@@ -31,7 +31,11 @@ from build_projected_semantic_basis import (  # noqa: E402
 )
 from assemble_authoring_workspace import assemble  # noqa: E402
 from merge_projected_term_registries import merge  # noqa: E402
-from lint_astrowoof_editorial import lint_deck  # noqa: E402
+from lint_astrowoof_editorial import (  # noqa: E402
+    authoring_pass_acceptance,
+    lint_deck,
+    reader_facing_items,
+)
 from validate_astrowoof_editorial import main as validate_editorial  # noqa: E402
 
 
@@ -325,6 +329,45 @@ class TestBrePacket(unittest.TestCase):
         codes = {item["code"] for item in report["warnings"]}
         self.assertIn("duplicate_body", codes)
         self.assertIn("claim_type_template", codes)
+        self.assertEqual(
+            "reject",
+            report["authoring_pass_acceptance"]["status"],
+        )
+
+    def test_authoring_pass_acceptance_ignores_overlap_within_one_card(
+        self,
+    ) -> None:
+        edited = complete_packet(self.packet)
+        edited["cards"] = edited["cards"][:1]
+        edited["summary"] = {}
+        repeated = (
+            "A deliberately repeated twelve word passage remains inside one "
+            "card across all editorial renderings today."
+        )
+        for density in ("no_astro", "light_astro", "full_astro"):
+            for voice in ("handler", "direct_to_dog", "hybrid"):
+                edited["cards"][0]["card"][density]["body"][voice] = repeated
+        report = authoring_pass_acceptance(reader_facing_items(edited))
+        self.assertEqual("accept", report["status"])
+        self.assertEqual(0, report["repeated_ngram_group_count"])
+
+    def test_authoring_pass_acceptance_rejects_cross_card_passages(
+        self,
+    ) -> None:
+        edited = complete_packet(self.packet)
+        repeated = (
+            "This deliberately repeated twelve word passage exposes a reusable "
+            "template across otherwise separate cards."
+        )
+        for card in edited["cards"][:3]:
+            card["card"]["no_astro"]["body"]["handler"] = repeated
+        report = authoring_pass_acceptance(reader_facing_items(edited))
+        self.assertEqual("reject", report["status"])
+        codes = {
+            reason["code"] for reason in report["rejection_reasons"]
+        }
+        self.assertIn("cross_card_exact_duplicate", codes)
+        self.assertIn("cross_card_repeated_passage", codes)
 
     def test_polish_phase_locks_organizational_fields(self) -> None:
         baseline = complete_packet(self.packet)

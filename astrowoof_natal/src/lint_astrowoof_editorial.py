@@ -45,6 +45,8 @@ GRAMMAR_PATTERNS = {
         r"awkward|easy|unusual|active|open|exact)\b"
     ),
 }
+PASS_NGRAM_WORDS = 12
+PASS_NGRAM_MIN_CLAIMS = 3
 
 
 def words(text: str) -> list[str]:
@@ -148,6 +150,104 @@ def reader_facing_items(deck: dict[str, Any]) -> list[dict[str, str]]:
 
 def warning(code: str, message: str, **details: Any) -> dict[str, Any]:
     return {"code": code, "message": message, "details": details}
+
+
+def authoring_pass_acceptance(
+    items: list[dict[str, str]],
+) -> dict[str, Any]:
+    """Return a deterministic accept/reject verdict for an authored pass.
+
+    Comparisons are made across distinct claims or summaries. Related density
+    and voice renderings within one card are deliberately treated as one
+    location so their expected semantic overlap cannot reject a pass.
+    """
+    reasons: list[dict[str, Any]] = []
+    exact_duplicate_groups: list[dict[str, Any]] = []
+
+    for kind in ("headline", "body", "dos", "donts", "humor"):
+        occurrences: dict[str, set[str]] = defaultdict(set)
+        fields: dict[str, list[str]] = defaultdict(list)
+        for item in items:
+            if item["kind"] != kind:
+                continue
+            normalized = " ".join(item["text"].lower().split())
+            occurrences[normalized].add(item["claim_id"])
+            fields[normalized].append(
+                f"{item['location']}:{item['field']}"
+            )
+        for text, claim_ids in occurrences.items():
+            if len(claim_ids) < 2:
+                continue
+            exact_duplicate_groups.append({
+                "kind": kind,
+                "claim_count": len(claim_ids),
+                "claim_ids": sorted(claim_ids),
+                "locations": fields[text],
+                "excerpt": text[:240],
+            })
+
+    if exact_duplicate_groups:
+        reasons.append({
+            "code": "cross_card_exact_duplicate",
+            "message": (
+                "Reader-facing text is reused exactly across distinct cards "
+                "or summaries."
+            ),
+            "group_count": len(exact_duplicate_groups),
+        })
+
+    ngram_claims: dict[str, set[str]] = defaultdict(set)
+    for item in items:
+        if item["kind"] != "body":
+            continue
+        tokens = words(item["text"])
+        item_ngrams = {
+            " ".join(tokens[index:index + PASS_NGRAM_WORDS])
+            for index in range(len(tokens) - PASS_NGRAM_WORDS + 1)
+        }
+        for ngram in item_ngrams:
+            ngram_claims[ngram].add(item["claim_id"])
+
+    repeated_ngrams = [
+        {
+            "claim_count": len(claim_ids),
+            "claim_ids": sorted(claim_ids),
+            "text": ngram,
+        }
+        for ngram, claim_ids in ngram_claims.items()
+        if len(claim_ids) >= PASS_NGRAM_MIN_CLAIMS
+    ]
+    repeated_ngrams.sort(
+        key=lambda item: (-item["claim_count"], item["text"])
+    )
+    if repeated_ngrams:
+        reasons.append({
+            "code": "cross_card_repeated_passage",
+            "message": (
+                f"A {PASS_NGRAM_WORDS}-word passage occurs in "
+                f"{PASS_NGRAM_MIN_CLAIMS} or more distinct cards or summaries."
+            ),
+            "group_count": len(repeated_ngrams),
+            "maximum_claim_count": repeated_ngrams[0]["claim_count"],
+        })
+
+    return {
+        "status": "accept" if not reasons else "reject",
+        "deterministic": True,
+        "thresholds": {
+            "ngram_words": PASS_NGRAM_WORDS,
+            "ngram_min_distinct_claims": PASS_NGRAM_MIN_CLAIMS,
+        },
+        "reader_facing_field_count": len(items),
+        "distinct_location_count": len({
+            item["claim_id"] for item in items
+        }),
+        "exact_duplicate_group_count": len(exact_duplicate_groups),
+        "exact_duplicate_groups": exact_duplicate_groups,
+        "repeated_ngram_group_count": len(repeated_ngrams),
+        "repeated_ngrams": repeated_ngrams,
+        "rejection_reasons": reasons,
+    }
 
 
 def lint_deck(path: Path, deck: dict[str, Any]) -> dict[str, Any]:
@@ -270,6 +370,7 @@ def lint_deck(path: Path, deck: dict[str, Any]) -> dict[str, Any]:
         "reader_facing_field_count": len(items),
         "warning_count": len(warnings),
         "warnings": warnings,
+        "authoring_pass_acceptance": authoring_pass_acceptance(items),
     }
 
 
