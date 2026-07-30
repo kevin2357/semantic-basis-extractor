@@ -19,6 +19,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
     build_candidates,
     compile_packet,
+    copy_static_assets,
     discover_subject_packages,
     load_and_validate_contexts,
     optimize,
@@ -296,6 +297,17 @@ class TestBrePacket(unittest.TestCase):
         )
         self.assertEqual("pass", report["status"], report["errors"])
 
+    def test_authoring_allows_empty_context_filters(self) -> None:
+        edited = complete_packet(self.packet)
+        edited["cards"][0]["context_filter_groups"] = {
+            "high_level": [],
+            "detail_level": [],
+        }
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
+
     def test_polish_phase_locks_organizational_fields(self) -> None:
         baseline = complete_packet(self.packet)
         polished = deepcopy(baseline)
@@ -358,6 +370,22 @@ class TestBrePacket(unittest.TestCase):
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):
+    def test_handoff_static_assets_include_execution_protocol(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = Path(temporary) / "subject"
+            copy_static_assets(bundle, ROOT, None)
+            expected = {
+                "AstroWoof Projected Natal Card Authoring Manual.md",
+                "LLM Card-by-Card Authoring Execution Protocol.md",
+                "LLM Editing Permissions and QA Checklist.md",
+                "Proposed LLM Handoff Prompt.md",
+            }
+            self.assertTrue(
+                expected.issubset(
+                    {path.name for path in (bundle / "static").iterdir()}
+                )
+            )
+
     def test_discovers_multiple_subject_directories(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

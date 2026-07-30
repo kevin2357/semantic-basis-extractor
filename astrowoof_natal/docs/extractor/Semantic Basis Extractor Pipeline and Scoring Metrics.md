@@ -589,17 +589,33 @@ The LLM bundle separates reusable static material from per-request data:
 
 ```text
 llm-handoff-bundle/
+    README.md
     manifest.json
-    static/
-        Semantic Basis Extractor Pipeline and Scoring Metrics.md
-        AstroWoof Projected Natal Card Authoring Manual.md
-        Proposed LLM Handoff Prompt.md
-    request/
-        bre.selected-authoring-packet.json
-        bre.selection-qa.json
+    validate_astrowoof_editorial.py
+    bre/
+        manifest.json
+        static/
+            Semantic Basis Extractor Pipeline and Scoring Metrics.md
+            AstroWoof Projected Natal Card Authoring Manual.md
+            LLM Card-by-Card Authoring Execution Protocol.md
+            LLM Editing Permissions and QA Checklist.md
+            Proposed LLM Handoff Prompt.md
+        request/
+            bre.selected-authoring-packet.json
+            bre.selection-qa.json
 ```
 
-Only files under `request/` change for each dog. Static instructions remain versioned and reusable.
+Each immediate subject directory is a self-contained single-subject handoff.
+The root README and manifest govern batch orchestration, and the root validator
+is run independently for each subject. Only files under each `request/`
+directory change per dog; static instructions are copied from versioned
+repository sources.
+
+The execution protocol is mandatory. It requires persistent working files,
+one-complete-card-at-a-time authoring, semantic briefs, unique editorial jobs,
+registry decoding, separate voice functions, claim-specific humor, repetition
+checkpoints, and a whole-deck audit. This prevents structurally complete output
+from satisfying the handoff through sentence-frame substitution.
 
 ## 17. QA requirements
 
@@ -638,6 +654,9 @@ The current implementation is intentionally conservative:
   `unselected_claims`;
 - humor affordance is lexical and low-weighted;
 - final editorial validation is specified but not yet a full linguistic parser;
+- the deterministic validator establishes structural integrity but cannot by
+  itself prove subject-specific prose, successful semantic decoding, or
+  non-templated voice differentiation;
 - whole-dog voice inference is deferred to the constrained LLM pass.
 
 These limitations are visible in the artifacts and can be improved independently.

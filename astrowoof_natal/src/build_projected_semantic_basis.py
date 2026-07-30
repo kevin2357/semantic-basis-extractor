@@ -1370,6 +1370,14 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
             repo_root / "docs" / "post_extraction_authoring"
             / "LLM Editing Permissions and QA Checklist.md"
         ),
+        "LLM Card-by-Card Authoring Execution Protocol.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "LLM Card-by-Card Authoring Execution Protocol.md"
+        ),
+        "AstroWoof Projected Natal Card Authoring Manual.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "AstroWoof Projected Natal Card Authoring Manual.md"
+        ),
         "AstroWoof Authoring Packet Schema.json": (
             repo_root / "docs" / "extractor" / "AstroWoof Authoring Packet Schema.json"
         ),
@@ -1381,6 +1389,8 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
     for name, source in sources.items():
         if source.exists():
             shutil.copy2(source, static / name)
+    # An explicit archive may temporarily override the repository-owned manual,
+    # but normal builds must not depend on a personal filesystem path.
     if manual_zip and manual_zip.exists():
         with zipfile.ZipFile(manual_zip) as archive:
             member = next(
@@ -1424,12 +1434,26 @@ def main() -> None:
     parser.add_argument(
         "--manual-zip",
         type=Path,
-        default=Path(r"C:\Users\kevin\Downloads\AstroWoof_Natal_Card_Authoring_Manual.zip"),
+        default=None,
+        help=(
+            "Optional archive containing a replacement authoring manual. "
+            "Normal builds use the versioned repository document."
+        ),
     )
     args = parser.parse_args()
     input_package = args.legacy_input_dir or args.input_package
     packages = discover_subject_packages(input_package, args.subject)
     repo_root = Path(__file__).resolve().parent.parent
+    args.bundle_dir.mkdir(parents=True, exist_ok=True)
+    batch_readme = (
+        repo_root / "docs" / "post_extraction_authoring"
+        / "Multi-Subject LLM Handoff README.md"
+    )
+    if batch_readme.exists():
+        shutil.copy2(batch_readme, args.bundle_dir / "README.md")
+    validator = repo_root / "src" / "validate_astrowoof_editorial.py"
+    if validator.exists():
+        shutil.copy2(validator, args.bundle_dir / validator.name)
     run_records = []
     failed = False
 
@@ -1497,7 +1521,7 @@ def main() -> None:
             )
             copy_static_assets(subject_bundle, repo_root, args.manual_zip)
             manifest = {
-                "bundle_version": "astrowoof.llm_handoff.v0.2",
+                "bundle_version": "astrowoof.llm_handoff.v0.4",
                 "subject": subject,
                 "instruction": (
                     "Use the prompt and static guidance to edit only permitted "
@@ -1558,6 +1582,35 @@ def main() -> None:
         "subjects": run_records,
     }
     write_json(args.output_dir / "run-manifest.json", run_manifest)
+    write_json(
+        args.bundle_dir / "manifest.json",
+        {
+            "bundle_version": "astrowoof.llm_handoff.v0.4",
+            "instruction": (
+                "Read README.md, then process each passing subject independently "
+                "with its mandatory card-by-card execution protocol."
+            ),
+            "subject_count": len(run_records),
+            "subjects": [
+                {
+                    "subject": record["subject"],
+                    "status": record["status"],
+                    **(
+                        {
+                            "manifest": f"{record['subject']}/manifest.json",
+                            "expected_output": (
+                                f"natal.{record['subject']}.cards.json"
+                            ),
+                        }
+                        if record["status"] == "pass"
+                        else {}
+                    ),
+                }
+                for record in run_records
+            ],
+            "validator": "validate_astrowoof_editorial.py",
+        },
+    )
     print(json.dumps(run_manifest, ensure_ascii=False, indent=2))
     if failed:
         raise SystemExit(1)

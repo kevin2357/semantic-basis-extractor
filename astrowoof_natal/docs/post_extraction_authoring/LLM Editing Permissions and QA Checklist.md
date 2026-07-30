@@ -1,8 +1,8 @@
-# LLM Editing Permissions and QA Checklist v0.3
+# LLM Editing Permissions and QA Checklist v0.4
 
 ## Editable
 
-- Selected-claim `theme_group` where the extractor supplied a placeholder
+- Selected aspect and synthesis `theme_group` placeholders
 - Selected-claim `context_filter_groups.high_level`
 - Selected-claim `context_filter_groups.detail_level`
 - Selected-claim `dos` and `donts`
@@ -26,42 +26,135 @@ including `unselected_claims`.
 - `unselected_claims`
 - `projected_term_registry`
 
-## Required final checks
+## Structural checks
 
 - Exactly 50 selected cards
 - No `__LLM_FILL__` placeholders
 - Every selected aspect and synthesis has a nonempty `theme_group`
 - No placement has an added `theme_group`
-- Every claim has at least one valid high-level and one valid detail-level
-  context filter
-- All filter values occur in the registered vocabulary at the matching level
-- Every assigned filter is strongly relevant enough that a reader choosing
-  that filter would reasonably expect to see the claim
-- Tangential filter matches and indiscriminate assignment to most filters have
-  been removed
-- Selected aspects form three or four approximately balanced thematic chapters
-- Selected syntheses independently form three or four approximately balanced
-  thematic chapters
+- Every filter value occurs in the registered vocabulary at the matching level
 - Humor occurs at card level and never inside density branches
 - All four summary cards are complete
-- Summary cards implement the fixed Who She Is, How She Lives, What She Needs,
-  and How She Grows lenses using the subject's actual pronouns
-- `unselected_claims` is byte-for-structure equivalent to the request packet
+- At least two `dos` and two `donts` exist for every selected and summary card
+- `unselected_claims` is structurally equivalent to the request packet
 - `projected_term_registry` is unchanged
-- No-astrology prose contains no explicit astrology
-- Handler, direct-to-dog, and hybrid voices are complete
-- At least two dos and two donts exist for each selected and summary card
 - The deterministic editorial validator passes
+
+## Card-level semantic and editorial checks
+
+For every card:
+
+- The private semantic brief decodes rather than repeats the canonical claim.
+- The unique editorial job differs materially from completed neighboring
+  cards.
+- Compound terms were interpreted through their full registry entries.
+- No-astrology prose contains neither astrology nor raw registry vocabulary.
+- Light astrology names and interprets actual retained astrological sources.
+- Full astrology explains the relevant retained astrological components and
+  relationships without dumping provenance.
+- Handler, direct-to-dog, and hybrid voices perform different functions.
+- Direct-to-dog grammar is genuinely second person rather than substituted.
+- Hybrid describes a reciprocal interaction or shared situation rather than
+  one-way handler instructions.
+- Headlines are concise and meaningfully differentiated by voice and density.
+- Advice is observable, situational, and claim-specific.
+- Humor belongs to the exact claim and is not reused.
+- No biography, diagnosis, medical assertion, or discarded graph fact was
+  introduced.
+- The line would not still work for five unrelated claims after replacing
+  only the dog name or projected term.
+
+## Prohibited reader-facing language
+
+Correct every occurrence of process-facing language such as:
+
+- selected claim, selected deck, or unselected claim;
+- retained evidence or source material says;
+- semantic profile, semantic system, or architecture;
+- model, graph, projected graph, or projected reading;
+- authoring, extraction, packet, derivation, or evidence assembly.
+
+Correct raw or malformed scaffolding such as:
+
+- `unspecified pattern`;
+- `whole personality`;
+- `mode mode`;
+- `recurring pattern pattern`;
+- registry keys converted to spaced title case without semantic translation.
+
+## Whole-deck variety audit
+
+After every five cards and again after all 50:
+
+- scan exact duplicate sentences and humor;
+- count repeated body openings and final-sentence formulas;
+- count repeated headline structures;
+- find advice reused across unrelated claims;
+- inspect repeated imagery and comic mechanisms;
+- reject headlines differing only by a substituted noun;
+- distinguish neighboring cards with related themes;
+- read all hybrid bodies alone as one deck;
+- review every literal match for "`<Dog>` brings," "you bring," "tells you,"
+  and "shows you";
+- verify that changing introductory clauses did not conceal an unchanged body
+  template.
+
+No exact humor line may appear under different claim IDs. A stock sentence
+frame with only a projected term changed also counts as reuse.
+
+## Context-filter audit
+
+- Each assigned filter independently passes the reader-expectation test.
+- Empty arrays are acceptable when no registered filter strongly fits.
+- Tangential assignments have been removed.
+- The author did not fill slots, force exactly one category, or optimize for
+  equal vocabulary coverage.
+- Every assignment has a private ledger justification.
+- Each filter's complete result set is coherent and useful for navigation.
+
+## Theme-group audit
+
+- Selected aspects form three or four approximately balanced, coherent
+  chapters.
+- Selected syntheses independently form three or four approximately balanced,
+  coherent chapters.
+- Labels were discovered from this subject's claims rather than copied as a
+  generic cross-subject taxonomy.
+- Balance did not override semantic coherence.
+
+## Summary audit
+
+- The four fixed lenses are Who the dog is, How the dog lives, What the dog
+  needs, and How the dog grows.
+- Each summary has a private source outline grounded in selected and
+  unselected material.
+- Summaries integrate motifs rather than list registry labels.
+- Summary prose is subject-specific and not a name-swapped universal dog-care
+  template.
+- Voices and densities remain differentiated.
+- Supplied pronouns are used consistently; absent pronouns are not guessed.
+- Summary headlines are natural in each audience voice.
+
+## Multi-subject audit
+
+- Each subject has separate working files, checkpoint, ledger, output, and
+  validator run.
+- No facts, phrases, humor, imagery, filters, theme labels, or summaries were
+  transferred between subjects.
+- Cross-subject exact and near-duplicate prose was reviewed.
+- Each subject was completed fully before the next was authored.
 
 ## Validator phases
 
-Use `--phase authoring` for the initial LLM pass. It permits population of
+Use `--phase authoring` for initial authoring. It permits population of
 context filters, theme groups, and summaries.
 
-Use `--phase polish` with the completed deck as the baseline for later prose
-editing. Polish locks context filters, theme groups, and summaries. Override
-only a user-authorized scope with:
+Use `--phase polish` with the completed deck as baseline for later prose
+editing. Polish locks context filters, theme groups, and summaries unless the
+user explicitly authorizes:
 
 - `--allow-context-filter-edits`
 - `--allow-theme-group-edits`
 - `--allow-summary-edits`
+
+Schema validation proves structural safety, not editorial quality.

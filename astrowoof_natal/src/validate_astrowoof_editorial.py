@@ -173,7 +173,6 @@ def main() -> None:
             assignments = filters.get(key)
             if (
                 not isinstance(assignments, list)
-                or not assignments
                 or len(assignments) != len(set(assignments))
                 or not set(assignments) <= registered_filters[registry_level]
             ):

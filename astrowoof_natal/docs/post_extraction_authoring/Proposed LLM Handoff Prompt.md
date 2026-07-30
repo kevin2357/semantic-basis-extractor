@@ -1,7 +1,19 @@
-# Proposed LLM Handoff Prompt v0.3
+# Proposed LLM Handoff Prompt v0.4
 
 Edit the supplied AstroWoof projected natal authoring packet into the final
 `natal.<subject>.cards.json` artifact.
+
+Before writing, read and obey:
+
+1. `AstroWoof Projected Natal Card Authoring Manual.md`
+2. `LLM Card-by-Card Authoring Execution Protocol.md`
+3. `LLM Editing Permissions and QA Checklist.md`
+4. this prompt
+
+The execution protocol is mandatory. Treat every card as an independent
+writing assignment and complete one entire card before beginning the next.
+Bulk field-by-field generation, sentence-frame substitution, global phrase
+banks, and rotating humor or advice are prohibited.
 
 Use only the selected `cards` and their retained evidence when authoring the 50
 ordinary claim cards. The top-level `unselected_claims` collection must not
@@ -30,113 +42,149 @@ Do not change:
 
 For every selected claim:
 
+- decode the canonical claim and retained evidence through the registry;
+- define its unique editorial job in the private ledger;
 - fill all handler, direct-to-dog, and hybrid headlines and bodies;
 - fill all no-, light-, and full-astrology density branches;
 - fill `dos` and `donts`;
 - fill the card-level `funny_dog_quotes`, `imperative_dog_quotes`, and
   `applicable_canine_jokes` arrays;
-- assign at least one relevant registered `context_filter_groups.high_level`
-  value;
-- assign at least one relevant registered `context_filter_groups.detail_level`
-  value.
-
-Context filters are reader-navigation facets, not restatements of structural
-`categories`. Assign a filter when the claim is strongly related enough that a
-reader who deliberately filtered the deck to that subject would reasonably
-expect to see the card. The filter need not be the claim's sole or primary
-focus, but an incidental or tangential reference is insufficient.
-
-Multiple assignments are allowed when each independently passes that test.
-Do not assign most or all filters merely because a broad interpretation could
-connect the claim to them.
+- assign only strongly relevant registered context filters.
 
 Humor belongs once at `card` level. Do not add humor fields inside astrology
 density branches.
 
-## Assign theme groups
+Every reader-facing line fails when it could fit five other claims after
+changing only the dog's name or projected terms. Rewrite the complete line or
+paragraph rather than disguising a repeated frame with a new opening.
 
-Every selected aspect and selected synthesized claim contains:
+## Reader-facing language
 
-```json
-"theme_group": "__LLM_FILL__"
-```
+Use `projected_term_registry` to understand compound terms, operators, signs,
+aspects, Doghouses, and other vocabulary. Preserve the registry unchanged.
 
-Replace it with a concise, nonempty chapter label. The website already
-organizes claims into major sections such as Big Three, placements, angles,
-nodes, aspects, and syntheses. `theme_group` supplies the chapter level within
-the aspect and synthesis sections.
+Do not expose raw registry labels in no-astrology prose. Never treat a
+compound phrase as finished prose or as separate words to concatenate.
 
-Organize the selected aspects into three or four approximately equal-sized
-chapters whose members share a recognizable theme. Independently organize the
-selected syntheses into three or four approximately equal-sized chapters.
-Choose subject-appropriate labels after reading the complete selected set.
-Exact equality is not required, but avoid one giant miscellaneous group, a
-single-card group, or a unique label per claim unless an unavoidable count
-edge case makes one necessary.
+Reader-facing prose must not mention:
 
-Aspect and synthesis chapters may coincidentally use the same label, but group
-each major section independently rather than using one combined size quota.
+- selected or unselected claims;
+- retained evidence;
+- semantic profiles or systems;
+- models, graphs, or graph processing;
+- projection or projected readings;
+- authoring, extraction, selection, or packet mechanics.
 
-Do not add `theme_group` to placement claims.
+Do not emit scaffolding such as `unspecified pattern`, `whole personality`,
+`mode mode`, or `recurring pattern pattern`.
 
-## Author the four summary cards
+## Voice and density
 
-Populate `summary.card1` through `summary.card4`, including:
+Handler explains what may be happening for the dog and helps the person
+recognize it.
 
-- `dos`;
-- `donts`;
-- the three card-level humor arrays;
-- all voice and astrology-density headline/body combinations.
+Direct-to-dog expresses the dog's imagined perspective using correct
+second-person grammar and independently composed prose.
 
-These are the first cards a reader sees when opening a WoofMap. They should
-provide a friendly, memorable, primarily non-astrological overview before the
-reader enters the full deck. Their four fixed lenses are:
+Hybrid describes the reciprocal dog-human interaction: what the dog and
+person or environment contribute, and what rhythm, adjustment, or possibility
+emerges. It must not be handler advice with pronouns changed, a generic
+instruction plus "together," or a repeated "`<Dog>` brings X; you bring Y"
+frame.
 
-1. **🐶 Who She Is** — Core personality: the at-a-glance account of temperament
-   and identity.
-2. **🏡 How She Lives** — Daily lifestyle and the dog's natural way of moving
-   through the world: home style, routines, comfort, and preferred environment.
-3. **❤️ What She Needs** — Emotional needs, support, enrichment, handling, and
-   the most actionable guidance for helping the dog thrive.
-4. **🌱 How She Grows** — Development, learning, challenges, opportunity, and
-   how the dog's potential unfolds over time.
+No-astrology prose translates the claim completely into recognizable dog life
+without astrology, projection language, or raw registry labels.
 
-Use the subject's actual pronouns in labels and prose rather than mechanically
-using “She.”
+Light astrology names the one or two most useful actual astrological sources
+and promptly translates them into canine meaning. Saying "the WoofMap
+suggests" is not sufficient.
 
-For summary cards only, read the entire chart basis: all selected `cards`, all
-`unselected_claims`, whole-graph analysis, and the projected-term registry.
-Compress that complete understanding through the four lenses. Do not mention
-claim selection, unselected status, graph processing, or evidence mechanics in
-reader-facing prose.
+Full astrology explains the retained planets, luminaries, angles, nodes,
+signs, Doghouses, aspects, operators, geometry, and orb strength that matter
+to the claim. It interprets them for a reader rather than reporting provenance.
 
-The supplied Bre gold reference demonstrates the desired warmth, scope,
-density, voice differentiation, and four-lens summary behavior. Use it as an
-editorial reference only. Do not copy Bre-specific facts, phrases, filter
-assignments, or obsolete schema details into another subject's deck.
+## Context filters
 
-## Registry use
+Context filters are reader-navigation facets, not structural categories.
+Assign a filter only when a reader deliberately choosing it would be satisfied
+to see the card. An incidental or tangential connection is insufficient.
 
-Use `projected_term_registry` to decode compound projected terms, operators,
-signs, aspects, and Doghouse vocabulary. Preserve the registry unchanged.
+Empty arrays are editorially preferable to false retrieval promises when no
+registered filter strongly fits. Multiple values are allowed only when each
+independently passes the reader-expectation test.
 
-## Completion
+Do not fill available slots, force exactly one value, target equal vocabulary
+coverage, or assign most filters through broad interpretation. Record a
+private justification for every value, then audit each filter's complete
+result set after all cards are written.
 
-Work through all 50 claims and four summary cards using a durable priority-ID
-ledger. If interrupted, resume at the first unfinished field rather than
-restarting or shortening later cards.
+## Theme groups
 
-Return one complete parseable JSON file. Run
-`validate_astrowoof_editorial.py` against the original authoring packet and
-correct every error before delivery:
+Every selected aspect and synthesis contains a `theme_group` placeholder.
+
+Read all selected aspects, then organize them into three or four approximately
+balanced chapters with recognizable subject-specific themes. Independently do
+the same for selected syntheses. Semantic coherence takes priority over exact
+equality.
+
+Do not reuse a fixed generic chapter taxonomy across subjects. Avoid one
+miscellaneous group, single-card groups, or unique labels per claim unless an
+unavoidable count edge case requires one. Do not add `theme_group` to
+placements.
+
+## Summary cards
+
+Populate `summary.card1` through `summary.card4`, including `dos`, `donts`,
+card-level humor, and every voice/density headline and body.
+
+These are the first cards shown to a reader. They provide a friendly,
+memorable, primarily non-astrological overview through four fixed lenses:
+
+1. Who the dog is: core personality, temperament, and identity.
+2. How the dog lives: routines, comfort, home style, activity, and preferred
+   environment.
+3. What the dog needs: emotional support, enrichment, handling, and the most
+   actionable guidance for thriving.
+4. How the dog grows: learning, challenge, development, and opportunity.
+
+For summaries only, read all selected cards, `unselected_claims`, whole-graph
+analysis, and the registry. First create a private source outline for each
+lens, then integrate those motifs into prose. Do not list registry terms or
+write universal dog-care language with only the subject's name substituted.
+
+Use supplied pronouns when present. When pronouns are absent, use the dog's
+name and grammatically neutral constructions. Do not invent awkward labels
+such as "You: Who They Are" or "`<Dog>` Together."
+
+The Bre gold reference demonstrates warmth, depth, voice and density
+differentiation, claim-specific humor, and four-lens summary behavior. It is
+an editorial reference only. Do not copy Bre-specific facts, phrases, filters,
+theme groups, or obsolete schema details.
+
+## Persistent completion
+
+Maintain the working deck, checkpoint, and detailed editorial ledger required
+by the execution protocol. Resume from the first unfinished priority ID after
+an interruption. Card 50 must receive the same care as card 1.
+
+After every five cards, run the protocol's repetition and integrity audit.
+After all cards, review the complete deck for repeated openings, endings,
+headline frames, advice, imagery, and humor. Review every hybrid body alone.
+
+Return one complete parseable JSON file plus the completed authoring ledger and
+validation report. Do not return samples, excerpts, or a partial deck.
+
+Run:
 
 ```text
 python validate_astrowoof_editorial.py AUTHORING_PACKET EDITED_DECK \
   --phase authoring
 ```
 
-Later prose-only polish passes must use the completed deck as both the baseline
-contract and the source of locked organizational fields:
+Correct every error before delivery. A validator pass proves structural
+integrity; it does not waive the protocol's editorial QA.
+
+Later prose-only polish passes use the completed deck as baseline:
 
 ```text
 python validate_astrowoof_editorial.py COMPLETED_BASELINE POLISHED_DECK \
@@ -144,5 +192,4 @@ python validate_astrowoof_editorial.py COMPLETED_BASELINE POLISHED_DECK \
 ```
 
 In polish phase, context filters, theme groups, and summaries remain locked
-unless the user explicitly requested changes and the corresponding
-`--allow-...-edits` option is supplied.
+unless the user explicitly authorizes the corresponding override.
