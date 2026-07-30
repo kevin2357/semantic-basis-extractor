@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -371,6 +372,45 @@ class TestBrePacket(unittest.TestCase):
         self.assertIn("cross_card_exact_duplicate", codes)
         self.assertIn("cross_card_repeated_passage", codes)
 
+    def test_authoring_pass_acceptance_rejects_metric_gaming_artifacts(
+        self,
+    ) -> None:
+        edited = complete_packet(self.packet)
+        edited["cards"] = edited["cards"][:10]
+        edited["summary"] = {}
+        for index, card in enumerate(edited["cards"]):
+            card["card"]["no_astro"]["body"]["handler"] = (
+                f"Distinct observation {index} begins here "
+                "[private phrase] and continues [private phrase] through "
+                "the evidence [private phrase] before ending [private phrase]."
+            )
+        report = authoring_pass_acceptance(reader_facing_items(edited))
+        codes = {
+            reason["code"] for reason in report["rejection_reasons"]
+        }
+        self.assertEqual("reject", report["status"])
+        self.assertIn("editorial_artifact_insertion", codes)
+
+    def test_authoring_pass_acceptance_rejects_multi_field_opening_template(
+        self,
+    ) -> None:
+        edited = complete_packet(self.packet)
+        edited["cards"] = edited["cards"][:10]
+        edited["summary"] = {}
+        for index, card in enumerate(edited["cards"][:8]):
+            card["card"]["no_astro"]["body"]["handler"] = (
+                f"Ashley notices first, then handler example {index} diverges."
+            )
+            card["card"]["light_astro"]["body"]["hybrid"] = (
+                f"Between Ashley and her person, example {index} diverges."
+            )
+        report = authoring_pass_acceptance(reader_facing_items(edited))
+        codes = {
+            reason["code"] for reason in report["rejection_reasons"]
+        }
+        self.assertEqual("reject", report["status"])
+        self.assertIn("multi_field_opening_template", codes)
+
     def test_polish_phase_locks_organizational_fields(self) -> None:
         baseline = complete_packet(self.packet)
         polished = deepcopy(baseline)
@@ -444,10 +484,10 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue((workspace / "WRITE WHOLE DOG PROFILE.md").exists())
             self.assertTrue((workspace / "GUIDING LIGHTS.md").exists())
             self.assertTrue((workspace / "lint_authoring_pass.py").exists())
-            self.assertTrue(
+            self.assertFalse(
                 (workspace / "lint_astrowoof_editorial.py").exists()
             )
-            self.assertTrue(
+            self.assertFalse(
                 (workspace / "assemble_authoring_workspace.py").exists()
             )
             self.assertFalse((workspace / "WHOLE DOG CONTEXT.md").exists())
@@ -455,8 +495,14 @@ class TestBrePacket(unittest.TestCase):
                 encoding="utf-8"
             )
             self.assertIn("Mechanical acceptance requirements", start_here)
-            self.assertIn("twelve words", start_here)
+            self.assertNotIn("twelve words", start_here)
             self.assertIn("python lint_authoring_pass.py .", start_here)
+            opaque_checker = (
+                workspace / "lint_authoring_pass.py"
+            ).read_text(encoding="utf-8")
+            self.assertIn("_PAYLOAD =", opaque_checker)
+            self.assertNotIn("PASS_NGRAM_MIN_CLAIMS", opaque_checker)
+            self.assertNotIn("cross_card_repeated_passage", opaque_checker)
             story_template = next(
                 (workspace / "cards").rglob("WRITE THIS CARD.md")
             ).read_text(encoding="utf-8")
@@ -491,6 +537,25 @@ class TestBrePacket(unittest.TestCase):
                     ),
                     encoding="utf-8",
                 )
+            gate_report = workspace / "gate-report.json"
+            gate = subprocess.run(
+                [
+                    sys.executable,
+                    str(workspace / "lint_authoring_pass.py"),
+                    str(workspace),
+                    "--output",
+                    str(gate_report),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(2, gate.returncode, gate.stderr)
+            public_report = json.loads(gate_report.read_text(encoding="utf-8"))
+            self.assertEqual("reject", public_report["status"])
+            self.assertTrue(public_report["editorial_issue_codes"])
+            self.assertNotIn("thresholds", public_report)
+            self.assertNotIn("repeated_ngrams", public_report)
             deck, report = assemble(
                 self.packet,
                 workspace,

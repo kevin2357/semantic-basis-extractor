@@ -273,10 +273,11 @@ characterization expressed through varied forms.
 
 ## The checker establishes a floor
 
-The deterministic checker detects exact cross-card reuse and long repeated
-passages. An `accept` verdict does not establish that the writing is vivid,
-insightful, natural, semantically distinct, or enjoyable. It proves only that
-the pass avoided specific measurable failure signatures.
+The deterministic checker detects selected failure signatures without
+publishing its measurements or thresholds. An `accept` verdict does not
+establish that the writing is vivid, insightful, natural, semantically
+distinct, or enjoyable. It proves only that the pass cleared that mechanical
+gate.
 
 Write to the creative standard in this guide. Use the checker as a final
 safety net, not as the target.

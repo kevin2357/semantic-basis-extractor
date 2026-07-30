@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -109,11 +110,42 @@ def main() -> None:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
-    report: dict[str, Any] = {
+    full_report: dict[str, Any] = {
         "schema_version": "astrowoof.authoring_pass_lint.v0.1",
         "workspace": str(args.workspace),
         **authoring_pass_acceptance(workspace_items(args.workspace)),
     }
+    if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
+        affected_claim_ids = sorted({
+            claim_id
+            for group in (
+                full_report["exact_duplicate_groups"]
+                + full_report["repeated_ngrams"]
+                + full_report["suspicious_artifacts"]
+                + full_report["dominant_openings"]
+            )
+            for claim_id in group.get("claim_ids", [])
+        })
+        issue_codes = [
+            reason["code"]
+            for reason in full_report["rejection_reasons"]
+        ]
+        report: dict[str, Any] = {
+            "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+            "workspace": str(args.workspace),
+            "status": full_report["status"],
+            "editorial_issue_codes": issue_codes,
+            "affected_claim_ids": affected_claim_ids,
+            "guidance": (
+                "Rewrite the affected cards as independent essays, removing "
+                "reused language and recurring prose frames, then rerun this "
+                "check."
+                if issue_codes
+                else "The pass cleared the bundled editorial gate."
+            ),
+        }
+    else:
+        report = full_report
     rendered = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

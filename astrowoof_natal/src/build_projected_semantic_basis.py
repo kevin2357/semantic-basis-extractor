@@ -10,12 +10,14 @@ selected semantics, evidence, dependencies, IDs, or scores.
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import math
 import re
 import shutil
 import zipfile
+import zlib
 from collections import Counter, defaultdict
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -2203,15 +2205,10 @@ def build_story_workspace(
         guiding_lights_source,
         subject_bundle / "GUIDING LIGHTS.md",
     )
-    for script_name in (
-        "assemble_authoring_workspace.py",
-        "lint_astrowoof_editorial.py",
-        "lint_authoring_pass.py",
-    ):
-        shutil.copy2(
-            repo_root / "src" / script_name,
-            subject_bundle / script_name,
-        )
+    write_opaque_authoring_checker(
+        subject_bundle / "lint_authoring_pass.py",
+        repo_root,
+    )
     display_name = (
         packet["subject"].get("display_name")
         or packet["subject"].get("subject_id")
@@ -2262,8 +2259,8 @@ def build_story_workspace(
         "Your completed pass will be checked automatically before it is "
         "accepted.\n\n"
         "- No reader-facing field may be copied exactly between cards.\n"
-        "- A sequence of twelve words appearing in three different cards "
-        "automatically rejects the entire pass.\n\n"
+        "- Reused language, recurring prose frames, metric-gaming artifacts, "
+        "and cosmetic word insertion do not satisfy editorial independence.\n\n"
         "These are rejection boundaries, not the creative quality standard. "
         "An `accept` verdict proves that detectable copying was avoided; it "
         "does not prove that the prose is insightful, natural, memorable, or "
@@ -2365,6 +2362,46 @@ def archive_story_workspace(workspace: Path) -> Path:
                     ).as_posix(),
                 )
     return archive_path
+
+
+def write_opaque_authoring_checker(target: Path, repo_root: Path) -> None:
+    """Bundle the private checker as a portable opaque source payload."""
+    module_names = (
+        "assemble_authoring_workspace",
+        "lint_astrowoof_editorial",
+        "lint_authoring_pass",
+    )
+    sources = {
+        name: (repo_root / "src" / f"{name}.py").read_text(encoding="utf-8")
+        for name in module_names
+    }
+    payload = base64.b85encode(
+        zlib.compress(
+            json.dumps(sources, ensure_ascii=False).encode("utf-8"),
+            level=9,
+        )
+    ).decode("ascii")
+    launcher = (
+        "#!/usr/bin/env python3\n"
+        '"""AstroWoof bundled authoring gate. Run this file; do not edit it."""\n'
+        "import base64, json, os, sys, types, zlib\n\n"
+        f"_PAYLOAD = {payload!r}\n"
+        "_sources = json.loads(zlib.decompress("
+        "base64.b85decode(_PAYLOAD)).decode('utf-8'))\n"
+        "for _name in ('assemble_authoring_workspace', "
+        "'lint_astrowoof_editorial'):\n"
+        "    _module = types.ModuleType(_name)\n"
+        "    _module.__file__ = f'<bundled:{_name}>'\n"
+        "    sys.modules[_name] = _module\n"
+        "    exec(compile(_sources[_name], _module.__file__, 'exec'), "
+        "_module.__dict__)\n"
+        "os.environ['ASTROWOOF_OPAQUE_ACCEPTANCE'] = '1'\n"
+        "_scope = {'__name__': '__main__', "
+        "'__file__': '<bundled:lint_authoring_pass>'}\n"
+        "exec(compile(_sources['lint_authoring_pass'], "
+        "_scope['__file__'], 'exec'), _scope)\n"
+    )
+    target.write_text(launcher, encoding="utf-8")
 
 
 def copy_static_assets(

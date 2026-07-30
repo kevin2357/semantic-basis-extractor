@@ -231,6 +231,83 @@ def authoring_pass_acceptance(
             "maximum_claim_count": repeated_ngrams[0]["claim_count"],
         })
 
+    suspicious_artifacts: list[dict[str, Any]] = []
+    for item in items:
+        if item["kind"] not in {"headline", "body", "dos", "donts", "humor"}:
+            continue
+        bracketed = sorted(set(re.findall(r"\[[^\]\n]{1,80}\]", item["text"])))
+        if bracketed:
+            suspicious_artifacts.append({
+                "claim_id": item["claim_id"],
+                "field": item["field"],
+                "kind": "bracketed_editorial_insertion",
+                "examples": bracketed[:5],
+            })
+        if item["kind"] == "body":
+            tokens = words(item["text"])
+            four_grams = Counter(
+                " ".join(tokens[index:index + 4])
+                for index in range(len(tokens) - 3)
+            )
+            repeated_inside = [
+                {"text": phrase, "count": count}
+                for phrase, count in four_grams.items()
+                if count >= 4
+            ]
+            if repeated_inside:
+                repeated_inside.sort(
+                    key=lambda value: (-value["count"], value["text"])
+                )
+                suspicious_artifacts.append({
+                    "claim_id": item["claim_id"],
+                    "field": item["field"],
+                    "kind": "repeated_insertion_within_field",
+                    "examples": repeated_inside[:5],
+                })
+    if suspicious_artifacts:
+        reasons.append({
+            "code": "editorial_artifact_insertion",
+            "message": (
+                "Reader-facing prose contains repeated or bracketed insertion "
+                "artifacts inconsistent with natural card writing."
+            ),
+            "occurrence_count": len(suspicious_artifacts),
+        })
+
+    opening_locations: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for item in items:
+        if item["kind"] != "body":
+            continue
+        opening = " ".join(words(item["text"])[:3])
+        if opening:
+            opening_locations[(item["field"], opening)].add(item["claim_id"])
+    dominant_openings = [
+        {
+            "field": field,
+            "opening": opening,
+            "claim_count": len(claim_ids),
+            "claim_ids": sorted(claim_ids),
+        }
+        for (field, opening), claim_ids in opening_locations.items()
+        if len(claim_ids) >= 8
+    ]
+    dominant_openings.sort(
+        key=lambda value: (
+            -value["claim_count"],
+            value["field"],
+            value["opening"],
+        )
+    )
+    if len(dominant_openings) >= 2:
+        reasons.append({
+            "code": "multi_field_opening_template",
+            "message": (
+                "The same opening dominates nearly every card in multiple "
+                "reader-facing field positions."
+            ),
+            "group_count": len(dominant_openings),
+        })
+
     return {
         "status": "accept" if not reasons else "reject",
         "deterministic": True,
@@ -246,6 +323,10 @@ def authoring_pass_acceptance(
         "exact_duplicate_groups": exact_duplicate_groups,
         "repeated_ngram_group_count": len(repeated_ngrams),
         "repeated_ngrams": repeated_ngrams,
+        "suspicious_artifact_count": len(suspicious_artifacts),
+        "suspicious_artifacts": suspicious_artifacts,
+        "dominant_opening_group_count": len(dominant_openings),
+        "dominant_openings": dominant_openings,
         "rejection_reasons": reasons,
     }
 
