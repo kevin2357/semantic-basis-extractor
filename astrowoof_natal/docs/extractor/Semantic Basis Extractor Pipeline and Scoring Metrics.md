@@ -533,8 +533,17 @@ The LLM may not:
 - turn symbolic interpretation into diagnosis;
 - invent biography, breed, birth data, gender, or pronouns.
 
-The LLM receives `unselected_claims` for preservation and audit only. Those
-records are locked and may not be imported into selected-card prose.
+The LLM receives `unselected_claims` as locked full-chart preservation
+material. Those records may not be imported into ordinary selected-card prose.
+The four summary cards are the sole exception: they intentionally synthesize
+the complete selected and unselected basis through the Who She Is, How She
+Lives, What She Needs, and How She Grows lenses, using the subject's actual
+pronouns.
+
+Initial authoring validation permits the LLM to populate context filters,
+theme groups, and summaries. Later polish validation uses the completed deck
+as its baseline and locks those organizational fields unless a scoped override
+was explicitly authorized.
 
 ## 15. Output artifacts
 

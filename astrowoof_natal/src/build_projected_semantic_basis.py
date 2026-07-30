@@ -1373,6 +1373,10 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
         "AstroWoof Authoring Packet Schema.json": (
             repo_root / "docs" / "extractor" / "AstroWoof Authoring Packet Schema.json"
         ),
+        "AstroWoof Bre Editorial Gold Reference.json": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "AstroWoof Bre Editorial Gold Reference.json"
+        ),
     }
     for name, source in sources.items():
         if source.exists():
@@ -1499,6 +1503,14 @@ def main() -> None:
                     "Use the prompt and static guidance to edit only permitted "
                     "editorial fields."
                 ),
+                "editorial_reference": {
+                    "path": "static/AstroWoof Bre Editorial Gold Reference.json",
+                    "scope": (
+                        "Tone, prose depth, voice differentiation, humor, and "
+                        "four-lens summary behavior only; the v0.3 schema and "
+                        "current subject packet remain authoritative."
+                    ),
+                },
                 "static_files": sorted(
                     str(x.relative_to(subject_bundle)).replace("\\", "/")
                     for x in (subject_bundle / "static").glob("*")

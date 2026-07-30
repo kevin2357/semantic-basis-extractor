@@ -78,6 +78,73 @@ def write_subject(directory: Path, subject: str) -> None:
         )
 
 
+def complete_packet(packet: dict) -> dict:
+    def fill(value):
+        if isinstance(value, dict):
+            return {key: fill(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [fill(item) for item in value]
+        if value == "__LLM_FILL__":
+            return "Completed editorial text"
+        return value
+
+    edited = fill(deepcopy(packet))
+    edited["generator"]["editorial_status"] = "llm_completed"
+    edited["statistics"]["editorial_placeholders"] = 0
+    aspect_index = 0
+    synthesis_index = 0
+    for claim in edited["cards"]:
+        claim["context_filter_groups"] = {
+            "high_level": ["Personality"],
+            "detail_level": ["Core Personality"],
+        }
+        claim["dos"] = ["Do one", "Do two"]
+        claim["donts"] = ["Avoid one", "Avoid two"]
+        if "theme_group" in claim:
+            if claim["claim_type"] == "synthesized_theme":
+                claim["theme_group"] = (
+                    f"Synthesis Chapter {(synthesis_index % 4) + 1}"
+                )
+                synthesis_index += 1
+            else:
+                claim["theme_group"] = (
+                    f"Aspect Chapter {(aspect_index % 4) + 1}"
+                )
+                aspect_index += 1
+    for summary in edited["summary"].values():
+        summary["dos"] = ["Do one", "Do two"]
+        summary["donts"] = ["Avoid one", "Avoid two"]
+    return edited
+
+
+def run_editorial_validator(
+    baseline: dict,
+    edited: dict,
+    *extra_args: str,
+) -> dict:
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        baseline_path = root / "baseline.json"
+        edited_path = root / "edited.json"
+        baseline_path.write_text(json.dumps(baseline), encoding="utf-8")
+        edited_path.write_text(json.dumps(edited), encoding="utf-8")
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "validate_astrowoof_editorial.py",
+                str(baseline_path),
+                str(edited_path),
+                *extra_args,
+            ],
+        ), redirect_stdout(StringIO()) as output:
+            try:
+                validate_editorial()
+            except SystemExit:
+                pass
+        return json.loads(output.getvalue())
+
+
 class TestBrePacket(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -223,51 +290,55 @@ class TestBrePacket(unittest.TestCase):
         )
 
     def test_completed_packet_passes_editorial_validator(self) -> None:
-        edited = deepcopy(self.packet)
+        edited = complete_packet(self.packet)
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
 
-        def fill(value):
-            if isinstance(value, dict):
-                return {key: fill(item) for key, item in value.items()}
-            if isinstance(value, list):
-                return [fill(item) for item in value]
-            if value == "__LLM_FILL__":
-                return "Completed editorial text"
-            return value
+    def test_polish_phase_locks_organizational_fields(self) -> None:
+        baseline = complete_packet(self.packet)
+        polished = deepcopy(baseline)
+        polished["cards"][0]["card"]["no_astro"]["body"]["handler"] = (
+            "A polished prose revision."
+        )
+        passing = run_editorial_validator(
+            baseline, polished, "--phase", "polish"
+        )
+        self.assertEqual("pass", passing["status"], passing["errors"])
 
-        edited = fill(edited)
-        edited["generator"]["editorial_status"] = "llm_completed"
-        edited["statistics"]["editorial_placeholders"] = 0
-        for claim in edited["cards"]:
-            claim["context_filter_groups"] = {
-                "high_level": ["Personality"],
-                "detail_level": ["Core Personality"],
-            }
-            claim["dos"] = ["Do one", "Do two"]
-            claim["donts"] = ["Avoid one", "Avoid two"]
-        for summary in edited["summary"].values():
-            summary["dos"] = ["Do one", "Do two"]
-            summary["donts"] = ["Avoid one", "Avoid two"]
+        polished["cards"][0]["context_filter_groups"]["high_level"] = ["Play"]
+        polished["summary"]["card1"]["no_astro"]["body"]["handler"] = (
+            "Changed summary."
+        )
+        failing = run_editorial_validator(
+            baseline, polished, "--phase", "polish"
+        )
+        self.assertEqual("fail", failing["status"])
+        self.assertTrue(
+            any("context filters" in error for error in failing["errors"])
+        )
+        self.assertIn(
+            "Polish phase changed locked summary content.",
+            failing["errors"],
+        )
 
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            original_path = root / "original.json"
-            edited_path = root / "edited.json"
-            original_path.write_text(
-                json.dumps(self.packet), encoding="utf-8"
-            )
-            edited_path.write_text(json.dumps(edited), encoding="utf-8")
-            with patch.object(
-                sys,
-                "argv",
-                [
-                    "validate_astrowoof_editorial.py",
-                    str(original_path),
-                    str(edited_path),
-                ],
-            ), redirect_stdout(StringIO()) as output:
-                validate_editorial()
-            report = json.loads(output.getvalue())
-            self.assertEqual("pass", report["status"], report["errors"])
+    def test_polish_phase_allows_explicit_scoped_overrides(self) -> None:
+        baseline = complete_packet(self.packet)
+        polished = deepcopy(baseline)
+        polished["cards"][0]["context_filter_groups"]["high_level"] = ["Play"]
+        polished["summary"]["card1"]["no_astro"]["body"]["handler"] = (
+            "Changed summary."
+        )
+        report = run_editorial_validator(
+            baseline,
+            polished,
+            "--phase",
+            "polish",
+            "--allow-context-filter-edits",
+            "--allow-summary-edits",
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
 
     def test_card_shapes_match_current_astrowoof_example(self) -> None:
         reference = json.loads(

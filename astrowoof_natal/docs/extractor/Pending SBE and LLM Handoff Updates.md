@@ -46,15 +46,23 @@ Update the LLM authoring packet, handoff prompt, examples, ledger/checkpoint ins
   on selected placement claims.
 - Require assignments to use only names registered for the matching level.
 - Permit multiple relevant assignments, but discourage indiscriminate assignment to most or all filters.
-- Instruct the editor to treat filters as reader-navigation facets, not as restatements of the claim’s structural `categories`.
+- Instruct the editor to treat filters as reader-navigation facets, not as
+  restatements of the claim’s structural `categories`: assign a filter only
+  when a user choosing that filter would reasonably expect the claim, not for
+  a tangential connection.
 - Require the editor to author all four top-level `summary` cards.
 - Explain that each summary card has the same editorial structure as a normal claim’s `card` object:
   - card-level humor arrays;
   - `no_astro`, `light_astro`, and `full_astro`;
   - handler, direct-to-dog, and hybrid headlines and bodies.
-- Define the four summary cards’ distinct editorial purposes before production use so they do not become four interchangeable overview paragraphs.
+- Define the four summary cards as Who She Is, How She Lives, What She Needs,
+  and How She Grows, using the subject's actual pronouns.
+- Author summaries from the complete chart basis, including unselected claims;
+  summaries are the only prose surface authorized to use unselected material.
 - Update handoff examples and gold examples to show humor only once at card level.
-- Lock populated context-filter assignments and summary content during later polish passes unless the requested task explicitly includes them.
+- Lock populated context-filter assignments, theme groups, and summary content
+  during later polish passes unless the requested task explicitly includes
+  them.
 - Validate that no summary field remains blank after the LLM authoring pass.
 - Validate that all four summary cards follow the normal voice, density, humor, and placeholder rules.
 

@@ -3,6 +3,7 @@
 import argparse
 import json
 import re
+from collections import Counter
 from pathlib import Path
 
 
@@ -73,7 +74,37 @@ def main() -> None:
     parser.add_argument("authoring_packet", type=Path)
     parser.add_argument("edited_deck", type=Path)
     parser.add_argument("--report", type=Path)
+    parser.add_argument(
+        "--phase",
+        choices=["authoring", "polish"],
+        default="authoring",
+        help=(
+            "authoring allows initial population of filters, theme groups, and "
+            "summaries; polish locks them to the completed baseline by default."
+        ),
+    )
+    parser.add_argument(
+        "--allow-context-filter-edits",
+        action="store_true",
+        help="In polish phase, explicitly permit context-filter reassignment.",
+    )
+    parser.add_argument(
+        "--allow-theme-group-edits",
+        action="store_true",
+        help="In polish phase, explicitly permit chapter/theme regrouping.",
+    )
+    parser.add_argument(
+        "--allow-summary-edits",
+        action="store_true",
+        help="In polish phase, explicitly permit summary-card changes.",
+    )
     args = parser.parse_args()
+    if args.phase == "authoring" and any([
+        args.allow_context_filter_edits,
+        args.allow_theme_group_edits,
+        args.allow_summary_edits,
+    ]):
+        parser.error("Polish edit overrides may only be used with --phase polish.")
 
     original = json.loads(args.authoring_packet.read_text(encoding="utf-8"))
     edited = json.loads(args.edited_deck.read_text(encoding="utf-8"))
@@ -97,6 +128,10 @@ def main() -> None:
         for level in ["high", "detail"]
     }
     registered_categories = set(edited.get("categories", []))
+    theme_group_counts = {
+        "aspects": Counter(),
+        "syntheses": Counter(),
+    }
     for index, (before, after) in enumerate(zip(original_cards, edited_cards), 1):
         for field in LOCKED_CARD_FIELDS:
             if before.get(field) != after.get(field):
@@ -115,6 +150,19 @@ def main() -> None:
             theme_group = after.get("theme_group")
             if not isinstance(theme_group, str) or not theme_group.strip():
                 errors.append(f"Card {index} needs a nonempty theme_group.")
+            else:
+                theme_kind = (
+                    "syntheses"
+                    if before.get("claim_type") == "synthesized_theme"
+                    else "aspects"
+                )
+                theme_group_counts[theme_kind][theme_group.strip()] += 1
+            if (
+                args.phase == "polish"
+                and not args.allow_theme_group_edits
+                and before.get("theme_group") != after.get("theme_group")
+            ):
+                errors.append(f"Card {index} changed locked polish-phase theme_group.")
         elif "theme_group" in after:
             errors.append(f"Card {index} unexpectedly added theme_group.")
         filters = after.get("context_filter_groups", {})
@@ -130,6 +178,20 @@ def main() -> None:
                 or not set(assignments) <= registered_filters[registry_level]
             ):
                 errors.append(f"Card {index} has invalid {key} context filters.")
+            elif len(assignments) > len(registered_filters[registry_level]) / 2:
+                warnings.append(
+                    f"Card {index} assigns more than half of all {key} filters; "
+                    "review for tangential or indiscriminate matches."
+                )
+        if (
+            args.phase == "polish"
+            and not args.allow_context_filter_edits
+            and before.get("context_filter_groups")
+            != after.get("context_filter_groups")
+        ):
+            errors.append(
+                f"Card {index} changed locked polish-phase context filters."
+            )
         serialized = json.dumps(after, ensure_ascii=False)
         if "__LLM_FILL__" in serialized:
             errors.append(f"Card {index} retains an editorial placeholder.")
@@ -138,6 +200,21 @@ def main() -> None:
         validate_editorial_card(
             after.get("card", {}), f"Card {index}", errors, warnings
         )
+
+    for theme_kind, counts in theme_group_counts.items():
+        group_count = len(counts)
+        if group_count not in {3, 4}:
+            errors.append(
+                f"Selected {theme_kind} must use three or four theme groups; "
+                f"found {group_count}."
+            )
+        if counts:
+            sizes = list(counts.values())
+            if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
+                errors.append(
+                    f"Selected {theme_kind} theme groups are not approximately "
+                    f"balanced: {dict(counts)}."
+                )
 
     summary = edited.get("summary", {})
     if list(summary) != ["card1", "card2", "card3", "card4"]:
@@ -148,6 +225,12 @@ def main() -> None:
         validate_editorial_card(
             summary_card, f"Summary {key}", errors, warnings
         )
+    if (
+        args.phase == "polish"
+        and not args.allow_summary_edits
+        and original.get("summary") != edited.get("summary")
+    ):
+        errors.append("Polish phase changed locked summary content.")
 
     report = {
         "status": "pass" if not errors else "fail",
@@ -155,6 +238,12 @@ def main() -> None:
         "warnings": warnings,
         "checks": {
             "card_count": len(edited.get("cards", [])),
+            "phase": args.phase,
+            "polish_edit_overrides": {
+                "context_filters": args.allow_context_filter_edits,
+                "theme_groups": args.allow_theme_group_edits,
+                "summary": args.allow_summary_edits,
+            },
             "locked_top_level_fields_checked": LOCKED_TOP_LEVEL,
             "locked_card_fields_checked": LOCKED_CARD_FIELDS,
             "summary_card_count": len(edited.get("summary", {})),
