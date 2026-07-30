@@ -22,6 +22,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from merge_projected_term_registries import merge as merge_projected_term_registries
+
 
 CONTEXT_FILES = {
     "general": "natal.{subject}.woof.general.json",
@@ -74,10 +76,56 @@ OBJECT_LABELS = {
 }
 
 CATEGORY_BY_OBJECT = {
-    "Sun": "core_traits", "Moon": "core_traits", "ASC": "angles",
+    "Sun": "big3_core_traits", "Moon": "big3_core_traits", "ASC": "angles",
     "DSC": "angles", "MC": "angles", "IC": "angles",
     "North Node": "development", "Part of Fortune": "development",
 }
+
+CONTEXT_FILTER_GROUPS = [
+    {"name": "Personality", "level": "high"},
+    {"name": "Learning", "level": "high"},
+    {"name": "Play", "level": "high"},
+    {"name": "Adventure", "level": "high"},
+    {"name": "Communication", "level": "high"},
+    {"name": "Trust", "level": "high"},
+    {"name": "Training", "level": "high"},
+    {"name": "Pack", "level": "high"},
+    {"name": "Core Personality", "level": "detail"},
+    {"name": "Mind & Intelligence", "level": "detail"},
+    {"name": "Emotions & Inner World", "level": "detail"},
+    {"name": "Energy & Motivation", "level": "detail"},
+    {"name": "Strengths & Talents", "level": "detail"},
+    {"name": "Growth & Potential", "level": "detail"},
+    {"name": "Play & Adventure", "level": "detail"},
+    {"name": "Learning & Training", "level": "detail"},
+    {"name": "Communication", "level": "detail"},
+    {"name": "Social & Pack Life", "level": "detail"},
+    {"name": "Trust & Security", "level": "detail"},
+    {"name": "Stress & Resilience", "level": "detail"},
+]
+
+CONTEXT_SUFFIXES = {
+    "general": "general",
+    "d2d": "direct_to_dog",
+    "handler": "handler",
+    "hybrid": "hybrid",
+}
+
+CONTEXT_ID_MARKERS = {
+    "general": "general",
+    "direct_to_dog": "dog_direct",
+    "handler": "handler",
+    "hybrid": "hybrid",
+}
+
+CATEGORY_ORDER = [
+    "angles",
+    "core_traits",
+    "development",
+    "synthesized_patterns",
+    "system_interactions",
+    "big3_core_traits",
+]
 
 
 def clamp(value: float) -> float:
@@ -118,7 +166,7 @@ class Candidate:
     candidate_id: str
     candidate_type: str
     claim_type: str
-    category: str
+    categories: list[str]
     canonical_claim: str
     dependencies: list[str]
     source_refs: list[str]
@@ -129,6 +177,9 @@ class Candidate:
     provenance: dict[str, Any]
     mandatory: bool = False
     semantic_role: list[str] = field(default_factory=list)
+    eligible_for_selection: bool = True
+    variant_of: str | None = None
+    variant_kind: str | None = None
     total_score: float = 0.0
     rejection_reason: str | None = None
 
@@ -143,7 +194,7 @@ class Candidate:
             "candidate_id": self.candidate_id,
             "candidate_type": self.candidate_type,
             "claim_type": self.claim_type,
-            "category": self.category,
+            "categories": self.categories,
             "canonical_claim": self.canonical_claim,
             "mandatory": self.mandatory,
             "semantic_role": self.semantic_role,
@@ -156,28 +207,156 @@ class Candidate:
             "total_score": self.total_score,
             "provenance": self.provenance,
             "rejection_reason": self.rejection_reason,
+            "eligible_for_selection": self.eligible_for_selection,
+            **({"variant_of": self.variant_of} if self.variant_of else {}),
+            **({"variant_kind": self.variant_kind} if self.variant_kind else {}),
         }
 
 
-def load_contexts(input_dir: Path, subject: str) -> dict[str, dict[str, Any]]:
-    contexts = {}
-    for context, pattern in CONTEXT_FILES.items():
-        path = input_dir / pattern.format(subject=subject)
-        if not path.exists():
-            suffix = {
-                "general": "general",
-                "direct_to_dog": "d2d",
-                "handler": "handler",
-                "hybrid": "hybrid",
-            }[context]
-            matches = sorted(input_dir.glob(f"natal.{subject}.woof*{suffix}.json"))
-            if len(matches) != 1:
-                raise FileNotFoundError(
-                    f"Expected one {context} input at {path} or by fallback glob; "
-                    f"found {matches}"
+def discover_subject_packages(
+    input_package: Path,
+    subject_filter: str | None = None,
+) -> dict[str, dict[str, Path]]:
+    """Discover one four-context file set per subject.
+
+    A package may contain one subject's files directly or one immediate
+    subdirectory per subject. Filenames are used for discovery; graph metadata
+    is validated separately and remains authoritative for identity.
+    """
+    if not input_package.is_dir():
+        raise NotADirectoryError(f"Input package is not a directory: {input_package}")
+
+    candidate_dirs = [input_package]
+    if not any(input_package.glob("natal.*.woof.*.json")):
+        candidate_dirs = sorted(path for path in input_package.iterdir() if path.is_dir())
+
+    discovered: dict[str, dict[str, Path]] = defaultdict(dict)
+    pattern = re.compile(
+        r"^natal\.(?P<subject>.+?)\.woof\.(?P<context>general|d2d|handler|hybrid)\.json$",
+        re.IGNORECASE,
+    )
+    for directory in candidate_dirs:
+        for path in sorted(directory.glob("natal.*.woof.*.json")):
+            match = pattern.match(path.name)
+            if not match:
+                continue
+            subject = match.group("subject").lower()
+            context = CONTEXT_SUFFIXES[match.group("context").lower()]
+            if subject_filter and subject != subject_filter.lower():
+                continue
+            if context in discovered[subject]:
+                raise ValueError(
+                    f"Duplicate {context} files for subject {subject}: "
+                    f"{discovered[subject][context]} and {path}"
                 )
-            path = matches[0]
-        contexts[context] = json.loads(path.read_text(encoding="utf-8"))
+            discovered[subject][context] = path
+
+    if not discovered:
+        suffix = f" for subject {subject_filter!r}" if subject_filter else ""
+        raise FileNotFoundError(f"No projected natal context files found{suffix}.")
+
+    return dict(sorted(discovered.items()))
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _source_ref_set(records: list[dict[str, Any]], field_name: str) -> set[str]:
+    return {
+        ref
+        for record in records
+        for ref in record.get(field_name, [])
+    }
+
+
+def load_and_validate_contexts(
+    subject: str,
+    paths: dict[str, Path],
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any], dict[str, Any]]:
+    required = set(CONTEXT_FILES)
+    missing = sorted(required - set(paths))
+    extra = sorted(set(paths) - required)
+    if missing or extra:
+        raise ValueError(
+            f"Subject {subject} must have exactly the four contexts; "
+            f"missing={missing}, extra={extra}"
+        )
+    contexts = {
+        context: json.loads(path.read_text(encoding="utf-8"))
+        for context, path in sorted(paths.items())
+    }
+    general = contexts["general"]
+    expected_identity = general.get("source_identity")
+    expected_graph = general.get("source_graph_ref")
+    expected_ontology = general.get("target_ontology")
+    expected_objects = _source_ref_set(general.get("objects", []), "source_refs")
+    expected_relationships = _source_ref_set(
+        general.get("relationships", []), "source_relationship_refs"
+    )
+    expected_chart_id = f"natal:{subject}"
+
+    errors: list[str] = []
+    for context, graph in sorted(contexts.items()):
+        identity = graph.get("source_identity")
+        chart_ids = set((identity or {}).get("source_chart_ids", []))
+        chart_id = (identity or {}).get("source_chart_id")
+        if (
+            _canonical_json(identity) != _canonical_json(expected_identity)
+            or (chart_id and chart_id != expected_chart_id)
+            or (chart_ids and expected_chart_id not in chart_ids)
+        ):
+            errors.append(f"{context}: subject identity does not match {expected_chart_id}")
+        if _canonical_json(graph.get("source_graph_ref")) != _canonical_json(expected_graph):
+            errors.append(f"{context}: source_graph_ref differs from general")
+        if graph.get("target_ontology") != expected_ontology:
+            errors.append(f"{context}: target_ontology differs from general")
+        context_id = str(
+            graph.get("metadata", {}).get("projection_context_id")
+            or graph.get("metadata", {}).get("context_id")
+            or ""
+        ).lower()
+        if CONTEXT_ID_MARKERS[context] not in context_id:
+            errors.append(
+                f"{context}: metadata context ID {context_id!r} does not match"
+            )
+        if _source_ref_set(graph.get("objects", []), "source_refs") != expected_objects:
+            errors.append(f"{context}: canonical object source refs differ from general")
+        if (
+            _source_ref_set(graph.get("relationships", []), "source_relationship_refs")
+            != expected_relationships
+        ):
+            errors.append(f"{context}: canonical relationship source refs differ from general")
+
+    if errors:
+        raise ValueError(
+            f"Incompatible projected contexts for subject {subject}: "
+            + "; ".join(errors)
+        )
+
+    merged_registry, registry_audit = merge_projected_term_registries(
+        [paths[context] for context in sorted(paths)]
+    )
+    input_audit = {
+        "subject": subject,
+        "input_files": {
+            context: str(paths[context].resolve()) for context in sorted(paths)
+        },
+        "source_identity": expected_identity,
+        "source_graph_ref": expected_graph,
+        "target_ontology": expected_ontology,
+        "object_source_ref_count": len(expected_objects),
+        "relationship_source_ref_count": len(expected_relationships),
+        "registry_merge": registry_audit,
+        "status": "pass",
+    }
+    return contexts, merged_registry, input_audit
+
+
+def load_contexts(input_dir: Path, subject: str) -> dict[str, dict[str, Any]]:
+    """Backward-compatible single-subject loader used by older callers."""
+    packages = discover_subject_packages(input_dir, subject)
+    contexts, _, _ = load_and_validate_contexts(subject, packages[subject.lower()])
     return contexts
 
 
@@ -300,7 +479,11 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             claim_type=("angle" if name in {"ASC", "DSC", "MC", "IC"}
                         else "orientation" if name in {"North Node", "South Node"}
                         else "placement"),
-            category=CATEGORY_BY_OBJECT.get(name, "core_traits"),
+            categories=(
+                ["angles", "big3_core_traits"]
+                if name == "ASC"
+                else [CATEGORY_BY_OBJECT.get(name, "core_traits")]
+            ),
             canonical_claim=claim,
             dependencies=[],
             source_refs=[source_ref],
@@ -374,7 +557,7 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             candidate_id=cid,
             candidate_type="projected_relationship",
             claim_type="system_interaction",
-            category="system_interactions",
+            categories=["system_interactions"],
             canonical_claim=(
                 f"{source_label} and {target_label} are linked through {relation}, "
                 f"creating {interaction}."
@@ -416,11 +599,17 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         tags: list[str],
         evidence_records: list[dict[str, Any]],
         evidence_strength: float,
-    ) -> None:
+        *,
+        candidate_type: str = "synthesized_motif",
+        eligible_for_selection: bool = True,
+        variant_of: str | None = None,
+        variant_kind: str | None = None,
+    ) -> Candidate | None:
         dependencies = sorted(set(dependencies))
         if len(dependencies) < 2:
-            return
-        cid = stable_id("synthesis", rule, key, *dependencies)
+            return None
+        id_prefix = "synthesis_variant" if variant_of else "synthesis"
+        cid = stable_id(id_prefix, rule, key, *dependencies)
         dep_count = len(dependencies)
         components = {
             "core_salience": clamp(0.35 + 0.06 * dep_count),
@@ -439,9 +628,9 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         }
         candidate = Candidate(
             candidate_id=cid,
-            candidate_type="synthesized_motif",
+            candidate_type=candidate_type,
             claim_type="synthesized_theme",
-            category="synthesized_patterns",
+            categories=["synthesized_patterns"],
             canonical_claim=claim,
             dependencies=dependencies,
             source_refs=sorted(set(
@@ -461,9 +650,13 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             score_components=components,
             provenance={"generation_rule": rule, "deterministic": True},
             semantic_role=["compressor", "reinforcement", "abstraction"],
+            eligible_for_selection=eligible_for_selection,
+            variant_of=variant_of,
+            variant_kind=variant_kind,
         )
         candidate.finish_score()
         candidates.append(candidate)
+        return candidate
 
     object_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for record in general["objects"]:
@@ -510,7 +703,14 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
     for (group_type, key), records in sorted(relation_groups.items()):
         if len(records) < 2:
             continue
-        ranked = sorted(records, key=lambda x: x.get("projection_relevance_score", 0), reverse=True)[:4]
+        all_ranked = sorted(
+            records,
+            key=lambda x: (
+                -x.get("projection_relevance_score", 0),
+                x.get("id", ""),
+            ),
+        )
+        ranked = all_ranked[:4]
         deps = [
             relationship_candidate_by_source_ref[x["source_relationship_refs"][0]]
             for x in ranked
@@ -528,7 +728,7 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             f"Several systems repeatedly participate in {humanize(key)}, making "
             f"{humanize(key)} a recurring whole-chart pattern rather than a one-off interaction."
         )
-        add_synthesis(
+        compact = add_synthesis(
             f"relationship_{group_type}_reinforcement.v1", key, claim, deps,
             domains, [key] + source_labels,
             [{
@@ -540,9 +740,51 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             } for x in ranked],
             sum(x.get("projection_relevance_score", 0) for x in ranked) / len(ranked) / 0.55,
         )
+        if compact and len(all_ranked) > len(ranked):
+            all_dependencies = [
+                relationship_candidate_by_source_ref[x["source_relationship_refs"][0]]
+                for x in all_ranked
+            ]
+            all_labels: list[str] = []
+            all_domains: list[str] = []
+            for record in all_ranked:
+                attrs = record.get("attributes", {})
+                all_labels.extend([
+                    humanize(attrs.get("source_canine_subsystem")),
+                    humanize(attrs.get("target_canine_subsystem")),
+                ])
+                all_domains.extend([
+                    attrs.get("source_doghouse"),
+                    attrs.get("target_doghouse"),
+                ])
+            add_synthesis(
+                f"relationship_{group_type}_reinforcement.maximal.v1",
+                key,
+                claim,
+                all_dependencies,
+                all_domains,
+                [key] + all_labels,
+                [{
+                    "id": x["id"],
+                    "source_relationship_refs": x.get("source_relationship_refs", []),
+                    "relationship_type": x.get("relationship_type"),
+                    "interaction_mode": x.get("attributes", {}).get("interaction_mode"),
+                    "theme_tags": x.get("theme_tags", []),
+                } for x in all_ranked],
+                (
+                    sum(x.get("projection_relevance_score", 0) for x in all_ranked)
+                    / len(all_ranked)
+                    / 0.55
+                ),
+                candidate_type="synthesized_motif_variant",
+                eligible_for_selection=False,
+                variant_of=compact.candidate_id,
+                variant_kind="maximal_support",
+            )
 
     # Collapse exact duplicate synthesis statements produced by different
     # detectors. Keep the stronger deterministic derivation.
+    candidates_before_deduplication = list(candidates)
     deduplicated: dict[tuple[str, str], Candidate] = {}
     for candidate in candidates:
         signature = (candidate.candidate_type, candidate.canonical_claim)
@@ -554,6 +796,48 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         ):
             deduplicated[signature] = candidate
     candidates = list(deduplicated.values())
+    surviving_ids = {candidate.candidate_id for candidate in candidates}
+    removed_by_id = {
+        candidate.candidate_id: candidate
+        for candidate in candidates_before_deduplication
+        if candidate.candidate_id not in surviving_ids
+    }
+    surviving_syntheses_by_claim = {
+        candidate.canonical_claim: candidate
+        for candidate in candidates
+        if candidate.candidate_type == "synthesized_motif"
+    }
+    for candidate in candidates:
+        if candidate.variant_of and candidate.variant_of not in surviving_ids:
+            removed_base = removed_by_id.get(candidate.variant_of)
+            replacement = (
+                surviving_syntheses_by_claim.get(removed_base.canonical_claim)
+                if removed_base
+                else None
+            )
+            if replacement is None:
+                raise AssertionError(
+                    f"Unable to rebase maximal synthesis variant {candidate.candidate_id}"
+                )
+            candidate.variant_of = replacement.candidate_id
+    surviving_by_id = {candidate.candidate_id: candidate for candidate in candidates}
+    retained_candidates: list[Candidate] = []
+    for candidate in candidates:
+        if candidate.variant_of:
+            base = surviving_by_id[candidate.variant_of]
+            candidate.dependencies = sorted(
+                set(candidate.dependencies) | set(base.dependencies)
+            )
+            if not (set(candidate.dependencies) - set(base.dependencies)):
+                continue
+            candidate.candidate_id = stable_id(
+                "synthesis_variant",
+                candidate.provenance.get("generation_rule", ""),
+                candidate.variant_of,
+                *candidate.dependencies,
+            )
+        retained_candidates.append(candidate)
+    candidates = retained_candidates
 
     analysis = {
         "subject": general.get("source_identity", {}),
@@ -614,7 +898,7 @@ def optimize(candidates: list[Candidate], budget: int = 50) -> tuple[list[Candid
     while len(selected_ids) < budget:
         best: tuple[float, float, str, set[str]] | None = None
         for candidate in candidates:
-            if candidate.candidate_id in selected_ids:
+            if candidate.candidate_id in selected_ids or not candidate.eligible_for_selection:
                 continue
             bundle = closure(candidate.candidate_id) - selected_ids
             if len(selected_ids) + len(bundle) > budget:
@@ -633,6 +917,7 @@ def optimize(candidates: list[Candidate], budget: int = 50) -> tuple[list[Candid
             remaining = [
                 x for x in candidates
                 if x.candidate_id not in selected_ids
+                and x.eligible_for_selection
                 and not (closure(x.candidate_id) - selected_ids - {x.candidate_id})
             ]
             if not remaining:
@@ -661,7 +946,12 @@ def optimize(candidates: list[Candidate], budget: int = 50) -> tuple[list[Candid
         (x.candidate_type, tuple(sorted(x.tags[:3]))) for x in selected
     )
     for candidate in rejected:
-        if candidate.candidate_type == "synthesized_motif":
+        if not candidate.eligible_for_selection:
+            candidate.rejection_reason = (
+                "Preserved maximal-support synthesis variant; not eligible for "
+                "the closed 50-claim authoring portfolio."
+            )
+        elif candidate.candidate_type == "synthesized_motif":
             missing = [x for x in candidate.dependencies if x not in selected_ids]
             candidate.rejection_reason = (
                 f"Not selected within budget; closure would additionally require "
@@ -675,22 +965,94 @@ def optimize(candidates: list[Candidate], budget: int = 50) -> tuple[list[Candid
     return selected, rejected, audit
 
 
-def blank_rendering() -> dict[str, Any]:
-    voices = {"handler": "__LLM_FILL__", "direct_to_dog": "__LLM_FILL__", "hybrid": "__LLM_FILL__"}
+def blank_voice_map() -> dict[str, str]:
     return {
-        "headline": deepcopy(voices),
-        "body": deepcopy(voices),
+        "handler": "__LLM_FILL__",
+        "direct_to_dog": "__LLM_FILL__",
+        "hybrid": "__LLM_FILL__",
+    }
+
+
+def blank_rendering() -> dict[str, Any]:
+    return {
+        "headline": blank_voice_map(),
+        "body": blank_voice_map(),
+    }
+
+
+def blank_card() -> dict[str, Any]:
+    return {
         "funny_dog_quotes": ["__LLM_FILL__"],
         "imperative_dog_quotes": ["__LLM_FILL__"],
         "applicable_canine_jokes": ["__LLM_FILL__"],
+        "no_astro": blank_rendering(),
+        "light_astro": blank_rendering(),
+        "full_astro": blank_rendering(),
     }
+
+
+def blank_summary_card() -> dict[str, Any]:
+    return {
+        "dos": ["__LLM_FILL__"],
+        "donts": ["__LLM_FILL__"],
+        **blank_card(),
+    }
+
+
+def unselected_claim_records(
+    selected: list[Candidate],
+    rejected: list[Candidate],
+) -> list[dict[str, Any]]:
+    all_candidates = {x.candidate_id: x for x in [*selected, *rejected]}
+    selected_ids = {x.candidate_id for x in selected}
+    records = []
+    for candidate in sorted(rejected, key=lambda x: (-x.total_score, x.candidate_id)):
+        record = {
+            "claim_id": candidate.candidate_id,
+            "claim_type": candidate.claim_type,
+            "candidate_type": candidate.candidate_type,
+            "categories": candidate.categories,
+            **({"variant_of": candidate.variant_of} if candidate.variant_of else {}),
+            **({"variant_kind": candidate.variant_kind} if candidate.variant_kind else {}),
+            "canonical_claim": candidate.canonical_claim,
+            "dependencies": candidate.dependencies,
+            "source_refs": candidate.source_refs,
+            "behavioral_domains": candidate.behavioral_domains,
+            "tags": candidate.tags,
+            "evidence": candidate.evidence,
+            "score_components": candidate.score_components,
+            "total_score": candidate.total_score,
+            "provenance": candidate.provenance,
+            "selection": {
+                "selected": False,
+                "eligible_for_selection": candidate.eligible_for_selection,
+                "rejection_reason": candidate.rejection_reason,
+                "selected_dependency_ids": sorted(
+                    dep for dep in candidate.dependencies if dep in selected_ids
+                ),
+                "unselected_dependency_ids": sorted(
+                    dep for dep in candidate.dependencies if dep not in selected_ids
+                ),
+            },
+        }
+        if candidate.variant_of:
+            base = all_candidates.get(candidate.variant_of)
+            base_dependencies = set(base.dependencies if base else [])
+            record["additional_supporting_claim_ids"] = sorted(
+                set(candidate.dependencies) - base_dependencies
+            )
+        records.append(record)
+    return records
 
 
 def compile_packet(
     subject: str,
     contexts: dict[str, dict[str, Any]],
     selected: list[Candidate],
+    rejected: list[Candidate],
     analysis: dict[str, Any],
+    projected_term_registry: dict[str, Any],
+    input_audit: dict[str, Any],
 ) -> dict[str, Any]:
     general = contexts["general"]
     ordered_ids = {candidate.candidate_id: i + 1 for i, candidate in enumerate(selected)}
@@ -716,7 +1078,17 @@ def compile_packet(
         cards.append({
             "claim_id": candidate.candidate_id,
             "claim_type": candidate.claim_type,
-            "category": candidate.category,
+            "categories": candidate.categories,
+            **({
+                "theme_group": "__LLM_FILL__",
+            } if (
+                candidate.candidate_type == "projected_relationship"
+                or candidate.claim_type == "synthesized_theme"
+            ) else {}),
+            "context_filter_groups": {
+                "high_level": [],
+                "detail_level": [],
+            },
             "canonical_claim": candidate.canonical_claim,
             "importance": clamp(candidate.total_score / max_score),
             "confidence": confidence,
@@ -728,7 +1100,7 @@ def compile_packet(
                 "score_components": candidate.score_components,
                 "total_score": candidate.total_score,
                 "editing_lock": [
-                    "claim_id", "claim_type", "category", "importance", "confidence",
+                    "claim_id", "claim_type", "categories", "importance", "confidence",
                     "strength", "priority_id", "selection", "evidence", "relations",
                 ],
             },
@@ -740,22 +1112,30 @@ def compile_packet(
                 "tensions_with": [],
                 "related_claims": dependency_ids if candidate.claim_type != "synthesized_theme" else [],
             },
-            "card": {
-                "no_astro": blank_rendering(),
-                "light_astro": blank_rendering(),
-                "full_astro": blank_rendering(),
-            },
             "dos": ["__LLM_FILL__"],
             "donts": ["__LLM_FILL__"],
+            "card": blank_card(),
         })
 
-    categories = sorted(set(x["category"] for x in cards))
     domains = sorted(set(d for x in cards for d in x["behavioral_domains"]))
+    unselected_claims = unselected_claim_records(selected, rejected)
+    discovered_categories = set(
+        category
+        for claim in [*cards, *unselected_claims]
+        for category in claim["categories"]
+    )
+    categories = [
+        category for category in CATEGORY_ORDER if category in discovered_categories
+    ] + sorted(discovered_categories - set(CATEGORY_ORDER))
+    summary = {
+        f"card{index}": blank_summary_card()
+        for index in range(1, 5)
+    }
     return {
-        "schema_version": "astrowoof.projected_natal_cards.authoring_packet.v0.2",
+        "schema_version": "astrowoof.projected_natal_cards.authoring_packet.v0.3",
         "generator": {
-            "semantic_basis_extractor": "projected-sbe.v0.1",
-            "candidate_generator": "projected-candidates.v0.1",
+            "semantic_basis_extractor": "projected-sbe.v0.2",
+            "candidate_generator": "projected-candidates.v0.2",
             "optimizer": "closed-marginal-portfolio.v0.1",
             "editorial_status": "awaiting_llm",
         },
@@ -786,11 +1166,14 @@ def compile_packet(
                 ).hexdigest()
                 for context, graph in contexts.items()
             },
+            "input_files": input_audit["input_files"],
+            "registry_merge": input_audit["registry_merge"],
         },
         "coverage": {
             "projected_object_count": len(general["objects"]),
             "projected_relationship_count": len(general["relationships"]),
             "selected_claim_count": len(cards),
+            "unselected_claim_count": len(unselected_claims),
             "guardrails": general.get("summary", {}).get("guardrails", [
                 "playful_experimental_projection",
                 "not_veterinary_advice",
@@ -803,14 +1186,23 @@ def compile_packet(
             "mandatory_claims": sum(x["selection"]["mandatory"] for x in cards),
             "claim_type_counts": dict(Counter(x["claim_type"] for x in cards)),
             "synthesized_claims": sum(x["claim_type"] == "synthesized_theme" for x in cards),
+            "unselected_claims": len(unselected_claims),
+            "maximal_support_variants": sum(
+                x.get("variant_kind") == "maximal_support" for x in unselected_claims
+            ),
             "editorial_placeholders": sum(
-                json.dumps(x).count("__LLM_FILL__") for x in cards
+                json.dumps(value).count("__LLM_FILL__")
+                for value in [cards, summary]
             ),
         },
         "categories": categories,
         "behavioral_domains": domains,
+        "context_filter_groups": deepcopy(CONTEXT_FILTER_GROUPS),
         "whole_graph_analysis": analysis,
+        "summary": summary,
         "cards": cards,
+        "unselected_claims": unselected_claims,
+        "projected_term_registry": projected_term_registry,
     }
 
 
@@ -835,6 +1227,98 @@ def qa_report(
     card_ids = [x["claim_id"] for x in packet["cards"]]
     if len(card_ids) != len(set(card_ids)):
         errors.append("Duplicate claim IDs in authoring packet")
+    registered_categories = set(packet.get("categories", []))
+    for index, (candidate, card) in enumerate(zip(selected, packet["cards"]), 1):
+        categories = card.get("categories")
+        if (
+            not isinstance(categories, list)
+            or not categories
+            or len(categories) != len(set(categories))
+            or not all(isinstance(value, str) and value for value in categories)
+        ):
+            errors.append(f"Card {index} has invalid categories.")
+        elif not set(categories) <= registered_categories:
+            errors.append(f"Card {index} uses an unregistered category.")
+        if "category" in card:
+            errors.append(f"Card {index} retains obsolete category field.")
+        needs_theme = (
+            candidate.candidate_type == "projected_relationship"
+            or candidate.claim_type == "synthesized_theme"
+        )
+        if needs_theme and card.get("theme_group") != "__LLM_FILL__":
+            errors.append(f"Card {index} must contain a theme_group placeholder.")
+        if not needs_theme and "theme_group" in card:
+            errors.append(f"Card {index} placement unexpectedly contains theme_group.")
+        editorial = card.get("card", {})
+        for collection in [
+            "funny_dog_quotes", "imperative_dog_quotes", "applicable_canine_jokes"
+        ]:
+            if not editorial.get(collection):
+                errors.append(f"Card {index} missing card-level {collection}.")
+        for density in ["no_astro", "light_astro", "full_astro"]:
+            branch = editorial.get(density, {})
+            if any(key in branch for key in [
+                "funny_dog_quotes", "imperative_dog_quotes", "applicable_canine_jokes"
+            ]):
+                errors.append(f"Card {index} retains density-level humor in {density}.")
+
+    expected_big_three = {
+        "Sun": ["big3_core_traits"],
+        "Moon": ["big3_core_traits"],
+        "ASC": ["angles", "big3_core_traits"],
+    }
+    selected_by_id = {candidate.candidate_id: candidate for candidate in selected}
+    packet_by_id = {card["claim_id"]: card for card in packet["cards"]}
+    for object_name_key, expected_categories in expected_big_three.items():
+        candidate = next(
+            (
+                item for item in selected
+                if item.provenance.get("canonical_object_name") == object_name_key
+            ),
+            None,
+        )
+        if candidate is None:
+            errors.append(f"Missing mandatory Big Three placement {object_name_key}.")
+        elif packet_by_id[candidate.candidate_id]["categories"] != expected_categories:
+            errors.append(f"Incorrect categories for {object_name_key}.")
+
+    summary = packet.get("summary", {})
+    if list(summary) != ["card1", "card2", "card3", "card4"]:
+        errors.append("Summary must contain card1 through card4 in order.")
+    for key, value in summary.items():
+        if not value.get("dos") or not value.get("donts"):
+            errors.append(f"Summary {key} lacks dos or donts placeholders.")
+        for density in ["no_astro", "light_astro", "full_astro"]:
+            if density not in value:
+                errors.append(f"Summary {key} lacks {density}.")
+
+    unselected_records = packet.get("unselected_claims", [])
+    unselected_ids = [item.get("claim_id") for item in unselected_records]
+    expected_rejected_ids = {candidate.candidate_id for candidate in rejected}
+    if set(unselected_ids) != expected_rejected_ids:
+        errors.append("unselected_claims does not exactly preserve rejected candidates.")
+    if len(unselected_ids) != len(set(unselected_ids)):
+        errors.append("Duplicate IDs in unselected_claims.")
+    if set(card_ids) & set(unselected_ids):
+        errors.append("Selected and unselected claim IDs overlap.")
+    all_candidate_ids = set(selected_by_id) | expected_rejected_ids
+    for record in unselected_records:
+        if (
+            not isinstance(record.get("categories"), list)
+            or not record["categories"]
+            or len(record["categories"]) != len(set(record["categories"]))
+            or not set(record["categories"]) <= registered_categories
+        ):
+            errors.append(
+                f"Unselected claim {record.get('claim_id')} has invalid categories."
+            )
+        if record.get("variant_of") and record["variant_of"] not in all_candidate_ids:
+            errors.append(
+                f"Unselected variant {record.get('claim_id')} has unknown variant_of."
+            )
+    registry = packet.get("projected_term_registry")
+    if not isinstance(registry, dict) or not isinstance(registry.get("terms"), dict):
+        errors.append("Packet lacks a complete projected_term_registry.")
     return {
         "status": "pass" if not errors else "fail",
         "errors": errors,
@@ -846,6 +1330,13 @@ def qa_report(
             "dependency_closure": not any(set(x.dependencies) - selected_ids for x in selected),
             "all_selected_have_evidence": all(x.evidence for x in selected),
             "unique_claim_ids": len(card_ids) == len(set(card_ids)),
+            "unselected_claims_preserved": set(unselected_ids) == expected_rejected_ids,
+            "projected_term_registry_present": isinstance(
+                packet.get("projected_term_registry", {}).get("terms"), dict
+            ),
+            "summary_template_present": list(packet.get("summary", {})) == [
+                "card1", "card2", "card3", "card4"
+            ],
             "editorial_placeholders_present": packet["statistics"]["editorial_placeholders"] > 0,
         },
         "selected_type_counts": dict(Counter(x.candidate_type for x in selected)),
@@ -866,13 +1357,24 @@ def write_json(path: Path, value: Any) -> None:
 def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -> None:
     static = bundle / "static"
     static.mkdir(parents=True, exist_ok=True)
-    for name in [
-        "Semantic Basis Extractor Pipeline and Scoring Metrics.md",
-        "Proposed LLM Handoff Prompt.md",
-        "LLM Editing Permissions and QA Checklist.md",
-        "AstroWoof Authoring Packet Schema.json",
-    ]:
-        source = repo_root / name
+    sources = {
+        "Semantic Basis Extractor Pipeline and Scoring Metrics.md": (
+            repo_root / "docs" / "extractor"
+            / "Semantic Basis Extractor Pipeline and Scoring Metrics.md"
+        ),
+        "Proposed LLM Handoff Prompt.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "Proposed LLM Handoff Prompt.md"
+        ),
+        "LLM Editing Permissions and QA Checklist.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "LLM Editing Permissions and QA Checklist.md"
+        ),
+        "AstroWoof Authoring Packet Schema.json": (
+            repo_root / "docs" / "extractor" / "AstroWoof Authoring Packet Schema.json"
+        ),
+    }
+    for name, source in sources.items():
         if source.exists():
             shutil.copy2(source, static / name)
     if manual_zip and manual_zip.exists():
@@ -888,88 +1390,165 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--subject", default="bre")
     parser.add_argument(
-        "--input-dir",
+        "--subject",
+        help="Optional subject ID filter within the input package.",
+    )
+    input_group = parser.add_mutually_exclusive_group()
+    input_group.add_argument(
+        "--input-package",
         type=Path,
-        default=Path(r"C:\dev\github\semantic-projection-core\woof projected natals all contexts"),
+        default=Path(__file__).resolve().parent.parent / "examples",
+        help=(
+            "Directory containing one subject's four context files directly, "
+            "or one immediate child directory per subject."
+        ),
+    )
+    input_group.add_argument(
+        "--input-dir",
+        dest="legacy_input_dir",
+        type=Path,
+        help="Deprecated alias for --input-package.",
     )
     parser.add_argument("--output-dir", type=Path, default=Path("semantic-basis-output"))
     parser.add_argument("--bundle-dir", type=Path, default=Path("llm-handoff-bundle"))
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Stop at the first invalid subject rather than finishing the batch manifest.",
+    )
     parser.add_argument(
         "--manual-zip",
         type=Path,
         default=Path(r"C:\Users\kevin\Downloads\AstroWoof_Natal_Card_Authoring_Manual.zip"),
     )
     args = parser.parse_args()
+    input_package = args.legacy_input_dir or args.input_package
+    packages = discover_subject_packages(input_package, args.subject)
+    repo_root = Path(__file__).resolve().parent.parent
+    run_records = []
+    failed = False
 
-    contexts = load_contexts(args.input_dir, args.subject)
-    candidates, analysis = build_candidates(contexts)
-    selected, rejected, audit = optimize(candidates)
-    packet = compile_packet(args.subject, contexts, selected, analysis)
-    qa = qa_report(candidates, selected, rejected, packet)
-    if qa["status"] != "pass":
-        raise AssertionError(json.dumps(qa, indent=2))
+    for subject, paths in packages.items():
+        try:
+            contexts, merged_registry, input_audit = load_and_validate_contexts(
+                subject, paths
+            )
+            candidates, analysis = build_candidates(contexts)
+            selected, rejected, audit = optimize(candidates)
+            packet = compile_packet(
+                subject,
+                contexts,
+                selected,
+                rejected,
+                analysis,
+                merged_registry,
+                input_audit,
+            )
+            qa = qa_report(candidates, selected, rejected, packet)
+            if qa["status"] != "pass":
+                raise AssertionError(json.dumps(qa, indent=2))
 
-    root = args.output_dir / args.subject
-    write_json(root / f"{args.subject}.whole-graph-analysis.json", analysis)
-    write_json(root / f"{args.subject}.candidate-pool.json", {
-        "schema_version": "semantic_basis.candidate_pool.v0.1",
-        "weights": WEIGHTS,
-        "candidates": [x.as_dict() for x in sorted(
-            candidates, key=lambda c: (-c.total_score, c.candidate_id)
-        )],
-    })
-    write_json(root / f"{args.subject}.selection-audit.json", {
-        "schema_version": "semantic_basis.selection_audit.v0.1",
-        "budget": 50,
-        "mandatory_count": 16,
-        "optimizer_decisions": audit,
-        "selected_ids": [x.candidate_id for x in selected],
-        "rejected": [
-            {"candidate_id": x.candidate_id, "score": x.total_score,
-             "reason": x.rejection_reason}
-            for x in sorted(rejected, key=lambda c: (-c.total_score, c.candidate_id))
-        ],
-    })
-    write_json(root / f"{args.subject}.selected-authoring-packet.json", packet)
-    write_json(root / f"{args.subject}.selection-qa.json", qa)
+            root = args.output_dir / subject
+            write_json(root / f"{subject}.input-audit.json", input_audit)
+            write_json(root / f"{subject}.whole-graph-analysis.json", analysis)
+            write_json(root / f"{subject}.candidate-pool.json", {
+                "schema_version": "semantic_basis.candidate_pool.v0.2",
+                "weights": WEIGHTS,
+                "candidates": [x.as_dict() for x in sorted(
+                    candidates, key=lambda c: (-c.total_score, c.candidate_id)
+                )],
+            })
+            write_json(root / f"{subject}.selection-audit.json", {
+                "schema_version": "semantic_basis.selection_audit.v0.2",
+                "budget": 50,
+                "mandatory_count": 16,
+                "optimizer_decisions": audit,
+                "selected_ids": [x.candidate_id for x in selected],
+                "rejected": [
+                    {
+                        "candidate_id": x.candidate_id,
+                        "score": x.total_score,
+                        "reason": x.rejection_reason,
+                        **({"variant_of": x.variant_of} if x.variant_of else {}),
+                    }
+                    for x in sorted(
+                        rejected, key=lambda c: (-c.total_score, c.candidate_id)
+                    )
+                ],
+            })
+            write_json(root / f"{subject}.selected-authoring-packet.json", packet)
+            write_json(root / f"{subject}.selection-qa.json", qa)
 
-    request = args.bundle_dir / "request"
-    request.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(
-        root / f"{args.subject}.selected-authoring-packet.json",
-        request / f"{args.subject}.selected-authoring-packet.json",
-    )
-    shutil.copy2(
-        root / f"{args.subject}.selection-qa.json",
-        request / f"{args.subject}.selection-qa.json",
-    )
-    copy_static_assets(args.bundle_dir, Path.cwd(), args.manual_zip)
-    manifest = {
-        "bundle_version": "astrowoof.llm_handoff.v0.1",
-        "subject": args.subject,
-        "instruction": "Use the prompt and static guidance to edit only permitted prose fields.",
-        "static_files": sorted(
-            str(x.relative_to(args.bundle_dir)).replace("\\", "/")
-            for x in (args.bundle_dir / "static").glob("*")
-        ),
-        "request_files": sorted(
-            str(x.relative_to(args.bundle_dir)).replace("\\", "/")
-            for x in request.glob("*")
-        ),
-        "expected_output": f"natal.{args.subject}.cards.json",
+            subject_bundle = args.bundle_dir / subject
+            request = subject_bundle / "request"
+            request.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(
+                root / f"{subject}.selected-authoring-packet.json",
+                request / f"{subject}.selected-authoring-packet.json",
+            )
+            shutil.copy2(
+                root / f"{subject}.selection-qa.json",
+                request / f"{subject}.selection-qa.json",
+            )
+            copy_static_assets(subject_bundle, repo_root, args.manual_zip)
+            manifest = {
+                "bundle_version": "astrowoof.llm_handoff.v0.2",
+                "subject": subject,
+                "instruction": (
+                    "Use the prompt and static guidance to edit only permitted "
+                    "editorial fields."
+                ),
+                "static_files": sorted(
+                    str(x.relative_to(subject_bundle)).replace("\\", "/")
+                    for x in (subject_bundle / "static").glob("*")
+                ),
+                "request_files": sorted(
+                    str(x.relative_to(subject_bundle)).replace("\\", "/")
+                    for x in request.glob("*")
+                ),
+                "expected_output": f"natal.{subject}.cards.json",
+            }
+            write_json(subject_bundle / "manifest.json", manifest)
+            run_records.append({
+                "subject": subject,
+                "status": "pass",
+                "input_files": input_audit["input_files"],
+                "candidate_count": len(candidates),
+                "selected_count": len(selected),
+                "unselected_count": len(rejected),
+                "synthesized_selected": sum(
+                    x.claim_type == "synthesized_theme" for x in selected
+                ),
+                "registry_unique_term_count": input_audit[
+                    "registry_merge"
+                ]["unique_term_count"],
+                "output": str(root.resolve()),
+                "bundle": str(subject_bundle.resolve()),
+            })
+        except Exception as exc:
+            failed = True
+            run_records.append({
+                "subject": subject,
+                "status": "fail",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            })
+            if args.fail_fast:
+                break
+
+    run_manifest = {
+        "schema_version": "semantic_basis.batch_run.v0.1",
+        "input_package": str(input_package.resolve()),
+        "subject_filter": args.subject,
+        "subject_count": len(packages),
+        "status": "fail" if failed else "pass",
+        "subjects": run_records,
     }
-    write_json(args.bundle_dir / "manifest.json", manifest)
-    print(json.dumps({
-        "subject": args.subject,
-        "candidate_count": len(candidates),
-        "selected_count": len(selected),
-        "synthesized_selected": sum(x.claim_type == "synthesized_theme" for x in selected),
-        "qa": qa["status"],
-        "output": str(root.resolve()),
-        "bundle": str(args.bundle_dir.resolve()),
-    }, indent=2))
+    write_json(args.output_dir / "run-manifest.json", run_manifest)
+    print(json.dumps(run_manifest, ensure_ascii=False, indent=2))
+    if failed:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

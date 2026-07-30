@@ -4,6 +4,9 @@ This document records schema and workflow changes introduced during the AstroWoo
 
 ## Semantic Basis Extractor update pass
 
+**Implementation status:** Completed in the v0.3 extractor update. Retained
+below as the governing acceptance checklist.
+
 Update the SBE-generated card artifact and its validator/schema expectations as follows:
 
 - Hoist `funny_dog_quotes`, `imperative_dog_quotes`, and `applicable_canine_jokes` to the claim’s `card` level. They should be siblings of `no_astro`, `light_astro`, and `full_astro`, not repeated inside every astrology-density object.
@@ -12,6 +15,9 @@ Update the SBE-generated card artifact and its validator/schema expectations as 
 - Assign Sun and Moon placement claims to `["big3_core_traits"]` instead of `["core_traits"]`.
 - Assign the Ascendant placement claim to both its existing angle category and the Big Three category: `["angles", "big3_core_traits"]`.
 - Add `big3_core_traits` to the artifact’s top-level category registry.
+- Add a `theme_group: string` field beside `categories` on every selected
+  aspect and selected synthesized claim. Emit `__LLM_FILL__` in the authoring
+  packet; selected placement claims do not receive this field.
 - Update schemas, examples, prompt contracts, locked-field lists, and validation rules to use `categories`.
 - Validate that all claim categories exist in the top-level category registry.
 - Validate that `categories` is a nonempty array of unique strings.
@@ -30,6 +36,14 @@ Update the LLM authoring packet, handoff prompt, examples, ledger/checkpoint ins
 - Require the editor to assign relevant filters to every claim at:
   - `context_filter_groups.high_level`
   - `context_filter_groups.detail_level`
+- Require the editor to assign a flexible chapter category in `theme_group` for
+  every selected aspect and selected synthesized claim. Theme groups are
+  editorial chapter labels rather than structural categories: the LLM may
+  create subject-appropriate labels that group related aspects and syntheses
+  into a coherent reading sequence.
+- Leave `theme_group` empty in the SBE authoring packet for the LLM to fill,
+  require a nonempty string after authoring, and do not require `theme_group`
+  on selected placement claims.
 - Require assignments to use only names registered for the matching level.
 - Permit multiple relevant assignments, but discourage indiscriminate assignment to most or all filters.
 - Instruct the editor to treat filters as reader-navigation facets, not as restatements of the claim’s structural `categories`.

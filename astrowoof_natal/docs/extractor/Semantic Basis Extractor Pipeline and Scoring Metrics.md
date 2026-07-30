@@ -1,8 +1,8 @@
 # Semantic Basis Extractor Pipeline and Scoring Metrics
 
-**Status:** Proposed and implemented v0.1 design for selecting a closed, story-complete AstroWoof natal card basis from full projected natal graphs.
+**Status:** Implemented v0.3 design for selecting a closed, story-complete AstroWoof natal card basis while preserving the complete unselected candidate space.
 
-**Primary implementation:** `tools/build_projected_semantic_basis.py`
+**Primary implementation:** `src/build_projected_semantic_basis.py`
 
 **Primary output:** `<subject>.selected-authoring-packet.json`
 
@@ -76,7 +76,7 @@ The final validator owns:
 
 ## 3. Inputs
 
-The v0.1 implementation expects four structurally equivalent projected natal graphs:
+The v0.3 implementation expects exactly four structurally equivalent projected natal graphs per subject:
 
 - `general`;
 - `handler`;
@@ -86,6 +86,29 @@ The v0.1 implementation expects four structurally equivalent projected natal gra
 Each graph contains projected objects and relationships. Records retain canonical source references, which allow equivalent records from different voice contexts to be joined into a single semantic identity.
 
 Selection occurs once at the shared semantic level. The four voice materializations are preserved as evidence/context records. This prevents the handler and direct-to-dog decks from selecting different astrological information merely because their projected wording differs.
+
+An input package may contain one subject's four files directly or one immediate
+subdirectory per subject:
+
+```text
+input-package/
+  bre/
+    natal.bre.woof.general.json
+    natal.bre.woof.d2d.json
+    natal.bre.woof.handler.json
+    natal.bre.woof.hybrid.json
+  luna/
+    natal.luna.woof.general.json
+    natal.luna.woof.d2d.json
+    natal.luna.woof.handler.json
+    natal.luna.woof.hybrid.json
+```
+
+Subject identity, source graph identity, target ontology, canonical object
+references, canonical relationship references, and context metadata are
+validated before analysis. The four projected-term registries are merged
+deterministically; identical definitions are deduplicated and conflicts fail
+the subject run.
 
 ## 4. Normalization
 
@@ -99,7 +122,9 @@ Projected relationships are joined using their first canonical `source_relations
 
 ### 4.3 Context completeness
 
-Context completeness contributes to evidence and voice-yield scoring. Missing contexts do not automatically invalidate a candidate, but they lower confidence and must be reported.
+All four contexts are required. A missing, duplicated, mislabeled, or
+structurally incompatible context invalidates that subject package. Complete
+context coverage continues to contribute to evidence and voice-yield scoring.
 
 ### 4.4 Source immutability
 
@@ -134,7 +159,7 @@ Every internal candidate conforms to a shared contract:
 | `candidate_id` | Deterministic internal identity |
 | `candidate_type` | Mandatory basis, projected object, projected relationship, or synthesized motif |
 | `claim_type` | AstroWoof-facing type such as placement, angle, system interaction, or synthesized theme |
-| `category` | Controlled AstroWoof category |
+| `categories` | One or more controlled AstroWoof structural categories |
 | `canonical_claim` | Deterministic semantic draft |
 | `mandatory` | Whether the claim is included before optimization |
 | `semantic_role` | Anchor, primitive, bridge, compressor, reinforcement, or abstraction |
@@ -450,7 +475,7 @@ The compiler fills and locks:
 - coverage and statistics;
 - categories and behavioral domains;
 - claim IDs and types;
-- category;
+- category arrays, including Big Three membership;
 - semantic draft claim;
 - importance, confidence, and strength;
 - priority order;
@@ -469,10 +494,17 @@ The compiler creates explicit `__LLM_FILL__` placeholders for:
 - funny quotes;
 - imperative quotes;
 - applicable canine jokes;
+- chapter-oriented `theme_group` values for selected aspects and syntheses;
+- four summary cards;
+- per-claim context-filter assignments;
 - `dos`;
 - `donts`.
 
 This makes the LLM’s allowed work visible and makes incomplete output mechanically detectable.
+
+Humor placeholders occur once at `card` level rather than being repeated under
+every astrology-density branch. Sun and Moon use `big3_core_traits`; the
+Ascendant uses both `angles` and `big3_core_traits`.
 
 ## 14. LLM editing boundary
 
@@ -485,6 +517,10 @@ The LLM may:
 - make density levels genuinely distinct;
 - write claim-specific humor;
 - write practical, non-diagnostic guidance.
+- assign registered navigation filters to each selected claim;
+- assign flexible chapter `theme_group` labels to selected aspects and
+  synthesized claims;
+- author the four summary cards.
 
 The LLM may not:
 
@@ -496,6 +532,9 @@ The LLM may not:
 - import discarded graph facts;
 - turn symbolic interpretation into diagnosis;
 - invent biography, breed, birth data, gender, or pronouns.
+
+The LLM receives `unselected_claims` for preservation and audit only. Those
+records are locked and may not be imported into selected-card prose.
 
 ## 15. Output artifacts
 
@@ -524,6 +563,10 @@ Contains each optimizer decision, closure bundle, bundle cost, marginal utility,
 `<subject>.selected-authoring-packet.json`
 
 The single per-request dataset delivered to the LLM.
+
+It contains the closed selected `cards`, parallel `unselected_claims`, summary
+templates, context-filter vocabulary, and the complete merged
+`projected_term_registry`.
 
 ### Selection QA
 
@@ -573,7 +616,7 @@ A final edited packet fails editorial QA if:
 - `dos` and `donts` contradict one another;
 - unsupported certainty or diagnosis appears.
 
-## 18. Known v0.1 limitations
+## 18. Known v0.3 limitations
 
 The current implementation is intentionally conservative:
 
@@ -581,7 +624,9 @@ The current implementation is intentionally conservative:
 - centrality uses degree rather than community-aware metrics;
 - semantic redundancy uses coarse signatures and coverage rather than embeddings;
 - evidence independence is approximated;
-- relationship syntheses use up to four strongest records;
+- selected relationship syntheses use up to four strongest records, while
+  fuller maximal-support variants are preserved separately in
+  `unselected_claims`;
 - humor affordance is lexical and low-weighted;
 - final editorial validation is specified but not yet a full linguistic parser;
 - whole-dog voice inference is deferred to the constrained LLM pass.
@@ -593,12 +638,15 @@ These limitations are visible in the artifacts and can be improved independently
 Run:
 
 ```powershell
-python tools/build_projected_semantic_basis.py `
-  --subject bre `
-  --input-dir "C:\dev\github\semantic-projection-core\woof projected natals all contexts" `
+python src/build_projected_semantic_basis.py `
+  --input-package "C:\path\to\projected-subject-package" `
   --output-dir semantic-basis-output `
   --bundle-dir llm-handoff-bundle
 ```
+
+Use `--subject bre` to select one subject from a batch package. Each subject
+receives the same independent output it would receive in a single-subject run,
+and the output root receives an aggregate `run-manifest.json`.
 
 For fixed inputs, weights, generator rules, and implementation version, candidate IDs, scores, selection decisions, and emitted artifacts are deterministic.
 
