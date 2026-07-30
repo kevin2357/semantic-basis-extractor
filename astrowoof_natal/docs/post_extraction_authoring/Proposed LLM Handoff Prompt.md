@@ -1,4 +1,4 @@
-# Proposed LLM Handoff Prompt v0.4
+# Proposed LLM Handoff Prompt v0.4.1
 
 Edit the supplied AstroWoof projected natal authoring packet into the final
 `natal.<subject>.cards.json` artifact.
@@ -15,6 +15,12 @@ writing assignment and complete one entire card before beginning the next.
 Bulk field-by-field generation, sentence-frame substitution, global phrase
 banks, and rotating humor or advice are prohibited.
 
+Do not use Python, JavaScript, templates, string interpolation, deterministic
+transformations, or any other programmatic method to generate reader-facing
+language. Tools may inspect evidence, maintain files, checkpoint, lint, and
+validate only. Compose each editable prose field through fresh reasoning about
+that exact card.
+
 Use only the selected `cards` and their retained evidence when authoring the 50
 ordinary claim cards. The top-level `unselected_claims` collection must not
 leak into those selected cards.
@@ -22,6 +28,20 @@ leak into those selected cards.
 The four top-level summary cards are the sole exception: they intentionally
 summarize the complete natal chart and may use both selected and unselected
 claims.
+
+## Phase 0: understand the complete dog
+
+Before authoring card 1, create the mandatory
+`<subject>.whole-chart-authoring-portrait.json` described by the execution
+protocol. Read the complete chart basis and synthesize the dog's overall
+temperament, recurring motifs, tensions, behavioral rhythms, relationship
+dynamics, strengths, growth edges, tone, and comic affordances with source
+claim IDs.
+
+Do not write any card prose until this portrait is complete. Use it to keep the
+deck recognizably about one individual dog, but never turn portrait motifs into
+fixed sentences appended across cards. Ordinary cards remain limited to their
+own selected evidence.
 
 ## Preserve exactly
 
@@ -44,6 +64,7 @@ For every selected claim:
 
 - decode the canonical claim and retained evidence through the registry;
 - define its unique editorial job in the private ledger;
+- distinguish that job concretely from its two closest selected neighbors;
 - fill all handler, direct-to-dog, and hybrid headlines and bodies;
 - fill all no-, light-, and full-astrology density branches;
 - fill `dos` and `donts`;
@@ -57,6 +78,10 @@ density branches.
 Every reader-facing line fails when it could fit five other claims after
 changing only the dog's name or projected terms. Rewrite the complete line or
 paragraph rather than disguising a repeated frame with a new opening.
+
+A ledger entry fails when its unique job merely says "Explain X through scene
+Y" or otherwise substitutes terms into a reusable meta-description. Concrete
+scenes must be evidence-supported, not assigned from a rotating scene pool.
 
 ## Reader-facing language
 
@@ -168,11 +193,16 @@ by the execution protocol. Resume from the first unfinished priority ID after
 an interruption. Card 50 must receive the same care as card 1.
 
 After every five cards, run the protocol's repetition and integrity audit.
+Run `lint_astrowoof_editorial.py`, save the checkpoint audit artifact, and
+correct errors and substantiated warnings before continuing automatically.
 After all cards, review the complete deck for repeated openings, endings,
-headline frames, advice, imagery, and humor. Review every hybrid body alone.
+headline frames, advice, imagery, claim-type templates, and humor. Review every
+hybrid body alone.
 
-Return one complete parseable JSON file plus the completed authoring ledger and
-validation report. Do not return samples, excerpts, or a partial deck.
+Return one complete parseable JSON file plus the whole-chart authoring
+portrait, completed authoring ledger, checkpoint audit files, final editorial
+linter report, and validation report. Do not return samples, excerpts, or a
+partial deck.
 
 Run:
 

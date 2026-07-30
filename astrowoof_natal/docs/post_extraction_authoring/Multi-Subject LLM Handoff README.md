@@ -1,4 +1,4 @@
-# Multi-Subject LLM Handoff v0.4
+# Multi-Subject LLM Handoff v0.4.1
 
 This root contains one or more independent AstroWoof subject handoffs.
 
@@ -18,6 +18,11 @@ This root contains one or more independent AstroWoof subject handoffs.
 9. Keep a separate working deck, checkpoint, and editorial ledger per subject.
 10. If interrupted, resume the current subject at its first unfinished
     priority ID. Do not restart completed subjects or shorten later subjects.
+11. Complete the subject's whole-chart authoring portrait before card 1.
+12. Run and save the required editorial-linter audit after each five-card
+    checkpoint without waiting for user approval.
+13. Never use scripts or deterministic templates to generate reader-facing
+    prose.
 
 Continue automatically until every subject is complete.
 
@@ -26,7 +31,9 @@ Continue automatically until every subject is complete.
 For each subject, deliver:
 
 - `natal.<subject>.cards.json`;
+- `<subject>.whole-chart-authoring-portrait.json`;
 - `<subject>.authoring-ledger.json`;
+- `<subject>.final-editorial-lint.json`;
 - `<subject>.validation-report.json`.
 
 Package all completed subject artifacts together only after every deck passes

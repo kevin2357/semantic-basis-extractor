@@ -591,6 +591,7 @@ The LLM bundle separates reusable static material from per-request data:
 llm-handoff-bundle/
     README.md
     manifest.json
+    lint_astrowoof_editorial.py
     validate_astrowoof_editorial.py
     bre/
         manifest.json
@@ -612,10 +613,13 @@ directory change per dog; static instructions are copied from versioned
 repository sources.
 
 The execution protocol is mandatory. It requires persistent working files,
+an integrated whole-chart authoring portrait before card 1,
 one-complete-card-at-a-time authoring, semantic briefs, unique editorial jobs,
-registry decoding, separate voice functions, claim-specific humor, repetition
-checkpoints, and a whole-deck audit. This prevents structurally complete output
-from satisfying the handoff through sentence-frame substitution.
+registry decoding, separate voice functions, claim-specific humor, saved
+five-card linter gates, and a whole-deck audit. Scripts may manage artifacts and
+validation but may not generate reader-facing prose. This prevents
+structurally complete output from satisfying the handoff through
+sentence-frame substitution.
 
 ## 17. QA requirements
 

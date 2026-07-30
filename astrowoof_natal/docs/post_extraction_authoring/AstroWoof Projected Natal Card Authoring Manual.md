@@ -826,3 +826,42 @@ card-ID migration rules, controlled vocabularies, application rendering
 contracts, release packaging, and versioned example fixtures. These should
 continue to evolve from observed production failures and successful decks
 rather than speculative rules alone.
+
+---
+
+## 40. Whole-chart understanding before card authoring
+
+The author must form an integrated understanding of the subject before writing
+the first card. This is not merely the Summary-card step. A complete natal
+portrait establishes the recurring motifs, tensions, counterweights,
+behavioral sequences, relationship dynamics, strengths, growth edges, tone,
+and uncertainties that make the deck belong to one individual dog.
+
+The portrait is private authoring context and retains supporting claim IDs. It
+may use the complete chart basis, including unselected claims. Ordinary cards
+remain constrained to their own selected evidence: the portrait guides
+interpretive emphasis and voice but does not authorize unsupported facts.
+
+A whole-chart portrait must not become a phrase bank. Appending one
+subject-specific refrain to many unrelated cards creates the appearance of
+individuality while flattening the deck internally. Each card must express the
+subject through the exact way its own claim participates in the larger
+portrait.
+
+---
+
+## 41. Tool boundary and inspectable audit gates
+
+Deterministic tools may read and preserve evidence, manipulate JSON, maintain
+checkpoints, calculate repetition, lint language, and run structural
+validation. They may not generate reader-facing prose through templates,
+interpolation, phrase rotation, or claim-type renderers.
+
+After every five cards, the author saves an editorial audit artifact containing
+the deterministic linter report and a manual disposition of its warnings. The
+single subject request continues automatically after corrections; no user
+round trip is required. These gates make internal progress inspectable without
+turning one dog into many separately billed authoring requests.
+
+The final audit covers every reader-facing field, including Summary cards,
+advice, and humor, and compares all subjects in a multi-subject request.

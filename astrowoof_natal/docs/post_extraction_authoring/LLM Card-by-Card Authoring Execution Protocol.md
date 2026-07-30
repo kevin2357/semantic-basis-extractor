@@ -1,4 +1,4 @@
-# LLM Card-by-Card Authoring Execution Protocol v0.4
+# LLM Card-by-Card Authoring Execution Protocol v0.4.1
 
 This protocol governs the working method used to turn one AstroWoof selected
 authoring packet into a finished deck. It is mandatory. The authoring manual
@@ -19,6 +19,12 @@ Never write all headlines first, all handler bodies second, all jokes third, or
 otherwise process the deck by field. Never create a global phrase pool,
 headline bank, advice bank, quote bank, joke bank, or reusable collection of
 sentence frames.
+
+Scripts and deterministic transformations may inspect, copy, merge, save,
+checkpoint, lint, and validate artifacts. They must never generate, paraphrase,
+expand, rotate, or slot-fill reader-facing prose. Every headline, body, `do`,
+`dont`, quote, joke, and summary paragraph must be composed through a fresh
+language-model reasoning step for its exact editorial job.
 
 ## 2. Persistent working state
 
@@ -51,6 +57,8 @@ For every completed claim, the private ledger records:
 - canonical claim;
 - one-sentence decoded semantic brief;
 - the card's unique editorial job;
+- the two closest neighboring claim IDs and a concrete explanation of how this
+  card's reader value differs from each;
 - a concrete behavioral scene or observable expression;
 - the distinct job of handler, direct-to-dog, and hybrid prose;
 - astrological sources chosen for light and full density;
@@ -59,6 +67,11 @@ For every completed claim, the private ledger records:
 - humor lines;
 - headline structures and distinctive imagery;
 - overlap warnings and card-level QA status.
+
+The unique editorial job must be a content distinction, not a reusable frame
+such as "Explain X through scene Y without collapsing it into neighboring
+claims." The behavioral scene must be supported by the claim; never assign a
+scene from a rotating pool merely to manufacture specificity.
 
 The ledger is working material, not website content.
 
@@ -81,7 +94,46 @@ If an execution or response limit approaches:
 
 Do not keep authoritative work only in conversation memory.
 
-## 4. One-card procedure
+## 4. Phase 0: complete natal portrait
+
+Before writing any card, read the complete subject basis:
+
+- whole-graph analysis;
+- all 50 selected cards and their evidence;
+- all `unselected_claims`;
+- all four projected contexts;
+- the complete projected-term registry.
+
+Create `<subject>.whole-chart-authoring-portrait.json`. This private,
+non-reader-facing artifact must contain:
+
+- a concise integrated portrait of the dog's temperament;
+- eight to twelve major recurring motifs;
+- important tensions, counterweights, and apparent contradictions;
+- characteristic behavioral rhythms and likely sequences;
+- relationship and handler-dog dynamics;
+- learning, regulation, play, trust, communication, pack, and adventure themes;
+- likely strengths and growth edges;
+- distinctions between superficially similar motifs;
+- tone, warmth, comic affordances, and imagery appropriate to this subject;
+- factual cautions and uncertainties;
+- source claim IDs supporting each statement.
+
+Do not write card prose during Phase 0. The portrait must synthesize rather than
+list registry terms, and every statement must remain traceable to the complete
+chart basis.
+
+Use the portrait as a governing context for all later cards. It helps each card
+sound like the same individual dog without appending one fixed subject-specific
+sentence to many cards. A portrait motif may guide a card only when that card's
+selected evidence independently supports it. `unselected_claims` may shape the
+overall understanding and Summary cards but must never leak unsupported facts
+into ordinary selected cards.
+
+Before card 1, compare the portrait with the Bre gold reference for depth and
+integration only. Do not borrow Bre's facts, phrases, humor, or voice.
+
+## 5. One-card procedure
 
 For the current card only:
 
@@ -92,23 +144,26 @@ For the current card only:
    other relevant entry in `projected_term_registry`.
 5. Write a private one-sentence semantic brief in natural behavioral language.
 6. Define the card's unique editorial job.
-7. Compare that job with all completed ledger entries.
-8. Choose a concrete dog-life expression or relational scene when the evidence
+7. State how this job differs from the two most semantically adjacent selected
+   claims, naming their claim IDs and the behavioral distinction.
+8. Compare that job with all completed ledger entries and the whole-chart
+   portrait.
+9. Choose a concrete dog-life expression or relational scene when the evidence
    supports one.
-9. Write all handler renderings.
-10. Write all direct-to-dog renderings independently.
-11. Write all hybrid renderings as reciprocal dog-human interactions.
-12. Write specific `dos` and `donts`.
-13. Design one claim-specific humor set.
-14. Assign only strongly relevant context filters and record why.
-15. Run card-level QA.
-16. Save the card, ledger, and checkpoint.
-17. Only then begin the next priority ID.
+10. Write all handler renderings.
+11. Write all direct-to-dog renderings independently.
+12. Write all hybrid renderings as reciprocal dog-human interactions.
+13. Write specific `dos` and `donts`.
+14. Design one claim-specific humor set.
+15. Assign only strongly relevant context filters and record why.
+16. Run card-level QA.
+17. Save the card, ledger, and checkpoint.
+18. Only then begin the next priority ID.
 
 The private semantic brief must decode the claim. It must not merely replace
 underscores with spaces or concatenate registry labels.
 
-## 5. Universal anti-template test
+## 6. Universal anti-template test
 
 Every reader-facing line fails when it could fit five other claims after
 changing only the dog's name or projected terms.
@@ -128,7 +183,7 @@ Reject and rewrite prose when:
 Changing an opening clause does not repair an underlying repeated structure.
 Rewrite the paragraph as a complete unit.
 
-## 6. Voice contracts
+## 7. Voice contracts
 
 ### 6.1 Handler
 
@@ -191,7 +246,7 @@ Across each set of 50 hybrid bodies at a density:
 These are ceilings, not target quotas. Review hybrid bodies alone as a deck. A
 reader should recognize hybrid mode without seeing its label.
 
-## 7. Astrology-density contracts
+## 8. Astrology-density contracts
 
 All densities express the same semantic claim.
 
@@ -218,7 +273,7 @@ evidence. Explain how the components combine while still writing for a reader.
 Do not dump provenance or discuss claim selection, evidence retention,
 semantic profiles, models, graphs, or projection mechanics.
 
-## 8. Internal term translation
+## 9. Internal term translation
 
 Use `projected_term_registry` actively. Treat each registered compound as a
 semantic unit with long description, facets, operator guidance, and output
@@ -237,7 +292,7 @@ Write the decoded behavior:
 Never use `unspecified pattern`, `whole personality`, `recurring pattern
 pattern`, `mode mode`, or similar extraction scaffolding as finished prose.
 
-## 9. Practical guidance
+## 10. Practical guidance
 
 Each `do` and `dont` must follow from the exact claim and describe something
 observable or usable. Prefer recognizable moments involving greetings, walks,
@@ -251,7 +306,7 @@ an outlet looks like in this claim's situation.
 
 Do not turn symbolic interpretation into diagnosis or rigid prescription.
 
-## 10. Humor
+## 11. Humor
 
 Each claim receives one stable card-level humor set:
 
@@ -277,22 +332,29 @@ a stock frame. Avoid defaulting to paperwork, departments, protocols, fine
 print, committees, snacks, treats, or squirrels. These may appear rarely when
 uniquely appropriate but must not become production-line language.
 
-## 11. Five-card checkpoints
+## 12. Five-card checkpoint gates
 
 After every five completed cards:
 
 1. parse the complete working JSON;
 2. confirm card count, order, and locked fields;
 3. reconcile completed IDs with the checkpoint;
-4. scan exact duplicate sentences and humor;
-5. inspect repeated openings, endings, headline structures, advice, imagery,
-   and comic mechanisms;
-6. correct repetition before continuing;
-7. save all working files.
+4. run `lint_astrowoof_editorial.py` against the working deck;
+5. write `<subject>.checkpoint-N-editorial-audit.json` containing the linter
+   report plus a manual review of every warning;
+6. scan exact duplicate sentences and humor;
+7. inspect repeated openings, endings, headline structures, advice, imagery,
+   comic mechanisms, and claim-type-correlated sentence frames;
+8. compare the five new ledger jobs with adjacent claims and reject generic
+   "Explain X through scene Y" distinctions;
+9. correct all errors and every substantiated warning before continuing;
+10. save all working files and the externally inspectable audit artifact.
 
-Do not stop merely because a checkpoint was reached.
+Do not stop merely because a checkpoint was reached and do not wait for user
+approval. The audit gate is internal to the single subject request but must be
+saved for later inspection.
 
-## 12. Theme groups and filters
+## 13. Theme groups and filters
 
 Read the full selected aspect set before finalizing aspect `theme_group`
 labels, and independently read the full selected synthesis set before
@@ -308,7 +370,7 @@ coverage, or force a match merely to avoid an empty array.
 After all cards are authored, review every filter's result set as a collection
 and remove tangential matches.
 
-## 13. Summary-card phase
+## 14. Summary-card phase
 
 Summary cards are authored only after the agent understands the complete
 subject. They may use selected cards, `unselected_claims`, whole-graph
@@ -330,7 +392,7 @@ When pronouns are absent, use the dog's name and grammatically neutral
 constructions. Do not manufacture labels such as "You: Who They Are" or
 "`<Dog>` Together."
 
-## 14. Global final pass
+## 15. Global final pass
 
 After all 50 cards and four summaries are complete:
 
@@ -347,8 +409,13 @@ After all 50 cards and four summaries are complete:
 11. compare summaries against other subjects in the same batch for name-swap
     boilerplate;
 12. confirm locked data and the registry remain unchanged;
-13. run the official validator and correct every error;
-14. save the final deck, completed ledger, and validation report.
+13. run the editorial linter over all reader-facing fields and correct
+    substantiated warnings;
+14. when multiple subjects share a request, run the linter's cross-subject
+    audit across complete decks, including summaries, advice, and humor;
+15. run the official validator and correct every error;
+16. save the final deck, whole-chart portrait, completed ledger, checkpoint
+    audits, linter report, and validation report.
 
 Schema validation proves structural safety, not editorial quality. Completion
 requires both.

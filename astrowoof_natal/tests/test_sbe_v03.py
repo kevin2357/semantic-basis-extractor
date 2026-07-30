@@ -26,6 +26,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     qa_report,
 )
 from merge_projected_term_registries import merge  # noqa: E402
+from lint_astrowoof_editorial import lint_deck  # noqa: E402
 from validate_astrowoof_editorial import main as validate_editorial  # noqa: E402
 
 
@@ -307,6 +308,22 @@ class TestBrePacket(unittest.TestCase):
             self.packet, edited, "--phase", "authoring"
         )
         self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_editorial_linter_detects_claim_type_templates(self) -> None:
+        edited = complete_packet(self.packet)
+        placement_cards = [
+            card for card in edited["cards"]
+            if card["claim_type"] == "placement"
+        ]
+        for card in placement_cards:
+            card["card"]["no_astro"]["body"]["handler"] = (
+                "This repeated placement template introduces the same prose "
+                "for every placement card despite different evidence."
+            )
+        report = lint_deck(Path("templated.json"), edited)
+        codes = {item["code"] for item in report["warnings"]}
+        self.assertIn("duplicate_body", codes)
+        self.assertIn("claim_type_template", codes)
 
     def test_polish_phase_locks_organizational_fields(self) -> None:
         baseline = complete_packet(self.packet)

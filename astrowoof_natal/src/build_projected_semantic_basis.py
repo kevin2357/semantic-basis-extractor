@@ -1454,6 +1454,9 @@ def main() -> None:
     validator = repo_root / "src" / "validate_astrowoof_editorial.py"
     if validator.exists():
         shutil.copy2(validator, args.bundle_dir / validator.name)
+    editorial_linter = repo_root / "src" / "lint_astrowoof_editorial.py"
+    if editorial_linter.exists():
+        shutil.copy2(editorial_linter, args.bundle_dir / editorial_linter.name)
     run_records = []
     failed = False
 
@@ -1521,7 +1524,7 @@ def main() -> None:
             )
             copy_static_assets(subject_bundle, repo_root, args.manual_zip)
             manifest = {
-                "bundle_version": "astrowoof.llm_handoff.v0.4",
+                "bundle_version": "astrowoof.llm_handoff.v0.4.1",
                 "subject": subject,
                 "instruction": (
                     "Use the prompt and static guidance to edit only permitted "
@@ -1585,7 +1588,7 @@ def main() -> None:
     write_json(
         args.bundle_dir / "manifest.json",
         {
-            "bundle_version": "astrowoof.llm_handoff.v0.4",
+            "bundle_version": "astrowoof.llm_handoff.v0.4.1",
             "instruction": (
                 "Read README.md, then process each passing subject independently "
                 "with its mandatory card-by-card execution protocol."
@@ -1609,6 +1612,7 @@ def main() -> None:
                 for record in run_records
             ],
             "validator": "validate_astrowoof_editorial.py",
+            "editorial_linter": "lint_astrowoof_editorial.py",
         },
     )
     print(json.dumps(run_manifest, ensure_ascii=False, indent=2))
