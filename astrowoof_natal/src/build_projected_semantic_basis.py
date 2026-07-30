@@ -1535,6 +1535,12 @@ def render_story_writing_template(
         "whole-dog characterization and your semantic memory of completed "
         "stories so the dog stays coherent and the lessons do not repeat.",
         "",
+        "Before writing prose, identify the architecture used by the previous "
+        "story: its opening move, paragraph progression, advice transition, "
+        "ending, headline style, and humor mechanism. Deliberately choose a "
+        "different architecture for this story. Do not replace claim-specific "
+        "nouns inside the previous story's structure.",
+        "",
         "## Editorial Plan",
         "",
         _field_block("Center of Gravity", "plan.center_of_gravity"),
@@ -2182,6 +2188,23 @@ def build_story_workspace(
         / "AstroWoof Story Workspace Authoring Brief.md"
     )
     shutil.copy2(brief_source, subject_bundle / "AUTHORING BRIEF.md")
+    guiding_lights_source = (
+        repo_root / "docs" / "post_extraction_authoring"
+        / "AstroWoof Authoring Guiding Lights.md"
+    )
+    shutil.copy2(
+        guiding_lights_source,
+        subject_bundle / "GUIDING LIGHTS.md",
+    )
+    for script_name in (
+        "assemble_authoring_workspace.py",
+        "lint_astrowoof_editorial.py",
+        "lint_authoring_pass.py",
+    ):
+        shutil.copy2(
+            repo_root / "src" / script_name,
+            subject_bundle / script_name,
+        )
     display_name = (
         packet["subject"].get("display_name")
         or packet["subject"].get("subject_id")
@@ -2223,7 +2246,39 @@ def build_story_workspace(
     (subject_bundle / "START HERE.md").write_text(
         f"# Start Here — {pass_label}\n\n"
         f"## Assignment\n\n{assignment}\n\n"
+        "## Read first\n\n"
+        "Read `GUIDING LIGHTS.md` as the creative doctrine for this pass. "
+        "Its independent-card standard is part of the assignment, not "
+        "optional inspiration.\n\n"
         f"## Working sequence\n\n{sequence}\n\n"
+        "## Mechanical acceptance requirements\n\n"
+        "Your completed pass will be checked automatically before it is "
+        "accepted.\n\n"
+        "- Do not use a recurring sentence, sentence fragment, transition, "
+        "conclusion, headline pattern, or explanatory frame across cards.\n"
+        "- Every headline must be written specifically for its card. Density "
+        "and audience labels are not headline templates.\n"
+        "- Do not give every handler story the same progression, every "
+        "direct-to-dog story the same reassurance, or every hybrid story the "
+        "same dog-and-human exchange.\n"
+        "- Do not append stock interpretive sentences such as “this pattern "
+        "can express itself in more than one way,” “the practical task is,” "
+        "or “repetition turns the next step into trust.”\n"
+        "- No reader-facing field may be copied exactly between cards.\n"
+        "- A sequence of twelve words appearing in three different cards "
+        "automatically rejects the entire pass.\n\n"
+        "Consistency belongs in the characterization of the dog, not in the "
+        "architecture of the prose.\n\n"
+        "## Required pre-delivery check\n\n"
+        "After completing every field, run:\n\n"
+        "```text\n"
+        "python lint_authoring_pass.py . --output "
+        "authoring-pass-acceptance.json\n"
+        "```\n\n"
+        "A report status of `reject` means the pass is not complete. Rewrite "
+        "the identified cross-card reuse and run the checker again until its "
+        "status is `accept`. Include `authoring-pass-acceptance.json` in the "
+        "returned ZIP.\n\n"
         "Preserve every field marker and replace every unfinished field. "
         "Return this complete pass directory as a ZIP archive.\n",
         encoding="utf-8",

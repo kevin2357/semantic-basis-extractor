@@ -440,7 +440,28 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue((workspace / "DOG DETAILS.md").exists())
             self.assertTrue((workspace / "FULL CHART BASIS.md").exists())
             self.assertTrue((workspace / "WRITE WHOLE DOG PROFILE.md").exists())
+            self.assertTrue((workspace / "GUIDING LIGHTS.md").exists())
+            self.assertTrue((workspace / "lint_authoring_pass.py").exists())
+            self.assertTrue(
+                (workspace / "lint_astrowoof_editorial.py").exists()
+            )
+            self.assertTrue(
+                (workspace / "assemble_authoring_workspace.py").exists()
+            )
             self.assertFalse((workspace / "WHOLE DOG CONTEXT.md").exists())
+            start_here = (workspace / "START HERE.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("Mechanical acceptance requirements", start_here)
+            self.assertIn("twelve words", start_here)
+            self.assertIn("python lint_authoring_pass.py .", start_here)
+            story_template = next(
+                (workspace / "cards").rglob("WRITE THIS CARD.md")
+            ).read_text(encoding="utf-8")
+            self.assertIn(
+                "Deliberately choose a different architecture",
+                story_template,
+            )
             profile = workspace / "WRITE WHOLE DOG PROFILE.md"
             profile.write_text(
                 profile.read_text(encoding="utf-8").replace(
