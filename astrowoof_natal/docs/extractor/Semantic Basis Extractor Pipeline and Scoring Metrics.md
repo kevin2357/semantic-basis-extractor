@@ -644,12 +644,34 @@ SBE supports two instruction profiles:
   density contracts, independent-card standard, filters, theme groups,
   summaries, linting, and final validation, but does not require auxiliary
   portrait, ledger, or scheduled checkpoint artifacts.
+- `--handoff-profile authoring-workspace` removes JSON from the LLM writing
+  surface. It emits one numbered Markdown directory per claim, containing a
+  read-only claim/evidence brief and one marked writing file. A deterministic
+  assembler merges the returned Markdown into the locally retained authoring
+  packet. `--workspace-card-limit 10` physically limits an experimental
+  workspace to the first ten stories.
 
 Compact mode treats checkpointing as interruption recovery rather than the
 normal unit of authorship. It exists for execution environments where the
 rigorous protocol's operational surface consumes disproportionate authoring
 time or triggers premature scope refusal. Individual output decks are
 structurally identical across profiles.
+
+The story-workspace profile makes the card—not the JSON schema—the visible
+unit of authorship. The LLM never receives the selected authoring packet in
+that bundle and is instructed to return authored Markdown rather than JSON.
+Locked semantics remain local. After authoring, run:
+
+```text
+python src/assemble_authoring_workspace.py \
+  semantic-basis-output/<subject>/<subject>.selected-authoring-packet.json \
+  returned-workspace/<subject> \
+  natal.<subject>.cards.json
+```
+
+Use `--allow-partial` for limited experiments. A full workspace includes all
+50 cards and four Summary directories; a limited workspace intentionally
+omits later cards and summaries.
 
 ## 17. QA requirements
 

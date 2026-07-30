@@ -1354,6 +1354,403 @@ def write_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _markdown_scalar(value: Any) -> str:
+    if value is None:
+        return "not specified"
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, ensure_ascii=False, sort_keys=True)
+    return str(value)
+
+
+def _markdown_data(value: Any, indent: int = 0) -> list[str]:
+    prefix = "  " * indent
+    if isinstance(value, dict):
+        lines: list[str] = []
+        for key, item in value.items():
+            label = str(key).replace("_", " ")
+            if isinstance(item, (dict, list)) and item:
+                lines.append(f"{prefix}- **{label}:**")
+                lines.extend(_markdown_data(item, indent + 1))
+            else:
+                lines.append(f"{prefix}- **{label}:** {_markdown_scalar(item)}")
+        return lines
+    if isinstance(value, list):
+        lines = []
+        for item in value:
+            if isinstance(item, (dict, list)):
+                lines.append(f"{prefix}-")
+                lines.extend(_markdown_data(item, indent + 1))
+            else:
+                lines.append(f"{prefix}- {_markdown_scalar(item)}")
+        return lines
+    return [f"{prefix}- {_markdown_scalar(value)}"]
+
+
+def _collect_registry_terms(value: Any, registry_terms: dict[str, Any]) -> set[str]:
+    found: set[str] = set()
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in registry_terms:
+                found.add(key)
+            found.update(_collect_registry_terms(item, registry_terms))
+    elif isinstance(value, list):
+        for item in value:
+            found.update(_collect_registry_terms(item, registry_terms))
+    elif isinstance(value, str):
+        if value in registry_terms:
+            found.add(value)
+        for token in re.findall(r"[a-z][a-z0-9_]+", value.lower()):
+            if token in registry_terms:
+                found.add(token)
+    return found
+
+
+def _field_block(label: str, field_path: str) -> str:
+    return (
+        f"### {label}\n\n"
+        f"<!-- BEGIN FIELD: {field_path} -->\n"
+        "__WRITE__\n"
+        f"<!-- END FIELD: {field_path} -->"
+    )
+
+
+def render_story_writing_template(
+    item: dict[str, Any],
+    *,
+    summary: bool = False,
+) -> str:
+    title = "Summary" if summary else f"Story {item.get('priority_id')}"
+    lines = [
+        f"# {title} Writing File",
+        "",
+        "Replace every `__WRITE__` value. Preserve all field markers exactly.",
+        "Write no reader-facing prose outside marked fields.",
+        "",
+        "## Editorial Plan",
+        "",
+        _field_block("Center of Gravity", "plan.center_of_gravity"),
+        "",
+        _field_block("Recognizable Behavior", "plan.recognizable_behavior"),
+        "",
+        _field_block("Likely Misunderstanding", "plan.likely_misunderstanding"),
+        "",
+        _field_block("Grounded Surprise", "plan.grounded_surprise"),
+        "",
+        _field_block("Distinct From Neighboring Stories", "plan.neighbor_distinction"),
+        "",
+        _field_block("Chosen Creative Approach", "plan.creative_approach"),
+        "",
+    ]
+    for density, density_label in (
+        ("no_astro", "No Astrology"),
+        ("light_astro", "Light Astrology"),
+        ("full_astro", "Full Astrology"),
+    ):
+        lines.extend([f"## {density_label}", ""])
+        for voice, voice_label in (
+            ("handler", "Handler"),
+            ("direct_to_dog", "Direct to Dog"),
+            ("hybrid", "Hybrid"),
+        ):
+            lines.extend(
+                [
+                    _field_block(
+                        f"{voice_label} Headline",
+                        f"{density}.headline.{voice}",
+                    ),
+                    "",
+                    _field_block(
+                        f"{voice_label} Story",
+                        f"{density}.body.{voice}",
+                    ),
+                    "",
+                ]
+            )
+    lines.extend(["## Practical Guidance", ""])
+    for index in range(len(item.get("dos", []))):
+        lines.extend(
+            [_field_block(f"Do {index + 1}", f"dos.{index}"), ""]
+        )
+    for index in range(len(item.get("donts", []))):
+        lines.extend(
+            [_field_block(f"Don't {index + 1}", f"donts.{index}"), ""]
+        )
+    lines.extend(["## Humor", ""])
+    for field_name, label in (
+        ("funny_dog_quotes", "Funny Dog Quote"),
+        ("imperative_dog_quotes", "Imperative Dog Quote"),
+        ("applicable_canine_jokes", "Canine Joke"),
+    ):
+        humor = item.get("card", item).get(field_name, [])
+        for index in range(len(humor)):
+            lines.extend(
+                [
+                    _field_block(
+                        f"{label} {index + 1}",
+                        f"{field_name}.{index}",
+                    ),
+                    "",
+                ]
+            )
+    if not summary:
+        lines.extend(["## Organization", ""])
+        lines.extend(
+            [
+                _field_block(
+                    "High-Level Filters — one registered value per line",
+                    "context_filter_groups.high_level",
+                ),
+                "",
+                _field_block(
+                    "Detail-Level Filters — one registered value per line",
+                    "context_filter_groups.detail_level",
+                ),
+                "",
+            ]
+        )
+        if "theme_group" in item:
+            lines.extend(
+                [_field_block("Theme Group", "theme_group"), ""]
+            )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_claim_and_evidence(
+    card: dict[str, Any],
+    packet: dict[str, Any],
+) -> str:
+    registry_terms = packet["projected_term_registry"].get("terms", {})
+    relevant_terms = _collect_registry_terms(card.get("evidence", []), registry_terms)
+    relevant_terms.update(_collect_registry_terms(card.get("relations", []), registry_terms))
+    cards_by_id = {item["claim_id"]: item for item in packet["cards"]}
+    dependency_ids: list[str] = []
+    for evidence in card.get("evidence", []):
+        dependency_ids.extend(evidence.get("claim_ids", []))
+    nearby_ids = list(dict.fromkeys(dependency_ids))
+    position = card["priority_id"] - 1
+    for neighbor_index in (position - 1, position + 1):
+        if 0 <= neighbor_index < len(packet["cards"]):
+            nearby_ids.append(packet["cards"][neighbor_index]["claim_id"])
+    nearby_ids = [
+        claim_id for claim_id in dict.fromkeys(nearby_ids)
+        if claim_id != card["claim_id"] and claim_id in cards_by_id
+    ]
+
+    lines = [
+        f"# Story {card['priority_id']:03d}: {card['claim_id']}",
+        "",
+        "This file is read-only source material. Write in `WRITE THIS CARD.md`.",
+        "",
+        "## Exact assignment",
+        "",
+        f"- **Claim type:** {card['claim_type']}",
+        f"- **Canonical claim:** {card['canonical_claim']}",
+        f"- **Categories:** {', '.join(card.get('categories', []))}",
+        f"- **Importance:** {card.get('importance')}",
+        f"- **Confidence:** {card.get('confidence')}",
+        f"- **Strength:** {card.get('strength')}",
+        "",
+        "## Evidence and underlying astrology",
+        "",
+    ]
+    for evidence_index, evidence in enumerate(card.get("evidence", []), 1):
+        lines.extend(
+            [
+                f"### Evidence {evidence_index}: "
+                f"{evidence.get('kind', 'unknown')} ({evidence.get('role', 'unspecified')})",
+                "",
+            ]
+        )
+        if evidence.get("source_refs"):
+            lines.append(
+                f"- **Astrological source references:** "
+                f"{', '.join(evidence['source_refs'])}"
+            )
+        if evidence.get("claim_ids"):
+            lines.append(
+                f"- **Required selected dependencies:** "
+                f"{', '.join(evidence['claim_ids'])}"
+            )
+        for context, wrapper in evidence.get("context_records", {}).items():
+            record = wrapper.get("record", {})
+            lines.extend(
+                [
+                    f"- **{context.replace('_', ' ')} voice projection:**",
+                    f"  - relevance: {wrapper.get('projection_relevance_score')}",
+                    f"  - structural strength: {wrapper.get('structural_strength_score')}",
+                ]
+            )
+            for key in ("object_type", "name", "relationship_type", "operators", "theme_tags"):
+                if record.get(key) not in (None, [], {}):
+                    lines.append(
+                        f"  - {key.replace('_', ' ')}: "
+                        f"{_markdown_scalar(record[key])}"
+                    )
+            attributes = record.get("attributes") or {}
+            for key, value in attributes.items():
+                if key in {"projection_relevance_components", "guardrails"}:
+                    continue
+                if value not in (None, [], {}):
+                    lines.append(
+                        f"  - {key.replace('_', ' ')}: {_markdown_scalar(value)}"
+                    )
+        lines.append("")
+    lines.extend(["## Relevant projected-term definitions", ""])
+    if relevant_terms:
+        for term in sorted(relevant_terms):
+            entry = registry_terms[term]
+            lines.extend(
+                [
+                    f"### {term}",
+                    "",
+                    f"- **Canonical label:** {entry.get('canonical_label', term)}",
+                    f"- **Meaning:** {entry.get('long_description') or entry.get('short_description')}",
+                    f"- **Core operators:** {', '.join(entry.get('core_operators', [])) or 'not specified'}",
+                    f"- **Semantic facets:** {', '.join(entry.get('semantic_facets', [])) or 'not specified'}",
+                    "",
+                ]
+            )
+    else:
+        lines.extend(["No registry entries were directly referenced.", ""])
+    lines.extend(["## Nearby selected stories", ""])
+    if nearby_ids:
+        for claim_id in nearby_ids:
+            neighbor = cards_by_id[claim_id]
+            lines.append(
+                f"- **Story {neighbor['priority_id']:03d} — {claim_id}:** "
+                f"{neighbor['canonical_claim']}"
+            )
+    else:
+        lines.append("- No explicit dependencies; distinguish this story from adjacent priorities.")
+    lines.extend(
+        [
+            "",
+            "## Allowed filter vocabulary",
+            "",
+            "### High level",
+            "",
+            *[
+                f"- {item['name']}"
+                for item in packet["context_filter_groups"]
+                if item["level"] == "high"
+            ],
+            "",
+            "### Detail level",
+            "",
+            *[
+                f"- {item['name']}"
+                for item in packet["context_filter_groups"]
+                if item["level"] == "detail"
+            ],
+            "",
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_whole_dog_context(packet: dict[str, Any]) -> str:
+    analysis = packet["whole_graph_analysis"]
+    lines = [
+        f"# Whole Dog Context: {packet['subject']}",
+        "",
+        "Use this file to understand the complete dog. Ordinary story claims remain "
+        "bounded by their own evidence files.",
+        "",
+        "## Whole-graph voice brief",
+        "",
+        *_markdown_data(analysis.get("whole_graph_voice_brief", {})),
+        "",
+        "## Dominant projected patterns",
+        "",
+        *_markdown_data(
+            {
+                "modes": analysis.get("dominant_projected_modes", []),
+                "domains": analysis.get("dominant_projected_domains", []),
+                "interactions": analysis.get("dominant_interaction_modes", []),
+                "highest degree objects": analysis.get("highest_degree_objects", []),
+            }
+        ),
+        "",
+        "## Selected story map",
+        "",
+    ]
+    for card in packet["cards"]:
+        lines.append(
+            f"- **{card['priority_id']:03d} — {card['claim_id']}:** "
+            f"{card['canonical_claim']}"
+        )
+    lines.extend(["", "## Unselected chart material for whole-dog understanding", ""])
+    for claim in packet.get("unselected_claims", []):
+        lines.append(
+            f"- **{claim.get('claim_id', claim.get('candidate_id', 'unidentified'))}:** "
+            f"{claim.get('canonical_claim', claim.get('claim', 'No claim text supplied.'))}"
+        )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def build_story_workspace(
+    subject_bundle: Path,
+    packet: dict[str, Any],
+    repo_root: Path,
+    card_limit: int,
+) -> None:
+    subject_bundle.mkdir(parents=True, exist_ok=True)
+    brief_source = (
+        repo_root / "docs" / "post_extraction_authoring"
+        / "AstroWoof Story Workspace Authoring Brief.md"
+    )
+    prompt_source = (
+        repo_root / "docs" / "post_extraction_authoring"
+        / "Story Workspace Handoff Prompt.md"
+    )
+    shutil.copy2(brief_source, subject_bundle / "AUTHORING BRIEF.md")
+    shutil.copy2(prompt_source, subject_bundle / "START HERE.md")
+    (subject_bundle / "WHOLE DOG CONTEXT.md").write_text(
+        render_whole_dog_context(packet),
+        encoding="utf-8",
+    )
+    cards_root = subject_bundle / "cards"
+    cards_root.mkdir(parents=True, exist_ok=True)
+    for card in packet["cards"][:card_limit]:
+        story_root = cards_root / (
+            f"Story {card['priority_id']:03d} -- {card['claim_id']}"
+        )
+        story_root.mkdir(parents=True, exist_ok=True)
+        (story_root / "CLAIM AND EVIDENCE.md").write_text(
+            render_claim_and_evidence(card, packet),
+            encoding="utf-8",
+        )
+        (story_root / "WRITE THIS CARD.md").write_text(
+            render_story_writing_template(card),
+            encoding="utf-8",
+        )
+    if card_limit == len(packet["cards"]):
+        summaries_root = subject_bundle / "summaries"
+        summaries_root.mkdir(parents=True, exist_ok=True)
+        summary_names = (
+            "Who the Dog Is",
+            "How the Dog Lives",
+            "What the Dog Needs",
+            "How the Dog Grows",
+        )
+        for index, name in enumerate(summary_names, 1):
+            summary = packet["summary"][f"card{index}"]
+            summary_root = summaries_root / f"Summary {index:02d} -- {name}"
+            summary_root.mkdir(parents=True, exist_ok=True)
+            (summary_root / "SUMMARY BASIS.md").write_text(
+                "# Summary Basis\n\n"
+                "Use `WHOLE DOG CONTEXT.md`, all selected story evidence, and "
+                "unselected chart material for this full-chart summary.\n",
+                encoding="utf-8",
+            )
+            (summary_root / "WRITE THIS SUMMARY.md").write_text(
+                render_story_writing_template(summary, summary=True),
+                encoding="utf-8",
+            )
+
+
 def copy_static_assets(
     bundle: Path,
     repo_root: Path,
@@ -1455,12 +1852,22 @@ def main() -> None:
     parser.add_argument("--bundle-dir", type=Path, default=Path("llm-handoff-bundle"))
     parser.add_argument(
         "--handoff-profile",
-        choices=("rigorous", "compact"),
+        choices=("rigorous", "compact", "authoring-workspace"),
         default="rigorous",
         help=(
             "Instruction profile for the generated LLM bundle. "
             "'rigorous' preserves the resumable ledger/checkpoint protocol; "
-            "'compact' emits a low-ceremony single-subject authoring brief."
+            "'compact' emits a low-ceremony single-subject authoring brief; "
+            "'authoring-workspace' emits one Markdown writing directory per card."
+        ),
+    )
+    parser.add_argument(
+        "--workspace-card-limit",
+        type=int,
+        default=50,
+        help=(
+            "Number of card directories to emit for --handoff-profile "
+            "authoring-workspace. Use 10 for the initial story-workspace experiment."
         ),
     )
     parser.add_argument(
@@ -1478,11 +1885,29 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
+    if not 1 <= args.workspace_card_limit <= 50:
+        parser.error("--workspace-card-limit must be between 1 and 50")
+    if (
+        args.handoff_profile != "authoring-workspace"
+        and args.workspace_card_limit != 50
+    ):
+        parser.error(
+            "--workspace-card-limit is only valid with "
+            "--handoff-profile authoring-workspace"
+        )
     input_package = args.legacy_input_dir or args.input_package
     packages = discover_subject_packages(input_package, args.subject)
     repo_root = Path(__file__).resolve().parent.parent
     args.bundle_dir.mkdir(parents=True, exist_ok=True)
-    if args.handoff_profile == "compact":
+    if args.handoff_profile == "authoring-workspace":
+        (args.bundle_dir / "README.md").write_text(
+            "# AstroWoof Story Workspace Handoff\n\n"
+            "Each subject directory is a Markdown authoring workspace. Read "
+            "`START HERE.md`, then complete the numbered story directories. "
+            "Return the authored workspace as a ZIP; do not create JSON.\n",
+            encoding="utf-8",
+        )
+    elif args.handoff_profile == "compact":
         (args.bundle_dir / "README.md").write_text(
             "# AstroWoof Compact LLM Handoff\n\n"
             "Each subject directory is an independent authoring job. Read its "
@@ -1504,6 +1929,9 @@ def main() -> None:
     editorial_linter = repo_root / "src" / "lint_astrowoof_editorial.py"
     if editorial_linter.exists():
         shutil.copy2(editorial_linter, args.bundle_dir / editorial_linter.name)
+    assembler = repo_root / "src" / "assemble_authoring_workspace.py"
+    if args.handoff_profile == "authoring-workspace" and assembler.exists():
+        shutil.copy2(assembler, args.bundle_dir / assembler.name)
     run_records = []
     failed = False
 
@@ -1559,24 +1987,38 @@ def main() -> None:
             write_json(root / f"{subject}.selection-qa.json", qa)
 
             subject_bundle = args.bundle_dir / subject
-            request = subject_bundle / "request"
-            request.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(
-                root / f"{subject}.selected-authoring-packet.json",
-                request / f"{subject}.selected-authoring-packet.json",
-            )
-            shutil.copy2(
-                root / f"{subject}.selection-qa.json",
-                request / f"{subject}.selection-qa.json",
-            )
-            copy_static_assets(
-                subject_bundle,
-                repo_root,
-                args.manual_zip,
-                args.handoff_profile,
-            )
+            request_files: list[str] = []
+            if args.handoff_profile == "authoring-workspace":
+                subject_bundle.mkdir(parents=True, exist_ok=True)
+                build_story_workspace(
+                    subject_bundle,
+                    packet,
+                    repo_root,
+                    args.workspace_card_limit,
+                )
+            else:
+                request = subject_bundle / "request"
+                request.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(
+                    root / f"{subject}.selected-authoring-packet.json",
+                    request / f"{subject}.selected-authoring-packet.json",
+                )
+                shutil.copy2(
+                    root / f"{subject}.selection-qa.json",
+                    request / f"{subject}.selection-qa.json",
+                )
+                request_files = sorted(
+                    str(x.relative_to(subject_bundle)).replace("\\", "/")
+                    for x in request.glob("*")
+                )
+                copy_static_assets(
+                    subject_bundle,
+                    repo_root,
+                    args.manual_zip,
+                    args.handoff_profile,
+                )
             manifest = {
-                "bundle_version": "astrowoof.llm_handoff.v0.4.3",
+                "bundle_version": "astrowoof.llm_handoff.v0.5.0",
                 "handoff_profile": args.handoff_profile,
                 "subject": subject,
                 "instruction": (
@@ -1591,17 +2033,38 @@ def main() -> None:
                         "current subject packet remain authoritative."
                     ),
                 },
-                "static_files": sorted(
-                    str(x.relative_to(subject_bundle)).replace("\\", "/")
-                    for x in (subject_bundle / "static").glob("*")
+                "static_files": (
+                    sorted(
+                        str(x.relative_to(subject_bundle)).replace("\\", "/")
+                        for x in (subject_bundle / "static").glob("*")
+                    )
+                    if args.handoff_profile != "authoring-workspace"
+                    else []
                 ),
-                "request_files": sorted(
-                    str(x.relative_to(subject_bundle)).replace("\\", "/")
-                    for x in request.glob("*")
+                "request_files": request_files,
+                "workspace_card_count": (
+                    args.workspace_card_limit
+                    if args.handoff_profile == "authoring-workspace"
+                    else None
                 ),
-                "expected_output": f"natal.{subject}.cards.json",
+                "expected_output": (
+                    f"{subject}-authored-story-workspace.zip"
+                    if args.handoff_profile == "authoring-workspace"
+                    else f"natal.{subject}.cards.json"
+                ),
             }
-            write_json(subject_bundle / "manifest.json", manifest)
+            if args.handoff_profile == "authoring-workspace":
+                (subject_bundle / "WORKSPACE MANIFEST.md").write_text(
+                    f"# AstroWoof Story Workspace\n\n"
+                    f"- **Subject:** {subject}\n"
+                    f"- **Story directories:** {args.workspace_card_limit}\n"
+                    f"- **Expected return:** "
+                    f"`{subject}-authored-story-workspace.zip`\n"
+                    f"- **Start with:** `START HERE.md`\n",
+                    encoding="utf-8",
+                )
+            else:
+                write_json(subject_bundle / "manifest.json", manifest)
             run_records.append({
                 "subject": subject,
                 "status": "pass",
@@ -1641,14 +2104,18 @@ def main() -> None:
     write_json(
         args.bundle_dir / "manifest.json",
         {
-            "bundle_version": "astrowoof.llm_handoff.v0.4.3",
+            "bundle_version": "astrowoof.llm_handoff.v0.5.0",
             "handoff_profile": args.handoff_profile,
             "instruction": (
                 "Read README.md, then process each passing subject independently "
                 + (
                     "with its compact single-subject authoring brief."
                     if args.handoff_profile == "compact"
-                    else "with its mandatory card-by-card execution protocol."
+                    else (
+                        "as a Markdown story workspace."
+                        if args.handoff_profile == "authoring-workspace"
+                        else "with its mandatory card-by-card execution protocol."
+                    )
                 )
             ),
             "subject_count": len(run_records),
@@ -1658,9 +2125,15 @@ def main() -> None:
                     "status": record["status"],
                     **(
                         {
-                            "manifest": f"{record['subject']}/manifest.json",
+                            "manifest": (
+                                f"{record['subject']}/WORKSPACE MANIFEST.md"
+                                if args.handoff_profile == "authoring-workspace"
+                                else f"{record['subject']}/manifest.json"
+                            ),
                             "expected_output": (
-                                f"natal.{record['subject']}.cards.json"
+                                f"{record['subject']}-authored-story-workspace.zip"
+                                if args.handoff_profile == "authoring-workspace"
+                                else f"natal.{record['subject']}.cards.json"
                             ),
                         }
                         if record["status"] == "pass"
@@ -1671,6 +2144,11 @@ def main() -> None:
             ],
             "validator": "validate_astrowoof_editorial.py",
             "editorial_linter": "lint_astrowoof_editorial.py",
+            "workspace_assembler": (
+                "assemble_authoring_workspace.py"
+                if args.handoff_profile == "authoring-workspace"
+                else None
+            ),
         },
     )
     print(json.dumps(run_manifest, ensure_ascii=False, indent=2))

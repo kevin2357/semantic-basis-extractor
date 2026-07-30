@@ -18,6 +18,7 @@ sys.path.insert(0, str(SRC))
 from build_projected_semantic_basis import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
     build_candidates,
+    build_story_workspace,
     compile_packet,
     copy_static_assets,
     discover_subject_packages,
@@ -25,6 +26,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     optimize,
     qa_report,
 )
+from assemble_authoring_workspace import assemble  # noqa: E402
 from merge_projected_term_registries import merge  # noqa: E402
 from lint_astrowoof_editorial import lint_deck  # noqa: E402
 from validate_astrowoof_editorial import main as validate_editorial  # noqa: E402
@@ -384,6 +386,42 @@ class TestBrePacket(unittest.TestCase):
             set(reference["summary"]["card1"]),
             set(self.packet["summary"]["card1"]),
         )
+
+
+    def test_story_workspace_round_trip_keeps_json_out_of_authoring_surface(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre"
+            build_story_workspace(workspace, self.packet, ROOT, 2)
+            self.assertEqual([], list(workspace.rglob("*.json")))
+            story_directories = sorted((workspace / "cards").iterdir())
+            self.assertEqual(2, len(story_directories))
+            for story in story_directories:
+                writing = story / "WRITE THIS CARD.md"
+                writing.write_text(
+                    writing.read_text(encoding="utf-8").replace(
+                        "__WRITE__",
+                        "Personality",
+                    ),
+                    encoding="utf-8",
+                )
+            deck, report = assemble(
+                self.packet,
+                workspace,
+                allow_partial=True,
+            )
+            self.assertEqual([1, 2], report["authored_priority_ids"])
+            self.assertEqual(3, report["next_unfinished_priority_id"])
+            self.assertTrue(report["placeholder_free"])
+            self.assertEqual(
+                self.packet["cards"][0]["claim_id"],
+                deck["cards"][0]["claim_id"],
+            )
+            self.assertEqual(
+                "Personality",
+                deck["cards"][0]["card"]["no_astro"]["body"]["handler"],
+            )
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):
