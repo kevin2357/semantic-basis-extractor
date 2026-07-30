@@ -133,6 +133,10 @@ def assemble(
     allow_partial: bool,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     deck = deepcopy(packet)
+    profile_path = workspace / "WRITE WHOLE DOG PROFILE.md"
+    if not profile_path.is_file():
+        raise ValueError(f"Missing whole-dog profile: {profile_path}")
+    whole_dog_profile = parse_fields(profile_path)
     cards_by_priority = {
         card["priority_id"]: card for card in packet["cards"]
     }
@@ -217,6 +221,7 @@ def assemble(
             else None
         ),
         "authored_summary_ids": authored_summaries,
+        "whole_dog_profile_field_count": len(whole_dog_profile),
         "placeholder_free": "__WRITE__" not in json.dumps(
             {
                 "cards": [

@@ -644,12 +644,14 @@ SBE supports two instruction profiles:
   density contracts, independent-card standard, filters, theme groups,
   summaries, linting, and final validation, but does not require auxiliary
   portrait, ledger, or scheduled checkpoint artifacts.
-- `--handoff-profile authoring-workspace` removes JSON from the LLM writing
-  surface. It emits one numbered Markdown directory per claim, containing a
-  read-only claim/evidence brief and one marked writing file. A deterministic
-  assembler merges the returned Markdown into the locally retained authoring
-  packet. `--workspace-card-limit 10` physically limits an experimental
-  workspace to the first ten stories.
+- `--handoff-profile authoring-workspace` emits a Markdown writing workspace.
+  Its root contains dog identity details, a complete-chart basis, and a
+  fillable whole-dog authoring profile. Each numbered claim directory contains
+  a plain-language story brief, decoded underlying astrology, supporting
+  evidence and projected-term definitions, plus one marked writing file. A
+  deterministic assembler merges the returned prose into the locally retained
+  authoring packet. `--workspace-card-limit 10` physically limits an
+  experimental workspace to the first ten stories.
 
 Compact mode treats checkpointing as interruption recovery rather than the
 normal unit of authorship. It exists for execution environments where the
@@ -672,6 +674,23 @@ python src/assemble_authoring_workspace.py \
 Use `--allow-partial` for limited experiments. A full workspace includes all
 50 cards and four Summary directories; a limited workspace intentionally
 omits later cards and summaries.
+
+### Optional subject details
+
+If `params.json` is present beside a subject's four projected chart files, SBE
+uses it for the authoring packet and `DOG DETAILS.md`. Supported fields are:
+
+- `subject_id` (when supplied, it must match the filename-derived subject);
+- `display_name`, `subject_type`, `gender`, and `breed`;
+- `pronouns.subject`, `pronouns.object`,
+  `pronouns.possessive_adjective`, `pronouns.possessive_pronoun`, and
+  `pronouns.reflexive`;
+- `birth_date`, `birth_datetime`, `birth_date_precision`, and
+  `birth_location`;
+- numeric `birth_latitude` and `birth_longitude`.
+
+The file is optional. Missing values retain the existing neutral/empty
+fallbacks.
 
 ## 17. QA requirements
 

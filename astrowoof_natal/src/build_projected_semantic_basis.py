@@ -270,6 +270,107 @@ def _source_ref_set(records: list[dict[str, Any]], field_name: str) -> set[str]:
     }
 
 
+def load_subject_params(
+    subject: str,
+    paths: dict[str, Path],
+) -> tuple[dict[str, Any], str | None]:
+    directories = {path.resolve().parent for path in paths.values()}
+    if len(directories) != 1:
+        raise ValueError(
+            f"Subject {subject} context files must share one directory to load params.json"
+        )
+    params_path = next(iter(directories)) / "params.json"
+    if not params_path.exists():
+        return {}, None
+    value = json.loads(params_path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"{params_path}: params.json must contain one object")
+    allowed = {
+        "subject_id",
+        "display_name",
+        "subject_type",
+        "gender",
+        "pronouns",
+        "breed",
+        "birth_date",
+        "birth_datetime",
+        "birth_latitude",
+        "birth_longitude",
+        "birth_location",
+        "birth_date_precision",
+    }
+    unknown = sorted(set(value) - allowed)
+    if unknown:
+        raise ValueError(f"{params_path}: unsupported fields: {unknown}")
+    if value.get("subject_id") not in (None, "", subject):
+        raise ValueError(
+            f"{params_path}: subject_id {value['subject_id']!r} must match {subject!r}"
+        )
+    string_fields = allowed - {
+        "pronouns",
+        "birth_latitude",
+        "birth_longitude",
+    }
+    for field_name in string_fields:
+        if field_name in value and not isinstance(value[field_name], str):
+            raise ValueError(f"{params_path}: {field_name} must be a string")
+    for field_name in ("birth_latitude", "birth_longitude"):
+        if field_name in value and not isinstance(value[field_name], (int, float)):
+            raise ValueError(f"{params_path}: {field_name} must be numeric")
+    if "birth_latitude" in value and not -90 <= value["birth_latitude"] <= 90:
+        raise ValueError(f"{params_path}: birth_latitude must be between -90 and 90")
+    if "birth_longitude" in value and not -180 <= value["birth_longitude"] <= 180:
+        raise ValueError(f"{params_path}: birth_longitude must be between -180 and 180")
+    pronoun_fields = {
+        "subject",
+        "object",
+        "possessive_adjective",
+        "possessive_pronoun",
+        "reflexive",
+    }
+    pronouns = value.get("pronouns")
+    if pronouns is not None:
+        if not isinstance(pronouns, dict):
+            raise ValueError(f"{params_path}: pronouns must be an object")
+        unknown_pronouns = sorted(set(pronouns) - pronoun_fields)
+        if unknown_pronouns:
+            raise ValueError(
+                f"{params_path}: unsupported pronoun fields: {unknown_pronouns}"
+            )
+        for field_name, field_value in pronouns.items():
+            if not isinstance(field_value, str):
+                raise ValueError(
+                    f"{params_path}: pronouns.{field_name} must be a string"
+                )
+    return value, str(params_path.resolve())
+
+
+def subject_record(subject: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    params = params or {}
+    pronouns = {
+        "subject": "",
+        "object": "",
+        "possessive_adjective": "",
+        "possessive_pronoun": "",
+        "reflexive": "",
+    }
+    pronouns.update(params.get("pronouns") or {})
+    return {
+        "subject_id": subject,
+        "display_name": params.get("display_name") or subject.title(),
+        "subject_type": params.get("subject_type") or "dog",
+        "gender": params.get("gender", ""),
+        "pronouns": pronouns,
+        "breed": params.get("breed", ""),
+        "birth_date": params.get("birth_date", ""),
+        "birth_datetime": params.get("birth_datetime", ""),
+        "birth_latitude": params.get("birth_latitude"),
+        "birth_longitude": params.get("birth_longitude"),
+        "birth_location": params.get("birth_location", ""),
+        "birth_date_precision": params.get("birth_date_precision", ""),
+    }
+
+
 def load_and_validate_contexts(
     subject: str,
     paths: dict[str, Path],
@@ -1053,6 +1154,7 @@ def compile_packet(
     analysis: dict[str, Any],
     projected_term_registry: dict[str, Any],
     input_audit: dict[str, Any],
+    params: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     general = contexts["general"]
     ordered_ids = {candidate.candidate_id: i + 1 for i, candidate in enumerate(selected)}
@@ -1139,17 +1241,7 @@ def compile_packet(
             "optimizer": "closed-marginal-portfolio.v0.1",
             "editorial_status": "awaiting_llm",
         },
-        "subject": {
-            "subject_id": subject,
-            "display_name": subject.title(),
-            "subject_type": "dog",
-            "gender": "",
-            "pronouns": {
-                "subject": "", "object": "", "possessive_adjective": "",
-                "possessive_pronoun": "", "reflexive": "",
-            },
-            "breed": "", "birth_datetime": "", "birth_location": "",
-        },
+        "subject": subject_record(subject, params),
         "source": {
             "source_graph_ref": general.get("source_graph_ref"),
             "source_identity": general.get("source_identity"),
@@ -1428,6 +1520,14 @@ def render_story_writing_template(
         "Replace every `__WRITE__` value. Preserve all field markers exactly.",
         "Write no reader-facing prose outside marked fields.",
         "",
+        "Write this evidence-bounded insight about the dog described in "
+        "`WRITE WHOLE DOG PROFILE.md`.",
+        "",
+        "Before beginning, set aside the wording, sentence structures, scenes, "
+        "jokes, and rhetorical approach used in prior stories. Retain the "
+        "whole-dog characterization and your semantic memory of completed "
+        "stories so the dog stays coherent and the lessons do not repeat.",
+        "",
         "## Editorial Plan",
         "",
         _field_block("Center of Gravity", "plan.center_of_gravity"),
@@ -1517,6 +1617,200 @@ def render_story_writing_template(
     return "\n".join(lines).rstrip() + "\n"
 
 
+ASTRO_OBJECT_FUNCTIONS = {
+    "Sun": "identity, vitality, and the way the dog most naturally feels like themself",
+    "Moon": "emotional regulation, instinctive comfort, and private needs",
+    "Mercury": "attention, learning, signaling, and information processing",
+    "Venus": "bonding style, pleasure, affection, and social preference",
+    "Mars": "action, pursuit, play drive, assertion, and frustration",
+    "Jupiter": "confidence, exploration, growth, and appetite for possibility",
+    "Saturn": "limits, rules, patience, responsibility, and durable structure",
+    "Uranus": "novelty, independence, disruption, and unconventional response",
+    "Neptune": "sensitivity, imagination, atmosphere, and porous boundaries",
+    "Pluto": "intensity, deep trust, control, and transformative pressure",
+    "Ascendant": "the dog's first response to situations and visible way of meeting the world",
+    "ASC": "the dog's first response to situations and visible way of meeting the world",
+    "Descendant": "one-to-one bonds and what the dog seeks or encounters in a close counterpart",
+    "DSC": "one-to-one bonds and what the dog seeks or encounters in a close counterpart",
+    "Imum Coeli": "private safety, home base, roots, and innermost comfort",
+    "IC": "private safety, home base, roots, and innermost comfort",
+    "Midheaven": "visible role, pack contribution, and outward development",
+    "MC": "visible role, pack contribution, and outward development",
+    "North Node": "a developmental direction that becomes more natural through experience",
+    "Part of Fortune": "conditions that tend to feel rewarding, fluent, or naturally enlivening",
+}
+
+ASPECT_DYNAMICS = {
+    "conjunction": "The two functions are fused and tend to activate together.",
+    "opposition": "The two functions pull across a polarity and ask for an active balance rather than a permanent winner.",
+    "square": "The two functions create friction that demands adjustment, effort, and usable action.",
+    "trine": "The two functions reinforce one another easily and can become a strong natural habit.",
+    "sextile": "The two functions offer a cooperative possibility that becomes more useful through practice.",
+    "quincunx": "The two functions do not naturally speak the same language and require repeated recalibration.",
+    "semisextile": "The two functions create a subtle nudge toward awareness and small adjustments.",
+}
+
+
+def _context_record(evidence: dict[str, Any]) -> dict[str, Any]:
+    contexts = evidence.get("context_records", {})
+    for context in ("general", "handler", "hybrid", "direct_to_dog"):
+        record = contexts.get(context, {}).get("record")
+        if isinstance(record, dict):
+            return record
+    return {}
+
+
+def _card_primary_record(card: dict[str, Any]) -> dict[str, Any]:
+    for evidence in card.get("evidence", []):
+        record = _context_record(evidence)
+        if record:
+            return record
+    return {}
+
+
+def _object_name(record: dict[str, Any]) -> str:
+    attributes = record.get("attributes") or {}
+    source_names = attributes.get("source_names")
+    source_name = source_names[0] if isinstance(source_names, list) and source_names else None
+    return str(
+        attributes.get("canonical_object_name")
+        or attributes.get("source_object")
+        or source_name
+        or record.get("name")
+        or "this chart factor"
+    )
+
+
+def _placement_sentence(record: dict[str, Any]) -> str:
+    attributes = record.get("attributes") or {}
+    object_name = _object_name(record)
+    sign = attributes.get("source_sign")
+    house = attributes.get("source_house")
+    doghouse = attributes.get("doghouse_number")
+    locations = []
+    if sign:
+        locations.append(str(sign))
+    if doghouse not in (None, ""):
+        locations.append(f"Doghouse {doghouse}")
+    elif house not in (None, ""):
+        locations.append(f"house {house}")
+    sentence = object_name
+    if locations:
+        sentence += " in " + ", ".join(locations)
+    function = ASTRO_OBJECT_FUNCTIONS.get(object_name)
+    if function:
+        sentence += f" describes {function}"
+    return sentence.rstrip(".") + "."
+
+
+def _relationship_facts(
+    card: dict[str, Any],
+    cards_by_id: dict[str, dict[str, Any]],
+) -> tuple[str, str]:
+    record = _card_primary_record(card)
+    attributes = record.get("attributes") or {}
+    dependency_ids = [
+        claim_id
+        for evidence in card.get("evidence", [])
+        for claim_id in evidence.get("claim_ids", [])
+    ]
+    dependency_records = [
+        _card_primary_record(cards_by_id[claim_id])
+        for claim_id in dependency_ids
+        if claim_id in cards_by_id
+    ]
+    names = [_object_name(item) for item in dependency_records[:2]]
+    source_name = names[0] if names else str(
+        attributes.get("source_object") or "the first chart factor"
+    )
+    target_name = names[1] if len(names) > 1 else str(
+        attributes.get("target_object") or "the second chart factor"
+    )
+    aspect = str(
+        attributes.get("canonical_aspect")
+        or record.get("relationship_type")
+        or "aspect"
+    ).lower()
+    orb = attributes.get("orb")
+    endpoint_labels = []
+    for name, endpoint_record in zip(
+        (source_name, target_name),
+        dependency_records[:2],
+    ):
+        sign = (endpoint_record.get("attributes") or {}).get("source_sign")
+        endpoint_labels.append(f"{name} in {sign}" if sign else name)
+    while len(endpoint_labels) < 2:
+        endpoint_labels.append((source_name, target_name)[len(endpoint_labels)])
+    exact = "exact " if orb in (0, 0.0, "0", "0.0") else ""
+    article = "an" if (exact or aspect[:1] in "aeiou") else "a"
+    fact = (
+        f"{endpoint_labels[0]} forms {article} {exact}{aspect} "
+        f"to {endpoint_labels[1]}"
+    )
+    if orb not in (None, ""):
+        fact += f" with an orb of {orb}°"
+    fact += "."
+    functions = []
+    for name in (source_name, target_name):
+        if name in ASTRO_OBJECT_FUNCTIONS:
+            functions.append(f"{name} describes {ASTRO_OBJECT_FUNCTIONS[name]}")
+    explanation = ". ".join(functions)
+    if explanation:
+        explanation += "."
+    if aspect in ASPECT_DYNAMICS:
+        explanation += f" {ASPECT_DYNAMICS[aspect]}"
+    return fact, explanation.strip()
+
+
+def _story_brief(
+    card: dict[str, Any],
+    cards_by_id: dict[str, dict[str, Any]],
+) -> tuple[str, list[str], str]:
+    claim_type = card.get("claim_type", "")
+    record = _card_primary_record(card)
+    if claim_type in {"relationship", "system_interaction", "aspect"}:
+        fact, explanation = _relationship_facts(card, cards_by_id)
+        aspect = str(
+            (record.get("attributes") or {}).get("canonical_aspect")
+            or record.get("relationship_type")
+            or "aspect"
+        ).lower()
+        return (
+            f"Explore how the two functions named below interact in this dog. "
+            f"Show the recognizable behavioral tension, cooperation, or adjustment "
+            f"created by the {aspect}.",
+            [fact, explanation],
+            "Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.",
+        )
+    if claim_type == "placement":
+        return (
+            "Translate this placement into one specific, recognizable pattern in the dog's temperament or daily behavior.",
+            [_placement_sentence(record)],
+            "Stay centered on this placement's distinctive function rather than borrowing a neighboring story's main lesson.",
+        )
+    dependency_ids = [
+        claim_id
+        for evidence in card.get("evidence", [])
+        for claim_id in evidence.get("claim_ids", [])
+    ]
+    support = [
+        cards_by_id[claim_id]
+        for claim_id in dependency_ids
+        if claim_id in cards_by_id
+    ]
+    facts = [
+        _placement_sentence(_card_primary_record(item))
+        if item.get("claim_type") == "placement"
+        else item.get("canonical_claim", item["claim_id"])
+        for item in support
+    ] or [card.get("canonical_claim", "Use the supplied evidence records.")]
+    return (
+        "Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.",
+        facts,
+        "Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.",
+    )
+
+
 def render_claim_and_evidence(
     card: dict[str, Any],
     packet: dict[str, Any],
@@ -1537,24 +1831,35 @@ def render_claim_and_evidence(
         claim_id for claim_id in dict.fromkeys(nearby_ids)
         if claim_id != card["claim_id"] and claim_id in cards_by_id
     ]
+    brief, astrology_facts, focus = _story_brief(card, cards_by_id)
 
     lines = [
         f"# Story {card['priority_id']:03d}: {card['claim_id']}",
         "",
         "This file is read-only source material. Write in `WRITE THIS CARD.md`.",
         "",
-        "## Exact assignment",
+        "## Story Brief",
         "",
-        f"- **Claim type:** {card['claim_type']}",
-        f"- **Canonical claim:** {card['canonical_claim']}",
-        f"- **Categories:** {', '.join(card.get('categories', []))}",
-        f"- **Importance:** {card.get('importance')}",
-        f"- **Confidence:** {card.get('confidence')}",
-        f"- **Strength:** {card.get('strength')}",
+        brief,
         "",
-        "## Evidence and underlying astrology",
+        "## Underlying Astrology",
         "",
     ]
+    lines.extend(f"- {fact}" for fact in astrology_facts if fact)
+    lines.extend(
+        [
+            "",
+            "## What This Story Is Specifically About",
+            "",
+            focus,
+            "",
+            "Use the evidence below to choose the exact behavioral expression, "
+            "emotional center, and practical consequence.",
+            "",
+            "## Supporting Evidence",
+            "",
+        ]
+    )
     for evidence_index, evidence in enumerate(card.get("evidence", []), 1):
         lines.extend(
             [
@@ -1597,7 +1902,7 @@ def render_claim_and_evidence(
                         f"  - {key.replace('_', ' ')}: {_markdown_scalar(value)}"
                     )
         lines.append("")
-    lines.extend(["## Relevant projected-term definitions", ""])
+    lines.extend(["## Projected-Term Reference", ""])
     if relevant_terms:
         for term in sorted(relevant_terms):
             entry = registry_terms[term]
@@ -1614,13 +1919,13 @@ def render_claim_and_evidence(
             )
     else:
         lines.extend(["No registry entries were directly referenced.", ""])
-    lines.extend(["## Nearby selected stories", ""])
+    lines.extend(["## Distinguish It From Nearby Stories", ""])
     if nearby_ids:
         for claim_id in nearby_ids:
             neighbor = cards_by_id[claim_id]
             lines.append(
-                f"- **Story {neighbor['priority_id']:03d} — {claim_id}:** "
-                f"{neighbor['canonical_claim']}"
+                f"- **Story {neighbor['priority_id']:03d}:** "
+                f"{_story_brief(neighbor, cards_by_id)[0]}"
             )
     else:
         lines.append("- No explicit dependencies; distinguish this story from adjacent priorities.")
@@ -1690,6 +1995,119 @@ def render_whole_dog_context(packet: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def render_dog_details(packet: dict[str, Any]) -> str:
+    subject = packet["subject"]
+    pronouns = subject.get("pronouns") or {}
+    return "\n".join(
+        [
+            f"# Dog Details: {subject.get('display_name') or subject.get('subject_id')}",
+            "",
+            f"- **Display name:** {subject.get('display_name', '')}",
+            f"- **Subject ID:** {subject.get('subject_id', '')}",
+            f"- **Pronouns:** {pronouns.get('subject', '')} / {pronouns.get('object', '')} / {pronouns.get('possessive_adjective', '')}",
+            f"- **Gender:** {subject.get('gender', '') or 'not supplied'}",
+            f"- **Breed:** {subject.get('breed', '') or 'not supplied'}",
+            f"- **Birth date:** {subject.get('birth_date', '') or 'not supplied'}",
+            f"- **Birth datetime:** {subject.get('birth_datetime', '') or 'not supplied'}",
+            f"- **Birth location:** {subject.get('birth_location', '') or 'not supplied'}",
+            f"- **Birth latitude:** {subject.get('birth_latitude') if subject.get('birth_latitude') is not None else 'not supplied'}",
+            f"- **Birth longitude:** {subject.get('birth_longitude') if subject.get('birth_longitude') is not None else 'not supplied'}",
+            f"- **Birth-date precision:** {subject.get('birth_date_precision', '') or 'not supplied'}",
+            "",
+        ]
+    )
+
+
+def _full_chart_claim_lines(packet: dict[str, Any]) -> list[str]:
+    lines = ["## Selected Chart Material", ""]
+    for card in packet["cards"]:
+        lines.extend(
+            [
+                f"### {card['priority_id']:03d}: {card['claim_id']}",
+                "",
+                f"- **Claim:** {card.get('canonical_claim', '')}",
+            ]
+        )
+        for evidence in card.get("evidence", []):
+            record = _context_record(evidence)
+            if record:
+                lines.extend(_markdown_data(record))
+        lines.append("")
+    lines.extend(["## Additional Chart Material", ""])
+    for claim in packet.get("unselected_claims", []):
+        lines.extend(
+            [
+                f"### {claim.get('claim_id', claim.get('candidate_id', 'unidentified'))}",
+                "",
+                f"- **Claim:** {claim.get('canonical_claim', claim.get('claim', 'No claim text supplied.'))}",
+            ]
+        )
+        for evidence in claim.get("evidence", []):
+            record = _context_record(evidence)
+            if record:
+                lines.extend(_markdown_data(record))
+        lines.append("")
+    return lines
+
+
+def _authoring_registry(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: _authoring_registry(item)
+            for key, item in value.items()
+            if "template" not in key.lower()
+        }
+    if isinstance(value, list):
+        return [_authoring_registry(item) for item in value]
+    return value
+
+
+def render_full_chart_basis(packet: dict[str, Any]) -> str:
+    display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
+    lines = [
+        f"# Full Chart Basis: {display_name}",
+        "",
+        "Read this complete chart basis before writing the whole-dog profile. "
+        "It includes the selected insights and additional chart material so the "
+        "profile can recognize the dog's complete pattern.",
+        "",
+        *_full_chart_claim_lines(packet),
+        "",
+        "## Complete Projected-Term Registry",
+        "",
+        *_markdown_data(_authoring_registry(packet.get("projected_term_registry", {}))),
+        "",
+    ]
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_whole_dog_profile_template(packet: dict[str, Any]) -> str:
+    display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
+    fields = (
+        ("Integrated Portrait", "profile.integrated_portrait"),
+        ("Core Temperament", "profile.core_temperament"),
+        ("Emotional Life and Regulation", "profile.emotional_regulation"),
+        ("Learning and Motivation", "profile.learning_motivation"),
+        ("Relationships and Trust", "profile.relationships_trust"),
+        ("Play, Adventure, and Daily Rhythm", "profile.play_adventure_rhythm"),
+        ("Tensions and Counterweights", "profile.tensions_counterweights"),
+        ("Strengths and Growth Edges", "profile.strengths_growth"),
+        ("Voice, Warmth, Humor, and Imagery", "profile.voice_humor_imagery"),
+        ("Factual Cautions", "profile.factual_cautions"),
+    )
+    lines = [
+        f"# Whole-Dog Authoring Profile: {display_name}",
+        "",
+        "Complete this profile first, using `DOG DETAILS.md` and the entire "
+        "`FULL CHART BASIS.md`. This becomes the shared characterization for "
+        "every story in the workspace.",
+        "",
+    ]
+    for label, field_path in fields:
+        lines.extend([_field_block(label, field_path), ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def build_story_workspace(
     subject_bundle: Path,
     packet: dict[str, Any],
@@ -1707,8 +2125,16 @@ def build_story_workspace(
     )
     shutil.copy2(brief_source, subject_bundle / "AUTHORING BRIEF.md")
     shutil.copy2(prompt_source, subject_bundle / "START HERE.md")
-    (subject_bundle / "WHOLE DOG CONTEXT.md").write_text(
-        render_whole_dog_context(packet),
+    (subject_bundle / "DOG DETAILS.md").write_text(
+        render_dog_details(packet),
+        encoding="utf-8",
+    )
+    (subject_bundle / "FULL CHART BASIS.md").write_text(
+        render_full_chart_basis(packet),
+        encoding="utf-8",
+    )
+    (subject_bundle / "WRITE WHOLE DOG PROFILE.md").write_text(
+        render_whole_dog_profile_template(packet),
         encoding="utf-8",
     )
     cards_root = subject_bundle / "cards"
@@ -1741,8 +2167,8 @@ def build_story_workspace(
             summary_root.mkdir(parents=True, exist_ok=True)
             (summary_root / "SUMMARY BASIS.md").write_text(
                 "# Summary Basis\n\n"
-                "Use `WHOLE DOG CONTEXT.md`, all selected story evidence, and "
-                "unselected chart material for this full-chart summary.\n",
+                "Use `WRITE WHOLE DOG PROFILE.md` and `FULL CHART BASIS.md` for "
+                "this full-chart summary.\n",
                 encoding="utf-8",
             )
             (summary_root / "WRITE THIS SUMMARY.md").write_text(
@@ -1940,6 +2366,8 @@ def main() -> None:
             contexts, merged_registry, input_audit = load_and_validate_contexts(
                 subject, paths
             )
+            params, params_file = load_subject_params(subject, paths)
+            input_audit["params_file"] = params_file
             candidates, analysis = build_candidates(contexts)
             selected, rejected, audit = optimize(candidates)
             packet = compile_packet(
@@ -1950,6 +2378,7 @@ def main() -> None:
                 analysis,
                 merged_registry,
                 input_audit,
+                params,
             )
             qa = qa_report(candidates, selected, rejected, packet)
             if qa["status"] != "pass":
@@ -1988,6 +2417,8 @@ def main() -> None:
 
             subject_bundle = args.bundle_dir / subject
             request_files: list[str] = []
+            if subject_bundle.exists():
+                shutil.rmtree(subject_bundle)
             if args.handoff_profile == "authoring-workspace":
                 subject_bundle.mkdir(parents=True, exist_ok=True)
                 build_story_workspace(

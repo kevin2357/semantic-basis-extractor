@@ -23,8 +23,10 @@ from build_projected_semantic_basis import (  # noqa: E402
     copy_static_assets,
     discover_subject_packages,
     load_and_validate_contexts,
+    load_subject_params,
     optimize,
     qa_report,
+    subject_record,
 )
 from assemble_authoring_workspace import assemble  # noqa: E402
 from merge_projected_term_registries import merge  # noqa: E402
@@ -395,6 +397,23 @@ class TestBrePacket(unittest.TestCase):
             workspace = Path(temporary) / "bre"
             build_story_workspace(workspace, self.packet, ROOT, 2)
             self.assertEqual([], list(workspace.rglob("*.json")))
+            self.assertTrue((workspace / "DOG DETAILS.md").exists())
+            self.assertTrue((workspace / "FULL CHART BASIS.md").exists())
+            self.assertTrue((workspace / "WRITE WHOLE DOG PROFILE.md").exists())
+            self.assertFalse((workspace / "WHOLE DOG CONTEXT.md").exists())
+            profile = workspace / "WRITE WHOLE DOG PROFILE.md"
+            profile.write_text(
+                profile.read_text(encoding="utf-8").replace(
+                    "__WRITE__",
+                    "Whole-dog profile text.",
+                ),
+                encoding="utf-8",
+            )
+            claim_brief = next((workspace / "cards").rglob("CLAIM AND EVIDENCE.md"))
+            claim_text = claim_brief.read_text(encoding="utf-8")
+            self.assertIn("## Story Brief", claim_text)
+            self.assertIn("## Underlying Astrology", claim_text)
+            self.assertNotIn("## Exact assignment", claim_text)
             story_directories = sorted((workspace / "cards").iterdir())
             self.assertEqual(2, len(story_directories))
             for story in story_directories:
@@ -414,6 +433,7 @@ class TestBrePacket(unittest.TestCase):
             self.assertEqual([1, 2], report["authored_priority_ids"])
             self.assertEqual(3, report["next_unfinished_priority_id"])
             self.assertTrue(report["placeholder_free"])
+            self.assertEqual(10, report["whole_dog_profile_field_count"])
             self.assertEqual(
                 self.packet["cards"][0]["claim_id"],
                 deck["cards"][0]["claim_id"],
@@ -425,6 +445,48 @@ class TestBrePacket(unittest.TestCase):
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):
+    def test_optional_subject_params_populate_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_subject(root, "kevin")
+            params = {
+                "display_name": "Kevin",
+                "gender": "male",
+                "pronouns": {
+                    "subject": "he",
+                    "object": "him",
+                    "possessive_adjective": "his",
+                    "possessive_pronoun": "his",
+                    "reflexive": "himself",
+                },
+                "birth_datetime": "2020-01-02T03:04:00-07:00",
+                "birth_latitude": 39.7392,
+                "birth_longitude": -104.9903,
+                "birth_location": "Denver, Colorado",
+            }
+            (root / "params.json").write_text(
+                json.dumps(params),
+                encoding="utf-8",
+            )
+            paths = discover_subject_packages(root)["kevin"]
+            loaded, source = load_subject_params("kevin", paths)
+            record = subject_record("kevin", loaded)
+            self.assertEqual(str((root / "params.json").resolve()), source)
+            self.assertEqual("he", record["pronouns"]["subject"])
+            self.assertEqual(39.7392, record["birth_latitude"])
+
+    def test_invalid_subject_params_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_subject(root, "kevin")
+            (root / "params.json").write_text(
+                json.dumps({"subject_id": "someone-else"}),
+                encoding="utf-8",
+            )
+            paths = discover_subject_packages(root)["kevin"]
+            with self.assertRaisesRegex(ValueError, "must match"):
+                load_subject_params("kevin", paths)
+
     def test_handoff_static_assets_include_execution_protocol(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             bundle = Path(temporary) / "subject"
