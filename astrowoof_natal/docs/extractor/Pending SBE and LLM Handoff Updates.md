@@ -17,7 +17,10 @@ Update the SBE-generated card artifact and its validator/schema expectations as 
 - Validate that `categories` is a nonempty array of unique strings.
 - Validate that the three card-level humor arrays exist and that obsolete density-level humor fields are absent.
 - Preserve the complete top-level `projected_term_registry`.
-- Preserve any unselected claims in an `unselected_claims` field parallel to `claims`; this must include at a minimum any unselected primitive or aspect, but should also include if possible any unselected synthetic claims, including stronger versions of syntheses that were selected that have additional support from unselected aspects 
+- Preserve any unselected claims in an `unselected_claims` field parallel to `claims`; this must include at a minimum any unselected primitive or aspect, but should also include if possible any unselected synthetic claims, including stronger versions of syntheses that were selected that have additional support from unselected aspects
+- Assume the per-subject input can consist of multiple files which need to be merged
+- Assume that an input package could contain projected graphs for several subjects
+- Output a `summary` key for the authoring LLM to fill in; example provided
 
 ## LLM handoff update pass
 
