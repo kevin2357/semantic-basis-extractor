@@ -865,3 +865,35 @@ turning one dog into many separately billed authoring requests.
 
 The final audit covers every reader-facing field, including Summary cards,
 advice, and humor, and compares all subjects in a multi-subject request.
+
+---
+
+## 42. Independent miniature essays
+
+The positive writing model is 50 independent miniature essays about the same
+dog. The dog remains coherent across the deck, but the prose is free to vary
+in pacing, imagery, rhetorical form, narrative viewpoint, and sentence
+architecture. Optimize for consistency of understanding, not uniformity of
+expression.
+
+Before composing a card, privately determine what the claim is really about,
+its center of gravity, the behavior a handler could recognize, the most likely
+misreading, a grounded surprise, a memorable picture, and the narrative angle
+best qualified to reveal this particular insight. Choose that angle because of
+the evidence; never rotate angles, scenes, jokes, or structures by card index
+or claim type.
+
+Behavior should ordinarily precede explanation. A scene can help when the
+claim naturally supports one, but scenes are optional and must never be drawn
+from a scene bank. Audience changes purpose rather than grammar: handler
+teaches recognition, direct-to-dog offers perspective, and hybrid reveals the
+shared interaction.
+
+Editorial independence is semantic, not merely lexical. Different words can
+still tell the same story. During checkpoints, mentally shuffle the cards and
+ask whether ten random entries feel like ten distinct creative starting points
+rather than one essay divided into schema fields. The same dog should remain
+recognizable while neighboring cards remain individually worth reading.
+
+`AstroWoof Independent Card Writing Brief.md` is the concise normative version
+of this method and must accompany every authoring handoff.

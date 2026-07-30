@@ -1,4 +1,4 @@
-# Proposed LLM Handoff Prompt v0.4.1
+# Proposed LLM Handoff Prompt v0.4.2
 
 Edit the supplied AstroWoof projected natal authoring packet into the final
 `natal.<subject>.cards.json` artifact.
@@ -6,14 +6,19 @@ Edit the supplied AstroWoof projected natal authoring packet into the final
 Before writing, read and obey:
 
 1. `AstroWoof Projected Natal Card Authoring Manual.md`
-2. `LLM Card-by-Card Authoring Execution Protocol.md`
-3. `LLM Editing Permissions and QA Checklist.md`
-4. this prompt
+2. `AstroWoof Independent Card Writing Brief.md`
+3. `LLM Card-by-Card Authoring Execution Protocol.md`
+4. `LLM Editing Permissions and QA Checklist.md`
+5. this prompt
 
 The execution protocol is mandatory. Treat every card as an independent
 writing assignment and complete one entire card before beginning the next.
 Bulk field-by-field generation, sentence-frame substitution, global phrase
 banks, and rotating humor or advice are prohibited.
+
+The independent-card writing brief is the positive creative standard. Write 50
+miniature essays about the same dog: consistent understanding, diverse
+expression. The schema stores the writing; it must not determine the writing.
 
 Do not use Python, JavaScript, templates, string interpolation, deterministic
 transformations, or any other programmatic method to generate reader-facing
@@ -65,6 +70,9 @@ For every selected claim:
 - decode the canonical claim and retained evidence through the registry;
 - define its unique editorial job in the private ledger;
 - distinguish that job concretely from its two closest selected neighbors;
+- identify its center of gravity, recognizable behavior, likely handler
+  misreading, grounded surprise, memorable image, and claim-natural narrative
+  angle;
 - fill all handler, direct-to-dog, and hybrid headlines and bodies;
 - fill all no-, light-, and full-astrology density branches;
 - fill `dos` and `donts`;
@@ -78,6 +86,15 @@ density branches.
 Every reader-facing line fails when it could fit five other claims after
 changing only the dog's name or projected terms. Rewrite the complete line or
 paragraph rather than disguising a repeated frame with a new opening.
+
+Do not manufacture lexical uniqueness through subject names, claim quotations,
+scene labels, priority numbers, or other variable slots. Do not attach one
+subject-specific refrain to many cards. Forget previous cards' syntax; remember
+their stories and avoid repeating them.
+
+Scenes are optional. Use one only when it arises naturally from the evidence.
+Never select scenes from a bank, assign them by card position, or prefix every
+rendering with a scene.
 
 A ledger entry fails when its unique job merely says "Explain X through scene
 Y" or otherwise substitutes terms into a reusable meta-description. Concrete
@@ -198,6 +215,10 @@ correct errors and substantiated warnings before continuing automatically.
 After all cards, review the complete deck for repeated openings, endings,
 headline frames, advice, imagery, claim-type templates, and humor. Review every
 hybrid body alone.
+
+The linter is a backstop, not the writing objective. A zero-warning report does
+not excuse name-swapped prose, slot-filled uniqueness, repeated semantic
+stories, all-empty filters, or unreadable language.
 
 Return one complete parseable JSON file plus the whole-chart authoring
 portrait, completed authoring ledger, checkpoint audit files, final editorial

@@ -598,6 +598,7 @@ llm-handoff-bundle/
         static/
             Semantic Basis Extractor Pipeline and Scoring Metrics.md
             AstroWoof Projected Natal Card Authoring Manual.md
+            AstroWoof Independent Card Writing Brief.md
             LLM Card-by-Card Authoring Execution Protocol.md
             LLM Editing Permissions and QA Checklist.md
             Proposed LLM Handoff Prompt.md
@@ -620,6 +621,35 @@ five-card linter gates, and a whole-deck audit. Scripts may manage artifacts and
 validation but may not generate reader-facing prose. This prevents
 structurally complete output from satisfying the handoff through
 sentence-frame substitution.
+
+The independent-card writing brief supplies the positive creative method:
+write 50 independent miniature essays about the same dog. Each card receives a
+private semantic plan—center of gravity, recognizable behavior, likely
+misreading, grounded surprise, memorable image, and a claim-natural narrative
+angle—before prose begins. Narrative angles and scenes are chosen from the
+evidence rather than rotated. Checkpoints audit repeated semantic stories as
+well as repeated words, and apply a shuffled-card test. The quality target is
+consistent characterization with diverse expression; linter success is only a
+backstop.
+
+### Handoff profiles
+
+SBE supports two instruction profiles:
+
+- `--handoff-profile rigorous` is the default. It includes the external
+  whole-chart portrait, authoring ledger, per-card checkpoints, five-card
+  audits, and resumable execution protocol.
+- `--handoff-profile compact` emits a low-ceremony single-subject brief and
+  prompt. It preserves the same deck schema, evidence boundaries, voice and
+  density contracts, independent-card standard, filters, theme groups,
+  summaries, linting, and final validation, but does not require auxiliary
+  portrait, ledger, or scheduled checkpoint artifacts.
+
+Compact mode treats checkpointing as interruption recovery rather than the
+normal unit of authorship. It exists for execution environments where the
+rigorous protocol's operational surface consumes disproportionate authoring
+time or triggers premature scope refusal. Individual output decks are
+structurally identical across profiles.
 
 ## 17. QA requirements
 

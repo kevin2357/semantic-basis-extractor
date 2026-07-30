@@ -1354,10 +1354,15 @@ def write_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -> None:
+def copy_static_assets(
+    bundle: Path,
+    repo_root: Path,
+    manual_zip: Path | None,
+    handoff_profile: str = "rigorous",
+) -> None:
     static = bundle / "static"
     static.mkdir(parents=True, exist_ok=True)
-    sources = {
+    rigorous_sources = {
         "Semantic Basis Extractor Pipeline and Scoring Metrics.md": (
             repo_root / "docs" / "extractor"
             / "Semantic Basis Extractor Pipeline and Scoring Metrics.md"
@@ -1374,6 +1379,10 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
             repo_root / "docs" / "post_extraction_authoring"
             / "LLM Card-by-Card Authoring Execution Protocol.md"
         ),
+        "AstroWoof Independent Card Writing Brief.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "AstroWoof Independent Card Writing Brief.md"
+        ),
         "AstroWoof Projected Natal Card Authoring Manual.md": (
             repo_root / "docs" / "post_extraction_authoring"
             / "AstroWoof Projected Natal Card Authoring Manual.md"
@@ -1386,12 +1395,30 @@ def copy_static_assets(bundle: Path, repo_root: Path, manual_zip: Path | None) -
             / "AstroWoof Bre Editorial Gold Reference.json"
         ),
     }
+    compact_sources = {
+        "AstroWoof Compact Single-Subject Authoring Brief.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "AstroWoof Compact Single-Subject Authoring Brief.md"
+        ),
+        "Compact LLM Handoff Prompt.md": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "Compact LLM Handoff Prompt.md"
+        ),
+        "AstroWoof Authoring Packet Schema.json": (
+            repo_root / "docs" / "extractor" / "AstroWoof Authoring Packet Schema.json"
+        ),
+        "AstroWoof Bre Editorial Gold Reference.json": (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "AstroWoof Bre Editorial Gold Reference.json"
+        ),
+    }
+    sources = compact_sources if handoff_profile == "compact" else rigorous_sources
     for name, source in sources.items():
         if source.exists():
             shutil.copy2(source, static / name)
     # An explicit archive may temporarily override the repository-owned manual,
     # but normal builds must not depend on a personal filesystem path.
-    if manual_zip and manual_zip.exists():
+    if handoff_profile == "rigorous" and manual_zip and manual_zip.exists():
         with zipfile.ZipFile(manual_zip) as archive:
             member = next(
                 x for x in archive.namelist()
@@ -1427,6 +1454,16 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("semantic-basis-output"))
     parser.add_argument("--bundle-dir", type=Path, default=Path("llm-handoff-bundle"))
     parser.add_argument(
+        "--handoff-profile",
+        choices=("rigorous", "compact"),
+        default="rigorous",
+        help=(
+            "Instruction profile for the generated LLM bundle. "
+            "'rigorous' preserves the resumable ledger/checkpoint protocol; "
+            "'compact' emits a low-ceremony single-subject authoring brief."
+        ),
+    )
+    parser.add_argument(
         "--fail-fast",
         action="store_true",
         help="Stop at the first invalid subject rather than finishing the batch manifest.",
@@ -1445,12 +1482,22 @@ def main() -> None:
     packages = discover_subject_packages(input_package, args.subject)
     repo_root = Path(__file__).resolve().parent.parent
     args.bundle_dir.mkdir(parents=True, exist_ok=True)
-    batch_readme = (
-        repo_root / "docs" / "post_extraction_authoring"
-        / "Multi-Subject LLM Handoff README.md"
-    )
-    if batch_readme.exists():
-        shutil.copy2(batch_readme, args.bundle_dir / "README.md")
+    if args.handoff_profile == "compact":
+        (args.bundle_dir / "README.md").write_text(
+            "# AstroWoof Compact LLM Handoff\n\n"
+            "Each subject directory is an independent authoring job. Read its "
+            "`manifest.json`, then follow "
+            "`static/Compact LLM Handoff Prompt.md` and "
+            "`static/AstroWoof Compact Single-Subject Authoring Brief.md`.\n",
+            encoding="utf-8",
+        )
+    else:
+        batch_readme = (
+            repo_root / "docs" / "post_extraction_authoring"
+            / "Multi-Subject LLM Handoff README.md"
+        )
+        if batch_readme.exists():
+            shutil.copy2(batch_readme, args.bundle_dir / "README.md")
     validator = repo_root / "src" / "validate_astrowoof_editorial.py"
     if validator.exists():
         shutil.copy2(validator, args.bundle_dir / validator.name)
@@ -1522,9 +1569,15 @@ def main() -> None:
                 root / f"{subject}.selection-qa.json",
                 request / f"{subject}.selection-qa.json",
             )
-            copy_static_assets(subject_bundle, repo_root, args.manual_zip)
+            copy_static_assets(
+                subject_bundle,
+                repo_root,
+                args.manual_zip,
+                args.handoff_profile,
+            )
             manifest = {
-                "bundle_version": "astrowoof.llm_handoff.v0.4.1",
+                "bundle_version": "astrowoof.llm_handoff.v0.4.3",
+                "handoff_profile": args.handoff_profile,
                 "subject": subject,
                 "instruction": (
                     "Use the prompt and static guidance to edit only permitted "
@@ -1588,10 +1641,15 @@ def main() -> None:
     write_json(
         args.bundle_dir / "manifest.json",
         {
-            "bundle_version": "astrowoof.llm_handoff.v0.4.1",
+            "bundle_version": "astrowoof.llm_handoff.v0.4.3",
+            "handoff_profile": args.handoff_profile,
             "instruction": (
                 "Read README.md, then process each passing subject independently "
-                "with its mandatory card-by-card execution protocol."
+                + (
+                    "with its compact single-subject authoring brief."
+                    if args.handoff_profile == "compact"
+                    else "with its mandatory card-by-card execution protocol."
+                )
             ),
             "subject_count": len(run_records),
             "subjects": [

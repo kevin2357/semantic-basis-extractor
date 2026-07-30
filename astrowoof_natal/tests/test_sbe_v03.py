@@ -393,6 +393,7 @@ class TestPackageDiscoveryAndRegistry(unittest.TestCase):
             copy_static_assets(bundle, ROOT, None)
             expected = {
                 "AstroWoof Projected Natal Card Authoring Manual.md",
+                "AstroWoof Independent Card Writing Brief.md",
                 "LLM Card-by-Card Authoring Execution Protocol.md",
                 "LLM Editing Permissions and QA Checklist.md",
                 "Proposed LLM Handoff Prompt.md",
@@ -402,6 +403,22 @@ class TestPackageDiscoveryAndRegistry(unittest.TestCase):
                     {path.name for path in (bundle / "static").iterdir()}
                 )
             )
+
+    def test_compact_handoff_static_assets_exclude_rigorous_protocol(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = Path(temporary) / "subject"
+            copy_static_assets(bundle, ROOT, None, "compact")
+            names = {path.name for path in (bundle / "static").iterdir()}
+            self.assertIn(
+                "AstroWoof Compact Single-Subject Authoring Brief.md",
+                names,
+            )
+            self.assertIn("Compact LLM Handoff Prompt.md", names)
+            self.assertNotIn(
+                "LLM Card-by-Card Authoring Execution Protocol.md",
+                names,
+            )
+            self.assertNotIn("Proposed LLM Handoff Prompt.md", names)
 
     def test_discovers_multiple_subject_directories(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

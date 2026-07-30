@@ -1,10 +1,13 @@
-# LLM Card-by-Card Authoring Execution Protocol v0.4.1
+# LLM Card-by-Card Authoring Execution Protocol v0.4.2
 
 This protocol governs the working method used to turn one AstroWoof selected
 authoring packet into a finished deck. It is mandatory. The authoring manual
 defines the editorial standard; the handoff prompt defines the deliverable;
 this document defines how to complete the work without collapsing into
 template substitution.
+
+`AstroWoof Independent Card Writing Brief.md` defines the positive creative
+method and is mandatory alongside this protocol.
 
 ## 1. Governing rule
 
@@ -56,6 +59,13 @@ For every completed claim, the private ledger records:
 - `priority_id` and `claim_id`;
 - canonical claim;
 - one-sentence decoded semantic brief;
+- center of gravity;
+- recognizable behavior;
+- likely handler misreading;
+- grounded surprise;
+- memorable image;
+- chosen narrative angle and why it fits;
+- semantic-story overlap check;
 - the card's unique editorial job;
 - the two closest neighboring claim IDs and a concrete explanation of how this
   card's reader value differs from each;
@@ -143,22 +153,29 @@ For the current card only:
 4. Look up every compound projected term, operator, sign, Doghouse, aspect, and
    other relevant entry in `projected_term_registry`.
 5. Write a private one-sentence semantic brief in natural behavioral language.
-6. Define the card's unique editorial job.
-7. State how this job differs from the two most semantically adjacent selected
+6. Answer every private planning question in the independent-card writing
+   brief.
+7. Define the card's center of gravity and unique editorial job.
+8. Choose the narrative angle because it best reveals this claim; never rotate
+   angles by index or claim type.
+9. State how this job differs from the two most semantically adjacent selected
    claims, naming their claim IDs and the behavioral distinction.
-8. Compare that job with all completed ledger entries and the whole-chart
+10. Compare that job with all completed ledger entries and the whole-chart
    portrait.
-9. Choose a concrete dog-life expression or relational scene when the evidence
-   supports one.
-10. Write all handler renderings.
-11. Write all direct-to-dog renderings independently.
-12. Write all hybrid renderings as reciprocal dog-human interactions.
-13. Write specific `dos` and `donts`.
-14. Design one claim-specific humor set.
-15. Assign only strongly relevant context filters and record why.
-16. Run card-level QA.
-17. Save the card, ledger, and checkpoint.
-18. Only then begin the next priority ID.
+11. Choose a concrete dog-life expression or relational scene only when the
+    evidence naturally supports one. Scenes are optional and never drawn from
+    a bank.
+12. Set aside previous cards' syntax while retaining their semantic stories in
+    memory.
+13. Write all handler renderings.
+14. Write all direct-to-dog renderings independently.
+15. Write all hybrid renderings as reciprocal dog-human interactions.
+16. Write specific `dos` and `donts`.
+17. Design one claim-specific humor set.
+18. Assign only strongly relevant context filters and record why.
+19. Run card-level QA.
+20. Save the card, ledger, and checkpoint.
+21. Only then begin the next priority ID.
 
 The private semantic brief must decode the claim. It must not merely replace
 underscores with spaces or concatenate registry labels.
@@ -167,6 +184,9 @@ underscores with spaces or concatenate registry labels.
 
 Every reader-facing line fails when it could fit five other claims after
 changing only the dog's name or projected terms.
+
+Every card also fails when it tells the same semantic story as several other
+cards using different words. Lexical uniqueness is not editorial independence.
 
 Reject and rewrite prose when:
 
@@ -347,8 +367,12 @@ After every five completed cards:
    comic mechanisms, and claim-type-correlated sentence frames;
 8. compare the five new ledger jobs with adjacent claims and reject generic
    "Explain X through scene Y" distinctions;
-9. correct all errors and every substantiated warning before continuing;
-10. save all working files and the externally inspectable audit artifact.
+9. compare the five new cards semantically: repeated lessons, emotional arcs,
+   behavioral sequences, tensions, and practical conclusions count as
+   repetition even when wording differs;
+10. apply the shuffled-card test from the independent writing brief;
+11. correct all errors and every substantiated warning before continuing;
+12. save all working files and the externally inspectable audit artifact.
 
 Do not stop merely because a checkpoint was reached and do not wait for user
 approval. The audit gate is internal to the single subject request but must be

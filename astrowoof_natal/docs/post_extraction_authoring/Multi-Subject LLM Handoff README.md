@@ -1,4 +1,4 @@
-# Multi-Subject LLM Handoff v0.4.1
+# Multi-Subject LLM Handoff v0.4.2
 
 This root contains one or more independent AstroWoof subject handoffs.
 
@@ -8,20 +8,24 @@ This root contains one or more independent AstroWoof subject handoffs.
 2. Process one complete subject before opening the next.
 3. Within a subject, follow
    `static/LLM Card-by-Card Authoring Execution Protocol.md` exactly.
-4. Use only that subject's request files as its factual and semantic basis.
-5. Never transfer chart facts, personality descriptions, prose, humor,
+4. Read and apply
+   `static/AstroWoof Independent Card Writing Brief.md`: author 50 independent
+   miniature essays about the same dog, with consistent understanding and
+   diverse expression.
+5. Use only that subject's request files as its factual and semantic basis.
+6. Never transfer chart facts, personality descriptions, prose, humor,
    imagery, filter assignments, theme labels, or summaries between subjects.
-6. Produce the exact output filename declared by each subject manifest.
-7. Run the root `validate_astrowoof_editorial.py` independently against each
+7. Produce the exact output filename declared by each subject manifest.
+8. Run the root `validate_astrowoof_editorial.py` independently against each
    subject's original authoring packet with `--phase authoring`.
-8. Correct every validation error before marking that subject complete.
-9. Keep a separate working deck, checkpoint, and editorial ledger per subject.
-10. If interrupted, resume the current subject at its first unfinished
+9. Correct every validation error before marking that subject complete.
+10. Keep a separate working deck, checkpoint, and editorial ledger per subject.
+11. If interrupted, resume the current subject at its first unfinished
     priority ID. Do not restart completed subjects or shorten later subjects.
-11. Complete the subject's whole-chart authoring portrait before card 1.
-12. Run and save the required editorial-linter audit after each five-card
+12. Complete the subject's whole-chart authoring portrait before card 1.
+13. Run and save the required editorial-linter audit after each five-card
     checkpoint without waiting for user approval.
-13. Never use scripts or deterministic templates to generate reader-facing
+14. Never use scripts or deterministic templates to generate reader-facing
     prose.
 
 Continue automatically until every subject is complete.
