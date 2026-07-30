@@ -5,6 +5,7 @@ import re
 import sys
 import tempfile
 import unittest
+import zipfile
 from contextlib import redirect_stdout
 from copy import deepcopy
 from io import StringIO
@@ -18,6 +19,7 @@ sys.path.insert(0, str(SRC))
 
 from build_projected_semantic_basis import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
+    archive_story_workspace,
     build_candidates,
     build_story_workspace,
     compile_packet,
@@ -459,9 +461,12 @@ class TestBrePacket(unittest.TestCase):
                 (workspace / "cards").rglob("WRITE THIS CARD.md")
             ).read_text(encoding="utf-8")
             self.assertIn(
-                "Deliberately choose a different architecture",
+                "Let the previous page leave your desk",
                 story_template,
             )
+            self.assertIn("plan.memorable_takeaway", story_template)
+            self.assertIn("plan.writing_form", story_template)
+            self.assertIn("plan.comic_premise", story_template)
             profile = workspace / "WRITE WHOLE DOG PROFILE.md"
             profile.write_text(
                 profile.read_text(encoding="utf-8").replace(
@@ -563,6 +568,33 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue(report["authored_theme_group_priority_ids"])
             self.assertTrue(report["placeholder_free"])
             self.assertNotIn("__LLM_FILL__", json.dumps(deck))
+
+    def test_story_workspace_archive_contains_named_root_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            workspace = root / "kevin_1"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                10,
+                card_start=1,
+                pass_number=1,
+                pass_count=6,
+            )
+            (workspace / "WORKSPACE MANIFEST.md").write_text(
+                "# Manifest\n",
+                encoding="utf-8",
+            )
+            archive_path = archive_story_workspace(workspace)
+            self.assertEqual(root / "kevin_1.zip", archive_path)
+            self.assertTrue(archive_path.is_file())
+            with zipfile.ZipFile(archive_path) as archive:
+                names = set(archive.namelist())
+            self.assertIn("kevin_1/START HERE.md", names)
+            self.assertIn("kevin_1/GUIDING LIGHTS.md", names)
+            self.assertIn("kevin_1/lint_authoring_pass.py", names)
+            self.assertIn("kevin_1/WORKSPACE MANIFEST.md", names)
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):

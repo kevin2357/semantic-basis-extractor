@@ -1530,20 +1530,20 @@ def render_story_writing_template(
         "Write this evidence-bounded insight about the dog described in "
         "`WRITE WHOLE DOG PROFILE.md`.",
         "",
-        "Before beginning, set aside the wording, sentence structures, scenes, "
-        "jokes, and rhetorical approach used in prior stories. Retain the "
-        "whole-dog characterization and your semantic memory of completed "
-        "stories so the dog stays coherent and the lessons do not repeat.",
-        "",
-        "Before writing prose, identify the architecture used by the previous "
-        "story: its opening move, paragraph progression, advice transition, "
-        "ending, headline style, and humor mechanism. Deliberately choose a "
-        "different architecture for this story. Do not replace claim-specific "
-        "nouns inside the previous story's structure.",
+        "Let the previous page leave your desk. Carry forward your understanding "
+        "of the dog and your memory of which lessons have already been taught, "
+        "but not the previous story's sentences or structure. Before drafting, "
+        "decide this story's remembered idea, behavioral doorway, writing form, "
+        "narrative movement, and comic premise.",
         "",
         "## Editorial Plan",
         "",
         _field_block("Center of Gravity", "plan.center_of_gravity"),
+        "",
+        _field_block(
+            "Remembered Idea — What Should Remain an Hour Later?",
+            "plan.memorable_takeaway",
+        ),
         "",
         _field_block("Recognizable Behavior", "plan.recognizable_behavior"),
         "",
@@ -1552,6 +1552,13 @@ def render_story_writing_template(
         _field_block("Grounded Surprise", "plan.grounded_surprise"),
         "",
         _field_block("Distinct From Neighboring Stories", "plan.neighbor_distinction"),
+        "",
+        _field_block("Chosen Writing Form", "plan.writing_form"),
+        "",
+        _field_block(
+            "Comic Premise — What Is Funny About This Trait?",
+            "plan.comic_premise",
+        ),
         "",
         _field_block("Chosen Creative Approach", "plan.creative_approach"),
         "",
@@ -2254,21 +2261,13 @@ def build_story_workspace(
         "## Mechanical acceptance requirements\n\n"
         "Your completed pass will be checked automatically before it is "
         "accepted.\n\n"
-        "- Do not use a recurring sentence, sentence fragment, transition, "
-        "conclusion, headline pattern, or explanatory frame across cards.\n"
-        "- Every headline must be written specifically for its card. Density "
-        "and audience labels are not headline templates.\n"
-        "- Do not give every handler story the same progression, every "
-        "direct-to-dog story the same reassurance, or every hybrid story the "
-        "same dog-and-human exchange.\n"
-        "- Do not append stock interpretive sentences such as “this pattern "
-        "can express itself in more than one way,” “the practical task is,” "
-        "or “repetition turns the next step into trust.”\n"
         "- No reader-facing field may be copied exactly between cards.\n"
         "- A sequence of twelve words appearing in three different cards "
         "automatically rejects the entire pass.\n\n"
-        "Consistency belongs in the characterization of the dog, not in the "
-        "architecture of the prose.\n\n"
+        "These are rejection boundaries, not the creative quality standard. "
+        "An `accept` verdict proves that detectable copying was avoided; it "
+        "does not prove that the prose is insightful, natural, memorable, or "
+        "sufficiently varied. Use `GUIDING LIGHTS.md` as the higher standard.\n\n"
         "## Required pre-delivery check\n\n"
         "After completing every field, run:\n\n"
         "```text\n"
@@ -2344,6 +2343,28 @@ def build_story_workspace(
                 render_story_writing_template(summary, summary=True),
                 encoding="utf-8",
             )
+
+
+def archive_story_workspace(workspace: Path) -> Path:
+    """Create an attach-ready ZIP containing the workspace root directory."""
+    archive_path = workspace.parent / f"{workspace.name}.zip"
+    if archive_path.exists():
+        archive_path.unlink()
+    with zipfile.ZipFile(
+        archive_path,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED,
+    ) as archive:
+        for path in sorted(workspace.rglob("*")):
+            if path.is_file():
+                archive.write(
+                    path,
+                    arcname=(
+                        Path(workspace.name)
+                        / path.relative_to(workspace)
+                    ).as_posix(),
+                )
+    return archive_path
 
 
 def copy_static_assets(
@@ -2512,8 +2533,9 @@ def main() -> None:
             "# AstroWoof Story Workspace Handoff\n\n"
             "Each pass directory is a self-contained Markdown authoring "
             "assignment. In split layout, passes 1–5 each contain ten stories "
-            "and pass 6 contains the four full-chart summaries. Open each pass "
-            "in its own temporary chat, read that pass's `START HERE.md`, and "
+            "and pass 6 contains the four full-chart summaries. An attach-ready "
+            "ZIP is generated beside every pass directory. Open each ZIP in "
+            "its own temporary chat, read that pass's `START HERE.md`, and "
             "return the completed pass directory as a ZIP archive. The six "
             "passes may run simultaneously.\n",
             encoding="utf-8",
@@ -2614,6 +2636,12 @@ def main() -> None:
                 for stale_path in stale_subject_paths:
                     if stale_path.exists():
                         shutil.rmtree(stale_path)
+                for index in range(1, 7):
+                    stale_archive = (
+                        args.bundle_dir / f"{subject}_{index}.zip"
+                    )
+                    if stale_archive.exists():
+                        stale_archive.unlink()
                 if args.workspace_layout == "split":
                     pass_specs = [
                         (1, 1, 10, False, False),
@@ -2660,6 +2688,7 @@ def main() -> None:
                             f"- **Start with:** `START HERE.md`\n",
                             encoding="utf-8",
                         )
+                        archive_story_workspace(pass_bundle)
                         subject_bundles.append(pass_bundle)
                 else:
                     subject_bundle.mkdir(parents=True, exist_ok=True)
