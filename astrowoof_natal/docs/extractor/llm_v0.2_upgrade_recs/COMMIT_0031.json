@@ -1,0 +1,12 @@
+{
+  "commit": "0031",
+  "parent": "0030",
+  "title": "Reference Implementation and Extensibility",
+  "next": "REC-031 Documentation Standards and Future Evolution",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "296871bce896dc46e7c04ef07aab5939123728e4556f32443a4c3fcb1ce3c063",
+    "sbe_v0_2_checkpoint.json": "5c1b435bcee28860acccc90474249a9de5d2afb29d2787355fd6733dca3b6b3f",
+    "sbe_v0_2_design_ledger.json": "b4d0f9b72963d5e4441076adc73347592a7395af9ecce2840faa17c251214c5b",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "commit": "0007",
+  "parent": "0006",
+  "title": "Utility Vector Calibration",
+  "added_sections": [
+    "REC-006 \u2014 Utility Vector Calibration"
+  ],
+  "next": "REC-007 \u2014 Marginal Bundle Comparison and Selection Stability",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "87f152a9c53953cdb0dce324e968a17749489dd8ec20dd7b3dc4d5357fba754d",
+    "sbe_v0_2_checkpoint.json": "3e227d694042c930b45f8664ef1f5c3ba7f8292b087ce5ee3fb2573e93311bfc",
+    "sbe_v0_2_design_ledger.json": "3f9bd751a48f9a92264be0842493c1f26e401c63452fb1a84a053ea6cdd38a16",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

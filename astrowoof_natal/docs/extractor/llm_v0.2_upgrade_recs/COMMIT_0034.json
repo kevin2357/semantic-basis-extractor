@@ -1,0 +1,12 @@
+{
+  "commit": "0034",
+  "parent": "0033",
+  "title": "Editorial Consistency and Publication Readiness",
+  "next": "Final publication bundle and closure",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "ebeb726d604670a77cf7b2b7e5837087f296d7eeec1d53bb6597cd37c340146d",
+    "sbe_v0_2_checkpoint.json": "6f6f1fd5f818bc3a63326da10753ccf70e9aeb628dd5a0b2494c2372bb55f73c",
+    "sbe_v0_2_design_ledger.json": "c02cc170ebd08217cdfb04e68d6539629637dcc134190a3e3a8ecaa443fad1ea",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

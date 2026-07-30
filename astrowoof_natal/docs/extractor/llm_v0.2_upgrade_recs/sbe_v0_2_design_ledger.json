@@ -1,0 +1,428 @@
+{
+  "architectural_principles": [
+    "Treat SBE as deterministic semantic compression.",
+    "Preserve architectural boundaries.",
+    "Favor evolutionary improvements.",
+    "Use Bre as a continuous case study."
+  ],
+  "accepted_process_rules": [
+    "Authoritative source is working markdown.",
+    "Checkpoint drives resumption.",
+    "Ledger records architectural decisions.",
+    "Do not substantially change document style mid-project."
+  ],
+  "recommendations": [
+    {
+      "id": "REC-001",
+      "status": "drafted",
+      "complexity": "Low",
+      "benefit": "High",
+      "risk": "Low"
+    },
+    {
+      "id": "REC-002",
+      "title": "Configuration Completion Bonus",
+      "status": "drafted",
+      "decision": "accept_for_staged_implementation",
+      "origin": "Observed incomplete preservation risk in Bre Moon-Saturn-North Node developmental regulation cluster.",
+      "affects": [
+        "whole_graph_analysis",
+        "portfolio_optimizer",
+        "selection_audit",
+        "future_candidate_generation"
+      ],
+      "compatibility": "Backward-compatible behind profile flag; no graph or authoring-packet contract break.",
+      "complexity": "Medium",
+      "benefit": "Medium to High",
+      "risk": "Low to Medium",
+      "key_constraints": [
+        "Deterministic detection",
+        "No inferred edges",
+        "Exact closure cost remains charged",
+        "Bounded bonus",
+        "Anti-stacking cap",
+        "Baseline reproducibility when disabled"
+      ]
+    },
+    {
+      "id": "REC-003",
+      "title": "Hub Preservation",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-005",
+      "title": "Utility Vector Diversity",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-006",
+      "title": "Utility Vector Calibration",
+      "status": "drafted",
+      "origin": "Need to calibrate and explain interactions among REC-001 through REC-005 and existing utility components.",
+      "affects": [
+        "utility_vector",
+        "optimizer_observability",
+        "qa",
+        "completion_logs",
+        "versioning"
+      ],
+      "compatibility": "Backward compatible when introduced first as profile extraction and diagnostic tracing.",
+      "classification": {
+        "implementation_complexity": "Medium",
+        "expected_benefit": "High",
+        "architectural_risk": "Low"
+      }
+    },
+    {
+      "id": "REC-007",
+      "title": "Marginal Bundle Comparison and Selection Stability",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-008",
+      "title": "Portfolio Drift and Stability Metrics",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-009",
+      "title": "Portfolio Coverage Metrics",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-010",
+      "title": "Coverage Targets and Budget Allocation",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-011",
+      "title": "Candidate Family Expansion Strategy",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-012",
+      "title": "Candidate Family Lifecycle",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-013",
+      "title": "Candidate Family Deprecation and Compatibility",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-014",
+      "title": "Candidate Family Composition",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-015",
+      "title": "Cross-Family Conflict Resolution",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-016",
+      "title": "Cross-Family Provenance",
+      "status": "drafted",
+      "affects": [
+        "candidate_schema",
+        "composition",
+        "optimizer_diagnostics",
+        "coverage",
+        "compatibility"
+      ],
+      "classification": {
+        "implementation_complexity": "Medium",
+        "expected_benefit": "High",
+        "architectural_risk": "Low"
+      }
+    },
+    {
+      "id": "REC-017",
+      "title": "Stable Candidate Identity",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-018",
+      "title": "Candidate Canonicalization",
+      "status": "drafted",
+      "affects": [
+        "candidate_schema",
+        "stable_identity",
+        "cross_family_composition",
+        "conflict_resolution",
+        "coverage",
+        "portfolio_drift",
+        "compatibility"
+      ],
+      "classification": {
+        "implementation_complexity": "Medium",
+        "expected_benefit": "High",
+        "architectural_risk": "Medium-Low"
+      }
+    },
+    {
+      "id": "REC-019",
+      "title": "Candidate Registry and Schema Governance",
+      "status": "drafted",
+      "affects": [
+        "candidate_schema",
+        "registry",
+        "canonicalization",
+        "provenance",
+        "utility",
+        "coverage",
+        "compatibility",
+        "validation"
+      ],
+      "classification": {
+        "implementation_complexity": "Medium",
+        "expected_benefit": "High",
+        "architectural_risk": "Medium-Low"
+      }
+    },
+    {
+      "id": "REC-020",
+      "title": "End-to-End Candidate Processing Pipeline",
+      "status": "drafted",
+      "affects": [
+        "execution_pipeline",
+        "candidate_generation",
+        "validation",
+        "canonicalization",
+        "identity",
+        "optimization",
+        "provenance",
+        "coverage",
+        "artifacts",
+        "completion_logs",
+        "qa"
+      ],
+      "classification": {
+        "implementation_complexity": "High",
+        "expected_benefit": "Very High",
+        "architectural_risk": "Medium"
+      }
+    },
+    {
+      "id": "REC-021",
+      "title": "Completion Log and Execution Diagnostics",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-022",
+      "title": "Output Profiles",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-023",
+      "title": "Artifact Packaging and Manifest Contracts",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-024",
+      "title": "Replay and Reproducibility Contracts",
+      "status": "drafted",
+      "affects": [
+        "replay",
+        "reproducibility",
+        "historical_compatibility",
+        "stage_reuse",
+        "migration",
+        "artifact_integrity",
+        "completion_logs",
+        "qa"
+      ],
+      "classification": {
+        "implementation_complexity": "Medium-High",
+        "expected_benefit": "Very High",
+        "architectural_risk": "Medium-Low"
+      }
+    },
+    {
+      "id": "REC-025",
+      "title": "Operational Configuration and Feature-Flag Governance",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-026",
+      "title": "Operational Deployment and Lifecycle Guidance",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-027",
+      "title": "Security, Integrity, and Trust Boundaries",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-028",
+      "title": "Performance, Scalability, and Resource Management",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-029",
+      "title": "Testing Strategy and Regression Governance",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-030",
+      "title": "Reference Implementation and Extensibility",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-031",
+      "title": "Documentation Standards and Future Evolution",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-032",
+      "title": "Final Integration, Appendices, and Publication Guidance",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-033",
+      "title": "Editorial Consistency and Publication Readiness",
+      "status": "drafted"
+    },
+    {
+      "id": "REC-034",
+      "title": "Publication Closure and Version 0.2 Release",
+      "status": "drafted"
+    }
+  ],
+  "architectural_decisions": [
+    {
+      "decision": "Treat configuration completion as portfolio-relative rather than a fixed candidate score.",
+      "commit": "0003"
+    },
+    {
+      "decision": "Separate configuration detection, completion bonus, and optional synthesis generation into staged capabilities.",
+      "commit": "0003"
+    },
+    {
+      "decision": "Use Bre Moon-Saturn-North Node as a named regression fixture without hard-coding a required final selection outcome.",
+      "commit": "0003"
+    },
+    {
+      "decision": "Treat utility calibration as a versioned engineering process rather than informal weight tuning.",
+      "commit": "0007"
+    },
+    {
+      "decision": "Separate intrinsic, bundle, marginal, and portfolio-level utility in diagnostics.",
+      "commit": "0007"
+    },
+    {
+      "decision": "Adopt exact-selection and invariant golden fixtures.",
+      "commit": "0007"
+    },
+    {
+      "decision": "Separate source, dependency, transformation, decision, and historical provenance.",
+      "commit": "0017"
+    },
+    {
+      "decision": "Treat layered provenance as authoritative and flattened provenance as a compatibility projection.",
+      "commit": "0017"
+    },
+    {
+      "decision": "Do not treat optimizer rationale as semantic source evidence.",
+      "commit": "0017"
+    },
+    {
+      "decision": "Canonicalize candidates before identity assignment, equivalence merging, conflict grouping, scoring, and optimization.",
+      "commit": "0019"
+    },
+    {
+      "decision": "Use schema-aware normalization that preserves meaningful direction, roles, and ordered configuration structure.",
+      "commit": "0019"
+    },
+    {
+      "decision": "Treat canonicalization profiles as versioned migration boundaries and preserve old-to-new identity lineage.",
+      "commit": "0019"
+    },
+    {
+      "decision": "Use a versioned Candidate Registry as the authoritative source for shared candidate vocabulary and schema contracts.",
+      "commit": "0020"
+    },
+    {
+      "decision": "Reserve deprecated identifiers permanently and prohibit semantic repurposing.",
+      "commit": "0020"
+    },
+    {
+      "decision": "Pin registry and compatibility profile versions in completion logs and replayable artifacts.",
+      "commit": "0020"
+    },
+    {
+      "decision": "Adopt the REC-020 logical stage sequence as the authoritative Semantic Basis Extractor execution contract.",
+      "commit": "0021"
+    },
+    {
+      "decision": "Require canonicalization before identity, equivalence merging before scoring, and provenance finalization after optimization.",
+      "commit": "0021"
+    },
+    {
+      "decision": "Treat materialization as a read-only projection over finalized selection and provenance.",
+      "commit": "0021"
+    },
+    {
+      "decision": "Require completion logs and QA status to reflect only stages and checks that actually executed.",
+      "commit": "0021"
+    },
+    {
+      "decision": "Distinguish semantic, metric, artifact, byte, and historical reproducibility claims.",
+      "commit": "0025"
+    },
+    {
+      "decision": "Require replay modes to declare reused, recomputed, and migrated stages explicitly.",
+      "commit": "0025"
+    },
+    {
+      "decision": "Require replay equivalence reports and prohibit silent profile or registry substitution.",
+      "commit": "0025"
+    }
+  ],
+  "cross_reference_queue": [
+    "REC-003 Hub Preservation should distinguish coherent motif completion from generic hub sampling.",
+    "REC-004 Structural Inevitability Penalty should exclude angle-only inevitable geometry from configuration qualification.",
+    "Portfolio Optimization chapter should revisit configuration bonuses, anti-stacking, and possible beam/MIP alternatives.",
+    "QA chapter should consolidate the Bre developmental-regulation regression fixture.",
+    "REC-001 through REC-005 -> REC-006 calibration interactions",
+    "REC-006 -> future optimizer comparison chapter",
+    "REC-006 -> QA and completion-log chapters",
+    "REC-017 Stable Candidate Identity should derive IDs from REC-018 canonical identity material.",
+    "REC-016 Cross-Family Provenance should record canonicalization profile, normalization events, and identity migration lineage.",
+    "REC-015 conflict grouping should occur after exact canonical-equivalence merging.",
+    "REC-009 coverage and REC-008 drift metrics should consume canonical candidate and source identities.",
+    "REC-001 through REC-019 should reference REC-020 stage placement where useful during final editorial integration.",
+    "REC-021 should expand Stage 21 and Stage 22 completion-log and QA-summary contracts.",
+    "Implementation architecture should use REC-020 as its organizing spine.",
+    "REC-020 replay architecture should cross-reference REC-024 during final integration.",
+    "REC-021 completion-log contract should include replay-specific fields from REC-024.",
+    "REC-023 package manifests should identify replayability level and immutable references."
+  ],
+  "editorial_passes": [
+    {
+      "id": "EP-001",
+      "title": "Global Consistency Review",
+      "status": "completed"
+    },
+    {
+      "id": "EP-002",
+      "title": "Publication Structure Enhancements",
+      "status": "completed"
+    },
+    {
+      "id": "EP-003",
+      "title": "Holistic Publication Edit",
+      "status": "completed",
+      "outputs": [
+        "sbe_v0_2_design_proposal.working.md",
+        "sbe_v0_2_design_proposal.publication_draft.md",
+        "EDITORIAL_AUDIT_0038.md"
+      ],
+      "known_issue": "REC-004 absent from source proposal and design ledger"
+    },
+    {
+      "id": "EP-004",
+      "title": "Final Line Edit",
+      "status": "completed"
+    }
+  ]
+}

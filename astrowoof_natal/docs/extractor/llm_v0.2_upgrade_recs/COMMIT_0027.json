@@ -1,0 +1,12 @@
+{
+  "commit": "0027",
+  "parent": "0026",
+  "title": "Operational Deployment and Lifecycle Guidance",
+  "next": "REC-027 Security, Integrity, and Trust Boundaries",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "d47704351fafa419a7c27853a97192795670ed8737eb364636f7d556e48e44dc",
+    "sbe_v0_2_checkpoint.json": "cbc0fc668bff6e3ff20c053bbd9fd0cf5a83198fbd562746b66d1c11a06ed31a",
+    "sbe_v0_2_design_ledger.json": "22f11198f1e73a8b6569458716c26e6b680bc23981ee97cec14007a00eda3f2a",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

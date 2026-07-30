@@ -1,0 +1,15 @@
+{
+  "commit": "0022",
+  "parent": "0021",
+  "title": "Completion Log and Execution Diagnostics",
+  "added": [
+    "REC-021"
+  ],
+  "next": "REC-022 Output Profiles",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "28104ad8912724360b3c08d731c8315ddc6c0526ebd27ba7ebe3eba3ce4db5f8",
+    "sbe_v0_2_checkpoint.json": "954822b31f0aa3d20bee75655bbd9b32869dd0fd0fa7f7e083f23d4d6f10ed4d",
+    "sbe_v0_2_design_ledger.json": "67e08671c85ded1a04c628a796a9c70a87f9940d08346d4016462d9acaa7aa58",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

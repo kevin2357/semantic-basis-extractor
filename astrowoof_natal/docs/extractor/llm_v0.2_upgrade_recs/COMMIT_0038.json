@@ -1,0 +1,16 @@
+{
+  "commit": "0038",
+  "parent": "0037",
+  "title": "Holistic Publication Editorial Pass",
+  "type": "editorial",
+  "architectural_meaning_changed": false,
+  "known_issue": "REC-004 source chapter absent",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "13949fb2cb8352c0efb6260197ae6cfb8cc4987bf1d5a0e7a762656b4218757d",
+    "sbe_v0_2_design_proposal.publication_draft.md": "13949fb2cb8352c0efb6260197ae6cfb8cc4987bf1d5a0e7a762656b4218757d",
+    "EDITORIAL_AUDIT_0038.md": "ee3944b42caea7b7e606abebf7d4f055d1a6f61740ce07befdbdd8df5c8966e2",
+    "sbe_v0_2_checkpoint.json": "0f646a6e02f4ceea6934c6d5ab0e554daff0ea45972da242a0d99bf18b5c83d9",
+    "sbe_v0_2_design_ledger.json": "73a077007fb0be2a66ee872d60d8079632c1326105a9f4ddbd3d3464b37c94d3",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

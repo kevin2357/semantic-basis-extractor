@@ -1,0 +1,256 @@
+Perform a complete editorial refinement pass on the attached AstroWoof natal-card JSON.
+
+Your job is to improve the human-facing writing while preserving the artifact’s data contract, astrological meaning, evidence, claim selection, and card ordering.
+
+IMPORTANT EXECUTION RULE
+
+Work through all 50 cards systematically. Do not stop merely because the response window or tooling session is becoming long.
+
+Maintain an internal ledger of completed priority_ids. If interrupted or forced into another execution window:
+
+1. Save the valid work completed so far.
+2. Record the last completed priority_id.
+3. Resume automatically at the next unfinished card.
+4. Do not restart completed cards.
+5. Do not ask the user to paste the instructions again.
+6. Continue until all cards are edited, assembled into one JSON file, and validated.
+
+Do not abbreviate later cards to save time. Card 50 must receive the same editorial care as card 1.
+
+OUTPUT REQUIREMENT
+
+Return one complete, parseable JSON artifact—not commentary, excerpts, pseudocode, a patch, or a partially edited sample.
+
+PRESERVE EXACTLY
+
+Do not change:
+
+- claim count
+- card order
+- priority_id
+- claim_id
+- claim_type
+- canonical_claim
+- category
+- importance
+- confidence
+- strength
+- selection metadata
+- behavioral_domains
+- tags
+- evidence
+- relations
+- top-level subject, source, coverage, categories, or behavioral_domains
+- the meaning or factual astrological basis of any card
+
+Preserve the complete top-level projected_term_registry in the final artifact. It must not be omitted, shortened, summarized, regenerated from memory, or moved inside an individual card. Preserve all registry entries, including terms for projected concepts, operators, signs, houses/Doghouses, aspects, and other included vocabulary.
+
+If pronoun metadata exists in the input, preserve it. Do not leave pronoun metadata blank while freely introducing gendered pronouns. For Bre, use the subject metadata supplied by the source artifact consistently.
+
+FIELDS YOU MAY EDIT
+
+Edit only the human-facing editorial fields:
+
+- headlines
+- bodies
+- dos
+- donts
+- funny_dog_quotes
+- imperative_dog_quotes
+- applicable_canine_jokes
+
+If the supplied schema or validator defines a slightly different explicit editable-field list, follow that contract, but do not alter locked semantic or evidentiary fields.
+
+OVERALL EDITORIAL STANDARD
+
+Write warm, observant, specific prose that sounds like a perceptive human who understands both dogs and astrology.
+
+The cards should feel:
+
+- affectionate without becoming sentimental
+- intelligent without sounding academic
+- playful without turning every sentence into a joke
+- confident without presenting interpretations as clinical facts
+- concrete enough to picture in ordinary dog life
+- varied enough that the collection does not reveal a template
+
+Prefer recognizable moments involving greetings, walks, thresholds, toys, meals, visitors, training, rest, search games, transitions, favorite people, household activity, recovery, and changes of plan.
+
+Do not invent biography, events, diagnoses, breeds, medical conditions, or behavioral history not supported by the packet.
+
+Avoid:
+
+- “architecture”
+- “projection” or “projected graph”
+- “semantic system”
+- “selected deck”
+- “selected systems”
+- “this synthesis rests on”
+- “this claim combines”
+- “the source material says”
+- discussion of evidence assembly or authoring mechanics
+- repetitive therapeutic language
+- generic filler that could describe any dog
+- exaggerated certainty
+- repeatedly announcing the same interpretive formula
+
+The evidence and derivation should inform the prose invisibly. End users should read an interpretation of Bre, not an explanation of how the artifact was constructed.
+
+VOICE CONTRACTS
+
+HANDLER
+
+Address the human and describe Bre in the third person.
+
+The handler voice should help the person recognize Bre’s tendencies, understand what may be happening, and respond constructively. It may offer gentle practical guidance, but it should not become a sequence of commands.
+
+DIRECT_TO_DOG
+
+Address Bre directly as “you.”
+
+This must sound like an affectionate reading spoken to the dog, not handler prose with pronouns mechanically replaced. Keep it intelligible, warm, and respectful. Do not make Bre sound foolish or reduce every interpretation to treats.
+
+HYBRID
+
+Hybrid is a genuinely relational voice. It must describe an interaction between Bre and her person, not merely describe Bre to the handler with slightly altered wording.
+
+Each hybrid body should contain, explicitly or implicitly:
+
+1. something Bre contributes to the interaction;
+2. something the person, environment, or relationship contributes;
+3. the resulting rhythm, adjustment, feedback, or next possibility.
+
+However, DO NOT force those elements into the same sentence template.
+
+The previous “Bre brings X; you bring Y; her response tells you Z” construction may appear occasionally, but it must not dominate the collection.
+
+Hybrid bodies should vary their organizing form. Use a mixture of:
+
+- a shared activity or ritual;
+- an observation about what happens between dog and person;
+- an “if/then” interaction;
+- complementary roles expressed naturally;
+- a moment of mutual adjustment;
+- a progression across two or three beats;
+- a relationship outcome that develops over time;
+- an invitation to notice Bre’s response;
+- occasional direct “Bre brings / you bring” language.
+
+Do not begin more than 20% of hybrid bodies at any density with “Bre” or “Bre’s.”
+
+Do not begin more than 20% with a stock transition such as:
+
+- “In practice”
+- “Here”
+- “At this point”
+- “As the interaction unfolds”
+- “Within this exchange”
+
+Across all 50 cards, do not repeatedly end with:
+
+- “Her response tells you…”
+- “Her next move shows…”
+- “Her return tells you…”
+- “This tells you whether…”
+
+Preserve the useful feedback idea, but express it in varied ways or leave it implicit when the interaction already demonstrates it.
+
+Hybrid should not always cast the human as the rule-giver and Bre as the reactor. Depending on the claim, Bre may initiate, invite, interrupt, investigate, regulate the pace, make a preference visible, restore play, request distance, or lead the pair toward useful information. The human may support, notice, answer, protect space, join, redirect, clarify, or simply refrain from crowding the moment.
+
+A good hybrid card should be identifiable as hybrid even if the labels are removed.
+
+ASTROLOGY DENSITY
+
+NO_ASTRO
+
+Use no explicit astrological terminology. Translate the claim completely into recognizable behavior, temperament, relationship, and dog-life situations.
+
+LIGHT_ASTRO
+
+Name the most useful placement, aspect, or configuration, then move promptly into interpretation. Do not overload the body with technical explanation.
+
+FULL_ASTRO
+
+Explain the relevant astrological components and how they combine, but still write for a reader rather than a graph-processing system.
+
+Projected registry vocabulary may be used when it adds flavor or precision, especially established AstroWoof terms such as Doghouse. Decode registry meanings accurately. Do not dump registry definitions, mechanically concatenate compound phrases, or force unusual projected vocabulary into every card.
+
+The astrology-density setting governs the body and headline’s astrological explicitness. It does not make the dog quote, do list, or don’t list progressively more technical. Dog quotes should remain doglike at every density.
+
+HEADLINES
+
+Make headlines concise, memorable, and meaningfully differentiated among handler, direct-to-dog, and hybrid.
+
+Avoid mechanically repeating the same astrological noun plus a generic verb. Hybrid headlines should suggest cooperation, rhythm, exchange, or a shared situation without making every headline begin with “Together,” “Let,” or “Build.”
+
+DOS AND DON’TS
+
+Make these concrete and usable.
+
+Each item should follow naturally from its claim rather than repeat generic advice such as “be patient,” “stay consistent,” or “give space” without situational detail.
+
+Do not convert an interpretive tendency into a rigid behavioral prescription. Vary sentence structures and avoid repeating the same advice across neighboring cards unless the context materially differs.
+
+DOG QUOTES AND JOKES
+
+Keep one stable set of dog-voice humor per claim across astrology-density variants unless the schema explicitly requires otherwise.
+
+Dog quotes should be short, distinctive, and tied to the claim’s actual behavioral image. They should sound like different observations from the same dog—not 50 versions of “I require snacks.”
+
+Avoid:
+
+- technical astrology in the dog’s mouth;
+- identical joke constructions;
+- constant treat references;
+- making Bre sound incompetent;
+- generic “human, do X” quotations;
+- forced punchlines that obscure the interpretation.
+
+Humor should add personality after the card already makes sense. It must not carry essential interpretive content.
+
+VARIETY AUDIT
+
+After editing all cards, conduct a whole-deck audit rather than validating each card only in isolation.
+
+Check for:
+
+- repeated opening phrases;
+- repeated final-sentence formulas;
+- excessive “Bre brings / you bring” constructions;
+- repeated rhythms and sentence lengths;
+- neighboring cards that sound interchangeable;
+- generic advice reused across unrelated claims;
+- headlines that differ only by one substituted noun;
+- jokes with the same setup;
+- clusters of cards that cover similar themes without differentiating their practical expression.
+
+When two cards are thematically related, sharpen their distinction. For example, separate:
+
+- initiating from sustaining;
+- excitement from regulation;
+- home security from social attachment;
+- preference from resource defense;
+- confidence from impulsivity;
+- training structure from visible duty;
+- exploration from information gathering.
+
+FINAL QUALITY CHECKS
+
+Before returning the file:
+
+1. Confirm the JSON parses.
+2. Confirm all 50 cards remain.
+3. Confirm priority_ids and ordering are unchanged.
+4. Confirm all locked fields match the input.
+5. Confirm the projected_term_registry is present and unchanged.
+6. Confirm no placeholders or authoring-process language remain.
+7. Confirm every editable field is complete.
+8. Confirm no_astro contains no explicit astrology.
+9. Confirm voice roles are correct.
+10. Confirm hybrid prose is reciprocal but not templated.
+11. Confirm no more than 20% of hybrid bodies at any density begin with “Bre” or “Bre’s.”
+12. Confirm humor remains claim-specific and nontechnical.
+13. Run the supplied validator.
+14. Fix all errors and warnings before delivery.
+
+Return the completed JSON file and a very short completion note stating that all 50 cards were edited and validation passed.

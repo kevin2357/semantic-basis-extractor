@@ -1,0 +1,14 @@
+{
+  "commit": "0039",
+  "parent": "0038",
+  "title": "Final Publication Line Edit",
+  "architectural_meaning_changed": false,
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "9f356419539e8fd33bfa43db5d15dd85f390edb74c7b66cf9c4591f3004db411",
+    "sbe_v0_2_design_proposal.publication_draft.md": "9f356419539e8fd33bfa43db5d15dd85f390edb74c7b66cf9c4591f3004db411",
+    "EDITORIAL_AUDIT_0039.md": "4abd9f6a91a0742752cd8ea8fcc14fd7e6da77f99e564fc0a825797c57207c84",
+    "sbe_v0_2_checkpoint.json": "5c23bd81035f53240da061ea2b5546a3bd62c2241b8993343ec6f237275679cd",
+    "sbe_v0_2_design_ledger.json": "7f2c18004bc987a4a8c003a9606cf6ddbf8dc5e5133af83846d39af424907f6b",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

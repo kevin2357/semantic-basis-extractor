@@ -1,0 +1,8 @@
+{
+  "commit": "0018",
+  "parent": "0017",
+  "added": [
+    "REC-017 \u2014 Stable Candidate Identity"
+  ],
+  "next": "REC-018 \u2014 Candidate Canonicalization"
+}

@@ -1,0 +1,23 @@
+{
+  "commit": "0003",
+  "parent": "0002",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": {
+      "bytes": 34373,
+      "sha256": "bca486f6679f090fa220400cf2082660a403d7229808de13d8803ec38837fb34"
+    },
+    "sbe_v0_2_checkpoint.json": {
+      "bytes": 610,
+      "sha256": "5255faaa8062bed9710e66272a24856bdeb42dcfe02fb1335d694552d7a1586b"
+    },
+    "sbe_v0_2_design_ledger.json": {
+      "bytes": 2518,
+      "sha256": "9f4e49db24c9109806eb13e6ab11266a37d756c30cbfb5cc8a605643ddae3f52"
+    },
+    "README_WORKFLOW.md": {
+      "bytes": 385,
+      "sha256": "d4665722053165fd57268fc515bc4b632b85de32ca82b7ff139bab0c50ee950e"
+    }
+  },
+  "summary": "Adds REC-002 Configuration Completion Bonus and advances checkpoint/ledger."
+}

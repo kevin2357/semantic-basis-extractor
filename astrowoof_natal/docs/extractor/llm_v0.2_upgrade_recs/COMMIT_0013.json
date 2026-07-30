@@ -1,0 +1,8 @@
+{
+  "commit": "0013",
+  "parent": "0012",
+  "added": [
+    "REC-012 \u2014 Candidate Family Lifecycle"
+  ],
+  "next": "REC-013 \u2014 Candidate Family Deprecation and Compatibility"
+}

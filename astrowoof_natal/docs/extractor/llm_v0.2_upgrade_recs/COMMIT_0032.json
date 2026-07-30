@@ -1,0 +1,12 @@
+{
+  "commit": "0032",
+  "parent": "0031",
+  "title": "Documentation Standards and Future Evolution",
+  "next": "REC-032 Final Integration, Appendices, and Publication Guidance",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "e4dc8ffde848bba09a66da39eb031ac953dc59b860c355736e688e93f22b8206",
+    "sbe_v0_2_checkpoint.json": "969548c8b9450203a7cce133c82f199071103965ee2b3000a76b0114ebfbfd06",
+    "sbe_v0_2_design_ledger.json": "09e8b0aadfdf641b892d4801b18414544d150de3abae96c05243cdb8f7c85a2e",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

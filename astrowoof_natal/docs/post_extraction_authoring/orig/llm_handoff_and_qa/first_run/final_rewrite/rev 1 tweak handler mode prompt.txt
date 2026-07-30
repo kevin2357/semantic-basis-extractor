@@ -1,0 +1,48 @@
+Perform a hybrid-voice differentiation pass only. Preserve all locked fields, evidence, claim order, canonical claims, handler prose, direct-to-dog prose, humor, dos, and donts.
+
+Hybrid mode must not read like handler advice with “you” added.
+
+Use this functional distinction:
+
+- Handler explains what may be happening inside Bre.
+- Direct-to-dog expresses Bre’s imagined perspective.
+- Hybrid describes the reciprocal interaction created by Bre and the person together.
+
+Every hybrid body must include:
+
+1. what Bre brings, signals, needs, or does;
+2. what the person brings, signals, or does;
+3. how those two contributions affect one another;
+4. when appropriate, what Bre’s next response tells the person.
+
+Prefer relational feedback loops over one-way instructions.
+
+Strong hybrid patterns include:
+
+- “Bre brings X; you bring Y; together Z becomes possible.”
+- “Bre signals X; you answer with Y; her next response shows whether Z is available.”
+- “You establish X; Bre experiments with Y; together you discover Z.”
+- “When Bre does X, your Y changes the next step; when you do Y, Bre can respond with Z.”
+- “The shared rhythm is X → Y → Z.”
+- “Bre’s job is X; your job is Y; neither side has to do the other’s work.”
+
+Do not mechanically reuse these sentence frames. They describe relational structures, not templates.
+
+Avoid making hybrid bodies merely:
+
+- commands directed at the handler;
+- summaries of the handler body;
+- “Bre’s placement means X, so you should Y”;
+- generic advice followed by the word “together.”
+
+No more than 25% of hybrid bodies may begin with:
+
+- “Bre’s…”
+- an astrological placement;
+- an imperative such as Give, Use, Let, Keep, Make, Build, or Treat.
+
+In light and full astrology, the astrological source may be named, but the body must still center the interaction rather than explain the placement.
+
+Preserve current hybrid bodies that already establish genuine complementary roles, particularly cards 1, 5, 6, 7, 15, and 46, unless a small wording improvement is needed.
+
+After editing, review all hybrid bodies alone as one deck. They should sound like a relationship-centered mode with its own purpose, not a second version of handler mode.

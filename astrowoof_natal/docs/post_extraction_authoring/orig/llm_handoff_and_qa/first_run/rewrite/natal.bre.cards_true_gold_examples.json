@@ -1,0 +1,780 @@
+{
+  "reference_version": "astrowoof.editorial_gold.v1",
+  "reference_status": "human-reviewed editorial examples",
+  "subject": {
+    "subject_id": "bre",
+    "display_name": "Bre"
+  },
+  "authority": {
+    "use_as_positive_standard_for": [
+      "canonical claim scope",
+      "behavioral specificity",
+      "headline length and variety",
+      "handler voice",
+      "direct-to-dog voice",
+      "hybrid voice",
+      "astrology-density differentiation",
+      "claim-specific humor",
+      "practical dos and donts",
+      "synthesis quality",
+      "approximate prose length"
+    ],
+    "do_not_copy_mechanically": [
+      "exact sentence structures",
+      "exact jokes",
+      "exact headlines",
+      "dog-specific motifs when they do not fit another claim"
+    ],
+    "legacy_reference_warning": "The earlier 26-card Bre file is a partial semantic reference only. It is not authoritative for voice, grammar, density differentiation, humor, or pronoun handling."
+  },
+  "style_targets": {
+    "headline_words": "2-7",
+    "no_astro_body_words": "18-40",
+    "light_astro_body_words": "25-50",
+    "full_astro_body_words": "40-75",
+    "handler_voice": "Warm, observant, specific, and useful to the person caring for the dog.",
+    "direct_to_dog_voice": "Concise second-person language that gives the dog dignity, perspective, and comic agency.",
+    "hybrid_voice": "Collaborative language describing what dog and handler can notice or do together.",
+    "humor": "Specific to the claim and the dog; never a generic decoration or repeated production-line joke."
+  },
+  "cards": [
+    {
+      "claim_id": "gold_moon_regulation",
+      "claim_type": "placement",
+      "canonical_claim": "Safety Starts in Motion",
+      "demonstrates": [
+        "atomic placement",
+        "regulation language",
+        "three genuinely different voices"
+      ],
+      "evidence_summary": {
+        "source": "Moon in Aries in the first Doghouse",
+        "projected_operator": "comfort and regulation",
+        "projected_mode": "immediate, body-led response",
+        "projected_domain": "body, temperament, and immediate presence"
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Safety Starts in Motion",
+            "direct_to_dog": "Let Me Do Something",
+            "hybrid": "Move First, Settle Together"
+          },
+          "body": {
+            "handler": "Bre may settle more easily after one clear action—a short walk, a simple cue, or a change of position—than when asked to become still immediately.",
+            "direct_to_dog": "When feelings arrive at full speed, you would like one useful thing to do with your feet.",
+            "hybrid": "Give Bre a brief, familiar action; then pause together and see whether calm has become more available."
+          },
+          "funny_dog_quotes": [
+            "“I am processing this emotionally, but with legs.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear move, then ask me again.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s relaxation plan occasionally begins with a small but urgent field assignment."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "An Aries Moon Moves Toward Calm",
+            "direct_to_dog": "Your Moon Has Feet",
+            "hybrid": "Work With the Aries Moon"
+          },
+          "body": {
+            "handler": "Bre’s Aries Moon places emotional safety close to movement, bodily autonomy, and a quick response. A short action can help the feeling travel instead of becoming trapped.",
+            "direct_to_dog": "Your Aries Moon does not submit a written request for comfort. It gets up, checks the situation, and prefers a clear next step.",
+            "hybrid": "When Bre’s Aries Moon activates, you can pair one brief movement reset with a familiar settling cue rather than demanding instant stillness."
+          },
+          "funny_dog_quotes": [
+            "“My Moon would like to pace briefly and circle back.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Respect the emotional lap around the room.”"
+          ],
+          "applicable_canine_jokes": [
+            "For this Moon, “sit with the feeling” may include standing up first."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Aries Moon in Doghouse One",
+            "direct_to_dog": "Your First-House Moon Responds Fast",
+            "hybrid": "Channel the First-House Moon"
+          },
+          "body": {
+            "handler": "The Moon carries comfort and regulation; Aries gives it an immediate, action-first mode, and the first Doghouse locates that response in Bre’s body and visible temperament. Regulation may therefore begin with agency and motion before quiet reassurance can land.",
+            "direct_to_dog": "Your Aries Moon lives in the first Doghouse, so comfort reaches you through body, choice, and immediate response. You are not refusing calm; you may be taking the active route toward it.",
+            "hybrid": "Treat the Aries Moon in Bre’s first Doghouse as a sequence: acknowledge the fast bodily response, offer one constructive action, and then invite recovery without turning the chart into a rigid rule."
+          },
+          "funny_dog_quotes": [
+            "“The Moon is in Aries. The paws have been notified.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Translate the aspect into an action plan, please.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s lunar filing system is organized by urgency and distance from the nearest doorway."
+          ]
+        }
+      },
+      "dos": [
+        "Offer one short movement reset before asking for stillness",
+        "Use a familiar cue that gives Bre an achievable next step",
+        "Notice whether the body softens after action"
+      ],
+      "donts": [
+        "Demand instant stillness while arousal is rising",
+        "Repeat cues more loudly without changing the situation",
+        "Mistake urgency for bad intent"
+      ]
+    },
+    {
+      "claim_id": "gold_sun_pack_role",
+      "claim_type": "placement",
+      "canonical_claim": "The Neighborhood Correspondent",
+      "demonstrates": [
+        "identity placement",
+        "curious but non-generic humor",
+        "short direct-to-dog voice"
+      ],
+      "evidence_summary": {
+        "source": "Sun in Gemini in the third Doghouse",
+        "projected_operator": "pack-role identity",
+        "projected_mode": "information gathering",
+        "projected_domain": "smells, barks, cues, and local information"
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Neighborhood Correspondent",
+            "direct_to_dog": "I Need the Local Update",
+            "hybrid": "Let the Walk Report Back"
+          },
+          "body": {
+            "handler": "Bre may feel most like herself when she can notice what changed, investigate the local news, and bring that information back into the relationship.",
+            "direct_to_dog": "There was a new smell by the fence. Obviously, you have responsibilities.",
+            "hybrid": "Let Bre investigate, then invite a check-in so curiosity becomes part of the conversation between you."
+          },
+          "funny_dog_quotes": [
+            "“Developing story: someone moved a trash can.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Please allow time for one follow-up sniff.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre does not gossip; she maintains a highly localized information service."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Gemini Sun, Local Intelligence",
+            "direct_to_dog": "Your Gemini Sun Has Updates",
+            "hybrid": "Share the Gemini Curiosity"
+          },
+          "body": {
+            "handler": "A Gemini Sun gives Bre’s identity a curious, comparative style, while the third Doghouse makes nearby scents, sounds, cues, and changing routines especially identity-building.",
+            "direct_to_dog": "Your Gemini Sun would like everyone to know that sniffing the same corner twice can still produce new information.",
+            "hybrid": "Bre’s Gemini Sun thrives when walks include discovery and you remain part of the exchange—notice, investigate, reconnect, continue."
+          },
+          "funny_dog_quotes": [
+            "“I have three updates and one unconfirmed squirrel.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Do not rush the breaking news portion of the walk.”"
+          ],
+          "applicable_canine_jokes": [
+            "The third Doghouse has issued a bulletin: the lamppost remains extremely informative."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Gemini Sun in Doghouse Three",
+            "direct_to_dog": "Your Sun Runs the News Desk",
+            "hybrid": "Make Curiosity a Shared Role"
+          },
+          "body": {
+            "handler": "The Sun represents Bre’s organizing identity and pack role. In Gemini, that identity gathers and compares information; in the third Doghouse, it works through local scents, signals, short routes, and cue exchange. Curiosity is not incidental—it is one way Bre participates.",
+            "direct_to_dog": "Your Gemini Sun operates from the third Doghouse of smells, barks, cues, and local data. In technical terms, you are a correspondent. In practical terms, you need to inspect that hedge.",
+            "hybrid": "Use Bre’s Gemini Sun in the third Doghouse as a shared rhythm: give investigation room, reward voluntary check-ins, and let information gathering strengthen connection instead of competing with it."
+          },
+          "funny_dog_quotes": [
+            "“The Sun says identity. Gemini says follow-up questions.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Subscribe to my neighborhood briefing.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s natal chart appears to include a press credential and no deadline whatsoever."
+          ]
+        }
+      },
+      "dos": [
+        "Let part of each walk belong to investigation",
+        "Use search games and changing cue combinations",
+        "Reward check-ins after Bre gathers information"
+      ],
+      "donts": [
+        "Treat every sniff as disengagement",
+        "Demand long stretches of passive repetition",
+        "Overload Bre with several new cues at once"
+      ]
+    },
+    {
+      "claim_id": "gold_fast_front_slow_engine",
+      "claim_type": "tension",
+      "canonical_claim": "Quick Entrance, Deliberate Engine",
+      "demonstrates": [
+        "meaningful tension",
+        "synthesis that adds a new proposition",
+        "non-deficit framing"
+      ],
+      "evidence_summary": {
+        "sources": [
+          "Aries Ascendant",
+          "Moon in Aries in the first Doghouse",
+          "Mars in Taurus in the second Doghouse"
+        ],
+        "synthesis": "The first response starts quickly, while sustained action prefers commitment and gradual redirection."
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Fast Start, Steady Engine",
+            "direct_to_dog": "I Already Started",
+            "hybrid": "Choose the Route Before Launch"
+          },
+          "body": {
+            "handler": "Bre can enter a situation quickly, then become deeply committed to the direction she chose. A fast beginning does not necessarily mean easy mid-course changes.",
+            "direct_to_dog": "You were ready immediately. Changing the plan is a separate meeting.",
+            "hybrid": "Before Bre launches, make the route clear; once she commits, redirect in steps instead of expecting an instant pivot."
+          },
+          "funny_dog_quotes": [
+            "“I support flexibility in principle and this route in particular.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Announce amendments before forward motion begins.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s accelerator responds immediately; the steering committee prefers advance notice."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Aries Launch, Taurus Follow-Through",
+            "direct_to_dog": "Fast Paws, Firm Plans",
+            "hybrid": "Plan for Two Speeds"
+          },
+          "body": {
+            "handler": "Bre’s Aries Moon and Ascendant answer quickly, while Taurus Mars sustains effort and resists abrupt redirection. The chart describes two speeds, not a contradiction.",
+            "direct_to_dog": "Your Aries side says go now. Your Taurus Mars says excellent—now let us continue exactly this way.",
+            "hybrid": "Work with both speeds: offer Bre a clean start, then use gradual transitions once Taurus Mars has invested in the plan."
+          },
+          "funny_dog_quotes": [
+            "“Immediate departure; carefully negotiated rerouting.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Please submit route changes before I become emotionally attached to north.”"
+          ],
+          "applicable_canine_jokes": [
+            "Aries booked the trip. Taurus packed enough commitment for the entire weekend."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Aries Doorway, Taurus Mars",
+            "direct_to_dog": "Your Chart Has Two Gears",
+            "hybrid": "Coordinate the Doorway and Drive"
+          },
+          "body": {
+            "handler": "The Aries Ascendant and first-Doghouse Aries Moon make Bre’s behavioral doorway and regulation system immediate. Mars in Taurus in the second Doghouse gives pursuit and defense a slower, resource-conscious persistence. Bre may commit before everyone realizes commitment has occurred.",
+            "direct_to_dog": "Your Aries Ascendant and Moon open the door quickly; your Taurus Mars supplies the durable engine. You are fast to begin and impressively unconvinced by unnecessary detours.",
+            "hybrid": "Coordinate Bre’s Aries doorway with Taurus Mars by clarifying the first cue, protecting valued resources, and using staged redirection after momentum builds. The tension becomes useful when both tempos receive a job."
+          },
+          "funny_dog_quotes": [
+            "“Aries approved departure. Taurus retained veto power over turning.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Respect both departments of the locomotion system.”"
+          ],
+          "applicable_canine_jokes": [
+            "The natal chart includes rapid deployment and a surprisingly thorough change-control process."
+          ]
+        }
+      },
+      "dos": [
+        "Clarify the route or task before Bre commits",
+        "Use gradual redirection once momentum has built",
+        "Give completed tasks a recognizable ending"
+      ],
+      "donts": [
+        "Assume a fast start means flexible follow-through",
+        "Change plans abruptly without a transition cue",
+        "Pull Bre away from valued tasks without closure"
+      ]
+    },
+    {
+      "claim_id": "gold_saturn_training",
+      "claim_type": "placement",
+      "canonical_claim": "Rules Work Best When They Make Sense",
+      "demonstrates": [
+        "training guidance without diagnosis",
+        "specific dos and donts",
+        "Saturn interpreted constructively"
+      ],
+      "evidence_summary": {
+        "source": "Saturn in Virgo in the sixth Doghouse",
+        "projected_operator": "training and rule structure",
+        "projected_mode": "inspection and refinement",
+        "projected_domain": "training, routine, and care"
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Make the Rule Legible",
+            "direct_to_dog": "Show Me the Actual Rule",
+            "hybrid": "Build a Routine You Both Trust"
+          },
+          "body": {
+            "handler": "Bre can become impressively reliable when the criterion stays clear. Inconsistent timing or silently changing expectations may create more friction than the rule itself.",
+            "direct_to_dog": "You can follow a rule. You would simply prefer that everyone agree on which rule it is.",
+            "hybrid": "Choose one observable criterion, practice it consistently, and let Bre’s successful repetitions tell you when the routine is ready to grow."
+          },
+          "funny_dog_quotes": [
+            "“I object only to the undocumented revision.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Define ‘done’ before the training session.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre may accept bureaucracy, provided the forms stop changing halfway through."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Virgo Saturn Likes Clear Criteria",
+            "direct_to_dog": "Your Saturn Read the Instructions",
+            "hybrid": "Train With Virgo Precision"
+          },
+          "body": {
+            "handler": "Saturn in Virgo gives Bre’s training system a precise, methodical style. Reliable sequences help; vague correction and moving goalposts make the task unnecessarily difficult.",
+            "direct_to_dog": "Your Virgo Saturn enjoys a procedure, especially one that remains the same long enough to become useful.",
+            "hybrid": "Let Virgo Saturn help both of you: keep cues precise, reward the same criterion consistently, and revise the plan between sessions rather than during the attempt."
+          },
+          "funny_dog_quotes": [
+            "“I have inspected the cue and found three possible interpretations.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Please standardize the treat-delivery protocol.”"
+          ],
+          "applicable_canine_jokes": [
+            "Virgo Saturn did not come to training without quality-control notes."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Saturn in Virgo, Doghouse Six",
+            "direct_to_dog": "Your Training Department Is Exact",
+            "hybrid": "Use the Sixth-Doghouse Strength"
+          },
+          "body": {
+            "handler": "Saturn governs limits, repetition, and usable structure. In Virgo, it refines criteria; in the sixth Doghouse, it acts through training, routine, and care. Bre’s reliability can become a strength when the system is consistent enough to inspect and learn.",
+            "direct_to_dog": "Your Saturn works in Virgo from the sixth Doghouse, where rules, routines, and care procedures live. You are capable of serious consistency—and of noticing when the humans have changed the rubric.",
+            "hybrid": "Use Bre’s sixth-Doghouse Virgo Saturn as a design principle: create repeatable mechanics, track what works, and distinguish a training problem from a criterion that was never clear."
+          },
+          "funny_dog_quotes": [
+            "“Saturn has requested version numbers for all future cues.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Issue the same specification to every household department.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s chart contains a tiny compliance officer who is mostly concerned about human consistency."
+          ]
+        }
+      },
+      "dos": [
+        "Use one precise criterion at a time",
+        "Keep cue mechanics consistent across people",
+        "Track which sequence produces reliable success"
+      ],
+      "donts": [
+        "Move the goalposts without teaching the change",
+        "Correct Bre for guessing at a vague expectation",
+        "Change several training mechanics in one repetition"
+      ]
+    },
+    {
+      "claim_id": "gold_home_world_bridge",
+      "claim_type": "system_interaction",
+      "canonical_claim": "A Secure Den Makes a Bigger World Possible",
+      "demonstrates": [
+        "supportive multi-source synthesis",
+        "home and adventure relationship",
+        "warm hybrid voice"
+      ],
+      "evidence_summary": {
+        "sources": [
+          "Cancer IC",
+          "Mercury in Cancer in the fourth Doghouse",
+          "Jupiter in Leo in the fifth Doghouse",
+          "Neptune in Sagittarius in the ninth Doghouse"
+        ],
+        "synthesis": "Stable home cues support rather than oppose expressive play and wider exploration."
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Home Makes Adventure Safer",
+            "direct_to_dog": "I Roam From Somewhere",
+            "hybrid": "Build the Return Into the Adventure"
+          },
+          "body": {
+            "handler": "Bre’s adventurous side may expand most freely when familiar home cues remain dependable. Security is not the opposite of exploration; it is often the launch point.",
+            "direct_to_dog": "You enjoy a bigger world when you know where the familiar ending lives.",
+            "hybrid": "Start from a recognizable routine, explore together, and protect the return ritual so novelty does not have to compete with safety."
+          },
+          "funny_dog_quotes": [
+            "“I support bold exploration with confirmed return-to-blanket access.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Keep the home coordinates available.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s expedition policy includes a generous adventure radius and a non-negotiable couch clause."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Cancer Roots, Expanding Horizons",
+            "direct_to_dog": "Your Den Comes With You",
+            "hybrid": "Join Security and Exploration"
+          },
+          "body": {
+            "handler": "Bre’s Cancer IC and Mercury emphasize familiar sensory safety, while Leo Jupiter and Sagittarius Neptune pull toward expressive play and a wider world. The two systems can support each other.",
+            "direct_to_dog": "Your Cancer placements remember home; Jupiter and Neptune would still like to see what is over there. You contain both the blanket and the expedition.",
+            "hybrid": "Let the Cancer foundation support Jupiter and Neptune: preserve familiar cues before, during, and after a new experience so Bre can explore without losing the route home."
+          },
+          "funny_dog_quotes": [
+            "“Adventure approved, subject to den-security review.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Pack one familiar ritual with the wider horizon.”"
+          ],
+          "applicable_canine_jokes": [
+            "Jupiter booked the outing; Cancer quietly packed the emotional emergency blanket."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Cancer Foundation, Jupiter-Neptune Horizon",
+            "direct_to_dog": "Your Chart Packs a Home Base",
+            "hybrid": "Let the IC Support the Ninth Doghouse"
+          },
+          "body": {
+            "handler": "The Cancer IC and fourth-Doghouse Mercury make den memory, familiar cues, and emotional context foundational. Jupiter in Leo in the fifth Doghouse expands expressive play, while Neptune in Sagittarius in the ninth Doghouse opens the atmosphere toward wider territory. Security supplies range.",
+            "direct_to_dog": "Your Cancer IC and Mercury keep the den map; Leo Jupiter brings confidence to play, and ninth-Doghouse Neptune imagines a larger territory. Your chart does not ask you to choose between home and horizon.",
+            "hybrid": "Treat Bre’s Cancer foundation as support for the Jupiter-Neptune expansion: anchor novelty in familiar sensory cues, allow expressive play, and deliberately complete the cycle with decompression at home."
+          },
+          "funny_dog_quotes": [
+            "“The ninth Doghouse may expand after the fourth Doghouse confirms snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Coordinate the horizon with the return address.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s chart has both an exploration department and a highly competent den-based logistics team."
+          ]
+        }
+      },
+      "dos": [
+        "Begin unfamiliar outings with a familiar ritual",
+        "Preserve a predictable return and decompression sequence",
+        "Let confidence expand from successful small adventures"
+      ],
+      "donts": [
+        "Use overwhelming novelty as a test of confidence",
+        "Remove every familiar anchor at once",
+        "Assume excitement eliminates the need for recovery"
+      ]
+    },
+    {
+      "claim_id": "gold_fairness_trust",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Fairness Is Part of Trust",
+      "demonstrates": [
+        "relationship and trust synthesis",
+        "firmness without moralizing",
+        "respectful tension language"
+      ],
+      "evidence_summary": {
+        "sources": [
+          "Libra Descendant",
+          "Pluto in Libra in the seventh Doghouse",
+          "Venus in Gemini in the second Doghouse"
+        ],
+        "synthesis": "Deep one-to-one trust is sensitive to consistency, reciprocity, and communicative repair."
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Fairness Builds Trust",
+            "direct_to_dog": "Be Clear With Me",
+            "hybrid": "Repair Matters"
+          },
+          "body": {
+            "handler": "Bre may handle a firm limit better than an inconsistent or relationally confusing one. How the interaction happens can matter almost as much as its outcome.",
+            "direct_to_dog": "You can hear no. You would also like the rules, tone, and relationship to remain recognizable.",
+            "hybrid": "Set clear limits, honor Bre’s communication, and reconnect after friction so the relationship remains part of the solution."
+          },
+          "funny_dog_quotes": [
+            "“I accept the ruling and reserve the right to review the procedure.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Be firm without becoming mysterious.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s appeals process is mostly eye contact, timing, and one exceptionally meaningful pause."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Libra Makes Process Personal",
+            "direct_to_dog": "Your Libra Side Notices the Exchange",
+            "hybrid": "Use the Libra Repair Instinct"
+          },
+          "body": {
+            "handler": "A Libra Descendant and Libra Pluto place cooperation, fairness, and deep trust in the one-to-one bond. Gemini Venus adds a need for responsive signals rather than unexplained control.",
+            "direct_to_dog": "Your Libra placements notice whether the interaction feels mutual, and Gemini Venus would appreciate a readable explanation—even if the explanation is simply a consistent cue.",
+            "hybrid": "Let Bre’s Libra emphasis guide the process: communicate clearly, make limits predictable, and use repair after conflict instead of pretending nothing happened."
+          },
+          "funny_dog_quotes": [
+            "“I am less concerned with losing the vote than with whether the meeting was fair.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Maintain diplomatic relations during boundary enforcement.”"
+          ],
+          "applicable_canine_jokes": [
+            "Libra has requested that all household negotiations include readable body language."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Libra Descendant and Seventh-Doghouse Pluto",
+            "direct_to_dog": "Your Bonding Axis Tracks Fairness",
+            "hybrid": "Protect the One-to-One Bond"
+          },
+          "body": {
+            "handler": "The Libra Descendant frames Bre’s primary companion interface through mutual adjustment. Pluto in Libra in the seventh Doghouse adds intensity to trust and one-to-one bonding, while Gemini Venus keeps affiliation responsive and information-sensitive. Consistency and repair become structural parts of trust.",
+            "direct_to_dog": "Your Libra Descendant and seventh-Doghouse Pluto take the favorite-person bond seriously; Gemini Venus keeps checking the signals. You can accept structure without wanting the relationship to disappear behind it.",
+            "hybrid": "Honor Bre’s Libra-Pluto companion axis by pairing firm boundaries with stable signals and genuine repair. Gemini Venus benefits when cooperation remains conversational, even when the final answer does not change."
+          },
+          "funny_dog_quotes": [
+            "“Pluto made this serious. Libra prepared the mediation room.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Preserve the bond while enforcing the boundary.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s chart contains deep trust, social balance, and a surprisingly formal complaint-resolution process."
+          ]
+        }
+      },
+      "dos": [
+        "Use consistent cues and consequences",
+        "Acknowledge Bre’s communication before redirecting",
+        "Reconnect calmly after a difficult interaction"
+      ],
+      "donts": [
+        "Use arbitrary control to prove authority",
+        "Punish warning or information-giving signals",
+        "Act as though tension never occurred"
+      ]
+    },
+    {
+      "claim_id": "gold_serious_job_playful_mind",
+      "claim_type": "system_interaction",
+      "canonical_claim": "A Playful Mind Wants a Real Job",
+      "demonstrates": [
+        "large multi-source synthesis",
+        "distinctive whole-dog portrait",
+        "humor that serves the proposition"
+      ],
+      "evidence_summary": {
+        "sources": [
+          "Sun in Gemini in the third Doghouse",
+          "Capricorn Midheaven",
+          "Saturn in Virgo in the sixth Doghouse",
+          "Jupiter in Leo in the fifth Doghouse"
+        ],
+        "synthesis": "Curiosity and play become more satisfying when they produce a visible, competently completed contribution."
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Play With a Purpose",
+            "direct_to_dog": "Give Me an Assignment",
+            "hybrid": "Turn Curiosity Into Contribution"
+          },
+          "body": {
+            "handler": "Bre may be playful and quick-minded while still wanting her activity to accomplish something recognizable. A small household job can satisfy both curiosity and competence.",
+            "direct_to_dog": "You are having fun. You are also helping. These facts are perfectly compatible.",
+            "hybrid": "Give Bre short jobs with a visible finish—find it, carry it, check it, report back—and celebrate competent completion together."
+          },
+          "funny_dog_quotes": [
+            "“This may look like play, but I have deliverables.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Name the assignment and acknowledge completion.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre brings startup energy to activities that already have a perfectly good household department."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Gemini Curiosity, Capricorn Purpose",
+            "direct_to_dog": "Your Chart Calls This a Job",
+            "hybrid": "Give the Playful Mind a Role"
+          },
+          "body": {
+            "handler": "Gemini Sun supplies curiosity, Capricorn Midheaven wants visible competence, Virgo Saturn values reliable mechanics, and Leo Jupiter enjoys recognition. Bre’s play can become especially satisfying when it matters.",
+            "direct_to_dog": "Your Gemini Sun finds the puzzle, Capricorn wants a title, Virgo checks the procedure, and Leo accepts applause. This is an efficient organization.",
+            "hybrid": "Build tasks that satisfy all four: interesting enough for Gemini, clear enough for Virgo, useful enough for Capricorn, and celebratory enough for Leo."
+          },
+          "funny_dog_quotes": [
+            "“I am available for promotion after the next successful retrieval.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Please distinguish my assignment from meaningless busywork.”"
+          ],
+          "applicable_canine_jokes": [
+            "The chart has assigned one dog to research, operations, management, and employee recognition."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Gemini Sun Meets the Capricorn Midheaven",
+            "direct_to_dog": "Your Natal Team Has Departments",
+            "hybrid": "Coordinate Curiosity, Craft, and Recognition"
+          },
+          "body": {
+            "handler": "Bre’s Gemini Sun in the third Doghouse organizes identity around local information and exchange. The Capricorn Midheaven seeks visible usefulness, sixth-Doghouse Virgo Saturn builds repeatable skill, and fifth-Doghouse Leo Jupiter expands through expressive play. Purposeful games unite the system.",
+            "direct_to_dog": "Your third-Doghouse Gemini Sun investigates; Capricorn MC wants the work to count; Virgo Saturn checks the method; Leo Jupiter presents the result. You are not merely playing—you are running a small institution.",
+            "hybrid": "Design Bre’s jobs across the whole pattern: an information-rich problem, a consistent method, a useful finish, and warm recognition. The synthesis works because no single placement has to carry the entire story."
+          },
+          "funny_dog_quotes": [
+            "“Gemini found the clue. Capricorn scheduled the briefing.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Recognize both the result and the excellent internal process.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s organizational chart is ambitious for a company whose primary asset is one very informed nose."
+          ]
+        }
+      },
+      "dos": [
+        "Give Bre short jobs with a visible finish",
+        "Vary the puzzle while keeping task mechanics clear",
+        "Acknowledge competent completion"
+      ],
+      "donts": [
+        "Assume playfulness means the task is meaningless",
+        "Offer only repetitive drills without information value",
+        "Withhold all feedback after Bre completes the job"
+      ]
+    },
+    {
+      "claim_id": "gold_uranus_trust",
+      "claim_type": "placement",
+      "canonical_claim": "Surprise Lives Behind the Locked Door",
+      "demonstrates": [
+        "subtle outer-planet placement",
+        "trust-sensitive language",
+        "humor without mocking vulnerability"
+      ],
+      "evidence_summary": {
+        "source": "Uranus in Scorpio in the eighth Doghouse",
+        "projected_operator": "novelty and surprise response",
+        "projected_mode": "intense investigation",
+        "projected_domain": "deep trust and vulnerability"
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Private Surprise",
+            "direct_to_dog": "I Get Weird With Trusted People",
+            "hybrid": "Make Room for the Unexpected"
+          },
+          "body": {
+            "handler": "Bre’s strangest or most inventive reactions may appear only after deep trust is involved. What looks sudden can belong to a private pattern becoming visible.",
+            "direct_to_dog": "Once you trust someone, you may unveil material from the experimental wing.",
+            "hybrid": "When Bre surprises you in a vulnerable moment, slow down, protect choice, and get curious before deciding the reaction is random."
+          },
+          "funny_dog_quotes": [
+            "“Access to the unusual behavior archive has been granted.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Do not confuse private with nonexistent.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s trusted-inner-circle benefits package apparently includes occasional experimental programming."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Uranus Hides in Deep Trust",
+            "direct_to_dog": "Your Uranus Has a Secret Door",
+            "hybrid": "Respect the Scorpio Surprise"
+          },
+          "body": {
+            "handler": "Uranus in Scorpio places novelty and unconventional response inside Bre’s deeper trust system. Surprise may emerge around vulnerability rather than in ordinary surface behavior.",
+            "direct_to_dog": "Your Scorpio Uranus does not reveal every experiment to the general public. Trusted personnel may receive the advanced demonstration.",
+            "hybrid": "Treat Scorpio Uranus as a request for privacy and agency: introduce sensitive novelty gradually, then let Bre show you how trust changes the response."
+          },
+          "funny_dog_quotes": [
+            "“The secret door was always there. You recently received clearance.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Approach the experimental wing with respectful curiosity.”"
+          ],
+          "applicable_canine_jokes": [
+            "Uranus supplied the surprise; Scorpio insists the guest list remain confidential."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Uranus in Scorpio, Doghouse Eight",
+            "direct_to_dog": "Your Eighth-Doghouse Uranus Experiments Privately",
+            "hybrid": "Protect Choice Around Deep Novelty"
+          },
+          "body": {
+            "handler": "Uranus carries disruption, novelty, and unconventional response. Scorpio gives it an investigative, high-intensity mode; the eighth Doghouse places expression around deep trust, fear, handling, and vulnerability. Bre’s unusual reactions may be meaningful precisely because they are not public.",
+            "direct_to_dog": "Your Uranus works through Scorpio in the eighth Doghouse, where trust and vulnerability live. Sudden does not mean meaningless; sometimes your private system has simply reached the point of disclosure.",
+            "hybrid": "Use the eighth-Doghouse Uranus as a caution against forced exposure. Preserve Bre’s exits, introduce sensitive changes in small doses, and interpret surprise alongside trust context rather than as isolated misbehavior."
+          },
+          "funny_dog_quotes": [
+            "“Uranus opened the door. Scorpio would still like to verify your credentials.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Keep novelty consent-based in the deep-trust department.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre’s chart stores some of its most original features behind two-factor authentication."
+          ]
+        }
+      },
+      "dos": [
+        "Introduce sensitive novelty in small, optional steps",
+        "Preserve a clear retreat or exit",
+        "Consider trust context when an unusual response appears"
+      ],
+      "donts": [
+        "Force exposure for entertainment or proof",
+        "Assume every surprising response is random",
+        "Invade retreat spaces to accelerate familiarity"
+      ]
+    }
+  ]
+}

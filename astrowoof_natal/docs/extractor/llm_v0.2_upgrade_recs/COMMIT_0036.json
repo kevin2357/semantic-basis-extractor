@@ -1,0 +1,11 @@
+{
+  "commit": "0036",
+  "parent": "0035",
+  "title": "Editorial Pass 1 - Global Consistency Review",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "3944d9f0f0eeceede5bf550f954207f835f1e23ddb8d0e80800d7769c5cc3830",
+    "sbe_v0_2_checkpoint.json": "326f707a86091e73f34e2e6478de643f4b732f4e68c4c7af622ddd8773cef15f",
+    "sbe_v0_2_design_ledger.json": "7b3718b4ac5aaeebe7ef9a1468c968e23257f2032e32737063d779f7219da030",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

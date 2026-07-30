@@ -1,0 +1,19 @@
+{
+  "commit": "0020",
+  "parent": "0019",
+  "title": "Candidate Registry and Schema Governance",
+  "added_sections": [
+    "REC-019 \u2014 Candidate Registry and Schema Governance"
+  ],
+  "updated": [
+    "sbe_v0_2_checkpoint.json",
+    "sbe_v0_2_design_ledger.json"
+  ],
+  "next": "REC-020 \u2014 End-to-End Candidate Processing Pipeline",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "4ab664e5d9aec66f6a624f1d1c19580510dd4fcf5fd05237e188e524c461b2c1",
+    "sbe_v0_2_checkpoint.json": "a435cf52f0cb40ffc088c8fb721582701aeb2ea1128598d367d679334a32cd3d",
+    "sbe_v0_2_design_ledger.json": "a30b270f6e202e6a613788d3a2245d38eedbd519b73161963470259dfb23eee0",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

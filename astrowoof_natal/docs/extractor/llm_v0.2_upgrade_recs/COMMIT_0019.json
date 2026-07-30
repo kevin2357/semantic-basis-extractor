@@ -1,0 +1,19 @@
+{
+  "commit": "0019",
+  "parent": "0018",
+  "title": "Candidate Canonicalization",
+  "added_sections": [
+    "REC-018 \u2014 Candidate Canonicalization"
+  ],
+  "updated": [
+    "sbe_v0_2_checkpoint.json",
+    "sbe_v0_2_design_ledger.json"
+  ],
+  "next": "REC-019 \u2014 Candidate Registry and Schema Governance",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "1a92241d5446e965a16a1bdfb9a2c7670519a1add8436f44f78badf43b0c4f25",
+    "sbe_v0_2_checkpoint.json": "d6f63841b7894288a832aec8aa3dc50883d22f0214f30f255e33ff5424a92111",
+    "sbe_v0_2_design_ledger.json": "cb08cadbdf9b60d1eb187f7cffa031b2f3563c484fa01a15b26c3b34809a6e07",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "commit": "0035",
+  "parent": "0034",
+  "title": "Publication Closure and Version 0.2 Release",
+  "next": "Version 0.2 complete",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "42a9455dfd86e395919d0db833aea7041da75cf2aab3c9e8d8cdf5bfb26a00a0",
+    "sbe_v0_2_checkpoint.json": "2413ad8a86bfd6865fa6d6497f2cd888747b7354bc8f4add06ee407ad8d603a5",
+    "sbe_v0_2_design_ledger.json": "f2db56f5d06f16c1a1d9742b5fe8ac18dfd68c43e6da77f7da85b94d7ca11ce0",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

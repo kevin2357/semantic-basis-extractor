@@ -1,0 +1,19 @@
+{
+  "commit": "0025",
+  "parent": "0024",
+  "title": "Replay and Reproducibility Contracts",
+  "added_sections": [
+    "REC-024 \u2014 Replay and Reproducibility Contracts"
+  ],
+  "updated": [
+    "sbe_v0_2_checkpoint.json",
+    "sbe_v0_2_design_ledger.json"
+  ],
+  "next": "REC-025 \u2014 Operational Configuration and Feature-Flag Governance",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "63ac92583b899ef939dc9b6baf36aa753b17421e295b6cba9074c62f9ff84f90",
+    "sbe_v0_2_checkpoint.json": "601b7da464f8703f56ad9aa73316fde01abb075558d0489f345814efc84fcb5f",
+    "sbe_v0_2_design_ledger.json": "adc9fe32e2fb29c52a3431651ce9fac60d42545dd4d6bf6584e1dd7efe189536",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

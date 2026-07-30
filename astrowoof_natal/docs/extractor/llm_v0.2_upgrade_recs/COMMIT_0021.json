@@ -1,0 +1,19 @@
+{
+  "commit": "0021",
+  "parent": "0020",
+  "title": "End-to-End Candidate Processing Pipeline",
+  "added_sections": [
+    "REC-020 \u2014 End-to-End Candidate Processing Pipeline"
+  ],
+  "updated": [
+    "sbe_v0_2_checkpoint.json",
+    "sbe_v0_2_design_ledger.json"
+  ],
+  "next": "REC-021 \u2014 Completion Log and Execution Diagnostics",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "58a3906ea165f8f1100e45e9da4b88d6688a20c899c5d775d4c6a2e28a56eee7",
+    "sbe_v0_2_checkpoint.json": "8d01489fa04d3b434efa207d8239c9d9281465891e5394cd42683c2d1390942b",
+    "sbe_v0_2_design_ledger.json": "5c2274687d5f026dd60b2013d0521cbfe7adf8133b7f560294cefa525a1a7f9f",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

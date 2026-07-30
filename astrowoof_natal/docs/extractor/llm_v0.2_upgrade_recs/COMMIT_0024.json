@@ -1,0 +1,12 @@
+{
+  "commit": "0024",
+  "parent": "0023",
+  "title": "Artifact Packaging and Manifest Contracts",
+  "next": "REC-024 Replay and Reproducibility Contracts",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "4de0eed4349e430cbb5829b89297100d44011fca466eed97b1dd8cfe6a32f53c",
+    "sbe_v0_2_checkpoint.json": "c1bccee2cec765da632e7dd563aadf625d3f7d0c801673d9e7221f77d743b037",
+    "sbe_v0_2_design_ledger.json": "e37a969da225a4915c866d60a7a853b2d83abe759e2eff0255c4a7b17318f71a",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

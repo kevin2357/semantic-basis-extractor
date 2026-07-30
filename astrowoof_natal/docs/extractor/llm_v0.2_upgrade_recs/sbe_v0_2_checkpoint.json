@@ -1,0 +1,29 @@
+{
+  "project": "SBE v0.2 Design Proposal",
+  "session": 39,
+  "status": "in_progress",
+  "phase": "Part I",
+  "completed_sections": [
+    "Purpose",
+    "Architectural Position",
+    "Design Philosophy",
+    "Recommendation Framework",
+    "REC-001",
+    "REC-002",
+    "REC-006 \u2014 Utility Vector Calibration",
+    "REC-016 \u2014 Cross-Family Provenance",
+    "REC-017 \u2014 Stable Candidate Identity",
+    "REC-018 \u2014 Candidate Canonicalization",
+    "REC-019 \u2014 Candidate Registry and Schema Governance",
+    "REC-020 \u2014 End-to-End Candidate Processing Pipeline",
+    "REC-024 \u2014 Replay and Reproducibility Contracts"
+  ],
+  "next_section": "Optional sentence-level line edit and REC-004 source resolution",
+  "estimated_completion": 1.0,
+  "commit": "0039",
+  "last_commit_summary": "Added REC-024 Replay and Reproducibility Contracts, defining replay modes, pinned execution contexts, reproducibility levels, stage reuse, equivalence reporting, historical replay, migration replay, and QA.",
+  "last_completed": "Final sentence-level editorial pass",
+  "current_section": "Portfolio Optimization",
+  "publication_status": "final_publication_candidate",
+  "known_issue": "REC-004 is named historically but absent from proposal and ledger"
+}

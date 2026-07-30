@@ -1,0 +1,11 @@
+{
+  "commit": "0004",
+  "adds": [
+    "REC-003 Hub Preservation"
+  ],
+  "updates": [
+    "proposal",
+    "checkpoint",
+    "ledger"
+  ]
+}

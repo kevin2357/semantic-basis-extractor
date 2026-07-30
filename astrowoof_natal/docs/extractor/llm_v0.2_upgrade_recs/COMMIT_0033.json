@@ -1,0 +1,12 @@
+{
+  "commit": "0033",
+  "parent": "0032",
+  "title": "Final Integration, Appendices, and Publication Guidance",
+  "next": "Editorial consistency and publication pass",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "48f702099fcfffb4d94a2fc9e4f8f5e032c9ab85ae2dea1ff1db89438bbaa780",
+    "sbe_v0_2_checkpoint.json": "fe1d398ff6748860bd5a55ecf47cdd339f4db7ac7814e4a906ba97bffb92b15a",
+    "sbe_v0_2_design_ledger.json": "3c8c67c289d2548e986aa1fccb7a7592aac69be36dc0ccd48d74c3a02fa01e0d",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

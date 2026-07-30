@@ -1,0 +1,15 @@
+{
+  "commit": "0017",
+  "parent": "0016",
+  "title": "Cross-Family Provenance",
+  "added_sections": [
+    "REC-016 \u2014 Cross-Family Provenance"
+  ],
+  "next": "REC-017 \u2014 Stable Candidate Identity",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "6a5d91fbee86260706fbbd036e6feb69cf5fa982e7880e5f585e41df437f2b36",
+    "sbe_v0_2_checkpoint.json": "70ff9b1d71c8a4fa6b1084131357438eb6e1a072b7d58307ebf1454ca773f7a8",
+    "sbe_v0_2_design_ledger.json": "ba6cb408804944b1f28a026f7b14c2705e87d4e66c6c574c2ee10742a2cb7ed8",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

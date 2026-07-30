@@ -1,0 +1,8 @@
+{
+  "commit": "0009",
+  "parent": "0008",
+  "added": [
+    "REC-008 \u2014 Portfolio Drift and Stability Metrics"
+  ],
+  "next": "REC-009 \u2014 Portfolio Coverage Metrics"
+}

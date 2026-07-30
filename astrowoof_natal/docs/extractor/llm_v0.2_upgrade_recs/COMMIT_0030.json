@@ -1,0 +1,12 @@
+{
+  "commit": "0030",
+  "parent": "0029",
+  "title": "Testing Strategy and Regression Governance",
+  "next": "REC-030 Reference Implementation and Extensibility",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "fb0856704cb6360eed68f50819e0c5eb1442dc8c23d03535c391fc632d3f5d3d",
+    "sbe_v0_2_checkpoint.json": "0f4187be7d4f8f4d3313c3a473bd3968d9890360c2f9c8822a9004fd876c2242",
+    "sbe_v0_2_design_ledger.json": "a7e65b8112f0f2f93605478e1be5c907492aa7ae5583617f17fbe7a2eebf869f",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

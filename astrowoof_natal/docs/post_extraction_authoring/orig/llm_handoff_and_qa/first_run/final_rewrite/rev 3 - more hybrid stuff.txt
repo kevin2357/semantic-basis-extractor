@@ -1,0 +1,54 @@
+The previous pass did not accomplish the requested editorial rewrite. It mechanically prefixed existing hybrid sentences with phrases such as “When…,” “During…,” and “Around…,” while leaving the underlying “Bre brings X; you bring Y; Bre’s response tells you Z” template intact. It also introduced lowercase “bre,” duplicated concepts, and produced malformed phrases such as “bre brings Bre’s need.”
+
+Do not repair this by adding, deleting, or substituting stock phrases mechanically.
+
+Return to the immediately previous hybrid bodies and rewrite each hybrid body as a complete unit, one card at a time.
+
+For every rewritten body:
+
+1. Read the claim and its existing handler, direct-to-dog, and hybrid versions.
+2. Identify the actual relational insight.
+3. Set aside the existing hybrid sentence structure.
+4. Compose a new, natural paragraph expressing that interaction.
+5. Read it aloud mentally and reject it if it sounds like fields being assigned in a system model.
+6. Check capitalization, grammar, duplication, and natural rhythm before proceeding.
+
+The interaction must remain reciprocal, but reciprocity does not require explicitly naming two contributions.
+
+Strong natural patterns include:
+
+- “A short pause after Bre’s first greeting gives her room to decide whether she wants to continue.”
+- “Keeping one familiar resting place available can make a changing household easier for Bre to explore.”
+- “Clear endings help Bre release a job without feeling that she has abandoned it.”
+- “If you let the first burst happen before offering the working cue, Bre may find it easier to turn excitement into purpose.”
+- “The more reliably her retreat remains available, the more freely Bre can choose to rejoin the household.”
+
+These express dog–human interaction without labeling each participant’s input.
+
+Across each set of 50 hybrid bodies:
+
+- Use “Bre brings/supplies/contributes” no more than 5 times.
+- Use “you bring/supply/contribute” no more than 5 times.
+- Use “Bre’s response/next move/return tells or shows you” no more than 5 times.
+- Do not solve opening repetition by attaching introductory clauses to otherwise unchanged sentences.
+- Never write lowercase “bre” or “bre’s.”
+- Never use “selected,” “deck,” “systems,” “synthesis,” “projection,” or authoring-process vocabulary in reader-facing prose.
+- Avoid describing the interaction as an exchange, calibration system, coordination point, or feedback loop unless that wording is genuinely natural in context.
+
+After rewriting, run a literal search for:
+
+- lowercase “bre”
+- “Bre brings”
+- “Bre supplies”
+- “Bre contributes”
+- “you bring”
+- “you supply”
+- “you contribute”
+- “tells you”
+- “shows you”
+- “selected”
+- “deck”
+
+Review every match manually. Do not merely report that the audit was performed; correct all excessive, malformed, duplicated, or process-facing instances.
+
+Preserve the projected_term_registry and all locked fields exactly.

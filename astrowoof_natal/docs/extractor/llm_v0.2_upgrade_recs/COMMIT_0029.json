@@ -1,0 +1,12 @@
+{
+  "commit": "0029",
+  "parent": "0028",
+  "title": "Performance, Scalability, and Resource Management",
+  "next": "REC-029 Testing Strategy and Regression Governance",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "8be498017f7f6c46dc5051168d0ec6d3211ec92d2090963c5bd3cc7e8c416367",
+    "sbe_v0_2_checkpoint.json": "d63af086667a52fc954e4e3d78bcf8c5d32b83c01987afa10f11b601558acf9d",
+    "sbe_v0_2_design_ledger.json": "f39f87d22e7ff2f6f6024758e3dce6aa14e12d256a81b9a8bef7cf0b0092c94d",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

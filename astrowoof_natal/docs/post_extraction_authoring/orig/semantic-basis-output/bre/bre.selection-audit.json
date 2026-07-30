@@ -1,0 +1,517 @@
+{
+  "schema_version": "semantic_basis.selection_audit.v0.1",
+  "budget": 50,
+  "mandatory_count": 16,
+  "optimizer_decisions": [
+    {
+      "decision": 1,
+      "winning_candidate_id": "relationship_6a617cc01800adff",
+      "bundle_added": [
+        "relationship_6a617cc01800adff"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.767629,
+      "selected_count_after": 17
+    },
+    {
+      "decision": 2,
+      "winning_candidate_id": "relationship_6cda85a046a60415",
+      "bundle_added": [
+        "relationship_6cda85a046a60415"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.745657,
+      "selected_count_after": 18
+    },
+    {
+      "decision": 3,
+      "winning_candidate_id": "relationship_e191e23377fc4ce9",
+      "bundle_added": [
+        "relationship_e191e23377fc4ce9"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.726526,
+      "selected_count_after": 19
+    },
+    {
+      "decision": 4,
+      "winning_candidate_id": "relationship_33edb90c7e74b146",
+      "bundle_added": [
+        "relationship_33edb90c7e74b146"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.724876,
+      "selected_count_after": 20
+    },
+    {
+      "decision": 5,
+      "winning_candidate_id": "relationship_61bf08f7bdad507f",
+      "bundle_added": [
+        "relationship_61bf08f7bdad507f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.709135,
+      "selected_count_after": 21
+    },
+    {
+      "decision": 6,
+      "winning_candidate_id": "relationship_80993124eaeb912b",
+      "bundle_added": [
+        "relationship_80993124eaeb912b"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.677866,
+      "selected_count_after": 22
+    },
+    {
+      "decision": 7,
+      "winning_candidate_id": "synthesis_aa9591b318908a75",
+      "bundle_added": [
+        "synthesis_aa9591b318908a75"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.659874,
+      "selected_count_after": 23
+    },
+    {
+      "decision": 8,
+      "winning_candidate_id": "relationship_8f76e123366f2f85",
+      "bundle_added": [
+        "relationship_8f76e123366f2f85"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.655622,
+      "selected_count_after": 24
+    },
+    {
+      "decision": 9,
+      "winning_candidate_id": "relationship_24aec3e54a035c1f",
+      "bundle_added": [
+        "relationship_24aec3e54a035c1f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.649196,
+      "selected_count_after": 25
+    },
+    {
+      "decision": 10,
+      "winning_candidate_id": "relationship_a58bea63e6996fb2",
+      "bundle_added": [
+        "relationship_a58bea63e6996fb2"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.646456,
+      "selected_count_after": 26
+    },
+    {
+      "decision": 11,
+      "winning_candidate_id": "synthesis_cad7843b1060b44a",
+      "bundle_added": [
+        "synthesis_cad7843b1060b44a"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.641445,
+      "selected_count_after": 27
+    },
+    {
+      "decision": 12,
+      "winning_candidate_id": "relationship_ec6b7a841485aae9",
+      "bundle_added": [
+        "relationship_ec6b7a841485aae9"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.639238,
+      "selected_count_after": 28
+    },
+    {
+      "decision": 13,
+      "winning_candidate_id": "relationship_10573a8b1d74a411",
+      "bundle_added": [
+        "relationship_10573a8b1d74a411"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.639238,
+      "selected_count_after": 29
+    },
+    {
+      "decision": 14,
+      "winning_candidate_id": "synthesis_9f33ad5f1790762b",
+      "bundle_added": [
+        "synthesis_9f33ad5f1790762b"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.638951,
+      "selected_count_after": 30
+    },
+    {
+      "decision": 15,
+      "winning_candidate_id": "synthesis_e1e8180d74433d36",
+      "bundle_added": [
+        "synthesis_e1e8180d74433d36"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.638596,
+      "selected_count_after": 31
+    },
+    {
+      "decision": 16,
+      "winning_candidate_id": "relationship_aef1f8ff9cc06749",
+      "bundle_added": [
+        "relationship_aef1f8ff9cc06749"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.637238,
+      "selected_count_after": 32
+    },
+    {
+      "decision": 17,
+      "winning_candidate_id": "relationship_2a1db383c378084f",
+      "bundle_added": [
+        "relationship_2a1db383c378084f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.637238,
+      "selected_count_after": 33
+    },
+    {
+      "decision": 18,
+      "winning_candidate_id": "synthesis_99edc6cbd548f44f",
+      "bundle_added": [
+        "synthesis_99edc6cbd548f44f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.627462,
+      "selected_count_after": 34
+    },
+    {
+      "decision": 19,
+      "winning_candidate_id": "synthesis_29e19b055f569b47",
+      "bundle_added": [
+        "synthesis_29e19b055f569b47"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.622818,
+      "selected_count_after": 35
+    },
+    {
+      "decision": 20,
+      "winning_candidate_id": "synthesis_f1ec661ee1d4f895",
+      "bundle_added": [
+        "relationship_f46a149888d441d3",
+        "synthesis_f1ec661ee1d4f895"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.621626,
+      "selected_count_after": 37
+    },
+    {
+      "decision": 21,
+      "winning_candidate_id": "relationship_7424b7f9324a7000",
+      "bundle_added": [
+        "relationship_7424b7f9324a7000"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.620458,
+      "selected_count_after": 38
+    },
+    {
+      "decision": 22,
+      "winning_candidate_id": "synthesis_f9ea40622ba4cf6f",
+      "bundle_added": [
+        "synthesis_f9ea40622ba4cf6f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.620402,
+      "selected_count_after": 39
+    },
+    {
+      "decision": 23,
+      "winning_candidate_id": "synthesis_6c72da0079df055f",
+      "bundle_added": [
+        "relationship_56708861d7164f26",
+        "synthesis_6c72da0079df055f"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.614896,
+      "selected_count_after": 41
+    },
+    {
+      "decision": 24,
+      "winning_candidate_id": "relationship_d51d3f0921094efb",
+      "bundle_added": [
+        "relationship_d51d3f0921094efb"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.606837,
+      "selected_count_after": 42
+    },
+    {
+      "decision": 25,
+      "winning_candidate_id": "synthesis_b37d58107951cdbd",
+      "bundle_added": [
+        "placement_0ca1eaba924ec0cb",
+        "relationship_574458ba2268012f",
+        "synthesis_b37d58107951cdbd"
+      ],
+      "bundle_cost": 3,
+      "marginal_utility": 0.604822,
+      "selected_count_after": 45
+    },
+    {
+      "decision": 26,
+      "winning_candidate_id": "synthesis_7e83da3aa4b799ca",
+      "bundle_added": [
+        "relationship_65a1915e350d6a99",
+        "synthesis_7e83da3aa4b799ca"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.64637,
+      "selected_count_after": 47
+    },
+    {
+      "decision": 27,
+      "winning_candidate_id": "synthesis_6e65ce41a86df7b6",
+      "bundle_added": [
+        "relationship_e4e7b4b3fcb6d7a7",
+        "synthesis_6e65ce41a86df7b6"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.621204,
+      "selected_count_after": 49
+    },
+    {
+      "decision": 28,
+      "winning_candidate_id": "synthesis_dfbdfafe9972fa43",
+      "bundle_added": [
+        "synthesis_dfbdfafe9972fa43"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.607643,
+      "selected_count_after": 50
+    }
+  ],
+  "selected_ids": [
+    "placement_95506eedd3e944db",
+    "relationship_6a617cc01800adff",
+    "synthesis_7e83da3aa4b799ca",
+    "synthesis_b37d58107951cdbd",
+    "synthesis_6e65ce41a86df7b6",
+    "placement_24aedcd2c6f08f34",
+    "relationship_e191e23377fc4ce9",
+    "relationship_33edb90c7e74b146",
+    "placement_bd760a1690f73b98",
+    "relationship_61bf08f7bdad507f",
+    "relationship_6cda85a046a60415",
+    "placement_1645eb8db1bca9fa",
+    "placement_6323053aaafdda4a",
+    "relationship_80993124eaeb912b",
+    "placement_d9ca62299194c82f",
+    "synthesis_aa9591b318908a75",
+    "relationship_8f76e123366f2f85",
+    "relationship_24aec3e54a035c1f",
+    "synthesis_cad7843b1060b44a",
+    "relationship_10573a8b1d74a411",
+    "relationship_ec6b7a841485aae9",
+    "synthesis_9f33ad5f1790762b",
+    "synthesis_e1e8180d74433d36",
+    "relationship_2a1db383c378084f",
+    "relationship_aef1f8ff9cc06749",
+    "relationship_a58bea63e6996fb2",
+    "synthesis_f1ec661ee1d4f895",
+    "synthesis_99edc6cbd548f44f",
+    "placement_843b7de0ada476f2",
+    "synthesis_6c72da0079df055f",
+    "synthesis_29e19b055f569b47",
+    "placement_917c0c006b085472",
+    "relationship_7424b7f9324a7000",
+    "synthesis_f9ea40622ba4cf6f",
+    "placement_63d0fe6b68c8bc4c",
+    "placement_b7ccf4dedf534730",
+    "synthesis_dfbdfafe9972fa43",
+    "relationship_d51d3f0921094efb",
+    "relationship_f46a149888d441d3",
+    "placement_54fb12b8f15d6c31",
+    "placement_d4f8a50bccc7b929",
+    "relationship_574458ba2268012f",
+    "relationship_65a1915e350d6a99",
+    "placement_fdc97faaadfec907",
+    "relationship_56708861d7164f26",
+    "placement_4109b08b5c3af2d3",
+    "placement_9680a79da27f5991",
+    "relationship_e4e7b4b3fcb6d7a7",
+    "placement_f498b9a02892ec74",
+    "placement_0ca1eaba924ec0cb"
+  ],
+  "rejected": [
+    {
+      "candidate_id": "synthesis_6be48b91b8990a5a",
+      "score": 0.717308,
+      "reason": "Not selected within budget; closure would additionally require 2 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_dcda2ebf07956409",
+      "score": 0.699525,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_255522b081b3006f",
+      "score": 0.697329,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_5d28e4605b30ea88",
+      "score": 0.658695,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_5645c8f7d6e209d5",
+      "score": 0.653866,
+      "reason": "Not selected within budget; closure would additionally require 2 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_da8a6459008cbafa",
+      "score": 0.634511,
+      "reason": "Not selected within budget; closure would additionally require 3 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_6e67a365b15ee136",
+      "score": 0.630776,
+      "reason": "Not selected within budget; closure would additionally require 3 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_d1ff727f815f2133",
+      "score": 0.598966,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_77e060eb302cb5d1",
+      "score": 0.590837,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_afd4474f209b6da3",
+      "score": 0.590121,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_5bcd81f63b793ecc",
+      "score": 0.586462,
+      "reason": "Lower marginal utility than a selected candidate with overlapping semantics."
+    },
+    {
+      "candidate_id": "synthesis_b784c09c82cc8422",
+      "score": 0.584597,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_286a3ff771141f91",
+      "score": 0.578723,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_296a745710aebd76",
+      "score": 0.578593,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_ecb7ce70c9f604c6",
+      "score": 0.578336,
+      "reason": "Lower marginal utility than a selected candidate with overlapping semantics."
+    },
+    {
+      "candidate_id": "relationship_83e680afc763ef04",
+      "score": 0.575821,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_ffb0067106defb81",
+      "score": 0.575247,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_ad8f31f80a82d35c",
+      "score": 0.566138,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_12140a6c703eaef7",
+      "score": 0.56306,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_6117fff90b3cb9e3",
+      "score": 0.562493,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_9e5b5198eccf41ca",
+      "score": 0.558201,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_ba76162df9ff6cdf",
+      "score": 0.555247,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_76bce64bc364b149",
+      "score": 0.55238,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_1f87eca8116745c7",
+      "score": 0.55028,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_24b2fc98a3c815b5",
+      "score": 0.5433,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_60e4cda5c9b234b1",
+      "score": 0.54161,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_70ffd0ed792fdc88",
+      "score": 0.5354,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_98bbba33066a6c0f",
+      "score": 0.533117,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_8df253a446738af8",
+      "score": 0.531267,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_29dab5e62c854b4f",
+      "score": 0.527813,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_39c96a32bd268a2e",
+      "score": 0.527461,
+      "reason": "Lower marginal utility than a selected candidate with overlapping semantics."
+    },
+    {
+      "candidate_id": "relationship_2186a3c2dfb52ab9",
+      "score": 0.505611,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_dee9d5d52c10b550",
+      "score": 0.491209,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_41ecb6b9706553a4",
+      "score": 0.454954,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    }
+  ]
+}

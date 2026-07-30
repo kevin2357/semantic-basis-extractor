@@ -1,0 +1,11 @@
+{
+  "commit": "0037",
+  "parent": "0036",
+  "title": "Editorial Pass 2",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "8c10ccc5f17034be1c12462862ac07defed0502bb72d8128b2d35126d58513b4",
+    "sbe_v0_2_checkpoint.json": "f65288dc6ddfb8d7426bd8a40336164a7557fa78292268a0a288ced101a4a81b",
+    "sbe_v0_2_design_ledger.json": "4c259c1150a49f201ca22de2fa1d66088980b073d118563fff8e073b9238dc6f",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

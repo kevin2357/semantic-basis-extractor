@@ -1,0 +1,12 @@
+{
+  "commit": "0028",
+  "parent": "0027",
+  "title": "Security, Integrity, and Trust Boundaries",
+  "next": "REC-028 Performance, Scalability, and Resource Management",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "06451dec519fad467976d1b24a79241fd4961c8fe3b046689ef697ad8b7e5314",
+    "sbe_v0_2_checkpoint.json": "49a3a89fde54950c8d18dd2bc1c95bf18244825485592e1a72303916e77be71b",
+    "sbe_v0_2_design_ledger.json": "80b44db4317496c5e063a1b2fa22b8c86ad41eddf25ddbc13789b5ed73131f25",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

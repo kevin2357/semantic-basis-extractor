@@ -1,0 +1,33 @@
+c:\dev\github\semantic-projection-core\tools\semantic_basis_extractor\dog_natal>python tools\validate_astrowoof_editorial.py "C:\dev\github\semantic-projection-core\tools\semantic_basis_extractor\dog_natal\llm_handoff_and_qa\first_run\request\bre.selected-authoring-packet.json" "C:\dev\github\semantic-projection-core\tools\semantic_basis_extractor\dog_natal\llm_handoff_and_qa\first_run\llm_output\natal.bre.cards.json"
+{
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": {
+    "card_count": 50,
+    "locked_top_level_fields_checked": [
+      "subject",
+      "source",
+      "coverage",
+      "categories",
+      "behavioral_domains"
+    ],
+    "locked_card_fields_checked": [
+      "claim_id",
+      "claim_type",
+      "category",
+      "importance",
+      "confidence",
+      "strength",
+      "priority_id",
+      "selection",
+      "behavioral_domains",
+      "tags",
+      "evidence",
+      "relations"
+    ],
+    "placeholder_free": true
+  }
+}
+
+c:\dev\github\semantic-projection-core\tools\semantic_basis_extractor\dog_natal>

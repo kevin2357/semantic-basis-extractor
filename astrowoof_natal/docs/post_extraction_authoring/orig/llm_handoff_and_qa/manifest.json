@@ -1,0 +1,17 @@
+{
+  "bundle_version": "astrowoof.llm_handoff.v0.1",
+  "subject": "bre",
+  "instruction": "Use the prompt and static guidance to edit only permitted prose fields.",
+  "static_files": [
+    "static/AstroWoof Authoring Packet Schema.json",
+    "static/AstroWoof Projected Natal Card Authoring Manual.md",
+    "static/LLM Editing Permissions and QA Checklist.md",
+    "static/Proposed LLM Handoff Prompt.md",
+    "static/Semantic Basis Extractor Pipeline and Scoring Metrics.md"
+  ],
+  "request_files": [
+    "request/bre.selected-authoring-packet.json",
+    "request/bre.selection-qa.json"
+  ],
+  "expected_output": "natal.bre.cards.json"
+}

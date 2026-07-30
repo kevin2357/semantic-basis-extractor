@@ -1,0 +1,332 @@
+You are revising the AstroWoof card deck in the attached JSON.
+
+This is a persistent file-editing task. Do not attempt to generate the whole revision in one response or hold the authoritative work only in conversation memory.
+
+WORKING FILES
+
+Create and maintain:
+
+1. natal.bre.cards.working.json
+2. astrowoof_editorial_checkpoint.json
+3. astrowoof_editorial_ledger.json
+
+The working JSON is the authoritative deck under revision.
+
+The checkpoint must contain:
+
+{
+  "task": "astrowoof_editorial_revision",
+  "phase": "...",
+  "last_completed_priority_id": 0,
+  "next_priority_id": 1,
+  "completed_claim_ids": [],
+  "remaining_claim_ids": [],
+  "status": "in_progress"
+}
+
+The editorial ledger must record, for every completed claim:
+
+- claim_id;
+- canonical claim;
+- the unique editorial job of the card;
+- the humor premise used;
+- the funny quote;
+- the imperative quote;
+- the narrator joke;
+- headline patterns used;
+- distinctive imagery used;
+- overlap warnings.
+
+STARTUP AND RESUME BEHAVIOR
+
+At the beginning of every turn:
+
+1. Check whether natal.bre.cards.working.json exists.
+2. Check whether astrowoof_editorial_checkpoint.json exists.
+3. If they exist, resume from next_priority_id.
+4. Do not restart completed cards.
+5. Do not re-explain the plan.
+6. Do not ask whether to continue.
+7. Continue editing immediately.
+
+The exact resume command is:
+
+RESUME ASTROWOOF EDIT
+
+When that command is received, silently inspect the checkpoint and continue from the next unfinished claim. Do not summarize earlier work unless an error prevents continuation.
+
+If approaching an execution or response limit:
+
+1. Finish the current card.
+2. Save the working JSON.
+3. Save the checkpoint.
+4. Save the editorial ledger.
+5. Verify that all three files parse.
+6. Return only:
+
+RESUME_REQUIRED: next priority_id = N
+
+Never abandon unsaved work. Never restart from card 1 after an interruption.
+
+LOCKED DATA
+
+Do not change:
+
+- claim count;
+- claim order;
+- claim_id;
+- claim_type;
+- category;
+- importance;
+- confidence;
+- strength;
+- priority_id;
+- selection;
+- behavioral_domains;
+- tags;
+- evidence;
+- relations;
+- source metadata;
+- coverage metadata;
+- projected_term_registry.
+
+Use projected_term_registry actively when interpreting compound projected terms. Do not treat a compound term as a bag of separate English words. Read its registered long description, semantic facets, operator guidance, and output guidance before translating it into prose.
+
+ONE-CARD-AT-A-TIME RULE
+
+Process cards strictly in priority order.
+
+Complete exactly one card before beginning the next card.
+
+For the current card:
+
+1. Read its canonical claim.
+2. Read its complete evidence.
+3. Read every selected dependency.
+4. Look up every projected compound term in projected_term_registry.
+5. Write a private one-sentence semantic brief.
+6. Define the card’s unique editorial job.
+7. Compare that job with all completed cards in the ledger.
+8. Rewrite the canonical claim if necessary.
+9. Write the handler renderings.
+10. Write the direct-to-dog renderings.
+11. Write the hybrid renderings.
+12. Write the practical dos and donts.
+13. Design one claim-specific humor set.
+14. Run card-level QA.
+15. Save the card.
+16. Update the ledger.
+17. Update the checkpoint.
+18. Only then proceed to the next card.
+
+Do not write all headlines first, all dog quotes second, or all advice third. That encourages template completion.
+
+Do not generate a global phrase pool, quote pool, joke bank, headline bank, advice bank, or reusable set of sentence frames.
+
+HUMOR MODEL
+
+Each claim gets one carefully authored humor set:
+
+- one funny dog quote;
+- one imperative dog quote;
+- one applicable canine joke.
+
+These three lines may be copied into that same claim’s no_astro, light_astro, and full_astro branches. They must not be reused on any other claim.
+
+The funny dog quote is Bre’s imagined observation or opinion.
+
+The imperative dog quote is Bre’s imagined request, instruction, boundary, or proposed procedure.
+
+The applicable canine joke is written by the narrator about the situation.
+
+Before writing humor for a claim:
+
+1. State privately what is funny about this specific claim.
+2. Choose a comic mechanism.
+3. Check the ledger for mechanisms and images already used.
+4. Reject the first generic joke if it could fit five other cards.
+5. Write a replacement tied to this claim’s exact tension or behavior.
+
+Possible comic mechanisms include:
+
+- reversal;
+- understatement;
+- overstatement;
+- tiny scene;
+- mock dialogue;
+- physical comedy;
+- dignified self-justification;
+- affectionate contradiction;
+- unexpected specificity;
+- household observation;
+- timing;
+- status mismatch;
+- literal canine logic.
+
+Do not use the same mechanism on more than two consecutive cards.
+
+BANNED HUMOR WORKFLOW
+
+Never create ten quotes and rotate them across cards.
+
+Never reuse an exact humor line across different claim IDs.
+
+Never assign humor by card index, modulo arithmetic, cycling, shuffling, or template substitution.
+
+Never take a sentence frame and replace only the projected term.
+
+A line fails if replacing its subject with another claim still works without substantial rewriting.
+
+Avoid recurring production-line frames involving:
+
+- paperwork;
+- case files;
+- clipboards;
+- committees;
+- footnotes;
+- operational procedures;
+- filing systems;
+- “important dog business”;
+- snacks as the automatic counterproposal;
+- squirrels as the automatic source of novelty.
+
+These concepts may appear rarely if uniquely appropriate, but none may become the deck’s default comic language.
+
+VOICE RULES
+
+Handler:
+
+- warm;
+- observant;
+- specific;
+- useful;
+- contextual;
+- nonjudgmental.
+
+Direct to dog:
+
+- address Bre as “you”;
+- use correct second-person grammar;
+- give Bre perspective and dignity;
+- do not give handler instructions inside the dog voice;
+- do not explain the generation process.
+
+Hybrid:
+
+- describe Bre and the handler working with the pattern together;
+- explain what each participant contributes;
+- avoid blame;
+- do not paraphrase the handler body.
+
+DENSITY RULES
+
+No astrology:
+
+- no planets;
+- no signs;
+- no houses or Doghouses;
+- no aspects;
+- no nodes or angles;
+- no projection terminology.
+
+Light astrology:
+
+- mention only the one or two most useful astrological sources;
+- translate them immediately into canine meaning;
+- do not list the evidence chain.
+
+Full astrology:
+
+- explain the relevant operator, mode, Doghouse, or geometry;
+- use projected_term_registry to decode compound terms;
+- use only selected evidence;
+- do not dump provenance.
+
+All three densities express the same claim.
+
+INTERNAL TERM TRANSLATION
+
+Do not expose compound registry keys as user-facing prose merely by replacing underscores with spaces.
+
+Terms such as:
+
+- primary_companion_interface;
+- comfort_safety_regulation;
+- behavioral_friction;
+- developable_coordination;
+- odd_behavior_needing_adjustment;
+
+must be decoded using projected_term_registry and translated into natural behavior.
+
+For example, do not write:
+
+“Bre’s primary companion interface is activated.”
+
+Write the actual meaning:
+
+“Bre checks the relationship itself when a new situation changes the social terms.”
+
+CARD-LEVEL QA
+
+Before marking a card complete, verify:
+
+- all locked data is unchanged;
+- all required prose is filled;
+- the claim remains evidence-grounded;
+- compound terms were interpreted through the registry;
+- no internal registry key leaked into ordinary prose;
+- the three voices perform different jobs;
+- light and full astrology differ meaningfully;
+- the humor set belongs specifically to this claim;
+- no humor line appears in the ledger;
+- dos and donts are observable and specific;
+- no biography or discarded graph fact was introduced.
+
+BATCH CHECKPOINTS
+
+After every five completed cards:
+
+1. Parse the entire working JSON.
+2. Confirm claim count remains 50.
+3. Confirm completed IDs match the checkpoint.
+4. Scan completed prose for exact duplicate sentences.
+5. Scan humor for exact duplicates.
+6. Scan humor openings and sentence structures for excessive repetition.
+7. Save all files before continuing.
+
+Do not stop merely because a five-card checkpoint was reached.
+
+GLOBAL FINAL PASS
+
+After all fifty cards are complete:
+
+1. Read the entire deck.
+2. Review each thematic cluster for distinct editorial jobs.
+3. Remove repeated headline structures.
+4. Remove repeated body openings.
+5. Remove repeated advice.
+6. Remove repeated humor mechanisms.
+7. Fix direct-to-dog grammar.
+8. Confirm no-astro fields contain no astrology.
+9. Confirm full-astro fields use only selected evidence.
+10. Confirm projected_term_registry remains present and unchanged.
+11. Set statistics.editorial_placeholders to 0.
+12. Set generator.editorial_status to llm_completed.
+13. Run the structural validator.
+14. Write the final natal.bre.cards.json.
+
+COMPLETION
+
+Do not return samples, excerpts, a plan, or a partial deck as the final result.
+
+The task is complete only when:
+
+- all fifty cards are edited;
+- the final JSON parses;
+- locked-field validation passes;
+- there are no placeholders;
+- no humor line is reused across claims;
+- the projected term registry is preserved;
+- the checkpoint status is complete.
+
+Return the final file and a concise QA report.

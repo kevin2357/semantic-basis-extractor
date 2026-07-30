@@ -1,0 +1,12 @@
+{
+  "commit": "0026",
+  "parent": "0025",
+  "title": "Operational Configuration and Feature-Flag Governance",
+  "next": "REC-026 Operational Deployment and Lifecycle Guidance",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "5ac475ac8b9d3cf85649950df621ffdb7a378b551e78a9a0d5ca9aee8fe6c8d7",
+    "sbe_v0_2_checkpoint.json": "d9374f6627caf46c1f8105439e9d92bf23b54e99269513e531a101f40478e039",
+    "sbe_v0_2_design_ledger.json": "851c2fca511c4be59372ddf50badd923fa7d3e147263292190c4fa422b61b2fd",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

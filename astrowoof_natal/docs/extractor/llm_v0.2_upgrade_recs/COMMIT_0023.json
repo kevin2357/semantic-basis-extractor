@@ -1,0 +1,12 @@
+{
+  "commit": "0023",
+  "parent": "0022",
+  "title": "Output Profiles",
+  "next": "REC-023 Artifact Packaging and Manifest Contracts",
+  "files": {
+    "sbe_v0_2_design_proposal.working.md": "10dfa6ced895c927af61f1a40b7f08d5748d001ca3b1dc7976e4b6c4e8bccbc0",
+    "sbe_v0_2_checkpoint.json": "436563cd53b195e2bf716ef148ba686eecf74e19da137afb6e483f6c63f7d617",
+    "sbe_v0_2_design_ledger.json": "7c92e3a3ce5a98a985de763c301b4e33a36d5d3990f588dd5735096c9aee8752",
+    "README_WORKFLOW.md": "a13f2751b71a79da228374d45865dbf8b84745f0794b4a5a37111d9e693cf495"
+  }
+}

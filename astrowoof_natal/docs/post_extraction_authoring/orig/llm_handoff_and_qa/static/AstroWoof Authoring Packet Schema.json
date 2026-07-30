@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/projected-natal-authoring-packet-v0.2.json",
+  "title": "AstroWoof Projected Natal Authoring Packet",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generator",
+    "subject",
+    "source",
+    "coverage",
+    "statistics",
+    "categories",
+    "behavioral_domains",
+    "cards"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "astrowoof.projected_natal_cards.authoring_packet.v0.2"
+    },
+    "generator": {
+      "type": "object",
+      "required": ["semantic_basis_extractor", "optimizer", "editorial_status"]
+    },
+    "subject": {
+      "type": "object",
+      "required": ["subject_id", "display_name", "subject_type", "pronouns"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_graph_ref", "source_identity", "contexts", "source_hashes"]
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "projected_object_count",
+        "projected_relationship_count",
+        "selected_claim_count",
+        "guardrails"
+      ]
+    },
+    "statistics": {
+      "type": "object",
+      "required": ["total_claims", "mandatory_claims", "claim_type_counts"]
+    },
+    "categories": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "behavioral_domains": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "cards": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {"$ref": "#/$defs/card"}
+    }
+  },
+  "$defs": {
+    "voiceMap": {
+      "type": "object",
+      "required": ["handler", "direct_to_dog", "hybrid"],
+      "properties": {
+        "handler": {"type": "string", "minLength": 1},
+        "direct_to_dog": {"type": "string", "minLength": 1},
+        "hybrid": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "rendering": {
+      "type": "object",
+      "required": [
+        "headline",
+        "body",
+        "funny_dog_quotes",
+        "imperative_dog_quotes",
+        "applicable_canine_jokes"
+      ],
+      "properties": {
+        "headline": {"$ref": "#/$defs/voiceMap"},
+        "body": {"$ref": "#/$defs/voiceMap"},
+        "funny_dog_quotes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "imperative_dog_quotes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "applicable_canine_jokes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "card": {
+      "type": "object",
+      "required": [
+        "claim_id",
+        "claim_type",
+        "category",
+        "canonical_claim",
+        "importance",
+        "confidence",
+        "strength",
+        "priority_id",
+        "selection",
+        "behavioral_domains",
+        "tags",
+        "evidence",
+        "relations",
+        "card",
+        "dos",
+        "donts"
+      ],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "claim_type": {"type": "string", "minLength": 1},
+        "category": {"type": "string", "minLength": 1},
+        "canonical_claim": {"type": "string", "minLength": 1},
+        "importance": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "strength": {"type": "number", "minimum": 0, "maximum": 1},
+        "priority_id": {"type": "integer", "minimum": 1, "maximum": 50},
+        "selection": {"type": "object"},
+        "behavioral_domains": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "object"}
+        },
+        "relations": {
+          "type": "object",
+          "required": ["reinforces", "tensions_with", "related_claims"]
+        },
+        "card": {
+          "type": "object",
+          "required": ["no_astro", "light_astro", "full_astro"],
+          "properties": {
+            "no_astro": {"$ref": "#/$defs/rendering"},
+            "light_astro": {"$ref": "#/$defs/rendering"},
+            "full_astro": {"$ref": "#/$defs/rendering"}
+          },
+          "additionalProperties": false
+        },
+        "dos": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "donts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
