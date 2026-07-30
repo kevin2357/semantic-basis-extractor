@@ -2,9 +2,10 @@
 
 ## The assignment
 
-This workspace contains a sequence of independent miniature essays about one
-dog. Work through the numbered story directories in order. Complete one
-writing file before opening the next.
+This pass contains one bounded portion of a larger deck about one dog. A card
+pass contains ten independent miniature essays. The summary pass contains four
+full-chart summaries and the global theme-group assignment. Follow the exact
+assignment in `START HERE.md`.
 
 Begin with the whole dog:
 
@@ -94,10 +95,17 @@ satisfied to see this story.
 Fill `Theme Group` when that field appears. Theme groups organize aspects and
 syntheses into a few coherent chapters.
 
+When `ASSIGN THEME GROUPS.md` is supplied, it owns chapter assignment for the
+entire deck. Organize all listed aspect and synthesis stories into three or
+four approximately equal, meaningfully related chapters. Reuse each chosen
+chapter name exactly. Card passes without this file leave theme grouping to the
+summary pass.
+
 ## Workspace care
 
 - Write in `WRITE WHOLE DOG PROFILE.md`, `WRITE THIS CARD.md`, and summary
-  writing files when supplied.
+  writing files when supplied. Also complete `ASSIGN THEME GROUPS.md` when it
+  is present.
 - Preserve every `BEGIN FIELD` and `END FIELD` marker exactly.
 - Replace every `__WRITE__` placeholder.
 - Keep reader-facing prose inside marked fields.

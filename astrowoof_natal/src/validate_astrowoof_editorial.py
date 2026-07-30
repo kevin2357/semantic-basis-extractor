@@ -128,10 +128,7 @@ def main() -> None:
         for level in ["high", "detail"]
     }
     registered_categories = set(edited.get("categories", []))
-    theme_group_counts = {
-        "aspects": Counter(),
-        "syntheses": Counter(),
-    }
+    theme_group_counts = Counter()
     for index, (before, after) in enumerate(zip(original_cards, edited_cards), 1):
         for field in LOCKED_CARD_FIELDS:
             if before.get(field) != after.get(field):
@@ -151,12 +148,7 @@ def main() -> None:
             if not isinstance(theme_group, str) or not theme_group.strip():
                 errors.append(f"Card {index} needs a nonempty theme_group.")
             else:
-                theme_kind = (
-                    "syntheses"
-                    if before.get("claim_type") == "synthesized_theme"
-                    else "aspects"
-                )
-                theme_group_counts[theme_kind][theme_group.strip()] += 1
+                theme_group_counts[theme_group.strip()] += 1
             if (
                 args.phase == "polish"
                 and not args.allow_theme_group_edits
@@ -194,33 +186,37 @@ def main() -> None:
         serialized = json.dumps(after, ensure_ascii=False)
         if "__LLM_FILL__" in serialized:
             errors.append(f"Card {index} retains an editorial placeholder.")
-        if len(after.get("dos", [])) < 2 or len(after.get("donts", [])) < 2:
-            errors.append(f"Card {index} needs at least two dos and two donts.")
+        if len(after.get("dos", [])) != 3 or len(after.get("donts", [])) != 3:
+            errors.append(f"Card {index} needs exactly three dos and three donts.")
         validate_editorial_card(
             after.get("card", {}), f"Card {index}", errors, warnings
         )
 
-    for theme_kind, counts in theme_group_counts.items():
-        group_count = len(counts)
-        if group_count not in {3, 4}:
+    group_count = len(theme_group_counts)
+    if group_count not in {3, 4}:
+        errors.append(
+            "Selected aspects and syntheses together must use three or four "
+            f"theme groups; found {group_count}."
+        )
+    if theme_group_counts:
+        sizes = list(theme_group_counts.values())
+        if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
             errors.append(
-                f"Selected {theme_kind} must use three or four theme groups; "
-                f"found {group_count}."
+                "Selected aspects and syntheses theme groups are not "
+                f"approximately balanced: {dict(theme_group_counts)}."
             )
-        if counts:
-            sizes = list(counts.values())
-            if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
-                errors.append(
-                    f"Selected {theme_kind} theme groups are not approximately "
-                    f"balanced: {dict(counts)}."
-                )
 
     summary = edited.get("summary", {})
     if list(summary) != ["card1", "card2", "card3", "card4"]:
         errors.append("Edited deck must contain summary.card1 through summary.card4.")
     for key, summary_card in summary.items():
-        if len(summary_card.get("dos", [])) < 2 or len(summary_card.get("donts", [])) < 2:
-            errors.append(f"Summary {key} needs at least two dos and two donts.")
+        if (
+            len(summary_card.get("dos", [])) != 3
+            or len(summary_card.get("donts", [])) != 3
+        ):
+            errors.append(
+                f"Summary {key} needs exactly three dos and three donts."
+            )
         validate_editorial_card(
             summary_card, f"Summary {key}", errors, warnings
         )

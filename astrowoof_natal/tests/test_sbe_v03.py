@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -97,29 +98,20 @@ def complete_packet(packet: dict) -> dict:
     edited = fill(deepcopy(packet))
     edited["generator"]["editorial_status"] = "llm_completed"
     edited["statistics"]["editorial_placeholders"] = 0
-    aspect_index = 0
-    synthesis_index = 0
+    theme_index = 0
     for claim in edited["cards"]:
         claim["context_filter_groups"] = {
             "high_level": ["Personality"],
             "detail_level": ["Core Personality"],
         }
-        claim["dos"] = ["Do one", "Do two"]
-        claim["donts"] = ["Avoid one", "Avoid two"]
+        claim["dos"] = ["Do one", "Do two", "Do three"]
+        claim["donts"] = ["Avoid one", "Avoid two", "Avoid three"]
         if "theme_group" in claim:
-            if claim["claim_type"] == "synthesized_theme":
-                claim["theme_group"] = (
-                    f"Synthesis Chapter {(synthesis_index % 4) + 1}"
-                )
-                synthesis_index += 1
-            else:
-                claim["theme_group"] = (
-                    f"Aspect Chapter {(aspect_index % 4) + 1}"
-                )
-                aspect_index += 1
+            claim["theme_group"] = f"Chapter {(theme_index % 4) + 1}"
+            theme_index += 1
     for summary in edited["summary"].values():
-        summary["dos"] = ["Do one", "Do two"]
-        summary["donts"] = ["Avoid one", "Avoid two"]
+        summary["dos"] = ["Do one", "Do two", "Do three"]
+        summary["donts"] = ["Avoid one", "Avoid two", "Avoid three"]
     return edited
 
 
@@ -229,6 +221,11 @@ class TestBrePacket(unittest.TestCase):
                 {"high_level": [], "detail_level": []},
                 claim["context_filter_groups"],
             )
+            self.assertEqual(3, len(claim["dos"]))
+            self.assertEqual(3, len(claim["donts"]))
+        for summary in self.packet["summary"].values():
+            self.assertEqual(3, len(summary["dos"]))
+            self.assertEqual(3, len(summary["donts"]))
 
     def test_every_rejected_candidate_is_preserved(self) -> None:
         expected = {candidate.candidate_id for candidate in self.rejected}
@@ -442,6 +439,66 @@ class TestBrePacket(unittest.TestCase):
                 "Personality",
                 deck["cards"][0]["card"]["no_astro"]["body"]["handler"],
             )
+
+    def test_split_story_workspaces_combine_into_one_complete_deck(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            specs = [
+                (1, 1, 10, False, False),
+                (2, 11, 10, False, False),
+                (3, 21, 10, False, False),
+                (4, 31, 10, False, False),
+                (5, 41, 10, False, False),
+                (6, 51, 0, True, True),
+            ]
+            for number, start, count, summaries, theme_plan in specs:
+                workspace = root / f"bre_{number}"
+                build_story_workspace(
+                    workspace,
+                    self.packet,
+                    ROOT,
+                    count,
+                    card_start=start,
+                    include_summaries=summaries,
+                    include_theme_plan=theme_plan,
+                    pass_number=number,
+                    pass_count=6,
+                )
+                for writing in workspace.rglob("WRITE*.md"):
+                    writing.write_text(
+                        writing.read_text(encoding="utf-8").replace(
+                            "__WRITE__",
+                            "Personality",
+                        ),
+                        encoding="utf-8",
+                    )
+                theme_path = workspace / "ASSIGN THEME GROUPS.md"
+                if theme_path.exists():
+                    text = theme_path.read_text(encoding="utf-8")
+                    markers = list(
+                        re.finditer(
+                            r"<!-- BEGIN FIELD: theme_group\.(\d+) -->",
+                            text,
+                        )
+                    )
+                    for index, marker in enumerate(markers):
+                        text = text.replace(
+                            "__WRITE__",
+                            f"Chapter {(index % 4) + 1}",
+                            1,
+                        )
+                    theme_path.write_text(text, encoding="utf-8")
+            deck, report = assemble(
+                self.packet,
+                root,
+                allow_partial=False,
+            )
+            self.assertEqual(6, report["workspace_count"])
+            self.assertEqual(list(range(1, 51)), report["authored_priority_ids"])
+            self.assertEqual([1, 2, 3, 4], report["authored_summary_ids"])
+            self.assertTrue(report["authored_theme_group_priority_ids"])
+            self.assertTrue(report["placeholder_free"])
+            self.assertNotIn("__LLM_FILL__", json.dumps(deck))
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):

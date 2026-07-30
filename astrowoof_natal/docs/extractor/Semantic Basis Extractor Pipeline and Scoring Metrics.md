@@ -653,6 +653,15 @@ SBE supports two instruction profiles:
   authoring packet. `--workspace-card-limit 10` physically limits an
   experimental workspace to the first ten stories.
 
+  The default `--workspace-layout split` emits six independent pass
+  directories per subject: five ten-story passes followed by one summary and
+  global-theme pass. Each pass contains its own dog details, complete-chart
+  basis, and fillable whole-dog profile, so all six may be authored
+  simultaneously in separate execution environments. Pass 6 owns the four
+  summary lenses and the single 3–4-chapter theme-group plan for every selected
+  aspect and synthesis. Use `--workspace-layout single` only for legacy or
+  controlled experiments.
+
 Compact mode treats checkpointing as interruption recovery rather than the
 normal unit of authorship. It exists for execution environments where the
 rigorous protocol's operational surface consumes disproportionate authoring
@@ -671,9 +680,11 @@ python src/assemble_authoring_workspace.py \
   natal.<subject>.cards.json
 ```
 
-Use `--allow-partial` for limited experiments. A full workspace includes all
-50 cards and four Summary directories; a limited workspace intentionally
-omits later cards and summaries.
+For split output, extract the six returned pass directories beneath one parent
+directory and give that parent to `assemble_authoring_workspace.py`. The
+assembler discovers the passes, rejects duplicate or missing priorities,
+applies the global theme plan, and combines the result into one deck. Use
+`--allow-partial` for limited single-workspace experiments.
 
 ### Optional subject details
 

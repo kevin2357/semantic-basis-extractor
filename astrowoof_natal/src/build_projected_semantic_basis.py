@@ -1094,8 +1094,8 @@ def blank_card() -> dict[str, Any]:
 
 def blank_summary_card() -> dict[str, Any]:
     return {
-        "dos": ["__LLM_FILL__"],
-        "donts": ["__LLM_FILL__"],
+        "dos": ["__LLM_FILL__", "__LLM_FILL__", "__LLM_FILL__"],
+        "donts": ["__LLM_FILL__", "__LLM_FILL__", "__LLM_FILL__"],
         **blank_card(),
     }
 
@@ -1214,8 +1214,8 @@ def compile_packet(
                 "tensions_with": [],
                 "related_claims": dependency_ids if candidate.claim_type != "synthesized_theme" else [],
             },
-            "dos": ["__LLM_FILL__"],
-            "donts": ["__LLM_FILL__"],
+            "dos": ["__LLM_FILL__", "__LLM_FILL__", "__LLM_FILL__"],
+            "donts": ["__LLM_FILL__", "__LLM_FILL__", "__LLM_FILL__"],
             "card": blank_card(),
         })
 
@@ -1341,6 +1341,10 @@ def qa_report(
             errors.append(f"Card {index} must contain a theme_group placeholder.")
         if not needs_theme and "theme_group" in card:
             errors.append(f"Card {index} placement unexpectedly contains theme_group.")
+        if len(card.get("dos", [])) != 3 or len(card.get("donts", [])) != 3:
+            errors.append(
+                f"Card {index} must scaffold exactly three dos and three donts."
+            )
         editorial = card.get("card", {})
         for collection in [
             "funny_dog_quotes", "imperative_dog_quotes", "applicable_canine_jokes"
@@ -1378,8 +1382,10 @@ def qa_report(
     if list(summary) != ["card1", "card2", "card3", "card4"]:
         errors.append("Summary must contain card1 through card4 in order.")
     for key, value in summary.items():
-        if not value.get("dos") or not value.get("donts"):
-            errors.append(f"Summary {key} lacks dos or donts placeholders.")
+        if len(value.get("dos", [])) != 3 or len(value.get("donts", [])) != 3:
+            errors.append(
+                f"Summary {key} must scaffold exactly three dos and three donts."
+            )
         for density in ["no_astro", "light_astro", "full_astro"]:
             if density not in value:
                 errors.append(f"Summary {key} lacks {density}.")
@@ -1512,6 +1518,7 @@ def render_story_writing_template(
     item: dict[str, Any],
     *,
     summary: bool = False,
+    include_theme_group: bool = True,
 ) -> str:
     title = "Summary" if summary else f"Story {item.get('priority_id')}"
     lines = [
@@ -1610,10 +1617,47 @@ def render_story_writing_template(
                 "",
             ]
         )
-        if "theme_group" in item:
+        if "theme_group" in item and include_theme_group:
             lines.extend(
                 [_field_block("Theme Group", "theme_group"), ""]
             )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_theme_group_assignment(packet: dict[str, Any]) -> str:
+    cards_by_id = {item["claim_id"]: item for item in packet["cards"]}
+    themed_cards = [
+        card for card in packet["cards"] if "theme_group" in card
+    ]
+    lines = [
+        "# Global Theme-Group Assignment",
+        "",
+        "Organize all aspect and synthesis stories below into three or four "
+        "approximately equal chapters. Use one concise chapter name for each "
+        "group and reuse that exact name for every story assigned to it. Base "
+        "the chapters on meaningful similarities in the stories, not their "
+        "priority numbers or claim types.",
+        "",
+    ]
+    for card in themed_cards:
+        brief, facts, focus = _story_brief(card, cards_by_id)
+        lines.extend(
+            [
+                f"## Story {card['priority_id']:03d}",
+                "",
+                brief,
+                "",
+                *[f"- {fact}" for fact in facts if fact],
+                "",
+                focus,
+                "",
+                _field_block(
+                    "Chapter Name",
+                    f"theme_group.{card['priority_id']}",
+                ),
+                "",
+            ]
+        )
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -2113,18 +2157,77 @@ def build_story_workspace(
     packet: dict[str, Any],
     repo_root: Path,
     card_limit: int,
+    *,
+    card_start: int = 1,
+    include_summaries: bool | None = None,
+    include_theme_plan: bool = False,
+    pass_number: int | None = None,
+    pass_count: int | None = None,
 ) -> None:
+    if card_start < 1 or card_limit < 0:
+        raise ValueError("card_start must be positive and card_limit nonnegative")
+    card_end = card_start + card_limit - 1
+    if card_end > len(packet["cards"]):
+        raise ValueError(
+            f"Requested stories {card_start}-{card_end}, but the packet has "
+            f"{len(packet['cards'])} cards"
+        )
+    if include_summaries is None:
+        include_summaries = (
+            card_start == 1 and card_limit == len(packet["cards"])
+        )
     subject_bundle.mkdir(parents=True, exist_ok=True)
     brief_source = (
         repo_root / "docs" / "post_extraction_authoring"
         / "AstroWoof Story Workspace Authoring Brief.md"
     )
-    prompt_source = (
-        repo_root / "docs" / "post_extraction_authoring"
-        / "Story Workspace Handoff Prompt.md"
-    )
     shutil.copy2(brief_source, subject_bundle / "AUTHORING BRIEF.md")
-    shutil.copy2(prompt_source, subject_bundle / "START HERE.md")
+    display_name = (
+        packet["subject"].get("display_name")
+        or packet["subject"].get("subject_id")
+    )
+    pass_label = (
+        f"Pass {pass_number} of {pass_count}"
+        if pass_number is not None and pass_count is not None
+        else "Authoring Pass"
+    )
+    if card_limit:
+        assignment = (
+            f"This pass contains exactly Stories {card_start:03d} through "
+            f"{card_end:03d}. Complete those {card_limit} story directories "
+            "in numeric order. The assignment is complete when their writing "
+            "files and the whole-dog profile contain no unfinished fields."
+        )
+        sequence = (
+            "Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read "
+            "`FULL CHART BASIS.md` in full and complete "
+            "`WRITE WHOLE DOG PROFILE.md`. Then author each supplied story as "
+            "a fresh miniature essay while retaining a coherent understanding "
+            f"of {display_name}."
+        )
+    else:
+        assignment = (
+            "This is the summary pass. Complete the four supplied Summary "
+            "directories through their distinct lenses: who the dog is, how "
+            "the dog lives, what the dog needs, and how the dog grows. Give "
+            "each summary its own central argument, examples, advice, and "
+            "language. Also complete `ASSIGN THEME GROUPS.md`, which creates "
+            "one coherent chapter plan for every aspect and synthesis story."
+        )
+        sequence = (
+            "Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read "
+            "`FULL CHART BASIS.md` in full and complete "
+            "`WRITE WHOLE DOG PROFILE.md`. Then write all four summaries from "
+            f"the complete chart understanding of {display_name}."
+        )
+    (subject_bundle / "START HERE.md").write_text(
+        f"# Start Here — {pass_label}\n\n"
+        f"## Assignment\n\n{assignment}\n\n"
+        f"## Working sequence\n\n{sequence}\n\n"
+        "Preserve every field marker and replace every unfinished field. "
+        "Return this complete pass directory as a ZIP archive.\n",
+        encoding="utf-8",
+    )
     (subject_bundle / "DOG DETAILS.md").write_text(
         render_dog_details(packet),
         encoding="utf-8",
@@ -2138,8 +2241,9 @@ def build_story_workspace(
         encoding="utf-8",
     )
     cards_root = subject_bundle / "cards"
-    cards_root.mkdir(parents=True, exist_ok=True)
-    for card in packet["cards"][:card_limit]:
+    if card_limit:
+        cards_root.mkdir(parents=True, exist_ok=True)
+    for card in packet["cards"][card_start - 1:card_end]:
         story_root = cards_root / (
             f"Story {card['priority_id']:03d} -- {card['claim_id']}"
         )
@@ -2149,10 +2253,20 @@ def build_story_workspace(
             encoding="utf-8",
         )
         (story_root / "WRITE THIS CARD.md").write_text(
-            render_story_writing_template(card),
+            render_story_writing_template(
+                card,
+                include_theme_group=not (
+                    pass_number is not None and pass_count == 6
+                ),
+            ),
             encoding="utf-8",
         )
-    if card_limit == len(packet["cards"]):
+    if include_theme_plan:
+        (subject_bundle / "ASSIGN THEME GROUPS.md").write_text(
+            render_theme_group_assignment(packet),
+            encoding="utf-8",
+        )
+    if include_summaries:
         summaries_root = subject_bundle / "summaries"
         summaries_root.mkdir(parents=True, exist_ok=True)
         summary_names = (
@@ -2297,6 +2411,16 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--workspace-layout",
+        choices=("split", "single"),
+        default="split",
+        help=(
+            "Layout for --handoff-profile authoring-workspace. 'split' emits "
+            "five independent ten-card passes and one summary pass; 'single' "
+            "preserves the legacy one-directory workspace."
+        ),
+    )
+    parser.add_argument(
         "--fail-fast",
         action="store_true",
         help="Stop at the first invalid subject rather than finishing the batch manifest.",
@@ -2315,10 +2439,13 @@ def main() -> None:
         parser.error("--workspace-card-limit must be between 1 and 50")
     if (
         args.handoff_profile != "authoring-workspace"
-        and args.workspace_card_limit != 50
+        and (
+            args.workspace_card_limit != 50
+            or args.workspace_layout != "split"
+        )
     ):
         parser.error(
-            "--workspace-card-limit is only valid with "
+            "--workspace-card-limit and --workspace-layout are only valid with "
             "--handoff-profile authoring-workspace"
         )
     input_package = args.legacy_input_dir or args.input_package
@@ -2328,9 +2455,12 @@ def main() -> None:
     if args.handoff_profile == "authoring-workspace":
         (args.bundle_dir / "README.md").write_text(
             "# AstroWoof Story Workspace Handoff\n\n"
-            "Each subject directory is a Markdown authoring workspace. Read "
-            "`START HERE.md`, then complete the numbered story directories. "
-            "Return the authored workspace as a ZIP; do not create JSON.\n",
+            "Each pass directory is a self-contained Markdown authoring "
+            "assignment. In split layout, passes 1–5 each contain ten stories "
+            "and pass 6 contains the four full-chart summaries. Open each pass "
+            "in its own temporary chat, read that pass's `START HERE.md`, and "
+            "return the completed pass directory as a ZIP archive. The six "
+            "passes may run simultaneously.\n",
             encoding="utf-8",
         )
     elif args.handoff_profile == "compact":
@@ -2416,18 +2546,78 @@ def main() -> None:
             write_json(root / f"{subject}.selection-qa.json", qa)
 
             subject_bundle = args.bundle_dir / subject
+            subject_bundles: list[Path] = []
             request_files: list[str] = []
-            if subject_bundle.exists():
-                shutil.rmtree(subject_bundle)
             if args.handoff_profile == "authoring-workspace":
-                subject_bundle.mkdir(parents=True, exist_ok=True)
-                build_story_workspace(
+                stale_subject_paths = [
                     subject_bundle,
-                    packet,
-                    repo_root,
-                    args.workspace_card_limit,
-                )
+                    *[
+                        args.bundle_dir / f"{subject}_{index}"
+                        for index in range(1, 7)
+                    ],
+                ]
+                for stale_path in stale_subject_paths:
+                    if stale_path.exists():
+                        shutil.rmtree(stale_path)
+                if args.workspace_layout == "split":
+                    pass_specs = [
+                        (1, 1, 10, False, False),
+                        (2, 11, 10, False, False),
+                        (3, 21, 10, False, False),
+                        (4, 31, 10, False, False),
+                        (5, 41, 10, False, False),
+                        (6, 51, 0, True, True),
+                    ]
+                    for (
+                        pass_number,
+                        card_start,
+                        card_count,
+                        summaries,
+                        theme_plan,
+                    ) in pass_specs:
+                        pass_bundle = (
+                            args.bundle_dir / f"{subject}_{pass_number}"
+                        )
+                        build_story_workspace(
+                            pass_bundle,
+                            packet,
+                            repo_root,
+                            card_count,
+                            card_start=card_start,
+                            include_summaries=summaries,
+                            include_theme_plan=theme_plan,
+                            pass_number=pass_number,
+                            pass_count=6,
+                        )
+                        assignment = (
+                            f"Stories {card_start:03d}–"
+                            f"{card_start + card_count - 1:03d}"
+                            if card_count
+                            else "Four full-chart summaries"
+                        )
+                        (pass_bundle / "WORKSPACE MANIFEST.md").write_text(
+                            "# AstroWoof Authoring Pass\n\n"
+                            f"- **Subject:** {subject}\n"
+                            f"- **Pass:** {pass_number} of 6\n"
+                            f"- **Assignment:** {assignment}\n"
+                            f"- **Expected return:** "
+                            f"`{subject}_{pass_number}-authored.zip`\n"
+                            f"- **Start with:** `START HERE.md`\n",
+                            encoding="utf-8",
+                        )
+                        subject_bundles.append(pass_bundle)
+                else:
+                    subject_bundle.mkdir(parents=True, exist_ok=True)
+                    build_story_workspace(
+                        subject_bundle,
+                        packet,
+                        repo_root,
+                        args.workspace_card_limit,
+                    )
+                    subject_bundles.append(subject_bundle)
             else:
+                if subject_bundle.exists():
+                    shutil.rmtree(subject_bundle)
                 request = subject_bundle / "request"
                 request.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(
@@ -2485,15 +2675,16 @@ def main() -> None:
                 ),
             }
             if args.handoff_profile == "authoring-workspace":
-                (subject_bundle / "WORKSPACE MANIFEST.md").write_text(
-                    f"# AstroWoof Story Workspace\n\n"
-                    f"- **Subject:** {subject}\n"
-                    f"- **Story directories:** {args.workspace_card_limit}\n"
-                    f"- **Expected return:** "
-                    f"`{subject}-authored-story-workspace.zip`\n"
-                    f"- **Start with:** `START HERE.md`\n",
-                    encoding="utf-8",
-                )
+                if args.workspace_layout == "single":
+                    (subject_bundle / "WORKSPACE MANIFEST.md").write_text(
+                        f"# AstroWoof Story Workspace\n\n"
+                        f"- **Subject:** {subject}\n"
+                        f"- **Story directories:** {args.workspace_card_limit}\n"
+                        f"- **Expected return:** "
+                        f"`{subject}-authored-story-workspace.zip`\n"
+                        f"- **Start with:** `START HERE.md`\n",
+                        encoding="utf-8",
+                    )
             else:
                 write_json(subject_bundle / "manifest.json", manifest)
             run_records.append({
@@ -2510,7 +2701,12 @@ def main() -> None:
                     "registry_merge"
                 ]["unique_term_count"],
                 "output": str(root.resolve()),
-                "bundle": str(subject_bundle.resolve()),
+                "bundle": (
+                    [str(path.resolve()) for path in subject_bundles]
+                    if args.handoff_profile == "authoring-workspace"
+                    and args.workspace_layout == "split"
+                    else str(subject_bundle.resolve())
+                ),
             })
         except Exception as exc:
             failed = True
@@ -2532,9 +2728,7 @@ def main() -> None:
         "subjects": run_records,
     }
     write_json(args.output_dir / "run-manifest.json", run_manifest)
-    write_json(
-        args.bundle_dir / "manifest.json",
-        {
+    bundle_manifest = {
             "bundle_version": "astrowoof.llm_handoff.v0.5.0",
             "handoff_profile": args.handoff_profile,
             "instruction": (
@@ -2580,8 +2774,43 @@ def main() -> None:
                 if args.handoff_profile == "authoring-workspace"
                 else None
             ),
-        },
-    )
+        }
+    if args.handoff_profile == "authoring-workspace":
+        lines = [
+            "# AstroWoof Authoring Bundle",
+            "",
+            f"- **Layout:** {args.workspace_layout}",
+            f"- **Subjects:** {len(run_records)}",
+            "",
+            "## Pass directories",
+            "",
+        ]
+        for record in run_records:
+            if record["status"] != "pass":
+                continue
+            if args.workspace_layout == "split":
+                for index in range(1, 7):
+                    assignment = (
+                        f"Stories {(index - 1) * 10 + 1:03d}–{index * 10:03d}"
+                        if index <= 5
+                        else "Four full-chart summaries"
+                    )
+                    lines.append(
+                        f"- `{record['subject']}_{index}/` — {assignment}"
+                    )
+            else:
+                lines.append(
+                    f"- `{record['subject']}/` — supplied story workspace"
+                )
+        (args.bundle_dir / "BUNDLE MANIFEST.md").write_text(
+            "\n".join(lines).rstrip() + "\n",
+            encoding="utf-8",
+        )
+        stale_manifest = args.bundle_dir / "manifest.json"
+        if stale_manifest.exists():
+            stale_manifest.unlink()
+    else:
+        write_json(args.bundle_dir / "manifest.json", bundle_manifest)
     print(json.dumps(run_manifest, ensure_ascii=False, indent=2))
     if failed:
         raise SystemExit(1)
