@@ -2275,6 +2275,15 @@ def build_story_workspace(
         "the identified cross-card reuse and run the checker again until its "
         "status is `accept`. Include `authoring-pass-acceptance.json` in the "
         "returned ZIP.\n\n"
+        "## If the gate rejects the pass\n\n"
+        "Treat a rejection as an editorial signal, not as a puzzle about the "
+        "checker. The most reliable response is to return to the affected "
+        "cards' plans, recover what makes each insight memorable, and rewrite "
+        "the prose in a natural voice with genuinely distinct movement and "
+        "character. Surface-level interventions—filler, recurring "
+        "catchphrases, bracketed insertions, or cosmetic paraphrase—do not "
+        "create editorial independence. Writing that sincerely follows "
+        "`GUIDING LIGHTS.md` is the best route to a successful pass.\n\n"
         "Preserve every field marker and replace every unfinished field. "
         "Return this complete pass directory as a ZIP archive.\n",
         encoding="utf-8",

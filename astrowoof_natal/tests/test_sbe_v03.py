@@ -497,6 +497,14 @@ class TestBrePacket(unittest.TestCase):
             self.assertIn("Mechanical acceptance requirements", start_here)
             self.assertNotIn("twelve words", start_here)
             self.assertIn("python lint_authoring_pass.py .", start_here)
+            self.assertIn(
+                "Treat a rejection as an editorial signal",
+                start_here,
+            )
+            self.assertIn(
+                "rewrite the prose in a natural voice",
+                start_here,
+            )
             opaque_checker = (
                 workspace / "lint_authoring_pass.py"
             ).read_text(encoding="utf-8")

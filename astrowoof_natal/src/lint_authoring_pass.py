@@ -137,9 +137,10 @@ def main() -> None:
             "editorial_issue_codes": issue_codes,
             "affected_claim_ids": affected_claim_ids,
             "guidance": (
-                "Rewrite the affected cards as independent essays, removing "
-                "reused language and recurring prose frames, then rerun this "
-                "check."
+                "Treat this result as an editorial signal rather than a puzzle "
+                "about the checker. Return to the affected plans and rewrite "
+                "the cards as natural, memorable, genuinely independent "
+                "pieces. Follow GUIDING LIGHTS.md, then rerun this check."
                 if issue_codes
                 else "The pass cleared the bundled editorial gate."
             ),
