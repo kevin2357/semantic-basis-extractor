@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import sys
 import tempfile
+import threading
+import time
 import unittest
 import zipfile
 from pathlib import Path
@@ -14,15 +16,25 @@ SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
 from author_semantic_closure import (  # noqa: E402
+    AuthoringProviderError,
+    FIELD_PATTERN,
     FakeAuthoringProvider,
+    OpenAIResponsesProvider,
+    OpenAIServiceError,
     PassSpec,
+    ProviderResult,
+    apply_authored_fields,
+    authoring_output_schema,
     author_pending_passes,
     discover_passes,
+    estimated_cost,
     initial_run_state,
     load_json,
+    normalized_usage,
     resume_run,
     safe_extract_zip,
     save_state,
+    writable_fields,
 )
 from build_projected_semantic_basis import (  # noqa: E402
     build_candidates,
@@ -35,6 +47,119 @@ from build_projected_semantic_basis import (  # noqa: E402
 
 
 EXAMPLES = ROOT / "examples"
+
+
+def authored_field_payload(workspace: Path) -> dict:
+    result = {}
+    ordinal = 0
+    for relative_path, fields in writable_fields(workspace).items():
+        result[relative_path] = {}
+        for field in fields:
+            ordinal += 1
+            result[relative_path][field] = (
+                f"Fresh authored value {ordinal} for {field}."
+            )
+    return {"files": result}
+
+
+def completed_response(
+    authored: dict,
+    *,
+    response_id: str = "resp_test",
+) -> dict:
+    return {
+        "id": response_id,
+        "status": "completed",
+        "model": "gpt-5.6-terra",
+        "output": [
+            {
+                "type": "message",
+                "content": [
+                    {
+                        "type": "output_text",
+                        "text": json.dumps(authored),
+                    }
+                ],
+            }
+        ],
+        "usage": {
+            "input_tokens": 1000,
+            "input_tokens_details": {"cached_tokens": 200},
+            "output_tokens": 500,
+            "output_tokens_details": {"reasoning_tokens": 100},
+            "total_tokens": 1500,
+        },
+    }
+
+
+class ScriptedTransport:
+    def __init__(self, results: list[dict | Exception]) -> None:
+        self.results = list(results)
+        self.calls: list[dict] = []
+
+    def request_json(self, **kwargs):
+        self.calls.append(kwargs)
+        if not self.results:
+            raise AssertionError("Unexpected transport call")
+        result = self.results.pop(0)
+        if isinstance(result, Exception):
+            raise result
+        return result
+
+
+class FeedbackRecordingProvider(FakeAuthoringProvider):
+    def __init__(self) -> None:
+        super().__init__(reject_attempts={"bre_1": 1})
+        self.feedback: list[dict | None] = []
+
+    def author(
+        self,
+        source_workspace,
+        response_workspace,
+        spec,
+        attempt_number,
+        feedback=None,
+    ):
+        self.feedback.append(feedback)
+        return super().author(
+            source_workspace,
+            response_workspace,
+            spec,
+            attempt_number,
+            feedback,
+        )
+
+
+class ConcurrentTrackingProvider(FakeAuthoringProvider):
+    def __init__(self) -> None:
+        super().__init__()
+        self._lock = threading.Lock()
+        self.active = 0
+        self.peak = 0
+
+    def author(
+        self,
+        source_workspace,
+        response_workspace,
+        spec,
+        attempt_number,
+        feedback=None,
+    ):
+        with self._lock:
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+        try:
+            time.sleep(0.03)
+            return super().author(
+                source_workspace,
+                response_workspace,
+                spec,
+                attempt_number,
+                feedback,
+            )
+        finally:
+            with self._lock:
+                self.active -= 1
 
 
 class SemanticClosureFixture(unittest.TestCase):
@@ -128,6 +253,351 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_openai_provider_reconstructs_structured_fields_and_accounts_usage(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            authored = authored_field_payload(source)
+            transport = ScriptedTransport([completed_response(authored)])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                background=False,
+                transport=transport,
+                sleep=lambda _: None,
+            )
+            response_workspace = (
+                root
+                / "run"
+                / "passes"
+                / "bre_1"
+                / "attempt-001"
+                / "response"
+                / "bre_1"
+            )
+            spec = PassSpec(
+                pass_id="bre_1",
+                subject="bre",
+                pass_number=1,
+                source_zip=root / "bundle" / "bre_1.zip",
+                source_sha256="source-hash",
+            )
+            before = (source / "START HERE.md").read_text(encoding="utf-8")
+            result = provider.author(
+                source,
+                response_workspace,
+                spec,
+                1,
+            )
+            self.assertEqual(response_workspace, result.workspace)
+            self.assertEqual(
+                before,
+                (response_workspace / "START HERE.md").read_text(
+                    encoding="utf-8"
+                ),
+            )
+            for path in response_workspace.rglob("WRITE*.md"):
+                marked_values = [
+                    match.group(3)
+                    for match in FIELD_PATTERN.finditer(
+                        path.read_text(encoding="utf-8")
+                    )
+                ]
+                self.assertTrue(
+                    all("__WRITE__" not in value for value in marked_values)
+                )
+            self.assertEqual(
+                {
+                    "input_tokens": 1000,
+                    "cached_input_tokens": 200,
+                    "cache_write_tokens": 0,
+                    "output_tokens": 500,
+                    "reasoning_tokens": 100,
+                    "total_tokens": 1500,
+                },
+                result.metadata["usage"],
+            )
+            self.assertEqual(
+                0.00955,
+                result.metadata["estimated_cost"]["estimated_amount"],
+            )
+            request = transport.calls[0]["payload"]
+            self.assertEqual("json_schema", request["text"]["format"]["type"])
+            self.assertEqual(
+                set(writable_fields(source)),
+                set(
+                    request["text"]["format"]["schema"]["properties"][
+                        "files"
+                    ]["properties"]
+                ),
+            )
+
+    def test_openai_background_polling_retries_transient_transport_errors(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            authored = authored_field_payload(source)
+            sleeps: list[float] = []
+            transport = ScriptedTransport(
+                [
+                    OpenAIServiceError("rate limited", retryable=True),
+                    {
+                        "id": "resp_background",
+                        "status": "in_progress",
+                    },
+                    {"id": "resp_background", "status": "queued"},
+                    completed_response(
+                        authored,
+                        response_id="resp_background",
+                    ),
+                ]
+            )
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=transport,
+                poll_interval_seconds=0.25,
+                transport_backoff_seconds=0.5,
+                sleep=sleeps.append,
+            )
+            result = provider.author(
+                source,
+                (
+                    root
+                    / "run"
+                    / "passes"
+                    / "bre_1"
+                    / "attempt-001"
+                    / "response"
+                    / "bre_1"
+                ),
+                PassSpec(
+                    "bre_1",
+                    "bre",
+                    1,
+                    root / "bundle" / "bre_1.zip",
+                    "hash",
+                ),
+                1,
+            )
+            self.assertEqual("resp_background", result.metadata["response_id"])
+            self.assertEqual(2, result.metadata["poll_count"])
+            self.assertEqual(
+                {"create": 2, "retrieve": 2},
+                result.metadata["transport_attempts"],
+            )
+            self.assertEqual([0.5, 0.25, 0.25], sleeps)
+            self.assertEqual(
+                ["POST", "POST", "GET", "GET"],
+                [call["method"] for call in transport.calls],
+            )
+            self.assertEqual(
+                transport.calls[0]["headers"]["Idempotency-Key"],
+                transport.calls[1]["headers"]["Idempotency-Key"],
+            )
+
+    def test_completed_malformed_output_preserves_billable_metadata(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            malformed = completed_response({})
+            malformed["output"][0]["content"][0]["text"] = "not json"
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                background=False,
+                transport=ScriptedTransport([malformed]),
+                sleep=lambda _: None,
+            )
+            with self.assertRaises(AuthoringProviderError) as raised:
+                provider.author(
+                    source,
+                    (
+                        root
+                        / "run"
+                        / "passes"
+                        / "bre_1"
+                        / "attempt-001"
+                        / "response"
+                        / "bre_1"
+                    ),
+                    PassSpec(
+                        "bre_1",
+                        "bre",
+                        1,
+                        root / "bundle" / "bre_1.zip",
+                        "hash",
+                    ),
+                    1,
+                )
+            self.assertEqual(
+                "resp_test",
+                raised.exception.metadata["response_id"],
+            )
+            self.assertEqual(
+                1500,
+                raised.exception.metadata["usage"]["total_tokens"],
+            )
+
+    def test_interrupted_background_attempt_resumes_without_new_post(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider_for_state = FakeAuthoringProvider()
+            state, run_json = self.make_state(root, provider_for_state)
+            record = state["passes"]["bre_1"]
+            attempt_root = (
+                root / "run" / "passes" / "bre_1" / "attempt-001"
+            )
+            attempt_root.mkdir(parents=True)
+            (attempt_root / "openai-background-response.json").write_text(
+                json.dumps(
+                    {"id": "resp_resume", "status": "in_progress"}
+                ),
+                encoding="utf-8",
+            )
+            record["state"] = "SUBMITTED"
+            record["attempts"] = [
+                {
+                    "attempt_number": 1,
+                    "state": "SUBMITTED",
+                    "started_at": "2026-07-31T00:00:00+00:00",
+                    "finished_at": None,
+                    "response_workspace": str(
+                        attempt_root / "response" / "bre_1"
+                    ),
+                    "provider_metadata": None,
+                    "qa": None,
+                    "error": None,
+                }
+            ]
+            for pass_id, other in state["passes"].items():
+                if pass_id != "bre_1":
+                    other["state"] = "PASS_QA_ACCEPTED"
+                    other["accepted_workspace"] = str(
+                        root / "accepted-placeholder" / pass_id
+                    )
+                    other["accepted_attempt"] = 1
+            save_state(run_json, state)
+            source_zip = Path(record["source_zip"])
+            with tempfile.TemporaryDirectory() as extracted:
+                with zipfile.ZipFile(source_zip) as archive:
+                    archive.extractall(extracted)
+                authored = authored_field_payload(
+                    Path(extracted) / "bre_1"
+                )
+            transport = ScriptedTransport(
+                [
+                    completed_response(
+                        authored,
+                        response_id="resp_resume",
+                    )
+                ]
+            )
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=transport,
+                sleep=lambda _: None,
+            )
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                max_workers=1,
+            )
+            persisted = load_json(run_json)
+            resumed = persisted["passes"]["bre_1"]
+            self.assertEqual("PASS_QA_ACCEPTED", resumed["state"])
+            self.assertEqual(1, resumed["accepted_attempt"])
+            self.assertEqual(1, len(resumed["attempts"]))
+            self.assertEqual(["GET"], [call["method"] for call in transport.calls])
+            self.assertEqual(
+                0,
+                resumed["attempts"][0]["provider_metadata"][
+                    "transport_attempts"
+                ]["create"],
+            )
+
+    def test_fatal_service_configuration_error_does_not_burn_retries(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json = self.make_state(
+                root,
+                FakeAuthoringProvider(),
+            )
+            state["passes"] = {"bre_1": state["passes"]["bre_1"]}
+            save_state(run_json, state)
+            transport = ScriptedTransport(
+                [
+                    OpenAIServiceError(
+                        "invalid request",
+                        status_code=400,
+                        fatal=True,
+                    )
+                ]
+            )
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=transport,
+                sleep=lambda _: None,
+            )
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+            )
+            record = load_json(run_json)["passes"]["bre_1"]
+            self.assertEqual("FAILED_REQUIRES_REVIEW", record["state"])
+            self.assertEqual(1, len(record["attempts"]))
+            self.assertEqual(
+                "OpenAIServiceError",
+                record["attempts"][0]["error"]["type"],
+            )
+
+    def test_output_schema_and_reconstruction_reject_shape_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            fields = writable_fields(source)
+            schema = authoring_output_schema(fields)
+            self.assertFalse(schema["additionalProperties"])
+            self.assertEqual(
+                list(fields),
+                schema["properties"]["files"]["required"],
+            )
+            authored = authored_field_payload(source)
+            authored["files"].pop(next(iter(authored["files"])))
+            with self.assertRaisesRegex(ValueError, "file mismatch"):
+                apply_authored_fields(
+                    source,
+                    root / "response" / "bre_1",
+                    authored,
+                )
+
+    def test_usage_and_cost_normalization_are_deterministic(self) -> None:
+        response = completed_response({})
+        usage = normalized_usage(response)
+        cost = estimated_cost("gpt-5.6-terra", usage)
+        self.assertEqual(1500, usage["total_tokens"])
+        self.assertEqual(0.00955, cost["estimated_amount"])
+        self.assertIsNone(estimated_cost("unknown-model", usage))
+
     def test_discovers_exactly_six_integral_pass_archives(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -174,7 +644,7 @@ class TestSemanticClosure(SemanticClosureFixture):
     def test_qa_rejection_retries_fresh_and_then_accepts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            provider = FakeAuthoringProvider(reject_attempts={"bre_1": 1})
+            provider = FeedbackRecordingProvider()
             state, run_json = self.make_state(root, provider)
             author_pending_passes(
                 state=state,
@@ -193,6 +663,42 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertNotEqual(
                 record["attempts"][0]["response_workspace"],
                 record["attempts"][1]["response_workspace"],
+            )
+            self.assertIsNone(provider.feedback[0])
+            self.assertEqual(
+                "editorial_qa_rejection",
+                provider.feedback[1]["kind"],
+            )
+            self.assertIn(
+                "cross_card_exact_duplicate",
+                provider.feedback[1]["editorial_issue_codes"],
+            )
+
+    def test_passes_can_execute_concurrently_without_corrupting_ledger(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = ConcurrentTrackingProvider()
+            state, run_json = self.make_state(root, provider)
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                max_workers=6,
+            )
+            persisted = load_json(run_json)
+            self.assertEqual("AUTHORING_COMPLETE", persisted["status"])
+            self.assertGreaterEqual(provider.peak, 2)
+            self.assertEqual(
+                {"PASS_QA_ACCEPTED"},
+                {
+                    record["state"]
+                    for record in persisted["passes"].values()
+                },
             )
 
     def test_resume_skips_accepted_pass_and_continues_remaining(self) -> None:

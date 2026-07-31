@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
-"""Orchestrate the deterministic stages of AstroWoof semantic closure.
+"""Orchestrate AstroWoof semantic-closure extraction and authoring.
 
-Phase 1 deliberately ships with a fake authoring provider only.  It exercises
-SBE generation, six-pass discovery, durable attempt state, local acceptance
-checking, retries, and resumability without making network requests.
+The runner supports a deterministic fake provider for token-free workflow
+tests and concurrent OpenAI Responses workers for live authoring.
 """
 
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+import time
+import urllib.error
+import urllib.request
 import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -23,9 +28,38 @@ from pathlib import Path
 from typing import Any, Protocol
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.1"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.2"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
+WRITABLE_FILE_NAMES = {
+    "WRITE WHOLE DOG PROFILE.md",
+    "WRITE THIS CARD.md",
+    "WRITE THIS SUMMARY.md",
+    "ASSIGN THEME GROUPS.md",
+}
+RETRYABLE_HTTP_STATUSES = {408, 409, 429, 500, 502, 503, 504}
+MODEL_PRICING_USD_PER_MILLION = {
+    "gpt-5.6": {
+        "input": 5.00,
+        "cached_input": 0.50,
+        "output": 30.00,
+    },
+    "gpt-5.6-sol": {
+        "input": 5.00,
+        "cached_input": 0.50,
+        "output": 30.00,
+    },
+    "gpt-5.6-terra": {
+        "input": 2.50,
+        "cached_input": 0.25,
+        "output": 15.00,
+    },
+    "gpt-5.6-luna": {
+        "input": 1.00,
+        "cached_input": 0.10,
+        "output": 6.00,
+    },
+}
 FIELD_PATTERN = re.compile(
     r"(<!-- BEGIN FIELD: ([a-zA-Z0-9_.]+) -->\s*\n)"
     r"(.*?)"
@@ -127,6 +161,7 @@ class AuthoringProvider(Protocol):
         response_workspace: Path,
         spec: PassSpec,
         attempt_number: int,
+        feedback: dict[str, Any] | None = None,
     ) -> ProviderResult:
         """Author one fresh pass workspace."""
 
@@ -228,6 +263,7 @@ class FakeAuthoringProvider:
         response_workspace: Path,
         spec: PassSpec,
         attempt_number: int,
+        feedback: dict[str, Any] | None = None,
     ) -> ProviderResult:
         if attempt_number <= self.error_attempts.get(spec.pass_id, 0):
             raise RuntimeError(
@@ -271,6 +307,653 @@ class FakeAuthoringProvider:
                     <= self.reject_attempts.get(spec.pass_id, 0)
                 ),
             },
+        )
+
+
+class OpenAIServiceError(RuntimeError):
+    """An OpenAI service or protocol failure."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        retryable: bool = False,
+        fatal: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.retryable = retryable
+        self.fatal = fatal
+
+
+class AuthoringProviderError(RuntimeError):
+    """A completed provider attempt that carries billable metadata."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        metadata: dict[str, Any],
+    ) -> None:
+        super().__init__(message)
+        self.metadata = metadata
+
+
+class JsonHttpTransport(Protocol):
+    def request_json(
+        self,
+        *,
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        payload: dict[str, Any] | None,
+        timeout_seconds: float,
+    ) -> dict[str, Any]:
+        """Send one JSON request and return one decoded JSON object."""
+
+
+class UrllibJsonTransport:
+    """Small dependency-free JSON transport for the OpenAI REST API."""
+
+    def request_json(
+        self,
+        *,
+        method: str,
+        url: str,
+        headers: dict[str, str],
+        payload: dict[str, Any] | None,
+        timeout_seconds: float,
+    ) -> dict[str, Any]:
+        body = (
+            json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            if payload is not None
+            else None
+        )
+        request = urllib.request.Request(
+            url=url,
+            data=body,
+            headers=headers,
+            method=method,
+        )
+        try:
+            with urllib.request.urlopen(
+                request,
+                timeout=timeout_seconds,
+            ) as response:
+                raw = response.read().decode("utf-8")
+        except urllib.error.HTTPError as exc:
+            raw = exc.read().decode("utf-8", errors="replace")
+            message = raw[:2000] or str(exc)
+            try:
+                decoded = json.loads(raw)
+                message = (
+                    decoded.get("error", {}).get("message")
+                    or decoded.get("message")
+                    or message
+                )
+            except (json.JSONDecodeError, AttributeError):
+                pass
+            raise OpenAIServiceError(
+                f"OpenAI HTTP {exc.code}: {message}",
+                status_code=exc.code,
+                retryable=exc.code in RETRYABLE_HTTP_STATUSES,
+                fatal=exc.code in {401, 403, 422},
+            ) from exc
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            raise OpenAIServiceError(
+                f"OpenAI transport error: {exc}",
+                retryable=True,
+            ) from exc
+        try:
+            decoded = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise OpenAIServiceError(
+                "OpenAI returned a non-JSON response",
+                retryable=False,
+            ) from exc
+        if not isinstance(decoded, dict):
+            raise OpenAIServiceError(
+                "OpenAI returned a JSON value that was not an object",
+                retryable=False,
+            )
+        return decoded
+
+
+def writable_fields(workspace: Path) -> dict[str, list[str]]:
+    result: dict[str, list[str]] = {}
+    for path in sorted(workspace.rglob("*.md")):
+        if path.name not in WRITABLE_FILE_NAMES:
+            continue
+        fields = [
+            match.group(2)
+            for match in FIELD_PATTERN.finditer(
+                path.read_text(encoding="utf-8")
+            )
+        ]
+        if not fields:
+            raise ValueError(f"Writable file has no field markers: {path}")
+        if len(fields) != len(set(fields)):
+            raise ValueError(f"Writable file repeats a field marker: {path}")
+        result[path.relative_to(workspace).as_posix()] = fields
+    if not result:
+        raise ValueError(f"No writable Markdown files found in {workspace}")
+    return result
+
+
+def authoring_output_schema(
+    expected_fields: dict[str, list[str]],
+) -> dict[str, Any]:
+    file_properties: dict[str, Any] = {}
+    for relative_path, fields in expected_fields.items():
+        file_properties[relative_path] = {
+            "type": "object",
+            "properties": {
+                field: {
+                    "type": "string",
+                    "description": (
+                        "Finished field content only, without marker comments."
+                    ),
+                }
+                for field in fields
+            },
+            "required": fields,
+            "additionalProperties": False,
+        }
+    return {
+        "type": "object",
+        "properties": {
+            "files": {
+                "type": "object",
+                "properties": file_properties,
+                "required": list(file_properties),
+                "additionalProperties": False,
+            },
+        },
+        "required": ["files"],
+        "additionalProperties": False,
+    }
+
+
+def render_workspace_input(workspace: Path) -> str:
+    sections = []
+    for path in sorted(workspace.rglob("*.md")):
+        relative = path.relative_to(workspace).as_posix()
+        sections.append(
+            f"\n===== BEGIN FILE: {relative} =====\n"
+            f"{path.read_text(encoding='utf-8')}"
+            f"\n===== END FILE: {relative} =====\n"
+        )
+    if not sections:
+        raise ValueError(f"No Markdown input files found in {workspace}")
+    return "".join(sections)
+
+
+def retry_feedback_from_record(
+    record: dict[str, Any],
+) -> dict[str, Any] | None:
+    if not record.get("attempts"):
+        return None
+    attempt = record["attempts"][-1]
+    qa_report = (attempt.get("qa") or {}).get("report") or {}
+    if qa_report.get("status") == "reject":
+        return {
+            "kind": "editorial_qa_rejection",
+            "editorial_issue_codes": qa_report.get(
+                "editorial_issue_codes", []
+            ),
+            "affected_claim_ids": qa_report.get("affected_claim_ids", []),
+            "guidance": qa_report.get("guidance"),
+        }
+    error = attempt.get("error")
+    if error:
+        return {
+            "kind": "malformed_or_failed_attempt",
+            "error_type": error.get("type"),
+            "guidance": (
+                "The prior response could not be reconstructed or validated. "
+                "Return every required field exactly once in the requested "
+                "structured output."
+            ),
+        }
+    return None
+
+
+def apply_authored_fields(
+    source_workspace: Path,
+    response_workspace: Path,
+    authored: dict[str, Any],
+) -> None:
+    expected = writable_fields(source_workspace)
+    files = authored.get("files")
+    if not isinstance(files, dict):
+        raise ValueError("Structured output lacks the required files object")
+    if set(files) != set(expected):
+        missing = sorted(set(expected) - set(files))
+        extra = sorted(set(files) - set(expected))
+        raise ValueError(
+            f"Structured output file mismatch; missing={missing}, extra={extra}"
+        )
+    if response_workspace.exists():
+        shutil.rmtree(response_workspace)
+    shutil.copytree(source_workspace, response_workspace)
+    for relative_path, fields in expected.items():
+        values = files[relative_path]
+        if not isinstance(values, dict) or set(values) != set(fields):
+            missing = sorted(set(fields) - set(values or {}))
+            extra = sorted(set(values or {}) - set(fields))
+            raise ValueError(
+                f"{relative_path}: field mismatch; "
+                f"missing={missing}, extra={extra}"
+            )
+        target = response_workspace / Path(relative_path)
+        text = target.read_text(encoding="utf-8")
+        seen: set[str] = set()
+
+        def replace(match: re.Match[str]) -> str:
+            field = match.group(2)
+            if field not in values:
+                return match.group(0)
+            value = values[field]
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(
+                    f"{relative_path}: field {field} is not a non-empty string"
+                )
+            if "__WRITE__" in value:
+                raise ValueError(
+                    f"{relative_path}: field {field} retains a placeholder"
+                )
+            if "<!-- BEGIN FIELD:" in value or "<!-- END FIELD:" in value:
+                raise ValueError(
+                    f"{relative_path}: field {field} contains marker comments"
+                )
+            seen.add(field)
+            return f"{match.group(1)}{value.strip()}{match.group(4)}"
+
+        rendered = FIELD_PATTERN.sub(replace, text)
+        if seen != set(fields):
+            raise ValueError(
+                f"{relative_path}: source markers changed during reconstruction"
+            )
+        target.write_text(rendered, encoding="utf-8")
+
+
+def response_output_text(response: dict[str, Any]) -> str:
+    direct = response.get("output_text")
+    if isinstance(direct, str) and direct.strip():
+        return direct
+    texts: list[str] = []
+    for item in response.get("output", []):
+        if not isinstance(item, dict):
+            continue
+        for content in item.get("content", []):
+            if not isinstance(content, dict):
+                continue
+            if content.get("type") == "output_text":
+                text = content.get("text")
+                if isinstance(text, str):
+                    texts.append(text)
+            elif content.get("type") == "refusal":
+                refusal = content.get("refusal")
+                if isinstance(refusal, str):
+                    raise OpenAIServiceError(
+                        f"OpenAI refused the authoring request: {refusal}"
+                    )
+    if not texts:
+        raise OpenAIServiceError("Completed response contains no output text")
+    return "".join(texts)
+
+
+def normalized_usage(response: dict[str, Any]) -> dict[str, int]:
+    usage = response.get("usage") or {}
+    input_details = usage.get("input_tokens_details") or {}
+    return {
+        "input_tokens": int(usage.get("input_tokens") or 0),
+        "cached_input_tokens": int(
+            input_details.get("cached_tokens") or 0
+        ),
+        "cache_write_tokens": int(
+            input_details.get("cache_write_tokens") or 0
+        ),
+        "output_tokens": int(usage.get("output_tokens") or 0),
+        "reasoning_tokens": int(
+            (usage.get("output_tokens_details") or {}).get(
+                "reasoning_tokens"
+            )
+            or 0
+        ),
+        "total_tokens": int(usage.get("total_tokens") or 0),
+    }
+
+
+def estimated_cost(
+    model: str,
+    usage: dict[str, int],
+) -> dict[str, Any] | None:
+    pricing = MODEL_PRICING_USD_PER_MILLION.get(model)
+    if not pricing:
+        return None
+    cached = min(
+        usage["cached_input_tokens"],
+        usage["input_tokens"],
+    )
+    uncached = max(usage["input_tokens"] - cached, 0)
+    amount = (
+        uncached * pricing["input"]
+        + cached * pricing["cached_input"]
+        + usage["output_tokens"] * pricing["output"]
+    ) / 1_000_000
+    return {
+        "currency": "USD",
+        "estimated_amount": round(amount, 8),
+        "pricing_version": "2026-07-31",
+        "rates_per_million_tokens": pricing,
+        "note": (
+            "Estimate excludes tool fees and special cache-write treatment; "
+            "the OpenAI usage dashboard remains authoritative."
+        ),
+    }
+
+
+class OpenAIResponsesProvider:
+    """Author a pass with one fresh OpenAI Responses API job."""
+
+    name = "openai"
+
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        model: str = "gpt-5.6-terra",
+        reasoning_effort: str = "medium",
+        base_url: str = "https://api.openai.com/v1",
+        background: bool = True,
+        poll_interval_seconds: float = 2.0,
+        response_timeout_seconds: float = 1800.0,
+        http_timeout_seconds: float = 60.0,
+        max_transport_retries: int = 4,
+        transport_backoff_seconds: float = 1.0,
+        max_output_tokens: int = 100_000,
+        safety_identifier: str | None = None,
+        transport: JsonHttpTransport | None = None,
+        sleep: Any = time.sleep,
+    ) -> None:
+        if not api_key:
+            raise ValueError("OpenAI API key is required")
+        self.api_key = api_key
+        self.model = model
+        self.reasoning_effort = reasoning_effort
+        self.base_url = base_url.rstrip("/")
+        self.background = background
+        self.poll_interval_seconds = poll_interval_seconds
+        self.response_timeout_seconds = response_timeout_seconds
+        self.http_timeout_seconds = http_timeout_seconds
+        self.max_transport_retries = max_transport_retries
+        self.transport_backoff_seconds = transport_backoff_seconds
+        self.max_output_tokens = max_output_tokens
+        self.safety_identifier = safety_identifier
+        self.transport = transport or UrllibJsonTransport()
+        self.sleep = sleep
+
+    def _request_with_retry(
+        self,
+        *,
+        method: str,
+        url: str,
+        payload: dict[str, Any] | None,
+        idempotency_key: str | None = None,
+    ) -> tuple[dict[str, Any], int]:
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        if idempotency_key:
+            headers["Idempotency-Key"] = idempotency_key
+        for transport_attempt in range(1, self.max_transport_retries + 2):
+            try:
+                response = self.transport.request_json(
+                    method=method,
+                    url=url,
+                    headers=headers,
+                    payload=payload,
+                    timeout_seconds=self.http_timeout_seconds,
+                )
+                return response, transport_attempt
+            except OpenAIServiceError as exc:
+                if (
+                    method == "POST"
+                    and exc.status_code in {400, 404}
+                ):
+                    exc.fatal = True
+                if (
+                    not exc.retryable
+                    or transport_attempt > self.max_transport_retries
+                ):
+                    raise
+                delay = self.transport_backoff_seconds * (
+                    2 ** (transport_attempt - 1)
+                )
+                self.sleep(delay)
+        raise AssertionError("unreachable")
+
+    def _prompt(
+        self,
+        *,
+        spec: PassSpec,
+        workspace: Path,
+        feedback: dict[str, Any] | None,
+    ) -> tuple[str, str]:
+        system = (
+            "You are the author of one bounded AstroWoof authoring pass. "
+            "Treat each supplied card or summary as an independent finished "
+            "writing assignment while keeping the dog recognizable across "
+            "the pass. Read START HERE.md first and follow the workspace's "
+            "own guidance as authoritative. Do not borrow wording, templates, "
+            "or content from any prior AstroWoof deck. Return only the field "
+            "values required by the response schema. Do not include marker "
+            "comments in field values."
+        )
+        retry_section = ""
+        if feedback:
+            retry_section = (
+                "\n\nA prior fresh attempt did not clear local processing. "
+                "Use this broad editorial signal, then author the entire pass "
+                "again from its source materials:\n"
+                + json.dumps(feedback, ensure_ascii=False, indent=2)
+            )
+        user = (
+            f"Author pass {spec.pass_number} of 6 for {spec.subject}. "
+            "Complete every marked writing field in every supplied writable "
+            "file. Preserve evidence boundaries and follow the requested "
+            "voice and astrology-density distinctions. The structured "
+            "response is transport only; experience the work as the set of "
+            "individual writing assignments described by the files."
+            f"{retry_section}\n\n"
+            "WORKSPACE FILES FOLLOW:\n"
+            f"{render_workspace_input(workspace)}"
+        )
+        return system, user
+
+    def author(
+        self,
+        source_workspace: Path,
+        response_workspace: Path,
+        spec: PassSpec,
+        attempt_number: int,
+        feedback: dict[str, Any] | None = None,
+    ) -> ProviderResult:
+        expected_fields = writable_fields(source_workspace)
+        system, user = self._prompt(
+            spec=spec,
+            workspace=source_workspace,
+            feedback=feedback,
+        )
+        request_payload: dict[str, Any] = {
+            "model": self.model,
+            "input": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            "background": self.background,
+            "reasoning": {"effort": self.reasoning_effort},
+            "text": {
+                "verbosity": "high",
+                "format": {
+                    "type": "json_schema",
+                    "name": "astrowoof_authoring_pass",
+                    "strict": True,
+                    "schema": authoring_output_schema(expected_fields),
+                },
+            },
+            "max_output_tokens": self.max_output_tokens,
+        }
+        if self.safety_identifier:
+            request_payload["safety_identifier"] = self.safety_identifier
+        attempt_root = response_workspace.parents[1]
+        write_json_atomic(
+            attempt_root / "openai-request.json",
+            {
+                **request_payload,
+                "input": [
+                    request_payload["input"][0],
+                    {
+                        "role": "user",
+                        "content": (
+                            "[workspace prompt persisted separately as "
+                            "openai-workspace-prompt.txt]"
+                        ),
+                    },
+                ],
+            },
+        )
+        (attempt_root / "openai-workspace-prompt.txt").write_text(
+            user,
+            encoding="utf-8",
+        )
+        idempotency_key = hashlib.sha256(
+            (
+                f"{spec.source_sha256}:{spec.pass_id}:{attempt_number}:"
+                f"{self.model}"
+            ).encode("utf-8")
+        ).hexdigest()
+        started = time.monotonic()
+        background_path = attempt_root / "openai-background-response.json"
+        if background_path.is_file():
+            background_record = load_json(background_path)
+            response_id = background_record.get("id")
+            if not isinstance(response_id, str) or not response_id:
+                raise OpenAIServiceError(
+                    f"Invalid persisted background response: {background_path}",
+                    fatal=True,
+                )
+            response, retrieval_attempts = self._request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/responses/{response_id}",
+                payload=None,
+            )
+            create_transport_attempts = 0
+            retrieve_transport_attempts = retrieval_attempts
+        else:
+            response, create_transport_attempts = self._request_with_retry(
+                method="POST",
+                url=f"{self.base_url}/responses",
+                payload=request_payload,
+                idempotency_key=idempotency_key,
+            )
+            write_json_atomic(
+                background_path,
+                {
+                    "id": response.get("id"),
+                    "status": response.get("status"),
+                    "created_at": utc_now(),
+                },
+            )
+            retrieve_transport_attempts = 0
+        response_id = response.get("id")
+        if not isinstance(response_id, str) or not response_id:
+            raise OpenAIServiceError("OpenAI response has no response ID")
+        polls = 0
+        while response.get("status") in {"queued", "in_progress"}:
+            if time.monotonic() - started > self.response_timeout_seconds:
+                try:
+                    self._request_with_retry(
+                        method="POST",
+                        url=f"{self.base_url}/responses/{response_id}/cancel",
+                        payload=None,
+                    )
+                except OpenAIServiceError:
+                    pass
+                raise OpenAIServiceError(
+                    f"Timed out waiting for background response {response_id}",
+                    retryable=True,
+                )
+            self.sleep(self.poll_interval_seconds)
+            response, retrieval_attempts = self._request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/responses/{response_id}",
+                payload=None,
+            )
+            polls += 1
+            retrieve_transport_attempts += retrieval_attempts
+        status = response.get("status")
+        write_json_atomic(attempt_root / "openai-response.json", response)
+        usage = normalized_usage(response)
+        cost = estimated_cost(self.model, usage)
+        metadata = {
+            "provider": self.name,
+            "response_id": response_id,
+            "response_status": status,
+            "model": response.get("model") or self.model,
+            "requested_model": self.model,
+            "reasoning_effort": self.reasoning_effort,
+            "background": self.background,
+            "poll_count": polls,
+            "transport_attempts": {
+                "create": create_transport_attempts,
+                "retrieve": retrieve_transport_attempts,
+            },
+            "usage": usage,
+            "estimated_cost": cost,
+            "elapsed_seconds": round(time.monotonic() - started, 3),
+            "request_path": normalized_path(
+                attempt_root / "openai-request.json"
+            ),
+            "response_path": normalized_path(
+                attempt_root / "openai-response.json"
+            ),
+            "authored_fields_path": normalized_path(
+                attempt_root / "openai-authored-fields.json"
+            ),
+        }
+        if status != "completed":
+            error = response.get("error") or response.get(
+                "incomplete_details"
+            )
+            raise AuthoringProviderError(
+                f"OpenAI response {response_id} ended with status "
+                f"{status!r}: {error}",
+                metadata=metadata,
+            )
+        try:
+            output_text = response_output_text(response)
+            authored = json.loads(output_text)
+            write_json_atomic(
+                attempt_root / "openai-authored-fields.json",
+                authored,
+            )
+            apply_authored_fields(
+                source_workspace,
+                response_workspace,
+                authored,
+            )
+        except Exception as exc:
+            raise AuthoringProviderError(
+                f"OpenAI output could not reconstruct the workspace: {exc}",
+                metadata=metadata,
+            ) from exc
+        return ProviderResult(
+            workspace=response_workspace,
+            metadata=metadata,
         )
 
 
@@ -406,6 +1089,7 @@ def initial_run_state(
         "input_package": normalized_path(input_package),
         "run_dir": normalized_path(run_dir),
         "provider": provider.name,
+        "provider_configuration": provider_configuration(provider),
         "max_attempts": max_attempts,
         "sbe": {
             "status": "pass",
@@ -428,6 +1112,22 @@ def initial_run_state(
             }
             for spec in specs
         },
+    }
+
+
+def provider_configuration(
+    provider: AuthoringProvider,
+) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in {
+            "model": getattr(provider, "model", None),
+            "reasoning_effort": getattr(provider, "reasoning_effort", None),
+            "background": getattr(provider, "background", None),
+            "base_url": getattr(provider, "base_url", None),
+            "max_output_tokens": getattr(provider, "max_output_tokens", None),
+        }.items()
+        if value is not None
     }
 
 
@@ -455,12 +1155,57 @@ def update_run_status(state: dict[str, Any]) -> None:
         state["status"] = "FAILED_REQUIRES_REVIEW"
     else:
         state["status"] = "AUTHORING"
+    usage_totals = {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "cache_write_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_tokens": 0,
+        "total_tokens": 0,
+    }
+    estimated_cost_total = 0.0
+    priced_attempt_count = 0
+    response_ids: list[str] = []
+    for record in state["passes"].values():
+        for attempt in record.get("attempts", []):
+            metadata = attempt.get("provider_metadata") or {}
+            usage = metadata.get("usage") or {}
+            for key in usage_totals:
+                usage_totals[key] += int(usage.get(key) or 0)
+            cost = metadata.get("estimated_cost") or {}
+            if cost.get("estimated_amount") is not None:
+                estimated_cost_total += float(cost["estimated_amount"])
+                priced_attempt_count += 1
+            if metadata.get("response_id"):
+                response_ids.append(metadata["response_id"])
+    state["accounting"] = {
+        "usage": usage_totals,
+        "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": round(estimated_cost_total, 8),
+            "priced_attempt_count": priced_attempt_count,
+            "note": (
+                "Attempt-level estimates use the configured model rate table; "
+                "the OpenAI usage dashboard remains authoritative."
+            ),
+        },
+        "response_ids": response_ids,
+    }
     state["updated_at"] = utc_now()
 
 
 def save_state(run_json: Path, state: dict[str, Any]) -> None:
     update_run_status(state)
     write_json_atomic(run_json, state)
+
+
+def save_state_locked(
+    run_json: Path,
+    state: dict[str, Any],
+    state_lock: threading.Lock,
+) -> None:
+    with state_lock:
+        save_state(run_json, state)
 
 
 def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
@@ -519,6 +1264,7 @@ def author_one_pass(
     python_executable: Path,
     run_json: Path,
     state: dict[str, Any],
+    state_lock: threading.Lock,
 ) -> None:
     if record["state"] == "PASS_QA_ACCEPTED":
         accepted = Path(record["accepted_workspace"])
@@ -537,33 +1283,62 @@ def author_one_pass(
     pass_root = run_dir / "passes" / spec.pass_id
     source_workspace = prepare_source_workspace(spec, pass_root)
     completed_attempts = len(record["attempts"])
-    for attempt_number in range(completed_attempts + 1, max_attempts + 1):
+    interrupted_attempt = (
+        record["attempts"][-1]
+        if record["attempts"]
+        and record["attempts"][-1]["state"]
+        in {"SUBMITTED", "RESPONSE_RECEIVED"}
+        and record["attempts"][-1].get("finished_at") is None
+        else None
+    )
+    first_attempt_number = (
+        interrupted_attempt["attempt_number"]
+        if interrupted_attempt
+        else completed_attempts + 1
+    )
+    for attempt_number in range(first_attempt_number, max_attempts + 1):
+        feedback = retry_feedback_from_record(record)
         attempt_root = pass_root / f"attempt-{attempt_number:03d}"
         response_workspace = attempt_root / "response" / spec.pass_id
-        attempt = {
-            "attempt_number": attempt_number,
-            "state": "SUBMITTED",
-            "started_at": utc_now(),
-            "finished_at": None,
-            "response_workspace": normalized_path(response_workspace),
-            "provider_metadata": None,
-            "qa": None,
-            "error": None,
-        }
-        record["state"] = "SUBMITTED"
-        record["attempts"].append(attempt)
-        save_state(run_json, state)
+        if (
+            interrupted_attempt
+            and interrupted_attempt["attempt_number"] == attempt_number
+        ):
+            attempt = interrupted_attempt
+            interrupted_attempt = None
+            feedback = None
+            with state_lock:
+                attempt["state"] = "SUBMITTED"
+                record["state"] = "SUBMITTED"
+                save_state(run_json, state)
+        else:
+            attempt = {
+                "attempt_number": attempt_number,
+                "state": "SUBMITTED",
+                "started_at": utc_now(),
+                "finished_at": None,
+                "response_workspace": normalized_path(response_workspace),
+                "provider_metadata": None,
+                "qa": None,
+                "error": None,
+            }
+            with state_lock:
+                record["state"] = "SUBMITTED"
+                record["attempts"].append(attempt)
+                save_state(run_json, state)
         try:
             result = provider.author(
                 source_workspace,
                 response_workspace,
                 spec,
                 attempt_number,
+                feedback,
             )
-            attempt["state"] = "RESPONSE_RECEIVED"
-            attempt["provider_metadata"] = result.metadata
-            record["state"] = "RESPONSE_RECEIVED"
-            save_state(run_json, state)
+            with state_lock:
+                attempt["state"] = "RESPONSE_RECEIVED"
+                attempt["provider_metadata"] = result.metadata
+                record["state"] = "RESPONSE_RECEIVED"
+                save_state(run_json, state)
 
             report_path = attempt_root / "authoring-pass-acceptance.json"
             accepted, qa = run_pass_acceptance(
@@ -571,33 +1346,48 @@ def author_one_pass(
                 report_path,
                 python_executable=python_executable,
             )
-            attempt["qa"] = qa
-            attempt["finished_at"] = utc_now()
+            with state_lock:
+                attempt["qa"] = qa
+                attempt["finished_at"] = utc_now()
             if accepted:
-                attempt["state"] = "PASS_QA_ACCEPTED"
-                record["state"] = "PASS_QA_ACCEPTED"
                 accepted_root = pass_root / "accepted"
                 if accepted_root.exists():
                     shutil.rmtree(accepted_root)
                 shutil.copytree(result.workspace, accepted_root)
-                record["accepted_workspace"] = normalized_path(accepted_root)
-                record["accepted_attempt"] = attempt_number
-                save_state(run_json, state)
+                with state_lock:
+                    attempt["state"] = "PASS_QA_ACCEPTED"
+                    record["state"] = "PASS_QA_ACCEPTED"
+                    record["accepted_workspace"] = normalized_path(
+                        accepted_root
+                    )
+                    record["accepted_attempt"] = attempt_number
+                    save_state(run_json, state)
                 return
-            attempt["state"] = "PASS_QA_REJECTED"
-            record["state"] = "PASS_QA_REJECTED"
+            with state_lock:
+                attempt["state"] = "PASS_QA_REJECTED"
+                record["state"] = "PASS_QA_REJECTED"
+                save_state(run_json, state)
         except Exception as exc:
-            attempt["state"] = "ATTEMPT_ERROR"
-            attempt["finished_at"] = utc_now()
-            attempt["error"] = {
-                "type": type(exc).__name__,
-                "message": str(exc),
-            }
-            record["state"] = "ATTEMPT_ERROR"
-        save_state(run_json, state)
+            with state_lock:
+                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["finished_at"] = utc_now()
+                if getattr(exc, "metadata", None):
+                    attempt["provider_metadata"] = exc.metadata
+                attempt["error"] = {
+                    "type": type(exc).__name__,
+                    "message": str(exc),
+                }
+                record["state"] = "ATTEMPT_ERROR"
+                save_state(run_json, state)
+            if getattr(exc, "fatal", False):
+                with state_lock:
+                    record["state"] = "FAILED_REQUIRES_REVIEW"
+                    save_state(run_json, state)
+                return
 
-    record["state"] = "FAILED_REQUIRES_REVIEW"
-    save_state(run_json, state)
+    with state_lock:
+        record["state"] = "FAILED_REQUIRES_REVIEW"
+        save_state(run_json, state)
 
 
 def author_pending_passes(
@@ -609,11 +1399,25 @@ def author_pending_passes(
     python_executable: Path,
     run_json: Path,
     stop_after_attempts: int | None = None,
+    max_workers: int = 1,
 ) -> None:
+    if max_workers < 1:
+        raise ValueError("max_workers must be at least 1")
+    if stop_after_attempts is not None and max_workers != 1:
+        raise ValueError(
+            "stop_after_attempts is only supported with max_workers=1"
+        )
+    state_lock = threading.Lock()
     attempts_before = sum(
         len(record["attempts"]) for record in state["passes"].values()
     )
-    for spec in specs_from_state(state):
+    specs = [
+        spec
+        for spec in specs_from_state(state)
+        if state["passes"][spec.pass_id]["state"] not in TERMINAL_STATES
+    ]
+
+    def run_spec(spec: PassSpec) -> None:
         record = state["passes"][spec.pass_id]
         author_one_pass(
             spec=spec,
@@ -624,16 +1428,32 @@ def author_pending_passes(
             python_executable=python_executable,
             run_json=run_json,
             state=state,
+            state_lock=state_lock,
         )
-        attempts_after = sum(
-            len(item["attempts"]) for item in state["passes"].values()
-        )
-        if (
-            stop_after_attempts is not None
-            and attempts_after - attempts_before >= stop_after_attempts
-        ):
-            break
-    save_state(run_json, state)
+
+    if max_workers == 1:
+        for spec in specs:
+            run_spec(spec)
+            attempts_after = sum(
+                len(item["attempts"]) for item in state["passes"].values()
+            )
+            if (
+                stop_after_attempts is not None
+                and attempts_after - attempts_before >= stop_after_attempts
+            ):
+                break
+    else:
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(max_workers, len(specs) or 1),
+            thread_name_prefix="astrowoof-author",
+        ) as executor:
+            futures = {
+                executor.submit(run_spec, spec): spec
+                for spec in specs
+            }
+            for future in concurrent.futures.as_completed(futures):
+                future.result()
+    save_state_locked(run_json, state, state_lock)
 
 
 def create_run(
@@ -694,6 +1514,13 @@ def resume_run(
         raise ValueError(
             f"Run provider is {state.get('provider')!r}, not {provider.name!r}"
         )
+    if state.get("provider_configuration", {}) != provider_configuration(
+        provider
+    ):
+        raise ValueError(
+            "Resume must use the original provider configuration "
+            f"({state.get('provider_configuration', {})})"
+        )
     if state.get("max_attempts") != max_attempts:
         raise ValueError(
             "Resume must use the original --max-attempts value "
@@ -711,15 +1538,53 @@ def default_sbe_script() -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Run the deterministic Phase-1 AstroWoof semantic-closure workflow."
+            "Run the AstroWoof semantic-closure extraction and authoring "
+            "workflow."
         )
     )
     parser.add_argument("--input-package", type=Path)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
-    parser.add_argument("--provider", choices=("fake",), default="fake")
+    parser.add_argument(
+        "--provider",
+        choices=("fake", "openai"),
+        default="fake",
+    )
     parser.add_argument("--max-attempts", type=int, default=3)
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=6,
+        help="Maximum number of independent passes authored concurrently.",
+    )
+    parser.add_argument("--model", default="gpt-5.6-terra")
+    parser.add_argument(
+        "--reasoning-effort",
+        choices=("none", "low", "medium", "high", "xhigh", "max"),
+        default="medium",
+    )
+    parser.add_argument(
+        "--api-key-env",
+        default="OPENAI_API_KEY",
+        help="Environment variable containing the OpenAI API key.",
+    )
+    parser.add_argument(
+        "--openai-base-url",
+        default="https://api.openai.com/v1",
+    )
+    parser.add_argument("--foreground", action="store_true")
+    parser.add_argument("--poll-interval-seconds", type=float, default=2.0)
+    parser.add_argument("--response-timeout-seconds", type=float, default=1800.0)
+    parser.add_argument("--http-timeout-seconds", type=float, default=60.0)
+    parser.add_argument("--max-transport-retries", type=int, default=4)
+    parser.add_argument(
+        "--transport-backoff-seconds",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument("--max-output-tokens", type=int, default=100_000)
+    parser.add_argument("--safety-identifier")
     parser.add_argument(
         "--sbe-script",
         type=Path,
@@ -747,6 +1612,12 @@ def main() -> None:
     args = parser.parse_args()
     if args.max_attempts < 1:
         parser.error("--max-attempts must be at least 1")
+    if args.max_workers < 1:
+        parser.error("--max-workers must be at least 1")
+    if args.max_transport_retries < 0:
+        parser.error("--max-transport-retries cannot be negative")
+    if args.max_output_tokens < 1:
+        parser.error("--max-output-tokens must be at least 1")
     if not args.resume and args.input_package is None:
         parser.error("--input-package is required unless --resume is used")
 
@@ -755,10 +1626,35 @@ def main() -> None:
         error_attempts = parse_attempt_map(args.fake_error)
     except argparse.ArgumentTypeError as exc:
         parser.error(str(exc))
-    provider = FakeAuthoringProvider(
-        reject_attempts=reject_attempts,
-        error_attempts=error_attempts,
-    )
+    if args.provider == "fake":
+        provider: AuthoringProvider = FakeAuthoringProvider(
+            reject_attempts=reject_attempts,
+            error_attempts=error_attempts,
+        )
+    else:
+        if args.fake_reject or args.fake_error:
+            parser.error(
+                "--fake-reject and --fake-error require --provider fake"
+            )
+        api_key = os.environ.get(args.api_key_env)
+        if not api_key:
+            parser.error(
+                f"--provider openai requires {args.api_key_env} to be set"
+            )
+        provider = OpenAIResponsesProvider(
+            api_key=api_key,
+            model=args.model,
+            reasoning_effort=args.reasoning_effort,
+            base_url=args.openai_base_url,
+            background=not args.foreground,
+            poll_interval_seconds=args.poll_interval_seconds,
+            response_timeout_seconds=args.response_timeout_seconds,
+            http_timeout_seconds=args.http_timeout_seconds,
+            max_transport_retries=args.max_transport_retries,
+            transport_backoff_seconds=args.transport_backoff_seconds,
+            max_output_tokens=args.max_output_tokens,
+            safety_identifier=args.safety_identifier,
+        )
     if args.resume:
         state, run_json = resume_run(
             run_dir=args.run_dir,
@@ -782,6 +1678,7 @@ def main() -> None:
         max_attempts=args.max_attempts,
         python_executable=args.python_executable,
         run_json=run_json,
+        max_workers=args.max_workers,
     )
     print(json.dumps(state, ensure_ascii=False, indent=2))
     if state["status"] == "FAILED_REQUIRES_REVIEW":
