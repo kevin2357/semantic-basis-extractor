@@ -23,17 +23,21 @@ from author_semantic_closure import (  # noqa: E402
     OpenAIServiceError,
     PassSpec,
     ProviderResult,
+    apply_deck_fields,
     apply_authored_fields,
     authoring_output_schema,
     author_pending_passes,
     discover_passes,
+    editable_deck_fields,
     estimated_cost,
+    finalize_subjects,
     initial_run_state,
     load_json,
     normalized_usage,
     resume_run,
     safe_extract_zip,
     save_state,
+    update_run_status,
     writable_fields,
 )
 from build_projected_semantic_basis import (  # noqa: E402
@@ -186,6 +190,7 @@ class SemanticClosureFixture(unittest.TestCase):
         root: Path,
         *,
         count: int = 6,
+        cards_per_pass: int = 2,
     ) -> tuple[dict, list[PassSpec], Path]:
         bundle = root / "bundle"
         bundle.mkdir()
@@ -196,8 +201,8 @@ class SemanticClosureFixture(unittest.TestCase):
                     workspace,
                     self.packet,
                     ROOT,
-                    2,
-                    card_start=(number - 1) * 2 + 1,
+                    cards_per_pass,
+                    card_start=(number - 1) * cards_per_pass + 1,
                     pass_number=number,
                     pass_count=6,
                 )
@@ -207,7 +212,7 @@ class SemanticClosureFixture(unittest.TestCase):
                     self.packet,
                     ROOT,
                     0,
-                    card_start=51,
+                    card_start=cards_per_pass * 5 + 1,
                     include_summaries=True,
                     include_theme_plan=True,
                     pass_number=6,
@@ -253,6 +258,154 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_polish_transport_can_only_change_reader_facing_fields(self) -> None:
+        fields = editable_deck_fields(self.packet)
+        authored = {
+            "fields": {
+                path: f"Polished {index}."
+                for index, path in enumerate(fields, start=1)
+            }
+        }
+        polished = apply_deck_fields(self.packet, authored)
+        self.assertEqual(
+            self.packet["cards"][0]["evidence"],
+            polished["cards"][0]["evidence"],
+        )
+        self.assertNotEqual(
+            self.packet["cards"][0]["card"]["no_astro"]["body"]["handler"],
+            polished["cards"][0]["card"]["no_astro"]["body"]["handler"],
+        )
+        incomplete = {"fields": dict(authored["fields"])}
+        incomplete["fields"].pop(next(iter(incomplete["fields"])))
+        with self.assertRaisesRegex(ValueError, "exactly match"):
+            apply_deck_fields(self.packet, incomplete)
+
+    def test_final_status_requires_every_subject_delivery(self) -> None:
+        state = {
+            "status": "AUTHORING_COMPLETE",
+            "passes": {
+                "bre_1": {
+                    "state": "PASS_QA_ACCEPTED",
+                    "attempts": [],
+                }
+            },
+            "subjects": {
+                "bre": {"state": "DELIVERY_COMPLETE", "polish_attempts": []},
+                "kevin": {"state": "FINAL_QA_WARN", "polish_attempts": []},
+            },
+        }
+        update_run_status(state)
+        self.assertEqual("FINAL_QA_REQUIRES_REVIEW", state["status"])
+        state["subjects"]["kevin"]["state"] = "DELIVERY_COMPLETE"
+        update_run_status(state)
+        self.assertEqual("DELIVERY_COMPLETE", state["status"])
+
+    def test_finalize_packages_clean_subject_and_preserves_warning_review(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            delivery_sources = []
+            for number in range(4):
+                path = root / f"source-{number}.json"
+                path.write_text("{}\n", encoding="utf-8")
+                delivery_sources.append(path)
+            state = {
+                "passes": {
+                    f"bre_{number}": {
+                        "subject": "bre",
+                        "pass_number": number,
+                        "state": "PASS_QA_ACCEPTED",
+                    }
+                    for number in range(1, 7)
+                },
+                "subjects": {},
+            }
+            clean = {
+                "subject": "bre",
+                "state": "FINAL_QA_PASSED",
+                "deck": str(delivery_sources[0]),
+                "assembly_report": str(delivery_sources[1]),
+                "validation_report": str(delivery_sources[2]),
+                "lint_report": str(delivery_sources[3]),
+                "polish_attempts": [],
+            }
+            with patch(
+                "author_semantic_closure.assemble_subject",
+                return_value=clean,
+            ):
+                finalize_subjects(
+                    state=state,
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    allow_lint_warnings=False,
+                )
+            self.assertEqual(
+                "DELIVERY_COMPLETE",
+                state["subjects"]["bre"]["state"],
+            )
+            self.assertTrue(
+                Path(state["subjects"]["bre"]["delivery"]).is_file()
+            )
+
+    def test_token_free_full_deck_assembles_validates_and_packages(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            manifest, specs, _ = self.make_passes(
+                root,
+                cards_per_pass=10,
+            )
+            run_dir = root / "run"
+            run_dir.mkdir()
+            packet_root = (
+                run_dir / "sbe" / "semantic-basis-output" / "bre"
+            )
+            packet_root.mkdir(parents=True)
+            (packet_root / "bre.selected-authoring-packet.json").write_text(
+                json.dumps(self.packet),
+                encoding="utf-8",
+            )
+            provider = FakeAuthoringProvider()
+            state = initial_run_state(
+                input_package=EXAMPLES,
+                run_dir=run_dir,
+                provider=provider,
+                max_attempts=1,
+                sbe_manifest=manifest,
+                specs=specs,
+            )
+            run_json = run_dir / "run.json"
+            save_state(run_json, state)
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=run_dir,
+                max_attempts=1,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                max_workers=6,
+            )
+            finalize_subjects(
+                state=state,
+                run_dir=run_dir,
+                python_executable=Path(sys.executable),
+                allow_lint_warnings=True,
+            )
+            save_state(run_json, state)
+            self.assertIn(
+                state["status"],
+                {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"},
+            )
+            final = state["subjects"]["bre"]
+            self.assertTrue(Path(final["deck"]).is_file())
+            self.assertTrue(Path(final["delivery"]).is_file())
+            self.assertEqual(
+                50,
+                len(load_json(Path(final["deck"]))["cards"]),
+            )
+
     def test_openai_provider_reconstructs_structured_fields_and_accounts_usage(
         self,
     ) -> None:

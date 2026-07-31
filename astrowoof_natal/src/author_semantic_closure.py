@@ -22,15 +22,19 @@ import time
 import urllib.error
 import urllib.request
 import zipfile
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
+from assemble_authoring_workspace import assemble
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.2"
+
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.3"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
+FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
 WRITABLE_FILE_NAMES = {
     "WRITE WHOLE DOG PROFILE.md",
     "WRITE THIS CARD.md",
@@ -183,7 +187,11 @@ def _fake_field_value(
         "context_filter_groups.high_level",
         "context_filter_groups.detail_level",
     }:
-        return f"Personality {ordinal}"
+        return (
+            "Personality"
+            if field.endswith("high_level")
+            else "Core Personality"
+        )
     if field.startswith("theme_group."):
         return f"Chapter {(ordinal % 4) + 1}"
     if field.startswith("plan."):
@@ -956,6 +964,109 @@ class OpenAIResponsesProvider:
             metadata=metadata,
         )
 
+    def complete_json(
+        self,
+        *,
+        system: str,
+        user: str,
+        schema: dict[str, Any],
+        schema_name: str,
+        attempt_root: Path,
+        idempotency_material: str,
+    ) -> tuple[Any, dict[str, Any]]:
+        """Run one resumable structured-output response for final polish."""
+        payload: dict[str, Any] = {
+            "model": self.model,
+            "input": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            "background": self.background,
+            "reasoning": {"effort": self.reasoning_effort},
+            "text": {
+                "verbosity": "high",
+                "format": {
+                    "type": "json_schema",
+                    "name": schema_name,
+                    "strict": True,
+                    "schema": schema,
+                },
+            },
+            "max_output_tokens": self.max_output_tokens,
+        }
+        if self.safety_identifier:
+            payload["safety_identifier"] = self.safety_identifier
+        attempt_root.mkdir(parents=True, exist_ok=True)
+        write_json_atomic(attempt_root / "openai-request.json", payload)
+        key = hashlib.sha256(idempotency_material.encode("utf-8")).hexdigest()
+        background_path = attempt_root / "openai-background-response.json"
+        started = time.monotonic()
+        if background_path.is_file():
+            response_id = load_json(background_path).get("id")
+            response, retrieve_attempts = self._request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/responses/{response_id}",
+                payload=None,
+            )
+            create_attempts = 0
+        else:
+            response, create_attempts = self._request_with_retry(
+                method="POST",
+                url=f"{self.base_url}/responses",
+                payload=payload,
+                idempotency_key=key,
+            )
+            write_json_atomic(
+                background_path,
+                {"id": response.get("id"), "status": response.get("status")},
+            )
+            retrieve_attempts = 0
+        response_id = response.get("id")
+        polls = 0
+        while response.get("status") in {"queued", "in_progress"}:
+            if time.monotonic() - started > self.response_timeout_seconds:
+                raise OpenAIServiceError(
+                    f"Timed out waiting for polish response {response_id}",
+                    retryable=True,
+                )
+            self.sleep(self.poll_interval_seconds)
+            response, count = self._request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/responses/{response_id}",
+                payload=None,
+            )
+            retrieve_attempts += count
+            polls += 1
+        write_json_atomic(attempt_root / "openai-response.json", response)
+        usage = normalized_usage(response)
+        metadata = {
+            "provider": self.name,
+            "response_id": response_id,
+            "response_status": response.get("status"),
+            "model": response.get("model") or self.model,
+            "usage": usage,
+            "estimated_cost": estimated_cost(self.model, usage),
+            "poll_count": polls,
+            "transport_attempts": {
+                "create": create_attempts,
+                "retrieve": retrieve_attempts,
+            },
+        }
+        if response.get("status") != "completed":
+            raise AuthoringProviderError(
+                f"Polish response {response_id} did not complete",
+                metadata=metadata,
+            )
+        try:
+            result = json.loads(response_output_text(response))
+        except Exception as exc:
+            raise AuthoringProviderError(
+                f"Polish response was not valid JSON: {exc}",
+                metadata=metadata,
+            ) from exc
+        write_json_atomic(attempt_root / "polished-deck.json", result)
+        return result, metadata
+
 
 def parse_attempt_map(values: list[str]) -> dict[str, int]:
     result: dict[str, int] = {}
@@ -1112,6 +1223,7 @@ def initial_run_state(
             }
             for spec in specs
         },
+        "subjects": {},
     }
 
 
@@ -1149,7 +1261,20 @@ def specs_from_state(state: dict[str, Any]) -> list[PassSpec]:
 
 def update_run_status(state: dict[str, Any]) -> None:
     states = {record["state"] for record in state["passes"].values()}
-    if states == {"PASS_QA_ACCEPTED"}:
+    final_states = {
+        record["state"] for record in state.get("subjects", {}).values()
+    }
+    if final_states and final_states <= FINAL_SUCCESS_STATES:
+        state["status"] = (
+            "DELIVERY_COMPLETE_WITH_WARNINGS"
+            if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
+            else "DELIVERY_COMPLETE"
+        )
+    elif "FINAL_QA_FAILED" in final_states:
+        state["status"] = "FINAL_QA_FAILED"
+    elif "FINAL_QA_WARN" in final_states:
+        state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+    elif states == {"PASS_QA_ACCEPTED"}:
         state["status"] = "AUTHORING_COMPLETE"
     elif "FAILED_REQUIRES_REVIEW" in states:
         state["status"] = "FAILED_REQUIRES_REVIEW"
@@ -1166,8 +1291,14 @@ def update_run_status(state: dict[str, Any]) -> None:
     estimated_cost_total = 0.0
     priced_attempt_count = 0
     response_ids: list[str] = []
-    for record in state["passes"].values():
-        for attempt in record.get("attempts", []):
+    attempt_groups = [
+        record.get("attempts", []) for record in state["passes"].values()
+    ] + [
+        record.get("polish_attempts", [])
+        for record in state.get("subjects", {}).values()
+    ]
+    for attempts in attempt_groups:
+        for attempt in attempts:
             metadata = attempt.get("provider_metadata") or {}
             usage = metadata.get("usage") or {}
             for key in usage_totals:
@@ -1456,6 +1587,452 @@ def author_pending_passes(
     save_state_locked(run_json, state, state_lock)
 
 
+def run_json_command(
+    command: list[str],
+    report_path: Path,
+    *,
+    accepted_returncodes: set[int],
+) -> dict[str, Any]:
+    """Run a repository QA command and require its JSON report."""
+    completed = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if not report_path.is_file():
+        raise RuntimeError(
+            f"QA command emitted no report (exit {completed.returncode}): "
+            f"{completed.stderr.strip()}"
+        )
+    report = load_json(report_path)
+    return {
+        "accepted": completed.returncode in accepted_returncodes,
+        "returncode": completed.returncode,
+        "stdout": completed.stdout,
+        "stderr": completed.stderr,
+        "report": report,
+    }
+
+
+def subject_records(state: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for record in state["passes"].values():
+        grouped.setdefault(record["subject"], []).append(record)
+    for records in grouped.values():
+        records.sort(key=lambda item: item["pass_number"])
+    return grouped
+
+
+def assemble_subject(
+    *,
+    state: dict[str, Any],
+    subject: str,
+    run_dir: Path,
+    python_executable: Path,
+) -> dict[str, Any]:
+    """Assemble six accepted passes and run final deterministic QA."""
+    records = subject_records(state)[subject]
+    if len(records) != PASS_COUNT or any(
+        record["state"] != "PASS_QA_ACCEPTED" for record in records
+    ):
+        raise ValueError(
+            f"{subject} cannot be assembled until all six passes are accepted"
+        )
+    final_root = run_dir / "final" / subject
+    workspace_root = final_root / "accepted-passes"
+    if workspace_root.exists():
+        shutil.rmtree(workspace_root)
+    workspace_root.mkdir(parents=True)
+    for record in records:
+        source = Path(record["accepted_workspace"])
+        if not source.is_dir():
+            raise FileNotFoundError(
+                f"Accepted workspace is missing for {record['pass_id']}: {source}"
+            )
+        shutil.copytree(source, workspace_root / record["pass_id"])
+
+    packet_path = (
+        run_dir
+        / "sbe"
+        / "semantic-basis-output"
+        / subject
+        / f"{subject}.selected-authoring-packet.json"
+    )
+    packet = load_json(packet_path)
+    deck, assembly_report = assemble(
+        packet,
+        workspace_root,
+        allow_partial=False,
+    )
+    deck_path = final_root / f"natal.{subject}.cards.json"
+    assembly_path = final_root / f"natal.{subject}.assembly-report.json"
+    write_json_atomic(deck_path, deck)
+    write_json_atomic(assembly_path, assembly_report)
+
+    validator_path = Path(__file__).resolve().with_name(
+        "validate_astrowoof_editorial.py"
+    )
+    validation_path = final_root / f"natal.{subject}.validation-report.json"
+    validation = run_json_command(
+        [
+            str(python_executable),
+            str(validator_path),
+            str(packet_path),
+            str(deck_path),
+            "--report",
+            str(validation_path),
+        ],
+        validation_path,
+        accepted_returncodes={0},
+    )
+    linter_path = Path(__file__).resolve().with_name(
+        "lint_astrowoof_editorial.py"
+    )
+    lint_path = final_root / f"natal.{subject}.lint-report.json"
+    lint = run_json_command(
+        [
+            str(python_executable),
+            str(linter_path),
+            str(deck_path),
+            "--output",
+            str(lint_path),
+        ],
+        lint_path,
+        accepted_returncodes={0, 2},
+    )
+    warning_count = int(lint["report"].get("warning_count") or 0)
+    status = (
+        "FINAL_QA_PASSED"
+        if validation["accepted"] and warning_count == 0
+        else "FINAL_QA_WARN"
+        if validation["accepted"]
+        else "FINAL_QA_FAILED"
+    )
+    return {
+        "subject": subject,
+        "state": status,
+        "packet": normalized_path(packet_path),
+        "deck": normalized_path(deck_path),
+        "assembly_report": normalized_path(assembly_path),
+        "validation_report": normalized_path(validation_path),
+        "lint_report": normalized_path(lint_path),
+        "validation": validation,
+        "lint": lint,
+        "baseline_warning_count": warning_count,
+        "polish_attempts": [],
+        "delivery": None,
+    }
+
+
+def package_subject_delivery(
+    record: dict[str, Any],
+    *,
+    run_dir: Path,
+) -> Path:
+    subject = record["subject"]
+    final_root = run_dir / "final" / subject
+    final_root.mkdir(parents=True, exist_ok=True)
+    delivery = final_root / f"astrowoof-{subject}-delivery.zip"
+    included = [
+        Path(record["deck"]),
+        Path(record["assembly_report"]),
+        Path(record["validation_report"]),
+        Path(record["lint_report"]),
+    ]
+    with zipfile.ZipFile(
+        delivery,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+    ) as archive:
+        for path in included:
+            archive.write(path, path.name)
+    with zipfile.ZipFile(delivery) as archive:
+        bad_member = archive.testzip()
+        if bad_member:
+            raise ValueError(f"Corrupt delivery archive member: {bad_member}")
+    record["delivery"] = normalized_path(delivery)
+    return delivery
+
+
+def editable_deck_fields(deck: dict[str, Any]) -> dict[str, str]:
+    """Flatten only reader-facing prose into a strict polish transport."""
+    fields: dict[str, str] = {}
+
+    def collect_card(prefix: str, card: dict[str, Any]) -> None:
+        for name in (
+            "funny_dog_quotes",
+            "imperative_dog_quotes",
+            "applicable_canine_jokes",
+        ):
+            for index, value in enumerate(card[name]):
+                fields[f"{prefix}.{name}.{index}"] = value
+        for density in ("no_astro", "light_astro", "full_astro"):
+            for part in ("headline", "body"):
+                for voice in ("handler", "direct_to_dog", "hybrid"):
+                    path = f"{prefix}.{density}.{part}.{voice}"
+                    fields[path] = card[density][part][voice]
+
+    for card_index, claim in enumerate(deck["cards"]):
+        prefix = f"cards.{card_index}"
+        for name in ("dos", "donts"):
+            for item_index, value in enumerate(claim[name]):
+                fields[f"{prefix}.{name}.{item_index}"] = value
+        collect_card(f"{prefix}.card", claim["card"])
+    for key, summary in deck["summary"].items():
+        prefix = f"summary.{key}"
+        for name in ("dos", "donts"):
+            for item_index, value in enumerate(summary[name]):
+                fields[f"{prefix}.{name}.{item_index}"] = value
+        collect_card(prefix, summary)
+    return fields
+
+
+def apply_deck_fields(
+    deck: dict[str, Any],
+    authored: dict[str, Any],
+) -> dict[str, Any]:
+    expected = editable_deck_fields(deck)
+    actual = authored.get("fields") if isinstance(authored, dict) else None
+    if not isinstance(actual, dict) or set(actual) != set(expected):
+        raise ValueError("Polish field map does not exactly match the deck")
+    result = deepcopy(deck)
+    for path, value in actual.items():
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"Polish field {path} must be a nonempty string")
+        current: Any = result
+        parts = path.split(".")
+        for part in parts[:-1]:
+            current = (
+                current[int(part)]
+                if isinstance(current, list)
+                else current[part]
+            )
+        last = parts[-1]
+        if isinstance(current, list):
+            current[int(last)] = value
+        else:
+            current[last] = value
+    return result
+
+
+def polish_output_schema(fields: dict[str, str]) -> dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": {
+            "fields": {
+                "type": "object",
+                "properties": {
+                    path: {"type": "string"} for path in fields
+                },
+                "required": list(fields),
+                "additionalProperties": False,
+            }
+        },
+        "required": ["fields"],
+        "additionalProperties": False,
+    }
+
+
+def polish_subject(
+    *,
+    record: dict[str, Any],
+    provider: OpenAIResponsesProvider,
+    run_dir: Path,
+    python_executable: Path,
+    max_attempts: int,
+) -> None:
+    """Try bounded whole-deck polish; retain baseline unless QA improves."""
+    subject = record["subject"]
+    baseline_path = Path(record["deck"])
+    baseline = load_json(baseline_path)
+    best_warning_count = int(record["baseline_warning_count"])
+    best_path = baseline_path
+    final_root = run_dir / "final" / subject
+    validator_path = Path(__file__).resolve().with_name(
+        "validate_astrowoof_editorial.py"
+    )
+    linter_path = Path(__file__).resolve().with_name(
+        "lint_astrowoof_editorial.py"
+    )
+    for attempt_number in range(
+        len(record.get("polish_attempts", [])) + 1,
+        max_attempts + 1,
+    ):
+        attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
+        lint_report = load_json(record["lint_report"])
+        system = (
+            "You are performing a surgical whole-deck editorial polish. "
+            "Return exactly the supplied reader-facing field map. "
+            "Preserve every factual, evidentiary, structural, selection, "
+            "category, filter, theme-group, and identity value. Edit only "
+            "reader-facing prose needed to resolve the supplied lint findings. "
+            "Do not homogenize distinct cards or rewrite clean material."
+        )
+        current_deck = load_json(best_path)
+        current_fields = editable_deck_fields(current_deck)
+        user = (
+            f"Polish the AstroWoof deck for {subject}. Reduce the deterministic "
+            "lint findings while retaining the same dog, meanings, evidence "
+            "boundaries, voice distinctions, and astrology-density levels. "
+            "A candidate is accepted only if structural validation passes and "
+            "its warning count is lower than the current best.\n\n"
+            f"LINT REPORT:\n{json.dumps(lint_report, ensure_ascii=False)}\n\n"
+            "READER-FACING FIELD MAP:\n"
+            f"{json.dumps(current_fields, ensure_ascii=False)}"
+        )
+        attempt = {
+            "attempt_number": attempt_number,
+            "state": "SUBMITTED",
+            "started_at": utc_now(),
+            "finished_at": None,
+            "provider_metadata": None,
+            "validation_report": None,
+            "lint_report": None,
+            "warning_count": None,
+            "accepted": False,
+            "error": None,
+        }
+        record["polish_attempts"].append(attempt)
+        try:
+            authored, metadata = provider.complete_json(
+                system=system,
+                user=user,
+                schema=polish_output_schema(current_fields),
+                schema_name="astrowoof_polished_deck",
+                attempt_root=attempt_root,
+                idempotency_material=(
+                    f"{sha256_file(best_path)}:{subject}:polish:"
+                    f"{attempt_number}:{provider.model}"
+                ),
+            )
+            candidate = apply_deck_fields(current_deck, authored)
+            candidate_path = attempt_root / f"natal.{subject}.cards.json"
+            write_json_atomic(candidate_path, candidate)
+            validation_path = attempt_root / "validation-report.json"
+            validation = run_json_command(
+                [
+                    str(python_executable),
+                    str(validator_path),
+                    str(best_path),
+                    str(candidate_path),
+                    "--phase",
+                    "polish",
+                    "--report",
+                    str(validation_path),
+                ],
+                validation_path,
+                accepted_returncodes={0},
+            )
+            lint_path = attempt_root / "lint-report.json"
+            lint = run_json_command(
+                [
+                    str(python_executable),
+                    str(linter_path),
+                    str(candidate_path),
+                    "--output",
+                    str(lint_path),
+                ],
+                lint_path,
+                accepted_returncodes={0, 2},
+            )
+            warning_count = int(lint["report"].get("warning_count") or 0)
+            accepted = validation["accepted"] and warning_count < best_warning_count
+            attempt.update(
+                {
+                    "state": "POLISH_ACCEPTED" if accepted else "POLISH_REJECTED",
+                    "finished_at": utc_now(),
+                    "provider_metadata": metadata,
+                    "validation_report": normalized_path(validation_path),
+                    "lint_report": normalized_path(lint_path),
+                    "warning_count": warning_count,
+                    "accepted": accepted,
+                }
+            )
+            if accepted:
+                best_path = candidate_path
+                best_warning_count = warning_count
+                shutil.copy2(candidate_path, baseline_path)
+                shutil.copy2(validation_path, record["validation_report"])
+                shutil.copy2(lint_path, record["lint_report"])
+                if warning_count == 0:
+                    break
+        except Exception as exc:
+            attempt.update(
+                {
+                    "state": "POLISH_ERROR",
+                    "finished_at": utc_now(),
+                    "provider_metadata": getattr(exc, "metadata", None),
+                    "error": {"type": type(exc).__name__, "message": str(exc)},
+                }
+            )
+            if getattr(exc, "fatal", False):
+                break
+    record["final_warning_count"] = best_warning_count
+    record["state"] = (
+        "DELIVERY_COMPLETE"
+        if best_warning_count == 0
+        else "FINAL_QA_WARN"
+    )
+    if record["state"] == "DELIVERY_COMPLETE":
+        package_subject_delivery(record, run_dir=run_dir)
+
+
+def finalize_subjects(
+    *,
+    state: dict[str, Any],
+    run_dir: Path,
+    python_executable: Path,
+    allow_lint_warnings: bool,
+    polish: bool = False,
+    polish_provider: OpenAIResponsesProvider | None = None,
+    max_polish_attempts: int = 2,
+) -> None:
+    """Assemble and validate every subject after authoring completes."""
+    if any(
+        record["state"] != "PASS_QA_ACCEPTED"
+        for record in state["passes"].values()
+    ):
+        return
+    finals = state.setdefault("subjects", {})
+    for subject in sorted(subject_records(state)):
+        record = finals.get(subject)
+        if record and record.get("state") in FINAL_SUCCESS_STATES:
+            continue
+        if not record or record.get("state") not in {
+            "FINAL_QA_WARN",
+            "FINAL_QA_FAILED",
+        }:
+            record = assemble_subject(
+                state=state,
+                subject=subject,
+                run_dir=run_dir,
+                python_executable=python_executable,
+            )
+        if record["state"] == "FINAL_QA_PASSED":
+            record["state"] = "DELIVERY_COMPLETE"
+            package_subject_delivery(record, run_dir=run_dir)
+        elif (
+            record["state"] == "FINAL_QA_WARN"
+            and polish
+            and polish_provider is not None
+        ):
+            polish_subject(
+                record=record,
+                provider=polish_provider,
+                run_dir=run_dir,
+                python_executable=python_executable,
+                max_attempts=max_polish_attempts,
+            )
+            if record["state"] == "FINAL_QA_WARN" and allow_lint_warnings:
+                record["state"] = "DELIVERY_COMPLETE_WITH_WARNINGS"
+                package_subject_delivery(record, run_dir=run_dir)
+        elif record["state"] == "FINAL_QA_WARN" and allow_lint_warnings:
+            record["state"] = "DELIVERY_COMPLETE_WITH_WARNINGS"
+            package_subject_delivery(record, run_dir=run_dir)
+        finals[subject] = record
+
+
 def create_run(
     *,
     input_package: Path,
@@ -1506,6 +2083,9 @@ def resume_run(
     if not run_json.is_file():
         raise FileNotFoundError(f"Cannot resume without {run_json}")
     state = load_json(run_json)
+    if state.get("schema_version") == "astrowoof.semantic_closure_run.v0.2":
+        state["schema_version"] = SCHEMA_VERSION
+        state.setdefault("subjects", {})
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(
             f"Unsupported run schema: {state.get('schema_version')!r}"
@@ -1584,6 +2164,20 @@ def main() -> None:
         default=1.0,
     )
     parser.add_argument("--max-output-tokens", type=int, default=100_000)
+    parser.add_argument(
+        "--polish",
+        action="store_true",
+        help=(
+            "Run up to --max-polish-attempts whole-deck surgical polish "
+            "attempts when final lint reports warnings (OpenAI provider only)."
+        ),
+    )
+    parser.add_argument("--max-polish-attempts", type=int, default=2)
+    parser.add_argument(
+        "--allow-lint-warnings",
+        action="store_true",
+        help="Package structurally valid decks even when final lint warns.",
+    )
     parser.add_argument("--safety-identifier")
     parser.add_argument(
         "--sbe-script",
@@ -1618,6 +2212,10 @@ def main() -> None:
         parser.error("--max-transport-retries cannot be negative")
     if args.max_output_tokens < 1:
         parser.error("--max-output-tokens must be at least 1")
+    if args.max_polish_attempts < 1:
+        parser.error("--max-polish-attempts must be at least 1")
+    if args.polish and args.provider != "openai":
+        parser.error("--polish requires --provider openai")
     if not args.resume and args.input_package is None:
         parser.error("--input-package is required unless --resume is used")
 
@@ -1680,8 +2278,24 @@ def main() -> None:
         run_json=run_json,
         max_workers=args.max_workers,
     )
+    finalize_subjects(
+        state=state,
+        run_dir=args.run_dir,
+        python_executable=args.python_executable,
+        allow_lint_warnings=args.allow_lint_warnings,
+        polish=args.polish,
+        polish_provider=(
+            provider if isinstance(provider, OpenAIResponsesProvider) else None
+        ),
+        max_polish_attempts=args.max_polish_attempts,
+    )
+    save_state(run_json, state)
     print(json.dumps(state, ensure_ascii=False, indent=2))
-    if state["status"] == "FAILED_REQUIRES_REVIEW":
+    if state["status"] in {
+        "FAILED_REQUIRES_REVIEW",
+        "FINAL_QA_FAILED",
+        "FINAL_QA_REQUIRES_REVIEW",
+    }:
         raise SystemExit(2)
 
 

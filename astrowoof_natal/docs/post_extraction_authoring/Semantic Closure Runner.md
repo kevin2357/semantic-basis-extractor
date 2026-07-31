@@ -3,9 +3,9 @@
 `src/author_semantic_closure.py` orchestrates the AstroWoof authoring stage
 between projected-chart inputs and final deck assembly.
 
-Phase 2 covers extraction, six independent authoring passes, per-pass
-acceptance, retry, resume, and API accounting. Full-deck assembly, whole-deck
-QA, and the optional surgical polish pass belong to Phase 3.
+The runner covers extraction, six independent authoring passes, per-pass
+acceptance, deterministic full-deck assembly, whole-deck QA, optional surgical
+polish, delivery packaging, retry, resume, and API accounting.
 
 ## Live authoring
 
@@ -63,6 +63,40 @@ Fatal request problems such as authentication, permission, and invalid-request
 errors stop the affected pass immediately rather than repeating an identical
 billable request.
 
+## Assembly and final QA
+
+After all six passes for a subject are accepted, the runner copies them into an
+isolated assembly directory, reconstructs `natal.<subject>.cards.json` from the
+locked SBE packet, runs structural validation, and runs the whole-deck
+editorial linter.
+
+Structural validation errors always stop delivery. By default, lint warnings
+leave the subject in `FINAL_QA_REQUIRES_REVIEW`; the assembled baseline remains
+available under `final/<subject>/`. Use `--allow-lint-warnings` when warnings
+should be reported but should not block packaging.
+
+The delivery ZIP contains the cards JSON, assembly report, structural
+validation report, and whole-deck lint report. Multi-subject runs assemble and
+validate each subject independently.
+
+## Optional whole-deck polish
+
+Add `--polish --max-polish-attempts 2` to let an OpenAI run make bounded,
+surgical corrections when the whole-deck linter warns. Polish receives the
+lint report and an exact map of reader-facing prose fields. It cannot return
+edits to evidence, claim selection, categories, filters, theme groups,
+identity, or other locked data.
+
+Python applies the returned prose to a copy of the accepted baseline and runs
+the validator in polish mode. A candidate replaces the current best deck only
+when polish-phase structural validation passes and its deterministic warning
+count is strictly lower. The original assembly therefore remains the safe
+baseline when polish fails or merely rearranges warnings. Polish stops early
+at zero warnings.
+
+`--allow-lint-warnings` may be combined with `--polish` to package the best
+structurally valid result when the bounded polish budget does not reach zero.
+
 ## Background execution and resume
 
 Background Responses are enabled by default. The runner polls queued and
@@ -113,12 +147,23 @@ passes/
     accepted/
   ...
   <subject>_6/
+final/
+  <subject>/
+    accepted-passes/
+    natal.<subject>.cards.json
+    natal.<subject>.assembly-report.json
+    natal.<subject>.validation-report.json
+    natal.<subject>.lint-report.json
+    polish/
+      attempt-001/
+    astrowoof-<subject>-delivery.zip
 ```
 
-`run.json` is written atomically and records pass states, attempt history,
-response IDs, model settings, token usage, and estimated cost. The estimate
-uses a versioned local model-rate table and is useful for run comparison; the
-OpenAI usage dashboard remains authoritative.
+`run.json` is written atomically and records pass states, subject delivery
+states, authoring and polish attempts, response IDs, model settings, token
+usage, estimated cost, QA reports, and delivery paths. The estimate uses a
+versioned local model-rate table and is useful for run comparison; the OpenAI
+usage dashboard remains authoritative.
 
 Completed but malformed responses retain their response ID and token usage in
 the ledger, so failed creative attempts remain visible in total cost.
@@ -126,8 +171,8 @@ the ledger, so failed creative attempts remain visible in total cost.
 ## Token-free workflow test
 
 The deterministic fake provider exercises the same SBE, concurrency, workspace
-reconstruction, acceptance, retry, and resume machinery without contacting
-OpenAI:
+reconstruction, acceptance, retry, assembly, final QA, delivery, and resume
+machinery without contacting OpenAI:
 
 ```powershell
 python src/author_semantic_closure.py `
