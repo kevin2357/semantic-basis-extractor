@@ -38,9 +38,11 @@ from author_semantic_closure import (  # noqa: E402
     load_json,
     normalized_usage,
     polish_subject,
+    prompt_cache_manifest,
     resume_run,
     safe_extract_zip,
     save_state,
+    select_cache_warmer,
     update_run_status,
     writable_fields,
 )
@@ -569,6 +571,22 @@ class TestSemanticClosure(SemanticClosureFixture):
                 result.metadata["estimated_cost"]["estimated_amount"],
             )
             request = transport.calls[0]["payload"]
+            self.assertEqual(
+                {"mode": "explicit", "ttl": "30m"},
+                request["prompt_cache_options"],
+            )
+            self.assertTrue(request["prompt_cache_key"].startswith("astrowoof:"))
+            user_blocks = request["input"][1]["content"]
+            self.assertEqual(3, len(user_blocks))
+            self.assertEqual(
+                {"mode": "explicit"},
+                user_blocks[0]["prompt_cache_breakpoint"],
+            )
+            self.assertEqual(
+                {"mode": "explicit"},
+                user_blocks[1]["prompt_cache_breakpoint"],
+            )
+            self.assertNotIn("prompt_cache_breakpoint", user_blocks[2])
             self.assertEqual("json_schema", request["text"]["format"]["type"])
             self.assertEqual(
                 set(writable_fields(source)),
@@ -884,8 +902,39 @@ class TestSemanticClosure(SemanticClosureFixture):
                     "shared_by_all_passes"
                 ]
             )
+            self.assertTrue(
+                report["segments"]["static_prefix"]["shared_by_all_passes"]
+            )
+            self.assertTrue(
+                report["segments"]["subject_prefix"]["shared_by_all_passes"]
+            )
+            self.assertEqual(
+                6,
+                report["segments"]["pass_assignment"][
+                    "distinct_sha256_count"
+                ],
+            )
             self.assertEqual(0, len(provider.transport.calls))
             self.assertEqual(1, estimated_text_tokens("a"))
+
+    def test_cache_manifest_verifies_shared_prefixes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            _, specs, _ = self.make_passes(root)
+            manifest = prompt_cache_manifest(specs)
+            self.assertEqual("tiered_prefix", manifest["mode"])
+            self.assertEqual(1, len(manifest["subject_context_sha256"]))
+            self.assertEqual(6, len(manifest["passes"]))
+
+    def test_cache_warmer_is_smallest_archive(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            _, specs, _ = self.make_passes(root)
+            selected = select_cache_warmer(specs)
+            self.assertEqual(
+                min(item.source_zip.stat().st_size for item in specs),
+                selected.source_zip.stat().st_size,
+            )
 
     def test_cost_comparison_reports_stage_and_savings_delta(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

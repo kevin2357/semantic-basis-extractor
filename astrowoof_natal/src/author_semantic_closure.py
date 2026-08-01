@@ -65,6 +65,15 @@ MODEL_PRICING_USD_PER_MILLION = {
     },
 }
 TOKEN_ESTIMATE_METHOD = "utf8_bytes_divided_by_4"
+STATIC_AUTHORING_FILES = {
+    "AUTHORING BRIEF.md",
+    "GUIDING LIGHTS.md",
+}
+SUBJECT_AUTHORING_FILES = {
+    "DOG DETAILS.md",
+    "FULL CHART BASIS.md",
+    "WRITE WHOLE DOG PROFILE.md",
+}
 FIELD_PATTERN = re.compile(
     r"(<!-- BEGIN FIELD: ([a-zA-Z0-9_.]+) -->\s*\n)"
     r"(.*?)"
@@ -501,8 +510,12 @@ def authoring_output_schema(
 
 
 def render_workspace_input(workspace: Path) -> str:
+    return render_workspace_files(workspace, sorted(workspace.rglob("*.md")))
+
+
+def render_workspace_files(workspace: Path, paths: list[Path]) -> str:
     sections = []
-    for path in sorted(workspace.rglob("*.md")):
+    for path in paths:
         relative = path.relative_to(workspace).as_posix()
         sections.append(
             f"\n===== BEGIN FILE: {relative} =====\n"
@@ -512,6 +525,31 @@ def render_workspace_input(workspace: Path) -> str:
     if not sections:
         raise ValueError(f"No Markdown input files found in {workspace}")
     return "".join(sections)
+
+
+def partition_workspace_prompt(workspace: Path) -> dict[str, str]:
+    """Split generated Markdown into cache-stable prompt tiers."""
+    tiers: dict[str, list[Path]] = {
+        "static": [],
+        "subject": [],
+        "assignment": [],
+    }
+    for path in sorted(workspace.rglob("*.md")):
+        relative = path.relative_to(workspace).as_posix()
+        if relative in STATIC_AUTHORING_FILES:
+            tiers["static"].append(path)
+        elif relative in SUBJECT_AUTHORING_FILES:
+            tiers["subject"].append(path)
+        else:
+            tiers["assignment"].append(path)
+    if not tiers["static"] or not tiers["subject"] or not tiers["assignment"]:
+        raise ValueError(
+            f"Workspace cannot be partitioned into cache tiers: {workspace}"
+        )
+    return {
+        name: render_workspace_files(workspace, paths)
+        for name, paths in tiers.items()
+    }
 
 
 def retry_feedback_from_record(
@@ -719,6 +757,8 @@ class OpenAIResponsesProvider:
         transport_backoff_seconds: float = 1.0,
         max_output_tokens: int = 100_000,
         safety_identifier: str | None = None,
+        prompt_cache_mode: str = "explicit",
+        prompt_cache_ttl: str = "30m",
         transport: JsonHttpTransport | None = None,
         sleep: Any = time.sleep,
     ) -> None:
@@ -736,6 +776,10 @@ class OpenAIResponsesProvider:
         self.transport_backoff_seconds = transport_backoff_seconds
         self.max_output_tokens = max_output_tokens
         self.safety_identifier = safety_identifier
+        if prompt_cache_mode not in {"disabled", "implicit", "explicit"}:
+            raise ValueError(f"Unsupported prompt cache mode: {prompt_cache_mode}")
+        self.prompt_cache_mode = prompt_cache_mode
+        self.prompt_cache_ttl = prompt_cache_ttl
         self.transport = transport or UrllibJsonTransport()
         self.sleep = sleep
 
@@ -786,7 +830,7 @@ class OpenAIResponsesProvider:
         spec: PassSpec,
         workspace: Path,
         feedback: dict[str, Any] | None,
-    ) -> tuple[str, str]:
+    ) -> tuple[str, dict[str, str]]:
         system = (
             "You are the author of one bounded AstroWoof authoring pass. "
             "Treat each supplied card or summary as an independent finished "
@@ -805,7 +849,21 @@ class OpenAIResponsesProvider:
                 "again from its source materials:\n"
                 + json.dumps(feedback, ensure_ascii=False, indent=2)
             )
-        user = (
+        tiers = partition_workspace_prompt(workspace)
+        static = (
+            "Use the following shared AstroWoof editorial guidance for this "
+            "bounded authoring pass. These documents govern every subject "
+            "and every pass.\n\nSTATIC GUIDANCE FILES:\n"
+            f"{tiers['static']}"
+        )
+        subject = (
+            f"The following full-chart context describes {spec.subject} and "
+            "is shared by all six passes for this subject. Use it for coherent "
+            "characterization while keeping each assignment bounded to its "
+            "own evidence.\n\nSUBJECT CONTEXT FILES:\n"
+            f"{tiers['subject']}"
+        )
+        assignment = (
             f"Author pass {spec.pass_number} of 6 for {spec.subject}. "
             "Complete every marked writing field in every supplied writable "
             "file. Preserve evidence boundaries and follow the requested "
@@ -813,10 +871,25 @@ class OpenAIResponsesProvider:
             "response is transport only; experience the work as the set of "
             "individual writing assignments described by the files."
             f"{retry_section}\n\n"
-            "WORKSPACE FILES FOLLOW:\n"
-            f"{render_workspace_input(workspace)}"
+            "PASS-SPECIFIC ASSIGNMENT FILES:\n"
+            f"{tiers['assignment']}"
         )
-        return system, user
+        return system, {
+            "static_prefix": static,
+            "subject_prefix": subject,
+            "pass_assignment": assignment,
+        }
+
+    def _input_text_block(
+        self,
+        text: str,
+        *,
+        breakpoint: bool = False,
+    ) -> dict[str, Any]:
+        block: dict[str, Any] = {"type": "input_text", "text": text}
+        if breakpoint and self.prompt_cache_mode != "disabled":
+            block["prompt_cache_breakpoint"] = {"mode": "explicit"}
+        return block
 
     def prompt_layout(
         self,
@@ -827,13 +900,11 @@ class OpenAIResponsesProvider:
     ) -> dict[str, Any]:
         """Describe the current request geometry without making an API call."""
         fields = writable_fields(workspace)
-        system, user = self._prompt(
+        system, prompt_segments = self._prompt(
             spec=spec,
             workspace=workspace,
             feedback=feedback,
         )
-        workspace_text = render_workspace_input(workspace)
-        user_envelope = user.replace(workspace_text, "", 1)
         schema_text = json.dumps(
             authoring_output_schema(fields),
             ensure_ascii=False,
@@ -841,8 +912,10 @@ class OpenAIResponsesProvider:
         )
         segments = {
             "system_instructions": text_measurement(system),
-            "user_envelope": text_measurement(user_envelope),
-            "workspace_rendering": text_measurement(workspace_text),
+            **{
+                name: text_measurement(value)
+                for name, value in prompt_segments.items()
+            },
             "response_schema": text_measurement(schema_text),
         }
         return {
@@ -870,7 +943,7 @@ class OpenAIResponsesProvider:
         feedback: dict[str, Any] | None = None,
     ) -> ProviderResult:
         expected_fields = writable_fields(source_workspace)
-        system, user = self._prompt(
+        system, prompt_segments = self._prompt(
             spec=spec,
             workspace=source_workspace,
             feedback=feedback,
@@ -878,8 +951,26 @@ class OpenAIResponsesProvider:
         request_payload: dict[str, Any] = {
             "model": self.model,
             "input": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
+                {
+                    "role": "system",
+                    "content": [self._input_text_block(system)],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        self._input_text_block(
+                            prompt_segments["static_prefix"],
+                            breakpoint=True,
+                        ),
+                        self._input_text_block(
+                            prompt_segments["subject_prefix"],
+                            breakpoint=True,
+                        ),
+                        self._input_text_block(
+                            prompt_segments["pass_assignment"]
+                        ),
+                    ],
+                },
             ],
             "background": self.background,
             "reasoning": {"effort": self.reasoning_effort},
@@ -894,6 +985,17 @@ class OpenAIResponsesProvider:
             },
             "max_output_tokens": self.max_output_tokens,
         }
+        if self.prompt_cache_mode != "disabled":
+            request_payload["prompt_cache_options"] = {
+                "mode": self.prompt_cache_mode,
+                "ttl": self.prompt_cache_ttl,
+            }
+            subject_hash = hashlib.sha256(
+                prompt_segments["subject_prefix"].encode("utf-8")
+            ).hexdigest()
+            request_payload["prompt_cache_key"] = (
+                f"astrowoof:{self.model}:{subject_hash[:32]}"
+            )
         prompt_layout = self.prompt_layout(
             spec=spec,
             workspace=source_workspace,
@@ -918,8 +1020,9 @@ class OpenAIResponsesProvider:
                 ],
             },
         )
+        rendered_prompt = "\n\n".join(prompt_segments.values())
         (attempt_root / "openai-workspace-prompt.txt").write_text(
-            user,
+            rendered_prompt,
             encoding="utf-8",
         )
         idempotency_key = hashlib.sha256(
@@ -1312,6 +1415,48 @@ def initial_run_state(
     }
 
 
+def prompt_cache_manifest(specs: list[PassSpec]) -> dict[str, Any]:
+    """Verify and fingerprint the shared prompt tiers before authoring."""
+    pass_records: dict[str, dict[str, str]] = {}
+    with tempfile.TemporaryDirectory(prefix="astrowoof-cache-manifest-") as temp:
+        root = Path(temp)
+        for spec in specs:
+            extracted = root / spec.pass_id
+            safe_extract_zip(spec.source_zip, extracted)
+            workspace = find_workspace_root(extracted, spec.pass_id)
+            tiers = partition_workspace_prompt(workspace)
+            pass_records[spec.pass_id] = {
+                name: hashlib.sha256(value.encode("utf-8")).hexdigest()
+                for name, value in tiers.items()
+            }
+    static_hashes = {item["static"] for item in pass_records.values()}
+    if len(static_hashes) != 1:
+        raise ValueError("Static authoring guidance differs between passes")
+    subjects: dict[str, set[str]] = {}
+    for spec in specs:
+        subjects.setdefault(spec.subject, set()).add(
+            pass_records[spec.pass_id]["subject"]
+        )
+    inconsistent = {
+        subject: sorted(hashes)
+        for subject, hashes in subjects.items()
+        if len(hashes) != 1
+    }
+    if inconsistent:
+        raise ValueError(
+            f"Subject prompt context differs between passes: {inconsistent}"
+        )
+    return {
+        "mode": "tiered_prefix",
+        "static_protocol_sha256": next(iter(static_hashes)),
+        "subject_context_sha256": {
+            subject: next(iter(hashes))
+            for subject, hashes in sorted(subjects.items())
+        },
+        "passes": pass_records,
+    }
+
+
 def provider_configuration(
     provider: AuthoringProvider,
 ) -> dict[str, Any]:
@@ -1323,6 +1468,8 @@ def provider_configuration(
             "background": getattr(provider, "background", None),
             "base_url": getattr(provider, "base_url", None),
             "max_output_tokens": getattr(provider, "max_output_tokens", None),
+            "prompt_cache_mode": getattr(provider, "prompt_cache_mode", None),
+            "prompt_cache_ttl": getattr(provider, "prompt_cache_ttl", None),
         }.items()
         if value is not None
     }
@@ -1726,6 +1873,32 @@ def author_pending_passes(
             state_lock=state_lock,
         )
 
+    cache_warmer: PassSpec | None = None
+    if (
+        max_workers > 1
+        and isinstance(provider, OpenAIResponsesProvider)
+        and provider.prompt_cache_mode != "disabled"
+        and len(specs) > 1
+        and not any(
+            state["passes"][spec.pass_id].get("attempts") for spec in specs
+        )
+    ):
+        cache_warmer = select_cache_warmer(specs)
+        warming = {
+            "pass_id": cache_warmer.pass_id,
+            "selection": "smallest_source_archive",
+            "state": "RUNNING",
+            "started_at": utc_now(),
+            "finished_at": None,
+        }
+        state.setdefault("prompt_cache", {})["warming"] = warming
+        save_state_locked(run_json, state, state_lock)
+        run_spec(cache_warmer)
+        warming["state"] = state["passes"][cache_warmer.pass_id]["state"]
+        warming["finished_at"] = utc_now()
+        save_state_locked(run_json, state, state_lock)
+        specs = [spec for spec in specs if spec != cache_warmer]
+
     if max_workers == 1:
         for spec in specs:
             run_spec(spec)
@@ -1749,6 +1922,15 @@ def author_pending_passes(
             for future in concurrent.futures.as_completed(futures):
                 future.result()
     save_state_locked(run_json, state, state_lock)
+
+
+def select_cache_warmer(specs: list[PassSpec]) -> PassSpec:
+    if not specs:
+        raise ValueError("Cannot select a cache warmer from no passes")
+    return min(
+        specs,
+        key=lambda item: (item.source_zip.stat().st_size, item.pass_number),
+    )
 
 
 def run_json_command(
@@ -2295,6 +2477,7 @@ def create_run(
         sbe_manifest=sbe_manifest,
         specs=specs,
     )
+    state["prompt_cache"] = prompt_cache_manifest(specs)
     run_json = run_dir / "run.json"
     save_state(run_json, state)
     return state, run_json
@@ -2310,12 +2493,21 @@ def resume_run(
     if not run_json.is_file():
         raise FileNotFoundError(f"Cannot resume without {run_json}")
     state = load_json(run_json)
-    if state.get("schema_version") in {
+    previous_schema = state.get("schema_version")
+    if previous_schema in {
         "astrowoof.semantic_closure_run.v0.2",
         "astrowoof.semantic_closure_run.v0.3",
     }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("subjects", {})
+        configuration = state.setdefault("provider_configuration", {})
+        if isinstance(provider, OpenAIResponsesProvider):
+            configuration.setdefault(
+                "prompt_cache_mode", provider.prompt_cache_mode
+            )
+            configuration.setdefault(
+                "prompt_cache_ttl", provider.prompt_cache_ttl
+            )
     if state.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(
             f"Unsupported run schema: {state.get('schema_version')!r}"
@@ -2509,6 +2701,20 @@ def main() -> None:
     )
     parser.add_argument("--max-output-tokens", type=int, default=100_000)
     parser.add_argument(
+        "--prompt-cache-mode",
+        choices=("disabled", "implicit", "explicit"),
+        default="explicit",
+        help=(
+            "Prompt-cache policy for GPT-5.6 authoring calls. Explicit mode "
+            "uses stable static and subject breakpoints."
+        ),
+    )
+    parser.add_argument(
+        "--prompt-cache-ttl",
+        choices=("30m",),
+        default="30m",
+    )
+    parser.add_argument(
         "--polish",
         action="store_true",
         help=(
@@ -2590,6 +2796,8 @@ def main() -> None:
             transport_backoff_seconds=args.transport_backoff_seconds,
             max_output_tokens=args.max_output_tokens,
             safety_identifier=args.safety_identifier,
+            prompt_cache_mode=args.prompt_cache_mode,
+            prompt_cache_ttl=args.prompt_cache_ttl,
         )
     elif args.provider == "fake":
         provider: AuthoringProvider = FakeAuthoringProvider(
@@ -2619,6 +2827,8 @@ def main() -> None:
             transport_backoff_seconds=args.transport_backoff_seconds,
             max_output_tokens=args.max_output_tokens,
             safety_identifier=args.safety_identifier,
+            prompt_cache_mode=args.prompt_cache_mode,
+            prompt_cache_ttl=args.prompt_cache_ttl,
         )
     if args.resume:
         state, run_json = resume_run(

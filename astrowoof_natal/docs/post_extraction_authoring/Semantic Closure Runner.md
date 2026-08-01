@@ -38,11 +38,29 @@ Markdown files around their original field markers. The model cannot rename
 files, alter source guidance, edit the bundled checker, or omit a required
 field without deterministic rejection.
 
+GPT-5.6 authoring calls use explicit prompt caching by default. The request is
+ordered as a stable editorial-guidance prefix, a subject-specific full-chart
+prefix, and finally the pass-local assignment. Explicit breakpoints follow the
+first two tiers, and the request uses a deterministic subject cache key with a
+30-minute minimum TTL. `run.json` records the static protocol and per-subject
+context hashes so an accidental difference between passes fails before any API
+request.
+
+Use `--prompt-cache-mode disabled` for a controlled uncached comparison, or
+`--prompt-cache-mode implicit` to retain the tiered breakpoints while allowing
+OpenAI's additional implicit breakpoint. `--prompt-cache-ttl 30m` is currently
+the only supported TTL value exposed by the runner.
+
 ## Concurrency and retries
 
 `--max-workers` controls the number of independent passes in flight. The
 default is six. Reduce it when an account's token-per-minute limit cannot
 support all six requests concurrently.
+
+For a fresh cached run with concurrent workers, the runner first completes the
+smallest generated pass as a cache warmer. It then submits the other five in
+parallel. This avoids six simultaneous cache writes for the same subject
+prefix. Resume never repeats an accepted pass merely to warm the cache.
 
 There are two retry layers:
 
