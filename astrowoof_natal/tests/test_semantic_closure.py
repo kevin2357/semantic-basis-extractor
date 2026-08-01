@@ -27,9 +27,12 @@ from author_semantic_closure import (  # noqa: E402
     apply_authored_fields,
     authoring_output_schema,
     author_pending_passes,
+    build_prompt_layout_report,
+    compare_cost_runs,
     discover_passes,
     editable_deck_fields,
     estimated_cost,
+    estimated_text_tokens,
     finalize_subjects,
     initial_run_state,
     load_json,
@@ -839,6 +842,89 @@ class TestSemanticClosure(SemanticClosureFixture):
         self.assertEqual(1500, usage["total_tokens"])
         self.assertEqual(0.00955, cost["estimated_amount"])
         self.assertIsNone(estimated_cost("unknown-model", usage))
+
+    def test_cost_accounts_for_explicit_cache_writes(self) -> None:
+        usage = {
+            "input_tokens": 1000,
+            "cached_input_tokens": 200,
+            "cache_write_tokens": 300,
+            "output_tokens": 100,
+            "reasoning_tokens": 0,
+            "total_tokens": 1100,
+        }
+        cost = estimated_cost("gpt-5.6-terra", usage)
+        self.assertEqual(
+            {
+                "uncached_input": 500,
+                "cached_input": 200,
+                "cache_write": 300,
+                "output": 100,
+            },
+            cost["billable_tokens"],
+        )
+        self.assertEqual(0.0037375, cost["estimated_amount"])
+
+    def test_prompt_layout_report_is_token_free_and_hashed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="unused",
+                transport=ScriptedTransport([]),
+            )
+            state, _ = self.make_state(root, provider)
+            report = build_prompt_layout_report(
+                state=state,
+                run_dir=root,
+                provider=provider,
+            )
+            self.assertEqual(6, report["pass_count"])
+            self.assertGreater(report["request_estimated_tokens"], 0)
+            self.assertTrue(
+                report["segments"]["system_instructions"][
+                    "shared_by_all_passes"
+                ]
+            )
+            self.assertEqual(0, len(provider.transport.calls))
+            self.assertEqual(1, estimated_text_tokens("a"))
+
+    def test_cost_comparison_reports_stage_and_savings_delta(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            (root / "baseline").mkdir()
+            (root / "candidate").mkdir()
+            baseline, baseline_path = self.make_state(root / "baseline", provider)
+            candidate, candidate_path = self.make_state(root / "candidate", provider)
+            for state, amount, tokens in (
+                (baseline, 4.0, 1000),
+                (candidate, 2.0, 600),
+            ):
+                attempt = state["passes"]["bre_1"]["attempts"] = [{
+                    "accepted": True,
+                    "provider_metadata": {
+                        "response_id": f"response-{amount}",
+                        "usage": {
+                            "input_tokens": tokens,
+                            "cached_input_tokens": 0,
+                            "cache_write_tokens": 0,
+                            "output_tokens": 0,
+                            "reasoning_tokens": 0,
+                            "total_tokens": tokens,
+                        },
+                        "estimated_cost": {
+                            "currency": "USD",
+                            "estimated_amount": amount,
+                        },
+                    },
+                }]
+                save_state(
+                    baseline_path if state is baseline else candidate_path,
+                    state,
+                )
+            report = compare_cost_runs(baseline_path, candidate_path)
+            self.assertEqual(2.0, report["difference"]["estimated_savings_usd"])
+            self.assertEqual(0.5, report["difference"]["estimated_savings_ratio"])
+            self.assertEqual(-400, report["difference"]["usage"]["input_tokens"])
 
     def test_discovers_exactly_six_integral_pass_archives(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

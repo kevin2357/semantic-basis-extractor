@@ -177,8 +177,50 @@ usage, estimated cost, QA reports, and delivery paths. The estimate uses a
 versioned local model-rate table and is useful for run comparison; the OpenAI
 usage dashboard remains authoritative.
 
+Accounting is also divided into `authoring_initial`, `creative_retries`, and
+`polish` stages. Each stage records request counts, accepted attempts, response
+IDs, cache-hit ratio, prompt-size estimates, usage, and estimated cost. A
+completed delivery additionally reports estimated cost per card and per deck.
+Explicit cache-write tokens are priced separately at 1.25 times ordinary input
+in the local GPT-5.6 estimate.
+
 Completed but malformed responses retain their response ID and token usage in
 the ledger, so failed creative attempts remain visible in total cost.
+
+## Token-free prompt layout report
+
+Generate the SBE workspaces and measure the exact prompt strings and response
+schemas without contacting OpenAI:
+
+```powershell
+python src/author_semantic_closure.py `
+  --input-package C:\path\to\projected-subjects `
+  --subject ella `
+  --run-dir C:\path\to\runs\ella-prompt-report `
+  --prompt-layout-report C:\path\to\ella-prompt-layout.json
+```
+
+The report gives character count, UTF-8 byte count, stable SHA-256, and a
+dependency-free token estimate for the system instructions, user message,
+workspace rendering, and strict response schema. It also shows whether each
+segment is byte-identical across all six passes. The estimate uses UTF-8 bytes
+divided by four and is intended for relative planning only; API response usage
+is the billing measurement.
+
+## Compare run cost
+
+Compare any two completed or partial run ledgers without creating a run or
+making an API request:
+
+```powershell
+python src/author_semantic_closure.py `
+  --compare-cost-runs C:\baseline\run.json C:\candidate\run.json `
+  --cost-report-output C:\reports\cost-comparison.json
+```
+
+The comparison includes stage accounting, token deltas, estimated dollar
+savings, and savings ratio. This is the acceptance report used for prompt-cache
+and sparse-polish optimization work.
 
 ## Token-free workflow test
 

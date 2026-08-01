@@ -31,7 +31,7 @@ from typing import Any, Protocol
 from assemble_authoring_workspace import assemble
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.3"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.4"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -64,6 +64,7 @@ MODEL_PRICING_USD_PER_MILLION = {
         "output": 6.00,
     },
 }
+TOKEN_ESTIMATE_METHOD = "utf8_bytes_divided_by_4"
 FIELD_PATTERN = re.compile(
     r"(<!-- BEGIN FIELD: ([a-zA-Z0-9_.]+) -->\s*\n)"
     r"(.*?)"
@@ -107,6 +108,22 @@ def sha256_file(path: Path) -> str:
 
 def normalized_path(path: Path) -> str:
     return str(path.resolve())
+
+
+def estimated_text_tokens(value: str) -> int:
+    """Return a dependency-free planning estimate, never API billing usage."""
+    byte_count = len(value.encode("utf-8"))
+    return (byte_count + 3) // 4
+
+
+def text_measurement(value: str) -> dict[str, Any]:
+    return {
+        "characters": len(value),
+        "utf8_bytes": len(value.encode("utf-8")),
+        "estimated_tokens": estimated_text_tokens(value),
+        "token_estimate_method": TOKEN_ESTIMATE_METHOD,
+        "sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
+    }
 
 
 def safe_extract_zip(archive_path: Path, destination: Path) -> None:
@@ -645,19 +662,38 @@ def estimated_cost(
         usage["cached_input_tokens"],
         usage["input_tokens"],
     )
-    uncached = max(usage["input_tokens"] - cached, 0)
-    amount = (
-        uncached * pricing["input"]
-        + cached * pricing["cached_input"]
-        + usage["output_tokens"] * pricing["output"]
-    ) / 1_000_000
+    cache_write = min(
+        usage.get("cache_write_tokens", 0),
+        max(usage["input_tokens"] - cached, 0),
+    )
+    uncached = max(usage["input_tokens"] - cached - cache_write, 0)
+    rates = {
+        **pricing,
+        "cache_write": pricing.get("cache_write", pricing["input"] * 1.25),
+    }
+    components = {
+        "uncached_input": uncached * rates["input"] / 1_000_000,
+        "cached_input": cached * rates["cached_input"] / 1_000_000,
+        "cache_write": cache_write * rates["cache_write"] / 1_000_000,
+        "output": usage["output_tokens"] * rates["output"] / 1_000_000,
+    }
+    amount = sum(components.values())
     return {
         "currency": "USD",
         "estimated_amount": round(amount, 8),
         "pricing_version": "2026-07-31",
-        "rates_per_million_tokens": pricing,
+        "rates_per_million_tokens": rates,
+        "billable_tokens": {
+            "uncached_input": uncached,
+            "cached_input": cached,
+            "cache_write": cache_write,
+            "output": usage["output_tokens"],
+        },
+        "components": {
+            key: round(value, 8) for key, value in components.items()
+        },
         "note": (
-            "Estimate excludes tool fees and special cache-write treatment; "
+            "Estimate includes explicit cache writes at 1.25x ordinary input; "
             "the OpenAI usage dashboard remains authoritative."
         ),
     }
@@ -782,6 +818,49 @@ class OpenAIResponsesProvider:
         )
         return system, user
 
+    def prompt_layout(
+        self,
+        *,
+        spec: PassSpec,
+        workspace: Path,
+        feedback: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Describe the current request geometry without making an API call."""
+        fields = writable_fields(workspace)
+        system, user = self._prompt(
+            spec=spec,
+            workspace=workspace,
+            feedback=feedback,
+        )
+        workspace_text = render_workspace_input(workspace)
+        user_envelope = user.replace(workspace_text, "", 1)
+        schema_text = json.dumps(
+            authoring_output_schema(fields),
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        segments = {
+            "system_instructions": text_measurement(system),
+            "user_envelope": text_measurement(user_envelope),
+            "workspace_rendering": text_measurement(workspace_text),
+            "response_schema": text_measurement(schema_text),
+        }
+        return {
+            "pass_id": spec.pass_id,
+            "subject": spec.subject,
+            "pass_number": spec.pass_number,
+            "source_sha256": spec.source_sha256,
+            "writable_field_count": len(fields),
+            "segments": segments,
+            "request_estimated_tokens": sum(
+                segment["estimated_tokens"] for segment in segments.values()
+            ),
+            "note": (
+                "Token counts are dependency-free planning estimates, not "
+                "Responses API billing measurements."
+            ),
+        }
+
     def author(
         self,
         source_workspace: Path,
@@ -815,6 +894,11 @@ class OpenAIResponsesProvider:
             },
             "max_output_tokens": self.max_output_tokens,
         }
+        prompt_layout = self.prompt_layout(
+            spec=spec,
+            workspace=source_workspace,
+            feedback=feedback,
+        )
         if self.safety_identifier:
             request_payload["safety_identifier"] = self.safety_identifier
         attempt_root = response_workspace.parents[1]
@@ -922,6 +1006,7 @@ class OpenAIResponsesProvider:
             },
             "usage": usage,
             "estimated_cost": cost,
+            "prompt_layout": prompt_layout,
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "request_path": normalized_path(
                 attempt_root / "openai-request.json"
@@ -1291,24 +1376,88 @@ def update_run_status(state: dict[str, Any]) -> None:
     estimated_cost_total = 0.0
     priced_attempt_count = 0
     response_ids: list[str] = []
-    attempt_groups = [
-        record.get("attempts", []) for record in state["passes"].values()
-    ] + [
-        record.get("polish_attempts", [])
-        for record in state.get("subjects", {}).values()
-    ]
-    for attempts in attempt_groups:
+    stage_attempts: dict[str, list[dict[str, Any]]] = {
+        "authoring_initial": [],
+        "creative_retries": [],
+        "polish": [],
+    }
+    for record in state["passes"].values():
+        for index, attempt in enumerate(record.get("attempts", [])):
+            stage_attempts[
+                "authoring_initial" if index == 0 else "creative_retries"
+            ].append(attempt)
+    for record in state.get("subjects", {}).values():
+        stage_attempts["polish"].extend(record.get("polish_attempts", []))
+
+    def summarize_attempts(attempts: list[dict[str, Any]]) -> dict[str, Any]:
+        nonlocal estimated_cost_total, priced_attempt_count
+        stage_usage = {key: 0 for key in usage_totals}
+        stage_cost = 0.0
+        stage_priced = 0
+        stage_responses: list[str] = []
+        accepted = 0
+        prompt_estimates: list[int] = []
         for attempt in attempts:
             metadata = attempt.get("provider_metadata") or {}
             usage = metadata.get("usage") or {}
             for key in usage_totals:
                 usage_totals[key] += int(usage.get(key) or 0)
-            cost = metadata.get("estimated_cost") or {}
+                stage_usage[key] += int(usage.get(key) or 0)
+            cost = (
+                estimated_cost(
+                    str(metadata.get("requested_model") or metadata.get("model")),
+                    {key: int(usage.get(key) or 0) for key in usage_totals},
+                )
+                or metadata.get("estimated_cost")
+                or {}
+            )
             if cost.get("estimated_amount") is not None:
                 estimated_cost_total += float(cost["estimated_amount"])
                 priced_attempt_count += 1
+                stage_cost += float(cost["estimated_amount"])
+                stage_priced += 1
             if metadata.get("response_id"):
                 response_ids.append(metadata["response_id"])
+                stage_responses.append(metadata["response_id"])
+            if (
+                attempt.get("accepted")
+                or attempt.get("state") == "PASS_QA_ACCEPTED"
+                or (attempt.get("qa") or {}).get("accepted") is True
+            ):
+                accepted += 1
+            estimate = (metadata.get("prompt_layout") or {}).get(
+                "request_estimated_tokens"
+            )
+            if estimate is not None:
+                prompt_estimates.append(int(estimate))
+        input_tokens = stage_usage["input_tokens"]
+        cached = stage_usage["cached_input_tokens"]
+        return {
+            "attempt_count": len(attempts),
+            "accepted_attempt_count": accepted,
+            "priced_attempt_count": stage_priced,
+            "response_ids": stage_responses,
+            "usage": stage_usage,
+            "cache_hit_ratio": round(cached / input_tokens, 6)
+            if input_tokens
+            else None,
+            "estimated_prompt_tokens": sum(prompt_estimates),
+            "estimated_cost": {
+                "currency": "USD",
+                "estimated_amount": round(stage_cost, 8),
+            },
+        }
+
+    stage_summaries = {
+        name: summarize_attempts(attempts)
+        for name, attempts in stage_attempts.items()
+    }
+    delivered_deck_count = sum(
+        1
+        for record in state.get("subjects", {}).values()
+        if record.get("state") in FINAL_SUCCESS_STATES
+    )
+    delivered_card_count = delivered_deck_count * 50
     state["accounting"] = {
         "usage": usage_totals,
         "estimated_cost": {
@@ -1321,6 +1470,21 @@ def update_run_status(state: dict[str, Any]) -> None:
             ),
         },
         "response_ids": response_ids,
+        "stages": stage_summaries,
+        "cost_per_accepted_card": (
+            round(estimated_cost_total / delivered_card_count, 8)
+            if delivered_card_count and estimated_cost_total
+            else None
+        ),
+        "cost_per_delivered_deck": (
+            round(
+                estimated_cost_total
+                / delivered_deck_count,
+                8,
+            )
+            if delivered_deck_count
+            else None
+        ),
     }
     state["updated_at"] = utc_now()
 
@@ -2146,7 +2310,10 @@ def resume_run(
     if not run_json.is_file():
         raise FileNotFoundError(f"Cannot resume without {run_json}")
     state = load_json(run_json)
-    if state.get("schema_version") == "astrowoof.semantic_closure_run.v0.2":
+    if state.get("schema_version") in {
+        "astrowoof.semantic_closure_run.v0.2",
+        "astrowoof.semantic_closure_run.v0.3",
+    }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("subjects", {})
     if state.get("schema_version") != SCHEMA_VERSION:
@@ -2178,6 +2345,103 @@ def default_sbe_script() -> Path:
     )
 
 
+def build_prompt_layout_report(
+    *,
+    state: dict[str, Any],
+    run_dir: Path,
+    provider: OpenAIResponsesProvider,
+) -> dict[str, Any]:
+    """Measure every authoring prompt without submitting a response."""
+    layouts: list[dict[str, Any]] = []
+    with tempfile.TemporaryDirectory(prefix="astrowoof-prompt-layout-") as temp:
+        root = Path(temp)
+        for spec in specs_from_state(state):
+            extracted = root / spec.pass_id
+            safe_extract_zip(spec.source_zip, extracted)
+            workspace = find_workspace_root(extracted, spec.pass_id)
+            layouts.append(
+                provider.prompt_layout(spec=spec, workspace=workspace)
+            )
+    segment_hashes: dict[str, dict[str, int]] = {}
+    for layout in layouts:
+        for name, measurement in layout["segments"].items():
+            hashes = segment_hashes.setdefault(name, {})
+            digest = measurement["sha256"]
+            hashes[digest] = hashes.get(digest, 0) + 1
+    return {
+        "schema_version": "astrowoof.prompt_layout_report.v1",
+        "created_at": utc_now(),
+        "run_dir": normalized_path(run_dir),
+        "model": provider.model,
+        "token_estimate_method": TOKEN_ESTIMATE_METHOD,
+        "pass_count": len(layouts),
+        "request_estimated_tokens": sum(
+            item["request_estimated_tokens"] for item in layouts
+        ),
+        "segments": {
+            name: {
+                "distinct_sha256_count": len(hashes),
+                "shared_by_all_passes": len(hashes) == 1,
+                "occurrences_by_sha256": hashes,
+            }
+            for name, hashes in segment_hashes.items()
+        },
+        "passes": layouts,
+        "note": (
+            "This report performs no API request. Estimates support relative "
+            "prompt-layout comparisons; response usage remains authoritative."
+        ),
+    }
+
+
+def accounting_from_run(path: Path) -> dict[str, Any]:
+    state = load_json(path)
+    update_run_status(state)
+    return state.get("accounting", {})
+
+
+def compare_cost_runs(baseline_path: Path, candidate_path: Path) -> dict[str, Any]:
+    """Compare two persisted runs using their response-level accounting."""
+    baseline = accounting_from_run(baseline_path)
+    candidate = accounting_from_run(candidate_path)
+    baseline_amount = float(
+        (baseline.get("estimated_cost") or {}).get("estimated_amount") or 0
+    )
+    candidate_amount = float(
+        (candidate.get("estimated_cost") or {}).get("estimated_amount") or 0
+    )
+    savings = baseline_amount - candidate_amount
+    baseline_usage = baseline.get("usage") or {}
+    candidate_usage = candidate.get("usage") or {}
+    return {
+        "schema_version": "astrowoof.cost_comparison.v1",
+        "created_at": utc_now(),
+        "baseline": {
+            "run_json": normalized_path(baseline_path),
+            "accounting": baseline,
+        },
+        "candidate": {
+            "run_json": normalized_path(candidate_path),
+            "accounting": candidate,
+        },
+        "difference": {
+            "estimated_cost_usd": round(candidate_amount - baseline_amount, 8),
+            "estimated_savings_usd": round(savings, 8),
+            "estimated_savings_ratio": round(savings / baseline_amount, 6)
+            if baseline_amount
+            else None,
+            "usage": {
+                key: int(candidate_usage.get(key) or 0)
+                - int(baseline_usage.get(key) or 0)
+                for key in {
+                    *baseline_usage.keys(),
+                    *candidate_usage.keys(),
+                }
+            },
+        },
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -2186,9 +2450,26 @@ def main() -> None:
         )
     )
     parser.add_argument("--input-package", type=Path)
-    parser.add_argument("--run-dir", type=Path, required=True)
+    parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--prompt-layout-report",
+        type=Path,
+        help="Write a token-free report of the generated authoring prompts.",
+    )
+    parser.add_argument(
+        "--compare-cost-runs",
+        nargs=2,
+        type=Path,
+        metavar=("BASELINE_RUN_JSON", "CANDIDATE_RUN_JSON"),
+        help="Compare persisted token usage and estimated cost, then exit.",
+    )
+    parser.add_argument(
+        "--cost-report-output",
+        type=Path,
+        help="Also persist the --compare-cost-runs report as JSON.",
+    )
     parser.add_argument(
         "--provider",
         choices=("fake", "openai"),
@@ -2267,6 +2548,14 @@ def main() -> None:
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
     args = parser.parse_args()
+    if args.compare_cost_runs:
+        report = compare_cost_runs(*args.compare_cost_runs)
+        if args.cost_report_output:
+            write_json_atomic(args.cost_report_output, report)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return
+    if args.run_dir is None:
+        parser.error("--run-dir is required for authoring and prompt reports")
     if args.max_attempts < 1:
         parser.error("--max-attempts must be at least 1")
     if args.max_workers < 1:
@@ -2287,7 +2576,22 @@ def main() -> None:
         error_attempts = parse_attempt_map(args.fake_error)
     except argparse.ArgumentTypeError as exc:
         parser.error(str(exc))
-    if args.provider == "fake":
+    if args.prompt_layout_report:
+        provider = OpenAIResponsesProvider(
+            api_key="prompt-layout-report-does-not-contact-openai",
+            model=args.model,
+            reasoning_effort=args.reasoning_effort,
+            base_url=args.openai_base_url,
+            background=not args.foreground,
+            poll_interval_seconds=args.poll_interval_seconds,
+            response_timeout_seconds=args.response_timeout_seconds,
+            http_timeout_seconds=args.http_timeout_seconds,
+            max_transport_retries=args.max_transport_retries,
+            transport_backoff_seconds=args.transport_backoff_seconds,
+            max_output_tokens=args.max_output_tokens,
+            safety_identifier=args.safety_identifier,
+        )
+    elif args.provider == "fake":
         provider: AuthoringProvider = FakeAuthoringProvider(
             reject_attempts=reject_attempts,
             error_attempts=error_attempts,
@@ -2332,6 +2636,17 @@ def main() -> None:
             sbe_script=args.sbe_script,
             python_executable=args.python_executable,
         )
+    if args.prompt_layout_report:
+        if not isinstance(provider, OpenAIResponsesProvider):
+            raise AssertionError("prompt report requires OpenAI request layout")
+        report = build_prompt_layout_report(
+            state=state,
+            run_dir=args.run_dir,
+            provider=provider,
+        )
+        write_json_atomic(args.prompt_layout_report, report)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return
     author_pending_passes(
         state=state,
         provider=provider,
