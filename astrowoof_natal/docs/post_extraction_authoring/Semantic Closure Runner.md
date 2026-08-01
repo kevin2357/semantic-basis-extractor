@@ -70,10 +70,14 @@ isolated assembly directory, reconstructs `natal.<subject>.cards.json` from the
 locked SBE packet, runs structural validation, and runs the whole-deck
 editorial linter.
 
-Structural validation errors always stop delivery. By default, lint warnings
-leave the subject in `FINAL_QA_REQUIRES_REVIEW`; the assembled baseline remains
-available under `final/<subject>/`. Use `--allow-lint-warnings` when warnings
-should be reported but should not block packaging.
+Structural validation errors always stop direct delivery. When `--polish` is
+enabled, fixable editorial validation errors may enter the same bounded
+recovery loop as lint findings. Validator warnings remain advisory and are
+preserved in the report; whole-deck linter warnings determine whether polish
+must continue. By default, unresolved lint warnings leave the subject in
+`FINAL_QA_REQUIRES_REVIEW`; the best valid baseline remains available under
+`final/<subject>/`. Use `--allow-lint-warnings` when linter warnings should be
+reported but should not block packaging.
 
 The delivery ZIP contains the cards JSON, assembly report, structural
 validation report, and whole-deck lint report. Multi-subject runs assemble and
@@ -82,17 +86,25 @@ validate each subject independently.
 ## Optional whole-deck polish
 
 Add `--polish --max-polish-attempts 2` to let an OpenAI run make bounded,
-surgical corrections when the whole-deck linter warns. Polish receives the
-lint report and an exact map of reader-facing prose fields. It cannot return
-edits to evidence, claim selection, categories, filters, theme groups,
-identity, or other locked data.
+surgical corrections when final validation fails or the whole-deck linter
+warns. Polish receives the validation report, lint report, and an exact map of
+reader-facing prose fields. It cannot return edits to evidence, claim
+selection, categories, filters, identity, or other locked data. Theme groups
+remain unavailable unless the validator explicitly reports that their balance
+is invalid; in that case only existing theme-group fields are added to the
+strict transport for rebalancing.
 
-Python applies the returned prose to a copy of the accepted baseline and runs
-the validator in polish mode. A candidate replaces the current best deck only
-when polish-phase structural validation passes and its deterministic warning
-count is strictly lower. The original assembly therefore remains the safe
-baseline when polish fails or merely rearranges warnings. Polish stops early
-at zero warnings.
+Python applies the returned fields to a copy of the accepted baseline and runs
+the validator in polish mode. The first candidate that repairs an invalid
+baseline may replace it only when structural validation passes. After a valid
+baseline exists, a candidate replaces the current best deck only when its
+whole-deck linter warning count is strictly lower. The original assembly
+therefore remains safe when polish fails, and accepted improvements remain safe
+when a later attempt fails. Polish stops early at zero linter warnings.
+
+On resume, persisted validation and lint reports define the current best state.
+Exhausted polish budgets do not create another response; a valid, zero-lint
+persisted deck proceeds directly to delivery packaging.
 
 `--allow-lint-warnings` may be combined with `--polish` to package the best
 structurally valid result when the bounded polish budget does not reach zero.

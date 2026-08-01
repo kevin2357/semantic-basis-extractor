@@ -27,7 +27,10 @@ ASTRO_TERMS = re.compile(
     r"conjunction|opposition|square|trine|sextile|quincunx|chart)\b",
     re.IGNORECASE,
 )
-BAD_SECOND_PERSON = re.compile(r"\byou\s+(?:is|has|does|regulates|needs|wants|prefers)\b", re.IGNORECASE)
+BAD_SECOND_PERSON = re.compile(
+    r"(?<!of )\byou\s+(?:is|has|does|regulates|needs|wants|prefers)\b",
+    re.IGNORECASE,
+)
 
 
 def validate_editorial_card(

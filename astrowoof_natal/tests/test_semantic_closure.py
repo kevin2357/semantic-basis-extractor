@@ -34,6 +34,7 @@ from author_semantic_closure import (  # noqa: E402
     initial_run_state,
     load_json,
     normalized_usage,
+    polish_subject,
     resume_run,
     safe_extract_zip,
     save_state,
@@ -48,6 +49,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     load_and_validate_contexts,
     optimize,
 )
+from validate_astrowoof_editorial import BAD_SECOND_PERSON  # noqa: E402
 
 
 EXAMPLES = ROOT / "examples"
@@ -258,6 +260,10 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_second_person_validator_allows_object_of_preposition(self) -> None:
+        self.assertIsNone(BAD_SECOND_PERSON.search("the rest of you has paused"))
+        self.assertIsNotNone(BAD_SECOND_PERSON.search("you has paused"))
+
     def test_polish_transport_can_only_change_reader_facing_fields(self) -> None:
         fields = editable_deck_fields(self.packet)
         authored = {
@@ -279,6 +285,89 @@ class TestSemanticClosure(SemanticClosureFixture):
         incomplete["fields"].pop(next(iter(incomplete["fields"])))
         with self.assertRaisesRegex(ValueError, "exactly match"):
             apply_deck_fields(self.packet, incomplete)
+
+    def test_polish_transport_exposes_theme_groups_only_when_requested(
+        self,
+    ) -> None:
+        normal = editable_deck_fields(self.packet)
+        rebalancing = editable_deck_fields(
+            self.packet,
+            include_theme_groups=True,
+        )
+        self.assertFalse(any(path.endswith(".theme_group") for path in normal))
+        self.assertTrue(
+            any(path.endswith(".theme_group") for path in rebalancing)
+        )
+
+    def test_polish_resumes_from_persisted_final_failure_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            deck_path.write_text(json.dumps(self.packet), encoding="utf-8")
+            assembly_path = final_root / "assembly.json"
+            assembly_path.write_text("{}", encoding="utf-8")
+            validation_path = final_root / "validation.json"
+            validation_path.write_text(
+                json.dumps({"errors": ["theme groups need rebalancing"]}),
+                encoding="utf-8",
+            )
+            lint_path = final_root / "lint.json"
+            lint_path.write_text(
+                json.dumps({"warning_count": 2, "warnings": []}),
+                encoding="utf-8",
+            )
+            record = {
+                "subject": "bre",
+                "state": "FINAL_QA_FAILED",
+                "deck": str(deck_path),
+                "assembly_report": str(assembly_path),
+                "validation_report": str(validation_path),
+                "lint_report": str(lint_path),
+                "baseline_warning_count": 2,
+                "polish_attempts": [],
+                "delivery": None,
+            }
+
+            class Provider:
+                model = "fake-polish"
+
+                def complete_json(inner_self, **kwargs):
+                    fields = editable_deck_fields(
+                        self.packet,
+                        include_theme_groups=True,
+                    )
+                    return {"fields": fields}, {"provider": "fake"}
+
+            def fake_qa(command, report_path, *, accepted_returncodes):
+                if "validate_astrowoof_editorial.py" in command[1]:
+                    report = {"status": "pass", "warnings": []}
+                else:
+                    report = {"status": "pass", "warning_count": 0}
+                report_path.write_text(json.dumps(report), encoding="utf-8")
+                return {
+                    "accepted": True,
+                    "returncode": 0,
+                    "stdout": "",
+                    "stderr": "",
+                    "report": report,
+                }
+
+            with patch(
+                "author_semantic_closure.run_json_command",
+                side_effect=fake_qa,
+            ):
+                polish_subject(
+                    record=record,
+                    provider=Provider(),
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_attempts=1,
+                )
+            self.assertEqual("DELIVERY_COMPLETE", record["state"])
+            self.assertTrue(record["polish_attempts"][0]["accepted"])
+            self.assertTrue(Path(record["delivery"]).is_file())
 
     def test_final_status_requires_every_subject_delivery(self) -> None:
         state = {

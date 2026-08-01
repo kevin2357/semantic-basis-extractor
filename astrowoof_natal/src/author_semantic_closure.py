@@ -1701,7 +1701,11 @@ def assemble_subject(
         lint_path,
         accepted_returncodes={0, 2},
     )
-    warning_count = int(lint["report"].get("warning_count") or 0)
+    lint_warning_count = int(lint["report"].get("warning_count") or 0)
+    validation_warning_count = len(
+        validation["report"].get("warnings") or []
+    )
+    warning_count = lint_warning_count
     status = (
         "FINAL_QA_PASSED"
         if validation["accepted"] and warning_count == 0
@@ -1720,6 +1724,10 @@ def assemble_subject(
         "validation": validation,
         "lint": lint,
         "baseline_warning_count": warning_count,
+        "baseline_warning_components": {
+            "validation": validation_warning_count,
+            "lint": lint_warning_count,
+        },
         "polish_attempts": [],
         "delivery": None,
     }
@@ -1755,7 +1763,11 @@ def package_subject_delivery(
     return delivery
 
 
-def editable_deck_fields(deck: dict[str, Any]) -> dict[str, str]:
+def editable_deck_fields(
+    deck: dict[str, Any],
+    *,
+    include_theme_groups: bool = False,
+) -> dict[str, str]:
     """Flatten only reader-facing prose into a strict polish transport."""
     fields: dict[str, str] = {}
 
@@ -1775,6 +1787,8 @@ def editable_deck_fields(deck: dict[str, Any]) -> dict[str, str]:
 
     for card_index, claim in enumerate(deck["cards"]):
         prefix = f"cards.{card_index}"
+        if include_theme_groups and "theme_group" in claim:
+            fields[f"{prefix}.theme_group"] = claim["theme_group"]
         for name in ("dos", "donts"):
             for item_index, value in enumerate(claim[name]):
                 fields[f"{prefix}.{name}.{item_index}"] = value
@@ -1791,8 +1805,13 @@ def editable_deck_fields(deck: dict[str, Any]) -> dict[str, str]:
 def apply_deck_fields(
     deck: dict[str, Any],
     authored: dict[str, Any],
+    *,
+    include_theme_groups: bool = False,
 ) -> dict[str, Any]:
-    expected = editable_deck_fields(deck)
+    expected = editable_deck_fields(
+        deck,
+        include_theme_groups=include_theme_groups,
+    )
     actual = authored.get("fields") if isinstance(authored, dict) else None
     if not isinstance(actual, dict) or set(actual) != set(expected):
         raise ValueError("Polish field map does not exactly match the deck")
@@ -1846,7 +1865,15 @@ def polish_subject(
     subject = record["subject"]
     baseline_path = Path(record["deck"])
     baseline = load_json(baseline_path)
-    best_warning_count = int(record["baseline_warning_count"])
+    current_lint_report = load_json(Path(record["lint_report"]))
+    current_validation_report = load_json(Path(record["validation_report"]))
+    persisted_warning_count = current_lint_report.get("warning_count")
+    best_warning_count = int(
+        record["baseline_warning_count"]
+        if persisted_warning_count is None
+        else persisted_warning_count
+    )
+    best_validation_passed = current_validation_report.get("status") == "pass"
     best_path = baseline_path
     final_root = run_dir / "final" / subject
     validator_path = Path(__file__).resolve().with_name(
@@ -1860,23 +1887,35 @@ def polish_subject(
         max_attempts + 1,
     ):
         attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
-        lint_report = load_json(record["lint_report"])
+        lint_report = load_json(Path(record["lint_report"]))
+        validation_report = load_json(Path(record["validation_report"]))
+        allow_theme_group_edits = any(
+            "theme group" in str(error).lower()
+            for error in validation_report.get("errors", [])
+        )
         system = (
             "You are performing a surgical whole-deck editorial polish. "
             "Return exactly the supplied reader-facing field map. "
             "Preserve every factual, evidentiary, structural, selection, "
-            "category, filter, theme-group, and identity value. Edit only "
+            "category, filter, and identity value. Edit only "
             "reader-facing prose needed to resolve the supplied lint findings. "
+            "Theme groups may change only when validation explicitly requires "
+            "rebalancing. "
             "Do not homogenize distinct cards or rewrite clean material."
         )
         current_deck = load_json(best_path)
-        current_fields = editable_deck_fields(current_deck)
+        current_fields = editable_deck_fields(
+            current_deck,
+            include_theme_groups=allow_theme_group_edits,
+        )
         user = (
             f"Polish the AstroWoof deck for {subject}. Reduce the deterministic "
             "lint findings while retaining the same dog, meanings, evidence "
             "boundaries, voice distinctions, and astrology-density levels. "
             "A candidate is accepted only if structural validation passes and "
             "its warning count is lower than the current best.\n\n"
+            "VALIDATION REPORT:\n"
+            f"{json.dumps(validation_report, ensure_ascii=False)}\n\n"
             f"LINT REPORT:\n{json.dumps(lint_report, ensure_ascii=False)}\n\n"
             "READER-FACING FIELD MAP:\n"
             f"{json.dumps(current_fields, ensure_ascii=False)}"
@@ -1906,12 +1945,15 @@ def polish_subject(
                     f"{attempt_number}:{provider.model}"
                 ),
             )
-            candidate = apply_deck_fields(current_deck, authored)
+            candidate = apply_deck_fields(
+                current_deck,
+                authored,
+                include_theme_groups=allow_theme_group_edits,
+            )
             candidate_path = attempt_root / f"natal.{subject}.cards.json"
             write_json_atomic(candidate_path, candidate)
             validation_path = attempt_root / "validation-report.json"
-            validation = run_json_command(
-                [
+            validation_command = [
                     str(python_executable),
                     str(validator_path),
                     str(best_path),
@@ -1920,7 +1962,11 @@ def polish_subject(
                     "polish",
                     "--report",
                     str(validation_path),
-                ],
+                ]
+            if allow_theme_group_edits:
+                validation_command.append("--allow-theme-group-edits")
+            validation = run_json_command(
+                validation_command,
                 validation_path,
                 accepted_returncodes={0},
             )
@@ -1936,8 +1982,17 @@ def polish_subject(
                 lint_path,
                 accepted_returncodes={0, 2},
             )
-            warning_count = int(lint["report"].get("warning_count") or 0)
-            accepted = validation["accepted"] and warning_count < best_warning_count
+            lint_warning_count = int(
+                lint["report"].get("warning_count") or 0
+            )
+            validation_warning_count = len(
+                validation["report"].get("warnings") or []
+            )
+            warning_count = lint_warning_count
+            accepted = validation["accepted"] and (
+                not best_validation_passed
+                or warning_count < best_warning_count
+            )
             attempt.update(
                 {
                     "state": "POLISH_ACCEPTED" if accepted else "POLISH_REJECTED",
@@ -1946,12 +2001,17 @@ def polish_subject(
                     "validation_report": normalized_path(validation_path),
                     "lint_report": normalized_path(lint_path),
                     "warning_count": warning_count,
+                    "warning_components": {
+                        "validation": validation_warning_count,
+                        "lint": lint_warning_count,
+                    },
                     "accepted": accepted,
                 }
             )
             if accepted:
                 best_path = candidate_path
                 best_warning_count = warning_count
+                best_validation_passed = True
                 shutil.copy2(candidate_path, baseline_path)
                 shutil.copy2(validation_path, record["validation_report"])
                 shutil.copy2(lint_path, record["lint_report"])
@@ -1969,11 +2029,14 @@ def polish_subject(
             if getattr(exc, "fatal", False):
                 break
     record["final_warning_count"] = best_warning_count
-    record["state"] = (
-        "DELIVERY_COMPLETE"
-        if best_warning_count == 0
-        else "FINAL_QA_WARN"
-    )
+    if not best_validation_passed:
+        record["state"] = "FINAL_QA_FAILED"
+    else:
+        record["state"] = (
+            "DELIVERY_COMPLETE"
+            if best_warning_count == 0
+            else "FINAL_QA_WARN"
+        )
     if record["state"] == "DELIVERY_COMPLETE":
         package_subject_delivery(record, run_dir=run_dir)
 
@@ -2013,7 +2076,7 @@ def finalize_subjects(
             record["state"] = "DELIVERY_COMPLETE"
             package_subject_delivery(record, run_dir=run_dir)
         elif (
-            record["state"] == "FINAL_QA_WARN"
+            record["state"] in {"FINAL_QA_WARN", "FINAL_QA_FAILED"}
             and polish
             and polish_provider is not None
         ):
