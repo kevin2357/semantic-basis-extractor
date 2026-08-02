@@ -57,9 +57,19 @@ Copy an input before editing it. Never overwrite a baseline artifact.
 7. Clarity without unnecessary explanation.
 8. Voice distinction beyond pronoun and grammar correctness.
 
-## Phase 0 — Manual sparse polish experiment
+## Phase 0 — Human-directed, context-naive API polish experiment
 
 ### Scope
+
+The human/long-context role is diagnosis, prompt design, context selection, and
+evaluation. A fresh API response with no conversation history writes every
+replacement. Do not manually author replacement prose for the primary
+experiment.
+
+The goal is not to force production of a better deck. The goal is to determine
+which writing-quality problems can and cannot be repaired after independent
+authoring passes have produced a complete deck. A weak or neutral result is
+valid and valuable evidence.
 
 Create a new Kevin research candidate while keeping all unrelated fields
 value-for-value identical. Target only:
@@ -82,6 +92,35 @@ For every changed field, record:
 - whether the change required whole-chart context;
 - whether the objective appears automatable before authoring, during pass authoring, or during final polish.
 
+The diagnosis ledger must not contain proposed replacement prose.
+
+### Experimental isolation
+
+- Use a fresh API response with no previous response ID or conversation state.
+- Include only context reproducible by the production pipeline.
+- Supply source and whole-dog context already available to the original
+  authoring workflow where required for a target.
+- Do not include the old manual Kevin deck or any gold examples.
+- Do not quote successful old-deck wording in diagnoses or prompt guidance.
+- Return only sparse edits to explicitly allowlisted paths.
+- Record the exact package, prompt, model, reasoning level, response, usage,
+  cost, and latency.
+
+### Pre-submission review gate
+
+After the request package, prompt, schema, and invocation command are ready,
+stop before contacting the OpenAI service. Report their exact repository paths
+and the exact prompt to the user. Submission requires explicit approval after
+that review.
+
+### Iteration policy
+
+Round 1 is not required to produce a superior deck. If its output reveals a
+specific, testable weakness in task framing or supplied context, preserve the
+round unchanged and consider Round 2 or Round 3. Each round must state its
+hypothesis and change only the variables needed to test it. Do not iteratively
+prompt merely to chase a preferred result.
+
 ### Validation
 
 - Parse the revised JSON.
@@ -96,7 +135,7 @@ Compare matched passages from:
 
 1. manual assembled Kevin;
 2. automated Kevin candidate;
-3. manually polished automated Kevin.
+3. human-directed, context-naive API-polished Kevin.
 
 Where practical, review without revealing which version produced a passage.
 Assess memorability, behavioral clarity, grounding, usefulness, voice,
@@ -194,6 +233,19 @@ Candidates include:
 Do not add every candidate automatically. Each addition consumes author
 attention and tokens. Implement only changes supported by Phase-0 evidence.
 
+### Full-chart basis transport review
+
+Review the `FULL CHART BASIS.md` representation supplied to authoring and
+summary agents. The current rendering is usable, but it may spend tokens on
+low-value structural detail while presenting important chart relationships in
+a form that is harder to synthesize than necessary. This is outside the
+Phase-0 polish experiment and must not alter its input after submission.
+
+Measure token cost, retained semantic coverage, evidence traceability, and
+resulting whole-dog comprehension. Compare the current rendering with at least
+one more compact, author-oriented representation before changing the
+production handoff.
+
 ## Phase 4 — Preserve mechanical polish and add qualitative diagnosis
 
 ### Mechanical repair polish
@@ -238,7 +290,7 @@ baseline; that would obscure causality.
 
 - **K0:** manual assembled Kevin deck.
 - **K1:** original automated Kevin candidate before this sprint.
-- **K2:** K1 with Phase-0 manual sparse polish only.
+- **K2:** K1 with Phase-0 human-directed, context-naive API polish only.
 
 ### Summary-isolation tests
 
@@ -305,7 +357,7 @@ At the end of the comparison matrix:
 
 ## Exit criteria
 
-The sprint is complete when the manual polish audit and discovery checkpoint
+The sprint is complete when the context-naive polish audit and discovery checkpoint
 are preserved; summary calibration and replayable diversified assignment are
 implemented and tested; the qualitative critic/polish decision is implemented
 or explicitly deferred; the Kevin matrix distinguishes upstream and downstream

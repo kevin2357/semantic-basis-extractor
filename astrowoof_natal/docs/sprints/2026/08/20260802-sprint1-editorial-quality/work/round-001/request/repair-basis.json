@@ -1,0 +1,875 @@
+{
+  "subject": {
+    "subject_id": "kevin",
+    "display_name": "Kevin",
+    "subject_type": "dog",
+    "gender": "male",
+    "pronouns": {
+      "subject": "he",
+      "object": "him",
+      "possessive_adjective": "his",
+      "possessive_pronoun": "his",
+      "reflexive": "himself"
+    },
+    "breed": "Golden Retriever",
+    "birth_date": "2020-10-07",
+    "birth_datetime": "2020-10-07T14:32:00-06:00",
+    "birth_latitude": 39.7392,
+    "birth_longitude": -104.9903,
+    "birth_location": "Denver, Colorado",
+    "birth_date_precision": "exact"
+  },
+  "cards": [
+    {
+      "index": 0,
+      "claim_id": "relationship_bd235e06b11e29af",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "behavioral_doorway",
+        "primary_companion_interface"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:5a6430c639047b23"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_2fe48d9251284733",
+            "placement_f2815d5a01cc7e75"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "claim_id": "relationship_4e0c5f290f0c410c",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Behavioral Doorway and Action and Play Drive are linked through drives face off, creating bond freedom axis tension.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "behavioral_doorway",
+        "chase_play_defense_drive",
+        "doghouse_6_training_routine_care"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:cc634365a4d949b7"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_2fe48d9251284733",
+            "placement_2600077993c79923"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "claim_id": "relationship_559bd87e20fcfbcc",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Action and Play Drive and Deep Trust Intensity are linked through trainable usable channel, creating developable coordination.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "chase_play_defense_drive",
+        "doghouse_6_training_routine_care",
+        "doghouse_8_deep_trust_vulnerability",
+        "primal_trust_intensity"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:f1dc08aa1b45f37b"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_2600077993c79923",
+            "placement_e4d48d4ede858bb5"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "claim_id": "relationship_97378bb1a752b883",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Primary Companion Interface and Action and Play Drive are linked through subsystems run together, creating inseparable dog impulse.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "chase_play_defense_drive",
+        "doghouse_6_training_routine_care",
+        "primary_companion_interface"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:1bc6607b58ba2104"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_f2815d5a01cc7e75",
+            "placement_2600077993c79923"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "claim_id": "placement_e862557046de33cb",
+      "claim_type": "placement",
+      "canonical_claim": "Comfort and Regulation operates in emotional sponge dream dog mode through body temperament presence.",
+      "categories": [
+        "big3_core_traits"
+      ],
+      "behavioral_domains": [
+        "attachment",
+        "body_state",
+        "comfort",
+        "doghouse_1_body_temperament_presence",
+        "safety"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Moon"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "claim_id": "relationship_6b3de5e16913e82a",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "safe_den_baseline",
+        "visible_pack_function"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:6cfb1322577779a5"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_85df75689829f069",
+            "placement_b2c332f5559c165f"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "claim_id": "relationship_bfc2c827df58870e",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Deep Trust Intensity and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "behavioral_doorway",
+        "doghouse_8_deep_trust_vulnerability",
+        "primal_trust_intensity"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:b94d4b3a0dce0a57"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_e4d48d4ede858bb5",
+            "placement_2fe48d9251284733"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "claim_id": "synthesis_553f9fdca867a3b5",
+      "claim_type": "synthesized_theme",
+      "canonical_claim": "Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.",
+      "categories": [
+        "synthesized_patterns"
+      ],
+      "behavioral_domains": [
+        "doghouse_6_training_routine_care",
+        "doghouse_8_deep_trust_vulnerability"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "synthesis_derivation",
+          "role": "derivation",
+          "source_refs": [],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "relationship_97378bb1a752b883",
+            "relationship_bd235e06b11e29af",
+            "relationship_d401f0b1a118fb52"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "claim_id": "placement_85df75689829f069",
+      "claim_type": "angle",
+      "canonical_claim": "Safe-Den Baseline operates in information sniffing mode through unspecified pattern.",
+      "categories": [
+        "angles"
+      ],
+      "behavioral_domains": [
+        "base_camp",
+        "home_base",
+        "private_safety"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:IC"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "claim_id": "synthesis_ca7411eac40647d2",
+      "claim_type": "synthesized_theme",
+      "canonical_claim": "Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.",
+      "categories": [
+        "synthesized_patterns"
+      ],
+      "behavioral_domains": [
+        "doghouse_6_training_routine_care"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "synthesis_derivation",
+          "role": "derivation",
+          "source_refs": [],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "relationship_4e0c5f290f0c410c",
+            "relationship_6b3de5e16913e82a",
+            "relationship_bd235e06b11e29af"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "claim_id": "relationship_5e63acfa56ece81d",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Training Rule Structure and Comfort and Regulation are linked through awkward system recalibration, creating odd behavior needing adjustment.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "comfort_safety_regulation",
+        "doghouse_1_body_temperament_presence",
+        "doghouse_8_deep_trust_vulnerability",
+        "training_rule_structure"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:ac5941a98786726d"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_df46a990db23a75d",
+            "placement_e862557046de33cb"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "claim_id": "synthesis_08631040add14d5b",
+      "claim_type": "synthesized_theme",
+      "canonical_claim": "Signals and Scent, Adventure Confidence, Deep Trust Intensity, Training Rule Structure and Pack Identity converge in deep trust vulnerability, concentrating several needs in the same life domain.",
+      "categories": [
+        "synthesized_patterns"
+      ],
+      "behavioral_domains": [
+        "doghouse_8_deep_trust_vulnerability"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "synthesis_derivation",
+          "role": "derivation",
+          "source_refs": [],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_1796adf72f899654",
+            "placement_2de9d192f7bc9a4c",
+            "placement_df46a990db23a75d",
+            "placement_e4d48d4ede858bb5",
+            "placement_fe632b84573cdc98"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "claim_id": "relationship_011406d66cbaab68",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Pack Identity and Adventure Confidence are linked through subsystems run together, creating inseparable dog impulse.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "adventure_optimism",
+        "doghouse_8_deep_trust_vulnerability",
+        "pack_role_identity"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:66a7db3573cd4e75"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_1796adf72f899654",
+            "placement_fe632b84573cdc98"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "claim_id": "placement_2600077993c79923",
+      "claim_type": "placement",
+      "canonical_claim": "Action and Play Drive operates in attention seeking display mode through training routine care.",
+      "categories": [
+        "core_traits"
+      ],
+      "behavioral_domains": [
+        "defense",
+        "doghouse_6_training_routine_care",
+        "immediate_action",
+        "play",
+        "pursuit"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Mars"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "claim_id": "relationship_96d0869a851b619d",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Atmosphere and Dream Permeability and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "atmosphere_dream_permeability",
+        "behavioral_doorway",
+        "doghouse_10_visible_pack_role"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:a5c54499d7566441"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_58dde150f872609a",
+            "placement_2fe48d9251284733"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "claim_id": "placement_f2815d5a01cc7e75",
+      "claim_type": "angle",
+      "canonical_claim": "Primary Companion Interface operates in attention seeking display mode through unspecified pattern.",
+      "categories": [
+        "angles"
+      ],
+      "behavioral_domains": [
+        "counterpart_style",
+        "favorite_human",
+        "one_to_one_bond"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:DSC"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "claim_id": "synthesis_3877e3c4d3704b2b",
+      "claim_type": "synthesized_theme",
+      "canonical_claim": "Adventure Confidence, Deep Trust Intensity, Training Rule Structure and Pack Identity repeatedly express social harmony maintenance mode, making that style a recurring part of the dog's behavior.",
+      "categories": [
+        "synthesized_patterns"
+      ],
+      "behavioral_domains": [
+        "doghouse_8_deep_trust_vulnerability"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "synthesis_derivation",
+          "role": "derivation",
+          "source_refs": [],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_1796adf72f899654",
+            "placement_df46a990db23a75d",
+            "placement_e4d48d4ede858bb5",
+            "placement_fe632b84573cdc98"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "claim_id": "relationship_9c454989bd05aa64",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Bonding Preference and Signals and Scent are linked through subtle adjacent nudge, creating minor behavioral nudge.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "bonding_preference",
+        "doghouse_8_deep_trust_vulnerability",
+        "doghouse_9_adventure_territory",
+        "scent_signal_interpretation"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:7525fdc873f49065"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_e08d946bcae8e677",
+            "placement_2de9d192f7bc9a4c"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "claim_id": "synthesis_707675a3ca907d5d",
+      "claim_type": "synthesized_theme",
+      "canonical_claim": "Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.",
+      "categories": [
+        "synthesized_patterns"
+      ],
+      "behavioral_domains": [
+        "doghouse_10_visible_pack_role",
+        "doghouse_6_training_routine_care"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "synthesis_derivation",
+          "role": "derivation",
+          "source_refs": [],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "relationship_380ae214d4a88980",
+            "relationship_ce916583b7c67f12"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 36,
+      "claim_id": "placement_26a344f555dc94dc",
+      "claim_type": "placement",
+      "canonical_claim": "Novelty and Surprise Response operates in obsessive investigation mode through adventure territory.",
+      "categories": [
+        "core_traits"
+      ],
+      "behavioral_domains": [
+        "doghouse_9_adventure_territory",
+        "independence",
+        "novelty",
+        "surprise",
+        "weirdness"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Uranus"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "claim_id": "relationship_c3f0e739cbea5734",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Behavioral Doorway and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "behavioral_doorway",
+        "doghouse_9_adventure_territory",
+        "novelty_zoomie_response"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:b180e4144e244658"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_2fe48d9251284733",
+            "placement_26a344f555dc94dc"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "claim_id": "relationship_caffe06d5a64022b",
+      "claim_type": "system_interaction",
+      "canonical_claim": "Novelty and Surprise Response and Primary Companion Interface are linked through drive conflict requires outlet, creating behavioral friction.",
+      "categories": [
+        "system_interactions"
+      ],
+      "behavioral_domains": [
+        "doghouse_9_adventure_territory",
+        "novelty_zoomie_response",
+        "primary_companion_interface"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_relationship",
+          "role": "primary",
+          "source_refs": [
+            "canonical:relationship:rel:aspect:4684a850af7f0594"
+          ],
+          "claim_ids": []
+        },
+        {
+          "kind": "selected_claim_dependencies",
+          "role": "derivation_support",
+          "source_refs": [],
+          "claim_ids": [
+            "placement_26a344f555dc94dc",
+            "placement_f2815d5a01cc7e75"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "claim_id": "placement_58dde150f872609a",
+      "claim_type": "placement",
+      "canonical_claim": "Atmosphere and Dream Permeability operates in adventure dog mode through visible pack role.",
+      "categories": [
+        "core_traits"
+      ],
+      "behavioral_domains": [
+        "doghouse_10_visible_pack_role",
+        "dreaming",
+        "emotional_atmosphere",
+        "scent_memory_haze"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Neptune"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "claim_id": "placement_e4d48d4ede858bb5",
+      "claim_type": "placement",
+      "canonical_claim": "Deep Trust Intensity operates in social harmony maintenance mode through deep trust vulnerability.",
+      "categories": [
+        "core_traits"
+      ],
+      "behavioral_domains": [
+        "deep_trust_fear",
+        "doghouse_8_deep_trust_vulnerability",
+        "hierarchy",
+        "primal_drive",
+        "territory"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Pluto"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 42,
+      "claim_id": "placement_1796adf72f899654",
+      "claim_type": "placement",
+      "canonical_claim": "Pack Identity operates in social harmony maintenance mode through deep trust vulnerability.",
+      "categories": [
+        "big3_core_traits"
+      ],
+      "behavioral_domains": [
+        "doghouse_8_deep_trust_vulnerability",
+        "pack_identity",
+        "vitality",
+        "whole_dog_coordination"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Sun"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "claim_id": "placement_af301822d66f8d0e",
+      "claim_type": "orientation",
+      "canonical_claim": "Training Development Vector operates in pack security focus mode through training routine care.",
+      "categories": [
+        "development"
+      ],
+      "behavioral_domains": [
+        "doghouse_6_training_routine_care",
+        "growth_direction",
+        "training_path"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:True_Node"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "claim_id": "placement_da8add1d453bf0b5",
+      "claim_type": "placement",
+      "canonical_claim": "Unexpected Encounter Trigger operates in patrol inspection mode through favorite human primary bond.",
+      "categories": [
+        "core_traits"
+      ],
+      "behavioral_domains": [
+        "doghouse_7_favorite_human_primary_bond",
+        "externally_evoked_behavior",
+        "surprise_meeting"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Vertex"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "claim_id": "placement_b2c332f5559c165f",
+      "claim_type": "angle",
+      "canonical_claim": "Visible Pack Function operates in adventure dog mode through unspecified pattern.",
+      "categories": [
+        "angles"
+      ],
+      "behavioral_domains": [
+        "couch_supervision",
+        "greeter_role",
+        "guardian_role",
+        "helper_role"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:MC"
+          ],
+          "claim_ids": []
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "claim_id": "placement_8cf9ef33127798ae",
+      "claim_type": "placement",
+      "canonical_claim": "Easy Reward Channel operates in pack security focus mode through play zoomies tricks.",
+      "categories": [
+        "development"
+      ],
+      "behavioral_domains": [
+        "comfort_resource",
+        "doghouse_5_play_zoomies_tricks",
+        "easy_success",
+        "treat_flow"
+      ],
+      "evidence_sources": [
+        {
+          "kind": "projected_object",
+          "role": "primary",
+          "source_refs": [
+            "canonical:object:natal:kevin:Part_of_Fortune"
+          ],
+          "claim_ids": []
+        }
+      ]
+    }
+  ]
+}

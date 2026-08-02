@@ -1,0 +1,52 @@
+{
+  "schema_version": "astrowoof.editorial_lint.v0.1",
+  "status": "warn",
+  "warning_count": 1,
+  "decks": [
+    {
+      "path": "astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\round-001\\request\\natal.kevin.cards.normalized-baseline.json",
+      "subject": "kevin",
+      "reader_facing_field_count": 1458,
+      "warning_count": 1,
+      "warnings": [
+        {
+          "code": "repeated_opening",
+          "message": "A three-word body opening is used six or more times.",
+          "details": {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you do",
+            "count": 6,
+            "claim_ids": [
+              "relationship_bd235e06b11e29af",
+              "relationship_559bd87e20fcfbcc",
+              "relationship_bfc2c827df58870e",
+              "placement_85df75689829f069",
+              "relationship_9c454989bd05aa64",
+              "relationship_caffe06d5a64022b"
+            ]
+          }
+        }
+      ],
+      "authoring_pass_acceptance": {
+        "status": "accept",
+        "deterministic": true,
+        "thresholds": {
+          "ngram_words": 12,
+          "ngram_min_distinct_claims": 3
+        },
+        "reader_facing_field_count": 1458,
+        "distinct_location_count": 54,
+        "exact_duplicate_group_count": 0,
+        "exact_duplicate_groups": [],
+        "repeated_ngram_group_count": 0,
+        "repeated_ngrams": [],
+        "suspicious_artifact_count": 0,
+        "suspicious_artifacts": [],
+        "dominant_opening_group_count": 0,
+        "dominant_openings": [],
+        "rejection_reasons": []
+      }
+    }
+  ],
+  "cross_subject_warnings": []
+}

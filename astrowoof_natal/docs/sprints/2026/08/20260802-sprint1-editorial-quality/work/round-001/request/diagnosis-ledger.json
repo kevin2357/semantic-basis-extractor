@@ -1,0 +1,1314 @@
+[
+  {
+    "field_path": "cards.0.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.0.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.0.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.0.card.no_astro.body.handler",
+    "observation": "The body is unusually long for this deck and risks explaining the mechanism after the reader already understands it.",
+    "objective": "Preserve the piercing behavioral insight and useful guidance while improving pace, selectivity, and natural prose.",
+    "reason_codes": [
+      "overexplained_body"
+    ]
+  },
+  {
+    "field_path": "cards.11.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.11.card.imperative_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.11.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.11.card.no_astro.body.hybrid",
+    "observation": "The deterministic validator flagged this field as stylistically suspect despite the deck passing structural validation.",
+    "objective": "Rewrite it as fluent, complete, natural human prose appropriate to the audience and claim.",
+    "reason_codes": [
+      "validator_prose_advisory"
+    ]
+  },
+  {
+    "field_path": "cards.12.card.no_astro.body.handler",
+    "observation": "The deterministic validator flagged this field as stylistically suspect despite the deck passing structural validation.",
+    "objective": "Rewrite it as fluent, complete, natural human prose appropriate to the audience and claim.",
+    "reason_codes": [
+      "validator_prose_advisory"
+    ]
+  },
+  {
+    "field_path": "cards.14.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.14.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.19.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.19.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.19.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.2.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.20.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.20.card.no_astro.body.handler",
+    "observation": "The body is unusually long for this deck and risks explaining the mechanism after the reader already understands it.",
+    "objective": "Preserve the piercing behavioral insight and useful guidance while improving pace, selectivity, and natural prose.",
+    "reason_codes": [
+      "overexplained_body"
+    ]
+  },
+  {
+    "field_path": "cards.21.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.24.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.29.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.29.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.3.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.32.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.33.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.34.card.no_astro.body.hybrid",
+    "observation": "The deterministic validator flagged this field as stylistically suspect despite the deck passing structural validation.",
+    "objective": "Rewrite it as fluent, complete, natural human prose appropriate to the audience and claim.",
+    "reason_codes": [
+      "validator_prose_advisory"
+    ]
+  },
+  {
+    "field_path": "cards.36.card.imperative_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.36.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.37.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.38.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.39.card.full_astro.body.handler",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.39.card.full_astro.body.hybrid",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.39.card.no_astro.body.handler",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.39.card.no_astro.body.hybrid",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.4.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.4.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.4.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.40.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.40.card.no_astro.body.handler",
+    "observation": "The body is unusually long for this deck and risks explaining the mechanism after the reader already understands it.",
+    "objective": "Preserve the piercing behavioral insight and useful guidance while improving pace, selectivity, and natural prose.",
+    "reason_codes": [
+      "overexplained_body"
+    ]
+  },
+  {
+    "field_path": "cards.40.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.42.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.44.card.funny_dog_quotes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.44.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.46.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.46.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.48.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.48.card.no_astro.headline.handler",
+    "observation": "The headline reads more like a label, instruction, or administrative summary than a memorable insight about this dog.",
+    "objective": "Write a concise, claim-specific headline with human editorial character; avoid merely renaming the claim.",
+    "reason_codes": [
+      "generic_or_administrative_headline"
+    ]
+  },
+  {
+    "field_path": "cards.49.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.49.card.full_astro.body.handler",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.49.card.full_astro.body.hybrid",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.49.card.no_astro.body.handler",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.49.card.no_astro.body.hybrid",
+    "observation": "This card's compound claim contains a meaningful interaction among multiple behavioral forces, but the prose risks collapsing it into one broad trait.",
+    "objective": "Preserve the relationship among the forces and show how the combination behaves in life; do not add astrology absent from the supplied evidence.",
+    "reason_codes": [
+      "compound_semantic_flattening"
+    ]
+  },
+  {
+    "field_path": "cards.5.card.no_astro.body.handler",
+    "observation": "The body is unusually long for this deck and risks explaining the mechanism after the reader already understands it.",
+    "objective": "Preserve the piercing behavioral insight and useful guidance while improving pace, selectivity, and natural prose.",
+    "reason_codes": [
+      "overexplained_body"
+    ]
+  },
+  {
+    "field_path": "cards.6.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.7.card.no_astro.body.direct_to_dog",
+    "observation": "This field belongs to a six-card cluster whose bodies begin with the same 'Kevin, you do...' architecture.",
+    "objective": "Give this claim its own natural direct-to-dog doorway and sentence movement while preserving meaning and affection.",
+    "reason_codes": [
+      "repeated_opening"
+    ]
+  },
+  {
+    "field_path": "cards.9.card.applicable_canine_jokes.0",
+    "observation": "Across the deck, comic material overuses office, policy, procedural, inspection, management, and contractual metaphors.",
+    "objective": "Find humor in this particular trait and lived dog behavior. Preserve an administrative joke only if it is genuinely the sharpest premise here; diversify the deck rather than performing word substitution.",
+    "reason_codes": [
+      "administrative_humor_cluster"
+    ]
+  },
+  {
+    "field_path": "cards.9.card.no_astro.body.handler",
+    "observation": "The body is unusually long for this deck and risks explaining the mechanism after the reader already understands it.",
+    "objective": "Preserve the piercing behavioral insight and useful guidance while improving pace, selectivity, and natural prose.",
+    "reason_codes": [
+      "overexplained_body"
+    ]
+  },
+  {
+    "field_path": "summary.card1.applicable_canine_jokes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.donts.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.donts.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.donts.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.dos.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.dos.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.dos.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.full_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.funny_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.imperative_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.light_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card1.no_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.applicable_canine_jokes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.donts.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.donts.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.donts.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.dos.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.dos.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.dos.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.full_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.funny_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.imperative_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.light_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card2.no_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.applicable_canine_jokes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.donts.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.donts.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.donts.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.dos.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.dos.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.dos.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.full_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.funny_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.imperative_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.light_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card3.no_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.applicable_canine_jokes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.donts.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.donts.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.donts.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.dos.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.dos.1",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.dos.2",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.full_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.funny_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.imperative_dog_quotes.0",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.light_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.body.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.body.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.body.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.headline.direct_to_dog",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.headline.handler",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  },
+  {
+    "field_path": "summary.card4.no_astro.headline.hybrid",
+    "observation": "The four summaries are the deck's front door and should work as a coordinated whole-chart portrait, not as generic recaps or lists of traits.",
+    "objective": "Make this field specific, memorable, warm, non-astrology-centric, faithful to its lens, and complementary rather than redundant with the other three summaries.",
+    "reason_codes": [
+      "summary_coherence"
+    ]
+  }
+]

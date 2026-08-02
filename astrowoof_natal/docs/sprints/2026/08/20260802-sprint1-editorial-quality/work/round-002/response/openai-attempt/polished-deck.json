@@ -1,0 +1,1644 @@
+{
+  "decisions": [
+    {
+      "field_path": "cards.0.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin does not say hello; he arrives sideways, adds a surprise flourish, and waits to see whether anyone appreciates the choreography.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Replaces the contractual-office premise with a lived greeting image while preserving Kevin's independent, performative entrance."
+    },
+    {
+      "field_path": "cards.0.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I made the greeting weird on purpose. Please enjoy the full experience.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the proud imagined voice without another workplace metaphor."
+    },
+    {
+      "field_path": "cards.0.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "Every hello does not need to begin the ordinary way, Kevin. You can arrive at an angle, inspect the situation, and invent your own greeting. When you finally look for your person, that is not surrendering your strangeness; it is sharing it. Give them the second act. Let them notice, answer, and join you without trying to turn your entrance into a standard one.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Varies the repeated direct-address opening while retaining the strong two-act image and the independence-to-connection movement."
+    },
+    {
+      "field_path": "cards.0.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin may not enter a relationship—or even a room—by the obvious route. He can make a sideways arrival, offer an unexpected pose, then check: did you see that? His independence is not the opposite of affection; it is his way into affection. Let him have the odd little entrance, then answer it warmly. A smile, verbal welcome, or brief invitation alongside you tells him originality did not cost him connection.",
+      "reason_codes": [
+        "overexplained_body",
+        "remove_true_overexplanation"
+      ],
+      "editorial_rationale": "Preserves the excellent behavioral insight and practical response while removing explanatory repetition."
+    },
+    {
+      "field_path": "cards.11.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin's quiet corner is not vacant; it is where he listens until the vacuum stops making suspicious promises.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the vacuum-specific humor while leaving behind reception-desk language."
+    },
+    {
+      "field_path": "cards.11.card.imperative_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“Please let me hear the whole house before I decide where I belong.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Makes the quote speakable and specific to Kevin's listening-post behavior."
+    },
+    {
+      "field_path": "cards.11.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "Your corner can be a listening post, Kevin. Take the time to sort footsteps, voices, and door sounds. You do not have to stand in the middle of every event to know what is happening. When you are ready, come out. No one needs to drag you into the story; the story can wait for your answer.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Offers a distinct opening while preserving privacy, observation, and voluntary re-entry."
+    },
+    {
+      "field_path": "cards.11.card.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin settles near the edge of the room while his person moves through the house. His ears keep the conversation going. The human learns not to call this absence and instead gives him a calm update: “Kitchen, then walk.” Kevin remains where he is for a moment, processing the bulletin. Later he joins the household as if he had chaired the meeting from the beginning.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "keep_voice_or_rhythm"
+      ],
+      "editorial_rationale": "The scene is fluent, complete, and unusually effective at showing the reciprocal listening ritual."
+    },
+    {
+      "field_path": "cards.12.card.no_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin can look as though he has volunteered for every job in the house. He greets, watches, joins the game, and keeps track of his people. Then, when the social temperature rises or the action becomes too directed, he may step away. Build an off-duty button into the day: a mat, a quiet interval, and a clear cue that nobody needs anything from him. When rest is part of the assignment, his public enthusiasm becomes easier to trust and easier to enjoy.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "keep_behavioral_grounding"
+      ],
+      "editorial_rationale": "The validator advisory is not substantively borne out; the prose is natural, practical, and sharply specific."
+    },
+    {
+      "field_path": "cards.14.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin can consider a sit very seriously, especially if the floor has not yet made a convincing emotional case.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves the comfort-versus-rule tension without committee language."
+    },
+    {
+      "field_path": "cards.14.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I understand the rule. My feelings about the floor remain complicated.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the comic mismatch between compliance and bodily comfort in a more dog-specific voice."
+    },
+    {
+      "field_path": "cards.19.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin remembers trust the way a nose remembers a trail: thoroughly, emotionally, and with no shortcut home.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Moves the joke from archive administration to scent, memory, and lasting relational meaning."
+    },
+    {
+      "field_path": "cards.19.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I remember the last version of this relationship. Please be recognizable.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Retains Kevin's serious trust voice without bureaucratic framing."
+    },
+    {
+      "field_path": "cards.19.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "For Kevin, Trust Reaches Everywhere",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Turns the administrative metaphor into a memorable statement of the whole-life trust theme."
+    },
+    {
+      "field_path": "cards.2.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin meets a new object with one question: should I sniff it carefully, or make it move immediately?",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the investigation-versus-action premise in physical dog behavior."
+    },
+    {
+      "field_path": "cards.20.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin believes every new path is a group activity, even when the group has not yet agreed to leave the sidewalk.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves the pack-led expedition joke without policy language."
+    },
+    {
+      "field_path": "cards.20.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin can meet a new path with the confidence of a dog already appointed trail guide. His nose works and his body brightens, but adventure is not an escape from his people; it is a way to bring them into a larger world. Notice the turn-back glance or check-in. Give him room to investigate while keeping a clear social thread: a familiar cue, shared direction, and praise when he reconnects. Exploration grows steadier when belonging travels with it.",
+      "reason_codes": [
+        "overexplained_body",
+        "remove_true_overexplanation"
+      ],
+      "editorial_rationale": "Keeps the key outward-and-back pattern while improving pace and avoiding duplicate explanation."
+    },
+    {
+      "field_path": "cards.21.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I did the sit beautifully. The brushing may now begin with admiration.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Retains Kevin's performative routine-care humor without departmental language."
+    },
+    {
+      "field_path": "cards.24.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin's Unusual Hello Can Become Clear",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Names the claim's practical promise rather than issuing an instruction."
+    },
+    {
+      "field_path": "cards.29.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin brings a toy, then another toy, just in case the first one failed to convey the importance of Kevin.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the comic attention bid in a concrete toy scene."
+    },
+    {
+      "field_path": "cards.29.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Makes Connection a Performance",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Gives the attention-seeking companion style more warmth and editorial character."
+    },
+    {
+      "field_path": "cards.3.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "Bring the whole bright burst, Kevin. You do not have to make yourself smaller to work with your person. Learn the pause, the cue, and the release as parts of the game. When you answer them, your person can trust your power—and you can trust that the fun has not vanished.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Retains the central training insight while varying the repeated opening architecture."
+    },
+    {
+      "field_path": "cards.32.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I have listened to everyone. A snack and a softer voice should settle this.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Replaces meeting language with Kevin's harmony-seeking, food-aware comic voice."
+    },
+    {
+      "field_path": "cards.33.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "A careful sniff can be the beginning of affection, Kevin. You do not have to rush into liking something because it is presented to you. Take a thoughtful pause and a few steps of your own choosing. Your curiosity is not delaying affection; it is helping affection land somewhere true.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves the gentle bond-and-investigation insight with a more distinctive entrance."
+    },
+    {
+      "field_path": "cards.34.card.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "The house goes quiet in that particular way. Kevin arrives with a toy, not as a therapist and not as a clown, but as Kevin: sensitive to the atmosphere and ready to make contact. His human gives him two minutes of tug, then a drink and a rest. The feeling has somewhere to go without becoming everybody's project.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "keep_voice_or_rhythm"
+      ],
+      "editorial_rationale": "The existing prose is fluent and unusually well calibrated: it avoids overclaiming while giving the interaction a usable shape."
+    },
+    {
+      "field_path": "cards.36.card.imperative_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“Let me sniff the suspicious shrub until it becomes ordinary.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the shrub-specific novelty premise while removing procedural language."
+    },
+    {
+      "field_path": "cards.36.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Treats Novelty Like Breaking News",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Retains the case-number wit but makes the headline a recognizable behavioral insight."
+    },
+    {
+      "field_path": "cards.37.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin's first impression is usually excellent, unless a surprise appears and his body starts improvising.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Retains the first-impression-versus-surprise friction without office-audit imagery."
+    },
+    {
+      "field_path": "cards.38.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "Look back, Kevin. Take the offered touch. Then go see what that strange sound was from a safe distance. You do not have to choose between being your own investigator and being close to your person. A good bond does not close the case for you; it gives you somewhere steady to return to.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Varies the opening while preserving the supported tension between independent investigation and relational check-in."
+    },
+    {
+      "field_path": "cards.39.card.full_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin's Neptune in Sagittarius occupies Doghouse 10, the visible pack-function part of his chart. Neptune describes porous attention, imagination, and sensitivity to atmosphere; Sagittarius carries that sensitivity outward toward roaming, horizon-minded experience. In public or group settings, Kevin may absorb the mood of an outing and help make it feel more spacious or adventurous. Pair room for scent, weather, and wonder with a clear navigation cue, so his atmospheric attentiveness remains connected to the group.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Separates Neptune's permeable absorption, Sagittarius's outward roaming style, and Doghouse 10's visible group role."
+    },
+    {
+      "field_path": "cards.39.card.full_astro.body.hybrid",
+      "action": "replace",
+      "replacement": "With Neptune in Sagittarius in Doghouse 10, Kevin's public role is not simply to wander: he absorbs an outing's atmosphere and turns it toward shared adventure. His human makes room for a pause at scent or sky, then offers a clear cue onward. Kevin contributes the feeling of the wider world; the human keeps the route legible. Together, an errand becomes an outing without becoming a drift apart.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Restores the interaction among atmosphere, adventure, and visible shared function."
+    },
+    {
+      "field_path": "cards.39.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin may take in a place with his whole presence. A breeze, shifting smell, or open path can draw him into soft, absorbed attention—and that attention can make the rest of the group slow down too. His gift is both sensory and social: he notices the mood of an outing, then makes it feel worth sharing. Let walks include unhurried sensory time, alongside a clear cue that gathers everyone back to the route.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Makes Kevin's place-absorption and group-facing contribution distinct rather than treating them as one broad trait."
+    },
+    {
+      "field_path": "cards.39.card.no_astro.body.hybrid",
+      "action": "replace",
+      "replacement": "The human thinks they are taking Kevin for a routine walk. Kevin finds a patch of wind, lifts his head, and turns the sidewalk briefly ceremonial. His person waits for the sniff, looks up too, then gives the cue to continue. Kevin has not merely delayed the errand; he has shared a feeling of the place, and the human has kept that feeling connected to the journey.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Preserves the memorable ceremonial sidewalk image while clarifying the shared-function mechanism."
+    },
+    {
+      "field_path": "cards.4.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin's toy basket is not storage; it is a pile of very persuasive reasons to come play with him.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves the toy-as-relationship-bid insight without proposal-archive framing."
+    },
+    {
+      "field_path": "cards.4.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I brought the toy, the enthusiasm, and a very good reason to look at me.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the speakable, performative dog voice while avoiding agenda language."
+    },
+    {
+      "field_path": "cards.4.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "When Kevin Brings a Toy, He Brings Connection",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Converts a clever label into a warm claim-specific insight."
+    },
+    {
+      "field_path": "cards.40.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin does not hold grudges; he remembers the mood, the timing, and where everyone was standing.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the lasting-memory premise without committee framing."
+    },
+    {
+      "field_path": "cards.40.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin does not hand out deep trust casually. Once he has chosen you, he may study your voice, follow a change in the room, or stay close when something feels different. The heart of that focus is relational: he wants the bond to feel steady and reciprocal. Keep important routines calm, give him a predictable place to settle, and invite rather than force contact. When he checks in, answer quietly and clearly. His intensity is the way he protects what love means to him.",
+      "reason_codes": [
+        "overexplained_body",
+        "remove_true_overexplanation"
+      ],
+      "editorial_rationale": "Retains the essential trust insight and practical guidance while tightening repetition."
+    },
+    {
+      "field_path": "cards.40.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Watches the Bonds That Matter",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Gives the trust-intensity claim more image and specificity than a generic statement of seriousness."
+    },
+    {
+      "field_path": "cards.42.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Comes Alive When He Can Help",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Replaces an instructional label with a warm, claim-specific insight about participation."
+    },
+    {
+      "field_path": "cards.44.card.funny_dog_quotes.0",
+      "action": "replace",
+      "replacement": "“I practiced the safe thing. I assume this earns a snack and a proud look.”",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the training-and-security premise in Kevin's imagined voice."
+    },
+    {
+      "field_path": "cards.44.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Grows Through the Routines That Hold Him",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Names the development-through-security insight rather than a broad abstraction."
+    },
+    {
+      "field_path": "cards.46.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin hears the doorbell and becomes briefly certain that the household requires a golden retriever-shaped lookout.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves alert visitor humor in a concrete household scene."
+    },
+    {
+      "field_path": "cards.46.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "The Doorbell Wakes Kevin's Watchful Side",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Keeps the trigger and the inspection response without administrative appointment language."
+    },
+    {
+      "field_path": "cards.48.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin believes every outing improves when a golden retriever announces it with enough enthusiasm.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Preserves his visible adventure role without executive-title language."
+    },
+    {
+      "field_path": "cards.48.card.no_astro.headline.handler",
+      "action": "replace",
+      "replacement": "Kevin Makes Every Departure an Occasion",
+      "reason_codes": [
+        "generic_or_administrative_headline",
+        "restore_specificity"
+      ],
+      "editorial_rationale": "Captures his public, adventure-facing pack role in a memorable behavioral line."
+    },
+    {
+      "field_path": "cards.49.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin's favorite game has room for one trusted person, one clear trick, and as many encore snacks as dignity permits.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the secure-play-and-reward premise without venue or policy framing."
+    },
+    {
+      "field_path": "cards.49.card.full_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin's Part of Fortune in Cancer in Doghouse 5 describes an easy reward channel through play, tricks, comfort resources, and secure pack connection. The Part of Fortune points to what eases effort and brings reward; Cancer makes emotional safety central; Doghouse 5 places that ease in joyful play and performance. A familiar person, clear game, and modest reward can therefore make willing effort come easily. Keep sessions brief, repeat successful patterns, and finish while the exchange still feels warm. Here, play organizes both pleasure and security.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Distinguishes the easy channel, Cancerian security, and Doghouse 5 play rather than flattening them into general reward sensitivity."
+    },
+    {
+      "field_path": "cards.49.card.full_astro.body.hybrid",
+      "action": "replace",
+      "replacement": "The Part of Fortune in Cancer in Doghouse 5 makes Kevin's easy reward channel a blend of safety, play, and small success. His person chooses a familiar game, gives a clear chance to win, and responds warmly; Kevin offers the trick again because the exchange feels secure before the reward arrives. Cancer supplies belonging, Doghouse 5 supplies play, and the easy channel lets delight travel between them.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Keeps all three semantic contributions active in the shared scene."
+    },
+    {
+      "field_path": "cards.49.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin often learns and plays most freely when three things arrive together: a familiar person, a clear little game, and a reward he can understand. The treat or praise matters, but so does the secure exchange around it. Watch for the moment his body brightens and his attention becomes willing. Repeat that pattern without overloading it. For Kevin, a small success shared with someone trusted may be richer than a more exciting but confusing prize.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Clarifies the interaction among familiarity, play success, reward, and security."
+    },
+    {
+      "field_path": "cards.49.card.no_astro.body.hybrid",
+      "action": "replace",
+      "replacement": "Kevin offers a trick; his person answers with a clear reward and warm recognition. The game stays short, familiar, and easy to understand. Soon he is not performing under pressure but playing inside a secure exchange, where success itself feels good before the snack arrives. The theater is small, the audience is trusted, and Kevin is delighted to offer another ticket.",
+      "reason_codes": [
+        "compound_semantic_flattening",
+        "preserve_compound_semantics"
+      ],
+      "editorial_rationale": "Preserves the lively theater image while showing how safety, play, and reward work together."
+    },
+    {
+      "field_path": "cards.5.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin may register a room's emotional tone before the people in it have named theirs. A hurried household, tense voice, or changed rhythm can show up in his posture, pace, or wish to stay close. He benefits from comfort that is tangible and repeatable: a quiet corner, familiar bed, calm voice, slow greeting, and predictable settling sequence. This is not a demand to organize the world around him. It is a reliable way back to calm.",
+      "reason_codes": [
+        "overexplained_body",
+        "remove_true_overexplanation"
+      ],
+      "editorial_rationale": "Keeps the vivid body-based sensitivity and useful settling guidance with a cleaner close."
+    },
+    {
+      "field_path": "cards.6.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin likes to inspect home before leaving, as if the couch might have important travel advice.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Turns the departure routine into a concrete den-to-adventure joke."
+    },
+    {
+      "field_path": "cards.7.card.no_astro.body.direct_to_dog",
+      "action": "replace",
+      "replacement": "Your unusual pause, careful approach, or quiet decision can carry a great deal, Kevin. You do not need a grand display to show that you understand a person. Let trust guide your first move. The people who know you will learn to read the little signals without forcing them to become loud ones.",
+      "reason_codes": [
+        "repeated_opening",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Varies the repeated opening while preserving dignity for Kevin's small, trust-informed gestures."
+    },
+    {
+      "field_path": "cards.9.card.applicable_canine_jokes.0",
+      "action": "replace",
+      "replacement": "Kevin's favorite human must be ready to applaud, throw the toy, approve the route, and remain available for the return trip.",
+      "reason_codes": [
+        "administrative_humor_cluster",
+        "differentiate_voice"
+      ],
+      "editorial_rationale": "Keeps the multiple-companion-roles humor without corporate title language."
+    },
+    {
+      "field_path": "cards.9.card.no_astro.body.handler",
+      "action": "replace",
+      "replacement": "Kevin's relationship with a primary companion may organize far more than cuddling. It appears in the unusual entrance he wants noticed, the toy or game he initiates, the burst of action he wants witnessed, and the trust that lets him return to a shared cue. He may seem independent one minute and intensely companion-oriented the next. The pattern is not contradiction: his bond gives individuality an audience, energy a partner, and exploration a return address. Build it with attention, purposeful play, reliable practice, and room for Kevin's own moves.",
+      "reason_codes": [
+        "overexplained_body",
+        "remove_true_overexplanation"
+      ],
+      "editorial_rationale": "Retains the card's structural insight while reducing the surrounding explanation."
+    },
+    {
+      "field_path": "summary.card1.applicable_canine_jokes.0",
+      "action": "keep",
+      "replacement": "Kevin does not make an entrance; he releases a limited-edition version of himself.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "This is concise, memorable, and perfectly fitted to the identity lens."
+    },
+    {
+      "field_path": "summary.card1.donts.0",
+      "action": "keep",
+      "replacement": "Do not treat every unconventional response as defiance or every flourish as a demand for unlimited attention.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Precisely balances Kevin's individuality with practical limits."
+    },
+    {
+      "field_path": "summary.card1.donts.1",
+      "action": "keep",
+      "replacement": "Do not force instant sociability when a short inspection would help him orient.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Offers identity-specific handling without duplicating the growth lens."
+    },
+    {
+      "field_path": "summary.card1.donts.2",
+      "action": "keep",
+      "replacement": "Do not make closeness depend on Kevin abandoning his individuality.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "This is the summary's central relational thesis in a clear, humane line."
+    },
+    {
+      "field_path": "summary.card1.dos.0",
+      "action": "keep",
+      "replacement": "Acknowledge Kevin's unusual first move, then give him one clear, low-drama way to rejoin the household plan.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong, specific support for the identity lens."
+    },
+    {
+      "field_path": "summary.card1.dos.1",
+      "action": "keep",
+      "replacement": "Use brief greeting rituals, choice-based cues, and shared play so independence has a cooperative outlet.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Maintains the freedom-and-connection synthesis."
+    },
+    {
+      "field_path": "summary.card1.dos.2",
+      "action": "keep",
+      "replacement": "Reward the return to connection—not only the spectacular entrance that preceded it.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Memorable and behaviorally useful."
+    },
+    {
+      "field_path": "summary.card1.full_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your exact Aquarius Ascendant opposite Leo Descendant says that meeting the world and meeting a companion are never entirely separate jobs. You may arrive through the side door of an idea, a surprise, or an independent inspection, yet your Leo relationship signature wants the close encounter to feel alive. Mars beside that Descendant gives your greetings paws and momentum. Pluto's supportive Libra links help you turn intensity into trust when the exchange is fair. Keep your originality; practice the return.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A rich, evidence-faithful astrological rendering of the distinct identity thesis."
+    },
+    {
+      "field_path": "summary.card1.full_astro.body.handler",
+      "action": "keep",
+      "replacement": "The exact Aquarius Ascendant–Leo Descendant opposition places Kevin's visible approach and one-to-one bond across a strong freedom-and-connection axis. His Aquarius Ascendant can meet the world through pattern-breaking, independent responses; the Leo Descendant seeks a close counterpart who makes interaction lively and personal. Mars in Leo sits close to the Descendant, so action and display readily enter relationship. Pluto in Libra trines the Ascendant and sextiles the Descendant, adding a quietly intense capacity to deepen trust through fair, practiced exchange. In daily life, let the unusual first move exist, then channel the encounter into a clear reciprocal ritual.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Preserves a particularly successful, whole-chart identity synthesis."
+    },
+    {
+      "field_path": "summary.card1.full_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's Aquarius Ascendant and Leo Descendant oppose at an exact degree, while Mars joins the Leo side: his independent first response and his expressive companion instinct can activate together. Pluto in Libra supports both ends by trine to the Ascendant and sextile to the Descendant, making trust a workable bridge rather than an abstract ideal. The human receives the surprising entrance, names the next cue, and joins the play. Kevin learns that a bond can contain a detour without losing its direction.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The hybrid version has a distinct reciprocal action and retains the full claim."
+    },
+    {
+      "field_path": "summary.card1.full_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Kevin, Be Original—and Come Back for the Applause",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Memorable identity headline."
+    },
+    {
+      "field_path": "summary.card1.full_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Kevin's Chart Makes Room for a Dramatic Original",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear, warm, and distinct from the other summary lenses."
+    },
+    {
+      "field_path": "summary.card1.full_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "The Dog Who Brings the Unexpected Move to a Two-Way Bond",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Captures the relationship interaction without flattening it."
+    },
+    {
+      "field_path": "summary.card1.funny_dog_quotes.0",
+      "action": "keep",
+      "replacement": "“I have entered the room. Please adjust the room to acknowledge this development.”",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The comic voice suits the identity introduction."
+    },
+    {
+      "field_path": "summary.card1.imperative_dog_quotes.0",
+      "action": "keep",
+      "replacement": "Bring your strange idea, then bring it back to the team.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Compactly states the summary's main developmental invitation."
+    },
+    {
+      "field_path": "summary.card1.light_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Aquarius rising side may take the unexpected path, but your Leo relationship side wants a real exchange at the end of it. You can be original without disappearing into the detour. Explore the odd detail, then offer your person the grand thing you were really carrying: attention, affection, or an invitation to play.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong light-astrology translation with a direct-to-Kevin purpose."
+    },
+    {
+      "field_path": "summary.card1.light_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin's Aquarius Ascendant gives his first response an unconventional, pattern-breaking quality, while his Leo Descendant makes one-to-one connection vivid and expressive. That combination can look like a dog who approaches differently from expectation but wants the resulting encounter to matter. Let him inspect or improvise briefly, then invite a recognizable social action: eye contact, a greeting cue, or a toy exchange. Structure protects the bond without making the bond dull.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear translation and practical implication."
+    },
+    {
+      "field_path": "summary.card1.light_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Aquarius on Kevin's Ascendant meets Leo on the Descendant as a recognizable social rhythm: he brings an unconventional first move, and the close companion answers with warmth and visibility. The handler can honor the first move while shaping the next one. A pause, a cue, and a shared game turn difference into dialogue rather than friction.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A successful audience-specific sibling."
+    },
+    {
+      "field_path": "summary.card1.light_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Strange Little Route Still Leads to Someone",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Warm and specific."
+    },
+    {
+      "field_path": "summary.card1.light_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Aquarius at the Door, Leo in the Greeting",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear astrology-density headline."
+    },
+    {
+      "field_path": "summary.card1.light_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "The Unusual Greeting Becomes a Conversation",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Distinctly hybrid and memorable."
+    },
+    {
+      "field_path": "summary.card1.no_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "You do not merely enter a moment; you announce your interpretation of it. Sometimes that means a grand hello, sometimes a thoughtful pause, sometimes one beautifully unnecessary detour before you return to your person. You are allowed to be unusual. You are also capable of making your unusualness useful: notice, choose, and then come back when your companion asks. The best version of your brightness is not silence. It is a self-possessed dog who can make an entrance and still join the plan.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A literary peak that introduces Kevin's identity with recognition and dignity."
+    },
+    {
+      "field_path": "summary.card1.no_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin has the social warmth to make an entrance and the individuality to refuse a predictable one. He may approach a room as though he has been invited to improve its atmosphere, then pause to investigate the arrangement before committing. With a favorite person, his attention becomes bright and theatrical: a look, a toy, a full-bodied presentation of the latest important development. The useful response is neither to flatten his odd moments nor to reward every interruption. Notice the intention underneath them. Give him a clear welcome, then offer a simple choice—settle beside you, bring the toy, or follow a known cue. He learns that being distinctive and being cooperative can occupy the same room.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "This is an excellent, behaviorally grounded introduction to the dog."
+    },
+    {
+      "field_path": "summary.card1.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin comes toward the household with a flourish, while his person is quietly trying to understand which version of the moment he has discovered. He may offer a greeting, a pause, and a sudden sideways idea in one sequence. When the human answers with calm interest instead of a tug-of-war, Kevin has somewhere to place his independence. A cue gives the scene a boundary; a playful acknowledgment gives it dignity. They are not choosing between freedom and closeness. They are practicing a relationship in which Kevin can bring his own angle and still return to the shared center.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Distinct hybrid scene that completes the first summary's central argument."
+    },
+    {
+      "field_path": "summary.card1.no_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Kevin, Your Entrance Has a Point of View",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Highly specific identity headline."
+    },
+    {
+      "field_path": "summary.card1.no_astro.headline.handler",
+      "action": "keep",
+      "replacement": "The Golden Retriever Who Arrives as Himself",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A warm, memorable whole-dog introduction."
+    },
+    {
+      "field_path": "summary.card1.no_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "A Shared Room, Two Ways of Entering It",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Captures the reciprocal lens."
+    },
+    {
+      "field_path": "summary.card2.applicable_canine_jokes.0",
+      "action": "keep",
+      "replacement": "Kevin's daily planner has three appointments: Adventure, Important Sniff, and Recovery from Adventure.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A memorable daily-rhythm joke distinct from the other summaries."
+    },
+    {
+      "field_path": "summary.card2.donts.0",
+      "action": "keep",
+      "replacement": "Do not assume more stimulation will automatically produce better settling.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear daily-rhythm guidance."
+    },
+    {
+      "field_path": "summary.card2.donts.1",
+      "action": "keep",
+      "replacement": "Do not erase every interesting detour in the name of efficiency.",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Preserves Kevin's meaningful curiosity."
+    },
+    {
+      "field_path": "summary.card2.donts.2",
+      "action": "keep",
+      "replacement": "Do not judge the whole rhythm by one energetic episode.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Supports the summary's sequence-based argument."
+    },
+    {
+      "field_path": "summary.card2.dos.0",
+      "action": "keep",
+      "replacement": "Give active periods a clear finish with water, a settle cue, and a familiar resting place.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Concrete and practical."
+    },
+    {
+      "field_path": "summary.card2.dos.1",
+      "action": "keep",
+      "replacement": "Vary walks and games while preserving a few dependable transition rituals.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Balances novelty and reliable transitions."
+    },
+    {
+      "field_path": "summary.card2.dos.2",
+      "action": "keep",
+      "replacement": "Include both social participation and quiet sensory decompression in the daily plan.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Completes the daily-life support plan."
+    },
+    {
+      "field_path": "summary.card2.full_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Neptune in Sagittarius gives you a nose for the feeling of the far-off place, while Jupiter in Libra makes possibility sweeter when it is shared. Your Pisces Moon in the first house also lets the body's atmosphere matter: too much stimulation can linger. Mars in Leo in the sixth gives your energy a useful daily stage. Explore, perform, investigate—and then accept the ritual that tells your whole self the day has landed.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A strong full-astrology daily-rhythm synthesis."
+    },
+    {
+      "field_path": "summary.card2.full_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin's Neptune in Sagittarius in Doghouse 9 colors daily experience with atmosphere, imagination, and adventure territory; Jupiter in Libra in Doghouse 8 adds confidence and appetite for possibility within deep relational trust. The Sun, Mercury, Saturn, and Pluto also gather in Libra and Scorpio around Doghouse 8 themes, so exploration is not detached from belonging. The Moon in Pisces in Doghouse 1 makes body and mood permeable, while Mars in Leo in Doghouse 6 channels energy through routine care and training. Plan his life as a sequence of meaningful departures and dependable returns.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The complete chart synthesis supports a daily-life thesis distinct from identity, needs, and growth."
+    },
+    {
+      "field_path": "summary.card2.full_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's Doghouse 9 Neptune reaches toward adventure, his Doghouse 8 Libra cluster makes trust and shared experience central, and Mars in Leo in Doghouse 6 wants energy translated into routine and care. The person who offers a steady ending is not shrinking his world; that ending lets him use the world well. Their day becomes an orbit: outward curiosity held by inward familiarity.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The orbit image elegantly unifies the summary's daily-rhythm logic."
+    },
+    {
+      "field_path": "summary.card2.full_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Kevin, Your Horizon Needs a Home Base",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong daily-life thesis."
+    },
+    {
+      "field_path": "summary.card2.full_astro.headline.handler",
+      "action": "keep",
+      "replacement": "The Chart of a Dog Who Needs Both Horizon and Home",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear contrast and chart-specific framing."
+    },
+    {
+      "field_path": "summary.card2.full_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "A Dog's Daily Orbit: Venture, Participate, Return",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Distinct and memorable."
+    },
+    {
+      "field_path": "summary.card2.funny_dog_quotes.0",
+      "action": "keep",
+      "replacement": "“The perimeter has changed by approximately one leaf. I will be filing a report.”",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The comic observational voice supports the daily-inspection theme."
+    },
+    {
+      "field_path": "summary.card2.imperative_dog_quotes.0",
+      "action": "keep",
+      "replacement": "Inspect the world, then let the world be quiet for a while.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A succinct rhythm prescription for Kevin."
+    },
+    {
+      "field_path": "summary.card2.light_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Neptune in Sagittarius notices the mood and the far edge of the outing; Jupiter in Libra makes the best discoveries better when someone shares them. Go wide, Kevin, but remember the little ritual that brings you home. A drink, a pause, and your person's familiar voice are not interruptions to adventure. They are its safe punctuation.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The safe-punctuation image is both useful and memorable."
+    },
+    {
+      "field_path": "summary.card2.light_astro.body.handler",
+      "action": "keep",
+      "replacement": "Neptune in Sagittarius gives Kevin an atmosphere-sensitive, adventure-facing way of moving through life, while Jupiter in Libra enlarges his appetite for shared possibility. He may absorb the feeling of a walk or gathering and become especially animated when exploration includes companionship. Make transitions explicit: announce the end of play, offer a familiar settling station, and keep adventures varied but not chaotic. His daily life flourishes when wonder has a reliable landing.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong light-astrology explanation with concrete routine implications."
+    },
+    {
+      "field_path": "summary.card2.light_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Neptune in Sagittarius draws Kevin toward atmosphere and possibility, while Jupiter in Libra makes shared experience expansive. His handler can let a walk feel exploratory without letting its ending become vague. A consistent return ritual translates the adventure into rest, allowing both partners to enjoy the outing rather than merely survive its aftermath.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A differentiated hybrid application of the daily-rhythm thesis."
+    },
+    {
+      "field_path": "summary.card2.light_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "You Explore the Feeling of the Whole Day",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Distinctive daily-life framing."
+    },
+    {
+      "field_path": "summary.card2.light_astro.headline.handler",
+      "action": "keep",
+      "replacement": "A Sagittarius Neptune Day with a Libra-Jupiter Welcome",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Useful light-astrology headline."
+    },
+    {
+      "field_path": "summary.card2.light_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "Adventure, Then the Familiar Door",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Elegant daily-rhythm phrase."
+    },
+    {
+      "field_path": "summary.card2.no_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "You like to know what is happening, take part in it, and inspect at least one detail nobody else thought important. Then you need the familiar landing place: the person, corner, or quiet spell that tells your body the expedition is over. Your best days are not endless motion. They are good loops—out, in, play, settle, repeat when the moment truly calls for it.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A concise and recognizable daily portrait."
+    },
+    {
+      "field_path": "summary.card2.no_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin tends to live outward and back again. He checks the household, notices what has changed, seeks a person or a game, follows the interesting thread, and eventually needs a familiar place where his body can come down. The sequence may look like restlessness if each event is viewed alone. Viewed together, it is a workable rhythm of participation. Build days with a beginning and an ending to activity: a sniffing walk followed by water and quiet, a short training game followed by a settle, a social burst followed by room to decompress. He does not need every minute filled. He needs his energy to have somewhere meaningful to go.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "This does the summary's daily-life work without overlapping the support or growth summaries."
+    },
+    {
+      "field_path": "summary.card2.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's person may think the walk ended at the gate, but Kevin's version includes the final sniff, the water, the household check, and the settling ritual. The human supplies the dependable return; Kevin supplies the alert participation that makes an ordinary day feel inhabited. When both honor the whole sequence, activity stops being a negotiation. It becomes a shared rhythm with room for curiosity and quiet.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "An excellent shared scene that distinguishes daily rhythm from training."
+    },
+    {
+      "field_path": "summary.card2.no_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Day Has a Return Address",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Central daily-rhythm image."
+    },
+    {
+      "field_path": "summary.card2.no_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Kevin's Day Is a Loop with Paws on It",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Warm and memorable."
+    },
+    {
+      "field_path": "summary.card2.no_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "The Expedition Ends Where the Family Is",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Captures the reciprocal return."
+    },
+    {
+      "field_path": "summary.card3.applicable_canine_jokes.0",
+      "action": "keep",
+      "replacement": "Kevin's emotional support plan has a policy manual, a review board, and one highly qualified golden retriever.",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The humorous support-plan framing is distinct and suited to the needs lens."
+    },
+    {
+      "field_path": "summary.card3.donts.0",
+      "action": "keep",
+      "replacement": "Do not punish the feeling you want him to learn to regulate.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A humane, precise support principle."
+    },
+    {
+      "field_path": "summary.card3.donts.1",
+      "action": "keep",
+      "replacement": "Do not pile on repeated commands when one clear cue and a pause would communicate more.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Concrete and aligned with Kevin's sensitivity."
+    },
+    {
+      "field_path": "summary.card3.donts.2",
+      "action": "keep",
+      "replacement": "Do not mistake a cheerful appearance for proof that he needs no decompression.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Adds needed nuance to support guidance."
+    },
+    {
+      "field_path": "summary.card3.dos.0",
+      "action": "keep",
+      "replacement": "Teach one or two settling sequences when Kevin is calm, then use them during manageable activation.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear, actionable support."
+    },
+    {
+      "field_path": "summary.card3.dos.1",
+      "action": "keep",
+      "replacement": "Give intense attention a constructive outlet such as searching, carrying, shaping, or a short practiced routine.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Offers multiple supported outlet forms."
+    },
+    {
+      "field_path": "summary.card3.dos.2",
+      "action": "keep",
+      "replacement": "Keep household cues and boundaries predictable, while pairing effort with genuine recovery time.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Balances structure with recovery."
+    },
+    {
+      "field_path": "summary.card3.full_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Libra-and-Scorpio Doghouse 8 emphasis gives trust weight: you notice signals, fairness, limits, possibility, and the depth beneath an exchange. Your Pisces Moon in Doghouse 1 may feel the atmosphere before anyone explains it. Mars in Leo in Doghouse 6 gives you a way forward—practice a sequence, perform a useful job, and let the body settle afterward. You do not need to become less intense. You need a trustworthy shape for intensity.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The full-astrology version clearly supports the needs lens."
+    },
+    {
+      "field_path": "summary.card3.full_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin's Sun, Mercury, Saturn, Jupiter, and Pluto cluster across Libra and Scorpio Doghouse 8 themes: identity, signals, rules, confidence, and deep trust all converge where vulnerability and shared resources matter. His Pisces Moon in Doghouse 1 makes comfort and atmosphere part of his bodily presentation. Mars in Leo in Doghouse 6 can turn activation into trainable routine, while the chart's repeated trainable channels connect play and trust. Use brief, consistent rules, meaningful outlets, and deliberate decompression; intensity becomes coordination when the bridge is practiced.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong whole-chart support synthesis distinct from daily rhythm and growth."
+    },
+    {
+      "field_path": "summary.card3.full_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's Doghouse 8 cluster makes dependable trust a central need, and Saturn there asks for rules that endure. His Pisces Moon in Doghouse 1 means that emotional climate can show up as body state; Mars in Leo in Doghouse 6 offers a practical route through training and care. The handler gives one fair cue and waits without flooding the moment. Kevin performs, receives the release, and discovers that structure can carry him rather than contain him.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The carry-versus-contain close is a valuable and memorable support insight."
+    },
+    {
+      "field_path": "summary.card3.full_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Kevin, Let Trust Be a Skill You Can Use",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Directly expresses the needs lens."
+    },
+    {
+      "field_path": "summary.card3.full_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Build Kevin a Bridge from Intensity to Ease",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong handling thesis."
+    },
+    {
+      "field_path": "summary.card3.full_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "The Human Holds the Rule; Kevin Learns the Release",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear reciprocal support structure."
+    },
+    {
+      "field_path": "summary.card3.funny_dog_quotes.0",
+      "action": "keep",
+      "replacement": "“I am calm. I have merely convened an emergency subcommittee about the calm.”",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A memorable comic rendering of Kevin's intense self-monitoring."
+    },
+    {
+      "field_path": "summary.card3.imperative_dog_quotes.0",
+      "action": "keep",
+      "replacement": "Use the job, take the breath, and let the quiet count as success.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A compact statement of the support sequence."
+    },
+    {
+      "field_path": "summary.card3.light_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Pisces Moon notices more than people always realize, and your Libra Saturn wants the rules of closeness to be fair. When the room feels large, take the small sequence: hear the cue, do the job, receive the calm. Trust does not require you to absorb everybody's mood. You can return to your own body and let a dependable routine hold the edges.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong direct-to-dog support language with a clear light-astrology basis."
+    },
+    {
+      "field_path": "summary.card3.light_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin's strong Libra Doghouse 8 emphasis makes trust, fairness, and shared regulation central, while his Pisces Moon in Doghouse 1 suggests that emotional atmosphere can register quickly in his body and visible behavior. Saturn in Libra adds a need for durable, humane structure rather than arbitrary correction. Use the same cue and consequence across ordinary situations, pair effort with recovery, and lower household intensity when he is already full of feeling.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Excellent practical translation of the support mechanism."
+    },
+    {
+      "field_path": "summary.card3.light_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's Doghouse 8 Libra concentration joins trust with rules, while the Pisces Moon in his first house makes the emotional climate physically consequential. A handler who keeps instructions short and consequences consistent gives him something sturdier than reassurance alone. Over time, the dog supplies effort and the human supplies fair repetition; together they make regulation practicable.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Distinct hybrid support passage with a useful reciprocal division of labor."
+    },
+    {
+      "field_path": "summary.card3.light_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Sensitive Body Can Learn a Steady Shape",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Warm and precise."
+    },
+    {
+      "field_path": "summary.card3.light_astro.headline.handler",
+      "action": "keep",
+      "replacement": "When Libra Trust Meets a Pisces Body",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear light-astrology framing."
+    },
+    {
+      "field_path": "summary.card3.light_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "Fairness Turns Intensity into Cooperation",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Captures the relational support thesis."
+    },
+    {
+      "field_path": "summary.card3.no_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "When a thing matters to you, it matters with your entire golden body. That is a strength, but it can make a small uncertainty feel like a meeting requiring immediate action. Your people can help by making the next step plain and giving your energy a proper assignment. Carry, search, practice, then rest. You are not being asked to care less; you are learning how to carry caring without letting it carry you away.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A highly recognizable direct-to-dog description of Kevin's support needs."
+    },
+    {
+      "field_path": "summary.card3.no_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin needs a dependable bridge between impulse and calm. When something catches him—an exciting game, a change in the room, a compelling scent, a person's attention—he may put his whole self behind it. That intensity is useful energy, but it needs edges. Keep cues consistent, practice them when he is already calm, and give the energy a job: carrying a toy, searching, learning a short sequence, or moving through a sniffing exercise. Then protect the landing. A quiet mat, a predictable voice, and a pause without demands teach him that regulation is something he can do, not something a human must impose.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "This is an excellent needs-focused miniature essay with specific support."
+    },
+    {
+      "field_path": "summary.card3.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin brings intensity; his person brings the shape of the next moment. If the human responds with scattered corrections, Kevin has more information but less clarity. If the human offers one familiar cue, a manageable outlet, and time to settle, the exchange becomes cooperative. His trust grows through repeated evidence that rules are not traps and that quiet does not mean disconnection.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A concise, distinct hybrid explanation of the support relationship."
+    },
+    {
+      "field_path": "summary.card3.no_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "You Do Not Have to Solve Every Feeling at Full Volume",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Memorable direct support headline."
+    },
+    {
+      "field_path": "summary.card3.no_astro.headline.handler",
+      "action": "keep",
+      "replacement": "What Kevin Is Asking For Beneath the Big Feeling",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Useful handler-oriented framing."
+    },
+    {
+      "field_path": "summary.card3.no_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "A Clear Rule Can Be a Kind of Reassurance",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Captures the relational mechanism with warmth."
+    },
+    {
+      "field_path": "summary.card4.applicable_canine_jokes.0",
+      "action": "keep",
+      "replacement": "Kevin's research department has no grant funding, no closing hours, and a strict policy against leaving suspicious leaves unexamined.",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A distinct novelty-and-investigation joke suited to the growth lens."
+    },
+    {
+      "field_path": "summary.card4.donts.0",
+      "action": "keep",
+      "replacement": "Do not flood him with novelty to test whether he can cope.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear growth-focused caution."
+    },
+    {
+      "field_path": "summary.card4.donts.1",
+      "action": "keep",
+      "replacement": "Do not demand instant composure from a dog whose first response is designed to notice change.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Protects Kevin's curiosity while naming the growth edge."
+    },
+    {
+      "field_path": "summary.card4.donts.2",
+      "action": "keep",
+      "replacement": "Do not confuse successful growth with the disappearance of his curiosity.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "An important and memorable developmental distinction."
+    },
+    {
+      "field_path": "summary.card4.dos.0",
+      "action": "keep",
+      "replacement": "Introduce novelty gradually and pair it with a behavior Kevin already knows well.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Concrete novelty-to-skill bridge."
+    },
+    {
+      "field_path": "summary.card4.dos.1",
+      "action": "keep",
+      "replacement": "Mark the moment he reorients to you before inviting investigation, play, or movement.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Specific and behaviorally useful."
+    },
+    {
+      "field_path": "summary.card4.dos.2",
+      "action": "keep",
+      "replacement": "Repeat the same recovery sequence across places so the skill generalizes without making every setting identical.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong developmental guidance."
+    },
+    {
+      "field_path": "summary.card4.full_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Scorpio Uranus notices what is hidden, strange, or newly changed, and your tight trine to the Cancer North Node says that discovery can help you grow toward secure, useful participation. Because Uranus also squares your Aquarius Ascendant and Leo Descendant, the surprise may arrive loudly in your body and your bonds. You can make it a strength: notice, look back, pause, do the practiced thing, and then investigate.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "The astrology supports a clear developmental sequence."
+    },
+    {
+      "field_path": "summary.card4.full_astro.body.handler",
+      "action": "keep",
+      "replacement": "Uranus in Scorpio trines the North Node in Cancer with a tight orb, linking novelty, independence, and disruption to a growth direction organized around emotional security and useful care. The North Node in Doghouse 6 favors practice, routine, and serviceable skill. Uranus also squares the Aquarius Ascendant and Leo Descendant, so surprise can rub against both first response and close relationship. Train the bridge explicitly: notice the change, orient to the handler, pause, perform a known behavior, then explore. This preserves the spark while building choice.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong, evidence-rich growth synthesis with precise practical implication."
+    },
+    {
+      "field_path": "summary.card4.full_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's tight Uranus–North Node trine makes novelty a plausible route into development, but the Uranus squares to both relationship angles explain why a new event can disrupt the social scene. The human's job is not to win against the disruption. It is to offer a known second act—orientation, pause, task, release. Kevin brings discovery; the handler supplies continuity; practice turns the collision into learning.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A compelling hybrid growth thesis with an excellent second-act image."
+    },
+    {
+      "field_path": "summary.card4.full_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Kevin, Your First Idea Is Not Your Final Answer",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Excellent developmental headline."
+    },
+    {
+      "field_path": "summary.card4.full_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Let Kevin's Disruption Become a Developmental Door",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clearly names the growth reframe."
+    },
+    {
+      "field_path": "summary.card4.full_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "The Handler Gives Surprise a Useful Second Act",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Memorable and relationally precise."
+    },
+    {
+      "field_path": "summary.card4.funny_dog_quotes.0",
+      "action": "keep",
+      "replacement": "“Excellent news: the mysterious object has been promoted to an entirely new category of sport.”",
+      "reason_codes": [
+        "keep_voice_or_rhythm",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A playful, Kevin-specific novelty joke."
+    },
+    {
+      "field_path": "summary.card4.imperative_dog_quotes.0",
+      "action": "keep",
+      "replacement": "Notice the surprise, find your person, and choose the next chapter.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A concise developmental sequence."
+    },
+    {
+      "field_path": "summary.card4.light_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "Uranus in Scorpio gives you a powerful nose for the unusual, while your Cancer North Node asks you to grow through dependable care and belonging. The new thing may start the lesson; the familiar cue finishes it. Notice, turn toward your person, and let the next useful action be part of your adventure.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Strong light-astrology growth rendering."
+    },
+    {
+      "field_path": "summary.card4.light_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin's Uranus in Scorpio trine North Node in Cancer suggests that unconventional reactions can become part of his developmental route when they are brought back toward security and relational learning. His North Node in Doghouse 6 favors growth through practiced care and useful routines. Let novelty appear in small doses, mark the pause, and reward a chosen response before allowing further exploration.",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A clear, distinct growth recommendation."
+    },
+    {
+      "field_path": "summary.card4.light_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin's Uranus–North Node trine supports a developmental pattern in which surprise can open learning rather than block it. The handler does not need to erase the unusual response. By pairing a new stimulus with a rehearsed pause and a security-building task, the human makes room for Kevin's independence while guiding it toward cooperation.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A strong hybrid interpretation of guided curiosity."
+    },
+    {
+      "field_path": "summary.card4.light_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Your Strange Discovery Can Lead You Home",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Warm and distinctive."
+    },
+    {
+      "field_path": "summary.card4.light_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Uranus Finds a Path through the North Node",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Useful light-astrology headline."
+    },
+    {
+      "field_path": "summary.card4.light_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "Novelty Supplies the Question; Practice Supplies the Answer",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Memorable expression of the growth mechanism."
+    },
+    {
+      "field_path": "summary.card4.no_astro.body.direct_to_dog",
+      "action": "keep",
+      "replacement": "You are allowed to be the first dog to discover the new thing. Your growing skill is what happens after discovery. Look toward your person, let the first wave pass through your paws, and choose the action you have practiced. Then go investigate with permission. You do not have to trade your curiosity for manners; you are learning to give curiosity a steering wheel.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A vivid, affirming direct-to-dog growth portrait."
+    },
+    {
+      "field_path": "summary.card4.no_astro.body.handler",
+      "action": "keep",
+      "replacement": "Kevin is likely to notice the new thing first and react with his whole attention. Growth does not mean making him indifferent to novelty. It means giving that first spark a sequence: orient to the handler, pause long enough to receive information, choose a practiced response, and then investigate or play when invited. Start with small changes and generous repetition. A dog who learns that surprise can lead to a familiar job becomes more capable without losing the lively originality that makes him Kevin.",
+      "reason_codes": [
+        "keep_richness",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Excellent growth guidance, distinct from the needs summary's regulation focus."
+    },
+    {
+      "field_path": "summary.card4.no_astro.body.hybrid",
+      "action": "keep",
+      "replacement": "Kevin sees the novelty and supplies the dramatic opening. His handler can either chase the excitement with corrections or join the moment by naming a known task. A pause, a hand target, a search cue, or a toy gives Kevin a route from surprise to participation. Each successful return changes the meaning of novelty: it is no longer a command to scatter, but an opportunity to choose together.",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "A strong shared-scene conclusion to the coordinated summary set."
+    },
+    {
+      "field_path": "summary.card4.no_astro.headline.direct_to_dog",
+      "action": "keep",
+      "replacement": "Keep the Spark; Learn the Next Move",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Excellent developmental thesis."
+    },
+    {
+      "field_path": "summary.card4.no_astro.headline.handler",
+      "action": "keep",
+      "replacement": "Kevin's Best Growth Is Organized Curiosity",
+      "reason_codes": [
+        "keep_semantic_precision",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Clear and claim-specific."
+    },
+    {
+      "field_path": "summary.card4.no_astro.headline.hybrid",
+      "action": "keep",
+      "replacement": "A Surprise Becomes a Lesson When Someone Joins It",
+      "reason_codes": [
+        "keep_existing_peak",
+        "summary_coherence"
+      ],
+      "editorial_rationale": "Warm, reciprocal, and distinct from the prior summary headlines."
+    }
+  ]
+}

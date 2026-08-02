@@ -1,0 +1,306 @@
+{
+  "id": "resp_056b1991508746e3006a6f14127ddc8193ae8b4b25584eed57",
+  "object": "response",
+  "created_at": 1785664530,
+  "status": "completed",
+  "background": true,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1785664596,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": 100000,
+  "max_tool_calls": null,
+  "model": "gpt-5.6-terra",
+  "moderation": null,
+  "output": [
+    {
+      "id": "rs_056b1991508746e3006a6f1414c0a88193a58cd699d72cb2a1",
+      "type": "reasoning",
+      "content": [],
+      "summary": []
+    },
+    {
+      "id": "msg_056b1991508746e3006a6f14164e248193aa0f7d9204783f9b",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\"edits\":[{\"field_path\":\"cards.0.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin treats every hello like a new game he invented halfway through the first bounce.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.0.card.funny_dog_quotes.0\",\"replacement\":\"“This is my special greeting. It has a spin move.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.0.card.no_astro.body.direct_to_dog\",\"replacement\":\"A plain hello was never likely to be your style. Take your angled approach, inspect the scene, and bring your own little flourish. Then look for your person and let them answer it. Sharing the second act does not make you less original; it makes your odd, bright entrance a connection.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.0.card.no_astro.body.handler\",\"replacement\":\"Kevin may enter a room sideways: an unexpected pose, a pause, a greeting with his own choreography. Then he checks whether you noticed. His independence is part of how he reaches for affection. Let the unusual entrance happen, then answer it warmly with a welcome, a smile, or an invitation to come alongside.\",\"reason_codes\":[\"overexplained_body\"]},{\"field_path\":\"cards.11.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin's bed is not hiding; it is where he listens until the vacuum stops telling its life story.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.11.card.imperative_dog_quotes.0\",\"replacement\":\"“Let me hear the whole house before I make an appearance.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.11.card.no_astro.body.direct_to_dog\",\"replacement\":\"Your corner can be a listening place, Kevin. From there, you can sort footsteps, voices, and door sounds until the house makes sense again. Come out when you are ready. The story does not move on without you.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.11.card.no_astro.body.hybrid\",\"replacement\":\"Kevin settles at the room's edge while his person moves through the house. His ears stay tuned to every cupboard, footstep, and change of plan. Instead of pulling him into the action, the human offers a calm update: “Kitchen, then walk.” After a thoughtful pause, Kevin joins as though he has been following along all day.\",\"reason_codes\":[\"validator_prose_advisory\"]},{\"field_path\":\"cards.12.card.no_astro.body.handler\",\"replacement\":\"Kevin may greet, supervise, play, and keep tabs on everyone until the room becomes too busy. Give him a clear off-duty routine: a mat, a quiet interval, and a cue that no one needs him right now. When rest has a place in the day, his enthusiasm stays generous instead of overextended.\",\"reason_codes\":[\"validator_prose_advisory\"]},{\"field_path\":\"cards.14.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin can do the sit, provided the floor, mood, and general coziness have all been approved.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.14.card.funny_dog_quotes.0\",\"replacement\":\"“I know the cue. I am waiting for the comforting version of it.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.19.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin remembers who brought snacks, who kept promises, and who once moved the furniture without warning.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.19.card.funny_dog_quotes.0\",\"replacement\":\"“I forgive slowly, but I love with excellent memory.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.19.card.no_astro.headline.handler\",\"replacement\":\"For Kevin, Trust Touches Everything\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.2.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin meets a new object with one question: sniff it carefully or chase it immediately?\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.20.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin explores like the trail was waiting all morning for his official golden-retriever review.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.20.card.no_astro.body.handler\",\"replacement\":\"Kevin meets a new path with bright confidence, nose working and body ready to go. His adventure is not an escape from his people; he often checks back in as if inviting them farther into the world. Give him room to investigate while keeping a familiar cue and shared direction available. Exploration feels steadier when belonging comes with him.\",\"reason_codes\":[\"overexplained_body\"]},{\"field_path\":\"cards.21.card.funny_dog_quotes.0\",\"replacement\":\"“I did the sit. Now please admire how handsome I was during it.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.24.card.no_astro.headline.handler\",\"replacement\":\"Kevin's Hello Takes Its Own Route\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.29.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin brings the toy over with the quiet confidence of a dog who knows you missed the first invitation.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.29.card.no_astro.headline.handler\",\"replacement\":\"When Kevin Wants to Be Chosen\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.3.card.no_astro.body.direct_to_dog\",\"replacement\":\"Bring the whole bright burst, Kevin. The pause, cue, and release are not there to shrink your game; they are part of it. When you answer your person, they can trust your power, and you can trust that the fun will come roaring back.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.32.card.funny_dog_quotes.0\",\"replacement\":\"“Everyone take a breath. I have brought my warmest golden-retriever face.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.33.card.no_astro.body.direct_to_dog\",\"replacement\":\"A careful sniff is how you make room for liking something, Kevin. Take your pause, choose your steps, and let your nose introduce you before your heart has to. Curiosity is not holding affection up; it is helping affection arrive honestly.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.34.card.no_astro.body.hybrid\",\"replacement\":\"The house goes quiet in a way Kevin can feel. He arrives with a toy—not to solve anyone's feelings, but to offer contact. His human accepts two minutes of tug, then brings water and a rest. The mood gets a gentle outlet without turning Kevin into the household's emotional caretaker.\",\"reason_codes\":[\"validator_prose_advisory\"]},{\"field_path\":\"cards.36.card.imperative_dog_quotes.0\",\"replacement\":\"“Please let me sniff the suspicious shrub from all four sides.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.36.card.no_astro.headline.handler\",\"replacement\":\"Kevin Needs to Meet the Weird Thing Properly\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.37.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin's polished greeting can become interpretive dance when the surprise arrives first.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.38.card.no_astro.body.direct_to_dog\",\"replacement\":\"The mystery can have your nose, and your person can still have your trust. Look back, take the offered touch, then investigate from a safe distance. A good bond does not close the case; it gives you a steady place to return to.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.39.card.full_astro.body.handler\",\"replacement\":\"Neptune in Sagittarius in Kevin's Doghouse 10 joins porous attention and atmospheric sensitivity with a visible, adventure-facing pack role. He may absorb the feeling of an outing—a breeze, scent, or open horizon—and make the group slow down enough to notice it too. Sagittarius reaches outward; Doghouse 10 makes that outward wonder part of what he brings to others. Pair sensory pauses with clear navigation cues so his public gift of wonder stays connected to the group.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.39.card.full_astro.body.hybrid\",\"replacement\":\"Neptune in Sagittarius in Kevin's visible-pack zone can make an ordinary outing feel expansive: Kevin pauses for scent and sky, and his person lets the moment breathe. Then a clear cue gathers them back onto the route. His sensitivity to atmosphere becomes something they share, while the human keeps the shared adventure moving.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.39.card.no_astro.body.handler\",\"replacement\":\"Kevin may take in a place with his whole presence. A breeze, changed scent, or open path can draw him into soft, absorbed attention—and invite everyone nearby to slow down too. Give outings room for sensory pauses, alongside clear cues for moving on. He does not always need a task; sometimes his contribution is helping the group notice where it is.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.39.card.no_astro.body.hybrid\",\"replacement\":\"The human sets out for a routine walk. Kevin finds a patch of wind, lifts his head, and turns the sidewalk into a moment worth noticing. His person waits for the sniff, looks up too, then calls them onward. Kevin has made an errand feel like an outing without losing the route home.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.4.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin carries a toy to his person the way other dogs carry important news.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.4.card.funny_dog_quotes.0\",\"replacement\":\"“I brought the squeaky one. This is clearly a together activity.”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.4.card.no_astro.headline.handler\",\"replacement\":\"Kevin Brings Toys as Invitations\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.40.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin does not hold grudges; he gives the relationship a long, soulful look from three feet away.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.40.card.no_astro.body.handler\",\"replacement\":\"Kevin gives deep trust carefully. Once he has chosen someone, a changed voice or routine may draw his attention close. What can look possessive is often a wish for the bond to feel steady. Keep key routines calm, offer a predictable settling place, and invite contact rather than insisting on it. A quiet voice and clear signal help his serious loyalty soften.\",\"reason_codes\":[\"overexplained_body\"]},{\"field_path\":\"cards.40.card.no_astro.headline.handler\",\"replacement\":\"Kevin Watches the Bond Closely\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.42.card.no_astro.headline.handler\",\"replacement\":\"Kevin Wants a Place in the Action\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.44.card.funny_dog_quotes.0\",\"replacement\":\"“I practiced being helpful. May I now collect one snack and a nap?”\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.44.card.no_astro.headline.handler\",\"replacement\":\"Kevin Learns the Rhythm of Belonging\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.46.card.applicable_canine_jokes.0\",\"replacement\":\"At the doorbell, Kevin becomes a very serious dog with a very curious nose.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.46.card.no_astro.headline.handler\",\"replacement\":\"The Doorbell Makes Kevin Look Twice\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.48.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin hears the leash jingle and suddenly believes the whole family needs his enthusiastic guidance.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.48.card.no_astro.headline.handler\",\"replacement\":\"Kevin Makes Every Outing an Occasion\",\"reason_codes\":[\"generic_or_administrative_headline\"]},{\"field_path\":\"cards.49.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin's favorite game has one trusted person, one easy win, and room for an encore.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.49.card.full_astro.body.handler\",\"replacement\":\"Kevin's Part of Fortune in Cancer in Doghouse 5 describes an easy reward channel where play, trick practice, and pleasure work best through emotional safety. Cancer makes the familiar person and warm response part of the reward; Doghouse 5 gives that security a lively outlet in games and performance. A clear, winnable task followed by praise or a small treat can therefore open willing effort quickly. Keep sessions brief and end on success: play lets security and joy reinforce one another.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.49.card.full_astro.body.hybrid\",\"replacement\":\"With Part of Fortune in Cancer in Doghouse 5, Kevin's easiest joy comes when familiar connection becomes play. His person offers a known game and a winnable cue; Kevin answers with a trick, a wag, and another eager try. The treat matters, but so does the safe exchange around it. Together they make success feel like home.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.49.card.no_astro.body.handler\",\"replacement\":\"Kevin often learns most freely when a reward is both fun and familiar. A short trick session, known game, warm acknowledgment, or small treat can create an easy opening. The clear success invites him to try; the trusted person helps the success feel safe. Keep the exchange simple and stop while he is still bright. For Kevin, comfort and play strengthen each other.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.49.card.no_astro.body.hybrid\",\"replacement\":\"Kevin offers a trick, and his person answers with the familiar reward that makes another try feel possible. The game stays short, clear, and warm. He is not performing under pressure; he is playing inside a secure exchange, where a small win brings both delight and closeness.\",\"reason_codes\":[\"compound_semantic_flattening\"]},{\"field_path\":\"cards.5.card.no_astro.body.handler\",\"replacement\":\"Kevin may register a room's emotional tone before anyone names it. A tense voice, hurried rhythm, or change in routine can show up in his posture or wish to stay close. Offer repeatable comfort: a quiet corner, familiar bed, calm voice, and predictable settling sequence. He does not need the world rearranged; he needs a reliable path back to calm.\",\"reason_codes\":[\"overexplained_body\"]},{\"field_path\":\"cards.6.card.applicable_canine_jokes.0\",\"replacement\":\"Before leaving, Kevin gives the house one last sniff as if it might have changed while he blinked.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.7.card.no_astro.body.direct_to_dog\",\"replacement\":\"Your quiet pause can say plenty, Kevin. A careful approach, unusual look, or small decision may carry more meaning than a grand display. Let trust guide your first move. The people who know you can learn to read those signals without demanding that you make them louder.\",\"reason_codes\":[\"repeated_opening\"]},{\"field_path\":\"cards.9.card.applicable_canine_jokes.0\",\"replacement\":\"Kevin's favorite person is expected to notice the flourish, throw the toy, and remain available for the triumphant return.\",\"reason_codes\":[\"administrative_humor_cluster\"]},{\"field_path\":\"cards.9.card.no_astro.body.handler\",\"replacement\":\"For Kevin, a primary companion is more than a cuddle source. He may bring that person his unusual entrance, toy invitation, burst of action, and eventual return. Independence and attachment are not competing stories here: the bond gives his individuality an audience and his exploration a home base. Build it through attention, purposeful play, and dependable practice, while leaving him room to make some moves of his own.\",\"reason_codes\":[\"overexplained_body\"]},{\"field_path\":\"summary.card1.applicable_canine_jokes.0\",\"replacement\":\"Kevin does not enter a room; he arrives with a fresh interpretation of it.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.donts.0\",\"replacement\":\"Do not mistake Kevin's unusual first move for defiance.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.donts.1\",\"replacement\":\"Do not require instant sociability before he has oriented himself.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.donts.2\",\"replacement\":\"Do not make connection conditional on him acting ordinary.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.dos.0\",\"replacement\":\"Welcome his distinctive approach, then offer one clear way to connect.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.dos.1\",\"replacement\":\"Use brief rituals that leave room for choice, play, and personality.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.dos.2\",\"replacement\":\"Praise the return to you as warmly as the dramatic entrance.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.body.direct_to_dog\",\"replacement\":\"Your Aquarius Ascendant makes the first move original, Kevin, while the Leo Descendant wants a close encounter to feel bright and personal. Mars beside that Descendant puts momentum into your bids for connection. Pluto in Libra supports both sides, helping trust deepen through fair, repeatable exchange. Keep your odd angle; practice coming back to the person who can meet it.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.body.handler\",\"replacement\":\"Kevin's exact Aquarius Ascendant–Leo Descendant opposition makes individuality and one-to-one connection central to his identity. Aquarius brings the surprising, pattern-breaking first response; Leo seeks warm recognition from a particular companion. Mars close to the Descendant makes play and action part of that bond, while Pluto in Libra supports both angles through trust built in fair exchange. Meet the unusual opening, then guide it into a reciprocal ritual.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.body.hybrid\",\"replacement\":\"Kevin's Aquarius Ascendant may bring the unexpected entrance just as his Leo Descendant asks for a vivid response. Mars joins the relational side, so a greeting can quickly become play. Pluto in Libra offers the bridge: the human receives Kevin's originality, gives a clear cue, and answers the bid warmly. Kevin learns that a detour can belong inside a bond.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.headline.direct_to_dog\",\"replacement\":\"Kevin, Keep Your Angle and Find Your Person\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.headline.handler\",\"replacement\":\"An Original Dog Who Wants a Real Response\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.full_astro.headline.hybrid\",\"replacement\":\"The Surprise Entrance Meets a Warm Reply\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.funny_dog_quotes.0\",\"replacement\":\"“I have arrived differently on purpose.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.imperative_dog_quotes.0\",\"replacement\":\"“Bring your own idea, then share it.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.body.direct_to_dog\",\"replacement\":\"Your Aquarius rising brings the unexpected route, while your Leo relationship side wants a real answer at the end of it. Be original, Kevin—then offer your person the attention, affection, or play invitation behind the detour.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.body.handler\",\"replacement\":\"Kevin's Aquarius Ascendant gives his first response an unconventional edge, while his Leo Descendant makes close connection vivid and expressive. Let him inspect or improvise briefly, then invite an easy social action: eye contact, a greeting cue, or a toy exchange.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.body.hybrid\",\"replacement\":\"Aquarius at Kevin's Ascendant brings the unusual first move; Leo at the Descendant wants it received with warmth. A pause, cue, and shared game let his person honor the difference without losing the connection.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.headline.direct_to_dog\",\"replacement\":\"Your Odd Route Can Still Lead to Connection\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.headline.handler\",\"replacement\":\"Aquarius First, Leo Together\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.light_astro.headline.hybrid\",\"replacement\":\"An Unusual Hello Becomes Dialogue\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.body.direct_to_dog\",\"replacement\":\"You bring a point of view to every room, Kevin: a flourish, a pause, a perfectly unnecessary detour. Keep that bright individuality. Then choose the return—the look, toy, or cue that lets your person join you. You can be unmistakably yourself and still be part of the plan.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.body.handler\",\"replacement\":\"Kevin is warm enough to make an entrance and independent enough to make it his own. He may pause, investigate, or offer a theatrical little update before deciding how to join in. Notice the intention beneath the flourish, welcome him clearly, and offer a simple next choice. He thrives when being distinctive and being cooperative are allowed to share the room.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.body.hybrid\",\"replacement\":\"Kevin approaches with his own angle; his person meets it with calm interest rather than a contest. A playful acknowledgment gives his independence dignity, and a cue gives the moment shape. Together they practice a bond where Kevin can be surprising without becoming separate.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.headline.direct_to_dog\",\"replacement\":\"Your Entrance Says Something, Kevin\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.headline.handler\",\"replacement\":\"Kevin Is Warm, Original, and Hard to Ignore\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card1.no_astro.headline.hybrid\",\"replacement\":\"His Own Angle, Their Shared Center\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.applicable_canine_jokes.0\",\"replacement\":\"Kevin's ideal day includes one adventure, one important sniff, and a nap to process both.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.donts.0\",\"replacement\":\"Do not fill every gap in the day with more stimulation.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.donts.1\",\"replacement\":\"Do not rush every interesting sniff or detour.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.donts.2\",\"replacement\":\"Do not expect an energetic outing to end without a landing ritual.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.dos.0\",\"replacement\":\"End activity with water, a cue, and a familiar resting place.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.dos.1\",\"replacement\":\"Keep walks varied while making departures and returns recognizable.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.dos.2\",\"replacement\":\"Make room for social fun and quiet sensory decompression.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.body.direct_to_dog\",\"replacement\":\"Neptune in Sagittarius pulls you toward the feeling of the far-off place, while Jupiter in Libra makes discovery sweeter when it is shared. Your Pisces Moon can hold stimulation in the body, and Mars in Leo gives daily energy somewhere lively to go. Explore, Kevin—then accept the little ritual that tells you the day has landed.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.body.handler\",\"replacement\":\"Kevin's Neptune in Sagittarius brings atmosphere and adventure into daily experience, while Jupiter and the Doghouse 8 cluster tie exploration closely to belonging and trust. His Pisces Moon makes stimulation physically lingering; Mars in Leo in Doghouse 6 wants energy used through routine and care. Shape his days as meaningful departures followed by dependable returns.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.body.hybrid\",\"replacement\":\"Neptune reaches Kevin toward adventure, while his Doghouse 8 emphasis wants shared trust and Mars in Doghouse 6 wants a practical rhythm. The person who creates a clear ending is not shrinking his world; they make it easier for him to use the world well. Their day becomes outward curiosity held by familiar return.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.headline.direct_to_dog\",\"replacement\":\"Kevin, Let Adventure End Softly\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.headline.handler\",\"replacement\":\"A Chart Built for Venture and Return\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.full_astro.headline.hybrid\",\"replacement\":\"Curiosity Goes Out; Familiarity Brings It Home\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.funny_dog_quotes.0\",\"replacement\":\"“The walk is over, but I am still thinking about that leaf.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.imperative_dog_quotes.0\",\"replacement\":\"“Explore fully, then let the day get quiet.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.body.direct_to_dog\",\"replacement\":\"Your Neptune in Sagittarius notices the far edge and feeling of an outing; Jupiter in Libra likes discovery best when someone shares it. Go wide, then let water, a pause, and your person's familiar voice bring you home.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.body.handler\",\"replacement\":\"Neptune in Sagittarius gives Kevin an adventure-facing sensitivity, while Jupiter in Libra enlarges his appetite for shared experience. Make transitions clear: end play deliberately, offer a settling place, and keep variety from becoming chaos.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.body.hybrid\",\"replacement\":\"Neptune draws Kevin toward possibility, and Jupiter makes shared outings especially rewarding. His person can protect both by giving the adventure a clear ending that turns excitement into rest.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.headline.direct_to_dog\",\"replacement\":\"Your Horizon Needs a Landing Place\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.headline.handler\",\"replacement\":\"Sagittarius Wonder, Libra Company\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.light_astro.headline.hybrid\",\"replacement\":\"Adventure Ends at the Familiar Door\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.body.direct_to_dog\",\"replacement\":\"You like to join the day, inspect its important details, and follow the interesting thread. Then your body needs a familiar landing place: a person, corner, drink, or quiet spell. Your best days are good loops—out, in, play, settle.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.body.handler\",\"replacement\":\"Kevin lives outward and back again. He notices change, seeks a person or game, follows the interesting thread, and eventually needs somewhere familiar to come down. Build a rhythm around that sequence: sniffing walk, water and quiet; short training game, then settle. He needs meaningful movement, not constant motion.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.body.hybrid\",\"replacement\":\"Kevin may think the walk includes the final sniff, water, household check, and settling ritual—not just the miles. His person supplies the dependable return, while Kevin supplies the alert participation that makes the day feel alive. Together they make room for both curiosity and quiet.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.headline.direct_to_dog\",\"replacement\":\"Your Day Needs a Way Back In\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.headline.handler\",\"replacement\":\"Kevin Thrives on Good Loops\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card2.no_astro.headline.hybrid\",\"replacement\":\"Out Together, Home Together\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.applicable_canine_jokes.0\",\"replacement\":\"Kevin feels things deeply, then looks relieved when someone gives the feeling a toy to carry.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.donts.0\",\"replacement\":\"Do not punish the feeling you want Kevin to learn to manage.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.donts.1\",\"replacement\":\"Do not stack commands when one familiar cue will do.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.donts.2\",\"replacement\":\"Do not confuse a cheerful face with a fully settled body.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.dos.0\",\"replacement\":\"Practice a short settling sequence when he is already calm.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.dos.1\",\"replacement\":\"Give intense attention a job: search, carry, shape, or retrieve.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.dos.2\",\"replacement\":\"Pair predictable boundaries with genuine recovery time.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.body.direct_to_dog\",\"replacement\":\"Your Libra and Scorpio Doghouse 8 pattern gives trust real weight, Kevin; your Pisces Moon feels the atmosphere in your body. Mars in Leo in Doghouse 6 offers a route through: take the cue, do the useful job, then settle. You do not need less intensity. You need a trustworthy shape for it.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.body.handler\",\"replacement\":\"Kevin's Libra–Scorpio Doghouse 8 cluster concentrates identity, signals, rules, confidence, and trust in one sensitive territory. His Pisces Moon makes emotional climate bodily, while Mars in Leo in Doghouse 6 can turn activation into useful routine. Use short, fair rules, purposeful outlets, and deliberate recovery. Practiced structure lets intensity become coordination.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.body.hybrid\",\"replacement\":\"Kevin's Doghouse 8 emphasis makes dependable trust essential, while his Pisces Moon lets the room's feeling show up in his body. Mars in Doghouse 6 offers a practical bridge. The human gives one fair cue, Kevin does the task and receives the release, and structure becomes something that carries him rather than confines him.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.headline.direct_to_dog\",\"replacement\":\"Kevin, Give Big Feelings a Safe Shape\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.headline.handler\",\"replacement\":\"Trust and Routine Help Kevin Settle\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.full_astro.headline.hybrid\",\"replacement\":\"A Fair Cue Makes Room for Relief\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.funny_dog_quotes.0\",\"replacement\":\"“I am fine. I just need a small task for this very large feeling.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.imperative_dog_quotes.0\",\"replacement\":\"“Take the cue, do the job, then rest.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.body.direct_to_dog\",\"replacement\":\"Your Pisces Moon notices more than people realize, and Libra Saturn wants closeness to have fair rules. When the room feels large, take the small sequence: cue, job, calm. A dependable routine can hold the edges for you.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.body.handler\",\"replacement\":\"Kevin's Libra Doghouse 8 emphasis makes trust and fairness central, while his Pisces Moon can register emotional atmosphere quickly in his body. Saturn favors durable, humane structure. Keep cues consistent, pair effort with recovery, and lower demands when he is already full.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.body.hybrid\",\"replacement\":\"Libra trust needs fairness, and Kevin's Pisces Moon makes emotional climate physically important. Short, consistent instruction gives him something sturdier than reassurance alone. The dog supplies effort; the human supplies calm repetition.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.headline.direct_to_dog\",\"replacement\":\"Your Sensitive Body Can Find Its Rhythm\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.headline.handler\",\"replacement\":\"Libra Trust, Pisces Sensitivity\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.light_astro.headline.hybrid\",\"replacement\":\"Fairness Turns Feeling into Cooperation\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.body.direct_to_dog\",\"replacement\":\"When something matters, it matters with your whole golden body. Your people can help by making the next step plain and giving your energy a useful assignment. Carry, search, practice, then rest. You are not learning to care less; you are learning not to let caring sweep you away.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.body.handler\",\"replacement\":\"Kevin needs a bridge between impulse and calm. When something catches him, he may put his whole self behind it. Keep cues consistent, practice them when he is calm, and give the energy a job—carry, search, or a short sequence. Then protect the landing with quiet and no new demands.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.body.hybrid\",\"replacement\":\"Kevin brings intensity; his person gives the next moment shape. One familiar cue, a manageable outlet, and time to settle make the exchange cooperative. Repeatedly, Kevin learns that rules are not traps and quiet does not mean disconnection.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.headline.direct_to_dog\",\"replacement\":\"You Can Feel Big Without Going Everywhere at Once\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.headline.handler\",\"replacement\":\"Kevin Needs a Bridge Back to Calm\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card3.no_astro.headline.hybrid\",\"replacement\":\"The Next Clear Step Is Reassuring\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.applicable_canine_jokes.0\",\"replacement\":\"Kevin believes every suspicious leaf deserves a proper second sniff.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.donts.0\",\"replacement\":\"Do not flood Kevin with novelty to see whether he can cope.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.donts.1\",\"replacement\":\"Do not demand instant composure after a surprise.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.donts.2\",\"replacement\":\"Do not treat growth as the disappearance of curiosity.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.dos.0\",\"replacement\":\"Introduce novelty gradually beside a behavior he knows well.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.dos.1\",\"replacement\":\"Reward reorientation before inviting further investigation.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.dos.2\",\"replacement\":\"Use one recovery sequence across many kinds of surprises.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.body.direct_to_dog\",\"replacement\":\"Your Scorpio Uranus notices the strange and hidden, Kevin, while its close trine to the Cancer North Node says discovery can help you grow toward secure, useful participation. Uranus also squares your relationship angles, so surprises may jolt both body and bond. Notice, look back, pause, do the practiced thing, then investigate.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.body.handler\",\"replacement\":\"Uranus in Scorpio trine the Cancer North Node links novelty and disruption to growth through security, care, and practiced skill. The North Node in Doghouse 6 favors useful routine, while Uranus squares both relationship angles, making surprise socially disruptive as well as stimulating. Train a bridge: notice, orient, pause, perform a known behavior, then explore.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.body.hybrid\",\"replacement\":\"Kevin's Uranus–North Node trine makes surprise a possible route into learning, even as Uranus squares to both relationship angles can unsettle the social moment. His person offers the known second act—orientation, pause, task, release. Kevin brings discovery; the human supplies continuity; practice turns disruption into skill.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.headline.direct_to_dog\",\"replacement\":\"Kevin, Let Curiosity Learn a Next Step\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.headline.handler\",\"replacement\":\"Surprise Can Become Kevin's Teacher\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.full_astro.headline.hybrid\",\"replacement\":\"The Human Gives Surprise a Useful Shape\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.funny_dog_quotes.0\",\"replacement\":\"“The strange object and I need a moment to get acquainted.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.imperative_dog_quotes.0\",\"replacement\":\"“Notice it, find your person, then choose.”\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.body.direct_to_dog\",\"replacement\":\"Uranus in Scorpio gives you a powerful nose for the unusual, while your Cancer North Node asks you to grow through dependable care. Let the new thing start the lesson; let the familiar cue help you finish it.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.body.handler\",\"replacement\":\"Kevin's Uranus in Scorpio trine Cancer North Node suggests that unconventional reactions can become part of his developmental path when they return to security and practiced care. Offer novelty in small doses, mark the pause, and reward a chosen response before more exploration.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.body.hybrid\",\"replacement\":\"The Uranus–North Node trine lets novelty open learning instead of ending it. By pairing a new stimulus with a rehearsed pause and security-building task, Kevin's person preserves his independence while guiding it toward cooperation.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.headline.direct_to_dog\",\"replacement\":\"Your Discovery Can Teach You Something\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.headline.handler\",\"replacement\":\"Uranus Finds Growth Through Practice\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.light_astro.headline.hybrid\",\"replacement\":\"Novelty Asks; Practice Answers\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.body.direct_to_dog\",\"replacement\":\"You are allowed to be first to notice the new thing. Your growing skill comes afterward: look toward your person, let the first wave pass, choose the action you have practiced, then investigate with permission. Curiosity does not need to lose its spark; it needs a steering wheel.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.body.handler\",\"replacement\":\"Kevin will likely notice the new thing first and give it his full attention. Growth is not indifference to novelty. It is learning a sequence: orient, pause, choose a practiced response, then investigate when invited. Start small and repeat generously. Surprise can become a familiar doorway into skill.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.body.hybrid\",\"replacement\":\"Kevin spots the novelty and provides the dramatic opening. His person names a known task instead of chasing the excitement with corrections. A pause, hand target, search cue, or toy gives him a route from surprise to participation. Each successful return makes novelty less scattering and more collaborative.\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.headline.direct_to_dog\",\"replacement\":\"Keep the Spark; Choose the Next Move\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.headline.handler\",\"replacement\":\"Kevin Grows Through Guided Curiosity\",\"reason_codes\":[\"summary_coherence\"]},{\"field_path\":\"summary.card4.no_astro.headline.hybrid\",\"replacement\":\"A Surprise Becomes a Lesson Together\",\"reason_codes\":[\"summary_coherence\"]}]}"
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "medium",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "description": null,
+      "name": "astrowoof_context_naive_polish_round_001",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "edits": {
+            "type": "array",
+            "minItems": 164,
+            "maxItems": 164,
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_path": {
+                  "type": "string",
+                  "enum": [
+                    "cards.0.card.applicable_canine_jokes.0",
+                    "cards.0.card.funny_dog_quotes.0",
+                    "cards.0.card.no_astro.body.direct_to_dog",
+                    "cards.0.card.no_astro.body.handler",
+                    "cards.11.card.applicable_canine_jokes.0",
+                    "cards.11.card.imperative_dog_quotes.0",
+                    "cards.11.card.no_astro.body.direct_to_dog",
+                    "cards.11.card.no_astro.body.hybrid",
+                    "cards.12.card.no_astro.body.handler",
+                    "cards.14.card.applicable_canine_jokes.0",
+                    "cards.14.card.funny_dog_quotes.0",
+                    "cards.19.card.applicable_canine_jokes.0",
+                    "cards.19.card.funny_dog_quotes.0",
+                    "cards.19.card.no_astro.headline.handler",
+                    "cards.2.card.applicable_canine_jokes.0",
+                    "cards.20.card.applicable_canine_jokes.0",
+                    "cards.20.card.no_astro.body.handler",
+                    "cards.21.card.funny_dog_quotes.0",
+                    "cards.24.card.no_astro.headline.handler",
+                    "cards.29.card.applicable_canine_jokes.0",
+                    "cards.29.card.no_astro.headline.handler",
+                    "cards.3.card.no_astro.body.direct_to_dog",
+                    "cards.32.card.funny_dog_quotes.0",
+                    "cards.33.card.no_astro.body.direct_to_dog",
+                    "cards.34.card.no_astro.body.hybrid",
+                    "cards.36.card.imperative_dog_quotes.0",
+                    "cards.36.card.no_astro.headline.handler",
+                    "cards.37.card.applicable_canine_jokes.0",
+                    "cards.38.card.no_astro.body.direct_to_dog",
+                    "cards.39.card.full_astro.body.handler",
+                    "cards.39.card.full_astro.body.hybrid",
+                    "cards.39.card.no_astro.body.handler",
+                    "cards.39.card.no_astro.body.hybrid",
+                    "cards.4.card.applicable_canine_jokes.0",
+                    "cards.4.card.funny_dog_quotes.0",
+                    "cards.4.card.no_astro.headline.handler",
+                    "cards.40.card.applicable_canine_jokes.0",
+                    "cards.40.card.no_astro.body.handler",
+                    "cards.40.card.no_astro.headline.handler",
+                    "cards.42.card.no_astro.headline.handler",
+                    "cards.44.card.funny_dog_quotes.0",
+                    "cards.44.card.no_astro.headline.handler",
+                    "cards.46.card.applicable_canine_jokes.0",
+                    "cards.46.card.no_astro.headline.handler",
+                    "cards.48.card.applicable_canine_jokes.0",
+                    "cards.48.card.no_astro.headline.handler",
+                    "cards.49.card.applicable_canine_jokes.0",
+                    "cards.49.card.full_astro.body.handler",
+                    "cards.49.card.full_astro.body.hybrid",
+                    "cards.49.card.no_astro.body.handler",
+                    "cards.49.card.no_astro.body.hybrid",
+                    "cards.5.card.no_astro.body.handler",
+                    "cards.6.card.applicable_canine_jokes.0",
+                    "cards.7.card.no_astro.body.direct_to_dog",
+                    "cards.9.card.applicable_canine_jokes.0",
+                    "cards.9.card.no_astro.body.handler",
+                    "summary.card1.applicable_canine_jokes.0",
+                    "summary.card1.donts.0",
+                    "summary.card1.donts.1",
+                    "summary.card1.donts.2",
+                    "summary.card1.dos.0",
+                    "summary.card1.dos.1",
+                    "summary.card1.dos.2",
+                    "summary.card1.full_astro.body.direct_to_dog",
+                    "summary.card1.full_astro.body.handler",
+                    "summary.card1.full_astro.body.hybrid",
+                    "summary.card1.full_astro.headline.direct_to_dog",
+                    "summary.card1.full_astro.headline.handler",
+                    "summary.card1.full_astro.headline.hybrid",
+                    "summary.card1.funny_dog_quotes.0",
+                    "summary.card1.imperative_dog_quotes.0",
+                    "summary.card1.light_astro.body.direct_to_dog",
+                    "summary.card1.light_astro.body.handler",
+                    "summary.card1.light_astro.body.hybrid",
+                    "summary.card1.light_astro.headline.direct_to_dog",
+                    "summary.card1.light_astro.headline.handler",
+                    "summary.card1.light_astro.headline.hybrid",
+                    "summary.card1.no_astro.body.direct_to_dog",
+                    "summary.card1.no_astro.body.handler",
+                    "summary.card1.no_astro.body.hybrid",
+                    "summary.card1.no_astro.headline.direct_to_dog",
+                    "summary.card1.no_astro.headline.handler",
+                    "summary.card1.no_astro.headline.hybrid",
+                    "summary.card2.applicable_canine_jokes.0",
+                    "summary.card2.donts.0",
+                    "summary.card2.donts.1",
+                    "summary.card2.donts.2",
+                    "summary.card2.dos.0",
+                    "summary.card2.dos.1",
+                    "summary.card2.dos.2",
+                    "summary.card2.full_astro.body.direct_to_dog",
+                    "summary.card2.full_astro.body.handler",
+                    "summary.card2.full_astro.body.hybrid",
+                    "summary.card2.full_astro.headline.direct_to_dog",
+                    "summary.card2.full_astro.headline.handler",
+                    "summary.card2.full_astro.headline.hybrid",
+                    "summary.card2.funny_dog_quotes.0",
+                    "summary.card2.imperative_dog_quotes.0",
+                    "summary.card2.light_astro.body.direct_to_dog",
+                    "summary.card2.light_astro.body.handler",
+                    "summary.card2.light_astro.body.hybrid",
+                    "summary.card2.light_astro.headline.direct_to_dog",
+                    "summary.card2.light_astro.headline.handler",
+                    "summary.card2.light_astro.headline.hybrid",
+                    "summary.card2.no_astro.body.direct_to_dog",
+                    "summary.card2.no_astro.body.handler",
+                    "summary.card2.no_astro.body.hybrid",
+                    "summary.card2.no_astro.headline.direct_to_dog",
+                    "summary.card2.no_astro.headline.handler",
+                    "summary.card2.no_astro.headline.hybrid",
+                    "summary.card3.applicable_canine_jokes.0",
+                    "summary.card3.donts.0",
+                    "summary.card3.donts.1",
+                    "summary.card3.donts.2",
+                    "summary.card3.dos.0",
+                    "summary.card3.dos.1",
+                    "summary.card3.dos.2",
+                    "summary.card3.full_astro.body.direct_to_dog",
+                    "summary.card3.full_astro.body.handler",
+                    "summary.card3.full_astro.body.hybrid",
+                    "summary.card3.full_astro.headline.direct_to_dog",
+                    "summary.card3.full_astro.headline.handler",
+                    "summary.card3.full_astro.headline.hybrid",
+                    "summary.card3.funny_dog_quotes.0",
+                    "summary.card3.imperative_dog_quotes.0",
+                    "summary.card3.light_astro.body.direct_to_dog",
+                    "summary.card3.light_astro.body.handler",
+                    "summary.card3.light_astro.body.hybrid",
+                    "summary.card3.light_astro.headline.direct_to_dog",
+                    "summary.card3.light_astro.headline.handler",
+                    "summary.card3.light_astro.headline.hybrid",
+                    "summary.card3.no_astro.body.direct_to_dog",
+                    "summary.card3.no_astro.body.handler",
+                    "summary.card3.no_astro.body.hybrid",
+                    "summary.card3.no_astro.headline.direct_to_dog",
+                    "summary.card3.no_astro.headline.handler",
+                    "summary.card3.no_astro.headline.hybrid",
+                    "summary.card4.applicable_canine_jokes.0",
+                    "summary.card4.donts.0",
+                    "summary.card4.donts.1",
+                    "summary.card4.donts.2",
+                    "summary.card4.dos.0",
+                    "summary.card4.dos.1",
+                    "summary.card4.dos.2",
+                    "summary.card4.full_astro.body.direct_to_dog",
+                    "summary.card4.full_astro.body.handler",
+                    "summary.card4.full_astro.body.hybrid",
+                    "summary.card4.full_astro.headline.direct_to_dog",
+                    "summary.card4.full_astro.headline.handler",
+                    "summary.card4.full_astro.headline.hybrid",
+                    "summary.card4.funny_dog_quotes.0",
+                    "summary.card4.imperative_dog_quotes.0",
+                    "summary.card4.light_astro.body.direct_to_dog",
+                    "summary.card4.light_astro.body.handler",
+                    "summary.card4.light_astro.body.hybrid",
+                    "summary.card4.light_astro.headline.direct_to_dog",
+                    "summary.card4.light_astro.headline.handler",
+                    "summary.card4.light_astro.headline.hybrid",
+                    "summary.card4.no_astro.body.direct_to_dog",
+                    "summary.card4.no_astro.body.handler",
+                    "summary.card4.no_astro.body.hybrid",
+                    "summary.card4.no_astro.headline.direct_to_dog",
+                    "summary.card4.no_astro.headline.handler",
+                    "summary.card4.no_astro.headline.hybrid"
+                  ]
+                },
+                "replacement": {
+                  "type": "string"
+                },
+                "reason_codes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "field_path",
+                "replacement",
+                "reason_codes"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "edits"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    },
+    "verbosity": "high"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 61918,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 8953,
+    "output_tokens_details": {
+      "reasoning_tokens": 125
+    },
+    "total_tokens": 70871
+  },
+  "user": null,
+  "metadata": {}
+}

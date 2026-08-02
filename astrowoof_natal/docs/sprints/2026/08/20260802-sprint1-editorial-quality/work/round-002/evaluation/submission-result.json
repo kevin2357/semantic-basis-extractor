@@ -1,0 +1,10 @@
+{
+  "candidate": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/round-002/response/natal.kevin.cards.phase0-round002.json",
+  "decision_counts": {
+    "keep": 111,
+    "replace": 53
+  },
+  "validator_returncode": 0,
+  "linter_returncode": 0,
+  "api_request_completed": true
+}

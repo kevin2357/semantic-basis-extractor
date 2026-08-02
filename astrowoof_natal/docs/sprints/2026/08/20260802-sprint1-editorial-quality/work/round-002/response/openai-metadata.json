@@ -1,0 +1,45 @@
+{
+  "provider": "openai",
+  "response_id": "resp_0de029f290978cc9006a6f45d54320819695f3dfef2714cc0f",
+  "response_status": "completed",
+  "model": "gpt-5.6-terra",
+  "requested_model": "gpt-5.6-terra",
+  "reasoning_effort": "medium",
+  "usage": {
+    "input_tokens": 157118,
+    "cached_input_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 15563,
+    "reasoning_tokens": 792,
+    "total_tokens": 172681
+  },
+  "estimated_cost": {
+    "currency": "USD",
+    "estimated_amount": 0.62624,
+    "pricing_version": "2026-07-31",
+    "rates_per_million_tokens": {
+      "input": 2.5,
+      "cached_input": 0.25,
+      "output": 15.0,
+      "cache_write": 3.125
+    },
+    "billable_tokens": {
+      "uncached_input": 157118,
+      "cached_input": 0,
+      "cache_write": 0,
+      "output": 15563
+    },
+    "components": {
+      "uncached_input": 0.392795,
+      "cached_input": 0.0,
+      "cache_write": 0.0,
+      "output": 0.233445
+    },
+    "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+  },
+  "poll_count": 37,
+  "transport_attempts": {
+    "create": 1,
+    "retrieve": 37
+  }
+}

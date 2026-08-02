@@ -11,15 +11,173 @@
 
 ### Decisions
 
-- Begin with manual sparse Kevin polish before production changes.
+- Begin with human-directed, context-naive API polish before production changes.
 - Stop for a discovery checkpoint after that experiment.
 - Use the complete manual Kevin summaries as the leading pass-6-only gold candidate.
 - Test deterministic stratification rather than unseeded shuffling.
 - Preserve mechanical polish as a distinct safety layer.
 - Explore qualitative diagnosis and bounded qualitative polish separately.
-- Compare manual polish against a new pass-6 run both without and with proposed qualitative polish.
+- Compare context-naive polish against a new pass-6 run both without and with proposed qualitative polish.
 - Use separate full-card variants to test reordering.
 
 ### Next action
 
-Execute Phase 0 and produce a field-level edit audit plus comparison report.
+Prepare Phase-0 Round 1 through the pre-submission review gate. The fresh API
+agent, not the long-context task, will write replacement prose.
+
+## 2026-08-02 — Phase-0 experimental framing corrected
+
+The purpose of Phase 0 is to explore the limits of post-authoring qualitative
+polish by a context-naive agent. It is not to prove that a long-context agent
+can manually improve Kevin's deck.
+
+Controls:
+
+- No gold examples or old manual Kevin prose enter the request.
+- Human work is diagnosis, target selection, prompt/context design, and evaluation.
+- The API response is fresh and stateless.
+- The complete request is shown to the user before submission.
+- Additional rounds require a specific hypothesis supported by a completed round.
+
+## 2026-08-02 — Phase-0 request review
+
+- Keep the experimental purpose in the sprint record, not in model-visible
+  instructions; the API agent should receive an ordinary production polish
+  assignment.
+- Replace the directory-workspace-oriented Guiding Lights copy with a compact
+  polish guide explaining the claim deck, voices, astrology-density levels,
+  summary authority, sparse targets, and read-only context.
+- Add a later sprint review of the full-chart basis transport for token
+  efficiency and author comprehension. This does not change the current
+  experiment's chart evidence.
+
+## 2026-08-02 — Phase-0 Round 1 submitted
+
+The revised request presented an ordinary targeted polish assignment. Model-
+visible instructions contained no experimental framing, gold reference, old
+Kevin deck, story-directory workflow, or prior-conversation context. A new
+polish-specific guide defined claim decks, evidence boundaries, summaries,
+voices, astrology-density levels, sparse targets, and read-only context.
+
+### Service result
+
+- Model: `gpt-5.6-terra`
+- Reasoning: `medium`
+- Response: fresh background Responses API job
+- Response ID: `resp_056b1991508746e3006a6f14127ddc8193ae8b4b25584eed57`
+- Wall time: approximately 70 seconds
+- Input tokens: 61,918, all uncached by design
+- Output tokens: 8,953
+- Reasoning tokens: 125
+- Estimated cost: $0.28909
+- Transport: one create and 27 successful retrieval polls
+
+### Mechanical result
+
+- All 164 required sparse replacements were returned.
+- Exactly 164 allowlisted scalar values changed.
+- No non-allowlisted value changed.
+- The standard validator passed with three advisory warnings.
+- The editorial linter passed with zero warnings.
+- The three remaining validator warnings appear lexical/heuristic rather than
+  actual no-astro leakage; the cited prose contains no astrology.
+
+### Preliminary qualitative signal
+
+- Administrative/corporate humor was replaced by substantially more varied,
+  claim-specific dog-life premises without reducing total humor length.
+- The six repeated direct-to-dog openings became distinct and lost 71 words in
+  aggregate.
+- Five over-explained bodies lost 193 words while generally preserving their
+  useful behavioral guidance.
+- Two sampled compound claims preserved their interacting semantic forces more
+  explicitly after revision.
+- Summary prose lost 1,166 of 3,428 words (34%). It became clearer and more
+  scannable, but several already-strong headlines and images became safer and
+  less literary. For example, `Kevin's Day Is a Loop with Paws on It` became
+  `Kevin Thrives on Good Loops`.
+
+Round 1 therefore supports a useful boundary hypothesis: targeted polish can
+reliably repair identifiable local mechanisms, but requiring replacement of
+every field in an entire already-competent summary set may trade away peaks
+while raising consistency and concision. Preserve the round unchanged for
+matched evaluation before deciding whether Round 2 should add an explicit
+`keep` decision or use narrower summary targets.
+
+## 2026-08-02 — Phase-0 Round 2 prepared
+
+Round 2 is an independent rerun from the exact normalized Round-1 baseline and
+the same 164-field candidate pool. Round 1 remains immutable.
+
+Hypothesis: bringing the polish agent to information parity with the original
+authoring agent, explicitly treating preservation as an editorial success, and
+providing descriptive length context will retain existing literary peaks while
+still repairing diagnosed local weaknesses.
+
+Model-visible improvements include:
+
+- product and reader-experience orientation;
+- miniature-essay and nine-sibling-rendering framing;
+- a private structured whole-dog orientation before decisions;
+- explicit summary requirements for distinct arguments, examples, advice,
+  language, and remembered ideas;
+- factual cautions and concrete-advice standards;
+- richer original claim evidence and semantic-neighbor context;
+- current-deck length measurements described as context rather than quotas;
+- one explicit `keep` or `replace` decision per candidate field.
+
+No gold example, old manual Kevin prose, Round-1 output, or conversation history
+enters the request. The request builder and submitter compile successfully, and
+the submission path has completed a no-network dry run.
+
+## 2026-08-02 — Phase-0 Round 2 submitted
+
+The final Round-2 handoff incorporated a versioned editorial handbook organized
+around `Read → Appreciate → Edit`, while concrete card requirements and the
+targeted execution contract remained separate. The integration removed
+model-visible experimental framing, full-deck claims unsupported by sparse
+visibility, documentation-maintenance commentary, and overlapping product
+guidance. It added coordinated-set resolution and an explicit counterweight to
+excessive preservation.
+
+### Service result
+
+- Model: `gpt-5.6-terra`
+- Reasoning: `medium`
+- Response ID: `resp_0de029f290978cc9006a6f45d54320819695f3dfef2714cc0f`
+- Wall time: approximately 105 seconds
+- Input tokens: 157,118, uncached by experimental design
+- Output tokens: 15,563
+- Reasoning tokens: 792
+- Estimated cost: $0.62624
+- Handbook: `1.0-round2`
+- Handbook SHA-256:
+  `2a21a8e0cc66d8e43f9793aa8e168e8b4b3c73119bf33ad0ed5ca63ccd53a1ad`
+
+### Mechanical result
+
+- Exactly 164 decisions were returned: 111 `keep`, 53 `replace`.
+- Exactly 53 allowlisted values changed; no non-allowlisted value changed.
+- The standard validator passed with the baseline's three apparent lexical
+  false-positive advisories.
+- The editorial linter passed with zero warnings.
+
+### Preliminary qualitative signal
+
+- All 108 summary fields were kept verbatim. Round 2 therefore preserved every
+  summary headline, image, example, and body length that Round 1 had compressed.
+- All 24 targeted administrative-humor fields were replaced with more varied
+  behavior-specific premises.
+- All six repeated openings, ten weak headlines, five over-explained bodies,
+  and eight compound-semantic renderings were replaced.
+- The three validator-advisory candidates were kept; their prose contains no
+  actual astrology and the warnings appear heuristic.
+- Replacement rationales generally identify both the repaired mechanism and
+  the original asset being protected. Several compound revisions preserve
+  strong images while making the contributing semantic forces explicit.
+
+The decision pattern is unusually categorical—every summary candidate was
+kept and every substantively diagnosed card candidate was replaced. This may
+reflect accurate interpretation of the supplied diagnoses, or it may indicate
+that the agent treated diagnosis class as the decision rather than judging all
+164 fields independently. Matched human evaluation should test that question.

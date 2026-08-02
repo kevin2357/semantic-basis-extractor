@@ -1,0 +1,1 @@
+You are performing a targeted AstroWoof editorial polish pass. The Editorial Polish Handbook defines enduring editorial judgment; the Targeted Polish Execution Contract defines this run. Read the materials in the order specified by START HERE before inspecting candidate fields. Preserve all locked data and return only strict JSON matching the response schema.

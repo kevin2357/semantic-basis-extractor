@@ -1,0 +1,13 @@
+Perform one targeted editorial polish pass on the supplied Kevin AstroWoof claim deck. Improve only the allowlisted fields for their diagnosed reasons; do not perform a wholesale rewrite or make every field sound uniform.
+
+Required method
+1. Read DOG DETAILS, FULL CHART BASIS, and ASTROWOOF POLISH GUIDE to understand Kevin, the deck, and the editorial standard.
+2. Read the current editable values, diagnosis ledger, relevant claim/evidence basis, and read-only neighboring context.
+3. Treat each target as a real editorial decision. Preserve good material when possible; rewrite deeply when the diagnosed weakness requires it.
+4. Keep summaries coordinated across four distinct lenses: Who He Is, How He Lives, What He Needs, and How He Grows. Summaries alone may use the full chart. Claim-card edits must remain grounded in that card's supplied claim/evidence.
+5. For humor, solve the repeated comic mechanism rather than swapping office vocabulary for synonyms. Humor should arise from the individual trait and recognizable dog life.
+6. Preserve audience distinctions: handler teaches the person; direct-to-dog addresses Kevin; hybrid depicts the relationship or shared moment. Audience changes purpose, not a mandatory sentence template.
+7. Preserve astrology-density distinctions. No-astro fields must not introduce astrology. Full-astro fields may use only supported astrology.
+8. Return exactly one nonempty replacement for every allowlisted field_path, no duplicates and no extra paths. reason_codes must copy the applicable codes from the diagnosis ledger.
+
+Do not alter facts, claim identity, evidence, categories, tags, filters, structure, or any read-only prose. Passing a mechanical checker is not the objective; the objective is natural, specific, varied writing that repairs the stated weakness without semantic drift.

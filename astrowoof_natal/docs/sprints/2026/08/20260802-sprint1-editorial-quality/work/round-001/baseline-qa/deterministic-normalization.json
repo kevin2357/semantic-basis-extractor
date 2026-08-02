@@ -1,0 +1,33 @@
+{
+  "source": "astrowoof_natal/qa/reference_decks/kevin/20260801-automated-live-polish-1/natal.kevin.cards.json",
+  "output": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/round-001/request/natal.kevin.cards.normalized-baseline.json",
+  "operation": "sanitize_context_filters",
+  "prose_changed": false,
+  "repairs": [
+    {
+      "card": 6,
+      "claim_id": "placement_e862557046de33cb",
+      "field": "high_level",
+      "removed": [
+        "Emotions"
+      ],
+      "retained": [
+        "Trust",
+        "Personality"
+      ]
+    },
+    {
+      "card": 15,
+      "claim_id": "relationship_5e63acfa56ece81d",
+      "field": "high_level",
+      "removed": [
+        "Emotions"
+      ],
+      "retained": [
+        "Training",
+        "Trust",
+        "Communication"
+      ]
+    }
+  ]
+}

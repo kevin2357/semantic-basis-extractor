@@ -1,0 +1,37 @@
+{
+  "experiment": "20260802-sprint1 phase-0 round-001",
+  "baseline": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/round-001/request/natal.kevin.cards.normalized-baseline.json",
+  "target_count": 164,
+  "summary_target_count": 108,
+  "card_target_count": 56,
+  "controls": {
+    "fresh_stateless_response": true,
+    "gold_examples_supplied": false,
+    "prior_manual_kevin_prose_supplied": false,
+    "sparse_allowlist": true,
+    "all_non_allowlisted_fields_locked": true,
+    "api_submission_performed": false
+  },
+  "planned_api": {
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "medium",
+    "background": true,
+    "max_output_tokens": 100000,
+    "structured_output": "response-schema.json"
+  },
+  "request_files": [
+    "ASTROWOOF POLISH GUIDE.md",
+    "DOG DETAILS.md",
+    "FULL CHART BASIS.md",
+    "OPENAI_USER_MESSAGE.txt",
+    "SYSTEM_PROMPT.txt",
+    "USER_PROMPT.txt",
+    "diagnosis-ledger.json",
+    "editable-targets.json",
+    "natal.kevin.cards.normalized-baseline.json",
+    "read-only-context.json",
+    "repair-basis.json",
+    "request-manifest.json",
+    "response-schema.json"
+  ]
+}

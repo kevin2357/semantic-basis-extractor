@@ -1,0 +1,32 @@
+{
+  "experiment": "20260802-sprint1 phase-0 round-002",
+  "hypothesis": "Information parity, explicit preservation, length context, and keep-or-replace decisions improve local repair without sanding down existing literary peaks.",
+  "baseline_identical_to_round_001": true,
+  "target_pool_identical_to_round_001": true,
+  "target_count": 164,
+  "gold_examples_supplied": false,
+  "prior_manual_kevin_prose_supplied": false,
+  "api_submission_performed": false,
+  "planned_api": {
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "medium",
+    "background": true,
+    "prompt_cache_mode": "disabled"
+  },
+  "editorial_handbook": {
+    "version": "1.0-round2",
+    "sha256": "2a21a8e0cc66d8e43f9793aa8e168e8b4b3c73119bf33ad0ed5ca63ccd53a1ad"
+  },
+  "model_visible_documents": [
+    "START HERE.md",
+    "AstroWoof Editorial Polish Handbook.md",
+    "DOG DETAILS.md",
+    "ASTROWOOF CARD AND FIELD REQUIREMENTS.md",
+    "WHOLE DOG ORIENTATION.md",
+    "FULL CHART BASIS.md",
+    "CURRENT DECK LENGTH PROFILE.md",
+    "TARGETED POLISH EXECUTION CONTRACT.md"
+  ],
+  "system_prompt_chars": 361,
+  "rendered_user_chars": 711742
+}
