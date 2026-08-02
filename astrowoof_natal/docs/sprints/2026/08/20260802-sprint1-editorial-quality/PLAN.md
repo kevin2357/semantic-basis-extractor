@@ -263,6 +263,14 @@ own prose. Its marginal quality benefit remains unproven because the thesis
 plan and gold were introduced together and Ella's prior summaries were already
 stronger in several literary dimensions.
 
+Summary evaluation must include product fit, not literary quality alone. The
+longer optimized Ella summaries and the shorter Phase-1 summaries will be
+reviewed in the current desktop and mobile UI. Record screen-level readability,
+scroll burden, perceived tractability, skimmability, and whether a user is
+likely to finish each card. A richer summary that users avoid reading is not
+automatically the better product result; UI review may justify a shorter target
+even when the longer version is stronger as standalone prose.
+
 ## Phase 2 — Deterministic diversified claim assignment
 
 ### Design
@@ -295,6 +303,8 @@ Candidate modes:
 - Identical input produces identical assignment.
 - The manifest records assignment policy and replay material.
 - Stratification improves or preserves type/category balance in fixtures.
+- Generated pass manifests and the run manifest expose the exact canonical
+  priority IDs, policy, algorithm version, and replay seed.
 
 ## Phase 3 — Semantic-completeness and editorial-planning improvements
 

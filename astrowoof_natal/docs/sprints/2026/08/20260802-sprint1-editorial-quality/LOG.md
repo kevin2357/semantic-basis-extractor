@@ -341,3 +341,30 @@ Both newly authored and historical Ella theme plans fail the current
 three-or-four-group validation rule. The pass-local acceptance gap is confirmed
 as a separate defect. Detailed analysis is in
 `results/PHASE 1 - Ella Cross-Subject Gold Test.md`.
+
+The longer optimized and shorter Phase-1 Ella decks were also exposed as
+separate artifacts for review in the current website UI. Summary-length
+decisions will incorporate desktop/mobile readability, scroll burden,
+skimmability, perceived tractability, and completion likelihood rather than
+using standalone literary richness as the only criterion.
+
+## 2026-08-02 — Phase 2 deterministic diversified assignment
+
+Implemented the versioned `stratified-v1` assignment policy for card passes
+1–5. The policy deterministically balances claim types, categories, behavioral
+domains, and canonical priority bands, then orders each pass to reduce adjacent
+semantic similarity. It preserves every claim ID and priority ID and leaves
+final assembly in canonical priority order. `contiguous` remains available as
+the historical control and the backward-compatible default for direct SBE
+calls; semantic closure now selects `stratified-v1` by default.
+
+Every split run persists `<subject>.split-assignment.json` and records the
+policy, algorithm version, subject-derived replay seed, and exact priority IDs
+per pass in the run manifest. Pass-local and root bundle manifests show the
+actual assignments rather than implying contiguous ranges.
+
+On the Bre fixture, aggregate claim-type imbalance fell from 12 to 4 and
+category imbalance from 14 to 6. The full 74-test suite passed. A token-free
+end-to-end Bre generation produced six valid pass directories and six ZIPs;
+the exact-once 50-card map was recorded with replay seed
+`5a985d114fe6fba4`, and pass 6 remained summary-only.

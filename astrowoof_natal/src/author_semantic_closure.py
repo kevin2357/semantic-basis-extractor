@@ -1559,6 +1559,7 @@ def run_sbe(
     python_executable: Path,
     output_dir: Path,
     bundle_dir: Path,
+    split_assignment_policy: str = "stratified-v1",
 ) -> dict[str, Any]:
     command = [
         str(python_executable),
@@ -1575,6 +1576,8 @@ def run_sbe(
         "split",
         "--workspace-card-limit",
         "50",
+        "--split-assignment-policy",
+        split_assignment_policy,
         "--fail-fast",
     ]
     if subject:
@@ -3611,6 +3614,7 @@ def create_run(
     sbe_script: Path,
     python_executable: Path,
     service_level: str = "interactive",
+    split_assignment_policy: str = "stratified-v1",
 ) -> tuple[dict[str, Any], Path]:
     if run_dir.exists() and any(run_dir.iterdir()):
         raise FileExistsError(
@@ -3627,6 +3631,7 @@ def create_run(
         python_executable=python_executable,
         output_dir=output_dir,
         bundle_dir=bundle_dir,
+        split_assignment_policy=split_assignment_policy,
     )
     specs = discover_passes(sbe_manifest, bundle_dir)
     state = initial_run_state(
@@ -3888,6 +3893,15 @@ def main() -> None:
     )
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument(
+        "--split-assignment-policy",
+        choices=("contiguous", "stratified-v1"),
+        default="stratified-v1",
+        help=(
+            "Deterministic card-to-pass assignment used by the SBE stage. "
+            "Use contiguous for the historical control."
+        ),
+    )
+    parser.add_argument(
         "--max-workers",
         type=int,
         default=6,
@@ -4119,6 +4133,7 @@ def main() -> None:
             sbe_script=args.sbe_script,
             python_executable=args.python_executable,
             service_level=args.service_level,
+            split_assignment_policy=args.split_assignment_policy,
         )
     if args.prompt_layout_report:
         if not isinstance(provider, OpenAIResponsesProvider):

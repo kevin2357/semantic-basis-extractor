@@ -23,6 +23,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     archive_story_workspace,
     authoring_projection_payload,
     build_candidates,
+    build_split_assignment_plan,
     build_story_workspace,
     compile_packet,
     copy_static_assets,
@@ -701,6 +702,126 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue(report["authored_theme_group_priority_ids"])
             self.assertTrue(report["placeholder_free"])
             self.assertNotIn("__LLM_FILL__", json.dumps(deck))
+
+    def test_stratified_split_assignment_is_deterministic_and_complete(self) -> None:
+        first = build_split_assignment_plan(self.packet, "stratified-v1")
+        second = build_split_assignment_plan(self.packet, "stratified-v1")
+        self.assertEqual(first, second)
+        assigned = [
+            priority_id
+            for pass_ids in first["passes"].values()
+            for priority_id in pass_ids
+        ]
+        self.assertEqual(list(range(1, 51)), sorted(assigned))
+        self.assertTrue(all(len(pass_ids) == 10 for pass_ids in first["passes"].values()))
+        self.assertEqual("stratified-v1", first["algorithm_version"])
+        self.assertRegex(first["seed"], r"^[0-9a-f]{16}$")
+
+    def test_stratified_split_improves_type_and_category_balance(self) -> None:
+        by_priority = {card["priority_id"]: card for card in self.packet["cards"]}
+
+        def imbalance(policy: str) -> tuple[int, int]:
+            plan = build_split_assignment_plan(self.packet, policy)
+            passes = [
+                [by_priority[priority_id] for priority_id in priority_ids]
+                for priority_ids in plan["passes"].values()
+            ]
+            claim_types = {
+                card["claim_type"] for card in self.packet["cards"]
+            }
+            categories = {
+                category
+                for card in self.packet["cards"]
+                for category in card["categories"]
+            }
+
+            def spread(values: set[str], extractor) -> int:
+                return sum(
+                    max(
+                        sum(value in extractor(card) for card in pass_cards)
+                        for pass_cards in passes
+                    )
+                    - min(
+                        sum(value in extractor(card) for card in pass_cards)
+                        for pass_cards in passes
+                    )
+                    for value in values
+                )
+
+            return (
+                spread(claim_types, lambda card: {card["claim_type"]}),
+                spread(categories, lambda card: set(card["categories"])),
+            )
+
+        contiguous = imbalance("contiguous")
+        stratified = imbalance("stratified-v1")
+        self.assertLessEqual(stratified[0], contiguous[0])
+        self.assertLessEqual(stratified[1], contiguous[1])
+
+    def test_stratified_workspaces_reassemble_in_canonical_order(self) -> None:
+        plan = build_split_assignment_plan(self.packet, "stratified-v1")
+        by_priority = {card["priority_id"]: card for card in self.packet["cards"]}
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for number in range(1, 6):
+                assigned = [
+                    by_priority[priority_id]
+                    for priority_id in plan["passes"][str(number)]
+                ]
+                workspace = root / f"bre_{number}"
+                build_story_workspace(
+                    workspace,
+                    self.packet,
+                    ROOT,
+                    len(assigned),
+                    card_start=assigned[0]["priority_id"],
+                    include_summaries=False,
+                    pass_number=number,
+                    pass_count=6,
+                    assigned_cards=assigned,
+                )
+                for writing in workspace.rglob("WRITE*.md"):
+                    writing.write_text(
+                        writing.read_text(encoding="utf-8").replace(
+                            "__WRITE__", "Personality"
+                        ),
+                        encoding="utf-8",
+                    )
+            summary_workspace = root / "bre_6"
+            build_story_workspace(
+                summary_workspace,
+                self.packet,
+                ROOT,
+                0,
+                card_start=51,
+                include_summaries=True,
+                include_theme_plan=True,
+                pass_number=6,
+                pass_count=6,
+                assigned_cards=[],
+            )
+            for writing in summary_workspace.rglob("WRITE*.md"):
+                writing.write_text(
+                    writing.read_text(encoding="utf-8").replace(
+                        "__WRITE__", "Personality"
+                    ),
+                    encoding="utf-8",
+                )
+            theme_path = summary_workspace / "ASSIGN THEME GROUPS.md"
+            theme_text = theme_path.read_text(encoding="utf-8")
+            theme_index = 0
+            while "__WRITE__" in theme_text:
+                theme_text = theme_text.replace(
+                    "__WRITE__", f"Chapter {(theme_index % 4) + 1}", 1
+                )
+                theme_index += 1
+            theme_path.write_text(theme_text, encoding="utf-8")
+            deck, report = assemble(self.packet, root, allow_partial=False)
+            self.assertEqual(list(range(1, 51)), report["authored_priority_ids"])
+            self.assertEqual(
+                list(range(1, 51)),
+                [card["priority_id"] for card in deck["cards"]],
+            )
 
     def test_story_workspace_archive_contains_named_root_directory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

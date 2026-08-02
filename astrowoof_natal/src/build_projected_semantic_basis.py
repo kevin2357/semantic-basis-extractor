@@ -2338,6 +2338,148 @@ def render_summary_gold_reference(repo_root: Path) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def _assignment_features(card: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "claim_type": str(card.get("claim_type") or "unknown"),
+        "categories": frozenset(str(x) for x in card.get("categories", [])),
+        "domains": frozenset(str(x) for x in card.get("behavioral_domains", [])),
+        "tags": frozenset(str(x) for x in card.get("tags", [])),
+        "priority_band": (int(card["priority_id"]) - 1) // 10,
+    }
+
+
+def _assignment_similarity(left: dict[str, Any], right: dict[str, Any]) -> float:
+    score = 3.0 if left["claim_type"] == right["claim_type"] else 0.0
+    score += 2.0 * len(left["categories"] & right["categories"])
+    score += 1.0 * len(left["domains"] & right["domains"])
+    tag_union = left["tags"] | right["tags"]
+    if tag_union:
+        score += len(left["tags"] & right["tags"]) / len(tag_union)
+    return score
+
+
+def build_split_assignment_plan(
+    packet: dict[str, Any],
+    policy: str,
+    *,
+    pass_count: int = 5,
+) -> dict[str, Any]:
+    """Assign selected cards to fixed-size authoring passes deterministically."""
+    cards = list(packet["cards"])
+    if len(cards) % pass_count:
+        raise ValueError(
+            f"Cannot divide {len(cards)} cards evenly across {pass_count} passes"
+        )
+    capacity = len(cards) // pass_count
+    subject = str(packet["subject"].get("subject_id") or "subject")
+    seed = hashlib.sha256(
+        f"astrowoof:{policy}:{subject}".encode("utf-8")
+    ).hexdigest()[:16]
+    if policy == "contiguous":
+        passes = [
+            cards[index * capacity:(index + 1) * capacity]
+            for index in range(pass_count)
+        ]
+    elif policy == "stratified-v1":
+        features = {card["claim_id"]: _assignment_features(card) for card in cards}
+        type_frequency = Counter(
+            feature["claim_type"] for feature in features.values()
+        )
+        category_frequency = Counter(
+            category
+            for feature in features.values()
+            for category in feature["categories"]
+        )
+
+        def stable_value(*parts: object) -> str:
+            value = ":".join(str(part) for part in (seed, *parts))
+            return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+        ordered = sorted(
+            cards,
+            key=lambda card: (
+                type_frequency[features[card["claim_id"]]["claim_type"]],
+                sum(
+                    category_frequency[item]
+                    for item in features[card["claim_id"]]["categories"]
+                ),
+                stable_value("allocation", card["claim_id"]),
+            ),
+        )
+        passes = [[] for _ in range(pass_count)]
+        for card in ordered:
+            feature = features[card["claim_id"]]
+            minimum_size = min(len(items) for items in passes)
+            eligible = [
+                index for index, items in enumerate(passes)
+                if len(items) == minimum_size and len(items) < capacity
+            ]
+
+            def allocation_cost(index: int) -> tuple[float, str]:
+                assigned = passes[index]
+                assigned_features = [features[item["claim_id"]] for item in assigned]
+                score = 6.0 * sum(
+                    item["claim_type"] == feature["claim_type"]
+                    for item in assigned_features
+                )
+                score += 2.0 * sum(
+                    len(item["categories"] & feature["categories"])
+                    for item in assigned_features
+                )
+                score += 1.0 * sum(
+                    len(item["domains"] & feature["domains"])
+                    for item in assigned_features
+                )
+                score += 4.0 * sum(
+                    item["priority_band"] == feature["priority_band"]
+                    for item in assigned_features
+                )
+                return score, stable_value("pass", index + 1, card["claim_id"])
+
+            target = min(eligible, key=allocation_cost)
+            passes[target].append(card)
+
+        for index, assigned in enumerate(passes):
+            remaining = list(assigned)
+            first = min(
+                remaining,
+                key=lambda card: stable_value("order", index + 1, card["claim_id"]),
+            )
+            ordered_pass = [first]
+            remaining.remove(first)
+            while remaining:
+                previous = features[ordered_pass[-1]["claim_id"]]
+                next_card = min(
+                    remaining,
+                    key=lambda card: (
+                        _assignment_similarity(previous, features[card["claim_id"]]),
+                        stable_value("order", index + 1, card["claim_id"]),
+                    ),
+                )
+                ordered_pass.append(next_card)
+                remaining.remove(next_card)
+            passes[index] = ordered_pass
+    else:
+        raise ValueError(f"Unknown split assignment policy: {policy}")
+
+    assigned_ids = [card["priority_id"] for items in passes for card in items]
+    if sorted(assigned_ids) != list(range(1, len(cards) + 1)):
+        raise AssertionError("Split assignment did not preserve every priority ID once")
+    return {
+        "schema_version": "astrowoof.split_assignment.v0.1",
+        "policy": policy,
+        "algorithm_version": policy,
+        "subject": subject,
+        "seed": seed,
+        "pass_count": pass_count,
+        "cards_per_pass": capacity,
+        "passes": {
+            str(index + 1): [card["priority_id"] for card in assigned]
+            for index, assigned in enumerate(passes)
+        },
+    }
+
+
 def build_story_workspace(
     subject_bundle: Path,
     packet: dict[str, Any],
@@ -2349,11 +2491,17 @@ def build_story_workspace(
     include_theme_plan: bool = False,
     pass_number: int | None = None,
     pass_count: int | None = None,
+    assigned_cards: list[dict[str, Any]] | None = None,
 ) -> None:
     if card_start < 1 or card_limit < 0:
         raise ValueError("card_start must be positive and card_limit nonnegative")
     card_end = card_start + card_limit - 1
-    if card_end > len(packet["cards"]):
+    if assigned_cards is not None and len(assigned_cards) != card_limit:
+        raise ValueError(
+            f"Expected {card_limit} explicitly assigned cards, got "
+            f"{len(assigned_cards)}"
+        )
+    if assigned_cards is None and card_end > len(packet["cards"]):
         raise ValueError(
             f"Requested stories {card_start}-{card_end}, but the packet has "
             f"{len(packet['cards'])} cards"
@@ -2484,7 +2632,12 @@ def build_story_workspace(
     cards_root = subject_bundle / "cards"
     if card_limit:
         cards_root.mkdir(parents=True, exist_ok=True)
-    for card in packet["cards"][card_start - 1:card_end]:
+    workspace_cards = (
+        assigned_cards
+        if assigned_cards is not None
+        else packet["cards"][card_start - 1:card_end]
+    )
+    for card in workspace_cards:
         story_root = cards_root / (
             f"Story {card['priority_id']:03d} -- {card['claim_id']}"
         )
@@ -2732,6 +2885,17 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--split-assignment-policy",
+        choices=("contiguous", "stratified-v1"),
+        default="contiguous",
+        help=(
+            "Card-to-pass assignment for split authoring workspaces. "
+            "'contiguous' preserves canonical priority ranges; "
+            "'stratified-v1' deterministically mixes claim types, categories, "
+            "behavioral domains, and priority bands."
+        ),
+    )
+    parser.add_argument(
         "--fail-fast",
         action="store_true",
         help="Stop at the first invalid subject rather than finishing the batch manifest.",
@@ -2753,10 +2917,12 @@ def main() -> None:
         and (
             args.workspace_card_limit != 50
             or args.workspace_layout != "split"
+            or args.split_assignment_policy != "contiguous"
         )
     ):
         parser.error(
-            "--workspace-card-limit and --workspace-layout are only valid with "
+            "--workspace-card-limit, --workspace-layout, and "
+            "--split-assignment-policy are only valid with "
             "--handoff-profile authoring-workspace"
         )
     input_package = args.legacy_input_dir or args.input_package
@@ -2878,21 +3044,29 @@ def main() -> None:
                     if stale_archive.exists():
                         stale_archive.unlink()
                 if args.workspace_layout == "split":
+                    assignment_plan = build_split_assignment_plan(
+                        packet, args.split_assignment_policy
+                    )
+                    assignment_path = root / f"{subject}.split-assignment.json"
+                    write_json(assignment_path, assignment_plan)
+                    cards_by_priority = {
+                        card["priority_id"]: card for card in packet["cards"]
+                    }
                     pass_specs = [
-                        (1, 1, 10, False, False),
-                        (2, 11, 10, False, False),
-                        (3, 21, 10, False, False),
-                        (4, 31, 10, False, False),
-                        (5, 41, 10, False, False),
-                        (6, 51, 0, True, True),
-                    ]
+                        (index, assignment_plan["passes"][str(index)], False, False)
+                        for index in range(1, 6)
+                    ] + [(6, [], True, True)]
                     for (
                         pass_number,
-                        card_start,
-                        card_count,
+                        priority_ids,
                         summaries,
                         theme_plan,
                     ) in pass_specs:
+                        assigned_cards = [
+                            cards_by_priority[priority_id]
+                            for priority_id in priority_ids
+                        ]
+                        card_count = len(assigned_cards)
                         pass_bundle = (
                             args.bundle_dir / f"{subject}_{pass_number}"
                         )
@@ -2901,15 +3075,18 @@ def main() -> None:
                             packet,
                             repo_root,
                             card_count,
-                            card_start=card_start,
+                            card_start=(priority_ids[0] if priority_ids else 51),
                             include_summaries=summaries,
                             include_theme_plan=theme_plan,
                             pass_number=pass_number,
                             pass_count=6,
+                            assigned_cards=assigned_cards,
                         )
                         assignment = (
-                            f"Stories {card_start:03d}–"
-                            f"{card_start + card_count - 1:03d}"
+                            "Stories with canonical priority IDs "
+                            + ", ".join(
+                                f"{priority_id:03d}" for priority_id in priority_ids
+                            )
                             if card_count
                             else "Four full-chart summaries"
                         )
@@ -2926,6 +3103,8 @@ def main() -> None:
                             f"- **Subject:** {subject}\n"
                             f"- **Pass:** {pass_number} of 6\n"
                             f"- **Assignment:** {assignment}\n"
+                            f"- **Assignment policy:** {assignment_plan['policy']}\n"
+                            f"- **Replay seed:** {assignment_plan['seed']}\n"
                             f"- **Expected return:** "
                             f"`{subject}_{pass_number}-authored.zip`\n"
                             f"- **Start with:** `START HERE.md`\n"
@@ -3035,6 +3214,15 @@ def main() -> None:
                     and args.workspace_layout == "split"
                     else str(subject_bundle.resolve())
                 ),
+                **(
+                    {
+                        "split_assignment": assignment_plan,
+                        "split_assignment_file": str(assignment_path.resolve()),
+                    }
+                    if args.handoff_profile == "authoring-workspace"
+                    and args.workspace_layout == "split"
+                    else {}
+                ),
             })
         except Exception as exc:
             failed = True
@@ -3053,12 +3241,14 @@ def main() -> None:
         "subject_filter": args.subject,
         "subject_count": len(packages),
         "status": "fail" if failed else "pass",
+        "split_assignment_policy": args.split_assignment_policy,
         "subjects": run_records,
     }
     write_json(args.output_dir / "run-manifest.json", run_manifest)
     bundle_manifest = {
             "bundle_version": "astrowoof.llm_handoff.v0.5.0",
             "handoff_profile": args.handoff_profile,
+            "split_assignment_policy": args.split_assignment_policy,
             "instruction": (
                 "Read README.md, then process each passing subject independently "
                 + (
@@ -3117,9 +3307,16 @@ def main() -> None:
             if record["status"] != "pass":
                 continue
             if args.workspace_layout == "split":
+                plan = record.get("split_assignment", {})
                 for index in range(1, 7):
                     assignment = (
-                        f"Stories {(index - 1) * 10 + 1:03d}–{index * 10:03d}"
+                        "Stories with canonical priority IDs "
+                        + ", ".join(
+                            f"{priority_id:03d}"
+                            for priority_id in plan.get("passes", {}).get(
+                                str(index), []
+                            )
+                        )
                         if index <= 5
                         else "Four full-chart summaries"
                     )

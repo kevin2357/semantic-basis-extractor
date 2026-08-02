@@ -23,6 +23,7 @@ python src/author_semantic_closure.py `
   --provider openai `
   --model gpt-5.6-terra `
   --reasoning-effort medium `
+  --split-assignment-policy stratified-v1 `
   --max-workers 6 `
   --max-attempts 3
 ```
@@ -46,6 +47,19 @@ pass-local assignment tier: card passes incur no gold-reference tokens, while
 the shared editorial and subject prefixes remain cache-stable across all six
 passes. The completed thesis plan remains in the accepted workspace for audit
 and does not alter the assembled deck schema.
+
+By default, semantic closure uses `stratified-v1` to distribute the 50 cards
+across passes 1–5. The deterministic assignment balances claim types,
+categories, behavioral domains, and canonical priority bands, then orders each
+pass to reduce adjacent semantic similarity. It does not change claim IDs,
+priority IDs, selection semantics, or final deck order. SBE writes the complete
+replay map, subject-derived seed, and algorithm version to
+`<subject>.split-assignment.json` and records them in `run-manifest.json`.
+
+Use `--split-assignment-policy contiguous` for the historical control in which
+passes receive priority IDs 1–10, 11–20, and so on. Direct SBE invocation keeps
+`contiguous` as its backward-compatible default; semantic closure explicitly
+selects `stratified-v1` unless overridden.
 
 GPT-5.6 authoring calls use explicit prompt caching by default. The request is
 ordered as a stable editorial-guidance prefix, a subject-specific full-chart
