@@ -1254,6 +1254,8 @@ class OpenAIResponsesProvider:
             "response_id": response_id,
             "response_status": response.get("status"),
             "model": response.get("model") or self.model,
+            "requested_model": self.model,
+            "reasoning_effort": self.reasoning_effort,
             "usage": usage,
             "estimated_cost": estimated_cost(self.model, usage),
             "poll_count": polls,
@@ -1276,6 +1278,71 @@ class OpenAIResponsesProvider:
             ) from exc
         write_json_atomic(attempt_root / "polished-deck.json", result)
         return result, metadata
+
+
+class RoutedOpenAIProvider:
+    """Escalate rejected authoring attempts without repricing clean passes."""
+
+    name = "openai"
+
+    def __init__(
+        self,
+        *,
+        initial: OpenAIResponsesProvider,
+        retry: OpenAIResponsesProvider,
+        policy: str = "cost_optimized",
+    ) -> None:
+        self.initial = initial
+        self.retry = retry
+        self.policy = policy
+        self.model = initial.model
+        self.reasoning_effort = initial.reasoning_effort
+        self.background = initial.background
+        self.base_url = initial.base_url
+        self.max_output_tokens = initial.max_output_tokens
+        self.prompt_cache_mode = initial.prompt_cache_mode
+        self.prompt_cache_ttl = initial.prompt_cache_ttl
+
+    def author(
+        self,
+        source_workspace: Path,
+        response_workspace: Path,
+        spec: PassSpec,
+        attempt_number: int,
+        feedback: dict[str, Any] | None = None,
+    ) -> ProviderResult:
+        route = "initial" if attempt_number == 1 else "creative_retry"
+        provider = self.initial if attempt_number == 1 else self.retry
+        try:
+            result = provider.author(
+                source_workspace,
+                response_workspace,
+                spec,
+                attempt_number,
+                feedback,
+            )
+        except AuthoringProviderError as exc:
+            exc.metadata["routing"] = {
+                "policy": self.policy,
+                "route": route,
+                "model": provider.model,
+                "reasoning_effort": provider.reasoning_effort,
+            }
+            raise
+        metadata = {**result.metadata, "routing": {
+            "policy": self.policy,
+            "route": route,
+            "model": provider.model,
+            "reasoning_effort": provider.reasoning_effort,
+        }}
+        return ProviderResult(workspace=result.workspace, metadata=metadata)
+
+    def configuration(self) -> dict[str, Any]:
+        return {
+            "routing_policy": self.policy,
+            "initial": provider_configuration(self.initial),
+            "creative_retry": provider_configuration(self.retry),
+        }
 
 
 def parse_attempt_map(values: list[str]) -> dict[str, int]:
@@ -1482,6 +1549,9 @@ def prompt_cache_manifest(specs: list[PassSpec]) -> dict[str, Any]:
 def provider_configuration(
     provider: AuthoringProvider,
 ) -> dict[str, Any]:
+    configuration = getattr(provider, "configuration", None)
+    if callable(configuration):
+        return configuration()
     return {
         key: value
         for key, value in {
@@ -1545,6 +1615,7 @@ def update_run_status(state: dict[str, Any]) -> None:
     estimated_cost_total = 0.0
     priced_attempt_count = 0
     response_ids: list[str] = []
+    model_totals: dict[str, dict[str, Any]] = {}
     stage_attempts: dict[str, list[dict[str, Any]]] = {
         "authoring_initial": [],
         "creative_retries": [],
@@ -1585,6 +1656,26 @@ def update_run_status(state: dict[str, Any]) -> None:
                 priced_attempt_count += 1
                 stage_cost += float(cost["estimated_amount"])
                 stage_priced += 1
+            model_name = str(
+                metadata.get("requested_model")
+                or metadata.get("model")
+                or "unreported"
+            )
+            model_record = model_totals.setdefault(
+                model_name,
+                {
+                    "attempt_count": 0,
+                    "usage": {key: 0 for key in usage_totals},
+                    "estimated_cost_usd": 0.0,
+                },
+            )
+            model_record["attempt_count"] += 1
+            for key in usage_totals:
+                model_record["usage"][key] += int(usage.get(key) or 0)
+            if cost.get("estimated_amount") is not None:
+                model_record["estimated_cost_usd"] += float(
+                    cost["estimated_amount"]
+                )
             if metadata.get("response_id"):
                 response_ids.append(metadata["response_id"])
                 stage_responses.append(metadata["response_id"])
@@ -1640,6 +1731,15 @@ def update_run_status(state: dict[str, Any]) -> None:
         },
         "response_ids": response_ids,
         "stages": stage_summaries,
+        "models": {
+            model: {
+                **record,
+                "estimated_cost_usd": round(
+                    record["estimated_cost_usd"], 8
+                ),
+            }
+            for model, record in sorted(model_totals.items())
+        },
         "cost_per_accepted_card": (
             round(estimated_cost_total / delivered_card_count, 8)
             if delivered_card_count and estimated_cost_total
@@ -1898,7 +1998,7 @@ def author_pending_passes(
     cache_warmer: PassSpec | None = None
     if (
         max_workers > 1
-        and isinstance(provider, OpenAIResponsesProvider)
+        and getattr(provider, "name", None) == "openai"
         and provider.prompt_cache_mode != "disabled"
         and len(specs) > 1
         and not any(
@@ -2626,6 +2726,9 @@ def polish_subject(
         len(record.get("polish_attempts", [])) + 1,
         max_attempts + 1,
     ):
+        expand_related = bool(record.get("polish_attempts")) and not bool(
+            record["polish_attempts"][-1].get("accepted")
+        )
         attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
         lint_report = load_json(Path(record["lint_report"]))
         validation_report = load_json(Path(record["validation_report"]))
@@ -2650,7 +2753,7 @@ def polish_subject(
             lint_report=lint_report,
             validation_report=validation_report,
             include_theme_groups=allow_theme_group_edits,
-            expand_related=attempt_number > 1,
+            expand_related=expand_related,
         )
         if not target_paths:
             record["polish_unaddressable"] = {
@@ -2718,6 +2821,13 @@ def polish_subject(
                     f"{attempt_number}:{provider.model}"
                 ),
             )
+            metadata["routing"] = {
+                "route": "polish",
+                "model": provider.model,
+                "reasoning_effort": getattr(
+                    provider, "reasoning_effort", "unreported"
+                ),
+            }
             candidate = (
                 apply_deck_fields(
                     current_deck,
@@ -2937,7 +3047,7 @@ def resume_run(
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("subjects", {})
         configuration = state.setdefault("provider_configuration", {})
-        if isinstance(provider, OpenAIResponsesProvider):
+        if getattr(provider, "name", None) == "openai":
             configuration.setdefault(
                 "prompt_cache_mode", provider.prompt_cache_mode
             )
@@ -3138,11 +3248,34 @@ def main() -> None:
         default=6,
         help="Maximum number of independent passes authored concurrently.",
     )
-    parser.add_argument("--model", default="gpt-5.6-terra")
+    parser.add_argument(
+        "--model",
+        help=(
+            "Initial authoring model. Defaults to Terra for fixed routing and "
+            "Luna for cost-optimized routing."
+        ),
+    )
     parser.add_argument(
         "--reasoning-effort",
         choices=("none", "low", "medium", "high", "xhigh", "max"),
         default="medium",
+    )
+    parser.add_argument(
+        "--routing-policy",
+        choices=("fixed", "cost_optimized"),
+        default="fixed",
+    )
+    parser.add_argument("--retry-model", default="gpt-5.6-terra")
+    parser.add_argument(
+        "--retry-reasoning-effort",
+        choices=("none", "low", "medium", "high", "xhigh", "max"),
+        default="medium",
+    )
+    parser.add_argument("--polish-model", default="gpt-5.6-luna")
+    parser.add_argument(
+        "--polish-reasoning-effort",
+        choices=("none", "low", "medium", "high", "xhigh", "max"),
+        default="low",
     )
     parser.add_argument(
         "--api-key-env",
@@ -3218,6 +3351,11 @@ def main() -> None:
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
     args = parser.parse_args()
+    args.model = args.model or (
+        "gpt-5.6-luna"
+        if args.routing_policy == "cost_optimized"
+        else "gpt-5.6-terra"
+    )
     if args.compare_cost_runs:
         report = compare_cost_runs(*args.compare_cost_runs)
         if args.cost_report_output:
@@ -3246,11 +3384,16 @@ def main() -> None:
         error_attempts = parse_attempt_map(args.fake_error)
     except argparse.ArgumentTypeError as exc:
         parser.error(str(exc))
-    if args.prompt_layout_report:
-        provider = OpenAIResponsesProvider(
-            api_key="prompt-layout-report-does-not-contact-openai",
-            model=args.model,
-            reasoning_effort=args.reasoning_effort,
+    def make_openai_provider(
+        *,
+        api_key: str,
+        model: str,
+        reasoning_effort: str,
+    ) -> OpenAIResponsesProvider:
+        return OpenAIResponsesProvider(
+            api_key=api_key,
+            model=model,
+            reasoning_effort=reasoning_effort,
             base_url=args.openai_base_url,
             background=not args.foreground,
             poll_interval_seconds=args.poll_interval_seconds,
@@ -3262,6 +3405,14 @@ def main() -> None:
             safety_identifier=args.safety_identifier,
             prompt_cache_mode=args.prompt_cache_mode,
             prompt_cache_ttl=args.prompt_cache_ttl,
+        )
+
+    polish_provider: OpenAIResponsesProvider | None = None
+    if args.prompt_layout_report:
+        provider = make_openai_provider(
+            api_key="prompt-layout-report-does-not-contact-openai",
+            model=args.model,
+            reasoning_effort=args.reasoning_effort,
         )
     elif args.provider == "fake":
         provider: AuthoringProvider = FakeAuthoringProvider(
@@ -3278,22 +3429,28 @@ def main() -> None:
             parser.error(
                 f"--provider openai requires {args.api_key_env} to be set"
             )
-        provider = OpenAIResponsesProvider(
+        initial_provider = make_openai_provider(
             api_key=api_key,
             model=args.model,
             reasoning_effort=args.reasoning_effort,
-            base_url=args.openai_base_url,
-            background=not args.foreground,
-            poll_interval_seconds=args.poll_interval_seconds,
-            response_timeout_seconds=args.response_timeout_seconds,
-            http_timeout_seconds=args.http_timeout_seconds,
-            max_transport_retries=args.max_transport_retries,
-            transport_backoff_seconds=args.transport_backoff_seconds,
-            max_output_tokens=args.max_output_tokens,
-            safety_identifier=args.safety_identifier,
-            prompt_cache_mode=args.prompt_cache_mode,
-            prompt_cache_ttl=args.prompt_cache_ttl,
         )
+        if args.routing_policy == "cost_optimized":
+            provider = RoutedOpenAIProvider(
+                initial=initial_provider,
+                retry=make_openai_provider(
+                    api_key=api_key,
+                    model=args.retry_model,
+                    reasoning_effort=args.retry_reasoning_effort,
+                ),
+            )
+            polish_provider = make_openai_provider(
+                api_key=api_key,
+                model=args.polish_model,
+                reasoning_effort=args.polish_reasoning_effort,
+            )
+        else:
+            provider = initial_provider
+            polish_provider = initial_provider
     if args.resume:
         state, run_json = resume_run(
             run_dir=args.run_dir,
@@ -3336,9 +3493,7 @@ def main() -> None:
         python_executable=args.python_executable,
         allow_lint_warnings=args.allow_lint_warnings,
         polish=args.polish,
-        polish_provider=(
-            provider if isinstance(provider, OpenAIResponsesProvider) else None
-        ),
+        polish_provider=polish_provider,
         max_polish_attempts=args.max_polish_attempts,
     )
     save_state(run_json, state)

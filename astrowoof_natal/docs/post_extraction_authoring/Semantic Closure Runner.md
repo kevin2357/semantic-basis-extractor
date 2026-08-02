@@ -81,6 +81,39 @@ Fatal request problems such as authentication, permission, and invalid-request
 errors stop the affected pass immediately rather than repeating an identical
 billable request.
 
+## Model routing
+
+Fixed routing remains the default and preserves the established behavior: the
+model and reasoning effort selected with `--model` and
+`--reasoning-effort` author every pass and perform polish.
+
+Use `--routing-policy cost_optimized` to route by editorial risk:
+
+- first authoring attempts default to `gpt-5.6-luna` at medium reasoning;
+- passes rejected by creative QA retry with `gpt-5.6-terra` at medium
+  reasoning;
+- sparse whole-deck polish uses `gpt-5.6-luna` at low reasoning.
+
+These defaults are independently configurable with `--model`,
+`--reasoning-effort`, `--retry-model`, `--retry-reasoning-effort`,
+`--polish-model`, and `--polish-reasoning-effort`. For example:
+
+```powershell
+python src/author_semantic_closure.py `
+  --input-package C:\path\to\projected-subjects `
+  --subject ella `
+  --run-dir C:\path\to\runs\ella-routed `
+  --provider openai `
+  --routing-policy cost_optimized `
+  --polish
+```
+
+The full route configuration is part of the resume contract. Every response
+records its route, requested model, and reasoning effort, while aggregate
+accounting reports attempts, tokens, and cost by model. A rejected inexpensive
+attempt therefore remains visible in expected-cost comparisons rather than
+being hidden by the successful escalation.
+
 ## Assembly and final QA
 
 After all six passes for a subject are accepted, the runner copies them into an

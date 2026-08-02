@@ -24,6 +24,7 @@ from author_semantic_closure import (  # noqa: E402
     OpenAIServiceError,
     PassSpec,
     ProviderResult,
+    RoutedOpenAIProvider,
     apply_deck_fields,
     apply_sparse_polish,
     apply_authored_fields,
@@ -41,6 +42,7 @@ from author_semantic_closure import (  # noqa: E402
     normalized_usage,
     polish_subject,
     polish_target_paths,
+    provider_configuration,
     prompt_cache_manifest,
     resume_run,
     safe_extract_zip,
@@ -994,6 +996,107 @@ class TestSemanticClosure(SemanticClosureFixture):
         self.assertEqual(1500, usage["total_tokens"])
         self.assertEqual(0.00955, cost["estimated_amount"])
         self.assertIsNone(estimated_cost("unknown-model", usage))
+
+    def test_model_router_escalates_only_creative_retries(self) -> None:
+        class StubProvider:
+            def __init__(inner_self, model, effort):
+                inner_self.model = model
+                inner_self.reasoning_effort = effort
+                inner_self.background = True
+                inner_self.base_url = "https://api.openai.com/v1"
+                inner_self.max_output_tokens = 100_000
+                inner_self.prompt_cache_mode = "explicit"
+                inner_self.prompt_cache_ttl = "30m"
+                inner_self.calls = []
+
+            def author(inner_self, *args, **kwargs):
+                inner_self.calls.append((args, kwargs))
+                return ProviderResult(
+                    workspace=args[1],
+                    metadata={
+                        "requested_model": inner_self.model,
+                        "usage": {},
+                    },
+                )
+
+        initial = StubProvider("gpt-5.6-luna", "medium")
+        retry = StubProvider("gpt-5.6-terra", "medium")
+        router = RoutedOpenAIProvider(initial=initial, retry=retry)
+        spec = PassSpec("bre_1", "bre", 1, Path("bre_1.zip"), "hash")
+        first = router.author(Path("source"), Path("first"), spec, 1)
+        second = router.author(Path("source"), Path("second"), spec, 2)
+        self.assertEqual(1, len(initial.calls))
+        self.assertEqual(1, len(retry.calls))
+        self.assertEqual("initial", first.metadata["routing"]["route"])
+        self.assertEqual(
+            "creative_retry", second.metadata["routing"]["route"]
+        )
+        configuration = provider_configuration(router)
+        self.assertEqual("cost_optimized", configuration["routing_policy"])
+        self.assertEqual(
+            "gpt-5.6-luna", configuration["initial"]["model"]
+        )
+        self.assertEqual(
+            "gpt-5.6-terra",
+            configuration["creative_retry"]["model"],
+        )
+
+    def test_routed_provider_configuration_is_resume_stable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            router = RoutedOpenAIProvider(
+                initial=OpenAIResponsesProvider(
+                    api_key="unused", model="gpt-5.6-luna"
+                ),
+                retry=OpenAIResponsesProvider(
+                    api_key="unused", model="gpt-5.6-terra"
+                ),
+            )
+            _, run_json = self.make_state(root, router)
+            resumed, resumed_path = resume_run(
+                run_dir=run_json.parent,
+                provider=router,
+                max_attempts=3,
+            )
+            self.assertEqual(run_json, resumed_path)
+            self.assertEqual(
+                "cost_optimized",
+                resumed["provider_configuration"]["routing_policy"],
+            )
+
+    def test_accounting_reports_usage_by_requested_model(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, _ = self.make_state(root, FakeAuthoringProvider())
+            records = list(state["passes"].values())[:2]
+            for record, model in zip(
+                records, ("gpt-5.6-luna", "gpt-5.6-terra")
+            ):
+                record["attempts"] = [{
+                    "state": "PASS_QA_ACCEPTED",
+                    "provider_metadata": {
+                        "requested_model": model,
+                        "usage": {
+                            "input_tokens": 1000,
+                            "cached_input_tokens": 0,
+                            "cache_write_tokens": 0,
+                            "output_tokens": 100,
+                            "reasoning_tokens": 0,
+                            "total_tokens": 1100,
+                        },
+                    },
+                }]
+            update_run_status(state)
+            self.assertEqual(
+                {"gpt-5.6-luna", "gpt-5.6-terra"},
+                set(state["accounting"]["models"]),
+            )
+            self.assertLess(
+                state["accounting"]["models"]["gpt-5.6-luna"]
+                ["estimated_cost_usd"],
+                state["accounting"]["models"]["gpt-5.6-terra"]
+                ["estimated_cost_usd"],
+            )
 
     def test_cost_accounts_for_explicit_cache_writes(self) -> None:
         usage = {
