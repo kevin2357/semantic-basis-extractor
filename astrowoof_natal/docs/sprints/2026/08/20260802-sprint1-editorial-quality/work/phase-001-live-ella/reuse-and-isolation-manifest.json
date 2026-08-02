@@ -1,0 +1,29 @@
+{
+  "source_run": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801",
+  "reused_passes": {
+    "ella_1": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_1\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\passes\\ella_1\\accepted"
+    },
+    "ella_2": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_2\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\passes\\ella_2\\accepted"
+    },
+    "ella_3": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_3\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\passes\\ella_3\\accepted"
+    },
+    "ella_4": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_4\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\passes\\ella_4\\accepted"
+    },
+    "ella_5": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_5\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\passes\\ella_5\\accepted"
+    }
+  },
+  "experimental_pass": "ella_6",
+  "gold_subject": "kevin",
+  "target_subject": "ella",
+  "assembly_control": "The new summaries are retained, but the accepted Ella baseline theme assignment is restored before assembly."
+}

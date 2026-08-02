@@ -290,3 +290,54 @@ Final whole-deck QA was blocked only by imbalanced newly authored theme groups
 (`8, 12, 3, 10`). The historical grouping also fails the current rule. The
 pass-local gate/final-validator mismatch is a separate defect. Detailed
 analysis is in `results/PHASE 1 - Kevin Summary Calibration Live Test.md`.
+
+## 2026-08-02 — Phase 1 cross-subject Ella live checkpoint
+
+Ella pass 6 was authored with the Kevin gold while accepted Ella passes 1–5
+were reused. The request completed on its first accepted attempt after durable
+polling resumed the originally submitted response; no duplicate request was
+created.
+
+A same-code assembly control differs from the candidate at exactly the 108
+summary values and nowhere else; all 50 reader-facing card payloads are
+identical. Differences between that control and the optimized historical deck
+are preserved separately as prior polish and theme-group drift.
+
+### Service result
+
+- Model: `gpt-5.6-terra`, medium reasoning
+- Response ID: `resp_0c7df228968c8380006a6f61b996c0819aa9015072264bfba8`
+- 43,398 input tokens; 7,639 output tokens; 53 reasoning tokens
+- 188.625 elapsed seconds including detached polling
+- Estimated cost: $0.22308
+
+### Leakage result
+
+The candidate shares no eight-, ten-, or twelve-word sequence with the Kevin
+gold, no exact headline, and only one generic six-word sequence (`cue and a
+familiar resting place`). Its maximum gold-body overlap is six words. Kevin's
+facts, astrology, jokes, and four-part needs framework do not transfer.
+
+Chapter, spark, landing, and return language appears in Ella, but the same
+devices were already extensive in Ella's prior deck and source-derived prose.
+The cross-subject evidence therefore supports same-subject alignment as the
+mechanism behind the earlier Kevin leakage.
+
+### Quality result
+
+The thesis plan again produced four distinct arguments and a clean
+needs-versus-growth distinction. The candidate is coherent, actionable, and
+well voiced, but its 2,830 summary-body words are 34.8% below the existing
+optimized Ella set's 4,339. The prior Ella summaries retain stronger literary
+peaks and richer development in several lenses. Gold appears safe across
+subjects, but its incremental benefit over the thesis plan alone remains
+unproven.
+
+Decision: retain the thesis plan; forbid same-subject prose gold; allow Kevin
+gold to remain experimental across subjects; do not make always-on gold a
+final decision without considering a later thesis-only A/B.
+
+Both newly authored and historical Ella theme plans fail the current
+three-or-four-group validation rule. The pass-local acceptance gap is confirmed
+as a separate defect. Detailed analysis is in
+`results/PHASE 1 - Ella Cross-Subject Gold Test.md`.

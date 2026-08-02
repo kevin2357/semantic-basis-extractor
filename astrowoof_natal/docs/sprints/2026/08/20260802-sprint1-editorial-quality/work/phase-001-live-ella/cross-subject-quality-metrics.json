@@ -1,0 +1,372 @@
+{
+  "status": "FINAL_QA_FAILED",
+  "isolation": {
+    "changed_value_path_count": 108,
+    "non_summary_changed_paths": [],
+    "reader_facing_card_payloads_identical": true
+  },
+  "historical_optimized_drift": {
+    "changed_value_paths": [
+      "cards.1.theme_group",
+      "cards.6.theme_group",
+      "cards.7.theme_group",
+      "cards.11.theme_group",
+      "cards.13.theme_group",
+      "cards.14.theme_group",
+      "cards.15.theme_group",
+      "cards.16.theme_group",
+      "cards.18.theme_group",
+      "cards.20.theme_group",
+      "cards.23.theme_group",
+      "cards.28.card.light_astro.headline.direct_to_dog",
+      "cards.28.card.light_astro.headline.handler",
+      "cards.40.card.light_astro.body.direct_to_dog",
+      "cards.45.theme_group",
+      "summary.card4.light_astro.body.direct_to_dog"
+    ],
+    "note": "Includes historical polish and postprocessing changes; not caused by Phase 1."
+  },
+  "qa": {
+    "validation": {
+      "accepted": false,
+      "returncode": 1,
+      "stdout": "{\n  \"status\": \"fail\",\n  \"errors\": [\n    \"Selected aspects and syntheses together must use three or four theme groups; found 5.\",\n    \"Selected aspects and syntheses theme groups are not approximately balanced: {'Patrol, Purpose, and Public Life': 6, 'Bond, Boundaries, and Reciprocity': 9, 'Home, Rest, and Recharging': 5, 'Signals, Learning, and Adaptable Intelligence': 8, 'Play, Friction, and Productive Outlets': 5}.\"\n  ],\n  \"warnings\": [\n    \"Card 32 may contain astrology in no_astro.headline.direct_to_dog.\",\n    \"Card 45 may contain astrology in no_astro.body.handler.\"\n  ],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 56,\n    \"placeholder_free\": true\n  }\n}\n",
+      "stderr": "",
+      "report": {
+        "status": "fail",
+        "errors": [
+          "Selected aspects and syntheses together must use three or four theme groups; found 5.",
+          "Selected aspects and syntheses theme groups are not approximately balanced: {'Patrol, Purpose, and Public Life': 6, 'Bond, Boundaries, and Reciprocity': 9, 'Home, Rest, and Recharging': 5, 'Signals, Learning, and Adaptable Intelligence': 8, 'Play, Friction, and Productive Outlets': 5}."
+        ],
+        "warnings": [
+          "Card 32 may contain astrology in no_astro.headline.direct_to_dog.",
+          "Card 45 may contain astrology in no_astro.body.handler."
+        ],
+        "checks": {
+          "card_count": 50,
+          "phase": "authoring",
+          "polish_edit_overrides": {
+            "context_filters": false,
+            "theme_groups": false,
+            "summary": false
+          },
+          "locked_top_level_fields_checked": [
+            "subject",
+            "source",
+            "coverage",
+            "categories",
+            "behavioral_domains",
+            "context_filter_groups",
+            "unselected_claims",
+            "projected_term_registry"
+          ],
+          "locked_card_fields_checked": [
+            "claim_id",
+            "claim_type",
+            "categories",
+            "importance",
+            "confidence",
+            "strength",
+            "priority_id",
+            "selection",
+            "behavioral_domains",
+            "tags",
+            "evidence",
+            "relations"
+          ],
+          "summary_card_count": 4,
+          "unselected_claim_count": 56,
+          "placeholder_free": true
+        }
+      }
+    },
+    "lint": {
+      "accepted": true,
+      "returncode": 2,
+      "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 1,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-ella\\\\run\\\\final\\\\ella\\\\natal.ella.cards.json\",\n      \"subject\": \"ella\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 1,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_failure_signature\",\n          \"message\": \"The 'fine-print humor' mechanism appears three or more times.\",\n          \"details\": {\n            \"count\": 3,\n            \"locations\": [\n              \"card:relationship_7d55305feb3af96a:light_astro.headline.handler\",\n              \"card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog\",\n              \"card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog\"\n            ],\n            \"excerpts\": [\n              \"Pluto Makes Mars Stop for the Fine Print\",\n              \"Your Pluto Can Read the Fine Print Before Mars Plays Again\",\n              \"Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t\"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 0,\n        \"dominant_openings\": [],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+      "stderr": "",
+      "report": {
+        "schema_version": "astrowoof.editorial_lint.v0.1",
+        "status": "warn",
+        "warning_count": 1,
+        "decks": [
+          {
+            "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-ella\\run\\final\\ella\\natal.ella.cards.json",
+            "subject": "ella",
+            "reader_facing_field_count": 1458,
+            "warning_count": 1,
+            "warnings": [
+              {
+                "code": "repeated_failure_signature",
+                "message": "The 'fine-print humor' mechanism appears three or more times.",
+                "details": {
+                  "count": 3,
+                  "locations": [
+                    "card:relationship_7d55305feb3af96a:light_astro.headline.handler",
+                    "card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog",
+                    "card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog"
+                  ],
+                  "excerpts": [
+                    "Pluto Makes Mars Stop for the Fine Print",
+                    "Your Pluto Can Read the Fine Print Before Mars Plays Again",
+                    "Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t"
+                  ]
+                }
+              }
+            ],
+            "authoring_pass_acceptance": {
+              "status": "accept",
+              "deterministic": true,
+              "thresholds": {
+                "ngram_words": 12,
+                "ngram_min_distinct_claims": 3
+              },
+              "reader_facing_field_count": 1458,
+              "distinct_location_count": 54,
+              "exact_duplicate_group_count": 0,
+              "exact_duplicate_groups": [],
+              "repeated_ngram_group_count": 0,
+              "repeated_ngrams": [],
+              "suspicious_artifact_count": 0,
+              "suspicious_artifacts": [],
+              "dominant_opening_group_count": 0,
+              "dominant_openings": [],
+              "rejection_reasons": []
+            }
+          }
+        ],
+        "cross_subject_warnings": []
+      }
+    }
+  },
+  "word_counts": {
+    "automated_baseline": 4339,
+    "phase1_candidate": 2830,
+    "kevin_gold": 3367
+  },
+  "exact_headline_reuse_from_kevin": [],
+  "kevin_gold_ngram_overlap": {
+    "6": {
+      "count": 1,
+      "examples": [
+        "cue and a familiar resting place"
+      ]
+    },
+    "8": {
+      "count": 0,
+      "examples": []
+    },
+    "10": {
+      "count": 0,
+      "examples": []
+    },
+    "12": {
+      "count": 0,
+      "examples": []
+    }
+  },
+  "longest_gold_body_matches": {
+    "card2.no_astro.body.hybrid": {
+      "word_count": 6,
+      "text": "cue and a familiar resting place"
+    },
+    "card4.light_astro.body.direct_to_dog": {
+      "word_count": 5,
+      "text": "gives you the ability to"
+    },
+    "card4.full_astro.body.direct_to_dog": {
+      "word_count": 5,
+      "text": "you do not have to"
+    },
+    "card2.no_astro.body.direct_to_dog": {
+      "word_count": 4,
+      "text": "you do not simply"
+    },
+    "card2.full_astro.body.handler": {
+      "word_count": 4,
+      "text": "action and play to"
+    },
+    "card2.full_astro.body.direct_to_dog": {
+      "word_count": 4,
+      "text": "mars beside your leo"
+    },
+    "card3.no_astro.body.direct_to_dog": {
+      "word_count": 4,
+      "text": "you do not need"
+    },
+    "card4.no_astro.body.handler": {
+      "word_count": 4,
+      "text": "and return to a"
+    },
+    "card4.no_astro.body.hybrid": {
+      "word_count": 4,
+      "text": "create enough space for"
+    },
+    "card1.no_astro.body.handler": {
+      "word_count": 3,
+      "text": "is likely to"
+    },
+    "card1.no_astro.body.direct_to_dog": {
+      "word_count": 3,
+      "text": "you are not"
+    },
+    "card1.no_astro.body.hybrid": {
+      "word_count": 3,
+      "text": "cue and a"
+    }
+  },
+  "transferred_device_mentions": {
+    "chapter_or_act": [
+      "card2.no_astro.body.handler",
+      "card2.full_astro.body.handler"
+    ],
+    "spark_and_return_or_landing": [
+      "card2.no_astro.body.direct_to_dog",
+      "card2.light_astro.headline.hybrid",
+      "card2.light_astro.body.direct_to_dog",
+      "card4.light_astro.body.handler"
+    ],
+    "anchor_gate_laboratory_stage": [],
+    "office_hours": []
+  },
+  "candidate_headlines": {
+    "card1": {
+      "no_astro": {
+        "handler": "The Little Dog With a Job Title",
+        "direct_to_dog": "Ella, Chief Examiner of Everything",
+        "hybrid": "Her Report Always Comes Back to the Team"
+      },
+      "light_astro": {
+        "handler": "Virgo Purpose, Leo Presence",
+        "direct_to_dog": "Your Small Missions Have a Big Heart",
+        "hybrid": "A Patrol With an Audience"
+      },
+      "full_astro": {
+        "handler": "A Virgo Scout With a Leo Pack Role",
+        "direct_to_dog": "You Were Born to Notice and Belong",
+        "hybrid": "The Axis Between Investigation and Belonging"
+      }
+    },
+    "card2": {
+      "no_astro": {
+        "handler": "Ella's Day Needs a Last Page",
+        "direct_to_dog": "Every Expedition Requires Debriefing",
+        "hybrid": "The Homecoming Is Part of the Walk"
+      },
+      "light_astro": {
+        "handler": "Mars Wants a Route; Neptune Feels the Weather",
+        "direct_to_dog": "You Travel With Your Whole Weather System",
+        "hybrid": "She Supplies the Spark; Home Supplies the Softening"
+      },
+      "full_astro": {
+        "handler": "From Leo Action Back to an Aquarius Den",
+        "direct_to_dog": "Your Chart Has an Outward March and an Inward Turn",
+        "hybrid": "Four Paws, One Reliable Sequence"
+      }
+    },
+    "card3": {
+      "no_astro": {
+        "handler": "Give Ella a Base and a Brief",
+        "direct_to_dog": "A Safe Place, a Fair Rule, a Good Assignment",
+        "hybrid": "The Boundary Comes With a Doorway"
+      },
+      "light_astro": {
+        "handler": "Taurus Bonding Meets Aquarius Home Rules",
+        "direct_to_dog": "Your Den May Be Particular, and That Is Fine",
+        "hybrid": "Security Without Shrinking Her"
+      },
+      "full_astro": {
+        "handler": "Support the IC–MC Axis and the Taurus Bond",
+        "direct_to_dog": "Your Needs Work Better as a Team",
+        "hybrid": "A Home That Gives Her Something to Return To"
+      }
+    },
+    "card4": {
+      "no_astro": {
+        "handler": "Teach the Return After the Notice",
+        "direct_to_dog": "Keep Your Eyes Open, Ella",
+        "hybrid": "A Better Way Back to the Same Team"
+      },
+      "light_astro": {
+        "handler": "Uranus Can Learn a Virgo Routine",
+        "direct_to_dog": "Your Plot Twist Can Have a Cue",
+        "hybrid": "From Startle to Signal"
+      },
+      "full_astro": {
+        "handler": "Practice the Cooperative Channels Around the Squares",
+        "direct_to_dog": "Your Hard Turn Has a Learning Path",
+        "hybrid": "The Square Becomes a Rehearsal"
+      }
+    }
+  },
+  "baseline_headlines": {
+    "card1": {
+      "no_astro": {
+        "handler": "Meet Ella, the Household Official with a Soft Center",
+        "direct_to_dog": "Ella, You Are Allowed to Be Both Watchdog and Cuddlebug",
+        "hybrid": "The Day Ella Audits the House and Joins the Family"
+      },
+      "light_astro": {
+        "handler": "Ella’s Virgo Sun, Leo Public Spark",
+        "direct_to_dog": "Your Virgo Attention Has a Leo Applause Button",
+        "hybrid": "When Virgo Checks the Details and Leo Takes the Stage"
+      },
+      "full_astro": {
+        "handler": "A Practical Observer with a Public Job",
+        "direct_to_dog": "Ella, Your Chart Makes a Place for the Inspector and the Star",
+        "hybrid": "Ella’s Full Pattern: Inspection Becomes Belonging"
+      }
+    },
+    "card2": {
+      "no_astro": {
+        "handler": "Ella’s Day Runs on Patrol, Play, and Return",
+        "direct_to_dog": "Your Day Is a Loop, Not a Straight Line",
+        "hybrid": "A Walk, a Whirlwind, and the Way Back Home"
+      },
+      "light_astro": {
+        "handler": "Mercury’s Route Map and Uranus’s Sudden Detour",
+        "direct_to_dog": "You Carry a Map, Then Draw a New Road",
+        "hybrid": "The Virgo Map Meets the Aries Detour"
+      },
+      "full_astro": {
+        "handler": "How Ella Makes a Life of Departures and Homecomings",
+        "direct_to_dog": "Ella, Your Routine Is a Map with Trapdoors for Joy",
+        "hybrid": "Ella’s Daily Architecture: A Reliable Frame for Unreliable Fun"
+      }
+    },
+    "card3": {
+      "no_astro": {
+        "handler": "Ella Needs a Home Base—and a Job Worth Leaving It For",
+        "direct_to_dog": "You Need Somewhere Safe to Come Back From",
+        "hybrid": "The Leash Is Not the Whole Relationship"
+      },
+      "light_astro": {
+        "handler": "Moon, Uranus, and the Outlet Ella Can Use",
+        "direct_to_dog": "A Capricorn Landing Pad for Your Aries Spark",
+        "hybrid": "When Comfort and Surprise Need a Negotiated Truce"
+      },
+      "full_astro": {
+        "handler": "The Conditions That Let Ella Be Both Secure and Spirited",
+        "direct_to_dog": "Ella, Your Safe Place Is a Launchpad, Not a Lock",
+        "hybrid": "A Secure Bond Gives Ella Room to Use Her Power"
+      }
+    },
+    "card4": {
+      "no_astro": {
+        "handler": "Teach the Investigator, Don’t Silence Her",
+        "direct_to_dog": "Your Questions Can Become Skills",
+        "hybrid": "The Lesson Starts Where Ella Is Looking"
+      },
+      "light_astro": {
+        "handler": "Mercury and Saturn Make Curiosity Durable",
+        "direct_to_dog": "Your Careful Mind Can Learn the Long Game",
+        "hybrid": "A Puzzle Becomes a Partnership"
+      },
+      "full_astro": {
+        "handler": "Ella’s Growth Path Runs Through Curiosity and Cooperation",
+        "direct_to_dog": "Ella, Your Nose Is a Classroom and Your Person Is a Conversation",
+        "hybrid": "From Local Data to Shared Language"
+      }
+    }
+  }
+}

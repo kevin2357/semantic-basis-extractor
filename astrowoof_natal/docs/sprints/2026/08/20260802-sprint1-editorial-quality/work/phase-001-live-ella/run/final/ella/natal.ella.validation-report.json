@@ -1,0 +1,47 @@
+{
+  "status": "fail",
+  "errors": [
+    "Selected aspects and syntheses together must use three or four theme groups; found 5.",
+    "Selected aspects and syntheses theme groups are not approximately balanced: {'Patrol, Purpose, and Public Life': 6, 'Bond, Boundaries, and Reciprocity': 9, 'Home, Rest, and Recharging': 5, 'Signals, Learning, and Adaptable Intelligence': 8, 'Play, Friction, and Productive Outlets': 5}."
+  ],
+  "warnings": [
+    "Card 32 may contain astrology in no_astro.headline.direct_to_dog.",
+    "Card 45 may contain astrology in no_astro.body.handler."
+  ],
+  "checks": {
+    "card_count": 50,
+    "phase": "authoring",
+    "polish_edit_overrides": {
+      "context_filters": false,
+      "theme_groups": false,
+      "summary": false
+    },
+    "locked_top_level_fields_checked": [
+      "subject",
+      "source",
+      "coverage",
+      "categories",
+      "behavioral_domains",
+      "context_filter_groups",
+      "unselected_claims",
+      "projected_term_registry"
+    ],
+    "locked_card_fields_checked": [
+      "claim_id",
+      "claim_type",
+      "categories",
+      "importance",
+      "confidence",
+      "strength",
+      "priority_id",
+      "selection",
+      "behavioral_domains",
+      "tags",
+      "evidence",
+      "relations"
+    ],
+    "summary_card_count": 4,
+    "unselected_claim_count": 56,
+    "placeholder_free": true
+  }
+}

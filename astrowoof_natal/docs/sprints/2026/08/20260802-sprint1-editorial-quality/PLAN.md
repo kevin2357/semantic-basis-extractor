@@ -254,6 +254,15 @@ The live test also exposed a separate pass-6/final-validator contract gap for
 theme-group balance. Preserve it as a defect to address without conflating it
 with summary calibration.
 
+The subsequent cross-subject Ella test found no exact headline reuse, no
+shared eight-word-or-longer sequences, and only one ordinary six-word overlap
+with the Kevin gold. This supports same-subject semantic alignment—not general
+gold imitation—as the mechanism behind the Kevin leakage. Complete prose gold
+may remain a cross-subject experiment but must never use the target subject's
+own prose. Its marginal quality benefit remains unproven because the thesis
+plan and gold were introduced together and Ella's prior summaries were already
+stronger in several literary dimensions.
+
 ## Phase 2 — Deterministic diversified claim assignment
 
 ### Design
