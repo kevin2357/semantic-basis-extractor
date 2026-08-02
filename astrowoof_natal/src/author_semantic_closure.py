@@ -20,6 +20,7 @@ import tempfile
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import zipfile
 from copy import deepcopy
@@ -32,7 +33,7 @@ from assemble_authoring_workspace import assemble
 from lint_astrowoof_editorial import reader_facing_items
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.4"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.5"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -759,6 +760,29 @@ def estimated_cost(
     }
 
 
+def batch_estimated_cost(model: str, usage: dict[str, int]) -> dict[str, Any] | None:
+    """Apply the documented 50% Batch API discount to a normal estimate."""
+    ordinary = estimated_cost(model, usage)
+    if ordinary is None:
+        return None
+    discounted = deepcopy(ordinary)
+    discounted["estimated_amount"] = round(
+        float(ordinary["estimated_amount"]) * 0.5, 8
+    )
+    discounted["components"] = {
+        key: round(float(value) * 0.5, 8)
+        for key, value in ordinary["components"].items()
+    }
+    discounted["service_level"] = "batch"
+    discounted["discount_ratio"] = 0.5
+    discounted["note"] = (
+        "Estimate applies the documented Batch API 50% discount; actual "
+        "usage and billing remain authoritative. Prompt-cache savings are "
+        "reported from returned cached-token usage, not assumed."
+    )
+    return discounted
+
+
 class OpenAIResponsesProvider:
     """Author a pass with one fresh OpenAI Responses API job."""
 
@@ -1344,6 +1368,169 @@ class RoutedOpenAIProvider:
             "creative_retry": provider_configuration(self.retry),
         }
 
+    def provider_for_attempt(self, attempt_number: int) -> OpenAIResponsesProvider:
+        return self.initial if attempt_number == 1 else self.retry
+
+
+def openai_provider_for_attempt(
+    provider: AuthoringProvider,
+    attempt_number: int,
+) -> OpenAIResponsesProvider:
+    if isinstance(provider, RoutedOpenAIProvider):
+        return provider.provider_for_attempt(attempt_number)
+    if isinstance(provider, OpenAIResponsesProvider):
+        return provider
+    raise TypeError("Batch service level requires an OpenAI provider")
+
+
+def build_batch_authoring_request(
+    provider: OpenAIResponsesProvider,
+    *,
+    spec: PassSpec,
+    workspace: Path,
+    feedback: dict[str, Any] | None,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, str]]:
+    """Build the same structured authoring request for Batch transport."""
+    expected_fields = writable_fields(workspace)
+    system, segments = provider._prompt(
+        spec=spec,
+        workspace=workspace,
+        feedback=feedback,
+    )
+    payload: dict[str, Any] = {
+        "model": provider.model,
+        "input": [
+            {
+                "role": "system",
+                "content": [provider._input_text_block(system)],
+            },
+            {
+                "role": "user",
+                "content": [
+                    provider._input_text_block(segments["static_prefix"]),
+                    provider._input_text_block(segments["subject_prefix"]),
+                    provider._input_text_block(segments["pass_assignment"]),
+                ],
+            },
+        ],
+        "reasoning": {"effort": provider.reasoning_effort},
+        "text": {
+            "verbosity": "high",
+            "format": {
+                "type": "json_schema",
+                "name": "astrowoof_authoring_pass",
+                "strict": True,
+                "schema": authoring_output_schema(expected_fields),
+            },
+        },
+        "max_output_tokens": provider.max_output_tokens,
+    }
+    if provider.safety_identifier:
+        payload["safety_identifier"] = provider.safety_identifier
+    return payload, provider.prompt_layout(
+        spec=spec,
+        workspace=workspace,
+        feedback=feedback,
+    ), segments
+
+
+class OpenAIBatchTransport(Protocol):
+    def upload_jsonl(self, content: bytes, filename: str) -> dict[str, Any]: ...
+    def create_batch(self, payload: dict[str, Any]) -> dict[str, Any]: ...
+    def retrieve_batch(self, batch_id: str) -> dict[str, Any]: ...
+    def download_file(self, file_id: str) -> str: ...
+
+
+class UrllibOpenAIBatchTransport:
+    """Dependency-free Files and Batch API transport."""
+
+    def __init__(
+        self,
+        *,
+        api_key: str,
+        base_url: str,
+        timeout_seconds: float,
+    ) -> None:
+        self.api_key = api_key
+        self.base_url = base_url.rstrip("/")
+        self.timeout_seconds = timeout_seconds
+
+    def _open(self, request: urllib.request.Request) -> bytes:
+        try:
+            with urllib.request.urlopen(
+                request, timeout=self.timeout_seconds
+            ) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:2000]
+            raise OpenAIServiceError(
+                f"OpenAI HTTP {exc.code}: {detail or exc}",
+                status_code=exc.code,
+                retryable=exc.code in RETRYABLE_HTTP_STATUSES,
+                fatal=exc.code in {401, 403, 422},
+            ) from exc
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            raise OpenAIServiceError(
+                f"OpenAI transport error: {exc}", retryable=True
+            ) from exc
+
+    def _json(
+        self,
+        method: str,
+        path: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        body = None if payload is None else json.dumps(payload).encode("utf-8")
+        request = urllib.request.Request(
+            f"{self.base_url}{path}",
+            data=body,
+            method=method,
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+        )
+        decoded = json.loads(self._open(request).decode("utf-8"))
+        if not isinstance(decoded, dict):
+            raise OpenAIServiceError("OpenAI returned a non-object JSON value")
+        return decoded
+
+    def upload_jsonl(self, content: bytes, filename: str) -> dict[str, Any]:
+        boundary = f"astrowoof-{hashlib.sha256(content).hexdigest()[:24]}"
+        parts = [
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"purpose\"\r\n\r\nbatch\r\n".encode(),
+            (
+                f"--{boundary}\r\nContent-Disposition: form-data; name=\"file\"; "
+                f"filename=\"{filename}\"\r\nContent-Type: application/jsonl\r\n\r\n"
+            ).encode(),
+            content,
+            f"\r\n--{boundary}--\r\n".encode(),
+        ]
+        request = urllib.request.Request(
+            f"{self.base_url}/files",
+            data=b"".join(parts),
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": f"multipart/form-data; boundary={boundary}",
+            },
+        )
+        return json.loads(self._open(request).decode("utf-8"))
+
+    def create_batch(self, payload: dict[str, Any]) -> dict[str, Any]:
+        return self._json("POST", "/batches", payload)
+
+    def retrieve_batch(self, batch_id: str) -> dict[str, Any]:
+        return self._json("GET", f"/batches/{urllib.parse.quote(batch_id)}")
+
+    def download_file(self, file_id: str) -> str:
+        request = urllib.request.Request(
+            f"{self.base_url}/files/{urllib.parse.quote(file_id)}/content",
+            method="GET",
+            headers={"Authorization": f"Bearer {self.api_key}"},
+        )
+        return self._open(request).decode("utf-8")
+
 
 def parse_attempt_map(values: list[str]) -> dict[str, int]:
     result: dict[str, int] = {}
@@ -1467,6 +1654,7 @@ def initial_run_state(
     max_attempts: int,
     sbe_manifest: dict[str, Any],
     specs: list[PassSpec],
+    service_level: str = "interactive",
 ) -> dict[str, Any]:
     now = utc_now()
     return {
@@ -1477,6 +1665,7 @@ def initial_run_state(
         "input_package": normalized_path(input_package),
         "run_dir": normalized_path(run_dir),
         "provider": provider.name,
+        "service_level": service_level,
         "provider_configuration": provider_configuration(provider),
         "max_attempts": max_attempts,
         "sbe": {
@@ -1616,6 +1805,7 @@ def update_run_status(state: dict[str, Any]) -> None:
     priced_attempt_count = 0
     response_ids: list[str] = []
     model_totals: dict[str, dict[str, Any]] = {}
+    service_totals: dict[str, dict[str, Any]] = {}
     stage_attempts: dict[str, list[dict[str, Any]]] = {
         "authoring_initial": [],
         "creative_retries": [],
@@ -1644,11 +1834,11 @@ def update_run_status(state: dict[str, Any]) -> None:
                 usage_totals[key] += int(usage.get(key) or 0)
                 stage_usage[key] += int(usage.get(key) or 0)
             cost = (
-                estimated_cost(
+                metadata.get("estimated_cost")
+                or estimated_cost(
                     str(metadata.get("requested_model") or metadata.get("model")),
                     {key: int(usage.get(key) or 0) for key in usage_totals},
                 )
-                or metadata.get("estimated_cost")
                 or {}
             )
             if cost.get("estimated_amount") is not None:
@@ -1674,6 +1864,22 @@ def update_run_status(state: dict[str, Any]) -> None:
                 model_record["usage"][key] += int(usage.get(key) or 0)
             if cost.get("estimated_amount") is not None:
                 model_record["estimated_cost_usd"] += float(
+                    cost["estimated_amount"]
+                )
+            service_name = str(metadata.get("service_level") or "interactive")
+            service_record = service_totals.setdefault(
+                service_name,
+                {
+                    "attempt_count": 0,
+                    "usage": {key: 0 for key in usage_totals},
+                    "estimated_cost_usd": 0.0,
+                },
+            )
+            service_record["attempt_count"] += 1
+            for key in usage_totals:
+                service_record["usage"][key] += int(usage.get(key) or 0)
+            if cost.get("estimated_amount") is not None:
+                service_record["estimated_cost_usd"] += float(
                     cost["estimated_amount"]
                 )
             if metadata.get("response_id"):
@@ -1739,6 +1945,20 @@ def update_run_status(state: dict[str, Any]) -> None:
                 ),
             }
             for model, record in sorted(model_totals.items())
+        },
+        "service_levels": {
+            service: {
+                **record,
+                "estimated_cost_usd": round(
+                    record["estimated_cost_usd"], 8
+                ),
+                "cache_hit_ratio": round(
+                    record["usage"]["cached_input_tokens"]
+                    / record["usage"]["input_tokens"],
+                    6,
+                ) if record["usage"]["input_tokens"] else None,
+            }
+            for service, record in sorted(service_totals.items())
         },
         "cost_per_accepted_card": (
             round(estimated_cost_total / delivered_card_count, 8)
@@ -2044,6 +2264,327 @@ def author_pending_passes(
             for future in concurrent.futures.as_completed(futures):
                 future.result()
     save_state_locked(run_json, state, state_lock)
+
+
+def _batch_jsonl_records(text: str) -> dict[str, dict[str, Any]]:
+    records: dict[str, dict[str, Any]] = {}
+    for line_number, line in enumerate(text.splitlines(), 1):
+        if not line.strip():
+            continue
+        value = json.loads(line)
+        custom_id = value.get("custom_id")
+        if not isinstance(custom_id, str) or not custom_id:
+            raise ValueError(f"Batch output line {line_number} has no custom_id")
+        if custom_id in records:
+            raise ValueError(f"Batch output repeats custom_id {custom_id!r}")
+        records[custom_id] = value
+    return records
+
+
+def author_pending_passes_batch(
+    *,
+    state: dict[str, Any],
+    provider: AuthoringProvider,
+    transport: OpenAIBatchTransport,
+    run_dir: Path,
+    max_attempts: int,
+    python_executable: Path,
+    run_json: Path,
+    poll_interval_seconds: float = 30.0,
+    detach: bool = False,
+    sleep: Any = time.sleep,
+) -> bool:
+    """Author pending passes in model-homogeneous, resumable Batch rounds."""
+    service = state.setdefault(
+        "batch_service",
+        {"service_level": "batch", "rounds": []},
+    )
+    terminal_batch_states = {"completed", "failed", "expired", "cancelled"}
+
+    while True:
+        pending = [
+            spec for spec in specs_from_state(state)
+            if state["passes"][spec.pass_id]["state"] not in TERMINAL_STATES
+        ]
+        if not pending:
+            save_state(run_json, state)
+            return True
+
+        resumable = next(
+            (
+                item for item in service["rounds"]
+                if item.get("state") not in {"INGESTED", "FAILED"}
+            ),
+            None,
+        )
+        if resumable is None:
+            candidates: list[tuple[PassSpec, dict[str, Any], int]] = []
+            for spec in pending:
+                record = state["passes"][spec.pass_id]
+                attempt_number = len(record["attempts"]) + 1
+                if attempt_number <= max_attempts:
+                    candidates.append((spec, record, attempt_number))
+                else:
+                    record["state"] = "FAILED_REQUIRES_REVIEW"
+            if not candidates:
+                save_state(run_json, state)
+                return True
+            first_provider = openai_provider_for_attempt(
+                provider, candidates[0][2]
+            )
+            candidates = [
+                item for item in candidates
+                if openai_provider_for_attempt(provider, item[2]).model
+                == first_provider.model
+            ]
+            round_number = len(service["rounds"]) + 1
+            round_root = run_dir / "batches" / f"round-{round_number:03d}"
+            round_root.mkdir(parents=True, exist_ok=True)
+            lines: list[str] = []
+            requests: list[dict[str, Any]] = []
+            for spec, record, attempt_number in candidates:
+                pass_root = run_dir / "passes" / spec.pass_id
+                source_workspace = prepare_source_workspace(spec, pass_root)
+                attempt_root = pass_root / f"attempt-{attempt_number:03d}"
+                response_workspace = attempt_root / "response" / spec.pass_id
+                routed = openai_provider_for_attempt(provider, attempt_number)
+                payload, layout, segments = build_batch_authoring_request(
+                    routed,
+                    spec=spec,
+                    workspace=source_workspace,
+                    feedback=retry_feedback_from_record(record),
+                )
+                custom_id = f"{spec.pass_id}:attempt-{attempt_number:03d}"
+                line = {
+                    "custom_id": custom_id,
+                    "method": "POST",
+                    "url": "/v1/responses",
+                    "body": payload,
+                }
+                lines.append(json.dumps(line, ensure_ascii=False))
+                attempt = {
+                    "attempt_number": attempt_number,
+                    "state": "BATCH_SUBMITTED",
+                    "started_at": utc_now(),
+                    "finished_at": None,
+                    "response_workspace": normalized_path(response_workspace),
+                    "provider_metadata": None,
+                    "qa": None,
+                    "error": None,
+                }
+                record["attempts"].append(attempt)
+                record["state"] = "BATCH_SUBMITTED"
+                requests.append({
+                    "custom_id": custom_id,
+                    "pass_id": spec.pass_id,
+                    "attempt_number": attempt_number,
+                    "model": routed.model,
+                    "reasoning_effort": routed.reasoning_effort,
+                    "prompt_layout": layout,
+                    "prompt_sha256": hashlib.sha256(
+                        "\n\n".join(segments.values()).encode("utf-8")
+                    ).hexdigest(),
+                })
+            input_text = "\n".join(lines) + "\n"
+            input_path = round_root / "batch-input.jsonl"
+            input_path.write_text(input_text, encoding="utf-8")
+            resumable = {
+                "round_number": round_number,
+                "state": "PREPARED",
+                "model": first_provider.model,
+                "created_at": utc_now(),
+                "input_path": normalized_path(input_path),
+                "requests": requests,
+                "input_file_id": None,
+                "batch_id": None,
+                "batch_status": None,
+            }
+            service["rounds"].append(resumable)
+            save_state(run_json, state)
+            uploaded = transport.upload_jsonl(
+                input_text.encode("utf-8"), input_path.name
+            )
+            resumable["input_file_id"] = uploaded["id"]
+            resumable["state"] = "UPLOADED"
+            save_state(run_json, state)
+            batch = transport.create_batch({
+                "input_file_id": uploaded["id"],
+                "endpoint": "/v1/responses",
+                "completion_window": "24h",
+                "metadata": {
+                    "workflow": "astrowoof_semantic_closure",
+                    "round": str(round_number),
+                },
+            })
+            resumable["batch_id"] = batch["id"]
+            resumable["batch_status"] = batch.get("status")
+            resumable["state"] = "SUBMITTED"
+            save_state(run_json, state)
+        else:
+            input_path = Path(resumable["input_path"])
+            if resumable["state"] == "PREPARED":
+                uploaded = transport.upload_jsonl(
+                    input_path.read_bytes(), input_path.name
+                )
+                resumable["input_file_id"] = uploaded["id"]
+                resumable["state"] = "UPLOADED"
+                save_state(run_json, state)
+            if resumable["state"] == "UPLOADED":
+                batch = transport.create_batch({
+                    "input_file_id": resumable["input_file_id"],
+                    "endpoint": "/v1/responses",
+                    "completion_window": "24h",
+                    "metadata": {
+                        "workflow": "astrowoof_semantic_closure",
+                        "round": str(resumable["round_number"]),
+                    },
+                })
+                resumable["batch_id"] = batch["id"]
+                resumable["batch_status"] = batch.get("status")
+                resumable["state"] = "SUBMITTED"
+                save_state(run_json, state)
+            else:
+                batch = transport.retrieve_batch(resumable["batch_id"])
+
+        if detach and batch.get("status") not in terminal_batch_states:
+            resumable["batch_status"] = batch.get("status")
+            save_state(run_json, state)
+            return False
+        while batch.get("status") not in terminal_batch_states:
+            sleep(poll_interval_seconds)
+            batch = transport.retrieve_batch(resumable["batch_id"])
+            resumable["batch_status"] = batch.get("status")
+            resumable["request_counts"] = batch.get("request_counts")
+            save_state(run_json, state)
+        resumable["batch_status"] = batch.get("status")
+        write_json_atomic(
+            Path(resumable["input_path"]).parent / "batch-object.json", batch
+        )
+        if batch.get("status") != "completed":
+            resumable["state"] = "FAILED"
+            resumable["finished_at"] = utc_now()
+            for request in resumable["requests"]:
+                record = state["passes"][request["pass_id"]]
+                attempt = record["attempts"][request["attempt_number"] - 1]
+                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["finished_at"] = utc_now()
+                attempt["error"] = {
+                    "type": "OpenAIBatchError",
+                    "message": f"Batch ended with status {batch.get('status')}",
+                }
+                record["state"] = "ATTEMPT_ERROR"
+            save_state(run_json, state)
+            continue
+
+        output_path = Path(resumable["input_path"]).parent / "batch-output.jsonl"
+        output_text = (
+            transport.download_file(batch["output_file_id"])
+            if batch.get("output_file_id")
+            else ""
+        )
+        output_path.write_text(output_text, encoding="utf-8")
+        outputs = _batch_jsonl_records(output_text)
+        error_outputs: dict[str, dict[str, Any]] = {}
+        if batch.get("error_file_id"):
+            error_text = transport.download_file(batch["error_file_id"])
+            (output_path.parent / "batch-errors.jsonl").write_text(
+                error_text, encoding="utf-8"
+            )
+            error_outputs = _batch_jsonl_records(error_text)
+
+        for request in resumable["requests"]:
+            spec = next(
+                item for item in specs_from_state(state)
+                if item.pass_id == request["pass_id"]
+            )
+            record = state["passes"][spec.pass_id]
+            attempt = record["attempts"][request["attempt_number"] - 1]
+            item = outputs.get(request["custom_id"])
+            if item is None:
+                error_item = error_outputs.get(request["custom_id"])
+                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["finished_at"] = utc_now()
+                attempt["error"] = {
+                    "type": "OpenAIBatchRequestError",
+                    "message": json.dumps(error_item or "missing batch output"),
+                }
+                record["state"] = "ATTEMPT_ERROR"
+                continue
+            envelope = item.get("response") or {}
+            response = envelope.get("body") or {}
+            attempt_root = (
+                run_dir / "passes" / spec.pass_id
+                / f"attempt-{request['attempt_number']:03d}"
+            )
+            write_json_atomic(attempt_root / "openai-response.json", response)
+            usage = normalized_usage(response)
+            metadata = {
+                "provider": "openai",
+                "service_level": "batch",
+                "batch_id": resumable["batch_id"],
+                "custom_id": request["custom_id"],
+                "response_id": response.get("id"),
+                "response_status": response.get("status"),
+                "model": response.get("model") or request["model"],
+                "requested_model": request["model"],
+                "reasoning_effort": request["reasoning_effort"],
+                "usage": usage,
+                "estimated_cost": batch_estimated_cost(request["model"], usage),
+                "prompt_layout": request["prompt_layout"],
+            }
+            if isinstance(provider, RoutedOpenAIProvider):
+                metadata["routing"] = {
+                    "policy": provider.policy,
+                    "route": (
+                        "initial"
+                        if request["attempt_number"] == 1
+                        else "creative_retry"
+                    ),
+                    "model": request["model"],
+                    "reasoning_effort": request["reasoning_effort"],
+                }
+            attempt["provider_metadata"] = metadata
+            response_workspace = Path(attempt["response_workspace"])
+            try:
+                authored = json.loads(response_output_text(response))
+                write_json_atomic(
+                    attempt_root / "openai-authored-fields.json", authored
+                )
+                source_workspace = prepare_source_workspace(
+                    spec, run_dir / "passes" / spec.pass_id
+                )
+                apply_authored_fields(
+                    source_workspace, response_workspace, authored
+                )
+                accepted, qa = run_pass_acceptance(
+                    response_workspace,
+                    attempt_root / "authoring-pass-acceptance.json",
+                    python_executable=python_executable,
+                )
+                attempt["qa"] = qa
+                attempt["finished_at"] = utc_now()
+                if accepted:
+                    accepted_root = run_dir / "passes" / spec.pass_id / "accepted"
+                    if accepted_root.exists():
+                        shutil.rmtree(accepted_root)
+                    shutil.copytree(response_workspace, accepted_root)
+                    attempt["state"] = "PASS_QA_ACCEPTED"
+                    record["state"] = "PASS_QA_ACCEPTED"
+                    record["accepted_workspace"] = normalized_path(accepted_root)
+                    record["accepted_attempt"] = request["attempt_number"]
+                else:
+                    attempt["state"] = "PASS_QA_REJECTED"
+                    record["state"] = "PASS_QA_REJECTED"
+            except Exception as exc:
+                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["finished_at"] = utc_now()
+                attempt["error"] = {
+                    "type": type(exc).__name__, "message": str(exc)
+                }
+                record["state"] = "ATTEMPT_ERROR"
+        resumable["state"] = "INGESTED"
+        resumable["finished_at"] = utc_now()
+        save_state(run_json, state)
 
 
 def select_cache_warmer(specs: list[PassSpec]) -> PassSpec:
@@ -2997,6 +3538,7 @@ def create_run(
     max_attempts: int,
     sbe_script: Path,
     python_executable: Path,
+    service_level: str = "interactive",
 ) -> tuple[dict[str, Any], Path]:
     if run_dir.exists() and any(run_dir.iterdir()):
         raise FileExistsError(
@@ -3022,6 +3564,7 @@ def create_run(
         max_attempts=max_attempts,
         sbe_manifest=sbe_manifest,
         specs=specs,
+        service_level=service_level,
     )
     state["prompt_cache"] = prompt_cache_manifest(specs)
     run_json = run_dir / "run.json"
@@ -3034,6 +3577,7 @@ def resume_run(
     run_dir: Path,
     provider: AuthoringProvider,
     max_attempts: int,
+    service_level: str = "interactive",
 ) -> tuple[dict[str, Any], Path]:
     run_json = run_dir / "run.json"
     if not run_json.is_file():
@@ -3043,8 +3587,10 @@ def resume_run(
     if previous_schema in {
         "astrowoof.semantic_closure_run.v0.2",
         "astrowoof.semantic_closure_run.v0.3",
+        "astrowoof.semantic_closure_run.v0.4",
     }:
         state["schema_version"] = SCHEMA_VERSION
+        state.setdefault("service_level", "interactive")
         state.setdefault("subjects", {})
         configuration = state.setdefault("provider_configuration", {})
         if getattr(provider, "name", None) == "openai":
@@ -3061,6 +3607,11 @@ def resume_run(
     if state.get("provider") != provider.name:
         raise ValueError(
             f"Run provider is {state.get('provider')!r}, not {provider.name!r}"
+        )
+    if state.get("service_level", "interactive") != service_level:
+        raise ValueError(
+            "Resume must use the original service level "
+            f"({state.get('service_level', 'interactive')!r})"
         )
     if state.get("provider_configuration", {}) != provider_configuration(
         provider
@@ -3241,6 +3792,28 @@ def main() -> None:
         choices=("fake", "openai"),
         default="fake",
     )
+    parser.add_argument(
+        "--service-level",
+        choices=("interactive", "batch"),
+        default="interactive",
+        help=(
+            "Use direct Responses calls or model-homogeneous asynchronous "
+            "Batch API rounds. Batch is OpenAI-only and half-price."
+        ),
+    )
+    parser.add_argument(
+        "--batch-detach",
+        action="store_true",
+        help=(
+            "Submit or refresh one Batch round, persist its IDs, and exit "
+            "without waiting. Resume the same run later to ingest results."
+        ),
+    )
+    parser.add_argument(
+        "--batch-poll-interval-seconds",
+        type=float,
+        default=30.0,
+    )
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument(
         "--max-workers",
@@ -3376,6 +3949,12 @@ def main() -> None:
         parser.error("--max-polish-attempts must be at least 1")
     if args.polish and args.provider != "openai":
         parser.error("--polish requires --provider openai")
+    if args.service_level == "batch" and args.provider != "openai":
+        parser.error("--service-level batch requires --provider openai")
+    if args.batch_detach and args.service_level != "batch":
+        parser.error("--batch-detach requires --service-level batch")
+    if args.batch_poll_interval_seconds <= 0:
+        parser.error("--batch-poll-interval-seconds must be positive")
     if not args.resume and args.input_package is None:
         parser.error("--input-package is required unless --resume is used")
 
@@ -3456,6 +4035,7 @@ def main() -> None:
             run_dir=args.run_dir,
             provider=provider,
             max_attempts=args.max_attempts,
+            service_level=args.service_level,
         )
     else:
         state, run_json = create_run(
@@ -3466,6 +4046,7 @@ def main() -> None:
             max_attempts=args.max_attempts,
             sbe_script=args.sbe_script,
             python_executable=args.python_executable,
+            service_level=args.service_level,
         )
     if args.prompt_layout_report:
         if not isinstance(provider, OpenAIResponsesProvider):
@@ -3478,15 +4059,39 @@ def main() -> None:
         write_json_atomic(args.prompt_layout_report, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return
-    author_pending_passes(
-        state=state,
-        provider=provider,
-        run_dir=args.run_dir,
-        max_attempts=args.max_attempts,
-        python_executable=args.python_executable,
-        run_json=run_json,
-        max_workers=args.max_workers,
-    )
+    authoring_complete = True
+    if args.service_level == "batch":
+        batch_base_provider = openai_provider_for_attempt(provider, 1)
+        authoring_complete = author_pending_passes_batch(
+            state=state,
+            provider=provider,
+            transport=UrllibOpenAIBatchTransport(
+                api_key=batch_base_provider.api_key,
+                base_url=batch_base_provider.base_url,
+                timeout_seconds=batch_base_provider.http_timeout_seconds,
+            ),
+            run_dir=args.run_dir,
+            max_attempts=args.max_attempts,
+            python_executable=args.python_executable,
+            run_json=run_json,
+            poll_interval_seconds=args.batch_poll_interval_seconds,
+            detach=args.batch_detach,
+        )
+    else:
+        author_pending_passes(
+            state=state,
+            provider=provider,
+            run_dir=args.run_dir,
+            max_attempts=args.max_attempts,
+            python_executable=args.python_executable,
+            run_json=run_json,
+            max_workers=args.max_workers,
+        )
+    if not authoring_complete:
+        update_run_status(state)
+        save_state(run_json, state)
+        print(json.dumps(state, ensure_ascii=False, indent=2))
+        return
     finalize_subjects(
         state=state,
         run_dir=args.run_dir,

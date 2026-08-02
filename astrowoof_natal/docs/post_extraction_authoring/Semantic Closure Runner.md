@@ -114,6 +114,45 @@ accounting reports attempts, tokens, and cost by model. A rejected inexpensive
 attempt therefore remains visible in expected-cost comparisons rather than
 being hidden by the successful escalation.
 
+## Optional Batch service level
+
+Use `--service-level batch` for asynchronous authoring that can tolerate the
+Batch API's 24-hour completion window. Interactive Responses remain the
+default. Batch mode uploads one JSONL request file for every model-homogeneous
+round, submits it to `/v1/responses`, persists the input file ID and Batch ID,
+then resolves returned rows by their unique pass-and-attempt `custom_id`.
+
+```powershell
+python src/author_semantic_closure.py `
+  --input-package C:\path\to\projected-subjects `
+  --subject ella `
+  --run-dir C:\path\to\runs\ella-batch `
+  --provider openai `
+  --service-level batch `
+  --routing-policy cost_optimized
+```
+
+The Batch API requires every request in an input file to use one model.
+Consequently, cost-optimized routing creates a Luna initial round and, only
+when needed, a later Terra retry round containing rejected or missing passes.
+Accepted passes are never resubmitted. Every returned pass still passes
+through the same local workspace reconstruction and opaque acceptance checker
+used by interactive mode.
+
+Add `--batch-detach` for a web-worker-friendly invocation. The command submits
+or refreshes one active round, saves its lifecycle state, and exits. Invoke the
+same command with `--resume --batch-detach` to poll without holding a process
+open; omit `--batch-detach` on a later resume to wait through remaining rounds.
+`--batch-poll-interval-seconds` controls blocking-mode polling.
+
+Batch accounting applies the documented 50% service discount independently
+to each returned response. It records cached input only when OpenAI reports
+cached tokens; the runner does not assume that prompt-cache and Batch
+discounts combine. Explicit cache-control fields are intentionally omitted
+from Batch request files. Sparse whole-deck polish remains an interactive
+Responses call because it is conditional on assembled-deck QA and already
+transports only targeted fields.
+
 ## Assembly and final QA
 
 After all six passes for a subject are accepted, the runner copies them into an
@@ -219,6 +258,12 @@ passes/
     accepted/
   ...
   <subject>_6/
+batches/
+  round-001/
+    batch-input.jsonl
+    batch-object.json
+    batch-output.jsonl
+    batch-errors.jsonl  # only when request-level errors are returned
 final/
   <subject>/
     accepted-passes/

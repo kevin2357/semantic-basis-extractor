@@ -30,6 +30,8 @@ from author_semantic_closure import (  # noqa: E402
     apply_authored_fields,
     authoring_output_schema,
     author_pending_passes,
+    author_pending_passes_batch,
+    batch_estimated_cost,
     build_prompt_layout_report,
     compare_cost_runs,
     discover_passes,
@@ -52,6 +54,7 @@ from author_semantic_closure import (  # noqa: E402
     sparse_polish_transport_metrics,
     update_run_status,
     writable_fields,
+    _fake_field_value,
 )
 from build_projected_semantic_basis import (  # noqa: E402
     build_candidates,
@@ -123,6 +126,65 @@ class ScriptedTransport:
         if isinstance(result, Exception):
             raise result
         return result
+
+
+class ScriptedBatchTransport:
+    def __init__(self, *, initially_complete: bool = True) -> None:
+        self.initially_complete = initially_complete
+        self.lines: list[dict] = []
+        self.retrieve_calls = 0
+
+    def upload_jsonl(self, content: bytes, filename: str) -> dict:
+        self.lines = [json.loads(line) for line in content.decode().splitlines()]
+        return {"id": "file_input"}
+
+    def create_batch(self, payload: dict) -> dict:
+        return {
+            "id": "batch_test",
+            "status": "completed" if self.initially_complete else "in_progress",
+            "output_file_id": "file_output" if self.initially_complete else None,
+            "error_file_id": None,
+        }
+
+    def retrieve_batch(self, batch_id: str) -> dict:
+        self.retrieve_calls += 1
+        return {
+            "id": batch_id,
+            "status": "completed",
+            "output_file_id": "file_output",
+            "error_file_id": None,
+            "request_counts": {
+                "total": len(self.lines), "completed": len(self.lines), "failed": 0
+            },
+        }
+
+    def download_file(self, file_id: str) -> str:
+        output = []
+        for index, line in enumerate(self.lines, 1):
+            files_schema = line["body"]["text"]["format"]["schema"]["properties"]["files"]
+            authored = {"files": {}}
+            ordinal = 0
+            for relative_path, file_schema in files_schema["properties"].items():
+                authored["files"][relative_path] = {}
+                for field in file_schema["properties"]:
+                    ordinal += 1
+                    authored["files"][relative_path][field] = _fake_field_value(
+                        pass_id=line["custom_id"],
+                        relative_file=relative_path,
+                        field=field,
+                        ordinal=ordinal,
+                    )
+            output.append(json.dumps({
+                "custom_id": line["custom_id"],
+                "response": {
+                    "status_code": 200,
+                    "body": completed_response(
+                        authored, response_id=f"resp_batch_{index}"
+                    ),
+                },
+                "error": None,
+            }))
+        return "\n".join(output) + "\n"
 
 
 class FeedbackRecordingProvider(FakeAuthoringProvider):
@@ -1258,6 +1320,99 @@ class TestSemanticClosure(SemanticClosureFixture):
                     "accept",
                     record["attempts"][0]["qa"]["report"]["status"],
                 )
+
+    def test_batch_service_authors_six_passes_and_records_discount(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                model="gpt-5.6-terra",
+                prompt_cache_mode="disabled",
+            )
+            state, run_json = self.make_state(root, provider)
+            state["service_level"] = "batch"
+            save_state(run_json, state)
+            transport = ScriptedBatchTransport()
+            completed = author_pending_passes_batch(
+                state=state,
+                provider=provider,
+                transport=transport,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                poll_interval_seconds=0,
+                sleep=lambda _: None,
+            )
+            persisted = load_json(run_json)
+            self.assertTrue(completed)
+            self.assertEqual(6, len(transport.lines))
+            self.assertEqual("INGESTED", persisted["batch_service"]["rounds"][0]["state"])
+            self.assertEqual(
+                {"PASS_QA_ACCEPTED"},
+                {record["state"] for record in persisted["passes"].values()},
+            )
+            metadata = persisted["passes"]["bre_1"]["attempts"][0]["provider_metadata"]
+            self.assertEqual("batch", metadata["service_level"])
+            self.assertEqual(
+                0.5, metadata["estimated_cost"]["discount_ratio"]
+            )
+
+    def test_batch_detach_persists_and_resume_ingests_same_batch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", prompt_cache_mode="disabled"
+            )
+            state, run_json = self.make_state(root, provider)
+            state["service_level"] = "batch"
+            save_state(run_json, state)
+            transport = ScriptedBatchTransport(initially_complete=False)
+            self.assertFalse(author_pending_passes_batch(
+                state=state,
+                provider=provider,
+                transport=transport,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                detach=True,
+                sleep=lambda _: None,
+            ))
+            submitted = load_json(run_json)
+            self.assertEqual(1, len(submitted["batch_service"]["rounds"]))
+            self.assertEqual(1, len(submitted["passes"]["bre_1"]["attempts"]))
+            self.assertTrue(author_pending_passes_batch(
+                state=submitted,
+                provider=provider,
+                transport=transport,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                detach=False,
+                poll_interval_seconds=0,
+                sleep=lambda _: None,
+            ))
+            resumed = load_json(run_json)
+            self.assertEqual(1, len(resumed["batch_service"]["rounds"]))
+            self.assertEqual(1, len(resumed["passes"]["bre_1"]["attempts"]))
+
+    def test_batch_cost_is_half_of_interactive_estimate(self) -> None:
+        usage = {
+            "input_tokens": 1000,
+            "cached_input_tokens": 200,
+            "cache_write_tokens": 0,
+            "output_tokens": 500,
+            "reasoning_tokens": 0,
+            "total_tokens": 1500,
+        }
+        interactive = estimated_cost("gpt-5.6-terra", usage)
+        batch = batch_estimated_cost("gpt-5.6-terra", usage)
+        self.assertAlmostEqual(
+            interactive["estimated_amount"] * 0.5,
+            batch["estimated_amount"],
+        )
 
     def test_qa_rejection_retries_fresh_and_then_accepts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
