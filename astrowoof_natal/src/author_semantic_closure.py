@@ -372,9 +372,37 @@ class AuthoringProviderError(RuntimeError):
         message: str,
         *,
         metadata: dict[str, Any],
+        details: dict[str, Any] | None = None,
     ) -> None:
         super().__init__(message)
         self.metadata = metadata
+        self.details = details or {}
+
+
+class BackgroundResponsePending(RuntimeError):
+    """A durable background response outlived this local polling window."""
+
+    def __init__(self, message: str, *, metadata: dict[str, Any]) -> None:
+        super().__init__(message)
+        self.metadata = metadata
+
+
+class IncompleteAuthoringDelivery(RuntimeError):
+    """A response workspace is missing required files or authored fields."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        missing_files: list[str] | None = None,
+        missing_fields: dict[str, list[str]] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.details = {
+            "issue_code": "incomplete_delivery",
+            "missing_files": missing_files or [],
+            "missing_fields": missing_fields or {},
+        }
 
 
 class JsonHttpTransport(Protocol):
@@ -594,9 +622,16 @@ def retry_feedback_from_record(
         }
     error = attempt.get("error")
     if error:
+        details = error.get("details") or {}
         return {
-            "kind": "malformed_or_failed_attempt",
+            "kind": (
+                "incomplete_delivery"
+                if details.get("issue_code") == "incomplete_delivery"
+                else "malformed_or_failed_attempt"
+            ),
             "error_type": error.get("type"),
+            "missing_files": details.get("missing_files", []),
+            "missing_fields": details.get("missing_fields", {}),
             "guidance": (
                 "The prior response could not be reconstructed or validated. "
                 "Return every required field exactly once in the requested "
@@ -663,6 +698,40 @@ def apply_authored_fields(
                 f"{relative_path}: source markers changed during reconstruction"
             )
         target.write_text(rendered, encoding="utf-8")
+
+
+def require_complete_authored_workspace(
+    source_workspace: Path,
+    response_workspace: Path,
+) -> None:
+    """Reject incomplete delivery before the opaque editorial checker runs."""
+    expected = writable_fields(source_workspace)
+    missing_files: list[str] = []
+    missing_fields: dict[str, list[str]] = {}
+    for relative_path, fields in expected.items():
+        target = response_workspace / Path(relative_path)
+        if not target.is_file():
+            missing_files.append(relative_path)
+            continue
+        text = target.read_text(encoding="utf-8")
+        parsed = {
+            match.group(2): match.group(3).strip()
+            for match in FIELD_PATTERN.finditer(text)
+        }
+        absent = [
+            field
+            for field in fields
+            if not parsed.get(field) or "__WRITE__" in parsed[field]
+        ]
+        if absent:
+            missing_fields[relative_path] = absent
+    if missing_files or missing_fields:
+        raise IncompleteAuthoringDelivery(
+            "Authored workspace is incomplete; "
+            f"missing_files={missing_files}, missing_fields={missing_fields}",
+            missing_files=missing_files,
+            missing_fields=missing_fields,
+        )
 
 
 def response_output_text(response: dict[str, Any]) -> str:
@@ -1117,17 +1186,42 @@ class OpenAIResponsesProvider:
         polls = 0
         while response.get("status") in {"queued", "in_progress"}:
             if time.monotonic() - started > self.response_timeout_seconds:
-                try:
-                    self._request_with_retry(
-                        method="POST",
-                        url=f"{self.base_url}/responses/{response_id}/cancel",
-                        payload=None,
-                    )
-                except OpenAIServiceError:
-                    pass
-                raise OpenAIServiceError(
-                    f"Timed out waiting for background response {response_id}",
-                    retryable=True,
+                pending_metadata = {
+                    "provider": self.name,
+                    "response_id": response_id,
+                    "response_status": response.get("status"),
+                    "model": response.get("model") or self.model,
+                    "requested_model": self.model,
+                    "reasoning_effort": self.reasoning_effort,
+                    "background": self.background,
+                    "poll_count": polls,
+                    "transport_attempts": {
+                        "create": create_transport_attempts,
+                        "retrieve": retrieve_transport_attempts,
+                    },
+                    "prompt_layout": prompt_layout,
+                    "elapsed_seconds": round(
+                        time.monotonic() - started, 3
+                    ),
+                    "request_path": normalized_path(
+                        attempt_root / "openai-request.json"
+                    ),
+                    "background_response_path": normalized_path(
+                        background_path
+                    ),
+                }
+                write_json_atomic(
+                    background_path,
+                    {
+                        "id": response_id,
+                        "status": response.get("status"),
+                        "last_polled_at": utc_now(),
+                    },
+                )
+                raise BackgroundResponsePending(
+                    "Background response is still running after the local "
+                    f"polling window: {response_id}",
+                    metadata=pending_metadata,
                 )
             self.sleep(self.poll_interval_seconds)
             response, retrieval_attempts = self._request_with_retry(
@@ -1189,10 +1283,15 @@ class OpenAIResponsesProvider:
                 response_workspace,
                 authored,
             )
+            require_complete_authored_workspace(
+                source_workspace,
+                response_workspace,
+            )
         except Exception as exc:
             raise AuthoringProviderError(
                 f"OpenAI output could not reconstruct the workspace: {exc}",
                 metadata=metadata,
+                details=getattr(exc, "details", None),
             ) from exc
         return ProviderResult(
             workspace=response_workspace,
@@ -1795,6 +1894,8 @@ def update_run_status(state: dict[str, Any]) -> None:
         state["status"] = "AUTHORING_COMPLETE"
     elif "FAILED_REQUIRES_REVIEW" in states:
         state["status"] = "FAILED_REQUIRES_REVIEW"
+    elif "WAITING_FOR_RESPONSE" in states:
+        state["status"] = "WAITING_FOR_RESPONSE"
     else:
         state["status"] = "AUTHORING"
     usage_totals = {
@@ -2010,7 +2111,10 @@ def run_pass_acceptance(
     report_path: Path,
     *,
     python_executable: Path,
+    source_workspace: Path | None = None,
 ) -> tuple[bool, dict[str, Any]]:
+    if source_workspace is not None:
+        require_complete_authored_workspace(source_workspace, workspace)
     checker = workspace / "lint_authoring_pass.py"
     if not checker.is_file():
         raise FileNotFoundError(f"Authored workspace lacks checker: {checker}")
@@ -2075,7 +2179,7 @@ def author_one_pass(
         record["attempts"][-1]
         if record["attempts"]
         and record["attempts"][-1]["state"]
-        in {"SUBMITTED", "RESPONSE_RECEIVED"}
+        in {"SUBMITTED", "RESPONSE_RECEIVED", "WAITING_FOR_RESPONSE"}
         and record["attempts"][-1].get("finished_at") is None
         else None
     )
@@ -2133,6 +2237,7 @@ def author_one_pass(
                 result.workspace,
                 report_path,
                 python_executable=python_executable,
+                source_workspace=source_workspace,
             )
             with state_lock:
                 attempt["qa"] = qa
@@ -2155,6 +2260,14 @@ def author_one_pass(
                 attempt["state"] = "PASS_QA_REJECTED"
                 record["state"] = "PASS_QA_REJECTED"
                 save_state(run_json, state)
+        except BackgroundResponsePending as exc:
+            with state_lock:
+                attempt["state"] = "WAITING_FOR_RESPONSE"
+                attempt["provider_metadata"] = exc.metadata
+                attempt["error"] = None
+                record["state"] = "WAITING_FOR_RESPONSE"
+                save_state(run_json, state)
+            return
         except Exception as exc:
             with state_lock:
                 attempt["state"] = "ATTEMPT_ERROR"
@@ -2165,6 +2278,8 @@ def author_one_pass(
                     "type": type(exc).__name__,
                     "message": str(exc),
                 }
+                if getattr(exc, "details", None):
+                    attempt["error"]["details"] = exc.details
                 record["state"] = "ATTEMPT_ERROR"
                 save_state(run_json, state)
             if getattr(exc, "fatal", False):
@@ -2243,6 +2358,8 @@ def author_pending_passes(
         warming["state"] = state["passes"][cache_warmer.pass_id]["state"]
         warming["finished_at"] = utc_now()
         save_state_locked(run_json, state, state_lock)
+        if warming["state"] == "WAITING_FOR_RESPONSE":
+            return
         specs = [spec for spec in specs if spec != cache_warmer]
 
     if max_workers == 1:
@@ -2560,10 +2677,14 @@ def author_pending_passes_batch(
                 apply_authored_fields(
                     source_workspace, response_workspace, authored
                 )
+                require_complete_authored_workspace(
+                    source_workspace, response_workspace
+                )
                 accepted, qa = run_pass_acceptance(
                     response_workspace,
                     attempt_root / "authoring-pass-acceptance.json",
                     python_executable=python_executable,
+                    source_workspace=source_workspace,
                 )
                 attempt["qa"] = qa
                 attempt["finished_at"] = utc_now()
@@ -2585,6 +2706,8 @@ def author_pending_passes_batch(
                 attempt["error"] = {
                     "type": type(exc).__name__, "message": str(exc)
                 }
+                if getattr(exc, "details", None):
+                    attempt["error"]["details"] = exc.details
                 record["state"] = "ATTEMPT_ERROR"
         resumable["state"] = "INGESTED"
         resumable["finished_at"] = utc_now()
@@ -3702,6 +3825,37 @@ def resume_run(
             "Resume must use the original --max-attempts value "
             f"({state.get('max_attempts')})"
         )
+    normalized_acceptance = False
+    for record in state.get("passes", {}).values():
+        accepted_attempt = record.get("accepted_attempt")
+        accepted_workspace = record.get("accepted_workspace")
+        if not accepted_attempt or not accepted_workspace:
+            continue
+        matching = next(
+            (
+                attempt
+                for attempt in record.get("attempts", [])
+                if attempt.get("attempt_number") == accepted_attempt
+            ),
+            None,
+        )
+        acceptance_evidence = bool(
+            matching
+            and (
+                matching.get("state") == "PASS_QA_ACCEPTED"
+                or matching.get("accepted") is True
+                or (matching.get("qa") or {}).get("accepted") is True
+            )
+        )
+        if acceptance_evidence and Path(accepted_workspace).is_dir():
+            if record.get("state") != "PASS_QA_ACCEPTED":
+                record["state"] = "PASS_QA_ACCEPTED"
+                normalized_acceptance = True
+            if matching.get("state") != "PASS_QA_ACCEPTED":
+                matching["state"] = "PASS_QA_ACCEPTED"
+                normalized_acceptance = True
+    if normalized_acceptance:
+        save_state(run_json, state)
     return state, run_json
 
 

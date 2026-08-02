@@ -391,3 +391,29 @@ can demote an already accepted final attempt when its attempt number equals the
 ceiling. The known pass-6 theme-group gate mismatch also reproduced. Full
 analysis and examples are in
 `results/PHASE 2 - Diversified Assignment Live AB.md`.
+
+## 2026-08-02 — Phase 2.5 live-run reliability hardening
+
+Implemented the four reliability fixes identified by the Phase-2 live A/B.
+Interactive background authoring now persists `WAITING_FOR_RESPONSE` when a
+response outlives the local polling window. It neither cancels the service job
+nor spends another creative attempt; resume retrieves the same response ID and
+continues the same attempt. A cache-warming pass in this state pauses fan-out so
+the remaining calls do not race ahead without the intended cached prefix.
+
+Resume now treats accepted-workspace existence plus accepted-attempt QA evidence
+as a durable invariant and repairs stale pass state back to
+`PASS_QA_ACCEPTED`. Workspace reconstruction is checked for every expected
+writable file and populated field before opaque QA in both interactive and
+Batch ingestion paths. Missing material produces structured
+`incomplete_delivery` details and retry feedback instead of a linter traceback.
+
+The pass-local linter now applies the final validator's theme-plan contract:
+three or four groups, at least two assignments per group, and a maximum size
+spread of two. This prevents pass 6 from being accepted with a chapter plan that
+must fail final deck validation.
+
+Regression coverage was added for durable timeout/resume without a second POST,
+waiting-state attempt preservation, pre-checker incomplete delivery, accepted
+state restoration, and pass-6 theme-group parity. Existing authoring behavior
+remained green alongside the new cases.

@@ -18,6 +18,7 @@ sys.path.insert(0, str(SRC))
 
 from author_semantic_closure import (  # noqa: E402
     AuthoringProviderError,
+    BackgroundResponsePending,
     FIELD_PATTERN,
     FakeAuthoringProvider,
     OpenAIResponsesProvider,
@@ -48,6 +49,7 @@ from author_semantic_closure import (  # noqa: E402
     provider_configuration,
     prompt_cache_manifest,
     resume_run,
+    run_pass_acceptance,
     safe_extract_zip,
     sanitize_context_filters,
     save_state,
@@ -68,7 +70,10 @@ from build_projected_semantic_basis import (  # noqa: E402
     optimize,
 )
 from validate_astrowoof_editorial import BAD_SECOND_PERSON  # noqa: E402
-from lint_authoring_pass import invalid_context_filter_claim_ids  # noqa: E402
+from lint_authoring_pass import (  # noqa: E402
+    invalid_context_filter_claim_ids,
+    invalid_theme_group_claim_ids,
+)
 
 
 EXAMPLES = ROOT / "examples"
@@ -1058,6 +1063,92 @@ class TestSemanticClosure(SemanticClosureFixture):
                 transport.calls[1]["headers"]["Idempotency-Key"],
             )
 
+    def test_background_timeout_preserves_response_for_same_attempt_resume(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            authored = authored_field_payload(source)
+            response_workspace = (
+                root / "run" / "passes" / "bre_1" / "attempt-001"
+                / "response" / "bre_1"
+            )
+            first_transport = ScriptedTransport([
+                {"id": "resp_wait", "status": "in_progress"}
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=first_transport,
+                response_timeout_seconds=-1,
+                sleep=lambda _: None,
+            )
+            spec = PassSpec(
+                "bre_1", "bre", 1, root / "bundle" / "bre_1.zip", "hash"
+            )
+            with self.assertRaises(BackgroundResponsePending) as raised:
+                provider.author(source, response_workspace, spec, 1)
+            self.assertEqual("resp_wait", raised.exception.metadata["response_id"])
+            self.assertEqual(["POST"], [call["method"] for call in first_transport.calls])
+
+            second_transport = ScriptedTransport([
+                completed_response(authored, response_id="resp_wait")
+            ])
+            resumed_provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=second_transport,
+                sleep=lambda _: None,
+            )
+            result = resumed_provider.author(source, response_workspace, spec, 1)
+            self.assertEqual("resp_wait", result.metadata["response_id"])
+            self.assertEqual(["GET"], [call["method"] for call in second_transport.calls])
+
+    def test_incomplete_workspace_is_rejected_before_checker_execution(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            response = root / "response"
+            apply_authored_fields(source, response, authored_field_payload(source))
+            missing = next(iter(writable_fields(source)))
+            (response / missing).unlink()
+            with patch("subprocess.run") as invoked:
+                with self.assertRaisesRegex(
+                    Exception, "Authored workspace is incomplete"
+                ) as raised:
+                    run_pass_acceptance(
+                        response,
+                        root / "report.json",
+                        python_executable=Path(sys.executable),
+                        source_workspace=source,
+                    )
+            invoked.assert_not_called()
+            self.assertEqual(
+                "incomplete_delivery",
+                raised.exception.details["issue_code"],
+            )
+            self.assertEqual([missing], raised.exception.details["missing_files"])
+
+    def test_pass_six_theme_groups_match_final_validator_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            assignment = root / "ASSIGN THEME GROUPS.md"
+            groups = ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E"]
+            assignment.write_text(
+                "\n".join(
+                    f"<!-- BEGIN FIELD: theme_group.{index} -->\n{group}\n"
+                    f"<!-- END FIELD: theme_group.{index} -->"
+                    for index, group in enumerate(groups, 1)
+                ),
+                encoding="utf-8",
+            )
+            affected, issue = invalid_theme_group_claim_ids(root)
+            self.assertEqual("theme_group_count", issue)
+            self.assertEqual([str(index) for index in range(1, 11)], affected)
+
     def test_completed_malformed_output_preserves_billable_metadata(
         self,
     ) -> None:
@@ -1185,6 +1276,37 @@ class TestSemanticClosure(SemanticClosureFixture):
                     "transport_attempts"
                 ]["create"],
             )
+
+    def test_pending_background_response_does_not_consume_a_retry(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json = self.make_state(root, FakeAuthoringProvider())
+            state["passes"] = {"bre_1": state["passes"]["bre_1"]}
+            save_state(run_json, state)
+            transport = ScriptedTransport([
+                {"id": "resp_durable", "status": "in_progress"}
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=transport,
+                response_timeout_seconds=-1,
+                sleep=lambda _: None,
+            )
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+            )
+            persisted = load_json(run_json)
+            record = persisted["passes"]["bre_1"]
+            self.assertEqual("WAITING_FOR_RESPONSE", persisted["status"])
+            self.assertEqual("WAITING_FOR_RESPONSE", record["state"])
+            self.assertEqual(1, len(record["attempts"]))
+            self.assertIsNone(record["attempts"][0]["finished_at"])
+            self.assertIsNone(record["attempts"][0]["error"])
 
     def test_fatal_service_configuration_error_does_not_burn_retries(
         self,
@@ -1707,6 +1829,39 @@ class TestSemanticClosure(SemanticClosureFixture):
                 persisted["passes"]["bre_1"]["accepted_workspace"],
             )
             self.assertEqual(1, len(persisted["passes"]["bre_1"]["attempts"]))
+
+    def test_resume_restores_accepted_state_from_durable_acceptance_evidence(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            state, run_json = self.make_state(root, provider)
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=root / "run",
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                run_json=run_json,
+                stop_after_attempts=1,
+            )
+            corrupted = load_json(run_json)
+            record = corrupted["passes"]["bre_1"]
+            record["state"] = "FAILED_REQUIRES_REVIEW"
+            record["attempts"][0]["state"] = "PASS_QA_REJECTED"
+            self.assertTrue(record["attempts"][0]["qa"]["accepted"])
+            save_state(run_json, corrupted)
+            resumed, _ = resume_run(
+                run_dir=root / "run",
+                provider=provider,
+                max_attempts=3,
+            )
+            restored = resumed["passes"]["bre_1"]
+            self.assertEqual("PASS_QA_ACCEPTED", restored["state"])
+            self.assertEqual(
+                "PASS_QA_ACCEPTED", restored["attempts"][0]["state"]
+            )
 
     def test_exhausted_attempts_become_terminal_failure(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

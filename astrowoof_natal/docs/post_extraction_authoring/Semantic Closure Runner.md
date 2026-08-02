@@ -107,6 +107,14 @@ the deck reaches assembly. As a defense for legacy workspaces, assembly removes
 only unregistered or duplicate labels, records every removal in the assembly
 report, and preserves all valid assignments in their original order.
 
+Before the opaque editorial checker runs, the runner verifies that every
+expected writable file and field is present and populated. Missing material is
+reported as `incomplete_delivery`, with the missing paths retained in the run
+ledger for the next creative attempt. Pass 6 additionally enforces the final
+deck contract for aspect/synthesis chapters: exactly three or four theme
+groups, each containing at least two cards, with largest and smallest group
+sizes differing by no more than two.
+
 Fatal request problems such as authentication, permission, and invalid-request
 errors stop the affected pass immediately rather than repeating an identical
 billable request.
@@ -251,8 +259,11 @@ structurally valid result when the bounded polish budget does not reach zero.
 ## Background execution and resume
 
 Background Responses are enabled by default. The runner polls queued and
-in-progress responses until completion. Use `--foreground` only for controlled
-testing.
+in-progress responses until completion or until the local polling window ends.
+Ending the local window does not cancel the OpenAI response and does not consume
+a creative attempt. The pass and run enter `WAITING_FOR_RESPONSE`, preserving
+the response ID and unfinished attempt for a later resume. Use `--foreground`
+only for controlled testing.
 
 The response ID is persisted as soon as OpenAI creates a background job. If
 the runner process stops before the response completes, rerun the command with
@@ -271,6 +282,9 @@ python src/author_semantic_closure.py `
 
 An interrupted attempt resumes polling its existing response ID. It does not
 issue a second response-creation request. Accepted passes are also skipped.
+Durable acceptance evidence (`accepted_attempt`, its successful QA report, and
+the accepted workspace) is normalized back to `PASS_QA_ACCEPTED` if stale run
+state ever disagrees, so resume cannot demote an already accepted pass.
 Provider, model, reasoning, background, base-URL, output-token, and attempt
 settings must match the original run.
 

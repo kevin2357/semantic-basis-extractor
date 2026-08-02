@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -139,6 +140,29 @@ def invalid_context_filter_claim_ids(workspace: Path) -> list[str]:
     return sorted(invalid)
 
 
+def invalid_theme_group_claim_ids(workspace: Path) -> tuple[list[str], str | None]:
+    """Enforce the same chapter-count and balance contract as final QA."""
+    assignment = workspace / "ASSIGN THEME GROUPS.md"
+    if not assignment.is_file():
+        return [], None
+    fields = parse_fields(assignment)
+    assignments = {
+        field.removeprefix("theme_group."): value.strip()
+        for field, value in fields.items()
+        if field.startswith("theme_group.") and value.strip()
+    }
+    counts = Counter(assignments.values())
+    claim_ids = sorted(assignments, key=lambda value: int(value))
+    if not counts:
+        return claim_ids, "missing_theme_group_plan"
+    sizes = list(counts.values())
+    if len(counts) not in {3, 4}:
+        return claim_ids, "theme_group_count"
+    if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
+        return claim_ids, "theme_group_balance"
+    return [], None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("workspace", type=Path)
@@ -158,6 +182,19 @@ def main() -> None:
             "message": "One or more cards use an unregistered context filter.",
             "claim_ids": invalid_filter_claim_ids,
         })
+    invalid_theme_claim_ids, theme_issue = invalid_theme_group_claim_ids(
+        args.workspace
+    )
+    if theme_issue:
+        full_report["status"] = "reject"
+        full_report["rejection_reasons"].append({
+            "code": theme_issue,
+            "message": (
+                "The aspect and synthesis chapter plan must contain three or "
+                "four approximately balanced groups."
+            ),
+            "claim_ids": invalid_theme_claim_ids,
+        })
     if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
         affected_claim_ids = sorted({
             claim_id
@@ -168,7 +205,7 @@ def main() -> None:
                 + full_report["dominant_openings"]
             )
             for claim_id in group.get("claim_ids", [])
-        } | set(invalid_filter_claim_ids))
+        } | set(invalid_filter_claim_ids) | set(invalid_theme_claim_ids))
         issue_codes = [
             reason["code"]
             for reason in full_report["rejection_reasons"]

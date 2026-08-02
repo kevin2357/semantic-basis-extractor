@@ -306,6 +306,27 @@ Candidate modes:
 - Generated pass manifests and the run manifest expose the exact canonical
   priority IDs, policy, algorithm version, and replay seed.
 
+## Phase 2.5 — Live-run reliability hardening
+
+Address the defects exposed by the Phase-2 live A/B before adding more
+editorial complexity:
+
+- treat a durable background response that exceeds the local polling window as
+  waiting work, not a failed creative attempt;
+- never cancel or resubmit that response automatically; resume the same response
+  ID and attempt number;
+- preserve accepted-pass state as an invariant when durable acceptance evidence
+  and the accepted workspace exist;
+- detect missing writable files and fields before invoking opaque editorial QA,
+  emit structured `incomplete_delivery` feedback, and retry cleanly;
+- enforce pass-6 theme-group count and balance rules at the same boundary as the
+  final deck validator;
+- cover every path with deterministic regression and resume tests, including
+  the Batch reconstruction path.
+
+Cache-TTL tuning and a future `stratified-v2` remain deferred. This phase changes
+reliability contracts, not assignment semantics or creative guidance.
+
 ## Phase 3 — Semantic-completeness and editorial-planning improvements
 
 Use the Phase-0 audit to select the smallest useful upstream changes.
