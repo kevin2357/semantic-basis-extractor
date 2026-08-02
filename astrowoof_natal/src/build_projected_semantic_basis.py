@@ -2212,6 +2212,132 @@ def render_whole_dog_profile_template(packet: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def render_summary_thesis_plan(packet: dict[str, Any]) -> str:
+    display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
+    fields = (
+        (
+            "Who the Dog Is — Identity Thesis",
+            "summary_plan.identity_thesis",
+        ),
+        (
+            "How the Dog Lives — Daily-Life Thesis",
+            "summary_plan.daily_life_thesis",
+        ),
+        (
+            "What the Dog Needs — Needs and Support Thesis",
+            "summary_plan.needs_support_thesis",
+        ),
+        (
+            "How the Dog Grows — Growth and Development Thesis",
+            "summary_plan.growth_development_thesis",
+        ),
+        (
+            "Why Needs and Growth Are Different Arguments",
+            "summary_plan.needs_vs_growth_distinction",
+        ),
+    )
+    lines = [
+        f"# Four-Summary Thesis Plan: {display_name}",
+        "",
+        "Complete this private editorial plan after the whole-dog profile and "
+        "before writing any summary. Give each lens one distinct idea the "
+        "reader should remember an hour later. The four theses must describe "
+        "the same dog without becoming four paraphrases of one dominant motif.",
+        "",
+        "The needs thesis explains present-tense support, regulation, handling, "
+        "and enrichment. The growth thesis explains learning, development, "
+        "challenges, and potential unfolding over time. State their distinction "
+        "explicitly before drafting prose.",
+        "",
+    ]
+    for label, field_path in fields:
+        lines.extend([_field_block(label, field_path), ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_summary_gold_reference(repo_root: Path) -> str:
+    reference_path = (
+        repo_root
+        / "qa"
+        / "reference_decks"
+        / "kevin"
+        / "20260730-six-pass-final"
+        / "natal.kevin.cards.json"
+    )
+    reference = json.loads(reference_path.read_text(encoding="utf-8"))
+    lens_names = (
+        "Who He Is",
+        "How He Lives",
+        "What He Needs",
+        "How He Grows",
+    )
+    lines = [
+        "# AstroWoof Four-Summary Gold Reference",
+        "",
+        "## Transfer target",
+        "",
+        "This is a craft reference for four-lens separation, full-chart "
+        "synthesis, prose depth, audience purpose, and astrology-density "
+        "control. Kevin is an example subject, not evidence about the current "
+        "dog.",
+        "",
+        "Do not copy Kevin's facts, astrology, wording, metaphors, jokes, "
+        "headlines, sentence structures, or organizing devices. Phrases such "
+        "as `anchor`, `gate`, `laboratory`, `stage`, and `train the landing` "
+        "are examples, not templates. Do not imitate lengths mechanically. "
+        "The current dog's full chart basis and whole-dog profile are the only "
+        "authority for what the new summaries may claim.",
+        "",
+        "Study how the four cards form a coordinated set while making "
+        "different arguments: identity, lived rhythm, present-tense support, "
+        "and development over time. Then close this reference conceptually and "
+        "write the current dog from the four-thesis plan.",
+        "",
+    ]
+    labels = {
+        "dos": "Do",
+        "donts": "Don't",
+        "funny_dog_quotes": "Funny Dog Quote",
+        "imperative_dog_quotes": "Imperative Dog Quote",
+        "applicable_canine_jokes": "Applicable Canine Joke",
+    }
+    density_labels = {
+        "no_astro": "No Astrology",
+        "light_astro": "Light Astrology",
+        "full_astro": "Full Astrology",
+    }
+    audience_labels = {
+        "handler": "Handler",
+        "direct_to_dog": "Direct to Dog",
+        "hybrid": "Hybrid",
+    }
+    for index, lens_name in enumerate(lens_names, 1):
+        summary = reference["summary"][f"card{index}"]
+        lines.extend([f"## Summary {index}: {lens_name}", ""])
+        for key, label in labels.items():
+            for item_index, value in enumerate(summary[key], 1):
+                suffix = f" {item_index}" if len(summary[key]) > 1 else ""
+                lines.extend([f"### {label}{suffix}", "", value, ""])
+        for density, density_label in density_labels.items():
+            lines.extend([f"### {density_label}", ""])
+            for audience, audience_label in audience_labels.items():
+                headline = summary[density]["headline"][audience]
+                body = summary[density]["body"][audience]
+                lines.extend(
+                    [
+                        f"#### {audience_label} headline",
+                        "",
+                        headline,
+                        "",
+                        f"#### {audience_label} body",
+                        "",
+                        body,
+                        "",
+                    ]
+                )
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def build_story_workspace(
     subject_bundle: Path,
     packet: dict[str, Any],
@@ -2289,16 +2415,26 @@ def build_story_workspace(
         sequence = (
             "Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read "
             "`FULL CHART BASIS.md` in full and complete "
-            "`WRITE WHOLE DOG PROFILE.md`. Then write all four summaries from "
-            f"the complete chart understanding of {display_name}."
+            "`WRITE WHOLE DOG PROFILE.md`. Study `SUMMARY GOLD REFERENCE.md` "
+            "for craft only, then complete `WRITE SUMMARY THESIS PLAN.md`. "
+            "Only after the four arguments are distinct should you write all "
+            f"four summaries from the complete chart understanding of {display_name}."
         )
+    pass_specific_reading = (
+        "\n\nFor this summary pass, also read `SUMMARY GOLD REFERENCE.md`. "
+        "Transfer its quality principles, never its Kevin-specific content or "
+        "language. Complete `WRITE SUMMARY THESIS PLAN.md` before drafting any "
+        "summary."
+        if include_summaries
+        else ""
+    )
     (subject_bundle / "START HERE.md").write_text(
         f"# Start Here — {pass_label}\n\n"
         f"## Assignment\n\n{assignment}\n\n"
         "## Read first\n\n"
         "Read `GUIDING LIGHTS.md` as the creative doctrine for this pass. "
         "Its independent-card standard is part of the assignment, not "
-        "optional inspiration.\n\n"
+        f"optional inspiration.{pass_specific_reading}\n\n"
         f"## Working sequence\n\n{sequence}\n\n"
         "## Mechanical acceptance requirements\n\n"
         "Your completed pass will be checked automatically before it is "
@@ -2372,6 +2508,14 @@ def build_story_workspace(
             encoding="utf-8",
         )
     if include_summaries:
+        (subject_bundle / "SUMMARY GOLD REFERENCE.md").write_text(
+            render_summary_gold_reference(repo_root),
+            encoding="utf-8",
+        )
+        (subject_bundle / "WRITE SUMMARY THESIS PLAN.md").write_text(
+            render_summary_thesis_plan(packet),
+            encoding="utf-8",
+        )
         summaries_root = subject_bundle / "summaries"
         summaries_root.mkdir(parents=True, exist_ok=True)
         summary_names = (
@@ -2769,6 +2913,14 @@ def main() -> None:
                             if card_count
                             else "Four full-chart summaries"
                         )
+                        pass_specific_files = (
+                            "- **Summary craft reference:** "
+                            "`SUMMARY GOLD REFERENCE.md`\n"
+                            "- **Required private plan:** "
+                            "`WRITE SUMMARY THESIS PLAN.md`\n"
+                            if summaries
+                            else ""
+                        )
                         (pass_bundle / "WORKSPACE MANIFEST.md").write_text(
                             "# AstroWoof Authoring Pass\n\n"
                             f"- **Subject:** {subject}\n"
@@ -2776,7 +2928,8 @@ def main() -> None:
                             f"- **Assignment:** {assignment}\n"
                             f"- **Expected return:** "
                             f"`{subject}_{pass_number}-authored.zip`\n"
-                            f"- **Start with:** `START HERE.md`\n",
+                            f"- **Start with:** `START HERE.md`\n"
+                            f"{pass_specific_files}",
                             encoding="utf-8",
                         )
                         archive_story_workspace(pass_bundle)

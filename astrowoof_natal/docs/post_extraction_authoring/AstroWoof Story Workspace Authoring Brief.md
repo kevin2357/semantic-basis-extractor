@@ -17,6 +17,12 @@ Begin with the whole dog:
 The full chart may inform the whole-dog profile. Each ordinary story remains
 bounded by the astrology and evidence in its own `CLAIM AND EVIDENCE.md`.
 
+When the summary pass supplies `SUMMARY GOLD REFERENCE.md`, use it only to
+study four-lens separation, synthesis depth, and finished craft. Never transfer
+the example dog's facts or language. Complete `WRITE SUMMARY THESIS PLAN.md`
+before drafting: identity, daily life, present-tense needs, and growth over time
+must become four distinct remembered ideas, not four paraphrases of one motif.
+
 ## The creative standard
 
 Treat each story as a fresh writing assignment. The dog should remain
@@ -113,8 +119,8 @@ summary pass.
 ## Workspace care
 
 - Write in `WRITE WHOLE DOG PROFILE.md`, `WRITE THIS CARD.md`, and summary
-  writing files when supplied. Also complete `ASSIGN THEME GROUPS.md` when it
-  is present.
+  writing files when supplied. Complete `WRITE SUMMARY THESIS PLAN.md` and
+  `ASSIGN THEME GROUPS.md` when they are present.
 - Preserve every `BEGIN FIELD` and `END FIELD` marker exactly.
 - Replace every `__WRITE__` placeholder.
 - Keep reader-facing prose inside marked fields.

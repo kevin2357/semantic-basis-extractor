@@ -639,6 +639,33 @@ class TestBrePacket(unittest.TestCase):
                     pass_number=number,
                     pass_count=6,
                 )
+                gold_path = workspace / "SUMMARY GOLD REFERENCE.md"
+                thesis_path = workspace / "WRITE SUMMARY THESIS PLAN.md"
+                if number == 6:
+                    self.assertTrue(gold_path.is_file())
+                    self.assertTrue(thesis_path.is_file())
+                    self.assertIn(
+                        "Kevin is an example subject, not evidence",
+                        gold_path.read_text(encoding="utf-8"),
+                    )
+                    self.assertIn(
+                        "The Friendly Original With a Serious Heart",
+                        gold_path.read_text(encoding="utf-8"),
+                    )
+                    thesis_text = thesis_path.read_text(encoding="utf-8")
+                    self.assertIn("summary_plan.identity_thesis", thesis_text)
+                    self.assertIn(
+                        "summary_plan.needs_vs_growth_distinction",
+                        thesis_text,
+                    )
+                    start_here = (workspace / "START HERE.md").read_text(
+                        encoding="utf-8"
+                    )
+                    self.assertIn("SUMMARY GOLD REFERENCE.md", start_here)
+                    self.assertIn("WRITE SUMMARY THESIS PLAN.md", start_here)
+                else:
+                    self.assertFalse(gold_path.exists())
+                    self.assertFalse(thesis_path.exists())
                 for writing in workspace.rglob("WRITE*.md"):
                     writing.write_text(
                         writing.read_text(encoding="utf-8").replace(

@@ -55,6 +55,7 @@ from author_semantic_closure import (  # noqa: E402
     sparse_polish_output_schema,
     sparse_polish_transport_metrics,
     update_run_status,
+    workspace_file_inventory,
     writable_fields,
     _fake_field_value,
 )
@@ -341,6 +342,50 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_summary_gold_and_thesis_plan_are_pass_specific_assignment_inputs(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            card_pass = root / "bre_1"
+            summary_pass = root / "bre_6"
+            self.assertFalse((card_pass / "SUMMARY GOLD REFERENCE.md").exists())
+            self.assertFalse(
+                (card_pass / "WRITE SUMMARY THESIS PLAN.md").exists()
+            )
+            inventory = {
+                item["path"]: item
+                for item in workspace_file_inventory(summary_pass)
+            }
+            self.assertEqual(
+                "assignment",
+                inventory["SUMMARY GOLD REFERENCE.md"]["tier"],
+            )
+            self.assertEqual(
+                "assignment",
+                inventory["WRITE SUMMARY THESIS PLAN.md"]["tier"],
+            )
+            self.assertIn(
+                "WRITE SUMMARY THESIS PLAN.md",
+                writable_fields(summary_pass),
+            )
+            cache_manifest = prompt_cache_manifest(
+                discover_passes(
+                    {
+                        "status": "pass",
+                        "subject_count": 1,
+                        "subjects": [{"subject": "bre", "status": "pass"}],
+                    },
+                    root / "bundle",
+                )
+            )
+            self.assertIn("bre_6", cache_manifest["passes"])
+            self.assertNotEqual(
+                cache_manifest["passes"]["bre_1"]["assignment"],
+                cache_manifest["passes"]["bre_6"]["assignment"],
+            )
+
     def test_invalid_context_filter_is_caught_inside_authored_pass(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             workspace = Path(temporary) / "bre_1"

@@ -38,6 +38,15 @@ Markdown files around their original field markers. The model cannot rename
 files, alter source guidance, edit the bundled checker, or omit a required
 field without deterministic rejection.
 
+Passes 1–5 contain card assignments only. Pass 6 additionally receives the
+versioned four-summary Kevin craft reference and a writable four-thesis plan.
+The reference demonstrates coordinated identity, daily-life, needs, and growth
+lenses but is not evidence about the current dog. Both files live in the
+pass-local assignment tier: card passes incur no gold-reference tokens, while
+the shared editorial and subject prefixes remain cache-stable across all six
+passes. The completed thesis plan remains in the accepted workspace for audit
+and does not alter the assembled deck schema.
+
 GPT-5.6 authoring calls use explicit prompt caching by default. The request is
 ordered as a stable editorial-guidance prefix, a subject-specific full-chart
 prefix, and finally the pass-local assignment. Explicit breakpoints follow the

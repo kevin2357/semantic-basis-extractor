@@ -217,3 +217,39 @@ design and controlled testing.
 
 Detailed methods, examples, cost data, limitations, and future research are in
 `results/PHASE 0 - Targeted Polish Capability Study.md`.
+
+## 2026-08-02 — Phase 1 summary calibration implemented
+
+Pass 6 now receives a complete Markdown rendering of the four manually
+assembled Kevin summary cards as a craft-only reference. The handoff explicitly
+forbids transferring Kevin's facts, astrology, language, metaphors, jokes,
+headlines, sentence structures, and organizing devices. The transfer target is
+four-lens differentiation, full-chart synthesis, prose depth, audience purpose,
+and astrology-density control.
+
+Pass 6 also receives a writable private thesis plan requiring distinct identity,
+daily-life, needs/support, and growth/development arguments plus an explicit
+explanation of why needs and growth are not the same thesis. The plan is
+returned with the accepted workspace for audit but does not enter the assembled
+cards JSON.
+
+Passes 1–5 contain neither artifact. Both summary files are classified in the
+pass-local assignment tier, preserving byte-identical shared static and subject
+cache prefixes. The pass-6 workspace manifest names both files.
+
+Verification:
+
+- 71 builder and semantic-closure tests pass;
+- tests cover pass isolation, gold safeguards, thesis markers, writable-field
+  transport, assignment-tier inventory, and cache-manifest behavior;
+- a real token-free Bre SBE generation produced all six archives;
+- pass 1 contained no summary artifact;
+- pass 6 and its ZIP contained the gold reference and thesis plan;
+- the pass-6 manifest named both required files.
+
+A token-free prompt-layout report confirmed byte-identical static and subject
+prefixes across all six passes. The gold reference contributes an estimated
+7,528 tokens and the thesis-plan template 352 tokens to pass 6 only. The
+complete pass-6 request is estimated at 50,909 tokens by the repository's
+dependency-free UTF-8-bytes/4 planning metric; actual API usage remains the
+billing authority.
