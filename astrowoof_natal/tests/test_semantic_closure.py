@@ -7,6 +7,7 @@ import threading
 import time
 import unittest
 import zipfile
+from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
@@ -24,6 +25,7 @@ from author_semantic_closure import (  # noqa: E402
     PassSpec,
     ProviderResult,
     apply_deck_fields,
+    apply_sparse_polish,
     apply_authored_fields,
     authoring_output_schema,
     author_pending_passes,
@@ -38,11 +40,14 @@ from author_semantic_closure import (  # noqa: E402
     load_json,
     normalized_usage,
     polish_subject,
+    polish_target_paths,
     prompt_cache_manifest,
     resume_run,
     safe_extract_zip,
     save_state,
     select_cache_warmer,
+    sparse_polish_output_schema,
+    sparse_polish_transport_metrics,
     update_run_status,
     writable_fields,
 )
@@ -304,6 +309,116 @@ class TestSemanticClosure(SemanticClosureFixture):
             any(path.endswith(".theme_group") for path in rebalancing)
         )
 
+    def test_sparse_polish_targets_only_reported_opening_fields(self) -> None:
+        claim_ids = [card["claim_id"] for card in self.packet["cards"][:6]]
+        lint_report = {
+            "decks": [{
+                "warnings": [{
+                    "code": "repeated_opening",
+                    "details": {
+                        "field": "no_astro.body.direct_to_dog",
+                        "opening": "you can see",
+                        "claim_ids": claim_ids,
+                    },
+                }],
+            }],
+        }
+        targets = polish_target_paths(
+            self.packet,
+            lint_report=lint_report,
+            validation_report={"errors": []},
+            include_theme_groups=False,
+        )
+        self.assertEqual(6, len(targets))
+        self.assertTrue(all(
+            path.endswith(".card.no_astro.body.direct_to_dog")
+            for path in targets
+        ))
+        schema = sparse_polish_output_schema(targets)
+        self.assertEqual(
+            targets,
+            schema["properties"]["edits"]["items"]["properties"]
+            ["field_path"]["enum"],
+        )
+        metrics = sparse_polish_transport_metrics(
+            self.packet,
+            target_paths=targets,
+            include_theme_groups=False,
+        )
+        self.assertLess(
+            metrics["output_estimated_tokens"]["target_ceiling"],
+            metrics["output_estimated_tokens"]["full_map"] * 0.2,
+        )
+        self.assertLess(
+            metrics["input_estimated_tokens"]["sparse_transport"],
+            metrics["input_estimated_tokens"]["full_map"] * 0.3,
+        )
+
+    def test_sparse_polish_rejects_locked_and_duplicate_paths(self) -> None:
+        target = "cards.0.card.no_astro.body.handler"
+        authored = {
+            "edits": [{
+                "field_path": target,
+                "replacement": "A precise replacement.",
+                "reason_codes": ["failure_signature"],
+            }],
+        }
+        result = apply_sparse_polish(
+            self.packet,
+            authored,
+            target_paths=[target],
+            include_theme_groups=False,
+        )
+        self.assertEqual(
+            self.packet["cards"][0]["evidence"],
+            result["cards"][0]["evidence"],
+        )
+        locked = deepcopy(authored)
+        locked["edits"][0]["field_path"] = "cards.0.evidence"
+        with self.assertRaisesRegex(ValueError, "not editable"):
+            apply_sparse_polish(
+                self.packet,
+                locked,
+                target_paths=[target],
+                include_theme_groups=False,
+            )
+        duplicate = {"edits": [authored["edits"][0], authored["edits"][0]]}
+        with self.assertRaisesRegex(ValueError, "repeats field"):
+            apply_sparse_polish(
+                self.packet,
+                duplicate,
+                target_paths=[target],
+                include_theme_groups=False,
+            )
+
+    def test_second_sparse_attempt_expands_only_affected_cards(self) -> None:
+        claim_id = self.packet["cards"][0]["claim_id"]
+        lint_report = {
+            "decks": [{"warnings": [{
+                "code": "repeated_opening",
+                "details": {
+                    "field": "no_astro.body.handler",
+                    "claim_ids": [claim_id],
+                },
+            }]}],
+        }
+        narrow = polish_target_paths(
+            self.packet,
+            lint_report=lint_report,
+            validation_report={"errors": []},
+            include_theme_groups=False,
+        )
+        expanded = polish_target_paths(
+            self.packet,
+            lint_report=lint_report,
+            validation_report={"errors": []},
+            include_theme_groups=False,
+            expand_related=True,
+        )
+        self.assertEqual(1, len(narrow))
+        self.assertGreater(len(expanded), len(narrow))
+        self.assertTrue(all(path.startswith("cards.0.") for path in expanded))
+
     def test_polish_resumes_from_persisted_final_failure_paths(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -334,16 +449,29 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "polish_attempts": [],
                 "delivery": None,
             }
+            submitted: list[dict] = []
 
             class Provider:
                 model = "fake-polish"
 
                 def complete_json(inner_self, **kwargs):
+                    submitted.append(kwargs)
+                    target_paths = kwargs["schema"]["properties"]["edits"][
+                        "items"
+                    ]["properties"]["field_path"]["enum"]
                     fields = editable_deck_fields(
-                        self.packet,
-                        include_theme_groups=True,
+                        self.packet, include_theme_groups=True
                     )
-                    return {"fields": fields}, {"provider": "fake"}
+                    return {
+                        "edits": [
+                            {
+                                "field_path": path,
+                                "replacement": fields[path],
+                                "reason_codes": ["theme_group_balance"],
+                            }
+                            for path in target_paths
+                        ]
+                    }, {"provider": "fake"}
 
             def fake_qa(command, report_path, *, accepted_returncodes):
                 if "validate_astrowoof_editorial.py" in command[1]:
@@ -372,6 +500,12 @@ class TestSemanticClosure(SemanticClosureFixture):
                 )
             self.assertEqual("DELIVERY_COMPLETE", record["state"])
             self.assertTrue(record["polish_attempts"][0]["accepted"])
+            self.assertEqual("astrowoof_sparse_polish", submitted[0]["schema_name"])
+            transport = record["polish_attempts"][0]["transport"]
+            self.assertLess(
+                transport["editable_target_count"],
+                transport["full_field_count"],
+            )
             self.assertTrue(Path(record["delivery"]).is_file())
 
     def test_final_status_requires_every_subject_delivery(self) -> None:

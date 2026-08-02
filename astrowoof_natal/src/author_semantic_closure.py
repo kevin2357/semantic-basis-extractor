@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from assemble_authoring_workspace import assemble
+from lint_astrowoof_editorial import reader_facing_items
 
 
 SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.4"
@@ -2220,6 +2221,378 @@ def polish_output_schema(fields: dict[str, str]) -> dict[str, Any]:
     }
 
 
+def _lint_item_editable_path(
+    deck: dict[str, Any],
+    item: dict[str, str],
+) -> str | None:
+    location = item["location"]
+    field = item["field"].replace("[", ".").replace("]", "")
+    if location.startswith("card:"):
+        claim_id = location.removeprefix("card:")
+        index = next(
+            (
+                index
+                for index, card in enumerate(deck["cards"])
+                if card["claim_id"] == claim_id
+            ),
+            None,
+        )
+        if index is None:
+            return None
+        card_prefix = f"cards.{index}"
+        return (
+            f"{card_prefix}.{field}"
+            if item["kind"] in {"dos", "donts"}
+            else f"{card_prefix}.card.{field}"
+        )
+    if location.startswith("summary:"):
+        summary_key = location.removeprefix("summary:")
+        return f"summary.{summary_key}.{field}"
+    return None
+
+
+def polish_target_paths(
+    deck: dict[str, Any],
+    *,
+    lint_report: dict[str, Any],
+    validation_report: dict[str, Any],
+    include_theme_groups: bool,
+    expand_related: bool = False,
+) -> list[str]:
+    """Resolve machine findings to the smallest safe prose edit allowlist."""
+    all_fields = editable_deck_fields(
+        deck,
+        include_theme_groups=include_theme_groups,
+    )
+    items = reader_facing_items(deck)
+    item_paths = {
+        (item["location"], item["field"]): _lint_item_editable_path(deck, item)
+        for item in items
+    }
+    targets: set[str] = set()
+
+    def add_location_field(location: str, field: str) -> None:
+        path = item_paths.get((location, field))
+        if path in all_fields:
+            targets.add(path)
+
+    warnings = [
+        warning
+        for deck_report in lint_report.get("decks", [])
+        for warning in deck_report.get("warnings", [])
+    ]
+    warnings.extend(lint_report.get("cross_subject_warnings", []))
+    for warning in warnings:
+        code = warning.get("code")
+        details = warning.get("details") or {}
+        if code == "repeated_opening":
+            for claim_id in details.get("claim_ids", []):
+                add_location_field(f"card:{claim_id}", details.get("field", ""))
+        elif code == "claim_type_template":
+            expected_field = (
+                f"{details.get('density')}.body.{details.get('voice')}"
+            )
+            opening = str(details.get("opening") or "")
+            for item in items:
+                if (
+                    item["claim_type"] == details.get("claim_type")
+                    and item["field"] == expected_field
+                    and item["text"].lower().startswith(opening.lower())
+                ):
+                    add_location_field(item["location"], item["field"])
+        elif code == "duplicate_body":
+            for location_field in details.get("locations", []):
+                location, field = location_field.rsplit(":", 1)
+                add_location_field(location, field)
+        elif code == "repeated_sentence":
+            excerpt = str(details.get("excerpt") or "").lower()
+            claims = set(details.get("claim_ids", []))
+            for item in items:
+                if (
+                    item["kind"] == "body"
+                    and item["claim_id"] in claims
+                    and excerpt in item["text"].lower()
+                ):
+                    add_location_field(item["location"], item["field"])
+        elif code and code.startswith("duplicate_"):
+            excerpt = str(details.get("excerpt") or "").lower()
+            claims = set(details.get("claim_ids", []))
+            for item in items:
+                if (
+                    item["claim_id"] in claims
+                    and item["text"].lower().startswith(excerpt)
+                ):
+                    add_location_field(item["location"], item["field"])
+        elif code == "failure_signature":
+            add_location_field(
+                str(details.get("location") or ""),
+                str(details.get("field") or ""),
+            )
+        elif code in {"repeated_failure_signature", "cross_subject_duplicate"}:
+            locations = details.get("locations", [])
+            locations += details.get("left_locations", [])
+            locations += details.get("right_locations", [])
+            for location_field in locations:
+                location, field = location_field.rsplit(":", 1)
+                add_location_field(location, field)
+
+    validation_errors = [
+        str(error) for error in validation_report.get("errors", [])
+    ]
+    if include_theme_groups:
+        targets.update(
+            path for path in all_fields if path.endswith(".theme_group")
+        )
+    for error in validation_errors:
+        card_match = re.search(r"\bCard\s+(\d+)\b", error, re.IGNORECASE)
+        field_match = re.search(
+            r"\b(no_astro|light_astro|full_astro)\."
+            r"(headline|body)\.(handler|direct_to_dog|hybrid)\b",
+            error,
+        )
+        if card_match and field_match:
+            path = (
+                f"cards.{int(card_match.group(1)) - 1}.card."
+                f"{field_match.group(0)}"
+            )
+            if path in all_fields:
+                targets.add(path)
+
+    if expand_related and targets:
+        prefixes = {
+            ".".join(path.split(".")[:2])
+            for path in targets
+            if path.startswith("cards.")
+        }
+        targets.update(
+            path
+            for path in all_fields
+            if any(path.startswith(f"{prefix}.") for prefix in prefixes)
+        )
+    return sorted(targets)
+
+
+def sparse_polish_context(
+    deck: dict[str, Any],
+    target_paths: list[str],
+) -> dict[str, str]:
+    """Supply nearby prose as read-only context without making it editable."""
+    all_fields = editable_deck_fields(deck, include_theme_groups=True)
+    selected = set(target_paths)
+    for target in target_paths:
+        parts = target.split(".")
+        if target.startswith("cards."):
+            card_index = int(parts[1])
+            card_prefix = f"cards.{card_index}"
+            if target.endswith(".theme_group"):
+                continue
+            if len(parts) >= 6 and parts[2] == "card" and parts[3] in {
+                "no_astro",
+                "light_astro",
+                "full_astro",
+            }:
+                density = parts[3]
+                for path in all_fields:
+                    if path.startswith(f"{card_prefix}.card.{density}."):
+                        selected.add(path)
+                suffix = ".".join(parts[3:])
+                for neighbor in (card_index - 1, card_index + 1):
+                    neighbor_path = f"cards.{neighbor}.card.{suffix}"
+                    if neighbor_path in all_fields:
+                        selected.add(neighbor_path)
+            elif parts[2] in {"dos", "donts"}:
+                selected.update(
+                    path
+                    for path in all_fields
+                    if path.startswith(f"{card_prefix}.dos.")
+                    or path.startswith(f"{card_prefix}.donts.")
+                )
+            elif parts[2] == "card":
+                selected.update(
+                    path
+                    for path in all_fields
+                    if path.startswith(f"{card_prefix}.card.")
+                    and not any(
+                        f".{density}." in path
+                        for density in ("no_astro", "light_astro", "full_astro")
+                    )
+                )
+        elif target.startswith("summary."):
+            summary_prefix = ".".join(parts[:2])
+            selected.update(
+                path
+                for path in all_fields
+                if path.startswith(f"{summary_prefix}.")
+            )
+    return {
+        path: all_fields[path]
+        for path in sorted(selected)
+        if path in all_fields
+    }
+
+
+def sparse_polish_basis(
+    deck: dict[str, Any],
+    target_paths: list[str],
+) -> dict[str, Any]:
+    card_indexes = sorted({
+        int(path.split(".")[1])
+        for path in target_paths
+        if path.startswith("cards.")
+    })
+    return {
+        "subject": deck.get("subject", {}),
+        "cards": [
+            {
+                "index": index,
+                "claim_id": deck["cards"][index].get("claim_id"),
+                "claim_type": deck["cards"][index].get("claim_type"),
+                "canonical_claim": deck["cards"][index].get("canonical_claim"),
+                "categories": deck["cards"][index].get("categories", []),
+                "behavioral_domains": deck["cards"][index].get(
+                    "behavioral_domains", []
+                ),
+                "evidence_sources": [
+                    {
+                        "kind": evidence.get("kind"),
+                        "role": evidence.get("role"),
+                        "source_refs": evidence.get("source_refs", []),
+                        "claim_ids": evidence.get("claim_ids", []),
+                    }
+                    for evidence in deck["cards"][index].get("evidence", [])
+                ],
+            }
+            for index in card_indexes
+        ],
+    }
+
+
+def sparse_polish_transport_metrics(
+    deck: dict[str, Any],
+    *,
+    target_paths: list[str],
+    include_theme_groups: bool,
+) -> dict[str, Any]:
+    all_fields = editable_deck_fields(
+        deck,
+        include_theme_groups=include_theme_groups,
+    )
+    targets = {path: all_fields[path] for path in target_paths}
+    context = sparse_polish_context(deck, target_paths)
+    basis = sparse_polish_basis(deck, target_paths)
+    full_text = json.dumps(all_fields, ensure_ascii=False, separators=(",", ":"))
+    sparse_text = json.dumps(
+        {"targets": targets, "context": context, "basis": basis},
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    full_output_text = json.dumps(
+        {"fields": all_fields}, ensure_ascii=False, separators=(",", ":")
+    )
+    target_output_text = json.dumps(
+        {"edits": [
+            {
+                "field_path": path,
+                "replacement": value,
+                "reason_codes": [],
+            }
+            for path, value in targets.items()
+        ]},
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    return {
+        "mode": "sparse_patch",
+        "editable_target_count": len(target_paths),
+        "reference_field_count": len(context),
+        "full_field_count": len(all_fields),
+        "input_estimated_tokens": {
+            "full_map": estimated_text_tokens(full_text),
+            "sparse_transport": estimated_text_tokens(sparse_text),
+        },
+        "output_estimated_tokens": {
+            "full_map": estimated_text_tokens(full_output_text),
+            "target_ceiling": estimated_text_tokens(target_output_text),
+        },
+    }
+
+
+def sparse_polish_output_schema(target_paths: list[str]) -> dict[str, Any]:
+    if not target_paths:
+        raise ValueError("Sparse polish requires at least one editable target")
+    return {
+        "type": "object",
+        "properties": {
+            "edits": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": len(target_paths),
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "field_path": {
+                            "type": "string",
+                            "enum": target_paths,
+                        },
+                        "replacement": {"type": "string"},
+                        "reason_codes": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                        },
+                    },
+                    "required": [
+                        "field_path",
+                        "replacement",
+                        "reason_codes",
+                    ],
+                    "additionalProperties": False,
+                },
+            }
+        },
+        "required": ["edits"],
+        "additionalProperties": False,
+    }
+
+
+def apply_sparse_polish(
+    deck: dict[str, Any],
+    authored: dict[str, Any],
+    *,
+    target_paths: list[str],
+    include_theme_groups: bool,
+) -> dict[str, Any]:
+    edits = authored.get("edits") if isinstance(authored, dict) else None
+    if not isinstance(edits, list) or not edits:
+        raise ValueError("Sparse polish response must contain edits")
+    allowed = set(target_paths)
+    seen: set[str] = set()
+    result = deepcopy(deck)
+    for edit in edits:
+        if not isinstance(edit, dict):
+            raise ValueError("Sparse polish edit must be an object")
+        path = edit.get("field_path")
+        replacement = edit.get("replacement")
+        if path not in allowed:
+            raise ValueError(f"Sparse polish field is not editable: {path}")
+        if path in seen:
+            raise ValueError(f"Sparse polish repeats field: {path}")
+        if not isinstance(replacement, str) or not replacement.strip():
+            raise ValueError(f"Sparse polish field {path} must be nonempty")
+        if path.endswith(".theme_group") and not include_theme_groups:
+            raise ValueError("Theme groups are locked for this polish attempt")
+        current: Any = result
+        parts = path.split(".")
+        for part in parts[:-1]:
+            current = current[int(part)] if isinstance(current, list) else current[part]
+        last = parts[-1]
+        if isinstance(current, list):
+            current[int(last)] = replacement.strip()
+        else:
+            current[last] = replacement.strip()
+        seen.add(path)
+    return result
+
+
 def polish_subject(
     *,
     record: dict[str, Any],
@@ -2262,7 +2635,8 @@ def polish_subject(
         )
         system = (
             "You are performing a surgical whole-deck editorial polish. "
-            "Return exactly the supplied reader-facing field map. "
+            "Return only a sparse list of necessary replacements chosen from "
+            "the supplied editable target paths. "
             "Preserve every factual, evidentiary, structural, selection, "
             "category, filter, and identity value. Edit only "
             "reader-facing prose needed to resolve the supplied lint findings. "
@@ -2271,10 +2645,30 @@ def polish_subject(
             "Do not homogenize distinct cards or rewrite clean material."
         )
         current_deck = load_json(best_path)
+        target_paths = polish_target_paths(
+            current_deck,
+            lint_report=lint_report,
+            validation_report=validation_report,
+            include_theme_groups=allow_theme_group_edits,
+            expand_related=attempt_number > 1,
+        )
+        if not target_paths:
+            record["polish_unaddressable"] = {
+                "validation_errors": validation_report.get("errors", []),
+                "lint_warning_count": lint_report.get("warning_count", 0),
+                "reason": "No validator-controlled editable fields matched.",
+            }
+            break
         current_fields = editable_deck_fields(
             current_deck,
             include_theme_groups=allow_theme_group_edits,
         )
+        target_fields = {path: current_fields[path] for path in target_paths}
+        reference_context = sparse_polish_context(
+            current_deck,
+            target_paths,
+        )
+        repair_basis = sparse_polish_basis(current_deck, target_paths)
         user = (
             f"Polish the AstroWoof deck for {subject}. Reduce the deterministic "
             "lint findings while retaining the same dog, meanings, evidence "
@@ -2284,8 +2678,12 @@ def polish_subject(
             "VALIDATION REPORT:\n"
             f"{json.dumps(validation_report, ensure_ascii=False)}\n\n"
             f"LINT REPORT:\n{json.dumps(lint_report, ensure_ascii=False)}\n\n"
-            "READER-FACING FIELD MAP:\n"
-            f"{json.dumps(current_fields, ensure_ascii=False)}"
+            "REPAIR BASIS:\n"
+            f"{json.dumps(repair_basis, ensure_ascii=False)}\n\n"
+            "EDITABLE TARGETS (only these paths may be replaced):\n"
+            f"{json.dumps(target_fields, ensure_ascii=False)}\n\n"
+            "READ-ONLY NEARBY PROSE:\n"
+            f"{json.dumps(reference_context, ensure_ascii=False)}"
         )
         attempt = {
             "attempt_number": attempt_number,
@@ -2297,6 +2695,14 @@ def polish_subject(
             "lint_report": None,
             "warning_count": None,
             "accepted": False,
+            "transport": {
+                **sparse_polish_transport_metrics(
+                    current_deck,
+                    target_paths=target_paths,
+                    include_theme_groups=allow_theme_group_edits,
+                ),
+                "editable_target_paths": target_paths,
+            },
             "error": None,
         }
         record["polish_attempts"].append(attempt)
@@ -2304,18 +2710,27 @@ def polish_subject(
             authored, metadata = provider.complete_json(
                 system=system,
                 user=user,
-                schema=polish_output_schema(current_fields),
-                schema_name="astrowoof_polished_deck",
+                schema=sparse_polish_output_schema(target_paths),
+                schema_name="astrowoof_sparse_polish",
                 attempt_root=attempt_root,
                 idempotency_material=(
                     f"{sha256_file(best_path)}:{subject}:polish:"
                     f"{attempt_number}:{provider.model}"
                 ),
             )
-            candidate = apply_deck_fields(
-                current_deck,
-                authored,
-                include_theme_groups=allow_theme_group_edits,
+            candidate = (
+                apply_deck_fields(
+                    current_deck,
+                    authored,
+                    include_theme_groups=allow_theme_group_edits,
+                )
+                if "fields" in authored
+                else apply_sparse_polish(
+                    current_deck,
+                    authored,
+                    target_paths=target_paths,
+                    include_theme_groups=allow_theme_group_edits,
+                )
             )
             candidate_path = attempt_root / f"natal.{subject}.cards.json"
             write_json_atomic(candidate_path, candidate)

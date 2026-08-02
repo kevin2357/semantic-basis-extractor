@@ -105,12 +105,21 @@ validate each subject independently.
 
 Add `--polish --max-polish-attempts 2` to let an OpenAI run make bounded,
 surgical corrections when final validation fails or the whole-deck linter
-warns. Polish receives the validation report, lint report, and an exact map of
-reader-facing prose fields. It cannot return edits to evidence, claim
-selection, categories, filters, identity, or other locked data. Theme groups
-remain unavailable unless the validator explicitly reports that their balance
-is invalid; in that case only existing theme-group fields are added to the
-strict transport for rebalancing.
+warns. Polish resolves the structured validation and lint findings to an exact
+allowlist of affected reader-facing field paths. The model receives those
+editable values, compact claim/source grounding, and narrowly related prose as
+read-only context. It returns a sparse list of replacements rather than the
+entire deck. Unknown paths, duplicate edits, blank replacements, and locked
+fields are rejected before validation. Evidence, claim selection, categories,
+filters, identity, and all other non-authoring data remain unavailable for
+editing. Theme groups remain unavailable unless the validator explicitly
+reports invalid balance; that repair exposes only existing theme-group fields.
+
+The first attempt targets only fields named or implicated by deterministic
+findings. If it does not improve QA, a second attempt may expand to other
+reader-facing fields on those same affected cards, never to unrelated cards.
+Each attempt records editable-target count, read-only context count, full-deck
+field count, and estimated full-versus-sparse input/output sizes.
 
 Python applies the returned fields to a copy of the accepted baseline and runs
 the validator in polish mode. The first candidate that repairs an invalid
