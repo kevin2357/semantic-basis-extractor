@@ -39,6 +39,7 @@ from author_semantic_closure import (  # noqa: E402
     estimated_cost,
     estimated_text_tokens,
     finalize_subjects,
+    fill_fake_workspace,
     initial_run_state,
     load_json,
     normalized_usage,
@@ -48,6 +49,7 @@ from author_semantic_closure import (  # noqa: E402
     prompt_cache_manifest,
     resume_run,
     safe_extract_zip,
+    sanitize_context_filters,
     save_state,
     select_cache_warmer,
     sparse_polish_output_schema,
@@ -65,6 +67,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     optimize,
 )
 from validate_astrowoof_editorial import BAD_SECOND_PERSON  # noqa: E402
+from lint_authoring_pass import invalid_context_filter_claim_ids  # noqa: E402
 
 
 EXAMPLES = ROOT / "examples"
@@ -77,9 +80,13 @@ def authored_field_payload(workspace: Path) -> dict:
         result[relative_path] = {}
         for field in fields:
             ordinal += 1
-            result[relative_path][field] = (
-                f"Fresh authored value {ordinal} for {field}."
-            )
+            if field == "context_filter_groups.high_level":
+                value = "Personality"
+            elif field == "context_filter_groups.detail_level":
+                value = "Core Personality"
+            else:
+                value = f"Fresh authored value {ordinal} for {field}."
+            result[relative_path][field] = value
     return {"files": result}
 
 
@@ -334,6 +341,49 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_invalid_context_filter_is_caught_inside_authored_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre_1"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                1,
+                card_start=1,
+                pass_number=1,
+                pass_count=6,
+            )
+            fill_fake_workspace(workspace)
+            card_path = next(workspace.rglob("WRITE THIS CARD.md"))
+            text = card_path.read_text(encoding="utf-8")
+            text = text.replace(
+                "<!-- BEGIN FIELD: context_filter_groups.high_level -->\nPersonality",
+                "<!-- BEGIN FIELD: context_filter_groups.high_level -->\n- Emotions\n- Trust",
+            )
+            card_path.write_text(text, encoding="utf-8")
+            invalid = invalid_context_filter_claim_ids(workspace)
+            self.assertEqual(1, len(invalid))
+            self.assertEqual(
+                card_path.parent.name.split(" -- ", 1)[1], invalid[0]
+            )
+
+    def test_context_filter_sanitizer_removes_only_invalid_labels(self) -> None:
+        deck = deepcopy(self.packet)
+        deck["cards"][0]["context_filter_groups"] = {
+            "high_level": ["Emotions", "Trust", "Trust", "Personality"],
+            "detail_level": ["Emotions & Inner World", "Bogus Detail"],
+        }
+        repairs = sanitize_context_filters(deck)
+        self.assertEqual(
+            ["Trust", "Personality"],
+            deck["cards"][0]["context_filter_groups"]["high_level"],
+        )
+        self.assertEqual(
+            ["Emotions & Inner World"],
+            deck["cards"][0]["context_filter_groups"]["detail_level"],
+        )
+        self.assertEqual(2, len(repairs))
+
     def test_second_person_validator_allows_object_of_preposition(self) -> None:
         self.assertIsNone(BAD_SECOND_PERSON.search("the rest of you has paused"))
         self.assertIsNotNone(BAD_SECOND_PERSON.search("you has paused"))
@@ -571,6 +621,92 @@ class TestSemanticClosure(SemanticClosureFixture):
                 transport["full_field_count"],
             )
             self.assertTrue(Path(record["delivery"]).is_file())
+
+    def test_polish_preserves_partial_improvement_without_broad_expansion(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            deck_path.write_text(json.dumps(self.packet), encoding="utf-8")
+            assembly_path = final_root / "assembly.json"
+            assembly_path.write_text("{}", encoding="utf-8")
+            validation_path = final_root / "validation.json"
+            validation_path.write_text(json.dumps({
+                "status": "fail",
+                "errors": [
+                    "Theme groups need rebalancing.",
+                    "A second structural problem remains.",
+                ],
+            }), encoding="utf-8")
+            lint_path = final_root / "lint.json"
+            lint_path.write_text(json.dumps({
+                "status": "warn", "warning_count": 2, "decks": []
+            }), encoding="utf-8")
+            record = {
+                "subject": "bre", "state": "FINAL_QA_FAILED",
+                "deck": str(deck_path), "assembly_report": str(assembly_path),
+                "validation_report": str(validation_path),
+                "lint_report": str(lint_path), "baseline_warning_count": 2,
+                "polish_attempts": [], "delivery": None,
+            }
+
+            class Provider:
+                model = "fake-polish"
+                reasoning_effort = "low"
+
+                def complete_json(inner_self, **kwargs):
+                    paths = kwargs["schema"]["properties"]["edits"]["items"][
+                        "properties"
+                    ]["field_path"]["enum"]
+                    fields = editable_deck_fields(
+                        self.packet, include_theme_groups=True
+                    )
+                    return {"edits": [{
+                        "field_path": path,
+                        "replacement": fields[path],
+                        "reason_codes": ["theme_group_balance"],
+                    } for path in paths]}, {"provider": "fake"}
+
+            validation_calls = 0
+
+            def fake_qa(command, report_path, *, accepted_returncodes):
+                nonlocal validation_calls
+                if "validate_astrowoof_editorial.py" in command[1]:
+                    validation_calls += 1
+                    report = (
+                        {"status": "fail", "errors": [
+                            "Theme groups need rebalancing."
+                        ], "warnings": []}
+                        if validation_calls == 1
+                        else {"status": "pass", "errors": [], "warnings": []}
+                    )
+                    accepted = report["status"] == "pass"
+                else:
+                    report = {"status": "warn", "warning_count": 2, "decks": []}
+                    accepted = True
+                report_path.write_text(json.dumps(report), encoding="utf-8")
+                return {
+                    "accepted": accepted, "returncode": 0 if accepted else 2,
+                    "stdout": "", "stderr": "", "report": report,
+                }
+
+            with patch(
+                "author_semantic_closure.run_json_command", side_effect=fake_qa
+            ):
+                polish_subject(
+                    record=record, provider=Provider(), run_dir=root,
+                    python_executable=Path(sys.executable), max_attempts=2,
+                )
+            self.assertEqual(
+                "POLISH_IMPROVED_PARTIAL",
+                record["polish_attempts"][0]["state"],
+            )
+            self.assertTrue(record["polish_attempts"][0]["improved"])
+            self.assertLess(
+                record["polish_attempts"][1]["transport"]["editable_target_count"],
+                100,
+            )
 
     def test_final_status_requires_every_subject_delivery(self) -> None:
         state = {

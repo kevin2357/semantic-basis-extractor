@@ -2674,6 +2674,8 @@ def assemble_subject(
         workspace_root,
         allow_partial=False,
     )
+    filter_repairs = sanitize_context_filters(deck)
+    assembly_report["deterministic_context_filter_repairs"] = filter_repairs
     deck_path = final_root / f"natal.{subject}.cards.json"
     assembly_path = final_root / f"natal.{subject}.assembly-report.json"
     write_json_atomic(deck_path, deck)
@@ -2770,6 +2772,44 @@ def package_subject_delivery(
             raise ValueError(f"Corrupt delivery archive member: {bad_member}")
     record["delivery"] = normalized_path(delivery)
     return delivery
+
+
+def sanitize_context_filters(deck: dict[str, Any]) -> list[dict[str, Any]]:
+    """Remove impossible filter labels while preserving valid LLM choices."""
+    registered = {
+        level: {
+            item["name"]
+            for item in deck.get("context_filter_groups", [])
+            if item.get("level") == level and isinstance(item.get("name"), str)
+        }
+        for level in ("high", "detail")
+    }
+    repairs: list[dict[str, Any]] = []
+    for index, card in enumerate(deck.get("cards", []), 1):
+        filters = card.get("context_filter_groups")
+        if not isinstance(filters, dict):
+            continue
+        for key, level in (("high_level", "high"), ("detail_level", "detail")):
+            values = filters.get(key)
+            if not isinstance(values, list):
+                continue
+            kept: list[str] = []
+            removed: list[Any] = []
+            for value in values:
+                if value in registered[level] and value not in kept:
+                    kept.append(value)
+                else:
+                    removed.append(value)
+            if removed:
+                filters[key] = kept
+                repairs.append({
+                    "card": index,
+                    "claim_id": card.get("claim_id"),
+                    "field": key,
+                    "removed": removed,
+                    "retained": kept,
+                })
+    return repairs
 
 
 def editable_deck_fields(
@@ -3255,6 +3295,9 @@ def polish_subject(
         else persisted_warning_count
     )
     best_validation_passed = current_validation_report.get("status") == "pass"
+    best_validation_error_count = len(
+        current_validation_report.get("errors") or []
+    )
     best_path = baseline_path
     final_root = run_dir / "final" / subject
     validator_path = Path(__file__).resolve().with_name(
@@ -3267,15 +3310,18 @@ def polish_subject(
         len(record.get("polish_attempts", [])) + 1,
         max_attempts + 1,
     ):
-        expand_related = bool(record.get("polish_attempts")) and not bool(
-            record["polish_attempts"][-1].get("accepted")
-        )
         attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
         lint_report = load_json(Path(record["lint_report"]))
         validation_report = load_json(Path(record["validation_report"]))
         allow_theme_group_edits = any(
             "theme group" in str(error).lower()
             for error in validation_report.get("errors", [])
+        )
+        prior_attempts = record.get("polish_attempts", [])
+        expand_related = (
+            bool(prior_attempts)
+            and not bool(prior_attempts[-1].get("improved"))
+            and not allow_theme_group_edits
         )
         system = (
             "You are performing a surgical whole-deck editorial polish. "
@@ -3421,14 +3467,30 @@ def polish_subject(
             validation_warning_count = len(
                 validation["report"].get("warnings") or []
             )
+            validation_error_count = len(
+                validation["report"].get("errors") or []
+            )
             warning_count = lint_warning_count
+            improved = (
+                validation_error_count < best_validation_error_count
+                or (
+                    validation_error_count == best_validation_error_count
+                    and warning_count < best_warning_count
+                )
+            )
             accepted = validation["accepted"] and (
                 not best_validation_passed
                 or warning_count < best_warning_count
             )
             attempt.update(
                 {
-                    "state": "POLISH_ACCEPTED" if accepted else "POLISH_REJECTED",
+                    "state": (
+                        "POLISH_ACCEPTED"
+                        if accepted
+                        else "POLISH_IMPROVED_PARTIAL"
+                        if improved
+                        else "POLISH_REJECTED"
+                    ),
                     "finished_at": utc_now(),
                     "provider_metadata": metadata,
                     "validation_report": normalized_path(validation_path),
@@ -3439,16 +3501,19 @@ def polish_subject(
                         "lint": lint_warning_count,
                     },
                     "accepted": accepted,
+                    "improved": improved or accepted,
+                    "validation_error_count": validation_error_count,
                 }
             )
-            if accepted:
+            if accepted or improved:
                 best_path = candidate_path
                 best_warning_count = warning_count
-                best_validation_passed = True
+                best_validation_passed = validation["accepted"]
+                best_validation_error_count = validation_error_count
                 shutil.copy2(candidate_path, baseline_path)
                 shutil.copy2(validation_path, record["validation_report"])
                 shutil.copy2(lint_path, record["lint_report"])
-                if warning_count == 0:
+                if best_validation_passed and warning_count == 0:
                     break
         except Exception as exc:
             attempt.update(

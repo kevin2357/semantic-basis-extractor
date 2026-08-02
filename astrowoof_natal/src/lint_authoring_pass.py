@@ -19,6 +19,19 @@ from lint_astrowoof_editorial import (
 
 STORY_PATTERN = re.compile(r"^Story (\d{3}) -- (.+)$")
 SUMMARY_PATTERN = re.compile(r"^Summary (\d{2}) -- (.+)$")
+CONTEXT_FILTER_VOCABULARY = {
+    "context_filter_groups.high_level": {
+        "Personality", "Learning", "Play", "Adventure", "Communication",
+        "Trust", "Training", "Pack",
+    },
+    "context_filter_groups.detail_level": {
+        "Core Personality", "Mind & Intelligence",
+        "Emotions & Inner World", "Energy & Motivation",
+        "Strengths & Talents", "Growth & Potential", "Play & Adventure",
+        "Learning & Training", "Communication", "Social & Pack Life",
+        "Trust & Security", "Stress & Resilience",
+    },
+}
 
 
 def item(
@@ -104,6 +117,28 @@ def workspace_items(workspace: Path) -> list[dict[str, str]]:
     return items
 
 
+def invalid_context_filter_claim_ids(workspace: Path) -> list[str]:
+    """Return cards whose authored filter lists use unregistered labels."""
+    invalid: set[str] = set()
+    cards_root = workspace / "cards"
+    if not cards_root.is_dir():
+        return []
+    for story_dir in sorted(path for path in cards_root.iterdir() if path.is_dir()):
+        match = STORY_PATTERN.match(story_dir.name)
+        if not match:
+            continue
+        fields = parse_fields(story_dir / "WRITE THIS CARD.md")
+        for field, allowed in CONTEXT_FILTER_VOCABULARY.items():
+            values = {
+                re.sub(r"^\s*[-*]\s+", "", line).strip()
+                for line in fields.get(field, "").splitlines()
+                if re.sub(r"^\s*[-*]\s+", "", line).strip()
+            }
+            if not values <= allowed:
+                invalid.add(match.group(2))
+    return sorted(invalid)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("workspace", type=Path)
@@ -115,6 +150,14 @@ def main() -> None:
         "workspace": str(args.workspace),
         **authoring_pass_acceptance(workspace_items(args.workspace)),
     }
+    invalid_filter_claim_ids = invalid_context_filter_claim_ids(args.workspace)
+    if invalid_filter_claim_ids:
+        full_report["status"] = "reject"
+        full_report["rejection_reasons"].append({
+            "code": "invalid_context_filter",
+            "message": "One or more cards use an unregistered context filter.",
+            "claim_ids": invalid_filter_claim_ids,
+        })
     if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
         affected_claim_ids = sorted({
             claim_id
@@ -125,7 +168,7 @@ def main() -> None:
                 + full_report["dominant_openings"]
             )
             for claim_id in group.get("claim_ids", [])
-        })
+        } | set(invalid_filter_claim_ids))
         issue_codes = [
             reason["code"]
             for reason in full_report["rejection_reasons"]

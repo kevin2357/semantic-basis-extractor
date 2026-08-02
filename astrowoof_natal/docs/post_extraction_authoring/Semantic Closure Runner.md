@@ -77,6 +77,13 @@ issue codes, affected claim IDs, and broad guidance from the rejected attempt.
 It does not continue the rejected model conversation or expose private checker
 thresholds.
 
+Pass acceptance also verifies that authored high-level and detail-level
+context filters belong to the deck's fixed vocabulary. Invalid labels produce
+the opaque `invalid_context_filter` issue code and a fresh pass retry before
+the deck reaches assembly. As a defense for legacy workspaces, assembly removes
+only unregistered or duplicate labels, records every removal in the assembly
+report, and preserves all valid assignments in their original order.
+
 Fatal request problems such as authentication, permission, and invalid-request
 errors stop the affected pass immediately rather than repeating an identical
 billable request.
@@ -200,6 +207,14 @@ baseline exists, a candidate replaces the current best deck only when its
 whole-deck linter warning count is strictly lower. The original assembly
 therefore remains safe when polish fails, and accepted improvements remain safe
 when a later attempt fails. Polish stops early at zero linter warnings.
+
+Recovery compares candidates by structural error count before lint-warning
+count. A candidate that removes structural errors but does not yet pass the
+validator becomes the next working baseline as `POLISH_IMPROVED_PARTIAL`.
+Subsequent attempts therefore address the remaining blocker instead of
+discarding useful repairs. Theme-group rebalancing never triggers broad prose
+expansion across every themed card; only explicit lint targets and theme-group
+fields remain editable.
 
 On resume, persisted validation and lint reports define the current best state.
 Exhausted polish budgets do not create another response; a valid, zero-lint
