@@ -2,7 +2,7 @@
 
 - **Date:** 2026-08-02
 - **Sprint:** 1
-- **Status:** planned; discovery phase begins before implementation
+- **Status:** Phase-0 discovery complete; implementation plan updated from findings
 - **Primary subject:** Kevin
 - **Supporting subjects:** Ella and future comparison subjects as needed
 - **Related backlog:** `docs/post_extraction_authoring/Editorial Quality Research and Improvement Backlog.md`
@@ -13,9 +13,10 @@ Improve the semantic-closure authoring pipeline in quality dimensions that are
 not adequately represented by deterministic validation and linting, while
 preserving its reliability, evidence boundaries, resumability, and low cost.
 
-The sprint begins with a bounded manual polish experiment. Its findings may
-change the implementation plan before code is modified. Subsequent work will
+The sprint began with a bounded, human-directed polish experiment. Its findings
+now define the responsibility boundary for implementation. Subsequent work will
 add pass-6 summary calibration, deterministic diversified claim assignment,
+upstream editorial-planning improvements, narrow production-polish hardening,
 and an optional qualitative review/polish path. Controlled Kevin comparisons
 will isolate the contribution of each change.
 
@@ -148,6 +149,55 @@ the remaining sprint plan if the audit shows that a problem belongs at a
 different pipeline stage than currently assumed. No production implementation
 begins before this checkpoint is recorded.
 
+### Phase-0 discovery conclusion
+
+Phase 0 established a sufficiently stable architectural boundary for the rest
+of this sprint:
+
+> Upstream authoring owns conception. Polishing owns evaluation and revision.
+
+A finished deck should remain acceptable if polish makes no changes. The
+polish pass is a selective editor and safety net, not the first stage at which
+the system decides what a card is about.
+
+Upstream authoring therefore owns:
+
+- the whole-dog portrait and coherent characterization;
+- one distinct remembered idea, behavioral doorway, and creative thesis per
+  card;
+- semantic differentiation among neighboring claims;
+- audience purpose and astrology-density conception;
+- claim-specific humor premises and initial headline quality;
+- complete treatment of compound semantic contributions;
+- four genuinely different full-chart summary arguments.
+
+Polish owns or is well suited to:
+
+- preservation-aware `keep` or `replace` evaluation;
+- repeated openings and sentence architectures;
+- reused comic mechanisms;
+- isolated weak headlines and over-explained bodies;
+- restoration of supplied compound semantics that prose has flattened;
+- false-positive-aware review of deterministic advisories;
+- bounded deck-level cleanup that does not reconceive the cards.
+
+Humor, headlines, voice distinction, summary coherence, semantic precision,
+and deck diversity remain shared responsibilities: they must begin upstream
+and may receive targeted downstream inspection.
+
+Use this routing test when assigning later work:
+
+> Can an editor identify and repair the defect from the finished prose and
+> localized evidence without deciding anew what the card fundamentally is?
+
+If yes, the issue is a reasonable polish target. If repair requires a new
+thesis, scene, audience posture, joke premise, or whole-chart interpretation,
+it belongs upstream.
+
+The full experiment and comparison are preserved in:
+
+`results/PHASE 0 - Targeted Polish Capability Study.md`
+
 ## Phase 1 — Pass-6 summary calibration
 
 ### Gold reference
@@ -245,6 +295,41 @@ Measure token cost, retained semantic coverage, evidence traceability, and
 resulting whole-dog comprehension. Compare the current rendering with at least
 one more compact, author-oriented representation before changing the
 production handoff.
+
+## Phase 3.5 — Narrow production-polish hardening
+
+Apply only the inexpensive, low-disruption Phase-0 findings that fit the
+current polish architecture. This is not the full qualitative critic or
+editorial-handbook project described in Phase 4.
+
+Candidate changes, subject to inspection of the current implementation:
+
+- let a polish target resolve to `keep` or no-op when a validator/linter
+  advisory is not a substantive writing defect;
+- state compactly that preservation of strong prose is editorial success;
+- require every replacement to repair the named mechanism while retaining the
+  field's strongest image, behavioral insight, or useful guidance;
+- provide localized source evidence for semantic-completeness findings,
+  especially compound claims, without sending unnecessary whole-chart context;
+- distinguish concision from automatic shortening and preserve current length
+  when richness is doing useful work;
+- keep all existing sparse allowlists, locked-field checks, deterministic QA,
+  retry behavior, resumability, and cost accounting;
+- place stable compact guidance in a cacheable prompt prefix where practical.
+
+Explicitly out of scope for this stage:
+
+- the full Round-2 editorial handbook;
+- mandatory review of every reader-facing field;
+- a separate LLM critic call;
+- broad summary rewriting;
+- a new multi-stage polish architecture.
+
+Tests must prove that accepted no-op decisions do not mutate the deck, actual
+replacements remain sparse, false-positive advisories need not trigger prose
+damage, compound repairs receive adequate evidence, and ordinary low-cost runs
+do not incur a large input-token increase. Record before/after prompt tokens
+and estimated polish cost on the next live QA.
 
 ## Phase 4 — Preserve mechanical polish and add qualitative diagnosis
 

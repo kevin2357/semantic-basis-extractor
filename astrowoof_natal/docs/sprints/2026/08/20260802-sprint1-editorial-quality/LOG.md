@@ -181,3 +181,39 @@ kept and every substantively diagnosed card candidate was replaced. This may
 reflect accurate interpretation of the supplied diagnoses, or it may indicate
 that the agent treated diagnosis class as the decision rather than judging all
 164 fields independently. Matched human evaluation should test that question.
+
+## 2026-08-02 — Phase-0 discovery checkpoint completed
+
+Round 1 and Round 2 were compared field by field against the same normalized
+automated Kevin baseline and against the older manually assembled Kevin deck as
+an external quality benchmark. The manual deck was not visible to either API
+agent.
+
+The discovery question now has a sufficiently confident answer for sprint
+planning: a bounded polish pass can reliably evaluate and repair named local
+defects, but it should not be the first stage responsible for conceiving card
+theses, whole-dog characterization, creative variety, or summary arguments.
+
+Round 1 changed all 164 authorized fields and reduced targeted prose from
+5,376 to 3,880 words. It repaired many local defects but also compressed strong
+summary writing and replaced false-positive advisory fields. Round 2 used
+`keep|replace`, changed 53 fields, preserved 111 verbatim, and left total target
+length essentially unchanged at 5,382 words. It retained all summaries and
+advisory fields while repairing all explicitly diagnosed humor, opening,
+headline, over-explanation, and compound-semantic targets.
+
+Architectural decision:
+
+- upstream authoring owns conception;
+- polish owns preservation-aware evaluation and bounded revision;
+- shared quality dimensions must be established upstream before polish inspects
+  them;
+- the deck should be acceptable even if polish performs no replacements.
+
+The remaining plan now includes a narrow Phase 3.5 for inexpensive polish
+hardening without importing the full experimental handbook or adding a critic
+call. The larger structured-critic hypothesis remains in Phase 4 for future
+design and controlled testing.
+
+Detailed methods, examples, cost data, limitations, and future research are in
+`results/PHASE 0 - Targeted Polish Capability Study.md`.
