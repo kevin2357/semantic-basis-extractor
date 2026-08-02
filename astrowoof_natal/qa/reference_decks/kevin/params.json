@@ -1,0 +1,23 @@
+{
+  "subject_id": "kevin",
+  "display_name": "Kevin",
+  "subject_type": "dog",
+  "gender": "male",
+  "breed": "Golden Retriever",
+
+  "pronouns": {
+    "subject": "he",
+    "object": "him",
+    "possessive_adjective": "his",
+    "possessive_pronoun": "his",
+    "reflexive": "himself"
+  },
+
+  "birth_date": "2020-10-07",
+  "birth_datetime": "2020-10-07T14:32:00-06:00",
+  "birth_date_precision": "exact",
+
+  "birth_location": "Denver, Colorado",
+  "birth_latitude": 39.7392,
+  "birth_longitude": -104.9903
+}

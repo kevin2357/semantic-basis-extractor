@@ -1,0 +1,3415 @@
+{
+  "schema_version": "astrowoof.projected_natal_cards.v0.1",
+  "generator": {
+    "projection_engine_version": "0.10.0",
+    "projection_profile_id": "woofmapped_astrology.v0",
+    "projection_profile_version": "0.1.0",
+    "claim_extractor_version": "prototype.manual.v0.1",
+    "card_generator_version": "prototype.manual.v0.1"
+  },
+  "subject": {
+    "subject_id": "bre",
+    "display_name": "Bre",
+    "subject_type": "dog",
+    "gender": "",
+    "pronouns": {
+      "subject": "",
+      "object": "",
+      "possessive_adjective": "",
+      "possessive_pronoun": "",
+      "reflexive": ""
+    },
+    "breed": "",
+    "birth_datetime": "",
+    "birth_location": ""
+  },
+  "source": {
+    "source_chart_id": "natal:bre",
+    "source_file": "bre_natal_dataset.analysis.json",
+    "source_graph_type": "natal",
+    "source_materialization": "analysis_view",
+    "projection_id": "projection:3ff67e8000368fe07afee538",
+    "context_id": "woofmapped.doghouse.general.v0",
+    "source_graph_hash": "d708526383c08da95308e42d"
+  },
+  "coverage": {
+    "projected_object_count": 16,
+    "projected_relationship_count": 0,
+    "aspect_cards_generated": 0,
+    "aspect_limitation": "This standard projected graph contains no projected relationships, so no natal-aspect claim cards were generated from unsupported evidence.",
+    "guardrails": [
+      "playful_experimental_projection",
+      "not_veterinary_advice",
+      "not_behavioral_diagnosis",
+      "not_empirically_validated"
+    ]
+  },
+  "statistics": {
+    "total_claims": 26,
+    "claim_type_counts": {
+      "placement": 10,
+      "angle": 4,
+      "orientation": 2,
+      "synthesized_theme": 4,
+      "system_interaction": 3,
+      "tension": 3
+    },
+    "atomic_or_orientation_claims": 16,
+    "synthesized_claims": 10
+  },
+  "categories": [
+    "angles",
+    "core_traits",
+    "development",
+    "synthesized_patterns"
+  ],
+  "behavioral_domains": [
+    "action",
+    "adventure",
+    "agency",
+    "atmosphere",
+    "attachment",
+    "body_state",
+    "bonding",
+    "care",
+    "comfort",
+    "communication",
+    "confidence",
+    "cooperation",
+    "counterpart_style",
+    "cue_processing",
+    "curiosity",
+    "defense",
+    "doorway_behavior",
+    "favorite_human",
+    "first_impression",
+    "growth_direction",
+    "guardian_role",
+    "handling",
+    "helper_role",
+    "home",
+    "imagination",
+    "impulse_control",
+    "independence",
+    "local_environment",
+    "novelty",
+    "one_to_one_bond",
+    "pack_identity",
+    "pack_role",
+    "persistence",
+    "play",
+    "private_safety",
+    "recovery",
+    "resources",
+    "rewards",
+    "routine",
+    "scent_ecology",
+    "scent_memory",
+    "social",
+    "territory",
+    "training",
+    "training_path",
+    "trust",
+    "visibility",
+    "visible_temperament",
+    "vulnerability"
+  ],
+  "cards": [
+    {
+      "claim_id": "moon_regulation",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Safety Starts in Motion",
+      "importance": 1.0,
+      "confidence": 0.98,
+      "strength": 1.0,
+      "behavioral_domains": [
+        "comfort",
+        "body_state",
+        "attachment",
+        "recovery"
+      ],
+      "tags": [
+        "fast-regulation",
+        "direct-needs",
+        "moon"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Moon",
+          "source_sign": "Aries",
+          "source_house": 1,
+          "projected_operator": "comfort_safety_regulation",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": "doghouse_1_body_temperament_presence",
+          "weight": 1.0,
+          "projection_relevance_score": 1.0
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Safety Starts in Motion",
+            "direct_to_dog": "Safety Starts in Motion",
+            "hybrid": "Safety Starts in Motion"
+          },
+          "body": {
+            "handler": "Bre often regulates by doing something rather than waiting quietly for feelings to pass.",
+            "direct_to_dog": "you often regulates by doing something rather than waiting quietly for feelings to pass.",
+            "hybrid": "Bre often regulates by doing something rather than waiting quietly for feelings to pass."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "An Aries Moon makes comfort active, immediate, and body-led.",
+            "direct_to_dog": "An Aries Moon makes comfort active, immediate, and body-led.",
+            "hybrid": "An Aries Moon makes comfort active, immediate, and body-led."
+          },
+          "body": {
+            "handler": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step.",
+            "direct_to_dog": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step.",
+            "hybrid": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Aries Moon: Safety Starts in Motion",
+            "direct_to_dog": "Aries Moon: Safety Starts in Motion",
+            "hybrid": "Aries Moon: Safety Starts in Motion"
+          },
+          "body": {
+            "handler": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step.",
+            "direct_to_dog": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step.",
+            "hybrid": "Her Aries Moon in the first doghouse links emotional safety to movement, direct response, bodily autonomy, and quick access to a clear next step."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Use brief movement resets",
+        "Acknowledge needs quickly",
+        "Give clear exits and choices"
+      ],
+      "donts": [
+        "Force stillness during rising arousal",
+        "Delay every response",
+        "Mistake urgency for bad intent"
+      ]
+    },
+    {
+      "claim_id": "sun_pack_role",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "The Neighborhood Correspondent",
+      "importance": 0.99,
+      "confidence": 0.98,
+      "strength": 0.99,
+      "behavioral_domains": [
+        "pack_identity",
+        "communication",
+        "local_environment"
+      ],
+      "tags": [
+        "curious",
+        "social-information",
+        "observant"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Sun",
+          "source_sign": "Gemini",
+          "source_house": 3,
+          "projected_operator": "pack_role_identity",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+          "weight": 1.0,
+          "projection_relevance_score": 1.0
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Neighborhood Correspondent",
+            "direct_to_dog": "The Neighborhood Correspondent",
+            "hybrid": "The Neighborhood Correspondent"
+          },
+          "body": {
+            "handler": "Bre builds identity by noticing, sorting, and sharing what is happening nearby.",
+            "direct_to_dog": "you builds identity by noticing, sorting, and sharing what is happening nearby.",
+            "hybrid": "Bre builds identity by noticing, sorting, and sharing what is happening nearby."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Gemini Sun makes Bre’s pack role quick, curious, and information-oriented.",
+            "direct_to_dog": "A Gemini Sun makes Bre’s pack role quick, curious, and information-oriented.",
+            "hybrid": "A Gemini Sun makes Bre’s pack role quick, curious, and information-oriented."
+          },
+          "body": {
+            "handler": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on.",
+            "direct_to_dog": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on.",
+            "hybrid": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Gemini Sun: The Neighborhood Correspondent",
+            "direct_to_dog": "Gemini Sun: The Neighborhood Correspondent",
+            "hybrid": "Gemini Sun: The Neighborhood Correspondent"
+          },
+          "body": {
+            "handler": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on.",
+            "direct_to_dog": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on.",
+            "hybrid": "Her Gemini Sun in the third doghouse favors sniffing, cue exchange, neighborhood intelligence, and a role built around knowing what is going on."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Offer short information-rich games",
+        "Let walks include investigation",
+        "Reward check-ins after exploring"
+      ],
+      "donts": [
+        "Demand long passive repetition",
+        "Treat curiosity as disobedience",
+        "Overload her with simultaneous cues"
+      ]
+    },
+    {
+      "claim_id": "asc_behavior",
+      "claim_type": "angle",
+      "category": "angles",
+      "canonical_claim": "First Response: Go",
+      "importance": 0.98,
+      "confidence": 0.98,
+      "strength": 0.98,
+      "behavioral_domains": [
+        "first_impression",
+        "doorway_behavior",
+        "visible_temperament"
+      ],
+      "tags": [
+        "fast-start",
+        "direct",
+        "bold"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "ASC",
+          "source_sign": "Aries",
+          "source_house": null,
+          "projected_operator": "behavioral_doorway",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": null,
+          "weight": 1.0,
+          "projection_relevance_score": 0.98
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "First Response: Go",
+            "direct_to_dog": "First Response: Go",
+            "hybrid": "First Response: Go"
+          },
+          "body": {
+            "handler": "Bre meets the world quickly and directly. Her first move may arrive before her full assessment does.",
+            "direct_to_dog": "you meets the world quickly and directly. Her first move may arrive before her full assessment does.",
+            "hybrid": "Bre meets the world quickly and directly. Her first move may arrive before her full assessment does."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "An Aries Ascendant gives Bre an immediate, action-first behavioral doorway.",
+            "direct_to_dog": "An Aries Ascendant gives Bre an immediate, action-first behavioral doorway.",
+            "hybrid": "An Aries Ascendant gives Bre an immediate, action-first behavioral doorway."
+          },
+          "body": {
+            "handler": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power.",
+            "direct_to_dog": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power.",
+            "hybrid": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Aries ASC: First Response: Go",
+            "direct_to_dog": "Aries ASC: First Response: Go",
+            "hybrid": "Aries ASC: First Response: Go"
+          },
+          "body": {
+            "handler": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power.",
+            "direct_to_dog": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power.",
+            "hybrid": "The Aries Ascendant projects her visible temperament through rapid response, direct engagement, and a strong preference to meet the world under her own power."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Reward orienting before action",
+        "Use clear threshold rituals",
+        "Channel initiative"
+      ],
+      "donts": [
+        "Punish enthusiasm indiscriminately",
+        "Expect lengthy hesitation",
+        "Crowd her first response"
+      ]
+    },
+    {
+      "claim_id": "motion_before_calm",
+      "claim_type": "synthesized_theme",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Movement Can Be Part of Regulation",
+      "importance": 0.96,
+      "confidence": 0.9,
+      "strength": 0.96,
+      "behavioral_domains": [
+        "comfort",
+        "recovery",
+        "doorway_behavior"
+      ],
+      "tags": [
+        "active-regulation",
+        "fast-start",
+        "body-led"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Moon",
+          "source_sign": "Aries",
+          "source_house": 1,
+          "projected_operator": "comfort_safety_regulation",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": "doghouse_1_body_temperament_presence",
+          "weight": 1,
+          "projection_relevance_score": 1.0
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "ASC",
+          "source_sign": "Aries",
+          "source_house": null,
+          "projected_operator": "behavioral_doorway",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": null,
+          "weight": 0.9,
+          "projection_relevance_score": 0.98
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Mars",
+          "source_sign": "Taurus",
+          "source_house": 2,
+          "projected_operator": "chase_play_defense_drive",
+          "projected_mode": "nap_spot_loyalty_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 0.55,
+          "projection_relevance_score": 0.96
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "moon_regulation",
+          "asc_behavior"
+        ],
+        "tensions_with": [
+          "saturn_training"
+        ],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Movement Can Be Part of Regulation",
+            "direct_to_dog": "Movement Can Be Part of Regulation",
+            "hybrid": "Movement Can Be Part of Regulation"
+          },
+          "body": {
+            "handler": "Bre is not always asking to be calmed down by becoming still; sometimes she needs a brief, structured action before settling is available.",
+            "direct_to_dog": "you is not always asking to be calmed down by becoming still; sometimes she needs a brief, structured action before settling is available.",
+            "hybrid": "Bre is not always asking to be calmed down by becoming still; sometimes she needs a brief, structured action before settling is available."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Movement Can Be Part of Regulation",
+            "direct_to_dog": "Movement Can Be Part of Regulation",
+            "hybrid": "Movement Can Be Part of Regulation"
+          },
+          "body": {
+            "handler": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through.",
+            "direct_to_dog": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through.",
+            "hybrid": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Movement Can Be Part of Regulation",
+            "direct_to_dog": "Movement Can Be Part of Regulation",
+            "hybrid": "Movement Can Be Part of Regulation"
+          },
+          "body": {
+            "handler": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through.",
+            "direct_to_dog": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through.",
+            "hybrid": "Her Aries Moon and Aries Ascendant make emotional and behavioral response immediate, while Taurus Mars adds a slower, more sustained physical follow-through."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Offer a short movement reset",
+        "Then cue a familiar settle",
+        "Watch whether the body softens"
+      ],
+      "donts": [
+        "Demand instant stillness",
+        "Keep escalating activity",
+        "Confuse motion with refusal"
+      ]
+    },
+    {
+      "claim_id": "curiosity_identity",
+      "claim_type": "synthesized_theme",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Curiosity Is Not a Side Hobby",
+      "importance": 0.95,
+      "confidence": 0.9,
+      "strength": 0.95,
+      "behavioral_domains": [
+        "pack_identity",
+        "bonding",
+        "rewards",
+        "communication"
+      ],
+      "tags": [
+        "curiosity-core",
+        "information-seeking",
+        "social-learning"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Sun",
+          "source_sign": "Gemini",
+          "source_house": 3,
+          "projected_operator": "pack_role_identity",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+          "weight": 1,
+          "projection_relevance_score": 1.0
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Venus",
+          "source_sign": "Gemini",
+          "source_house": 2,
+          "projected_operator": "bonding_preference",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 0.85,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Part of Fortune",
+          "source_sign": "Gemini",
+          "source_house": 3,
+          "projected_operator": "easy_good_thing_channel",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+          "weight": 0.55,
+          "projection_relevance_score": 0.56
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Mercury",
+          "source_sign": "Cancer",
+          "source_house": 4,
+          "projected_operator": "scent_signal_interpretation",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": "doghouse_4_den_home_base_safety",
+          "weight": 0.7,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "sun_pack_role",
+          "venus_bonding",
+          "fortune_channel"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Curiosity Is Not a Side Hobby",
+            "direct_to_dog": "Curiosity Is Not a Side Hobby",
+            "hybrid": "Curiosity Is Not a Side Hobby"
+          },
+          "body": {
+            "handler": "Bre’s curiosity is woven into identity, affection, reward, and communication. Investigating is one of the ways she participates in relationship.",
+            "direct_to_dog": "you’s curiosity is woven into identity, affection, reward, and communication. Investigating is one of the ways she participates in relationship.",
+            "hybrid": "Bre’s curiosity is woven into identity, affection, reward, and communication. Investigating is one of the ways she participates in relationship."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Curiosity Is Not a Side Hobby",
+            "direct_to_dog": "Curiosity Is Not a Side Hobby",
+            "hybrid": "Curiosity Is Not a Side Hobby"
+          },
+          "body": {
+            "handler": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context.",
+            "direct_to_dog": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context.",
+            "hybrid": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Curiosity Is Not a Side Hobby",
+            "direct_to_dog": "Curiosity Is Not a Side Hobby",
+            "hybrid": "Curiosity Is Not a Side Hobby"
+          },
+          "body": {
+            "handler": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context.",
+            "direct_to_dog": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context.",
+            "hybrid": "Gemini emphasis across Sun, Venus, and Part of Fortune reinforces information-seeking, while Mercury gives that curiosity a memory-rich home context."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Let sniffing count as participation",
+        "Use discovery as reward",
+        "Invite her to report back"
+      ],
+      "donts": [
+        "Treat every investigation as distraction",
+        "Over-structure every walk",
+        "Separate bonding from curiosity"
+      ]
+    },
+    {
+      "claim_id": "mars_resources",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Slow Fuse, Strong Follow-Through",
+      "importance": 0.95,
+      "confidence": 0.98,
+      "strength": 0.95,
+      "behavioral_domains": [
+        "play",
+        "resources",
+        "defense",
+        "persistence"
+      ],
+      "tags": [
+        "steady-drive",
+        "resource-focus",
+        "determined"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Mars",
+          "source_sign": "Taurus",
+          "source_house": 2,
+          "projected_operator": "chase_play_defense_drive",
+          "projected_mode": "nap_spot_loyalty_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 1.0,
+          "projection_relevance_score": 0.96
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Slow Fuse, Strong Follow-Through",
+            "direct_to_dog": "Slow Fuse, Strong Follow-Through",
+            "hybrid": "Slow Fuse, Strong Follow-Through"
+          },
+          "body": {
+            "handler": "Bre may take time to commit, but once engaged she can be remarkably persistent about play, pursuit, or protecting what matters.",
+            "direct_to_dog": "you may take time to commit, but once engaged she can be remarkably persistent about play, pursuit, or protecting what matters.",
+            "hybrid": "Bre may take time to commit, but once engaged she can be remarkably persistent about play, pursuit, or protecting what matters."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Taurus Mars makes action steady, embodied, and difficult to redirect once fully engaged.",
+            "direct_to_dog": "Taurus Mars makes action steady, embodied, and difficult to redirect once fully engaged.",
+            "hybrid": "Taurus Mars makes action steady, embodied, and difficult to redirect once fully engaged."
+          },
+          "body": {
+            "handler": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort.",
+            "direct_to_dog": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort.",
+            "hybrid": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Taurus Mars: Slow Fuse, Strong Follow-Through",
+            "direct_to_dog": "Taurus Mars: Slow Fuse, Strong Follow-Through",
+            "hybrid": "Taurus Mars: Slow Fuse, Strong Follow-Through"
+          },
+          "body": {
+            "handler": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort.",
+            "direct_to_dog": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort.",
+            "hybrid": "Mars in Taurus in the second doghouse concentrates chase, play, and defensive drive around valued resources, physical comfort, and sustained effort."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Teach clean start-stop rituals",
+        "Use sturdy enrichment",
+        "Reward voluntary release"
+      ],
+      "donts": [
+        "Escalate resource conflict",
+        "Rush transitions",
+        "Assume slow activation means low motivation"
+      ]
+    },
+    {
+      "claim_id": "mc_role",
+      "claim_type": "angle",
+      "category": "angles",
+      "canonical_claim": "A Job Worth Taking Seriously",
+      "importance": 0.95,
+      "confidence": 0.98,
+      "strength": 0.95,
+      "behavioral_domains": [
+        "pack_role",
+        "guardian_role",
+        "helper_role"
+      ],
+      "tags": [
+        "responsible",
+        "visible-role",
+        "competence"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "MC",
+          "source_sign": "Capricorn",
+          "source_house": null,
+          "projected_operator": "visible_pack_function",
+          "projected_mode": "working_dog_seriousness_mode",
+          "projected_domain": null,
+          "weight": 1.0,
+          "projection_relevance_score": 0.96
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "A Job Worth Taking Seriously",
+            "direct_to_dog": "A Job Worth Taking Seriously",
+            "hybrid": "A Job Worth Taking Seriously"
+          },
+          "body": {
+            "handler": "Bre may thrive when she has a recognizable household function and knows what competent participation looks like.",
+            "direct_to_dog": "you may thrive when she has a recognizable household function and knows what competent participation looks like.",
+            "hybrid": "Bre may thrive when she has a recognizable household function and knows what competent participation looks like."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Capricorn Midheaven gives visible pack function a serious, capable tone.",
+            "direct_to_dog": "A Capricorn Midheaven gives visible pack function a serious, capable tone.",
+            "hybrid": "A Capricorn Midheaven gives visible pack function a serious, capable tone."
+          },
+          "body": {
+            "handler": "The Capricorn MC frames Bre’s public role through responsibility, structure, earned competence, and a desire for her contribution to count.",
+            "direct_to_dog": "The Capricorn MC frames you’s public role through responsibility, structure, earned competence, and a desire for her contribution to count.",
+            "hybrid": "The Capricorn MC frames Bre’s public role through responsibility, structure, earned competence, and a desire for her contribution to count."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Capricorn MC: A Job Worth Taking Seriously",
+            "direct_to_dog": "Capricorn MC: A Job Worth Taking Seriously",
+            "hybrid": "Capricorn MC: A Job Worth Taking Seriously"
+          },
+          "body": {
+            "handler": "The Capricorn MC frames Bre’s public role through responsibility, structure, earned competence, and a desire for her contribution to count.",
+            "direct_to_dog": "The Capricorn MC frames you’s public role through responsibility, structure, earned competence, and a desire for her contribution to count.",
+            "hybrid": "The Capricorn MC frames Bre’s public role through responsibility, structure, earned competence, and a desire for her contribution to count."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Assign concrete jobs",
+        "Recognize reliable performance",
+        "Build responsibility gradually"
+      ],
+      "donts": [
+        "Give meaningless busywork",
+        "Change her role constantly",
+        "Only notice mistakes"
+      ]
+    },
+    {
+      "claim_id": "home_world_bridge",
+      "claim_type": "system_interaction",
+      "category": "synthesized_patterns",
+      "canonical_claim": "A Secure Den Makes a Bigger World Possible",
+      "importance": 0.94,
+      "confidence": 0.9,
+      "strength": 0.94,
+      "behavioral_domains": [
+        "home",
+        "adventure",
+        "confidence",
+        "recovery"
+      ],
+      "tags": [
+        "secure-base",
+        "exploration",
+        "return"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "IC",
+          "source_sign": "Cancer",
+          "source_house": null,
+          "projected_operator": "safe_den_baseline",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": null,
+          "weight": 1,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Mercury",
+          "source_sign": "Cancer",
+          "source_house": 4,
+          "projected_operator": "scent_signal_interpretation",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": "doghouse_4_den_home_base_safety",
+          "weight": 0.8,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Jupiter",
+          "source_sign": "Leo",
+          "source_house": 5,
+          "projected_operator": "adventure_optimism",
+          "projected_mode": "attention_seeking_display_mode",
+          "projected_domain": "doghouse_5_play_zoomies_tricks",
+          "weight": 0.75,
+          "projection_relevance_score": 0.84
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Neptune",
+          "source_sign": "Sagittarius",
+          "source_house": 9,
+          "projected_operator": "atmosphere_dream_permeability",
+          "projected_mode": "adventure_dog_mode",
+          "projected_domain": "doghouse_9_adventure_territory",
+          "weight": 0.55,
+          "projection_relevance_score": 0.76
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "ic_den",
+          "mercury_home_signals",
+          "jupiter_play"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "A Secure Den Makes a Bigger World Possible",
+            "direct_to_dog": "A Secure Den Makes a Bigger World Possible",
+            "hybrid": "A Secure Den Makes a Bigger World Possible"
+          },
+          "body": {
+            "handler": "Bre’s adventurous side works best when home remains a stable emotional reference point. Exploration and security are partners, not opposites.",
+            "direct_to_dog": "you’s adventurous side works best when home remains a stable emotional reference point. Exploration and security are partners, not opposites.",
+            "hybrid": "Bre’s adventurous side works best when home remains a stable emotional reference point. Exploration and security are partners, not opposites."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Secure Den Makes a Bigger World Possible",
+            "direct_to_dog": "A Secure Den Makes a Bigger World Possible",
+            "hybrid": "A Secure Den Makes a Bigger World Possible"
+          },
+          "body": {
+            "handler": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory.",
+            "direct_to_dog": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory.",
+            "hybrid": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "A Secure Den Makes a Bigger World Possible",
+            "direct_to_dog": "A Secure Den Makes a Bigger World Possible",
+            "hybrid": "A Secure Den Makes a Bigger World Possible"
+          },
+          "body": {
+            "handler": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory.",
+            "direct_to_dog": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory.",
+            "hybrid": "Cancer IC and Mercury emphasize den memory and safety, while Jupiter in Leo and Neptune in Sagittarius pull toward expressive play and wider territory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Start novelty from a familiar base",
+        "Preserve return rituals",
+        "Follow adventure with decompression"
+      ],
+      "donts": [
+        "Use novelty to prove confidence",
+        "Remove familiar anchors",
+        "Assume exploration replaces recovery"
+      ]
+    },
+    {
+      "claim_id": "dsc_companion",
+      "claim_type": "angle",
+      "category": "angles",
+      "canonical_claim": "Partnership Needs Fair Play",
+      "importance": 0.93,
+      "confidence": 0.98,
+      "strength": 0.93,
+      "behavioral_domains": [
+        "favorite_human",
+        "one_to_one_bond",
+        "counterpart_style"
+      ],
+      "tags": [
+        "cooperative",
+        "balanced",
+        "responsive"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "DSC",
+          "source_sign": "Libra",
+          "source_house": null,
+          "projected_operator": "primary_companion_interface",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": null,
+          "weight": 1.0,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Partnership Needs Fair Play",
+            "direct_to_dog": "Partnership Needs Fair Play",
+            "hybrid": "Partnership Needs Fair Play"
+          },
+          "body": {
+            "handler": "Bre does best with companions who are clear, fair, and willing to work with her rather than simply direct her.",
+            "direct_to_dog": "you does best with companions who are clear, fair, and willing to work with her rather than simply direct her.",
+            "hybrid": "Bre does best with companions who are clear, fair, and willing to work with her rather than simply direct her."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Libra Descendant seeks balance and cooperation in the primary bond.",
+            "direct_to_dog": "A Libra Descendant seeks balance and cooperation in the primary bond.",
+            "hybrid": "A Libra Descendant seeks balance and cooperation in the primary bond."
+          },
+          "body": {
+            "handler": "The Libra Descendant frames Bre’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable.",
+            "direct_to_dog": "The Libra Descendant frames you’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable.",
+            "hybrid": "The Libra Descendant frames Bre’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Libra DSC: Partnership Needs Fair Play",
+            "direct_to_dog": "Libra DSC: Partnership Needs Fair Play",
+            "hybrid": "Libra DSC: Partnership Needs Fair Play"
+          },
+          "body": {
+            "handler": "The Libra Descendant frames Bre’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable.",
+            "direct_to_dog": "The Libra Descendant frames you’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable.",
+            "hybrid": "The Libra Descendant frames Bre’s companion interface through mutual adjustment, social harmony, and sensitivity to whether interactions feel equitable."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Use cooperative routines",
+        "Acknowledge her signals",
+        "Keep handling fair and predictable"
+      ],
+      "donts": [
+        "Use arbitrary power struggles",
+        "Ignore consent signals",
+        "Make closeness competitive"
+      ]
+    },
+    {
+      "claim_id": "ic_den",
+      "claim_type": "angle",
+      "category": "angles",
+      "canonical_claim": "Home Base Is Sacred",
+      "importance": 0.93,
+      "confidence": 0.98,
+      "strength": 0.93,
+      "behavioral_domains": [
+        "home",
+        "private_safety",
+        "recovery"
+      ],
+      "tags": [
+        "den-security",
+        "familiarity",
+        "rooted"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "IC",
+          "source_sign": "Cancer",
+          "source_house": null,
+          "projected_operator": "safe_den_baseline",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": null,
+          "weight": 1.0,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Home Base Is Sacred",
+            "direct_to_dog": "Home Base Is Sacred",
+            "hybrid": "Home Base Is Sacred"
+          },
+          "body": {
+            "handler": "Bre’s private baseline depends on a home base that feels emotionally familiar and reliably hers.",
+            "direct_to_dog": "you’s private baseline depends on a home base that feels emotionally familiar and reliably hers.",
+            "hybrid": "Bre’s private baseline depends on a home base that feels emotionally familiar and reliably hers."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Cancer IC makes the den deeply tied to memory, attachment, and emotional safety.",
+            "direct_to_dog": "A Cancer IC makes the den deeply tied to memory, attachment, and emotional safety.",
+            "hybrid": "A Cancer IC makes the den deeply tied to memory, attachment, and emotional safety."
+          },
+          "body": {
+            "handler": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery.",
+            "direct_to_dog": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery.",
+            "hybrid": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Cancer IC: Home Base Is Sacred",
+            "direct_to_dog": "Cancer IC: Home Base Is Sacred",
+            "hybrid": "Cancer IC: Home Base Is Sacred"
+          },
+          "body": {
+            "handler": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery.",
+            "direct_to_dog": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery.",
+            "hybrid": "The Cancer IC projects private regulation through secure denning, familiar sensory cues, and a strong connection between home atmosphere and recovery."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Protect a reliable retreat",
+        "Keep comfort scents familiar",
+        "Support decompression at home"
+      ],
+      "donts": [
+        "Use the den as punishment",
+        "Move rest spaces casually",
+        "Interrupt every retreat"
+      ]
+    },
+    {
+      "claim_id": "mercury_home_signals",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Home Is a Language",
+      "importance": 0.93,
+      "confidence": 0.98,
+      "strength": 0.93,
+      "behavioral_domains": [
+        "cue_processing",
+        "routine",
+        "scent_ecology",
+        "home"
+      ],
+      "tags": [
+        "predictive",
+        "sensitive-cues",
+        "familiarity"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Mercury",
+          "source_sign": "Cancer",
+          "source_house": 4,
+          "projected_operator": "scent_signal_interpretation",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": "doghouse_4_den_home_base_safety",
+          "weight": 1.0,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Home Is a Language",
+            "direct_to_dog": "Home Is a Language",
+            "hybrid": "Home Is a Language"
+          },
+          "body": {
+            "handler": "Bre reads the household through tiny cues, scents, timing changes, and familiar sequences.",
+            "direct_to_dog": "you reads the household through tiny cues, scents, timing changes, and familiar sequences.",
+            "hybrid": "Bre reads the household through tiny cues, scents, timing changes, and familiar sequences."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Cancer Mercury processes signals through memory, safety, and familiar rhythm.",
+            "direct_to_dog": "Cancer Mercury processes signals through memory, safety, and familiar rhythm.",
+            "hybrid": "Cancer Mercury processes signals through memory, safety, and familiar rhythm."
+          },
+          "body": {
+            "handler": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns.",
+            "direct_to_dog": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns.",
+            "hybrid": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Cancer Mercury: Home Is a Language",
+            "direct_to_dog": "Cancer Mercury: Home Is a Language",
+            "hybrid": "Cancer Mercury: Home Is a Language"
+          },
+          "body": {
+            "handler": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns.",
+            "direct_to_dog": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns.",
+            "hybrid": "Mercury in Cancer in the fourth doghouse makes scent and cue interpretation strongly dependent on emotional context, den security, and remembered household patterns."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Use consistent cue wording",
+        "Prepare her for routine changes",
+        "Let familiar locations support learning"
+      ],
+      "donts": [
+        "Assume subtle changes go unnoticed",
+        "Give mixed emotional signals",
+        "Change several routines at once"
+      ]
+    },
+    {
+      "claim_id": "serious_job_playful_mind",
+      "claim_type": "system_interaction",
+      "category": "synthesized_patterns",
+      "canonical_claim": "A Playful Mind Wants a Real Job",
+      "importance": 0.93,
+      "confidence": 0.9,
+      "strength": 0.93,
+      "behavioral_domains": [
+        "pack_role",
+        "training",
+        "communication",
+        "play"
+      ],
+      "tags": [
+        "competence",
+        "meaningful-work",
+        "clever-helper"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Sun",
+          "source_sign": "Gemini",
+          "source_house": 3,
+          "projected_operator": "pack_role_identity",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+          "weight": 1,
+          "projection_relevance_score": 1.0
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "MC",
+          "source_sign": "Capricorn",
+          "source_house": null,
+          "projected_operator": "visible_pack_function",
+          "projected_mode": "working_dog_seriousness_mode",
+          "projected_domain": null,
+          "weight": 0.95,
+          "projection_relevance_score": 0.96
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Saturn",
+          "source_sign": "Virgo",
+          "source_house": 6,
+          "projected_operator": "training_rule_structure",
+          "projected_mode": "patrol_inspection_mode",
+          "projected_domain": "doghouse_6_training_routine_care",
+          "weight": 0.85,
+          "projection_relevance_score": 0.92
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Jupiter",
+          "source_sign": "Leo",
+          "source_house": 5,
+          "projected_operator": "adventure_optimism",
+          "projected_mode": "attention_seeking_display_mode",
+          "projected_domain": "doghouse_5_play_zoomies_tricks",
+          "weight": 0.6,
+          "projection_relevance_score": 0.84
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "sun_pack_role",
+          "mc_role",
+          "saturn_training"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "A Playful Mind Wants a Real Job",
+            "direct_to_dog": "A Playful Mind Wants a Real Job",
+            "hybrid": "A Playful Mind Wants a Real Job"
+          },
+          "body": {
+            "handler": "Bre may be light, curious, and playful while still wanting her contribution to feel real. She is not just entertaining herself; she may be trying to help.",
+            "direct_to_dog": "you may be light, curious, and playful while still wanting her contribution to feel real. She is not just entertaining herself; she may be trying to help.",
+            "hybrid": "Bre may be light, curious, and playful while still wanting her contribution to feel real. She is not just entertaining herself; she may be trying to help."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Playful Mind Wants a Real Job",
+            "direct_to_dog": "A Playful Mind Wants a Real Job",
+            "hybrid": "A Playful Mind Wants a Real Job"
+          },
+          "body": {
+            "handler": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition.",
+            "direct_to_dog": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition.",
+            "hybrid": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "A Playful Mind Wants a Real Job",
+            "direct_to_dog": "A Playful Mind Wants a Real Job",
+            "hybrid": "A Playful Mind Wants a Real Job"
+          },
+          "body": {
+            "handler": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition.",
+            "direct_to_dog": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition.",
+            "hybrid": "Gemini Sun supplies quick information processing, Capricorn MC seeks visible competence, Virgo Saturn builds reliable routines, and Leo Jupiter enjoys recognition."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Give named household jobs",
+        "Keep tasks mentally alive",
+        "Recognize competent completion"
+      ],
+      "donts": [
+        "Assume playfulness means unseriousness",
+        "Offer only repetitive drills",
+        "Withhold all feedback"
+      ]
+    },
+    {
+      "claim_id": "fairness_trust",
+      "claim_type": "system_interaction",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Fairness Is Part of Trust",
+      "importance": 0.92,
+      "confidence": 0.9,
+      "strength": 0.92,
+      "behavioral_domains": [
+        "bonding",
+        "handling",
+        "trust",
+        "cooperation"
+      ],
+      "tags": [
+        "relational-fairness",
+        "repair",
+        "agency"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "DSC",
+          "source_sign": "Libra",
+          "source_house": null,
+          "projected_operator": "primary_companion_interface",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": null,
+          "weight": 1,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Pluto",
+          "source_sign": "Libra",
+          "source_house": 7,
+          "projected_operator": "primal_trust_intensity",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": "doghouse_7_favorite_human_primary_bond",
+          "weight": 0.9,
+          "projection_relevance_score": 0.84
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Venus",
+          "source_sign": "Gemini",
+          "source_house": 2,
+          "projected_operator": "bonding_preference",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 0.55,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "dsc_companion",
+          "pluto_bond"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Fairness Is Part of Trust",
+            "direct_to_dog": "Fairness Is Part of Trust",
+            "hybrid": "Fairness Is Part of Trust"
+          },
+          "body": {
+            "handler": "Bre may tolerate firm limits better than inconsistent or relationally confusing ones. The quality of the interaction matters alongside the outcome.",
+            "direct_to_dog": "you may tolerate firm limits better than inconsistent or relationally confusing ones. The quality of the interaction matters alongside the outcome.",
+            "hybrid": "Bre may tolerate firm limits better than inconsistent or relationally confusing ones. The quality of the interaction matters alongside the outcome."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Fairness Is Part of Trust",
+            "direct_to_dog": "Fairness Is Part of Trust",
+            "hybrid": "Fairness Is Part of Trust"
+          },
+          "body": {
+            "handler": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative.",
+            "direct_to_dog": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative.",
+            "hybrid": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Fairness Is Part of Trust",
+            "direct_to_dog": "Fairness Is Part of Trust",
+            "hybrid": "Fairness Is Part of Trust"
+          },
+          "body": {
+            "handler": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative.",
+            "direct_to_dog": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative.",
+            "hybrid": "Libra Descendant and Libra Pluto concentrate cooperation and deep trust in the one-to-one bond, while Venus keeps affiliation responsive and communicative."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Be clear and consistent",
+        "Repair after conflict",
+        "Honor voluntary cooperation"
+      ],
+      "donts": [
+        "Use arbitrary control",
+        "Punish communication",
+        "Pretend tension never happened"
+      ]
+    },
+    {
+      "claim_id": "venus_bonding",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Affection Likes Variety",
+      "importance": 0.92,
+      "confidence": 0.98,
+      "strength": 0.92,
+      "behavioral_domains": [
+        "bonding",
+        "play",
+        "rewards",
+        "social"
+      ],
+      "tags": [
+        "playful-affection",
+        "choice",
+        "variety"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Venus",
+          "source_sign": "Gemini",
+          "source_house": 2,
+          "projected_operator": "bonding_preference",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 1.0,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Affection Likes Variety",
+            "direct_to_dog": "Affection Likes Variety",
+            "hybrid": "Affection Likes Variety"
+          },
+          "body": {
+            "handler": "Bre bonds through lively exchange: attention, toys, treats, conversation, and little shared discoveries.",
+            "direct_to_dog": "you bonds through lively exchange: attention, toys, treats, conversation, and little shared discoveries.",
+            "hybrid": "Bre bonds through lively exchange: attention, toys, treats, conversation, and little shared discoveries."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Gemini Venus gives bonding a curious, responsive, varied style.",
+            "direct_to_dog": "Gemini Venus gives bonding a curious, responsive, varied style.",
+            "hybrid": "Gemini Venus gives bonding a curious, responsive, varied style."
+          },
+          "body": {
+            "handler": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection.",
+            "direct_to_dog": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection.",
+            "hybrid": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Gemini Venus: Affection Likes Variety",
+            "direct_to_dog": "Gemini Venus: Affection Likes Variety",
+            "hybrid": "Gemini Venus: Affection Likes Variety"
+          },
+          "body": {
+            "handler": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection.",
+            "direct_to_dog": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection.",
+            "hybrid": "Venus in Gemini in the second doghouse suggests enjoyment through changing resources, playful communication, clever toys, and flexible forms of affection."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Rotate toys and reinforcers",
+        "Use playful verbal attention",
+        "Let bonding include exploration"
+      ],
+      "donts": [
+        "Make every reward identical",
+        "Assume closeness must look still",
+        "Use boredom as a test of loyalty"
+      ]
+    },
+    {
+      "claim_id": "fast_front_slow_engine",
+      "claim_type": "tension",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Quick Entrance, Deliberate Engine",
+      "importance": 0.91,
+      "confidence": 0.86,
+      "strength": 0.91,
+      "behavioral_domains": [
+        "doorway_behavior",
+        "action",
+        "persistence"
+      ],
+      "tags": [
+        "mixed-tempo",
+        "impulse-and-inertia",
+        "pacing"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "ASC",
+          "source_sign": "Aries",
+          "source_house": null,
+          "projected_operator": "behavioral_doorway",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": null,
+          "weight": 1,
+          "projection_relevance_score": 0.98
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Moon",
+          "source_sign": "Aries",
+          "source_house": 1,
+          "projected_operator": "comfort_safety_regulation",
+          "projected_mode": "immediate_chase_mode",
+          "projected_domain": "doghouse_1_body_temperament_presence",
+          "weight": 0.85,
+          "projection_relevance_score": 1.0
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Mars",
+          "source_sign": "Taurus",
+          "source_house": 2,
+          "projected_operator": "chase_play_defense_drive",
+          "projected_mode": "nap_spot_loyalty_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 0.9,
+          "projection_relevance_score": 0.96
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "asc_behavior",
+          "mars_resources"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Quick Entrance, Deliberate Engine",
+            "direct_to_dog": "Quick Entrance, Deliberate Engine",
+            "hybrid": "Quick Entrance, Deliberate Engine"
+          },
+          "body": {
+            "handler": "Bre can look instantly ready while her deeper action system prefers steady commitment and resists abrupt redirection. The launch and the engine run at different speeds.",
+            "direct_to_dog": "you can look instantly ready while her deeper action system prefers steady commitment and resists abrupt redirection. The launch and the engine run at different speeds.",
+            "hybrid": "Bre can look instantly ready while her deeper action system prefers steady commitment and resists abrupt redirection. The launch and the engine run at different speeds."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Quick Entrance, Deliberate Engine",
+            "direct_to_dog": "Quick Entrance, Deliberate Engine",
+            "hybrid": "Quick Entrance, Deliberate Engine"
+          },
+          "body": {
+            "handler": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested.",
+            "direct_to_dog": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested.",
+            "hybrid": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Quick Entrance, Deliberate Engine",
+            "direct_to_dog": "Quick Entrance, Deliberate Engine",
+            "hybrid": "Quick Entrance, Deliberate Engine"
+          },
+          "body": {
+            "handler": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested.",
+            "direct_to_dog": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested.",
+            "hybrid": "Aries Moon and Ascendant produce a rapid first response; Taurus Mars sustains effort and makes mid-course changes slower once she is invested."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Pause before commitment",
+        "Set the route before launch",
+        "Use gradual redirection"
+      ],
+      "donts": [
+        "Assume fast start means flexible follow-through",
+        "Change plans abruptly",
+        "Pull her off tasks without closure"
+      ]
+    },
+    {
+      "claim_id": "saturn_training",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Rules Work Best When They Make Sense",
+      "importance": 0.91,
+      "confidence": 0.98,
+      "strength": 0.91,
+      "behavioral_domains": [
+        "training",
+        "routine",
+        "impulse_control",
+        "care"
+      ],
+      "tags": [
+        "precise",
+        "consistent",
+        "methodical"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Saturn",
+          "source_sign": "Virgo",
+          "source_house": 6,
+          "projected_operator": "training_rule_structure",
+          "projected_mode": "patrol_inspection_mode",
+          "projected_domain": "doghouse_6_training_routine_care",
+          "weight": 1.0,
+          "projection_relevance_score": 0.92
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Rules Work Best When They Make Sense",
+            "direct_to_dog": "Rules Work Best When They Make Sense",
+            "hybrid": "Rules Work Best When They Make Sense"
+          },
+          "body": {
+            "handler": "Bre can become highly reliable when routines are clear, detailed, and consistently applied.",
+            "direct_to_dog": "you can become highly reliable when routines are clear, detailed, and consistently applied.",
+            "hybrid": "Bre can become highly reliable when routines are clear, detailed, and consistently applied."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Virgo Saturn favors precise structure, sequencing, and careful habit formation.",
+            "direct_to_dog": "Virgo Saturn favors precise structure, sequencing, and careful habit formation.",
+            "hybrid": "Virgo Saturn favors precise structure, sequencing, and careful habit formation."
+          },
+          "body": {
+            "handler": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent.",
+            "direct_to_dog": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent.",
+            "hybrid": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Virgo Saturn: Rules Work Best When They Make Sense",
+            "direct_to_dog": "Virgo Saturn: Rules Work Best When They Make Sense",
+            "hybrid": "Virgo Saturn: Rules Work Best When They Make Sense"
+          },
+          "body": {
+            "handler": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent.",
+            "direct_to_dog": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent.",
+            "hybrid": "Saturn in Virgo in the sixth doghouse gives training and care routines a methodical style, with strength in repetition and possible friction when criteria are inconsistent."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Use precise criteria",
+        "Build reliable sequences",
+        "Track what actually works"
+      ],
+      "donts": [
+        "Move goalposts silently",
+        "Correct vague expectations",
+        "Change mechanics mid-session"
+      ]
+    },
+    {
+      "claim_id": "play_resource_tension",
+      "claim_type": "tension",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Fun Can Become Serious Around Valued Things",
+      "importance": 0.9,
+      "confidence": 0.86,
+      "strength": 0.9,
+      "behavioral_domains": [
+        "play",
+        "resources",
+        "bonding",
+        "defense"
+      ],
+      "tags": [
+        "resource-intensity",
+        "persistent-play",
+        "clear-rules"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Mars",
+          "source_sign": "Taurus",
+          "source_house": 2,
+          "projected_operator": "chase_play_defense_drive",
+          "projected_mode": "nap_spot_loyalty_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 1,
+          "projection_relevance_score": 0.96
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Venus",
+          "source_sign": "Gemini",
+          "source_house": 2,
+          "projected_operator": "bonding_preference",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_2_food_toys_bones_resources",
+          "weight": 0.75,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Pluto",
+          "source_sign": "Libra",
+          "source_house": 7,
+          "projected_operator": "primal_trust_intensity",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": "doghouse_7_favorite_human_primary_bond",
+          "weight": 0.5,
+          "projection_relevance_score": 0.84
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "mars_resources",
+          "venus_bonding"
+        ],
+        "tensions_with": [
+          "fairness_trust"
+        ],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Fun Can Become Serious Around Valued Things",
+            "direct_to_dog": "Fun Can Become Serious Around Valued Things",
+            "hybrid": "Fun Can Become Serious Around Valued Things"
+          },
+          "body": {
+            "handler": "Play, affection, and valued resources can become tightly linked. Clear exchange rules keep enthusiasm from turning into a negotiation over ownership.",
+            "direct_to_dog": "Play, affection, and valued resources can become tightly linked. Clear exchange rules keep enthusiasm from turning into a negotiation over ownership.",
+            "hybrid": "Play, affection, and valued resources can become tightly linked. Clear exchange rules keep enthusiasm from turning into a negotiation over ownership."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Fun Can Become Serious Around Valued Things",
+            "direct_to_dog": "Fun Can Become Serious Around Valued Things",
+            "hybrid": "Fun Can Become Serious Around Valued Things"
+          },
+          "body": {
+            "handler": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity.",
+            "direct_to_dog": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity.",
+            "hybrid": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Fun Can Become Serious Around Valued Things",
+            "direct_to_dog": "Fun Can Become Serious Around Valued Things",
+            "hybrid": "Fun Can Become Serious Around Valued Things"
+          },
+          "body": {
+            "handler": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity.",
+            "direct_to_dog": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity.",
+            "hybrid": "Mars in Taurus and Venus in Gemini share the second doghouse, combining persistent resource drive with varied reward preference; Pluto adds relational intensity."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Teach trade and release",
+        "Separate arousal from access",
+        "Use predictable endings"
+      ],
+      "donts": [
+        "Grab valued items casually",
+        "Turn every exchange into a contest",
+        "Let rules change during play"
+      ]
+    },
+    {
+      "claim_id": "training_as_care",
+      "claim_type": "synthesized_theme",
+      "category": "synthesized_patterns",
+      "canonical_claim": "Training Is Part of Feeling Cared For",
+      "importance": 0.9,
+      "confidence": 0.9,
+      "strength": 0.9,
+      "behavioral_domains": [
+        "training",
+        "routine",
+        "home",
+        "attachment"
+      ],
+      "tags": [
+        "predictability",
+        "care-structure",
+        "daily-competence"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Saturn",
+          "source_sign": "Virgo",
+          "source_house": 6,
+          "projected_operator": "training_rule_structure",
+          "projected_mode": "patrol_inspection_mode",
+          "projected_domain": "doghouse_6_training_routine_care",
+          "weight": 1,
+          "projection_relevance_score": 0.92
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "North Node",
+          "source_sign": "Virgo",
+          "source_house": 6,
+          "projected_operator": "training_development_vector",
+          "projected_mode": "patrol_inspection_mode",
+          "projected_domain": "doghouse_6_training_routine_care",
+          "weight": 0.8,
+          "projection_relevance_score": 0.68
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Mercury",
+          "source_sign": "Cancer",
+          "source_house": 4,
+          "projected_operator": "scent_signal_interpretation",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": "doghouse_4_den_home_base_safety",
+          "weight": 0.7,
+          "projection_relevance_score": 0.94
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "IC",
+          "source_sign": "Cancer",
+          "source_house": null,
+          "projected_operator": "safe_den_baseline",
+          "projected_mode": "pack_security_focus_mode",
+          "projected_domain": null,
+          "weight": 0.6,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "saturn_training",
+          "node_training",
+          "ic_den"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Training Is Part of Feeling Cared For",
+            "direct_to_dog": "Training Is Part of Feeling Cared For",
+            "hybrid": "Training Is Part of Feeling Cared For"
+          },
+          "body": {
+            "handler": "Clear routines are not merely performance tools for Bre; they can help make the household feel understandable and safe.",
+            "direct_to_dog": "Clear routines are not merely performance tools for you; they can help make the household feel understandable and safe.",
+            "hybrid": "Clear routines are not merely performance tools for Bre; they can help make the household feel understandable and safe."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Training Is Part of Feeling Cared For",
+            "direct_to_dog": "Training Is Part of Feeling Cared For",
+            "hybrid": "Training Is Part of Feeling Cared For"
+          },
+          "body": {
+            "handler": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory.",
+            "direct_to_dog": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory.",
+            "hybrid": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Training Is Part of Feeling Cared For",
+            "direct_to_dog": "Training Is Part of Feeling Cared For",
+            "hybrid": "Training Is Part of Feeling Cared For"
+          },
+          "body": {
+            "handler": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory.",
+            "direct_to_dog": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory.",
+            "hybrid": "Virgo Saturn and North Node emphasize useful routine, while Cancer Mercury and IC link predictable sequences to den security and emotional memory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Use routines to reduce ambiguity",
+        "Make care sequences consistent",
+        "Let mastery become reassurance"
+      ],
+      "donts": [
+        "Train only under pressure",
+        "Use surprise as a default",
+        "Separate emotional safety from handling mechanics"
+      ]
+    },
+    {
+      "claim_id": "attention_with_agency",
+      "claim_type": "tension",
+      "category": "synthesized_patterns",
+      "canonical_claim": "She Likes Being Seen—On Her Terms",
+      "importance": 0.86,
+      "confidence": 0.86,
+      "strength": 0.86,
+      "behavioral_domains": [
+        "confidence",
+        "visibility",
+        "bonding",
+        "agency"
+      ],
+      "tags": [
+        "recognition",
+        "choice",
+        "performance"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Jupiter",
+          "source_sign": "Leo",
+          "source_house": 5,
+          "projected_operator": "adventure_optimism",
+          "projected_mode": "attention_seeking_display_mode",
+          "projected_domain": "doghouse_5_play_zoomies_tricks",
+          "weight": 1,
+          "projection_relevance_score": 0.84
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "MC",
+          "source_sign": "Capricorn",
+          "source_house": null,
+          "projected_operator": "visible_pack_function",
+          "projected_mode": "working_dog_seriousness_mode",
+          "projected_domain": null,
+          "weight": 0.7,
+          "projection_relevance_score": 0.96
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Uranus",
+          "source_sign": "Scorpio",
+          "source_house": 8,
+          "projected_operator": "novelty_zoomie_response",
+          "projected_mode": "obsessive_investigation_mode",
+          "projected_domain": "doghouse_8_deep_trust_vulnerability",
+          "weight": 0.45,
+          "projection_relevance_score": 0.78
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "DSC",
+          "source_sign": "Libra",
+          "source_house": null,
+          "projected_operator": "primary_companion_interface",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": null,
+          "weight": 0.6,
+          "projection_relevance_score": 0.94
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "jupiter_play",
+          "mc_role"
+        ],
+        "tensions_with": [
+          "uranus_trust"
+        ],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "She Likes Being Seen—On Her Terms",
+            "direct_to_dog": "She Likes Being Seen—On Her Terms",
+            "hybrid": "She Likes Being Seen—On Her Terms"
+          },
+          "body": {
+            "handler": "Bre may enjoy recognition and visible success while still needing genuine choice about when and how she participates.",
+            "direct_to_dog": "you may enjoy recognition and visible success while still needing genuine choice about when and how she participates.",
+            "hybrid": "Bre may enjoy recognition and visible success while still needing genuine choice about when and how she participates."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "She Likes Being Seen—On Her Terms",
+            "direct_to_dog": "She Likes Being Seen—On Her Terms",
+            "hybrid": "She Likes Being Seen—On Her Terms"
+          },
+          "body": {
+            "handler": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure.",
+            "direct_to_dog": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure.",
+            "hybrid": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "She Likes Being Seen—On Her Terms",
+            "direct_to_dog": "She Likes Being Seen—On Her Terms",
+            "hybrid": "She Likes Being Seen—On Her Terms"
+          },
+          "body": {
+            "handler": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure.",
+            "direct_to_dog": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure.",
+            "hybrid": "Leo Jupiter enjoys display and encouragement, Capricorn MC values earned competence, and Uranus in deep-trust territory protects independence around exposure."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Invite performance",
+        "Celebrate without crowding",
+        "Allow a graceful opt-out"
+      ],
+      "donts": [
+        "Demand constant sociability",
+        "Use applause to override discomfort",
+        "Mistake visibility for consent"
+      ]
+    },
+    {
+      "claim_id": "novelty_depth",
+      "claim_type": "synthesized_theme",
+      "category": "synthesized_patterns",
+      "canonical_claim": "The Weirdest Reactions May Be the Most Meaningful",
+      "importance": 0.84,
+      "confidence": 0.9,
+      "strength": 0.84,
+      "behavioral_domains": [
+        "novelty",
+        "vulnerability",
+        "atmosphere",
+        "trust"
+      ],
+      "tags": [
+        "deep-novelty",
+        "environmental-reading",
+        "private-response"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Uranus",
+          "source_sign": "Scorpio",
+          "source_house": 8,
+          "projected_operator": "novelty_zoomie_response",
+          "projected_mode": "obsessive_investigation_mode",
+          "projected_domain": "doghouse_8_deep_trust_vulnerability",
+          "weight": 1,
+          "projection_relevance_score": 0.78
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Neptune",
+          "source_sign": "Sagittarius",
+          "source_house": 9,
+          "projected_operator": "atmosphere_dream_permeability",
+          "projected_mode": "adventure_dog_mode",
+          "projected_domain": "doghouse_9_adventure_territory",
+          "weight": 0.75,
+          "projection_relevance_score": 0.76
+        },
+        {
+          "kind": "projected_placement",
+          "role": "supporting",
+          "source_object": "Pluto",
+          "source_sign": "Libra",
+          "source_house": 7,
+          "projected_operator": "primal_trust_intensity",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": "doghouse_7_favorite_human_primary_bond",
+          "weight": 0.7,
+          "projection_relevance_score": 0.84
+        }
+      ],
+      "relations": {
+        "reinforces": [
+          "uranus_trust",
+          "neptune_adventure",
+          "pluto_bond"
+        ],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Weirdest Reactions May Be the Most Meaningful",
+            "direct_to_dog": "The Weirdest Reactions May Be the Most Meaningful",
+            "hybrid": "The Weirdest Reactions May Be the Most Meaningful"
+          },
+          "body": {
+            "handler": "Bre’s unusual reactions may cluster around situations with hidden emotional weight, unfamiliar atmosphere, or deep trust—not random everyday oddness.",
+            "direct_to_dog": "you’s unusual reactions may cluster around situations with hidden emotional weight, unfamiliar atmosphere, or deep trust—not random everyday oddness.",
+            "hybrid": "Bre’s unusual reactions may cluster around situations with hidden emotional weight, unfamiliar atmosphere, or deep trust—not random everyday oddness."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "The Weirdest Reactions May Be the Most Meaningful",
+            "direct_to_dog": "The Weirdest Reactions May Be the Most Meaningful",
+            "hybrid": "The Weirdest Reactions May Be the Most Meaningful"
+          },
+          "body": {
+            "handler": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory.",
+            "direct_to_dog": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory.",
+            "hybrid": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "The Weirdest Reactions May Be the Most Meaningful",
+            "direct_to_dog": "The Weirdest Reactions May Be the Most Meaningful",
+            "hybrid": "The Weirdest Reactions May Be the Most Meaningful"
+          },
+          "body": {
+            "handler": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory.",
+            "direct_to_dog": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory.",
+            "hybrid": "Uranus in the eighth doghouse, Neptune in the ninth, and Pluto in the seventh connect surprise, atmosphere, and transformation to vulnerable relationship territory."
+          },
+          "funny_dog_quotes": [
+            "“I contain multitudes, several of which require snacks.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Make the pattern clear and let me choose my entry.”"
+          ],
+          "applicable_canine_jokes": [
+            "This is less a contradiction than a highly specialized canine operating system."
+          ]
+        }
+      },
+      "dos": [
+        "Record context around unusual reactions",
+        "Allow distance and observation",
+        "Look for trust or atmosphere factors"
+      ],
+      "donts": [
+        "Label everything random",
+        "Force quick exposure",
+        "Turn private responses into entertainment"
+      ]
+    },
+    {
+      "claim_id": "jupiter_play",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "The Bigger the Adventure, the Better",
+      "importance": 0.83,
+      "confidence": 0.93,
+      "strength": 0.83,
+      "behavioral_domains": [
+        "confidence",
+        "adventure",
+        "play",
+        "curiosity"
+      ],
+      "tags": [
+        "bold-play",
+        "showmanship",
+        "expansion"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Jupiter",
+          "source_sign": "Leo",
+          "source_house": 5,
+          "projected_operator": "adventure_optimism",
+          "projected_mode": "attention_seeking_display_mode",
+          "projected_domain": "doghouse_5_play_zoomies_tricks",
+          "weight": 1.0,
+          "projection_relevance_score": 0.84
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Bigger the Adventure, the Better",
+            "direct_to_dog": "The Bigger the Adventure, the Better",
+            "hybrid": "The Bigger the Adventure, the Better"
+          },
+          "body": {
+            "handler": "Bre’s confidence grows when play feels generous, visible, and a little bit grand.",
+            "direct_to_dog": "you’s confidence grows when play feels generous, visible, and a little bit grand.",
+            "hybrid": "Bre’s confidence grows when play feels generous, visible, and a little bit grand."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Leo Jupiter expands confidence through play, attention, and expressive participation.",
+            "direct_to_dog": "Leo Jupiter expands confidence through play, attention, and expressive participation.",
+            "hybrid": "Leo Jupiter expands confidence through play, attention, and expressive participation."
+          },
+          "body": {
+            "handler": "Jupiter in Leo in the fifth doghouse enlarges Bre’s curiosity radius through performance, joyful experimentation, and activities where success is noticed.",
+            "direct_to_dog": "Jupiter in Leo in the fifth doghouse enlarges you’s curiosity radius through performance, joyful experimentation, and activities where success is noticed.",
+            "hybrid": "Jupiter in Leo in the fifth doghouse enlarges Bre’s curiosity radius through performance, joyful experimentation, and activities where success is noticed."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Leo Jupiter: The Bigger the Adventure, the Better",
+            "direct_to_dog": "Leo Jupiter: The Bigger the Adventure, the Better",
+            "hybrid": "Leo Jupiter: The Bigger the Adventure, the Better"
+          },
+          "body": {
+            "handler": "Jupiter in Leo in the fifth doghouse enlarges Bre’s curiosity radius through performance, joyful experimentation, and activities where success is noticed.",
+            "direct_to_dog": "Jupiter in Leo in the fifth doghouse enlarges you’s curiosity radius through performance, joyful experimentation, and activities where success is noticed.",
+            "hybrid": "Jupiter in Leo in the fifth doghouse enlarges Bre’s curiosity radius through performance, joyful experimentation, and activities where success is noticed."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Celebrate clean successes",
+        "Use confidence-building games",
+        "Let her demonstrate skills"
+      ],
+      "donts": [
+        "Overhype every repetition",
+        "Confuse confidence with unlimited stamina",
+        "Shame attention-seeking"
+      ]
+    },
+    {
+      "claim_id": "pluto_bond",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "The Favorite-Human Bond Runs Deep",
+      "importance": 0.82,
+      "confidence": 0.93,
+      "strength": 0.82,
+      "behavioral_domains": [
+        "bonding",
+        "trust",
+        "territory",
+        "attachment"
+      ],
+      "tags": [
+        "intense-bond",
+        "loyalty",
+        "relational-power"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Pluto",
+          "source_sign": "Libra",
+          "source_house": 7,
+          "projected_operator": "primal_trust_intensity",
+          "projected_mode": "social_harmony_maintenance_mode",
+          "projected_domain": "doghouse_7_favorite_human_primary_bond",
+          "weight": 1.0,
+          "projection_relevance_score": 0.84
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "The Favorite-Human Bond Runs Deep",
+            "direct_to_dog": "The Favorite-Human Bond Runs Deep",
+            "hybrid": "The Favorite-Human Bond Runs Deep"
+          },
+          "body": {
+            "handler": "Bre may treat close partnership as serious emotional territory, with powerful loyalty and equally powerful sensitivity to trust.",
+            "direct_to_dog": "you may treat close partnership as serious emotional territory, with powerful loyalty and equally powerful sensitivity to trust.",
+            "hybrid": "Bre may treat close partnership as serious emotional territory, with powerful loyalty and equally powerful sensitivity to trust."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Libra Pluto intensifies partnership, balance, and trust negotiation.",
+            "direct_to_dog": "Libra Pluto intensifies partnership, balance, and trust negotiation.",
+            "hybrid": "Libra Pluto intensifies partnership, balance, and trust negotiation."
+          },
+          "body": {
+            "handler": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential.",
+            "direct_to_dog": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential.",
+            "hybrid": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Libra Pluto: The Favorite-Human Bond Runs Deep",
+            "direct_to_dog": "Libra Pluto: The Favorite-Human Bond Runs Deep",
+            "hybrid": "Libra Pluto: The Favorite-Human Bond Runs Deep"
+          },
+          "body": {
+            "handler": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential.",
+            "direct_to_dog": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential.",
+            "hybrid": "Pluto in Libra in the seventh doghouse places transformation and primal trust inside the favorite-human bond, where fairness and relational balance become unusually consequential."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Repair ruptures clearly",
+        "Respect relational boundaries",
+        "Use cooperative handling"
+      ],
+      "donts": [
+        "Use affection as leverage",
+        "Create loyalty contests",
+        "Dismiss subtle trust changes"
+      ]
+    },
+    {
+      "claim_id": "uranus_trust",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Surprise Lives Behind the Locked Door",
+      "importance": 0.76,
+      "confidence": 0.93,
+      "strength": 0.76,
+      "behavioral_domains": [
+        "novelty",
+        "trust",
+        "independence",
+        "vulnerability"
+      ],
+      "tags": [
+        "intense-novelty",
+        "private-weirdness",
+        "sudden-change"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Uranus",
+          "source_sign": "Scorpio",
+          "source_house": 8,
+          "projected_operator": "novelty_zoomie_response",
+          "projected_mode": "obsessive_investigation_mode",
+          "projected_domain": "doghouse_8_deep_trust_vulnerability",
+          "weight": 1.0,
+          "projection_relevance_score": 0.78
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Surprise Lives Behind the Locked Door",
+            "direct_to_dog": "Surprise Lives Behind the Locked Door",
+            "hybrid": "Surprise Lives Behind the Locked Door"
+          },
+          "body": {
+            "handler": "Bre may reveal her strangest, most inventive reactions only after deep trust is involved.",
+            "direct_to_dog": "you may reveal her strangest, most inventive reactions only after deep trust is involved.",
+            "hybrid": "Bre may reveal her strangest, most inventive reactions only after deep trust is involved."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Scorpio Uranus makes change intense, private, and closely tied to trust.",
+            "direct_to_dog": "Scorpio Uranus makes change intense, private, and closely tied to trust.",
+            "hybrid": "Scorpio Uranus makes change intense, private, and closely tied to trust."
+          },
+          "body": {
+            "handler": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior.",
+            "direct_to_dog": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior.",
+            "hybrid": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Scorpio Uranus: Surprise Lives Behind the Locked Door",
+            "direct_to_dog": "Scorpio Uranus: Surprise Lives Behind the Locked Door",
+            "hybrid": "Scorpio Uranus: Surprise Lives Behind the Locked Door"
+          },
+          "body": {
+            "handler": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior.",
+            "direct_to_dog": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior.",
+            "hybrid": "Uranus in Scorpio in the eighth doghouse brings sudden, unconventional responses into deep-bond, fear, and vulnerability territory rather than ordinary surface behavior."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Allow private decompression",
+        "Introduce sensitive novelty slowly",
+        "Respect unusual coping choices"
+      ],
+      "donts": [
+        "Force exposure for entertainment",
+        "Assume surprise is random",
+        "Invade retreat spaces"
+      ]
+    },
+    {
+      "claim_id": "neptune_adventure",
+      "claim_type": "placement",
+      "category": "core_traits",
+      "canonical_claim": "Every Trail Has a Mythology",
+      "importance": 0.74,
+      "confidence": 0.93,
+      "strength": 0.74,
+      "behavioral_domains": [
+        "atmosphere",
+        "adventure",
+        "scent_memory",
+        "imagination"
+      ],
+      "tags": [
+        "dreamy-explorer",
+        "environmental-sensitivity",
+        "wandering"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Neptune",
+          "source_sign": "Sagittarius",
+          "source_house": 9,
+          "projected_operator": "atmosphere_dream_permeability",
+          "projected_mode": "adventure_dog_mode",
+          "projected_domain": "doghouse_9_adventure_territory",
+          "weight": 1.0,
+          "projection_relevance_score": 0.76
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Every Trail Has a Mythology",
+            "direct_to_dog": "Every Trail Has a Mythology",
+            "hybrid": "Every Trail Has a Mythology"
+          },
+          "body": {
+            "handler": "Bre may absorb the mood of places and turn exploration into a full sensory story.",
+            "direct_to_dog": "you may absorb the mood of places and turn exploration into a full sensory story.",
+            "hybrid": "Bre may absorb the mood of places and turn exploration into a full sensory story."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Sagittarius Neptune blends adventure with permeability to atmosphere.",
+            "direct_to_dog": "Sagittarius Neptune blends adventure with permeability to atmosphere.",
+            "hybrid": "Sagittarius Neptune blends adventure with permeability to atmosphere."
+          },
+          "body": {
+            "handler": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort.",
+            "direct_to_dog": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort.",
+            "hybrid": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Sagittarius Neptune: Every Trail Has a Mythology",
+            "direct_to_dog": "Sagittarius Neptune: Every Trail Has a Mythology",
+            "hybrid": "Sagittarius Neptune: Every Trail Has a Mythology"
+          },
+          "body": {
+            "handler": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort.",
+            "direct_to_dog": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort.",
+            "hybrid": "Neptune in Sagittarius in the ninth doghouse makes distant territory, scent memory, and exploratory experience vivid but occasionally diffuse or hard to sort."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Allow orientation time",
+        "Use clear return cues",
+        "Choose environments with recovery space"
+      ],
+      "donts": [
+        "Rush through unfamiliar territory",
+        "Assume wandering equals confidence",
+        "Ignore atmospheric overload"
+      ]
+    },
+    {
+      "claim_id": "node_training",
+      "claim_type": "orientation",
+      "category": "development",
+      "canonical_claim": "Growth Through Better Systems",
+      "importance": 0.67,
+      "confidence": 0.93,
+      "strength": 0.67,
+      "behavioral_domains": [
+        "training_path",
+        "growth_direction",
+        "routine"
+      ],
+      "tags": [
+        "development",
+        "practice",
+        "refinement"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "North Node",
+          "source_sign": "Virgo",
+          "source_house": 6,
+          "projected_operator": "training_development_vector",
+          "projected_mode": "patrol_inspection_mode",
+          "projected_domain": "doghouse_6_training_routine_care",
+          "weight": 1.0,
+          "projection_relevance_score": 0.68
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Growth Through Better Systems",
+            "direct_to_dog": "Growth Through Better Systems",
+            "hybrid": "Growth Through Better Systems"
+          },
+          "body": {
+            "handler": "Bre’s developmental path favors clearer routines, better discrimination, and increasingly skillful everyday habits.",
+            "direct_to_dog": "you’s developmental path favors clearer routines, better discrimination, and increasingly skillful everyday habits.",
+            "hybrid": "Bre’s developmental path favors clearer routines, better discrimination, and increasingly skillful everyday habits."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "The Virgo North Node points toward refinement, useful routine, and careful skill-building.",
+            "direct_to_dog": "The Virgo North Node points toward refinement, useful routine, and careful skill-building.",
+            "hybrid": "The Virgo North Node points toward refinement, useful routine, and careful skill-building."
+          },
+          "body": {
+            "handler": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence.",
+            "direct_to_dog": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence.",
+            "hybrid": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Virgo North Node: Growth Through Better Systems",
+            "direct_to_dog": "Virgo North Node: Growth Through Better Systems",
+            "hybrid": "Virgo North Node: Growth Through Better Systems"
+          },
+          "body": {
+            "handler": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence.",
+            "direct_to_dog": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence.",
+            "hybrid": "The North Node in Virgo in the sixth doghouse marks a training-development vector toward precision, sustainable care routines, and practical competence."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Practice small useful skills",
+        "Refine one variable at a time",
+        "Reward steady improvement"
+      ],
+      "donts": [
+        "Demand instant mastery",
+        "Make growth theatrical",
+        "Change too many variables"
+      ]
+    },
+    {
+      "claim_id": "fortune_channel",
+      "claim_type": "orientation",
+      "category": "development",
+      "canonical_claim": "Good Things Arrive Through Information",
+      "importance": 0.55,
+      "confidence": 0.93,
+      "strength": 0.55,
+      "behavioral_domains": [
+        "rewards",
+        "local_environment",
+        "cue_processing"
+      ],
+      "tags": [
+        "easy-success",
+        "curiosity",
+        "treat-flow"
+      ],
+      "evidence": [
+        {
+          "kind": "projected_placement",
+          "role": "primary",
+          "source_object": "Part of Fortune",
+          "source_sign": "Gemini",
+          "source_house": 3,
+          "projected_operator": "easy_good_thing_channel",
+          "projected_mode": "information_sniffing_mode",
+          "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+          "weight": 1.0,
+          "projection_relevance_score": 0.56
+        }
+      ],
+      "relations": {
+        "reinforces": [],
+        "tensions_with": [],
+        "related_claims": []
+      },
+      "card": {
+        "no_astro": {
+          "headline": {
+            "handler": "Good Things Arrive Through Information",
+            "direct_to_dog": "Good Things Arrive Through Information",
+            "hybrid": "Good Things Arrive Through Information"
+          },
+          "body": {
+            "handler": "Bre’s easiest successes often come through noticing, communicating, and investigating what is nearby.",
+            "direct_to_dog": "you’s easiest successes often come through noticing, communicating, and investigating what is nearby.",
+            "hybrid": "Bre’s easiest successes often come through noticing, communicating, and investigating what is nearby."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Gemini Part of Fortune favors easy success through curiosity and exchange.",
+            "direct_to_dog": "Gemini Part of Fortune favors easy success through curiosity and exchange.",
+            "hybrid": "Gemini Part of Fortune favors easy success through curiosity and exchange."
+          },
+          "body": {
+            "handler": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication.",
+            "direct_to_dog": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication.",
+            "hybrid": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Gemini Part of Fortune: Good Things Arrive Through Information",
+            "direct_to_dog": "Gemini Part of Fortune: Good Things Arrive Through Information",
+            "hybrid": "Gemini Part of Fortune: Good Things Arrive Through Information"
+          },
+          "body": {
+            "handler": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication.",
+            "direct_to_dog": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication.",
+            "hybrid": "The Part of Fortune in Gemini in the third doghouse links treat flow and comfort resources to local exploration, scent information, and responsive communication."
+          },
+          "funny_dog_quotes": [
+            "“I have reviewed the situation and formed an immediate opinion.”"
+          ],
+          "imperative_dog_quotes": [
+            "“Give me one clear thing to do.”"
+          ],
+          "applicable_canine_jokes": [
+            "Bre has filed this under Extremely Important Dog Business."
+          ]
+        }
+      },
+      "dos": [
+        "Use easy find-it games",
+        "Reward useful noticing",
+        "Offer small choices"
+      ],
+      "donts": [
+        "Make every win physically demanding",
+        "Ignore spontaneous check-ins",
+        "Overcomplicate easy enrichment"
+      ]
+    }
+  ]
+}

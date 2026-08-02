@@ -1,0 +1,20 @@
+{
+  "subject_id": "bre",
+  "display_name": "Bre",
+  "subject_type": "dog",
+  "gender": "female",
+  "pronouns": {
+    "subject": "she",
+    "object": "her",
+    "possessive_adjective": "her",
+    "possessive_pronoun": "hers",
+    "reflexive": "herself"
+  },
+  "breed": "",
+  "birth_date": "",
+  "birth_datetime": "",
+  "birth_latitude": null,
+  "birth_longitude": null,
+  "birth_location": "",
+  "birth_date_precision": "unknown"
+}

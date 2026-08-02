@@ -1,0 +1,20 @@
+{
+  "subject_id": "brandi",
+  "display_name": "Brandi",
+  "subject_type": "dog",
+  "gender": "female",
+  "pronouns": {
+    "subject": "she",
+    "object": "her",
+    "possessive_adjective": "her",
+    "possessive_pronoun": "hers",
+    "reflexive": "herself"
+  },
+  "breed": "Schnauzer",
+  "birth_date": "1977-07-29",
+  "birth_datetime": "1977-07-29T10:58:00-06:00",
+  "birth_latitude": 39.6478,
+  "birth_longitude": -104.9878,
+  "birth_location": "Englewood, Colorado",
+  "birth_date_precision": "minute"
+}

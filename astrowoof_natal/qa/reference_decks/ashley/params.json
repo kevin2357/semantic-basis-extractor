@@ -1,0 +1,20 @@
+{
+  "subject_id": "ashley",
+  "display_name": "Ashley",
+  "subject_type": "dog",
+  "gender": "female",
+  "pronouns": {
+    "subject": "she",
+    "object": "her",
+    "possessive_adjective": "her",
+    "possessive_pronoun": "hers",
+    "reflexive": "herself"
+  },
+  "breed": "Poodle",
+  "birth_date": "1979-06-19",
+  "birth_datetime": "1979-06-19T18:09:00-06:00",
+  "birth_latitude": 39.7392,
+  "birth_longitude": -104.9903,
+  "birth_location": "Denver, Colorado",
+  "birth_date_precision": "minute"
+}
