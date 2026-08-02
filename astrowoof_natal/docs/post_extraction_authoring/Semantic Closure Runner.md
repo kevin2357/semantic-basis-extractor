@@ -225,6 +225,16 @@ segment is byte-identical across all six passes. The estimate uses UTF-8 bytes
 divided by four and is intended for relative planning only; API response usage
 is the billing measurement.
 
+The file inventory lists every Markdown source by prompt tier and reports exact
+cross-pass duplication. SBE compacts the authoring surface before this report:
+the full-chart basis retains every selected and unselected claim, source
+reference, dependency, score, and the complete projected-term registry without
+repeating each claim's full evidence record. Claim-specific evidence remains in
+its story directory. When multiple voice contexts render the same projected
+evidence, one visible record names every context that uses it; genuinely
+different voice projections remain separate. The registered filter vocabulary
+lives once in the shared authoring brief instead of once per story.
+
 ## Compare run cost
 
 Compare any two completed or partial run ledgers without creating a run or

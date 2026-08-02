@@ -552,6 +552,27 @@ def partition_workspace_prompt(workspace: Path) -> dict[str, str]:
     }
 
 
+def workspace_file_inventory(workspace: Path) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for path in sorted(workspace.rglob("*.md")):
+        relative = path.relative_to(workspace).as_posix()
+        tier = (
+            "static"
+            if relative in STATIC_AUTHORING_FILES
+            else "subject"
+            if relative in SUBJECT_AUTHORING_FILES
+            else "assignment"
+        )
+        result.append(
+            {
+                "path": relative,
+                "tier": tier,
+                **text_measurement(path.read_text(encoding="utf-8")),
+            }
+        )
+    return result
+
+
 def retry_feedback_from_record(
     record: dict[str, Any],
 ) -> dict[str, Any] | None:
@@ -2545,12 +2566,14 @@ def build_prompt_layout_report(
 ) -> dict[str, Any]:
     """Measure every authoring prompt without submitting a response."""
     layouts: list[dict[str, Any]] = []
+    inventories: dict[str, list[dict[str, Any]]] = {}
     with tempfile.TemporaryDirectory(prefix="astrowoof-prompt-layout-") as temp:
         root = Path(temp)
         for spec in specs_from_state(state):
             extracted = root / spec.pass_id
             safe_extract_zip(spec.source_zip, extracted)
             workspace = find_workspace_root(extracted, spec.pass_id)
+            inventories[spec.pass_id] = workspace_file_inventory(workspace)
             layouts.append(
                 provider.prompt_layout(spec=spec, workspace=workspace)
             )
@@ -2560,6 +2583,23 @@ def build_prompt_layout_report(
             hashes = segment_hashes.setdefault(name, {})
             digest = measurement["sha256"]
             hashes[digest] = hashes.get(digest, 0) + 1
+    content_occurrences: dict[str, dict[str, Any]] = {}
+    for pass_id, files in inventories.items():
+        for file in files:
+            entry = content_occurrences.setdefault(
+                file["sha256"],
+                {
+                    "utf8_bytes": file["utf8_bytes"],
+                    "estimated_tokens": file["estimated_tokens"],
+                    "locations": [],
+                },
+            )
+            entry["locations"].append(f"{pass_id}/{file['path']}")
+    duplicate_tokens = sum(
+        entry["estimated_tokens"] * (len(entry["locations"]) - 1)
+        for entry in content_occurrences.values()
+        if len(entry["locations"]) > 1
+    )
     return {
         "schema_version": "astrowoof.prompt_layout_report.v1",
         "created_at": utc_now(),
@@ -2579,6 +2619,15 @@ def build_prompt_layout_report(
             for name, hashes in segment_hashes.items()
         },
         "passes": layouts,
+        "file_inventory": {
+            "passes": inventories,
+            "exact_duplicate_estimated_tokens": duplicate_tokens,
+            "repeated_content": [
+                {"sha256": digest, **entry}
+                for digest, entry in sorted(content_occurrences.items())
+                if len(entry["locations"]) > 1
+            ],
+        },
         "note": (
             "This report performs no API request. Estimates support relative "
             "prompt-layout comparisons; response usage remains authoritative."

@@ -1532,11 +1532,9 @@ def render_story_writing_template(
         "Write this evidence-bounded insight about the dog described in "
         "`WRITE WHOLE DOG PROFILE.md`.",
         "",
-        "Let the previous page leave your desk. Carry forward your understanding "
-        "of the dog and your memory of which lessons have already been taught, "
-        "but not the previous story's sentences or structure. Before drafting, "
-        "decide this story's remembered idea, behavioral doorway, writing form, "
-        "narrative movement, and comic premise.",
+        "Let the previous page leave your desk. Use the shared guidance to plan "
+        "this claim as an independent miniature essay before filling its "
+        "renderings.",
         "",
         "## Editorial Plan",
         "",
@@ -1870,6 +1868,36 @@ def _story_brief(
     )
 
 
+def authoring_projection_payload(wrapper: dict[str, Any]) -> dict[str, Any]:
+    """Return exactly the projected data rendered for an authoring client."""
+    record = wrapper.get("record", {})
+    return {
+        "projection_relevance_score": wrapper.get(
+            "projection_relevance_score"
+        ),
+        "structural_strength_score": wrapper.get(
+            "structural_strength_score"
+        ),
+        "record": {
+            key: record.get(key)
+            for key in (
+                "object_type",
+                "name",
+                "relationship_type",
+                "operators",
+                "theme_tags",
+            )
+            if record.get(key) not in (None, [], {})
+        },
+        "attributes": {
+            key: value
+            for key, value in (record.get("attributes") or {}).items()
+            if key not in {"projection_relevance_components", "guardrails"}
+            and value not in (None, [], {})
+        },
+    }
+
+
 def render_claim_and_evidence(
     card: dict[str, Any],
     packet: dict[str, Any],
@@ -1937,11 +1965,28 @@ def render_claim_and_evidence(
                 f"- **Required selected dependencies:** "
                 f"{', '.join(evidence['claim_ids'])}"
             )
+        grouped_contexts: dict[str, dict[str, Any]] = {}
         for context, wrapper in evidence.get("context_records", {}).items():
+            fingerprint = json.dumps(
+                authoring_projection_payload(wrapper),
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            group = grouped_contexts.setdefault(
+                fingerprint,
+                {"contexts": [], "wrapper": wrapper},
+            )
+            group["contexts"].append(context)
+        for group in grouped_contexts.values():
+            wrapper = group["wrapper"]
             record = wrapper.get("record", {})
+            context_label = ", ".join(
+                context.replace("_", " ") for context in group["contexts"]
+            )
             lines.extend(
                 [
-                    f"- **{context.replace('_', ' ')} voice projection:**",
+                    f"- **Projection used by:** {context_label}",
                     f"  - relevance: {wrapper.get('projection_relevance_score')}",
                     f"  - structural strength: {wrapper.get('structural_strength_score')}",
                 ]
@@ -1988,29 +2033,6 @@ def render_claim_and_evidence(
             )
     else:
         lines.append("- No explicit dependencies; distinguish this story from adjacent priorities.")
-    lines.extend(
-        [
-            "",
-            "## Allowed filter vocabulary",
-            "",
-            "### High level",
-            "",
-            *[
-                f"- {item['name']}"
-                for item in packet["context_filter_groups"]
-                if item["level"] == "high"
-            ],
-            "",
-            "### Detail level",
-            "",
-            *[
-                f"- {item['name']}"
-                for item in packet["context_filter_groups"]
-                if item["level"] == "detail"
-            ],
-            "",
-        ]
-    )
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -2085,12 +2107,24 @@ def _full_chart_claim_lines(packet: dict[str, Any]) -> list[str]:
                 f"### {card['priority_id']:03d}: {card['claim_id']}",
                 "",
                 f"- **Claim:** {card.get('canonical_claim', '')}",
+                f"- **Type:** {card.get('claim_type', 'unspecified')}",
+                f"- **Priority weight:** {card.get('pct_total_priority', card.get('importance', 'unspecified'))}",
             ]
         )
-        for evidence in card.get("evidence", []):
-            record = _context_record(evidence)
-            if record:
-                lines.extend(_markdown_data(record))
+        source_refs = sorted({
+            source_ref
+            for evidence in card.get("evidence", [])
+            for source_ref in evidence.get("source_refs", [])
+        })
+        dependencies = sorted({
+            claim_id
+            for evidence in card.get("evidence", [])
+            for claim_id in evidence.get("claim_ids", [])
+        })
+        if source_refs:
+            lines.append(f"- **Source references:** {', '.join(source_refs)}")
+        if dependencies:
+            lines.append(f"- **Depends on:** {', '.join(dependencies)}")
         lines.append("")
     lines.extend(["## Additional Chart Material", ""])
     for claim in packet.get("unselected_claims", []):
@@ -2099,12 +2133,23 @@ def _full_chart_claim_lines(packet: dict[str, Any]) -> list[str]:
                 f"### {claim.get('claim_id', claim.get('candidate_id', 'unidentified'))}",
                 "",
                 f"- **Claim:** {claim.get('canonical_claim', claim.get('claim', 'No claim text supplied.'))}",
+                f"- **Type:** {claim.get('claim_type', 'unspecified')}",
             ]
         )
-        for evidence in claim.get("evidence", []):
-            record = _context_record(evidence)
-            if record:
-                lines.extend(_markdown_data(record))
+        source_refs = sorted({
+            source_ref
+            for evidence in claim.get("evidence", [])
+            for source_ref in evidence.get("source_refs", [])
+        })
+        dependencies = sorted({
+            claim_id
+            for evidence in claim.get("evidence", [])
+            for claim_id in evidence.get("claim_ids", [])
+        })
+        if source_refs:
+            lines.append(f"- **Source references:** {', '.join(source_refs)}")
+        if dependencies:
+            lines.append(f"- **Depends on:** {', '.join(dependencies)}")
         lines.append("")
     return lines
 

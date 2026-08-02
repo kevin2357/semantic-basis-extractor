@@ -21,6 +21,7 @@ sys.path.insert(0, str(SRC))
 from build_projected_semantic_basis import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
     archive_story_workspace,
+    authoring_projection_payload,
     build_candidates,
     build_story_workspace,
     compile_packet,
@@ -534,6 +535,38 @@ class TestBrePacket(unittest.TestCase):
             self.assertIn("## Story Brief", claim_text)
             self.assertIn("## Underlying Astrology", claim_text)
             self.assertNotIn("## Exact assignment", claim_text)
+            expected_projection_groups = sum(
+                len({
+                    json.dumps(
+                        authoring_projection_payload(wrapper),
+                        sort_keys=True,
+                    )
+                    for wrapper in evidence.get("context_records", {}).values()
+                })
+                for evidence in self.packet["cards"][0].get("evidence", [])
+            )
+            self.assertEqual(
+                expected_projection_groups,
+                claim_text.count("**Projection used by:**"),
+            )
+            self.assertNotIn("## Allowed filter vocabulary", claim_text)
+            brief = (workspace / "AUTHORING BRIEF.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("High level: Personality; Learning; Play", brief)
+            full_chart = (workspace / "FULL CHART BASIS.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("## Selected Chart Material", full_chart)
+            self.assertIn("## Complete Projected-Term Registry", full_chart)
+            self.assertIn("**Source references:**", full_chart)
+            for card in self.packet["cards"]:
+                self.assertIn(card["claim_id"], full_chart)
+            for claim in self.packet.get("unselected_claims", []):
+                self.assertIn(
+                    claim.get("claim_id", claim.get("candidate_id")),
+                    full_chart,
+                )
             story_directories = sorted((workspace / "cards").iterdir())
             self.assertEqual(2, len(story_directories))
             for story in story_directories:

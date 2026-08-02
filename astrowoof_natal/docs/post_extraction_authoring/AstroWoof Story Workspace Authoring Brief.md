@@ -92,6 +92,15 @@ its own comic world.
 Assign a context filter when a user deliberately choosing it would be
 satisfied to see this story.
 
+Use only these registered filters:
+
+- High level: Personality; Learning; Play; Adventure; Communication; Trust;
+  Training; Pack.
+- Detail level: Core Personality; Mind & Intelligence; Emotions & Inner World;
+  Energy & Motivation; Strengths & Talents; Growth & Potential; Play &
+  Adventure; Learning & Training; Communication; Social & Pack Life; Trust &
+  Security; Stress & Resilience.
+
 Fill `Theme Group` when that field appears. Theme groups organize aspects and
 syntheses into a few coherent chapters.
 

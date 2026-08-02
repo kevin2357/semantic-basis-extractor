@@ -897,6 +897,10 @@ class TestSemanticClosure(SemanticClosureFixture):
             )
             self.assertEqual(6, report["pass_count"])
             self.assertGreater(report["request_estimated_tokens"], 0)
+            self.assertGreater(
+                report["file_inventory"]["exact_duplicate_estimated_tokens"],
+                0,
+            )
             self.assertTrue(
                 report["segments"]["system_instructions"][
                     "shared_by_all_passes"
