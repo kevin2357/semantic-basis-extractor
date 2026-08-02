@@ -1,0 +1,505 @@
+{
+  "status": "summary_isolation_pass_full_qa_blocked_by_theme_balance",
+  "run_state": "FINAL_QA_FAILED",
+  "pass6_attempts": [
+    {
+      "attempt_number": 1,
+      "state": "PASS_QA_ACCEPTED",
+      "started_at": "2026-08-02T15:07:53.498093+00:00",
+      "finished_at": "2026-08-02T15:09:33.923169+00:00",
+      "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_6\\attempt-001\\response\\kevin_6",
+      "provider_metadata": {
+        "provider": "openai",
+        "response_id": "resp_09beba8d6c027770006a6f5d4a58b0819a85e2dd67b61044d1",
+        "response_status": "completed",
+        "model": "gpt-5.6-terra",
+        "requested_model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "background": true,
+        "poll_count": 40,
+        "transport_attempts": {
+          "create": 1,
+          "retrieve": 40
+        },
+        "usage": {
+          "input_tokens": 42961,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 8277,
+          "reasoning_tokens": 44,
+          "total_tokens": 51238
+        },
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.2315575,
+          "pricing_version": "2026-07-31",
+          "rates_per_million_tokens": {
+            "input": 2.5,
+            "cached_input": 0.25,
+            "output": 15.0,
+            "cache_write": 3.125
+          },
+          "billable_tokens": {
+            "uncached_input": 42961,
+            "cached_input": 0,
+            "cache_write": 0,
+            "output": 8277
+          },
+          "components": {
+            "uncached_input": 0.1074025,
+            "cached_input": 0.0,
+            "cache_write": 0.0,
+            "output": 0.124155
+          },
+          "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+        },
+        "prompt_layout": {
+          "pass_id": "kevin_6",
+          "subject": "kevin",
+          "pass_number": 6,
+          "source_sha256": "93507eebe16baed85269703b210e64d9c8350d6e0990e9af59dd6f5fb7e4a8be",
+          "writable_field_count": 7,
+          "segments": {
+            "system_instructions": {
+              "characters": 462,
+              "utf8_bytes": 462,
+              "estimated_tokens": 116,
+              "token_estimate_method": "utf8_bytes_divided_by_4",
+              "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+            },
+            "static_prefix": {
+              "characters": 18639,
+              "utf8_bytes": 18673,
+              "estimated_tokens": 4669,
+              "token_estimate_method": "utf8_bytes_divided_by_4",
+              "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+            },
+            "subject_prefix": {
+              "characters": 75785,
+              "utf8_bytes": 75785,
+              "estimated_tokens": 18947,
+              "token_estimate_method": "utf8_bytes_divided_by_4",
+              "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+            },
+            "pass_assignment": {
+              "characters": 80839,
+              "utf8_bytes": 80949,
+              "estimated_tokens": 20238,
+              "token_estimate_method": "utf8_bytes_divided_by_4",
+              "sha256": "e49337e9444a20478d854d934ca94941fb1143dd5fe3987e068878c9984ed1fc"
+            },
+            "response_schema": {
+              "characters": 27448,
+              "utf8_bytes": 27448,
+              "estimated_tokens": 6862,
+              "token_estimate_method": "utf8_bytes_divided_by_4",
+              "sha256": "661b01afbcc51318ef0b769a8fc57511588a6f3e0ccaa48e3daf6757642d0094"
+            }
+          },
+          "request_estimated_tokens": 50832,
+          "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+        },
+        "elapsed_seconds": 100.0,
+        "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_6\\attempt-001\\openai-request.json",
+        "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_6\\attempt-001\\openai-response.json",
+        "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_6\\attempt-001\\openai-authored-fields.json"
+      },
+      "qa": {
+        "accepted": true,
+        "returncode": 0,
+        "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\passes\\\\kevin_6\\\\attempt-001\\\\response\\\\kevin_6\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+        "stderr": "",
+        "report": {
+          "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+          "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_6\\attempt-001\\response\\kevin_6",
+          "status": "accept",
+          "editorial_issue_codes": [],
+          "affected_claim_ids": [],
+          "guidance": "The pass cleared the bundled editorial gate."
+        }
+      },
+      "error": null
+    }
+  ],
+  "final_record": {
+    "subject": "kevin",
+    "state": "FINAL_QA_FAILED",
+    "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\semantic-basis-output\\kevin\\kevin.selected-authoring-packet.json",
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.cards.json",
+    "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.assembly-report.json",
+    "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.validation-report.json",
+    "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.lint-report.json",
+    "validation": {
+      "accepted": false,
+      "returncode": 1,
+      "stdout": "{\n  \"status\": \"fail\",\n  \"errors\": [\n    \"Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}.\"\n  ],\n  \"warnings\": [\n    \"Card 12 may contain astrology in no_astro.body.hybrid.\",\n    \"Card 13 may contain astrology in no_astro.body.handler.\",\n    \"Card 35 may contain astrology in no_astro.body.hybrid.\"\n  ],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 58,\n    \"placeholder_free\": true\n  }\n}\n",
+      "stderr": "",
+      "report": {
+        "status": "fail",
+        "errors": [
+          "Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}."
+        ],
+        "warnings": [
+          "Card 12 may contain astrology in no_astro.body.hybrid.",
+          "Card 13 may contain astrology in no_astro.body.handler.",
+          "Card 35 may contain astrology in no_astro.body.hybrid."
+        ],
+        "checks": {
+          "card_count": 50,
+          "phase": "authoring",
+          "polish_edit_overrides": {
+            "context_filters": false,
+            "theme_groups": false,
+            "summary": false
+          },
+          "locked_top_level_fields_checked": [
+            "subject",
+            "source",
+            "coverage",
+            "categories",
+            "behavioral_domains",
+            "context_filter_groups",
+            "unselected_claims",
+            "projected_term_registry"
+          ],
+          "locked_card_fields_checked": [
+            "claim_id",
+            "claim_type",
+            "categories",
+            "importance",
+            "confidence",
+            "strength",
+            "priority_id",
+            "selection",
+            "behavioral_domains",
+            "tags",
+            "evidence",
+            "relations"
+          ],
+          "summary_card_count": 4,
+          "unselected_claim_count": 58,
+          "placeholder_free": true
+        }
+      }
+    },
+    "lint": {
+      "accepted": true,
+      "returncode": 2,
+      "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 2,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\final\\\\kevin\\\\natal.kevin.cards.json\",\n      \"subject\": \"kevin\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 2,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"count\": 9,\n            \"claim_ids\": [\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_bfc2c827df58870e\",\n              \"placement_85df75689829f069\",\n              \"placement_2600077993c79923\",\n              \"relationship_96d0869a851b619d\",\n              \"synthesis_b97e4fa25d4751db\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_caffe06d5a64022b\"\n            ]\n          }\n        },\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you are\",\n            \"count\": 6,\n            \"claim_ids\": [\n              \"placement_2fe48d9251284733\",\n              \"synthesis_4883de73692b5b8c\",\n              \"synthesis_ca7411eac40647d2\",\n              \"synthesis_0db15a33ea59ebe2\",\n              \"relationship_ee265ac315162d87\",\n              \"placement_af301822d66f8d0e\"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 1,\n        \"dominant_openings\": [\n          {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"claim_count\": 9,\n            \"claim_ids\": [\n              \"placement_2600077993c79923\",\n              \"placement_85df75689829f069\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_96d0869a851b619d\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_bfc2c827df58870e\",\n              \"relationship_caffe06d5a64022b\",\n              \"synthesis_b97e4fa25d4751db\"\n            ]\n          }\n        ],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+      "stderr": "",
+      "report": {
+        "schema_version": "astrowoof.editorial_lint.v0.1",
+        "status": "warn",
+        "warning_count": 2,
+        "decks": [
+          {
+            "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.cards.json",
+            "subject": "kevin",
+            "reader_facing_field_count": 1458,
+            "warning_count": 2,
+            "warnings": [
+              {
+                "code": "repeated_opening",
+                "message": "A three-word body opening is used six or more times.",
+                "details": {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you do",
+                  "count": 9,
+                  "claim_ids": [
+                    "relationship_bd235e06b11e29af",
+                    "relationship_559bd87e20fcfbcc",
+                    "relationship_bfc2c827df58870e",
+                    "placement_85df75689829f069",
+                    "placement_2600077993c79923",
+                    "relationship_96d0869a851b619d",
+                    "synthesis_b97e4fa25d4751db",
+                    "relationship_9c454989bd05aa64",
+                    "relationship_caffe06d5a64022b"
+                  ]
+                }
+              },
+              {
+                "code": "repeated_opening",
+                "message": "A three-word body opening is used six or more times.",
+                "details": {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you are",
+                  "count": 6,
+                  "claim_ids": [
+                    "placement_2fe48d9251284733",
+                    "synthesis_4883de73692b5b8c",
+                    "synthesis_ca7411eac40647d2",
+                    "synthesis_0db15a33ea59ebe2",
+                    "relationship_ee265ac315162d87",
+                    "placement_af301822d66f8d0e"
+                  ]
+                }
+              }
+            ],
+            "authoring_pass_acceptance": {
+              "status": "accept",
+              "deterministic": true,
+              "thresholds": {
+                "ngram_words": 12,
+                "ngram_min_distinct_claims": 3
+              },
+              "reader_facing_field_count": 1458,
+              "distinct_location_count": 54,
+              "exact_duplicate_group_count": 0,
+              "exact_duplicate_groups": [],
+              "repeated_ngram_group_count": 0,
+              "repeated_ngrams": [],
+              "suspicious_artifact_count": 0,
+              "suspicious_artifacts": [],
+              "dominant_opening_group_count": 1,
+              "dominant_openings": [
+                {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you do",
+                  "claim_count": 9,
+                  "claim_ids": [
+                    "placement_2600077993c79923",
+                    "placement_85df75689829f069",
+                    "relationship_559bd87e20fcfbcc",
+                    "relationship_96d0869a851b619d",
+                    "relationship_9c454989bd05aa64",
+                    "relationship_bd235e06b11e29af",
+                    "relationship_bfc2c827df58870e",
+                    "relationship_caffe06d5a64022b",
+                    "synthesis_b97e4fa25d4751db"
+                  ]
+                }
+              ],
+              "rejection_reasons": []
+            }
+          }
+        ],
+        "cross_subject_warnings": []
+      }
+    },
+    "baseline_warning_count": 2,
+    "baseline_warning_components": {
+      "validation": 3,
+      "lint": 2
+    },
+    "polish_attempts": [],
+    "delivery": null
+  },
+  "comparison_summary": {
+    "status": "summary_isolation_pass_full_qa_blocked_by_theme_balance",
+    "controls": {
+      "historical_automated_baseline": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\kevin\\20260801-automated-live-base\\natal.kevin.cards.json",
+      "manual_reference": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\kevin\\20260730-six-pass-final\\natal.kevin.cards.json",
+      "same_code_control": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.same-code-control.cards.json",
+      "phase1_isolation_candidate": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.phase1-isolation.cards.json",
+      "phase1_production_candidate": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.phase1-production.cards.json"
+    },
+    "same_code_isolation": {
+      "changed_value_path_count": 110,
+      "non_summary_changed_paths": [
+        "cards.5.context_filter_groups.high_level",
+        "cards.14.context_filter_groups.high_level"
+      ],
+      "expected_post_assembly_sanitizer_changes": [
+        "cards.14.context_filter_groups.high_level",
+        "cards.5.context_filter_groups.high_level"
+      ],
+      "unexpected_changed_paths": [],
+      "reader_facing_card_payloads_identical": true
+    },
+    "historical_assembler_drift": {
+      "changed_value_path_count": 0,
+      "changed_value_paths": []
+    },
+    "production_theme_group_update": {
+      "theme_group_changed_paths": [
+        "cards.0.theme_group",
+        "cards.2.theme_group",
+        "cards.3.theme_group",
+        "cards.4.theme_group",
+        "cards.6.theme_group",
+        "cards.7.theme_group",
+        "cards.8.theme_group",
+        "cards.9.theme_group",
+        "cards.10.theme_group",
+        "cards.12.theme_group",
+        "cards.13.theme_group",
+        "cards.14.theme_group",
+        "cards.15.theme_group",
+        "cards.16.theme_group",
+        "cards.17.theme_group",
+        "cards.18.theme_group",
+        "cards.19.theme_group",
+        "cards.20.theme_group",
+        "cards.22.theme_group",
+        "cards.23.theme_group",
+        "cards.24.theme_group",
+        "cards.25.theme_group",
+        "cards.26.theme_group",
+        "cards.27.theme_group",
+        "cards.28.theme_group",
+        "cards.30.theme_group",
+        "cards.31.theme_group",
+        "cards.32.theme_group",
+        "cards.33.theme_group",
+        "cards.34.theme_group",
+        "cards.35.theme_group",
+        "cards.37.theme_group",
+        "cards.38.theme_group"
+      ],
+      "unexpected_changed_paths": []
+    },
+    "qa": {
+      "state": "FINAL_QA_FAILED",
+      "theme_group_balance_is_only_validation_error": true,
+      "validation": {
+        "accepted": false,
+        "returncode": 1,
+        "stdout": "{\n  \"status\": \"fail\",\n  \"errors\": [\n    \"Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}.\"\n  ],\n  \"warnings\": [\n    \"Card 12 may contain astrology in no_astro.body.hybrid.\",\n    \"Card 13 may contain astrology in no_astro.body.handler.\",\n    \"Card 35 may contain astrology in no_astro.body.hybrid.\"\n  ],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 58,\n    \"placeholder_free\": true\n  }\n}\n",
+        "stderr": "",
+        "report": {
+          "status": "fail",
+          "errors": [
+            "Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}."
+          ],
+          "warnings": [
+            "Card 12 may contain astrology in no_astro.body.hybrid.",
+            "Card 13 may contain astrology in no_astro.body.handler.",
+            "Card 35 may contain astrology in no_astro.body.hybrid."
+          ],
+          "checks": {
+            "card_count": 50,
+            "phase": "authoring",
+            "polish_edit_overrides": {
+              "context_filters": false,
+              "theme_groups": false,
+              "summary": false
+            },
+            "locked_top_level_fields_checked": [
+              "subject",
+              "source",
+              "coverage",
+              "categories",
+              "behavioral_domains",
+              "context_filter_groups",
+              "unselected_claims",
+              "projected_term_registry"
+            ],
+            "locked_card_fields_checked": [
+              "claim_id",
+              "claim_type",
+              "categories",
+              "importance",
+              "confidence",
+              "strength",
+              "priority_id",
+              "selection",
+              "behavioral_domains",
+              "tags",
+              "evidence",
+              "relations"
+            ],
+            "summary_card_count": 4,
+            "unselected_claim_count": 58,
+            "placeholder_free": true
+          }
+        }
+      },
+      "lint": {
+        "accepted": true,
+        "returncode": 2,
+        "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 2,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\final\\\\kevin\\\\natal.kevin.cards.json\",\n      \"subject\": \"kevin\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 2,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"count\": 9,\n            \"claim_ids\": [\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_bfc2c827df58870e\",\n              \"placement_85df75689829f069\",\n              \"placement_2600077993c79923\",\n              \"relationship_96d0869a851b619d\",\n              \"synthesis_b97e4fa25d4751db\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_caffe06d5a64022b\"\n            ]\n          }\n        },\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you are\",\n            \"count\": 6,\n            \"claim_ids\": [\n              \"placement_2fe48d9251284733\",\n              \"synthesis_4883de73692b5b8c\",\n              \"synthesis_ca7411eac40647d2\",\n              \"synthesis_0db15a33ea59ebe2\",\n              \"relationship_ee265ac315162d87\",\n              \"placement_af301822d66f8d0e\"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 1,\n        \"dominant_openings\": [\n          {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"claim_count\": 9,\n            \"claim_ids\": [\n              \"placement_2600077993c79923\",\n              \"placement_85df75689829f069\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_96d0869a851b619d\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_bfc2c827df58870e\",\n              \"relationship_caffe06d5a64022b\",\n              \"synthesis_b97e4fa25d4751db\"\n            ]\n          }\n        ],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+        "stderr": "",
+        "report": {
+          "schema_version": "astrowoof.editorial_lint.v0.1",
+          "status": "warn",
+          "warning_count": 2,
+          "decks": [
+            {
+              "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.cards.json",
+              "subject": "kevin",
+              "reader_facing_field_count": 1458,
+              "warning_count": 2,
+              "warnings": [
+                {
+                  "code": "repeated_opening",
+                  "message": "A three-word body opening is used six or more times.",
+                  "details": {
+                    "field": "no_astro.body.direct_to_dog",
+                    "opening": "kevin you do",
+                    "count": 9,
+                    "claim_ids": [
+                      "relationship_bd235e06b11e29af",
+                      "relationship_559bd87e20fcfbcc",
+                      "relationship_bfc2c827df58870e",
+                      "placement_85df75689829f069",
+                      "placement_2600077993c79923",
+                      "relationship_96d0869a851b619d",
+                      "synthesis_b97e4fa25d4751db",
+                      "relationship_9c454989bd05aa64",
+                      "relationship_caffe06d5a64022b"
+                    ]
+                  }
+                },
+                {
+                  "code": "repeated_opening",
+                  "message": "A three-word body opening is used six or more times.",
+                  "details": {
+                    "field": "no_astro.body.direct_to_dog",
+                    "opening": "kevin you are",
+                    "count": 6,
+                    "claim_ids": [
+                      "placement_2fe48d9251284733",
+                      "synthesis_4883de73692b5b8c",
+                      "synthesis_ca7411eac40647d2",
+                      "synthesis_0db15a33ea59ebe2",
+                      "relationship_ee265ac315162d87",
+                      "placement_af301822d66f8d0e"
+                    ]
+                  }
+                }
+              ],
+              "authoring_pass_acceptance": {
+                "status": "accept",
+                "deterministic": true,
+                "thresholds": {
+                  "ngram_words": 12,
+                  "ngram_min_distinct_claims": 3
+                },
+                "reader_facing_field_count": 1458,
+                "distinct_location_count": 54,
+                "exact_duplicate_group_count": 0,
+                "exact_duplicate_groups": [],
+                "repeated_ngram_group_count": 0,
+                "repeated_ngrams": [],
+                "suspicious_artifact_count": 0,
+                "suspicious_artifacts": [],
+                "dominant_opening_group_count": 1,
+                "dominant_openings": [
+                  {
+                    "field": "no_astro.body.direct_to_dog",
+                    "opening": "kevin you do",
+                    "claim_count": 9,
+                    "claim_ids": [
+                      "placement_2600077993c79923",
+                      "placement_85df75689829f069",
+                      "relationship_559bd87e20fcfbcc",
+                      "relationship_96d0869a851b619d",
+                      "relationship_9c454989bd05aa64",
+                      "relationship_bd235e06b11e29af",
+                      "relationship_bfc2c827df58870e",
+                      "relationship_caffe06d5a64022b",
+                      "synthesis_b97e4fa25d4751db"
+                    ]
+                  }
+                ],
+                "rejection_reasons": []
+              }
+            }
+          ],
+          "cross_subject_warnings": []
+        }
+      }
+    }
+  }
+}

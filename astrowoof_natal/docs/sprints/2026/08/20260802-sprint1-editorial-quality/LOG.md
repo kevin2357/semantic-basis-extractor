@@ -253,3 +253,40 @@ prefixes across all six passes. The gold reference contributes an estimated
 complete pass-6 request is estimated at 50,909 tokens by the repository's
 dependency-free UTF-8-bytes/4 planning metric; actual API usage remains the
 billing authority.
+
+## 2026-08-02 — Phase 1 isolated Kevin live checkpoint
+
+Only Kevin pass 6 was authored under the Phase-1 configuration. Accepted
+historical passes 1–5 were reused, and same-code and summary-isolation decks
+were preserved.
+
+### Service result
+
+- Model: `gpt-5.6-terra`, medium reasoning
+- Response ID: `resp_09beba8d6c027770006a6f5d4a58b0819a85e2dd67b61044d1`
+- One attempt; opaque pass gate accepted
+- 42,961 input tokens; 8,277 output tokens; 44 reasoning tokens
+- 100 seconds; estimated cost $0.2315575
+
+### Quality result
+
+The private plan formed four distinct arguments and explicitly separated
+present support from development over time. Candidate summary bodies totaled
+3,244 words, versus 2,675 in the historical automated baseline and 3,367 in the
+manual reference. Reader-facing quality, richness, lens separation, and
+needs/growth differentiation improved materially over the automated baseline.
+
+The test also revealed substantial same-subject gold leakage. The candidate
+shares 30 distinct twelve-word sequences with the manual Kevin reference, with
+a maximum same-field run of 18 words, plus conceptually transferred chapter,
+spark/return, and four-part-needs structures. No headline is copied exactly,
+but explicit anti-copying instructions did not prevent structural imitation.
+
+Decision: retain the thesis plan; keep full prose gold experimental pending a
+cross-subject pass-6 test. The Kevin candidate demonstrates the attainable
+quality target but is not a clean independent-authorship comparison.
+
+Final whole-deck QA was blocked only by imbalanced newly authored theme groups
+(`8, 12, 3, 10`). The historical grouping also fails the current rule. The
+pass-local gate/final-validator mismatch is a separate defect. Detailed
+analysis is in `results/PHASE 1 - Kevin Summary Calibration Live Test.md`.

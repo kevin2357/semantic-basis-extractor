@@ -1,0 +1,1139 @@
+{
+  "status": "summary_isolation_pass_full_qa_blocked_by_theme_balance",
+  "controls": {
+    "historical_automated_baseline": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\kevin\\20260801-automated-live-base\\natal.kevin.cards.json",
+    "manual_reference": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\kevin\\20260730-six-pass-final\\natal.kevin.cards.json",
+    "same_code_control": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.same-code-control.cards.json",
+    "phase1_isolation_candidate": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.phase1-isolation.cards.json",
+    "phase1_production_candidate": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\natal.kevin.phase1-production.cards.json"
+  },
+  "same_code_isolation": {
+    "changed_value_path_count": 110,
+    "non_summary_changed_paths": [
+      "cards.5.context_filter_groups.high_level",
+      "cards.14.context_filter_groups.high_level"
+    ],
+    "expected_post_assembly_sanitizer_changes": [
+      "cards.14.context_filter_groups.high_level",
+      "cards.5.context_filter_groups.high_level"
+    ],
+    "unexpected_changed_paths": [],
+    "reader_facing_card_payloads_identical": true
+  },
+  "historical_assembler_drift": {
+    "changed_value_path_count": 0,
+    "changed_value_paths": []
+  },
+  "production_theme_group_update": {
+    "theme_group_changed_paths": [
+      "cards.0.theme_group",
+      "cards.2.theme_group",
+      "cards.3.theme_group",
+      "cards.4.theme_group",
+      "cards.6.theme_group",
+      "cards.7.theme_group",
+      "cards.8.theme_group",
+      "cards.9.theme_group",
+      "cards.10.theme_group",
+      "cards.12.theme_group",
+      "cards.13.theme_group",
+      "cards.14.theme_group",
+      "cards.15.theme_group",
+      "cards.16.theme_group",
+      "cards.17.theme_group",
+      "cards.18.theme_group",
+      "cards.19.theme_group",
+      "cards.20.theme_group",
+      "cards.22.theme_group",
+      "cards.23.theme_group",
+      "cards.24.theme_group",
+      "cards.25.theme_group",
+      "cards.26.theme_group",
+      "cards.27.theme_group",
+      "cards.28.theme_group",
+      "cards.30.theme_group",
+      "cards.31.theme_group",
+      "cards.32.theme_group",
+      "cards.33.theme_group",
+      "cards.34.theme_group",
+      "cards.35.theme_group",
+      "cards.37.theme_group",
+      "cards.38.theme_group"
+    ],
+    "unexpected_changed_paths": []
+  },
+  "qa": {
+    "state": "FINAL_QA_FAILED",
+    "theme_group_balance_is_only_validation_error": true,
+    "validation": {
+      "accepted": false,
+      "returncode": 1,
+      "stdout": "{\n  \"status\": \"fail\",\n  \"errors\": [\n    \"Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}.\"\n  ],\n  \"warnings\": [\n    \"Card 12 may contain astrology in no_astro.body.hybrid.\",\n    \"Card 13 may contain astrology in no_astro.body.handler.\",\n    \"Card 35 may contain astrology in no_astro.body.hybrid.\"\n  ],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 58,\n    \"placeholder_free\": true\n  }\n}\n",
+      "stderr": "",
+      "report": {
+        "status": "fail",
+        "errors": [
+          "Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Freedom & First Moves': 8, 'Trust in Action': 12, 'Home and the Wider World': 3, 'Curiosity, Adventure & Change': 10}."
+        ],
+        "warnings": [
+          "Card 12 may contain astrology in no_astro.body.hybrid.",
+          "Card 13 may contain astrology in no_astro.body.handler.",
+          "Card 35 may contain astrology in no_astro.body.hybrid."
+        ],
+        "checks": {
+          "card_count": 50,
+          "phase": "authoring",
+          "polish_edit_overrides": {
+            "context_filters": false,
+            "theme_groups": false,
+            "summary": false
+          },
+          "locked_top_level_fields_checked": [
+            "subject",
+            "source",
+            "coverage",
+            "categories",
+            "behavioral_domains",
+            "context_filter_groups",
+            "unselected_claims",
+            "projected_term_registry"
+          ],
+          "locked_card_fields_checked": [
+            "claim_id",
+            "claim_type",
+            "categories",
+            "importance",
+            "confidence",
+            "strength",
+            "priority_id",
+            "selection",
+            "behavioral_domains",
+            "tags",
+            "evidence",
+            "relations"
+          ],
+          "summary_card_count": 4,
+          "unselected_claim_count": 58,
+          "placeholder_free": true
+        }
+      }
+    },
+    "lint": {
+      "accepted": true,
+      "returncode": 2,
+      "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 2,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\final\\\\kevin\\\\natal.kevin.cards.json\",\n      \"subject\": \"kevin\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 2,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"count\": 9,\n            \"claim_ids\": [\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_bfc2c827df58870e\",\n              \"placement_85df75689829f069\",\n              \"placement_2600077993c79923\",\n              \"relationship_96d0869a851b619d\",\n              \"synthesis_b97e4fa25d4751db\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_caffe06d5a64022b\"\n            ]\n          }\n        },\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you are\",\n            \"count\": 6,\n            \"claim_ids\": [\n              \"placement_2fe48d9251284733\",\n              \"synthesis_4883de73692b5b8c\",\n              \"synthesis_ca7411eac40647d2\",\n              \"synthesis_0db15a33ea59ebe2\",\n              \"relationship_ee265ac315162d87\",\n              \"placement_af301822d66f8d0e\"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 1,\n        \"dominant_openings\": [\n          {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you do\",\n            \"claim_count\": 9,\n            \"claim_ids\": [\n              \"placement_2600077993c79923\",\n              \"placement_85df75689829f069\",\n              \"relationship_559bd87e20fcfbcc\",\n              \"relationship_96d0869a851b619d\",\n              \"relationship_9c454989bd05aa64\",\n              \"relationship_bd235e06b11e29af\",\n              \"relationship_bfc2c827df58870e\",\n              \"relationship_caffe06d5a64022b\",\n              \"synthesis_b97e4fa25d4751db\"\n            ]\n          }\n        ],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+      "stderr": "",
+      "report": {
+        "schema_version": "astrowoof.editorial_lint.v0.1",
+        "status": "warn",
+        "warning_count": 2,
+        "decks": [
+          {
+            "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\final\\kevin\\natal.kevin.cards.json",
+            "subject": "kevin",
+            "reader_facing_field_count": 1458,
+            "warning_count": 2,
+            "warnings": [
+              {
+                "code": "repeated_opening",
+                "message": "A three-word body opening is used six or more times.",
+                "details": {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you do",
+                  "count": 9,
+                  "claim_ids": [
+                    "relationship_bd235e06b11e29af",
+                    "relationship_559bd87e20fcfbcc",
+                    "relationship_bfc2c827df58870e",
+                    "placement_85df75689829f069",
+                    "placement_2600077993c79923",
+                    "relationship_96d0869a851b619d",
+                    "synthesis_b97e4fa25d4751db",
+                    "relationship_9c454989bd05aa64",
+                    "relationship_caffe06d5a64022b"
+                  ]
+                }
+              },
+              {
+                "code": "repeated_opening",
+                "message": "A three-word body opening is used six or more times.",
+                "details": {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you are",
+                  "count": 6,
+                  "claim_ids": [
+                    "placement_2fe48d9251284733",
+                    "synthesis_4883de73692b5b8c",
+                    "synthesis_ca7411eac40647d2",
+                    "synthesis_0db15a33ea59ebe2",
+                    "relationship_ee265ac315162d87",
+                    "placement_af301822d66f8d0e"
+                  ]
+                }
+              }
+            ],
+            "authoring_pass_acceptance": {
+              "status": "accept",
+              "deterministic": true,
+              "thresholds": {
+                "ngram_words": 12,
+                "ngram_min_distinct_claims": 3
+              },
+              "reader_facing_field_count": 1458,
+              "distinct_location_count": 54,
+              "exact_duplicate_group_count": 0,
+              "exact_duplicate_groups": [],
+              "repeated_ngram_group_count": 0,
+              "repeated_ngrams": [],
+              "suspicious_artifact_count": 0,
+              "suspicious_artifacts": [],
+              "dominant_opening_group_count": 1,
+              "dominant_openings": [
+                {
+                  "field": "no_astro.body.direct_to_dog",
+                  "opening": "kevin you do",
+                  "claim_count": 9,
+                  "claim_ids": [
+                    "placement_2600077993c79923",
+                    "placement_85df75689829f069",
+                    "relationship_559bd87e20fcfbcc",
+                    "relationship_96d0869a851b619d",
+                    "relationship_9c454989bd05aa64",
+                    "relationship_bd235e06b11e29af",
+                    "relationship_bfc2c827df58870e",
+                    "relationship_caffe06d5a64022b",
+                    "synthesis_b97e4fa25d4751db"
+                  ]
+                }
+              ],
+              "rejection_reasons": []
+            }
+          }
+        ],
+        "cross_subject_warnings": []
+      }
+    }
+  },
+  "summary_sets": {
+    "historical_automated_baseline": {
+      "card1": {
+        "dos": [
+          "Acknowledge Kevin's unusual first move, then give him one clear, low-drama way to rejoin the household plan.",
+          "Use brief greeting rituals, choice-based cues, and shared play so independence has a cooperative outlet.",
+          "Reward the return to connection—not only the spectacular entrance that preceded it."
+        ],
+        "donts": [
+          "Do not treat every unconventional response as defiance or every flourish as a demand for unlimited attention.",
+          "Do not force instant sociability when a short inspection would help him orient.",
+          "Do not make closeness depend on Kevin abandoning his individuality."
+        ],
+        "funny_dog_quotes": [
+          "“I have entered the room. Please adjust the room to acknowledge this development.”"
+        ],
+        "imperative_dog_quotes": [
+          "Bring your strange idea, then bring it back to the team."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin does not make an entrance; he releases a limited-edition version of himself."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "The Golden Retriever Who Arrives as Himself",
+            "direct_to_dog": "Kevin, Your Entrance Has a Point of View",
+            "hybrid": "A Shared Room, Two Ways of Entering It"
+          },
+          "body": {
+            "handler": "Kevin has the social warmth to make an entrance and the individuality to refuse a predictable one. He may approach a room as though he has been invited to improve its atmosphere, then pause to investigate the arrangement before committing. With a favorite person, his attention becomes bright and theatrical: a look, a toy, a full-bodied presentation of the latest important development. The useful response is neither to flatten his odd moments nor to reward every interruption. Notice the intention underneath them. Give him a clear welcome, then offer a simple choice—settle beside you, bring the toy, or follow a known cue. He learns that being distinctive and being cooperative can occupy the same room.",
+            "direct_to_dog": "You do not merely enter a moment; you announce your interpretation of it. Sometimes that means a grand hello, sometimes a thoughtful pause, sometimes one beautifully unnecessary detour before you return to your person. You are allowed to be unusual. You are also capable of making your unusualness useful: notice, choose, and then come back when your companion asks. The best version of your brightness is not silence. It is a self-possessed dog who can make an entrance and still join the plan.",
+            "hybrid": "Kevin comes toward the household with a flourish, while his person is quietly trying to understand which version of the moment he has discovered. He may offer a greeting, a pause, and a sudden sideways idea in one sequence. When the human answers with calm interest instead of a tug-of-war, Kevin has somewhere to place his independence. A cue gives the scene a boundary; a playful acknowledgment gives it dignity. They are not choosing between freedom and closeness. They are practicing a relationship in which Kevin can bring his own angle and still return to the shared center."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Aquarius at the Door, Leo in the Greeting",
+            "direct_to_dog": "Your Strange Little Route Still Leads to Someone",
+            "hybrid": "The Unusual Greeting Becomes a Conversation"
+          },
+          "body": {
+            "handler": "Kevin's Aquarius Ascendant gives his first response an unconventional, pattern-breaking quality, while his Leo Descendant makes one-to-one connection vivid and expressive. That combination can look like a dog who approaches differently from expectation but wants the resulting encounter to matter. Let him inspect or improvise briefly, then invite a recognizable social action: eye contact, a greeting cue, or a toy exchange. Structure protects the bond without making the bond dull.",
+            "direct_to_dog": "Your Aquarius rising side may take the unexpected path, but your Leo relationship side wants a real exchange at the end of it. You can be original without disappearing into the detour. Explore the odd detail, then offer your person the grand thing you were really carrying: attention, affection, or an invitation to play.",
+            "hybrid": "Aquarius on Kevin's Ascendant meets Leo on the Descendant as a recognizable social rhythm: he brings an unconventional first move, and the close companion answers with warmth and visibility. The handler can honor the first move while shaping the next one. A pause, a cue, and a shared game turn difference into dialogue rather than friction."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Kevin's Chart Makes Room for a Dramatic Original",
+            "direct_to_dog": "Kevin, Be Original—and Come Back for the Applause",
+            "hybrid": "The Dog Who Brings the Unexpected Move to a Two-Way Bond"
+          },
+          "body": {
+            "handler": "The exact Aquarius Ascendant–Leo Descendant opposition places Kevin's visible approach and one-to-one bond across a strong freedom-and-connection axis. His Aquarius Ascendant can meet the world through pattern-breaking, independent responses; the Leo Descendant seeks a close counterpart who makes interaction lively and personal. Mars in Leo sits close to the Descendant, so action and display readily enter relationship. Pluto in Libra trines the Ascendant and sextiles the Descendant, adding a quietly intense capacity to deepen trust through fair, practiced exchange. In daily life, let the unusual first move exist, then channel the encounter into a clear reciprocal ritual.",
+            "direct_to_dog": "Your exact Aquarius Ascendant opposite Leo Descendant says that meeting the world and meeting a companion are never entirely separate jobs. You may arrive through the side door of an idea, a surprise, or an independent inspection, yet your Leo relationship signature wants the close encounter to feel alive. Mars beside that Descendant gives your greetings paws and momentum. Pluto's supportive Libra links help you turn intensity into trust when the exchange is fair. Keep your originality; practice the return.",
+            "hybrid": "Kevin's Aquarius Ascendant and Leo Descendant oppose at an exact degree, while Mars joins the Leo side: his independent first response and his expressive companion instinct can activate together. Pluto in Libra supports both ends by trine to the Ascendant and sextile to the Descendant, making trust a workable bridge rather than an abstract ideal. The human receives the surprising entrance, names the next cue, and joins the play. Kevin learns that a bond can contain a detour without losing its direction."
+          }
+        }
+      },
+      "card2": {
+        "dos": [
+          "Give active periods a clear finish with water, a settle cue, and a familiar resting place.",
+          "Vary walks and games while preserving a few dependable transition rituals.",
+          "Include both social participation and quiet sensory decompression in the daily plan."
+        ],
+        "donts": [
+          "Do not assume more stimulation will automatically produce better settling.",
+          "Do not erase every interesting detour in the name of efficiency.",
+          "Do not judge the whole rhythm by one energetic episode."
+        ],
+        "funny_dog_quotes": [
+          "“The perimeter has changed by approximately one leaf. I will be filing a report.”"
+        ],
+        "imperative_dog_quotes": [
+          "Inspect the world, then let the world be quiet for a while."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's daily planner has three appointments: Adventure, Important Sniff, and Recovery from Adventure."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin's Day Is a Loop with Paws on It",
+            "direct_to_dog": "Your Day Has a Return Address",
+            "hybrid": "The Expedition Ends Where the Family Is"
+          },
+          "body": {
+            "handler": "Kevin tends to live outward and back again. He checks the household, notices what has changed, seeks a person or a game, follows the interesting thread, and eventually needs a familiar place where his body can come down. The sequence may look like restlessness if each event is viewed alone. Viewed together, it is a workable rhythm of participation. Build days with a beginning and an ending to activity: a sniffing walk followed by water and quiet, a short training game followed by a settle, a social burst followed by room to decompress. He does not need every minute filled. He needs his energy to have somewhere meaningful to go.",
+            "direct_to_dog": "You like to know what is happening, take part in it, and inspect at least one detail nobody else thought important. Then you need the familiar landing place: the person, corner, or quiet spell that tells your body the expedition is over. Your best days are not endless motion. They are good loops—out, in, play, settle, repeat when the moment truly calls for it.",
+            "hybrid": "Kevin's person may think the walk ended at the gate, but Kevin's version includes the final sniff, the water, the household check, and the settling ritual. The human supplies the dependable return; Kevin supplies the alert participation that makes an ordinary day feel inhabited. When both honor the whole sequence, activity stops being a negotiation. It becomes a shared rhythm with room for curiosity and quiet."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Sagittarius Neptune Day with a Libra-Jupiter Welcome",
+            "direct_to_dog": "You Explore the Feeling of the Whole Day",
+            "hybrid": "Adventure, Then the Familiar Door"
+          },
+          "body": {
+            "handler": "Neptune in Sagittarius gives Kevin an atmosphere-sensitive, adventure-facing way of moving through life, while Jupiter in Libra enlarges his appetite for shared possibility. He may absorb the feeling of a walk or gathering and become especially animated when exploration includes companionship. Make transitions explicit: announce the end of play, offer a familiar settling station, and keep adventures varied but not chaotic. His daily life flourishes when wonder has a reliable landing.",
+            "direct_to_dog": "Your Neptune in Sagittarius notices the mood and the far edge of the outing; Jupiter in Libra makes the best discoveries better when someone shares them. Go wide, Kevin, but remember the little ritual that brings you home. A drink, a pause, and your person's familiar voice are not interruptions to adventure. They are its safe punctuation.",
+            "hybrid": "Neptune in Sagittarius draws Kevin toward atmosphere and possibility, while Jupiter in Libra makes shared experience expansive. His handler can let a walk feel exploratory without letting its ending become vague. A consistent return ritual translates the adventure into rest, allowing both partners to enjoy the outing rather than merely survive its aftermath."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "The Chart of a Dog Who Needs Both Horizon and Home",
+            "direct_to_dog": "Kevin, Your Horizon Needs a Home Base",
+            "hybrid": "A Dog's Daily Orbit: Venture, Participate, Return"
+          },
+          "body": {
+            "handler": "Kevin's Neptune in Sagittarius in Doghouse 9 colors daily experience with atmosphere, imagination, and adventure territory; Jupiter in Libra in Doghouse 8 adds confidence and appetite for possibility within deep relational trust. The Sun, Mercury, Saturn, and Pluto also gather in Libra and Scorpio around Doghouse 8 themes, so exploration is not detached from belonging. The Moon in Pisces in Doghouse 1 makes body and mood permeable, while Mars in Leo in Doghouse 6 channels energy through routine care and training. Plan his life as a sequence of meaningful departures and dependable returns.",
+            "direct_to_dog": "Neptune in Sagittarius gives you a nose for the feeling of the far-off place, while Jupiter in Libra makes possibility sweeter when it is shared. Your Pisces Moon in the first house also lets the body's atmosphere matter: too much stimulation can linger. Mars in Leo in the sixth gives your energy a useful daily stage. Explore, perform, investigate—and then accept the ritual that tells your whole self the day has landed.",
+            "hybrid": "Kevin's Doghouse 9 Neptune reaches toward adventure, his Doghouse 8 Libra cluster makes trust and shared experience central, and Mars in Leo in Doghouse 6 wants energy translated into routine and care. The person who offers a steady ending is not shrinking his world; that ending lets him use the world well. Their day becomes an orbit: outward curiosity held by inward familiarity."
+          }
+        }
+      },
+      "card3": {
+        "dos": [
+          "Teach one or two settling sequences when Kevin is calm, then use them during manageable activation.",
+          "Give intense attention a constructive outlet such as searching, carrying, shaping, or a short practiced routine.",
+          "Keep household cues and boundaries predictable, while pairing effort with genuine recovery time."
+        ],
+        "donts": [
+          "Do not punish the feeling you want him to learn to regulate.",
+          "Do not pile on repeated commands when one clear cue and a pause would communicate more.",
+          "Do not mistake a cheerful appearance for proof that he needs no decompression."
+        ],
+        "funny_dog_quotes": [
+          "“I am calm. I have merely convened an emergency subcommittee about the calm.”"
+        ],
+        "imperative_dog_quotes": [
+          "Use the job, take the breath, and let the quiet count as success."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's emotional support plan has a policy manual, a review board, and one highly qualified golden retriever."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "What Kevin Is Asking For Beneath the Big Feeling",
+            "direct_to_dog": "You Do Not Have to Solve Every Feeling at Full Volume",
+            "hybrid": "A Clear Rule Can Be a Kind of Reassurance"
+          },
+          "body": {
+            "handler": "Kevin needs a dependable bridge between impulse and calm. When something catches him—an exciting game, a change in the room, a compelling scent, a person's attention—he may put his whole self behind it. That intensity is useful energy, but it needs edges. Keep cues consistent, practice them when he is already calm, and give the energy a job: carrying a toy, searching, learning a short sequence, or moving through a sniffing exercise. Then protect the landing. A quiet mat, a predictable voice, and a pause without demands teach him that regulation is something he can do, not something a human must impose.",
+            "direct_to_dog": "When a thing matters to you, it matters with your entire golden body. That is a strength, but it can make a small uncertainty feel like a meeting requiring immediate action. Your people can help by making the next step plain and giving your energy a proper assignment. Carry, search, practice, then rest. You are not being asked to care less; you are learning how to carry caring without letting it carry you away.",
+            "hybrid": "Kevin brings intensity; his person brings the shape of the next moment. If the human responds with scattered corrections, Kevin has more information but less clarity. If the human offers one familiar cue, a manageable outlet, and time to settle, the exchange becomes cooperative. His trust grows through repeated evidence that rules are not traps and that quiet does not mean disconnection."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "When Libra Trust Meets a Pisces Body",
+            "direct_to_dog": "Your Sensitive Body Can Learn a Steady Shape",
+            "hybrid": "Fairness Turns Intensity into Cooperation"
+          },
+          "body": {
+            "handler": "Kevin's strong Libra Doghouse 8 emphasis makes trust, fairness, and shared regulation central, while his Pisces Moon in Doghouse 1 suggests that emotional atmosphere can register quickly in his body and visible behavior. Saturn in Libra adds a need for durable, humane structure rather than arbitrary correction. Use the same cue and consequence across ordinary situations, pair effort with recovery, and lower household intensity when he is already full of feeling.",
+            "direct_to_dog": "Your Pisces Moon notices more than people always realize, and your Libra Saturn wants the rules of closeness to be fair. When the room feels large, take the small sequence: hear the cue, do the job, receive the calm. Trust does not require you to absorb everybody's mood. You can return to your own body and let a dependable routine hold the edges.",
+            "hybrid": "Kevin's Doghouse 8 Libra concentration joins trust with rules, while the Pisces Moon in his first house makes the emotional climate physically consequential. A handler who keeps instructions short and consequences consistent gives him something sturdier than reassurance alone. Over time, the dog supplies effort and the human supplies fair repetition; together they make regulation practicable."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Build Kevin a Bridge from Intensity to Ease",
+            "direct_to_dog": "Kevin, Let Trust Be a Skill You Can Use",
+            "hybrid": "The Human Holds the Rule; Kevin Learns the Release"
+          },
+          "body": {
+            "handler": "Kevin's Sun, Mercury, Saturn, Jupiter, and Pluto cluster across Libra and Scorpio Doghouse 8 themes: identity, signals, rules, confidence, and deep trust all converge where vulnerability and shared resources matter. His Pisces Moon in Doghouse 1 makes comfort and atmosphere part of his bodily presentation. Mars in Leo in Doghouse 6 can turn activation into trainable routine, while the chart's repeated trainable channels connect play and trust. Use brief, consistent rules, meaningful outlets, and deliberate decompression; intensity becomes coordination when the bridge is practiced.",
+            "direct_to_dog": "Your Libra-and-Scorpio Doghouse 8 emphasis gives trust weight: you notice signals, fairness, limits, possibility, and the depth beneath an exchange. Your Pisces Moon in Doghouse 1 may feel the atmosphere before anyone explains it. Mars in Leo in Doghouse 6 gives you a way forward—practice a sequence, perform a useful job, and let the body settle afterward. You do not need to become less intense. You need a trustworthy shape for intensity.",
+            "hybrid": "Kevin's Doghouse 8 cluster makes dependable trust a central need, and Saturn there asks for rules that endure. His Pisces Moon in Doghouse 1 means that emotional climate can show up as body state; Mars in Leo in Doghouse 6 offers a practical route through training and care. The handler gives one fair cue and waits without flooding the moment. Kevin performs, receives the release, and discovers that structure can carry him rather than contain him."
+          }
+        }
+      },
+      "card4": {
+        "dos": [
+          "Introduce novelty gradually and pair it with a behavior Kevin already knows well.",
+          "Mark the moment he reorients to you before inviting investigation, play, or movement.",
+          "Repeat the same recovery sequence across places so the skill generalizes without making every setting identical."
+        ],
+        "donts": [
+          "Do not flood him with novelty to test whether he can cope.",
+          "Do not demand instant composure from a dog whose first response is designed to notice change.",
+          "Do not confuse successful growth with the disappearance of his curiosity."
+        ],
+        "funny_dog_quotes": [
+          "“Excellent news: the mysterious object has been promoted to an entirely new category of sport.”"
+        ],
+        "imperative_dog_quotes": [
+          "Notice the surprise, find your person, and choose the next chapter."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's research department has no grant funding, no closing hours, and a strict policy against leaving suspicious leaves unexamined."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin's Best Growth Is Organized Curiosity",
+            "direct_to_dog": "Keep the Spark; Learn the Next Move",
+            "hybrid": "A Surprise Becomes a Lesson When Someone Joins It"
+          },
+          "body": {
+            "handler": "Kevin is likely to notice the new thing first and react with his whole attention. Growth does not mean making him indifferent to novelty. It means giving that first spark a sequence: orient to the handler, pause long enough to receive information, choose a practiced response, and then investigate or play when invited. Start with small changes and generous repetition. A dog who learns that surprise can lead to a familiar job becomes more capable without losing the lively originality that makes him Kevin.",
+            "direct_to_dog": "You are allowed to be the first dog to discover the new thing. Your growing skill is what happens after discovery. Look toward your person, let the first wave pass through your paws, and choose the action you have practiced. Then go investigate with permission. You do not have to trade your curiosity for manners; you are learning to give curiosity a steering wheel.",
+            "hybrid": "Kevin sees the novelty and supplies the dramatic opening. His handler can either chase the excitement with corrections or join the moment by naming a known task. A pause, a hand target, a search cue, or a toy gives Kevin a route from surprise to participation. Each successful return changes the meaning of novelty: it is no longer a command to scatter, but an opportunity to choose together."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Uranus Finds a Path through the North Node",
+            "direct_to_dog": "Your Strange Discovery Can Lead You Home",
+            "hybrid": "Novelty Supplies the Question; Practice Supplies the Answer"
+          },
+          "body": {
+            "handler": "Kevin's Uranus in Scorpio trine North Node in Cancer suggests that unconventional reactions can become part of his developmental route when they are brought back toward security and relational learning. His North Node in Doghouse 6 favors growth through practiced care and useful routines. Let novelty appear in small doses, mark the pause, and reward a chosen response before allowing further exploration.",
+            "direct_to_dog": "Uranus in Scorpio gives you a powerful nose for the unusual, while your Cancer North Node asks you to grow through dependable care and belonging. The new thing may start the lesson; the familiar cue finishes it. Notice, turn toward your person, and let the next useful action be part of your adventure.",
+            "hybrid": "Kevin's Uranus–North Node trine supports a developmental pattern in which surprise can open learning rather than block it. The handler does not need to erase the unusual response. By pairing a new stimulus with a rehearsed pause and a security-building task, the human makes room for Kevin's independence while guiding it toward cooperation."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Let Kevin's Disruption Become a Developmental Door",
+            "direct_to_dog": "Kevin, Your First Idea Is Not Your Final Answer",
+            "hybrid": "The Handler Gives Surprise a Useful Second Act"
+          },
+          "body": {
+            "handler": "Uranus in Scorpio trines the North Node in Cancer with a tight orb, linking novelty, independence, and disruption to a growth direction organized around emotional security and useful care. The North Node in Doghouse 6 favors practice, routine, and serviceable skill. Uranus also squares the Aquarius Ascendant and Leo Descendant, so surprise can rub against both first response and close relationship. Train the bridge explicitly: notice the change, orient to the handler, pause, perform a known behavior, then explore. This preserves the spark while building choice.",
+            "direct_to_dog": "Your Scorpio Uranus notices what is hidden, strange, or newly changed, and your tight trine to the Cancer North Node says that discovery can help you grow toward secure, useful participation. Because Uranus also squares your Aquarius Ascendant and Leo Descendant, the surprise may arrive loudly in your body and your bonds. You can make it a strength: notice, look back, pause, do the practiced thing, and then investigate.",
+            "hybrid": "Kevin's tight Uranus–North Node trine makes novelty a plausible route into development, but the Uranus squares to both relationship angles explain why a new event can disrupt the social scene. The human's job is not to win against the disruption. It is to offer a known second act—orientation, pause, task, release. Kevin brings discovery; the handler supplies continuity; practice turns the collision into learning."
+          }
+        }
+      }
+    },
+    "manual_reference": {
+      "card1": {
+        "dos": [
+          "Give him a brief, named investigation window—such as “check it out”—followed by a consistent return cue.",
+          "Use fair rules that remain stable across people, especially around access, greetings, and shared objects.",
+          "Acknowledge his social bids before redirecting: eye contact, a touch, or one clear cue can keep the bond online."
+        ],
+        "donts": [
+          "Do not label every unconventional response as stubbornness before checking what information caught his attention.",
+          "Do not make affection unpredictable as a way to force compliance; clarity builds more trust than emotional leverage.",
+          "Do not confuse sociability with shallowness or assume a quick recovery means the interaction did not matter."
+        ],
+        "funny_dog_quotes": [
+          "I am not off course. I am expanding the definition of the course."
+        ],
+        "imperative_dog_quotes": [
+          "Respect the inspection, then cue the reunion."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin joined the welcoming committee, then rewrote its bylaws during the greeting."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "The Friendly Original With a Serious Heart",
+            "direct_to_dog": "You Were Not Built for Background Duty",
+            "hybrid": "A Bond Spacious Enough for a Plot Twist"
+          },
+          "body": {
+            "handler": "Kevin may greet the world as though every ordinary event has an unpublished footnote. He notices the side door, the new smell, the person standing slightly apart, and the toy nobody officially selected. Then he brings his discovery into relationship. His independence is rarely a rejection of company; it is an invitation to meet him where the interesting thing is.\n\nWhat can be missed is the gravity beneath the charm. Kevin appears social and expressive, but trust is not casual for him. He is likely to care about fairness, consistent access, and the emotional terms of belonging. Treat his quirks as communication rather than decoration. When his person can appreciate the unusual entrance and still provide dependable limits, Kevin gets to be both unmistakably himself and securely part of the team.",
+            "direct_to_dog": "Kevin, you have a way of arriving with an observation. Perhaps the hallway has changed. Perhaps a glove requires review. Perhaps everyone has forgotten that you are available for consultation. You do not simply occupy a room; you establish a point of view.\n\nUnder that bright presentation is a loyal, careful heart. You want closeness that can survive your curiosity and rules that do not erase your personality. Your best people will understand that your little departures are not always departures from them. Often you are circling back with news.",
+            "hybrid": "Kevin spots the unexpected path; his person remembers the destination. He offers a dramatic proposal; they offer a boundary sturdy enough to negotiate with. Their relationship works when neither role wins completely. He does not have to surrender curiosity to prove loyalty, and the human does not have to abandon structure to honor individuality.\n\nOver time, the pair develops a shared language: a moment to investigate, a cue to rejoin, a laugh at the theatrical pause, and a reliable return to one another. The result is not a perfectly predictable dog. It is a recognizable partnership."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Aquarius at the Door, Libra at the Heart",
+            "direct_to_dog": "Your Weird Little Entrance Has a Loyal Destination",
+            "hybrid": "The Original and the Diplomat Share One Leash"
+          },
+          "body": {
+            "handler": "Kevin's Aquarius Ascendant gives his visible style an inventive, pattern-breaking quality. He may meet situations sideways—observing first, trying an unusual response, or changing the expected sequence. Meanwhile, his strong Libra emphasis places identity, confidence, discipline, and deep trust inside the territory of relationship and fairness.\n\nThis combination explains why he can seem independent and deeply companionable at once. Give the Aquarius doorway room for a brief original response, then support the Libra core with clear, even-handed expectations. He is more cooperative when belonging does not require sameness.",
+            "direct_to_dog": "Your Aquarius rising likes to test the door before walking through it the usual way. Your Libra core keeps asking who is with you, whether the exchange is fair, and what the bond means. So yes, Kevin: you may improvise the opening and still care deeply about the ending.\n\nYou are not inconsistent. You are a social original. The mission is to keep your freedom curious rather than chaotic and your loyalty strong without making it heavy.",
+            "hybrid": "Aquarius rising supplies the surprise; Libra supplies the relationship intelligence. Kevin changes the route by three feet to examine a mystery, and his person gives that mystery a brief audience before inviting him onward. The compromise is small, but it carries the whole chart's lesson: individuality can live inside cooperation.\n\nEach successful return tells Kevin that the bond is flexible. Each fair boundary tells the human that flexibility does not require losing direction."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "A Pattern-Breaking Ascendant Anchored by Deep Libra Trust",
+            "direct_to_dog": "You Carry Freedom and Belonging in the Same Harness",
+            "hybrid": "The Exact Opposition That Becomes a Partnership Practice"
+          },
+          "body": {
+            "handler": "Kevin's Aquarius ASC describes a first response that is independent, experimental, and visibly unlike the standard script. Uranus in Scorpio squares both the ASC and Leo DSC, intensifying the tension between spontaneous investigation and the expectations of close partnership. The exact ASC–DSC opposition already makes self-presentation and one-to-one bonding a central axis; Uranus turns that axis into a live negotiation around novelty and freedom.\n\nAt the same time, Sun, Jupiter, Saturn, and Pluto gather in Libra in the eighth Doghouse. Identity, growth, structure, and intensity therefore converge around fairness, sharing, vulnerability, and deep trust. Jupiter conjunct Pluto enlarges emotional stakes, while Mars conjunct the Leo DSC fuses action with companion attention. Kevin's chart is not describing a detached eccentric. It describes an original social being whose strongest independence questions arise inside meaningful bonds. The practical response is dignified flexibility: permit investigation, keep agreements consistent, and make reunion part of the ritual.",
+            "direct_to_dog": "Your Aquarius Ascendant wants an unscripted first move. Uranus in Scorpio squares your ASC–DSC axis, so novelty can arrive like an urgent amendment to the social contract. But your Libra Sun, Jupiter, Saturn, and Pluto in the eighth Doghouse make trust, fairness, and shared stakes central to who you are.\n\nMars beside your Leo DSC means relationship often comes alive through action: a game, a display, a bold invitation. You are not choosing between being free and being loved. Your chart keeps teaching you to practice both at once—explore, signal, return, and discover that the bond remains.",
+            "hybrid": "Kevin's Aquarius ASC stands exactly opposite his Leo DSC, placing self-directed entry and vivid companionship across one axis. Mars conjunct the DSC adds action and play to the companion side, while Uranus squares both ends from Scorpio, supplying abrupt investigations and unconventional responses. The human experiences a dog who can seek attention wholeheartedly and then pivot toward a private mystery.\n\nThe deeper Libra eighth-Doghouse concentration supplies the reason this tension matters: Kevin is invested in trust. Their shared practice is therefore neither constant control nor unlimited improvisation. It is a repeatable sequence—notice the novelty, allow a bounded inquiry, cue reconnection, reward the return. Geometry becomes relationship craft."
+          }
+        }
+      },
+      "card2": {
+        "dos": [
+          "Create a consistent end-of-outing sequence: water, one easy cue, then five quiet minutes in a familiar place.",
+          "Alternate high-energy games with sniffing or slow searching rather than stacking arousing activities.",
+          "Give routine chores a visible role, such as carrying an approved object or going to a station while gear is prepared."
+        ],
+        "donts": [
+          "Do not assume physical arrival at home means his arousal has already arrived there too.",
+          "Do not fill every pause with another command; some pauses are how he processes the previous scene.",
+          "Do not offer endless novelty without a predictable finish and then fault him for staying activated."
+        ],
+        "funny_dog_quotes": [
+          "The walk is over when the final scent submits its report."
+        ],
+        "imperative_dog_quotes": [
+          "Close the expedition gently and officially."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's five-minute walk has an intermission, a subplot, and director's commentary."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin's Day Has Acts, Not Just Hours",
+            "direct_to_dog": "Every Expedition Needs a Base Camp",
+            "hybrid": "The Walk Continues After the Leash Comes Off"
+          },
+          "body": {
+            "handler": "Kevin may not experience a walk, meal, visitor, or training session as an isolated event. Each one has an opening scan, an investigative middle, a social question, and an aftereffect. He gathers atmosphere quickly, pursues details intensely, and often turns action into a shared performance. When the sequence ends clearly, he can settle. When it simply stops, some part of him may keep looking for the missing final scene.\n\nBuild days with contrast. Let a sniff-rich outing contain choices, then mark its conclusion with water, a simple cue, and a familiar resting place. Pair energetic play with a low-key transition rather than another demand. Kevin's life becomes smoother when curiosity has permission, activity has purpose, and recovery has a recognizable address.",
+            "direct_to_dog": "You begin by reading the room, Kevin. Then you read the ground. Then, because scholarship should be shared, you involve a human. Your days are richest when there is something to discover and someone to report to.\n\nBut even the chief investigator needs an ending. A drink, a mat, a chew, a slow exhale—these tell your whole system that the case may close for now. Rest is not surrender. It is where tomorrow's excellent ideas charge.",
+            "hybrid": "Outside, Kevin's person sees the route. Kevin sees layers: scent, motion, mood, possibility, audience. Back home, the person may think the activity is finished while Kevin is still carrying its momentum through the hallway.\n\nTheir best routine includes a bridge. The human lowers pace, repeats the same closing cues, and gives Kevin a simple settling job. Kevin learns that returning home is not an abrupt loss of the world; it is the final movement of the outing. Both arrive together."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Sagittarius Adventure, Scorpio Investigation, Pisces Sensitivity",
+            "direct_to_dog": "You Travel Far, Even on a Neighborhood Block",
+            "hybrid": "One Holds the Map; One Reads the Weather"
+          },
+          "body": {
+            "handler": "Kevin's Sagittarius Venus and Neptune favor exploration, novelty, and an open horizon. Mercury and Uranus in Scorpio add depth: he does not merely notice; he investigates. A Pisces Moon increases sensitivity to atmosphere, so the same dog who charges toward possibility may also carry the emotional weather home.\n\nDaily rhythm should honor all three. Offer genuine exploration, let him examine selected details, and create predictable downshifts. The chart suggests that a good life is not nonstop stimulation; it is meaningful movement followed by enough quiet for a porous system to settle.",
+            "direct_to_dog": "Sagittarius in you calls the corner an expedition. Scorpio makes one mailbox worthy of forensic attention. Your Pisces Moon notices the wind, the voices, and the mood behind the voices. No wonder a short outing can become a large internal journey.\n\nYour rhythm works when the world opens and then gently closes: explore, investigate, connect, return, soften.",
+            "hybrid": "Kevin's Sagittarius side widens the walk, his Scorpio side deepens it, and his Pisces Moon absorbs the atmosphere around it. His person provides the practical frame: where they go, when they turn, how they come down.\n\nNeither contribution is decorative. Kevin brings richness; the human brings shape. Together they turn routine into adventure without letting adventure consume the whole evening."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "A Daily Circuit From Porous Moon to Performative Mars",
+            "direct_to_dog": "Your Chart Runs on Openings and Landings",
+            "hybrid": "The Household Becomes a Sequence Kevin Can Trust"
+          },
+          "body": {
+            "handler": "Kevin's Pisces Moon in the first Doghouse makes comfort and regulation bodily, visible, and atmosphere-sensitive. Neptune in Sagittarius in the tenth Doghouse carries imagination into his visible pack role, while Venus in Sagittarius in the ninth Doghouse links pleasure and bonding with adventure territory. Mercury and Uranus in Scorpio add concentrated investigation, and Mars in Leo in the sixth Doghouse channels action through training, routine, and care.\n\nSeveral flowing aspects help these systems cooperate: Neptune trines Mars and the DSC, and sextiles Jupiter, while Pluto trines the ASC and sextiles Mars. Yet squares involving Uranus, the ASC–DSC axis, and Mars mean novelty can disrupt the sequence. Daily life benefits from explicit phase changes. Use a start cue, a bounded exploration period, a social task, and a consistent closing ritual. That structure lets the trines become usable habits instead of leaving sensitive energy open-ended.",
+            "direct_to_dog": "Your Pisces Moon receives the atmosphere through your whole body. Sagittarius Venus and Neptune want a larger world; Scorpio Mercury and Uranus want the hidden detail; Leo Mars in the sixth Doghouse wants action to become a visible job. You are a complete daily circuit, Kevin, not a single speed.\n\nThe trines help imagination flow into play and partnership. The squares make novelty capable of changing the program mid-scene. Your growth is rhythmic: begin clearly, investigate well, perform the useful action, and accept the gentle landing.",
+            "hybrid": "A Pisces first-Doghouse Moon means Kevin's regulation shows up in posture, pace, and presence. Mars in Leo in the sixth makes routine active and relational; Neptune in Sagittarius in the tenth sends atmosphere and imagination into public participation. The human therefore cannot manage only the task. They also manage the transition between tasks.\n\nWhen the pair uses repeated thresholds—leash on, permission to sniff, check-in, home, water, mat—the chart's flowing channels gain form. Kevin contributes sensitivity and adventurous engagement. His person supplies punctuation. The day stops feeling like a string of interruptions and becomes a story with chapters."
+          }
+        }
+      },
+      "card3": {
+        "dos": [
+          "Offer bounded choices—two approved toys, two walking directions, or two station locations—before he invents a third option.",
+          "Keep one low-traffic resting area predictable and protect it from unnecessary interruption.",
+          "Schedule brief scent searches or “find it” tasks that end with an obvious success and release cue."
+        ],
+        "donts": [
+          "Do not respond to every restless moment by adding more speed or distance; first test whether he needs a downshift.",
+          "Do not change access rules casually between family members and expect him to understand the hidden exception.",
+          "Do not remove all choice in the name of consistency; consistency can define the menu without choosing every bite."
+        ],
+        "funny_dog_quotes": [
+          "I accept boundaries, provided they include visiting hours for the shrubbery."
+        ],
+        "imperative_dog_quotes": [
+          "Build the return path before opening the gate."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin does not need unlimited freedom; he needs freedom with office hours."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Give Him an Anchor, a Gate, a Laboratory, and a Stage",
+            "direct_to_dog": "Your Curiosity Deserves a Job Description",
+            "hybrid": "Security Is the Frame Around Freedom"
+          },
+          "body": {
+            "handler": "Kevin needs an anchor: a relationship whose rules and warmth remain dependable. He needs a gate: boundaries that clearly show when access opens and closes. He needs a laboratory: approved chances to sniff, search, compare, and solve. And he needs a stage: small roles through which his energy becomes useful and socially acknowledged.\n\nMissing one piece can distort the others. Without an anchor, attention-seeking may become urgent. Without a gate, curiosity can sprawl. Without a laboratory, he invents research. Without a stage, ordinary care may feel like something done around him instead of with him. Meet these needs in modest, repeatable ways; Kevin is likely to value coherence more than extravagance.",
+            "direct_to_dog": "You need to know where home is in a person, Kevin. You also need the dignity of a little choice: which direction to sniff, which toy to bring, where to settle within the allowed area. Your mind likes evidence, and your heart likes dependable terms.\n\nGive you a search, a role, and a clean finish, and much of your dramatic administration becomes unnecessary. Not all of it, obviously. Standards must be maintained.",
+            "hybrid": "The human sets the perimeter; Kevin animates the space inside it. A gate means “not now,” but a sniff cue means “yes, here.” A mat creates stillness, but a search game gives investigation somewhere to go. Attention is warm, yet not available only after escalation.\n\nThis reciprocity matters. Kevin learns that limits are information, not rejection. His person learns that choice is not loss of authority. The household becomes easier because both can predict how freedom begins and ends."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Pisces Moon Needs Grounding; Aquarius Rising Needs Choice",
+            "direct_to_dog": "Soft Landing, Clear Edges, Excellent Assignment",
+            "hybrid": "The Rule Holds; the Dog Still Gets a Vote"
+          },
+          "body": {
+            "handler": "Kevin's Pisces Moon points to a sensitive regulation system that benefits from calm sensory anchors. Aquarius rising and strong Uranian tension favor autonomy, novelty, and unconventional response. His Libra concentration needs fairness and stable relationship terms, while Mars in Leo wants active participation.\n\nCare should combine these instead of choosing one. Use a quiet den, consistent boundaries, real choice within safe options, and visible jobs. He is not asking for either softness or discipline. He needs grounded sensitivity and respectful structure together.",
+            "direct_to_dog": "Your Pisces Moon needs the room to become calm enough for your body to believe it. Your Aquarius doorway needs some say in how you enter. Your Libra planets need fair terms. Your Leo Mars would appreciate a role with appropriate ceremony.\n\nSo the recipe is not mysterious: steady person, clear boundary, interesting task, graceful exit.",
+            "hybrid": "Kevin's Aquarius and Uranus signatures ask for agency, while his Libra trust pattern asks for dependable agreements. His person can answer both by offering structured choices: two routes, two toys, one designated sniff zone, one clear station.\n\nThe Pisces Moon receives the calm tone and repeated ritual; Leo Mars receives the chance to participate. The dog gets dignity. The human keeps the frame. Cooperation becomes less of a contest."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Care for the Whole Axis: Moon, ASC–DSC, Sixth House, and Eighth House",
+            "direct_to_dog": "Your Needs Are a System, Not a Demand List",
+            "hybrid": "A Household Designed for Return"
+          },
+          "body": {
+            "handler": "Kevin's care needs emerge from several linked systems. The Pisces Moon in the first Doghouse makes regulation embodied and atmosphere-sensitive. Aquarius ASC opposite Leo DSC creates an exact self–companion axis, while Uranus squares both ends, requiring usable outlets for autonomy and novelty. Mars conjunct the DSC in Leo and placed in the sixth Doghouse ties action, attention, and daily care together. Sun, Jupiter, Saturn, and Pluto in Libra in the eighth Doghouse make fairness, boundaries, shared resources, and deep trust structurally important.\n\nTranslate that geometry into infrastructure. Provide a low-stimulation resting base; establish stable rules around access; use permission cues for investigation; include choice inside training; and give action a household purpose. Because Saturn quincunxes the Moon, rules may need small recalibrations to become regulating rather than merely restrictive. Because Neptune trines Mars and the DSC, gentle imagination—searches, pattern games, ritualized roles—can connect sensitivity to cooperation.",
+            "direct_to_dog": "Your Pisces Moon needs a bodily sense of safety. Your Aquarius ASC needs an honest first response, and Uranus squaring the ASC–DSC axis needs novelty to have a legal outlet. Mars beside the Leo DSC wants action with a companion. The Libra eighth-Doghouse gathering needs fair, reliable terms around closeness and limits.\n\nWhen all of these are honored together, Kevin, you do not have to choose between being soothed, engaged, trusted, and free. The care plan can hold the whole dog.",
+            "hybrid": "The chart's central oppositions and squares do not ask Kevin's person to eliminate tension; they ask for a reliable way through it. A Uranian impulse may pull him toward the new thing while the Leo DSC and Mars pull him toward visible companionship. The Pisces Moon absorbs the handler's state, and the Libra eighth-house planets evaluate the fairness of the exchange.\n\nA practical ritual integrates them: name the boundary, offer one permitted option, complete a shared task, and return to a calm base. Repetition teaches Kevin that every opening has a route home. It teaches the human that security can be designed rather than demanded."
+          }
+        }
+      },
+      "card4": {
+        "dos": [
+          "Measure progress by recovery time, response at workable distance, and ability to resume—not by never noticing the trigger.",
+          "Practice one reorientation cue in easy environments before using it around major novelty.",
+          "Increase difficulty one variable at a time: distance, duration, movement, or social intensity."
+        ],
+        "donts": [
+          "Do not punish the first look toward something new; train what he does after the look.",
+          "Do not repeat a cue louder when his body is over threshold; change distance or simplify the task.",
+          "Do not call progress a failure because his personality remains vivid."
+        ],
+        "funny_dog_quotes": [
+          "Personal growth, yes. Personal blandness, absolutely not."
+        ],
+        "imperative_dog_quotes": [
+          "Reward the return, not the disappearance of curiosity."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's character arc includes character, which he has declined to remove."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Do Not Train Out the Spark; Train the Landing",
+            "direct_to_dog": "Keep the Plot Twist; Learn the Final Line",
+            "hybrid": "Progress Is a Shorter Distance Back to Each Other"
+          },
+          "body": {
+            "handler": "Kevin's growth is not a march toward bland predictability. The useful goal is that his curiosity becomes easier to steer, his excitement easier to complete, and his relationship bids easier to read. A mature response may still begin with a dramatic double take. The difference is that he can take in information, choose a known action, and come back into contact.\n\nPractice in small doses. Introduce a manageable novelty at enough distance for thinking, cue one familiar behavior, reward orientation, and leave before repetition becomes strain. Track recovery time rather than demanding instant neutrality. Kevin grows when originality gains brakes, trust gains flexibility, and the pair can repair a disrupted moment without turning it into a referendum on character.",
+            "direct_to_dog": "You do not need to stop noticing everything, Kevin. Your noticing is one of your gifts. The next skill is deciding what happens after the notice. Can you look, breathe, hear your cue, and choose the action that brings everyone back into the same scene?\n\nEach return makes you more capable, not less yourself. The world stays interesting. You simply become better at carrying your interest without being carried away by it.",
+            "hybrid": "A surprise happens. Kevin turns toward it; the human feels the leash change. Old versions of the moment might have escalated into competing agendas. The growing version contains a pause. The person lowers pressure, uses a practiced cue, and rewards the smallest honest reorientation. Kevin returns without being dragged away from his own perception.\n\nThat is the metric: not no disruption, but a cleaner repair. Their shared skill becomes the ability to lose the thread briefly and find it again."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Uranian Surprise Can Become Libra Coordination",
+            "direct_to_dog": "Your Surprise Response Has Somewhere to Go",
+            "hybrid": "Rehearsing the Bridge Between Novelty and Trust"
+          },
+          "body": {
+            "handler": "Uranus strongly challenges Kevin's ASC–DSC axis, so novelty and relationship expectations can collide quickly. Yet his chart also contains many trines and sextiles connecting trust, action, imagination, confidence, and companionship. Libra emphasis adds a natural concern with balance and cooperation.\n\nDevelopment comes from practicing those supportive routes. Let him notice; then cue a simple action that reconnects him. Reward recovery, not only perfect prevention. Over time, the Uranian spark becomes adaptable intelligence rather than repeated derailment.",
+            "direct_to_dog": "Uranus gives you the lightning turn toward the unexpected. Libra gives you the ability to coordinate with a partner. Your chart's flowing connections mean the path between intensity and useful action can be strengthened.\n\nYou grow each time the flash becomes a choice: look, check in, do the known thing, continue with dignity.",
+            "hybrid": "Kevin supplies the live stimulus test; his person supplies a repeatable bridge. Uranian novelty activates the body, and Libra relationship intelligence offers a route back through fairness and familiar cooperation.\n\nThe pair rehearses below threshold, then gradually in richer settings. They celebrate the return as its own achievement. The dog keeps his alert originality; the human gains confidence in the repair process."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Use the Trines to Train the Squares",
+            "direct_to_dog": "Your Hard Aspects Are Not Dead Ends",
+            "hybrid": "From Aspect Geometry to a Repair Ritual"
+          },
+          "body": {
+            "handler": "Kevin's developmental map is unusually clear. Uranus in Scorpio squares the Aquarius ASC, Leo DSC, and Mars, making surprise, independence, and investigation capable of disrupting visible behavior, companionship, and action. Jupiter also squares the Part of Fortune, so expansive confidence does not always lead automatically to what feels most rewarding. Saturn quincunx the Pisces Moon shows that rules and regulation may require adjustment rather than simple repetition.\n\nBut the chart supplies bridges. Pluto trines the ASC and sextiles Mars; Neptune trines Mars and the DSC and sextiles Jupiter; Jupiter sextiles Mars and the DSC; Uranus trines the North Node; Venus trines the North Node. These aspects describe trainable coordination among deep trust, imagination, confidence, action, bonding, and development. Work from easy channels toward hard geometry: establish a calm cue in simple settings, pair it with movement or scent work, add novelty gradually, and reinforce the return. Growth is the increasing availability of the bridge under pressure.",
+            "direct_to_dog": "Uranus squares your ASC, DSC, and Mars, so the unexpected can light up your whole social-action system. Saturn's quincunx to your Pisces Moon means the rule may need translating before it feels regulating. Jupiter's square to the Part of Fortune means bigger is not always better.\n\nYet Pluto, Neptune, Jupiter, Venus, and the North Node form usable channels through trust, imagination, action, bonding, and practice. Kevin, your chart is full of bridges. Your work is to cross them often enough that they remain available when the weather changes.",
+            "hybrid": "When Uranus triggers the ASC–DSC–Mars configuration, Kevin can pivot from companion engagement to intense novelty in a breath. The handler's task is not to overpower the square. It is to recruit the supportive aspects: Neptune's trines favor a soft, imaginative cue; Jupiter's sextiles favor confident encouragement; Pluto's channels favor grounded trust; North Node links favor repetition as development.\n\nThey build a repair ritual with four parts: orient to the trigger, create enough space for choice, perform one known cooperative action, and release into a safe next step. As the ritual becomes familiar, the square still supplies energy, but it no longer owns the ending."
+          }
+        }
+      }
+    },
+    "same_code_control": {
+      "card1": {
+        "dos": [
+          "Acknowledge Kevin's unusual first move, then give him one clear, low-drama way to rejoin the household plan.",
+          "Use brief greeting rituals, choice-based cues, and shared play so independence has a cooperative outlet.",
+          "Reward the return to connection—not only the spectacular entrance that preceded it."
+        ],
+        "donts": [
+          "Do not treat every unconventional response as defiance or every flourish as a demand for unlimited attention.",
+          "Do not force instant sociability when a short inspection would help him orient.",
+          "Do not make closeness depend on Kevin abandoning his individuality."
+        ],
+        "funny_dog_quotes": [
+          "“I have entered the room. Please adjust the room to acknowledge this development.”"
+        ],
+        "imperative_dog_quotes": [
+          "Bring your strange idea, then bring it back to the team."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin does not make an entrance; he releases a limited-edition version of himself."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "The Golden Retriever Who Arrives as Himself",
+            "direct_to_dog": "Kevin, Your Entrance Has a Point of View",
+            "hybrid": "A Shared Room, Two Ways of Entering It"
+          },
+          "body": {
+            "handler": "Kevin has the social warmth to make an entrance and the individuality to refuse a predictable one. He may approach a room as though he has been invited to improve its atmosphere, then pause to investigate the arrangement before committing. With a favorite person, his attention becomes bright and theatrical: a look, a toy, a full-bodied presentation of the latest important development. The useful response is neither to flatten his odd moments nor to reward every interruption. Notice the intention underneath them. Give him a clear welcome, then offer a simple choice—settle beside you, bring the toy, or follow a known cue. He learns that being distinctive and being cooperative can occupy the same room.",
+            "direct_to_dog": "You do not merely enter a moment; you announce your interpretation of it. Sometimes that means a grand hello, sometimes a thoughtful pause, sometimes one beautifully unnecessary detour before you return to your person. You are allowed to be unusual. You are also capable of making your unusualness useful: notice, choose, and then come back when your companion asks. The best version of your brightness is not silence. It is a self-possessed dog who can make an entrance and still join the plan.",
+            "hybrid": "Kevin comes toward the household with a flourish, while his person is quietly trying to understand which version of the moment he has discovered. He may offer a greeting, a pause, and a sudden sideways idea in one sequence. When the human answers with calm interest instead of a tug-of-war, Kevin has somewhere to place his independence. A cue gives the scene a boundary; a playful acknowledgment gives it dignity. They are not choosing between freedom and closeness. They are practicing a relationship in which Kevin can bring his own angle and still return to the shared center."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Aquarius at the Door, Leo in the Greeting",
+            "direct_to_dog": "Your Strange Little Route Still Leads to Someone",
+            "hybrid": "The Unusual Greeting Becomes a Conversation"
+          },
+          "body": {
+            "handler": "Kevin's Aquarius Ascendant gives his first response an unconventional, pattern-breaking quality, while his Leo Descendant makes one-to-one connection vivid and expressive. That combination can look like a dog who approaches differently from expectation but wants the resulting encounter to matter. Let him inspect or improvise briefly, then invite a recognizable social action: eye contact, a greeting cue, or a toy exchange. Structure protects the bond without making the bond dull.",
+            "direct_to_dog": "Your Aquarius rising side may take the unexpected path, but your Leo relationship side wants a real exchange at the end of it. You can be original without disappearing into the detour. Explore the odd detail, then offer your person the grand thing you were really carrying: attention, affection, or an invitation to play.",
+            "hybrid": "Aquarius on Kevin's Ascendant meets Leo on the Descendant as a recognizable social rhythm: he brings an unconventional first move, and the close companion answers with warmth and visibility. The handler can honor the first move while shaping the next one. A pause, a cue, and a shared game turn difference into dialogue rather than friction."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Kevin's Chart Makes Room for a Dramatic Original",
+            "direct_to_dog": "Kevin, Be Original—and Come Back for the Applause",
+            "hybrid": "The Dog Who Brings the Unexpected Move to a Two-Way Bond"
+          },
+          "body": {
+            "handler": "The exact Aquarius Ascendant–Leo Descendant opposition places Kevin's visible approach and one-to-one bond across a strong freedom-and-connection axis. His Aquarius Ascendant can meet the world through pattern-breaking, independent responses; the Leo Descendant seeks a close counterpart who makes interaction lively and personal. Mars in Leo sits close to the Descendant, so action and display readily enter relationship. Pluto in Libra trines the Ascendant and sextiles the Descendant, adding a quietly intense capacity to deepen trust through fair, practiced exchange. In daily life, let the unusual first move exist, then channel the encounter into a clear reciprocal ritual.",
+            "direct_to_dog": "Your exact Aquarius Ascendant opposite Leo Descendant says that meeting the world and meeting a companion are never entirely separate jobs. You may arrive through the side door of an idea, a surprise, or an independent inspection, yet your Leo relationship signature wants the close encounter to feel alive. Mars beside that Descendant gives your greetings paws and momentum. Pluto's supportive Libra links help you turn intensity into trust when the exchange is fair. Keep your originality; practice the return.",
+            "hybrid": "Kevin's Aquarius Ascendant and Leo Descendant oppose at an exact degree, while Mars joins the Leo side: his independent first response and his expressive companion instinct can activate together. Pluto in Libra supports both ends by trine to the Ascendant and sextile to the Descendant, making trust a workable bridge rather than an abstract ideal. The human receives the surprising entrance, names the next cue, and joins the play. Kevin learns that a bond can contain a detour without losing its direction."
+          }
+        }
+      },
+      "card2": {
+        "dos": [
+          "Give active periods a clear finish with water, a settle cue, and a familiar resting place.",
+          "Vary walks and games while preserving a few dependable transition rituals.",
+          "Include both social participation and quiet sensory decompression in the daily plan."
+        ],
+        "donts": [
+          "Do not assume more stimulation will automatically produce better settling.",
+          "Do not erase every interesting detour in the name of efficiency.",
+          "Do not judge the whole rhythm by one energetic episode."
+        ],
+        "funny_dog_quotes": [
+          "“The perimeter has changed by approximately one leaf. I will be filing a report.”"
+        ],
+        "imperative_dog_quotes": [
+          "Inspect the world, then let the world be quiet for a while."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's daily planner has three appointments: Adventure, Important Sniff, and Recovery from Adventure."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin's Day Is a Loop with Paws on It",
+            "direct_to_dog": "Your Day Has a Return Address",
+            "hybrid": "The Expedition Ends Where the Family Is"
+          },
+          "body": {
+            "handler": "Kevin tends to live outward and back again. He checks the household, notices what has changed, seeks a person or a game, follows the interesting thread, and eventually needs a familiar place where his body can come down. The sequence may look like restlessness if each event is viewed alone. Viewed together, it is a workable rhythm of participation. Build days with a beginning and an ending to activity: a sniffing walk followed by water and quiet, a short training game followed by a settle, a social burst followed by room to decompress. He does not need every minute filled. He needs his energy to have somewhere meaningful to go.",
+            "direct_to_dog": "You like to know what is happening, take part in it, and inspect at least one detail nobody else thought important. Then you need the familiar landing place: the person, corner, or quiet spell that tells your body the expedition is over. Your best days are not endless motion. They are good loops—out, in, play, settle, repeat when the moment truly calls for it.",
+            "hybrid": "Kevin's person may think the walk ended at the gate, but Kevin's version includes the final sniff, the water, the household check, and the settling ritual. The human supplies the dependable return; Kevin supplies the alert participation that makes an ordinary day feel inhabited. When both honor the whole sequence, activity stops being a negotiation. It becomes a shared rhythm with room for curiosity and quiet."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Sagittarius Neptune Day with a Libra-Jupiter Welcome",
+            "direct_to_dog": "You Explore the Feeling of the Whole Day",
+            "hybrid": "Adventure, Then the Familiar Door"
+          },
+          "body": {
+            "handler": "Neptune in Sagittarius gives Kevin an atmosphere-sensitive, adventure-facing way of moving through life, while Jupiter in Libra enlarges his appetite for shared possibility. He may absorb the feeling of a walk or gathering and become especially animated when exploration includes companionship. Make transitions explicit: announce the end of play, offer a familiar settling station, and keep adventures varied but not chaotic. His daily life flourishes when wonder has a reliable landing.",
+            "direct_to_dog": "Your Neptune in Sagittarius notices the mood and the far edge of the outing; Jupiter in Libra makes the best discoveries better when someone shares them. Go wide, Kevin, but remember the little ritual that brings you home. A drink, a pause, and your person's familiar voice are not interruptions to adventure. They are its safe punctuation.",
+            "hybrid": "Neptune in Sagittarius draws Kevin toward atmosphere and possibility, while Jupiter in Libra makes shared experience expansive. His handler can let a walk feel exploratory without letting its ending become vague. A consistent return ritual translates the adventure into rest, allowing both partners to enjoy the outing rather than merely survive its aftermath."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "The Chart of a Dog Who Needs Both Horizon and Home",
+            "direct_to_dog": "Kevin, Your Horizon Needs a Home Base",
+            "hybrid": "A Dog's Daily Orbit: Venture, Participate, Return"
+          },
+          "body": {
+            "handler": "Kevin's Neptune in Sagittarius in Doghouse 9 colors daily experience with atmosphere, imagination, and adventure territory; Jupiter in Libra in Doghouse 8 adds confidence and appetite for possibility within deep relational trust. The Sun, Mercury, Saturn, and Pluto also gather in Libra and Scorpio around Doghouse 8 themes, so exploration is not detached from belonging. The Moon in Pisces in Doghouse 1 makes body and mood permeable, while Mars in Leo in Doghouse 6 channels energy through routine care and training. Plan his life as a sequence of meaningful departures and dependable returns.",
+            "direct_to_dog": "Neptune in Sagittarius gives you a nose for the feeling of the far-off place, while Jupiter in Libra makes possibility sweeter when it is shared. Your Pisces Moon in the first house also lets the body's atmosphere matter: too much stimulation can linger. Mars in Leo in the sixth gives your energy a useful daily stage. Explore, perform, investigate—and then accept the ritual that tells your whole self the day has landed.",
+            "hybrid": "Kevin's Doghouse 9 Neptune reaches toward adventure, his Doghouse 8 Libra cluster makes trust and shared experience central, and Mars in Leo in Doghouse 6 wants energy translated into routine and care. The person who offers a steady ending is not shrinking his world; that ending lets him use the world well. Their day becomes an orbit: outward curiosity held by inward familiarity."
+          }
+        }
+      },
+      "card3": {
+        "dos": [
+          "Teach one or two settling sequences when Kevin is calm, then use them during manageable activation.",
+          "Give intense attention a constructive outlet such as searching, carrying, shaping, or a short practiced routine.",
+          "Keep household cues and boundaries predictable, while pairing effort with genuine recovery time."
+        ],
+        "donts": [
+          "Do not punish the feeling you want him to learn to regulate.",
+          "Do not pile on repeated commands when one clear cue and a pause would communicate more.",
+          "Do not mistake a cheerful appearance for proof that he needs no decompression."
+        ],
+        "funny_dog_quotes": [
+          "“I am calm. I have merely convened an emergency subcommittee about the calm.”"
+        ],
+        "imperative_dog_quotes": [
+          "Use the job, take the breath, and let the quiet count as success."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's emotional support plan has a policy manual, a review board, and one highly qualified golden retriever."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "What Kevin Is Asking For Beneath the Big Feeling",
+            "direct_to_dog": "You Do Not Have to Solve Every Feeling at Full Volume",
+            "hybrid": "A Clear Rule Can Be a Kind of Reassurance"
+          },
+          "body": {
+            "handler": "Kevin needs a dependable bridge between impulse and calm. When something catches him—an exciting game, a change in the room, a compelling scent, a person's attention—he may put his whole self behind it. That intensity is useful energy, but it needs edges. Keep cues consistent, practice them when he is already calm, and give the energy a job: carrying a toy, searching, learning a short sequence, or moving through a sniffing exercise. Then protect the landing. A quiet mat, a predictable voice, and a pause without demands teach him that regulation is something he can do, not something a human must impose.",
+            "direct_to_dog": "When a thing matters to you, it matters with your entire golden body. That is a strength, but it can make a small uncertainty feel like a meeting requiring immediate action. Your people can help by making the next step plain and giving your energy a proper assignment. Carry, search, practice, then rest. You are not being asked to care less; you are learning how to carry caring without letting it carry you away.",
+            "hybrid": "Kevin brings intensity; his person brings the shape of the next moment. If the human responds with scattered corrections, Kevin has more information but less clarity. If the human offers one familiar cue, a manageable outlet, and time to settle, the exchange becomes cooperative. His trust grows through repeated evidence that rules are not traps and that quiet does not mean disconnection."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "When Libra Trust Meets a Pisces Body",
+            "direct_to_dog": "Your Sensitive Body Can Learn a Steady Shape",
+            "hybrid": "Fairness Turns Intensity into Cooperation"
+          },
+          "body": {
+            "handler": "Kevin's strong Libra Doghouse 8 emphasis makes trust, fairness, and shared regulation central, while his Pisces Moon in Doghouse 1 suggests that emotional atmosphere can register quickly in his body and visible behavior. Saturn in Libra adds a need for durable, humane structure rather than arbitrary correction. Use the same cue and consequence across ordinary situations, pair effort with recovery, and lower household intensity when he is already full of feeling.",
+            "direct_to_dog": "Your Pisces Moon notices more than people always realize, and your Libra Saturn wants the rules of closeness to be fair. When the room feels large, take the small sequence: hear the cue, do the job, receive the calm. Trust does not require you to absorb everybody's mood. You can return to your own body and let a dependable routine hold the edges.",
+            "hybrid": "Kevin's Doghouse 8 Libra concentration joins trust with rules, while the Pisces Moon in his first house makes the emotional climate physically consequential. A handler who keeps instructions short and consequences consistent gives him something sturdier than reassurance alone. Over time, the dog supplies effort and the human supplies fair repetition; together they make regulation practicable."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Build Kevin a Bridge from Intensity to Ease",
+            "direct_to_dog": "Kevin, Let Trust Be a Skill You Can Use",
+            "hybrid": "The Human Holds the Rule; Kevin Learns the Release"
+          },
+          "body": {
+            "handler": "Kevin's Sun, Mercury, Saturn, Jupiter, and Pluto cluster across Libra and Scorpio Doghouse 8 themes: identity, signals, rules, confidence, and deep trust all converge where vulnerability and shared resources matter. His Pisces Moon in Doghouse 1 makes comfort and atmosphere part of his bodily presentation. Mars in Leo in Doghouse 6 can turn activation into trainable routine, while the chart's repeated trainable channels connect play and trust. Use brief, consistent rules, meaningful outlets, and deliberate decompression; intensity becomes coordination when the bridge is practiced.",
+            "direct_to_dog": "Your Libra-and-Scorpio Doghouse 8 emphasis gives trust weight: you notice signals, fairness, limits, possibility, and the depth beneath an exchange. Your Pisces Moon in Doghouse 1 may feel the atmosphere before anyone explains it. Mars in Leo in Doghouse 6 gives you a way forward—practice a sequence, perform a useful job, and let the body settle afterward. You do not need to become less intense. You need a trustworthy shape for intensity.",
+            "hybrid": "Kevin's Doghouse 8 cluster makes dependable trust a central need, and Saturn there asks for rules that endure. His Pisces Moon in Doghouse 1 means that emotional climate can show up as body state; Mars in Leo in Doghouse 6 offers a practical route through training and care. The handler gives one fair cue and waits without flooding the moment. Kevin performs, receives the release, and discovers that structure can carry him rather than contain him."
+          }
+        }
+      },
+      "card4": {
+        "dos": [
+          "Introduce novelty gradually and pair it with a behavior Kevin already knows well.",
+          "Mark the moment he reorients to you before inviting investigation, play, or movement.",
+          "Repeat the same recovery sequence across places so the skill generalizes without making every setting identical."
+        ],
+        "donts": [
+          "Do not flood him with novelty to test whether he can cope.",
+          "Do not demand instant composure from a dog whose first response is designed to notice change.",
+          "Do not confuse successful growth with the disappearance of his curiosity."
+        ],
+        "funny_dog_quotes": [
+          "“Excellent news: the mysterious object has been promoted to an entirely new category of sport.”"
+        ],
+        "imperative_dog_quotes": [
+          "Notice the surprise, find your person, and choose the next chapter."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin's research department has no grant funding, no closing hours, and a strict policy against leaving suspicious leaves unexamined."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin's Best Growth Is Organized Curiosity",
+            "direct_to_dog": "Keep the Spark; Learn the Next Move",
+            "hybrid": "A Surprise Becomes a Lesson When Someone Joins It"
+          },
+          "body": {
+            "handler": "Kevin is likely to notice the new thing first and react with his whole attention. Growth does not mean making him indifferent to novelty. It means giving that first spark a sequence: orient to the handler, pause long enough to receive information, choose a practiced response, and then investigate or play when invited. Start with small changes and generous repetition. A dog who learns that surprise can lead to a familiar job becomes more capable without losing the lively originality that makes him Kevin.",
+            "direct_to_dog": "You are allowed to be the first dog to discover the new thing. Your growing skill is what happens after discovery. Look toward your person, let the first wave pass through your paws, and choose the action you have practiced. Then go investigate with permission. You do not have to trade your curiosity for manners; you are learning to give curiosity a steering wheel.",
+            "hybrid": "Kevin sees the novelty and supplies the dramatic opening. His handler can either chase the excitement with corrections or join the moment by naming a known task. A pause, a hand target, a search cue, or a toy gives Kevin a route from surprise to participation. Each successful return changes the meaning of novelty: it is no longer a command to scatter, but an opportunity to choose together."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Uranus Finds a Path through the North Node",
+            "direct_to_dog": "Your Strange Discovery Can Lead You Home",
+            "hybrid": "Novelty Supplies the Question; Practice Supplies the Answer"
+          },
+          "body": {
+            "handler": "Kevin's Uranus in Scorpio trine North Node in Cancer suggests that unconventional reactions can become part of his developmental route when they are brought back toward security and relational learning. His North Node in Doghouse 6 favors growth through practiced care and useful routines. Let novelty appear in small doses, mark the pause, and reward a chosen response before allowing further exploration.",
+            "direct_to_dog": "Uranus in Scorpio gives you a powerful nose for the unusual, while your Cancer North Node asks you to grow through dependable care and belonging. The new thing may start the lesson; the familiar cue finishes it. Notice, turn toward your person, and let the next useful action be part of your adventure.",
+            "hybrid": "Kevin's Uranus–North Node trine supports a developmental pattern in which surprise can open learning rather than block it. The handler does not need to erase the unusual response. By pairing a new stimulus with a rehearsed pause and a security-building task, the human makes room for Kevin's independence while guiding it toward cooperation."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Let Kevin's Disruption Become a Developmental Door",
+            "direct_to_dog": "Kevin, Your First Idea Is Not Your Final Answer",
+            "hybrid": "The Handler Gives Surprise a Useful Second Act"
+          },
+          "body": {
+            "handler": "Uranus in Scorpio trines the North Node in Cancer with a tight orb, linking novelty, independence, and disruption to a growth direction organized around emotional security and useful care. The North Node in Doghouse 6 favors practice, routine, and serviceable skill. Uranus also squares the Aquarius Ascendant and Leo Descendant, so surprise can rub against both first response and close relationship. Train the bridge explicitly: notice the change, orient to the handler, pause, perform a known behavior, then explore. This preserves the spark while building choice.",
+            "direct_to_dog": "Your Scorpio Uranus notices what is hidden, strange, or newly changed, and your tight trine to the Cancer North Node says that discovery can help you grow toward secure, useful participation. Because Uranus also squares your Aquarius Ascendant and Leo Descendant, the surprise may arrive loudly in your body and your bonds. You can make it a strength: notice, look back, pause, do the practiced thing, and then investigate.",
+            "hybrid": "Kevin's tight Uranus–North Node trine makes novelty a plausible route into development, but the Uranus squares to both relationship angles explain why a new event can disrupt the social scene. The human's job is not to win against the disruption. It is to offer a known second act—orientation, pause, task, release. Kevin brings discovery; the handler supplies continuity; practice turns the collision into learning."
+          }
+        }
+      }
+    },
+    "phase1_candidate": {
+      "card1": {
+        "dos": [
+          "Acknowledge Kevin’s first observation with a look, word, or brief pause before asking for the next behavior.",
+          "Keep access, greeting, and attention rules consistent across the people who handle him.",
+          "Use a reliable check-in cue after short investigation breaks so independence ends in reconnection."
+        ],
+        "donts": [
+          "Do not call every unconventional response defiance before considering what caught his attention.",
+          "Do not make affection unpredictable in an attempt to force compliance.",
+          "Do not assume a friendly, expressive dog has casual feelings about trust."
+        ],
+        "funny_dog_quotes": [
+          "“I am not delaying the greeting. I am improving its editorial standards.”"
+        ],
+        "imperative_dog_quotes": [
+          "Notice the detour, then invite the reunion."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin joined the welcome committee, inspected the exits, and requested a chairmanship."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "The Dog With His Own Opening Line",
+            "direct_to_dog": "Kevin, You Arrive With Notes",
+            "hybrid": "A Detour With an Audience"
+          },
+          "body": {
+            "handler": "Kevin is unlikely to enter a moment as blank background scenery. He may notice the unclaimed corner, the changed smell, or the person who has not yet been properly included. Then he often turns that discovery into a social event. His originality is not a withdrawal from his people; it is his way of offering them a viewpoint.\n\nTreat the odd little pause as information before you redirect it. Kevin seems to thrive when a human can acknowledge his observation, keep the boundary clear, and invite him back into the shared plan. He is both a character and a companion, and neither role cancels the other.",
+            "direct_to_dog": "You do not merely come into a room, Kevin. You review its conditions. A misplaced shoe, a new breeze, a visitor standing at the edge of things: each may deserve your professional attention.\n\nBut your independence has a warm destination. You want your people to understand that your detour is often an invitation, not a disappearance. Keep bringing them your discoveries. The right humans will give you room to be unmistakable and still make sure you know exactly where you belong.",
+            "hybrid": "Kevin notices something peculiar; his person notices Kevin noticing it. That second notice is important. A brief look, a cheerful cue, and a little permission can turn a potential standoff into a shared joke.\n\nHe gets to investigate without becoming stranded in the investigation. The human gets a dog who feels seen without surrendering the day’s direction. Their partnership is roomy enough for Kevin’s plot twists and sturdy enough for his return."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Aquarius Entrance, Libra Heart",
+            "direct_to_dog": "Your Strange Route Leads Back to Us",
+            "hybrid": "Originality Meets Fair Play"
+          },
+          "body": {
+            "handler": "Kevin’s Aquarius Ascendant gives his visible style an inventive, sideways quality. He may meet the world by testing its edges first. Yet the Libra concentration around his identity, confidence, discipline, and deep trust points toward fairness and meaningful connection.\n\nThat is why he can be so distinctive without being detached. Let the Aquarius side have a bounded moment of originality, then use consistent, even-handed expectations to support the Libra need for reliable belonging. Kevin cooperates best when he does not have to become generic to be included.",
+            "direct_to_dog": "Aquarius rising gives you a preference for the unscripted entrance, Kevin. Your Libra heart keeps track of who is with you and whether the exchange feels fair. You can be the dog who investigates the side path and still care fiercely about the reunion.\n\nThere is no contradiction in that. You are a social original. Keep your curiosity bright, and let your people show you that good rules leave room for your particular style.",
+            "hybrid": "Kevin’s Aquarius rising supplies the unexpected approach; his Libra pattern seeks mutuality. His person can meet both by allowing a short inspection, then giving one clear invitation onward.\n\nThat small agreement says a great deal. Kevin learns that connection can flex without breaking. The human learns that structure need not flatten personality. Their leash becomes less a tug-of-war than a line of communication between a curious dog and a steady ally."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "An Aquarius Doorway With Deep Libra Stakes",
+            "direct_to_dog": "Freedom and Belonging Share Your Harness",
+            "hybrid": "The Axis That Teaches Partnership"
+          },
+          "body": {
+            "handler": "Kevin’s Aquarius ASC describes a first response that can be independent, experimental, and pleasantly off-script. Its exact opposition to the Leo DSC makes self-presentation and one-to-one partnership a central polarity. Mars conjunct the DSC adds expressive action and play to the relationship side, while Uranus in Scorpio squares both ends, making novelty capable of interrupting the expected social sequence.\n\nThe deeper motive is found in the Libra eighth-Doghouse gathering of Sun, Jupiter, Saturn, and Pluto: trust, fairness, shared terms, and emotional consequence matter greatly to him. Kevin is not a detached eccentric. He is an original dog whose biggest questions about freedom occur inside bonds that count. Give him dignified flexibility, dependable agreements, and a practiced route back to his person.",
+            "direct_to_dog": "Your Aquarius Ascendant wants an honest first move, Kevin, while the Leo DSC across from it wants vivid companionship. Mars beside that DSC can make play, action, and attention arrive together. Uranus squaring the axis may send you toward a sudden mystery before anyone has finished the original sentence.\n\nStill, your Libra Sun, Jupiter, Saturn, and Pluto in the eighth Doghouse make loyalty and fair exchange deeply important. You are allowed to be unusual and attached. Your practice is simple: notice, signal, explore within the agreement, and return to the bond that makes adventure worth having.",
+            "hybrid": "The exact Aquarius ASC–Leo DSC opposition puts Kevin’s self-directed approach opposite his desire for close, expressive companionship. Uranus squares the axis from Scorpio; Mars joins the DSC. His person may therefore meet a dog who pivots quickly from social engagement to an urgent private investigation.\n\nThe Libra eighth-house emphasis explains why the repair matters: Kevin takes trust seriously. A useful shared ritual is to acknowledge the novelty, allow a brief inquiry, cue reconnection, and warmly reward the return. The geometry does not demand a winner. It gives dog and human a relationship skill to practice."
+          }
+        }
+      },
+      "card2": {
+        "dos": [
+          "Use the same brief post-outing sequence: water, one easy cue, then a calm place to rest.",
+          "Follow highly arousing play with a sniff search, chew, or quiet decompression rather than another exciting demand.",
+          "Give routine moments a visible role, such as going to a station while equipment is prepared."
+        ],
+        "donts": [
+          "Do not assume the outing is over for Kevin merely because the leash is off.",
+          "Do not stack novelty upon novelty when his body is still carrying the previous event.",
+          "Do not fill every processing pause with commands."
+        ],
+        "funny_dog_quotes": [
+          "“The walk concludes after the final scent has submitted its report.”"
+        ],
+        "imperative_dog_quotes": [
+          "Close the expedition gently and officially."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin’s ten-minute walk includes an intermission, a subplot, and director’s commentary."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Kevin’s Day Runs in Chapters",
+            "direct_to_dog": "Chief Explorer, Please File Your Report",
+            "hybrid": "How They Get Home Together"
+          },
+          "body": {
+            "handler": "For Kevin, a walk may begin at the front door but it does not necessarily end there. He gathers scent, atmosphere, movement, and social information; a lively moment can keep echoing through his body after the leash is hung up. A sudden stop may leave him looking for the missing final page.\n\nBuild transitions into the day. After an outing, slow the pace, offer water, ask for one easy familiar behavior, and lead him to a known resting place. Alternate vigorous games with sniffing, searching, or quiet company. Kevin does not need every hour to be exciting. He needs his excitement to have a beginning, a middle, and a gentle finish.",
+            "direct_to_dog": "A block can contain several urgent developments, Kevin: the message on the fencepost, the leaves’ new arrangement, the neighbor’s mysterious schedule. Naturally, you cannot always close the case the instant the doorknob turns.\n\nA drink, a mat, a chew, a quiet minute near your person—these are not boring interruptions. They are your official debrief. You can let the expedition settle into you without having to keep reenacting it in the hallway. Tomorrow will provide fresh evidence.",
+            "hybrid": "Kevin’s person sees the route completed. Kevin may still be carrying the route in his nose, muscles, and imagination. Instead of arguing with that momentum, the human makes a bridge: slower steps, the same arrival cue, water, then a small settling job.\n\nKevin learns that coming home does not mean the interesting world vanished without warning. It means the adventure has reached its last scene. The human gets a calmer evening; Kevin gets an ending he can recognize."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "A Sensitive Explorer’s Daily Circuit",
+            "direct_to_dog": "The Neighborhood Is Never Just a Block",
+            "hybrid": "One Reads the Map, One Reads the Air"
+          },
+          "body": {
+            "handler": "Kevin’s Pisces Moon is receptive to atmosphere, while Sagittarius Venus and Neptune favor a larger, more adventurous horizon. Mercury and Uranus in Scorpio add concentrated investigation. He can therefore make a great deal out of an ordinary outing: he explores widely, studies deeply, and absorbs the surrounding mood.\n\nDaily life works best when it includes all three phases—room to roam or sniff, time to examine, and a predictable downshift. A good routine is not nonstop stimulation. It is an experience with enough shape that his sensitive system can put it down afterward.",
+            "direct_to_dog": "Sagittarius in you sees a horizon, Scorpio finds the hidden clue, and your Pisces Moon feels the weather around the clue. No wonder a short walk can become an interior voyage, Kevin.\n\nYou are happiest when your person lets the world open for a while and then helps it close softly. Explore well. Read the evidence. Return to your quiet corner with the satisfaction of a dog who has done thorough fieldwork.",
+            "hybrid": "Kevin’s Sagittarius and Scorpio signatures make the walk broad and deep; his Pisces Moon makes it emotionally textured. His person supplies the practical frame—where they go, when they turn, and how the pace comes down.\n\nTogether, they can make routine feel rich without letting richness spill across the entire evening. Kevin brings discovery. The human provides the commas and period."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "A Chart That Benefits From Clear Transitions",
+            "direct_to_dog": "You Need Openings and Landings",
+            "hybrid": "The Household Gives the Day Its Punctuation"
+          },
+          "body": {
+            "handler": "Kevin’s Pisces Moon in the first Doghouse makes regulation visible in body, pace, and atmosphere. Neptune in Sagittarius in the visible-pack-role domain and Venus in Sagittarius in adventure territory pull imagination, pleasure, and participation toward the wider world. Scorpio Mercury and Uranus add investigative intensity, while Mars in Leo in the sixth Doghouse makes action part of routine, training, and care.\n\nNeptune’s trines to Mars and the DSC help sensitivity flow into play and partnership, but Uranus squares the ASC–DSC axis and Mars, so novelty can abruptly change the program. Use explicit phases: a departure cue, a bounded exploration period, a check-in, and a familiar homecoming sequence. Kevin’s day becomes easier when his active systems are given both permission and closure.",
+            "direct_to_dog": "Your first-Doghouse Pisces Moon feels life in the body, Kevin. Sagittarius Venus and Neptune want a larger world; Scorpio Mercury and Uranus want to know what is hidden inside it. Leo Mars in the sixth Doghouse wants daily activity to be an actual job, preferably one with an appreciative audience.\n\nThe flowing aspects help your imagination become shared action. The Uranian squares can make the next surprise arrive before the last one has settled. Your rhythm is to begin clearly, investigate fully, do the useful thing, and accept a peaceful landing.",
+            "hybrid": "Kevin’s Moon receives atmosphere through his body, Mars in the sixth Doghouse turns routine into action, and Neptune in the tenth colors his public pack role with imagination. His person is therefore handling more than a schedule; they are shaping transitions between states.\n\nRepeated thresholds—leash on, permission to sniff, check-in, home, water, rest—give Kevin a sequence he can inhabit. He supplies engaged presence and adventurous detail. The human supplies form. Together they turn a day from scattered stimulus into a story with an ending."
+          }
+        }
+      },
+      "card3": {
+        "dos": [
+          "Protect one predictable, low-traffic resting area and let Kevin use it without unnecessary interruption.",
+          "Offer bounded choices, such as two approved toys or two walking directions, before he invents an unapproved option.",
+          "Schedule short scent searches or cooperative tasks that end with a clear success and release cue."
+        ],
+        "donts": [
+          "Do not answer every restless moment by adding speed, distance, or excitement.",
+          "Do not change access rules casually between handlers.",
+          "Do not remove every choice in the name of consistency."
+        ],
+        "funny_dog_quotes": [
+          "“I accept boundaries, provided the shrubbery has visiting hours.”"
+        ],
+        "imperative_dog_quotes": [
+          "Build the return path before opening the gate."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin does not need unlimited freedom; he needs freedom with clearly posted office hours."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "The Frame and the Freedom Inside It",
+            "direct_to_dog": "Your Curiosity Needs Good Office Hours",
+            "hybrid": "The Rule Holds, and Kevin Gets a Say"
+          },
+          "body": {
+            "handler": "Kevin appears to need four things that work best as one system: a reliable person, clear edges, legitimate investigation, and a role in the household action. A quiet resting place gives him somewhere to downshift. Consistent access rules prevent him from having to guess. Scent work, choices between approved options, and small cooperative jobs give his lively mind a place to go.\n\nThe point is not to make his life smaller. It is to make it legible. Offer two permitted toys, a designated sniff break, or a stationing task during preparation. Name when access is open and when it is closed. Kevin can meet limits with much more ease when limits arrive as useful information rather than unexplained loss.",
+            "direct_to_dog": "You need to know where comfort lives, Kevin, and you need a few legitimate ways to make decisions. Which approved toy? Which side of the path? Which search box first? These are small dignities, but they matter to a dog who notices so much.\n\nYou also deserve rules that do not drift from person to person. When the terms are clear, you can spend less time managing the administration and more time doing your important work: sniffing, participating, and being charmingly available for consultation.",
+            "hybrid": "The human closes the gate before opening the game. Kevin hears “not that yard,” then receives “find it here.” A mat is not exile when it comes with a predictable release; a boundary is not rejection when attention remains warm.\n\nThis is the exchange that serves them both. The person keeps safety and clarity. Kevin receives agency inside a dependable perimeter. Each successful choice teaches him that cooperation does not mean becoming passive."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Ground the Pisces Moon, Respect the Aquarius Doorway",
+            "direct_to_dog": "Soft Landing, Clear Edge, Fine Assignment",
+            "hybrid": "A Choice Menu, Not a Free-for-All"
+          },
+          "body": {
+            "handler": "Kevin’s Pisces Moon suggests a regulation style that benefits from calm sensory anchors and a low-pressure place to settle. Aquarius rising and Uranian tension favor novelty and an independent first response. His Libra emphasis makes fair, stable relationship terms important, while Leo Mars wants action to matter.\n\nCombine rather than choose between these needs. Provide a protected rest area, consistent boundaries, real choice among safe options, and visible jobs that include him in household life. Kevin is not asking for softness instead of structure. He is likely to need a structure gentle enough to feel safe and active enough to feel meaningful.",
+            "direct_to_dog": "Your Pisces Moon wants a body-level sense of ease. Aquarius rising wants an honest first response. Libra asks whether the terms are fair, and Leo Mars would like a job with proper ceremony.\n\nThat is not an impossible menu, Kevin. It is a good care plan: a steady person, an understandable boundary, a worthwhile task, and a calm place to finish. You can be soothed and engaged at the same time.",
+            "hybrid": "Kevin’s Aquarius and Uranus signatures favor agency, while his Libra trust pattern favors dependable agreements. His person can answer both with structured choices: two approved routes, two toys, one permitted sniff area, one clear station.\n\nThe Pisces Moon receives the calm tone and repetition. Leo Mars receives a chance to participate. Kevin gets a vote without having to write the entire constitution, and the human keeps the household intelligible."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Care for the Linked Moon, Axis, Sixth House, and Eighth House",
+            "direct_to_dog": "Your Needs Belong to One System",
+            "hybrid": "A Home Built for Safe Return"
+          },
+          "body": {
+            "handler": "Kevin’s needs are distributed across a connected chart. The Pisces Moon in the first Doghouse makes comfort embodied and atmosphere-sensitive. Aquarius ASC opposite Leo DSC creates an exact autonomy-and-companionship axis, with Uranus in Scorpio squaring both ends and requiring safe outlets for novelty. Mars conjunct the DSC and placed in the sixth Doghouse ties attention, action, and daily care together. Sun, Jupiter, Saturn, and Pluto in Libra in the eighth Doghouse give fairness, limits, sharing, and deep trust unusual importance.\n\nTranslate this into infrastructure: protect a low-stimulation base, keep rules stable, use permission cues for inquiry, include bounded choices in training, and give action a cooperative purpose. Saturn’s quincunx to the Moon means a rule may need adjustment before it becomes regulating. Neptune’s flowing aspects make gentle searches and ritualized tasks especially useful bridges.",
+            "direct_to_dog": "Your Pisces Moon needs bodily safety, Kevin. Your Aquarius ASC needs an authentic first response, and Uranus squaring the ASC–DSC axis needs novelty to have a lawful outlet. Mars beside the Leo DSC wants shared action. The Libra eighth-house gathering needs reliable, fair terms around closeness and limits.\n\nWhen your people honor the whole arrangement, you do not have to choose between comfort, engagement, dignity, and freedom. A thoughtful home can hold all of those needs at once.",
+            "hybrid": "Kevin’s chart does not ask his human to erase tension. Uranus may pull him toward a new stimulus while Mars and the Leo DSC pull him toward visible companionship; the Pisces Moon absorbs the emotional temperature, and the Libra eighth-house planets care about the fairness of the exchange.\n\nA useful ritual integrates the parts: state the boundary, offer one permitted option, complete a shared task, then return to the calm base. Kevin learns that limits contain a path forward. His person learns that security can be built through design, not demanded through pressure."
+          }
+        }
+      },
+      "card4": {
+        "dos": [
+          "Measure progress by recovery time, response at workable distance, and ability to resume after a surprise.",
+          "Practice one reorientation cue in easy settings before relying on it around bigger novelty.",
+          "Increase only one difficulty variable at a time: distance, duration, movement, or social intensity."
+        ],
+        "donts": [
+          "Do not punish Kevin for the first look toward something new; train the behavior that follows it.",
+          "Do not repeat a cue louder when his body is over threshold; create space or simplify instead.",
+          "Do not call growth a failure because Kevin remains vivid and curious."
+        ],
+        "funny_dog_quotes": [
+          "“Personal growth, yes. Personal blandness, no thank you.”"
+        ],
+        "imperative_dog_quotes": [
+          "Reward the return, not the disappearance of curiosity."
+        ],
+        "applicable_canine_jokes": [
+          "Kevin’s character arc includes character, which he has declined to remove."
+        ],
+        "no_astro": {
+          "headline": {
+            "handler": "Keep the Spark, Teach the Return",
+            "direct_to_dog": "Keep the Plot Twist; Learn the Ending",
+            "hybrid": "A Better Way Back to Each Other"
+          },
+          "body": {
+            "handler": "Kevin’s development does not require making him less alert, less interested, or less himself. The useful goal is a shorter, easier route from “I must examine that” to “I can hear you and choose what happens next.” A dramatic double take can remain part of his personality; recovery is the skill that changes its outcome.\n\nPractice well below the point of overwhelm. At a workable distance from something interesting, cue one familiar action, reward the smallest genuine reorientation, and leave while he can still succeed. Track how quickly he resumes rather than demanding he never react. Kevin grows when curiosity gains steering and the pair gets better at repairing a broken moment.",
+            "direct_to_dog": "You do not need to stop noticing everything, Kevin. Your noticing is one of your gifts. The next trick is deciding what comes after the notice: look, breathe, hear your person, choose a familiar action, and return to the shared scene.\n\nEvery honest return makes you more capable without making you less interesting. The world can remain full of excellent surprises. You simply become better at carrying your excitement instead of letting it carry you.",
+            "hybrid": "Something unexpected appears. Kevin turns; the human feels the change through the leash. Growth creates a pause where there used to be competing agendas. The person makes room, uses a rehearsed cue, and rewards the first sincere shift back.\n\nKevin is not dragged away from his perception. He is shown what to do with it. Their metric is not a perfectly uneventful walk. It is a cleaner repair and a shorter distance back to cooperation."
+          }
+        },
+        "light_astro": {
+          "headline": {
+            "handler": "Let Uranian Surprise Learn Libra Coordination",
+            "direct_to_dog": "Your Surprise Response Has a Bridge",
+            "hybrid": "Rehearsing Novelty Into Teamwork"
+          },
+          "body": {
+            "handler": "Uranus strongly challenges Kevin’s ASC–DSC axis, so novelty and relationship expectations can collide quickly. Yet his Libra emphasis favors balance and cooperation, and the chart contains many supportive connections among trust, action, imagination, confidence, and companionship.\n\nDevelopment comes from practicing those easier routes until they are available after a surprise. Let Kevin look; then ask for a simple reconnecting behavior and reward recovery. The Uranian spark need not become repeated derailment. With repetition, it can mature into flexible, responsive intelligence.",
+            "direct_to_dog": "Uranus gives you the quick turn toward the unexpected, Kevin. Libra gives you a way to coordinate with a partner. The helpful pathways in your chart say that intensity can travel somewhere useful.\n\nYour practice is to make the flash into a choice: notice, check in, do the known thing, and continue with your dignity intact. You are not being asked to dim your lightning—only to learn where it can safely land.",
+            "hybrid": "Kevin provides the real-time surprise; his person provides the bridge they have practiced in easier places. Uranian novelty activates the moment, while Libra cooperation offers a route back through familiar and fair exchange.\n\nThey begin with modest challenges, celebrate reorientation, and increase difficulty slowly. Kevin retains his bright alertness. His human gains confidence that the relationship has a usable answer when the plan changes."
+          }
+        },
+        "full_astro": {
+          "headline": {
+            "handler": "Train the Supportive Channels Before the Hard Geometry",
+            "direct_to_dog": "Your Difficult Aspects Have Exits",
+            "hybrid": "Aspect Geometry Becomes a Repair Ritual"
+          },
+          "body": {
+            "handler": "Uranus in Scorpio squares Kevin’s Aquarius ASC, Leo DSC, and Mars, so surprise and independence can disrupt visible behavior, companionship, and action in one swift sequence. Jupiter squares the Part of Fortune, suggesting that expansive enthusiasm does not always lead directly to what is settling or rewarding. Saturn quincunx the Pisces Moon shows that rules and regulation may need translation and adjustment.\n\nThe chart also supplies bridges: Pluto trines the ASC and sextiles Mars; Neptune trines Mars and the DSC and sextiles Jupiter; Uranus trines the North Node. These channels support practice linking trust, imagination, action, and development. Start with an easy cue in a simple setting, pair it with movement or scent work, add one challenge at a time, and reinforce the return. Growth is the bridge becoming available under more pressure.",
+            "direct_to_dog": "Uranus squares your ASC, DSC, and Mars, Kevin, so an unexpected event can light up your whole social-action system. Saturn’s quincunx to your Pisces Moon means a rule may need to be made kinder or clearer before your body can use it. Jupiter’s square to the Part of Fortune says that more excitement is not always the better reward.\n\nBut Pluto, Neptune, and the North Node offer workable routes through trust, imagination, action, and repeated practice. Your chart has bridges. Cross them often enough, and they will still be there when the weather changes.",
+            "hybrid": "When Uranus activates Kevin’s ASC–DSC–Mars pattern, he may swing from companion engagement toward an intense novelty in a breath. The human need not overpower that square. They can recruit the supportive aspects: Neptune’s trines through a soft imaginative cue, Pluto’s channels through grounded trust, and the Node connection through repetition.\n\nTheir repair ritual has four parts: acknowledge the trigger, create enough distance for a choice, perform one known cooperative action, and release into a safe next step. The square still supplies energy, but it no longer gets to decide the ending."
+          }
+        }
+      }
+    }
+  }
+}

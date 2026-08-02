@@ -1,0 +1,33 @@
+{
+  "schema_version": "semantic_basis.batch_run.v0.1",
+  "input_package": "C:\\tmp\\kevin-semantic-closure-batch-input",
+  "subject_filter": "kevin",
+  "subject_count": 1,
+  "status": "pass",
+  "subjects": [
+    {
+      "subject": "kevin",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\tmp\\kevin-semantic-closure-batch-input\\natal.kevin.woof.d2d.json",
+        "general": "C:\\tmp\\kevin-semantic-closure-batch-input\\natal.kevin.woof.general.json",
+        "handler": "C:\\tmp\\kevin-semantic-closure-batch-input\\natal.kevin.woof.handler.json",
+        "hybrid": "C:\\tmp\\kevin-semantic-closure-batch-input\\natal.kevin.woof.hybrid.json"
+      },
+      "candidate_count": 108,
+      "selected_count": 50,
+      "unselected_count": 58,
+      "synthesized_selected": 13,
+      "registry_unique_term_count": 47,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\semantic-basis-output\\kevin",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle\\kevin_6"
+      ]
+    }
+  ]
+}

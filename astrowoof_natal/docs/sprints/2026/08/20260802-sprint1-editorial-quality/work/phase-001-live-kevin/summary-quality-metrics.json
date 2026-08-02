@@ -1,0 +1,644 @@
+{
+  "word_counts": {
+    "historical_automated": {
+      "total": 2675,
+      "mean": 74.31,
+      "minimum": 53,
+      "maximum": 117,
+      "by_field": {
+        "card1.no_astro.body.handler": 117,
+        "card1.no_astro.body.direct_to_dog": 84,
+        "card1.no_astro.body.hybrid": 100,
+        "card1.light_astro.body.handler": 73,
+        "card1.light_astro.body.direct_to_dog": 54,
+        "card1.light_astro.body.hybrid": 56,
+        "card1.full_astro.body.handler": 103,
+        "card1.full_astro.body.direct_to_dog": 80,
+        "card1.full_astro.body.hybrid": 82,
+        "card2.no_astro.body.handler": 110,
+        "card2.no_astro.body.direct_to_dog": 65,
+        "card2.no_astro.body.hybrid": 66,
+        "card2.light_astro.body.handler": 73,
+        "card2.light_astro.body.direct_to_dog": 57,
+        "card2.light_astro.body.hybrid": 53,
+        "card2.full_astro.body.handler": 93,
+        "card2.full_astro.body.direct_to_dog": 74,
+        "card2.full_astro.body.hybrid": 63,
+        "card3.no_astro.body.handler": 104,
+        "card3.no_astro.body.direct_to_dog": 74,
+        "card3.no_astro.body.hybrid": 62,
+        "card3.light_astro.body.handler": 71,
+        "card3.light_astro.body.direct_to_dog": 63,
+        "card3.light_astro.body.hybrid": 56,
+        "card3.full_astro.body.handler": 84,
+        "card3.full_astro.body.direct_to_dog": 75,
+        "card3.full_astro.body.hybrid": 76,
+        "card4.no_astro.body.handler": 84,
+        "card4.no_astro.body.direct_to_dog": 64,
+        "card4.no_astro.body.hybrid": 68,
+        "card4.light_astro.body.handler": 62,
+        "card4.light_astro.body.direct_to_dog": 53,
+        "card4.light_astro.body.hybrid": 55,
+        "card4.full_astro.body.handler": 86,
+        "card4.full_astro.body.direct_to_dog": 69,
+        "card4.full_astro.body.hybrid": 66
+      }
+    },
+    "manual_reference": {
+      "total": 3367,
+      "mean": 93.53,
+      "minimum": 53,
+      "maximum": 156,
+      "by_field": {
+        "card1.no_astro.body.handler": 131,
+        "card1.no_astro.body.direct_to_dog": 90,
+        "card1.no_astro.body.hybrid": 96,
+        "card1.light_astro.body.handler": 90,
+        "card1.light_astro.body.direct_to_dog": 77,
+        "card1.light_astro.body.hybrid": 73,
+        "card1.full_astro.body.handler": 155,
+        "card1.full_astro.body.direct_to_dog": 99,
+        "card1.full_astro.body.hybrid": 110,
+        "card2.no_astro.body.handler": 123,
+        "card2.no_astro.body.direct_to_dog": 77,
+        "card2.no_astro.body.hybrid": 80,
+        "card2.light_astro.body.handler": 91,
+        "card2.light_astro.body.direct_to_dog": 57,
+        "card2.light_astro.body.hybrid": 60,
+        "card2.full_astro.body.handler": 146,
+        "card2.full_astro.body.direct_to_dog": 87,
+        "card2.full_astro.body.hybrid": 101,
+        "card3.no_astro.body.handler": 112,
+        "card3.no_astro.body.direct_to_dog": 72,
+        "card3.no_astro.body.hybrid": 79,
+        "card3.light_astro.body.handler": 82,
+        "card3.light_astro.body.direct_to_dog": 56,
+        "card3.light_astro.body.hybrid": 69,
+        "card3.full_astro.body.handler": 151,
+        "card3.full_astro.body.direct_to_dog": 83,
+        "card3.full_astro.body.hybrid": 106,
+        "card4.no_astro.body.handler": 119,
+        "card4.no_astro.body.direct_to_dog": 72,
+        "card4.no_astro.body.hybrid": 80,
+        "card4.light_astro.body.handler": 77,
+        "card4.light_astro.body.direct_to_dog": 53,
+        "card4.light_astro.body.hybrid": 62,
+        "card4.full_astro.body.handler": 156,
+        "card4.full_astro.body.direct_to_dog": 89,
+        "card4.full_astro.body.hybrid": 106
+      }
+    },
+    "phase1_candidate": {
+      "total": 3244,
+      "mean": 90.11,
+      "minimum": 61,
+      "maximum": 138,
+      "by_field": {
+        "card1.no_astro.body.handler": 106,
+        "card1.no_astro.body.direct_to_dog": 81,
+        "card1.no_astro.body.hybrid": 72,
+        "card1.light_astro.body.handler": 88,
+        "card1.light_astro.body.direct_to_dog": 74,
+        "card1.light_astro.body.hybrid": 73,
+        "card1.full_astro.body.handler": 126,
+        "card1.full_astro.body.direct_to_dog": 96,
+        "card1.full_astro.body.hybrid": 98,
+        "card2.no_astro.body.handler": 111,
+        "card2.no_astro.body.direct_to_dog": 77,
+        "card2.no_astro.body.hybrid": 78,
+        "card2.light_astro.body.handler": 93,
+        "card2.light_astro.body.direct_to_dog": 72,
+        "card2.light_astro.body.hybrid": 61,
+        "card2.full_astro.body.handler": 125,
+        "card2.full_astro.body.direct_to_dog": 92,
+        "card2.full_astro.body.hybrid": 87,
+        "card3.no_astro.body.handler": 119,
+        "card3.no_astro.body.direct_to_dog": 84,
+        "card3.no_astro.body.hybrid": 73,
+        "card3.light_astro.body.handler": 103,
+        "card3.light_astro.body.direct_to_dog": 72,
+        "card3.light_astro.body.hybrid": 69,
+        "card3.full_astro.body.handler": 138,
+        "card3.full_astro.body.direct_to_dog": 80,
+        "card3.full_astro.body.hybrid": 94,
+        "card4.no_astro.body.handler": 112,
+        "card4.no_astro.body.direct_to_dog": 75,
+        "card4.no_astro.body.hybrid": 75,
+        "card4.light_astro.body.handler": 81,
+        "card4.light_astro.body.direct_to_dog": 73,
+        "card4.light_astro.body.hybrid": 65,
+        "card4.full_astro.body.handler": 133,
+        "card4.full_astro.body.direct_to_dog": 95,
+        "card4.full_astro.body.hybrid": 93
+      }
+    }
+  },
+  "candidate_similarity": {
+    "historical_automated": {
+      "mean": 0.1888,
+      "maximum": 0.6747,
+      "maximum_path": "card1.light_astro.headline.direct_to_dog",
+      "by_field": {
+        "card1.no_astro.headline.handler": 0.3421,
+        "card1.no_astro.headline.direct_to_dog": 0.5588,
+        "card1.no_astro.headline.hybrid": 0.254,
+        "card1.no_astro.body.handler": 0.0274,
+        "card1.no_astro.body.direct_to_dog": 0.0492,
+        "card1.no_astro.body.hybrid": 0.0311,
+        "card1.light_astro.headline.handler": 0.507,
+        "card1.light_astro.headline.direct_to_dog": 0.6747,
+        "card1.light_astro.headline.hybrid": 0.3143,
+        "card1.light_astro.body.handler": 0.1354,
+        "card1.light_astro.body.direct_to_dog": 0.0482,
+        "card1.light_astro.body.hybrid": 0.0576,
+        "card1.full_astro.headline.handler": 0.2,
+        "card1.full_astro.headline.direct_to_dog": 0.2921,
+        "card1.full_astro.headline.hybrid": 0.3146,
+        "card1.full_astro.body.handler": 0.0321,
+        "card1.full_astro.body.direct_to_dog": 0.0575,
+        "card1.full_astro.body.hybrid": 0.069,
+        "card2.no_astro.headline.handler": 0.5231,
+        "card2.no_astro.headline.direct_to_dog": 0.2353,
+        "card2.no_astro.headline.hybrid": 0.3692,
+        "card2.no_astro.body.handler": 0.0252,
+        "card2.no_astro.body.direct_to_dog": 0.0213,
+        "card2.no_astro.body.hybrid": 0.0636,
+        "card2.light_astro.headline.handler": 0.3556,
+        "card2.light_astro.headline.direct_to_dog": 0.2821,
+        "card2.light_astro.headline.hybrid": 0.3478,
+        "card2.light_astro.body.handler": 0.0262,
+        "card2.light_astro.body.direct_to_dog": 0.0617,
+        "card2.light_astro.body.hybrid": 0.0375,
+        "card2.full_astro.headline.handler": 0.3191,
+        "card2.full_astro.headline.direct_to_dog": 0.4179,
+        "card2.full_astro.headline.hybrid": 0.3261,
+        "card2.full_astro.body.handler": 0.0258,
+        "card2.full_astro.body.direct_to_dog": 0.0614,
+        "card2.full_astro.body.hybrid": 0.0301,
+        "card3.no_astro.headline.handler": 0.3614,
+        "card3.no_astro.headline.direct_to_dog": 0.2418,
+        "card3.no_astro.headline.hybrid": 0.3896,
+        "card3.no_astro.body.handler": 0.0244,
+        "card3.no_astro.body.direct_to_dog": 0.0263,
+        "card3.no_astro.body.hybrid": 0.0526,
+        "card3.light_astro.headline.handler": 0.2727,
+        "card3.light_astro.headline.direct_to_dog": 0.2353,
+        "card3.light_astro.headline.hybrid": 0.1351,
+        "card3.light_astro.body.handler": 0.0374,
+        "card3.light_astro.body.direct_to_dog": 0.0728,
+        "card3.light_astro.body.hybrid": 0.0353,
+        "card3.full_astro.headline.handler": 0.2115,
+        "card3.full_astro.headline.direct_to_dog": 0.1429,
+        "card3.full_astro.headline.hybrid": 0.3077,
+        "card3.full_astro.body.handler": 0.0477,
+        "card3.full_astro.body.direct_to_dog": 0.0539,
+        "card3.full_astro.body.hybrid": 0.049,
+        "card4.no_astro.headline.handler": 0.2703,
+        "card4.no_astro.headline.direct_to_dog": 0.5833,
+        "card4.no_astro.headline.hybrid": 0.225,
+        "card4.no_astro.body.handler": 0.0218,
+        "card4.no_astro.body.direct_to_dog": 0.0342,
+        "card4.no_astro.body.hybrid": 0.0604,
+        "card4.light_astro.headline.handler": 0.2989,
+        "card4.light_astro.headline.direct_to_dog": 0.4267,
+        "card4.light_astro.headline.hybrid": 0.3077,
+        "card4.light_astro.body.handler": 0.0242,
+        "card4.light_astro.body.direct_to_dog": 0.0646,
+        "card4.light_astro.body.hybrid": 0.0254,
+        "card4.full_astro.headline.handler": 0.3077,
+        "card4.full_astro.headline.direct_to_dog": 0.325,
+        "card4.full_astro.headline.hybrid": 0.2588,
+        "card4.full_astro.body.handler": 0.0704,
+        "card4.full_astro.body.direct_to_dog": 0.0551,
+        "card4.full_astro.body.hybrid": 0.0395
+      }
+    },
+    "manual_reference": {
+      "mean": 0.3692,
+      "maximum": 0.8636,
+      "maximum_path": "card3.light_astro.headline.direct_to_dog",
+      "by_field": {
+        "card1.no_astro.headline.handler": 0.4,
+        "card1.no_astro.headline.direct_to_dog": 0.303,
+        "card1.no_astro.headline.hybrid": 0.25,
+        "card1.no_astro.body.handler": 0.0611,
+        "card1.no_astro.body.direct_to_dog": 0.0447,
+        "card1.no_astro.body.hybrid": 0.0692,
+        "card1.light_astro.headline.handler": 0.6857,
+        "card1.light_astro.headline.direct_to_dog": 0.4,
+        "card1.light_astro.headline.hybrid": 0.3889,
+        "card1.light_astro.body.handler": 0.268,
+        "card1.light_astro.body.direct_to_dog": 0.0904,
+        "card1.light_astro.body.hybrid": 0.0958,
+        "card1.full_astro.headline.handler": 0.3636,
+        "card1.full_astro.headline.direct_to_dog": 0.7253,
+        "card1.full_astro.headline.hybrid": 0.6292,
+        "card1.full_astro.body.handler": 0.138,
+        "card1.full_astro.body.direct_to_dog": 0.1237,
+        "card1.full_astro.body.hybrid": 0.1317,
+        "card2.no_astro.headline.handler": 0.5312,
+        "card2.no_astro.headline.direct_to_dog": 0.3562,
+        "card2.no_astro.headline.hybrid": 0.3143,
+        "card2.no_astro.body.handler": 0.0683,
+        "card2.no_astro.body.direct_to_dog": 0.1003,
+        "card2.no_astro.body.hybrid": 0.0734,
+        "card2.light_astro.headline.handler": 0.24,
+        "card2.light_astro.headline.direct_to_dog": 0.5122,
+        "card2.light_astro.headline.hybrid": 0.7895,
+        "card2.light_astro.body.handler": 0.0939,
+        "card2.light_astro.body.direct_to_dog": 0.2435,
+        "card2.light_astro.body.hybrid": 0.2254,
+        "card2.full_astro.headline.handler": 0.3299,
+        "card2.full_astro.headline.direct_to_dog": 0.7429,
+        "card2.full_astro.headline.hybrid": 0.4835,
+        "card2.full_astro.body.handler": 0.205,
+        "card2.full_astro.body.direct_to_dog": 0.0821,
+        "card2.full_astro.body.hybrid": 0.1713,
+        "card3.no_astro.headline.handler": 0.25,
+        "card3.no_astro.headline.direct_to_dog": 0.5316,
+        "card3.no_astro.headline.hybrid": 0.3056,
+        "card3.no_astro.body.handler": 0.0325,
+        "card3.no_astro.body.direct_to_dog": 0.0922,
+        "card3.no_astro.body.hybrid": 0.1179,
+        "card3.light_astro.headline.handler": 0.4865,
+        "card3.light_astro.headline.direct_to_dog": 0.8636,
+        "card3.light_astro.headline.hybrid": 0.2973,
+        "card3.light_astro.body.handler": 0.3011,
+        "card3.light_astro.body.direct_to_dog": 0.1753,
+        "card3.light_astro.body.hybrid": 0.5544,
+        "card3.full_astro.headline.handler": 0.8154,
+        "card3.full_astro.headline.direct_to_dog": 0.5479,
+        "card3.full_astro.headline.hybrid": 0.6102,
+        "card3.full_astro.body.handler": 0.4269,
+        "card3.full_astro.body.direct_to_dog": 0.5449,
+        "card3.full_astro.body.hybrid": 0.5525,
+        "card4.no_astro.headline.handler": 0.4935,
+        "card4.no_astro.headline.direct_to_dog": 0.8462,
+        "card4.no_astro.headline.hybrid": 0.625,
+        "card4.no_astro.body.handler": 0.0536,
+        "card4.no_astro.body.direct_to_dog": 0.5567,
+        "card4.no_astro.body.hybrid": 0.103,
+        "card4.light_astro.headline.handler": 0.8132,
+        "card4.light_astro.headline.direct_to_dog": 0.7273,
+        "card4.light_astro.headline.hybrid": 0.5823,
+        "card4.light_astro.body.handler": 0.3537,
+        "card4.light_astro.body.direct_to_dog": 0.2687,
+        "card4.light_astro.body.hybrid": 0.2025,
+        "card4.full_astro.headline.handler": 0.3371,
+        "card4.full_astro.headline.direct_to_dog": 0.5294,
+        "card4.full_astro.headline.hybrid": 0.8462,
+        "card4.full_astro.body.handler": 0.2909,
+        "card4.full_astro.body.direct_to_dog": 0.442,
+        "card4.full_astro.body.hybrid": 0.2716
+      }
+    }
+  },
+  "candidate_manual_ngram_overlap": {
+    "6": {
+      "shared_distinct_ngram_count": 182,
+      "examples": [
+        "a drink a mat a chew",
+        "a larger world scorpio mercury and",
+        "action and release into a safe",
+        "agency while his libra trust pattern",
+        "agreements his person can answer both",
+        "and atmosphere sensitive aquarius asc opposite",
+        "and daily care together sun jupiter",
+        "and neptune want a larger world",
+        "and placed in the sixth doghouse",
+        "and pluto in libra in the",
+        "and pluto in the eighth doghouse",
+        "and reinforce the return growth is",
+        "and relationship expectations can collide quickly",
+        "and release into a safe next",
+        "and sextiles mars neptune trines mars",
+        "and the dsc and sextiles jupiter",
+        "and the libra eighth house planets",
+        "and uranus in scorpio add concentrated",
+        "and uranus squaring the asc dsc",
+        "aquarius asc describes a first response"
+      ]
+    },
+    "8": {
+      "shared_distinct_ngram_count": 96,
+      "examples": [
+        "a larger world scorpio mercury and uranus want",
+        "action and release into a safe next step",
+        "and atmosphere sensitive aquarius asc opposite leo dsc",
+        "and daily care together sun jupiter saturn and",
+        "and neptune want a larger world scorpio mercury",
+        "and pluto in libra in the eighth doghouse",
+        "and relationship expectations can collide quickly yet his",
+        "and sextiles mars neptune trines mars and the",
+        "and uranus squaring the asc dsc axis needs",
+        "aquarius asc opposite leo dsc creates an exact",
+        "aquarius ascendant gives his visible style an inventive",
+        "asc and sextiles mars neptune trines mars and",
+        "asc dsc axis needs novelty to have a",
+        "asc dsc axis so novelty and relationship expectations",
+        "atmosphere sensitive aquarius asc opposite leo dsc creates",
+        "axis so novelty and relationship expectations can collide",
+        "boundary offer one permitted option complete a shared",
+        "bridges pluto trines the asc and sextiles mars",
+        "can light up your whole social action system",
+        "care together sun jupiter saturn and pluto in"
+      ]
+    },
+    "10": {
+      "shared_distinct_ngram_count": 56,
+      "examples": [
+        "and atmosphere sensitive aquarius asc opposite leo dsc creates an",
+        "and daily care together sun jupiter saturn and pluto in",
+        "and neptune want a larger world scorpio mercury and uranus",
+        "and sextiles mars neptune trines mars and the dsc and",
+        "and uranus squaring the asc dsc axis needs novelty to",
+        "asc and sextiles mars neptune trines mars and the dsc",
+        "asc dsc axis so novelty and relationship expectations can collide",
+        "atmosphere sensitive aquarius asc opposite leo dsc creates an exact",
+        "axis so novelty and relationship expectations can collide quickly yet",
+        "bridges pluto trines the asc and sextiles mars neptune trines",
+        "care together sun jupiter saturn and pluto in libra in",
+        "choice perform one known cooperative action and release into a",
+        "clear station the pisces moon receives the calm tone and",
+        "daily care together sun jupiter saturn and pluto in libra",
+        "do not need to stop noticing everything kevin your noticing",
+        "dsc axis so novelty and relationship expectations can collide quickly",
+        "embodied and atmosphere sensitive aquarius asc opposite leo dsc creates",
+        "everything kevin your noticing is one of your gifts the",
+        "first response and uranus squaring the asc dsc axis needs",
+        "jupiter saturn and pluto in libra in the eighth doghouse"
+      ]
+    },
+    "12": {
+      "shared_distinct_ngram_count": 30,
+      "examples": [
+        "and daily care together sun jupiter saturn and pluto in libra in",
+        "and sextiles mars neptune trines mars and the dsc and sextiles jupiter",
+        "and uranus squaring the asc dsc axis needs novelty to have a",
+        "asc and sextiles mars neptune trines mars and the dsc and sextiles",
+        "asc dsc axis so novelty and relationship expectations can collide quickly yet",
+        "bridges pluto trines the asc and sextiles mars neptune trines mars and",
+        "care together sun jupiter saturn and pluto in libra in the eighth",
+        "choice perform one known cooperative action and release into a safe next",
+        "daily care together sun jupiter saturn and pluto in libra in the",
+        "do not need to stop noticing everything kevin your noticing is one",
+        "dsc axis so novelty and relationship expectations can collide quickly yet his",
+        "embodied and atmosphere sensitive aquarius asc opposite leo dsc creates an exact",
+        "first response and uranus squaring the asc dsc axis needs novelty to",
+        "need to stop noticing everything kevin your noticing is one of your",
+        "not need to stop noticing everything kevin your noticing is one of",
+        "noticing everything kevin your noticing is one of your gifts the next",
+        "perform one known cooperative action and release into a safe next step",
+        "pluto trines the asc and sextiles mars neptune trines mars and the",
+        "response and uranus squaring the asc dsc axis needs novelty to have",
+        "rewarding saturn quincunx the pisces moon shows that rules and regulation may"
+      ]
+    }
+  },
+  "candidate_manual_longest_body_matches": {
+    "card4.no_astro.body.direct_to_dog": {
+      "word_count": 18,
+      "text": "you do not need to stop noticing everything kevin your noticing is one of your gifts the next"
+    },
+    "card4.full_astro.body.handler": {
+      "word_count": 18,
+      "text": "supplies bridges pluto trines the asc and sextiles mars neptune trines mars and the dsc and sextiles jupiter"
+    },
+    "card3.full_astro.body.handler": {
+      "word_count": 15,
+      "text": "and daily care together sun jupiter saturn and pluto in libra in the eighth doghouse"
+    },
+    "card3.full_astro.body.direct_to_dog": {
+      "word_count": 14,
+      "text": "first response and uranus squaring the asc dsc axis needs novelty to have a"
+    },
+    "card2.full_astro.body.direct_to_dog": {
+      "word_count": 13,
+      "text": "sagittarius venus and neptune want a larger world scorpio mercury and uranus want"
+    },
+    "card4.light_astro.body.handler": {
+      "word_count": 13,
+      "text": "asc dsc axis so novelty and relationship expectations can collide quickly yet his"
+    },
+    "card4.full_astro.body.hybrid": {
+      "word_count": 13,
+      "text": "choice perform one known cooperative action and release into a safe next step"
+    },
+    "card1.full_astro.body.direct_to_dog": {
+      "word_count": 12,
+      "text": "your libra sun jupiter saturn and pluto in the eighth doghouse make"
+    },
+    "card2.full_astro.body.hybrid": {
+      "word_count": 11,
+      "text": "repeated thresholds leash on permission to sniff check in home water"
+    },
+    "card3.light_astro.body.hybrid": {
+      "word_count": 11,
+      "text": "one clear station the pisces moon receives the calm tone and"
+    },
+    "card3.full_astro.body.hybrid": {
+      "word_count": 10,
+      "text": "pull him toward visible companionship the pisces moon absorbs the"
+    },
+    "card2.light_astro.body.hybrid": {
+      "word_count": 9,
+      "text": "the practical frame where they go when they turn"
+    },
+    "card1.light_astro.body.handler": {
+      "word_count": 8,
+      "text": "aquarius ascendant gives his visible style an inventive"
+    },
+    "card4.full_astro.body.direct_to_dog": {
+      "word_count": 8,
+      "text": "can light up your whole social action system"
+    },
+    "card1.full_astro.body.handler": {
+      "word_count": 7,
+      "text": "aquarius asc describes a first response that"
+    },
+    "card2.no_astro.body.direct_to_dog": {
+      "word_count": 7,
+      "text": "a drink a mat a chew a"
+    },
+    "card2.light_astro.body.handler": {
+      "word_count": 7,
+      "text": "horizon mercury and uranus in scorpio add"
+    },
+    "card2.full_astro.body.handler": {
+      "word_count": 7,
+      "text": "pisces moon in the first doghouse makes"
+    },
+    "card3.light_astro.body.handler": {
+      "word_count": 6,
+      "text": "that benefits from calm sensory anchors"
+    },
+    "card4.light_astro.body.direct_to_dog": {
+      "word_count": 6,
+      "text": "check in do the known thing"
+    },
+    "card1.light_astro.body.direct_to_dog": {
+      "word_count": 5,
+      "text": "you are a social original"
+    },
+    "card2.no_astro.body.handler": {
+      "word_count": 5,
+      "text": "looking for the missing final"
+    },
+    "card2.no_astro.body.hybrid": {
+      "word_count": 5,
+      "text": "settling job kevin learns that"
+    },
+    "card3.no_astro.body.direct_to_dog": {
+      "word_count": 5,
+      "text": "you need to know where"
+    },
+    "card4.light_astro.body.hybrid": {
+      "word_count": 5,
+      "text": "offers a route back through"
+    },
+    "card1.light_astro.body.hybrid": {
+      "word_count": 4,
+      "text": "aquarius rising supplies the"
+    },
+    "card1.full_astro.body.hybrid": {
+      "word_count": 4,
+      "text": "the novelty allow a"
+    },
+    "card2.light_astro.body.direct_to_dog": {
+      "word_count": 4,
+      "text": "no wonder a short"
+    },
+    "card4.no_astro.body.handler": {
+      "word_count": 4,
+      "text": "the useful goal is"
+    },
+    "card4.no_astro.body.hybrid": {
+      "word_count": 4,
+      "text": "the human feels the"
+    },
+    "card1.no_astro.body.direct_to_dog": {
+      "word_count": 3,
+      "text": "you do not"
+    },
+    "card3.no_astro.body.hybrid": {
+      "word_count": 3,
+      "text": "here a mat"
+    },
+    "card3.light_astro.body.direct_to_dog": {
+      "word_count": 3,
+      "text": "your pisces moon"
+    },
+    "card1.no_astro.body.handler": {
+      "word_count": 2,
+      "text": "the person"
+    },
+    "card1.no_astro.body.hybrid": {
+      "word_count": 2,
+      "text": "his person"
+    },
+    "card3.no_astro.body.handler": {
+      "word_count": 2,
+      "text": "when access"
+    }
+  },
+  "candidate_exact_headline_reuse": {
+    "historical_automated": [],
+    "manual_reference": []
+  },
+  "cross_lens_vocabulary_jaccard": {
+    "historical_automated": {
+      "card1__card2": 0.1278,
+      "card1__card3": 0.1432,
+      "card1__card4": 0.1801,
+      "card2__card3": 0.1972,
+      "card2__card4": 0.1282,
+      "card3__card4": 0.159
+    },
+    "manual_reference": {
+      "card1__card2": 0.1528,
+      "card1__card3": 0.1947,
+      "card1__card4": 0.1648,
+      "card2__card3": 0.1844,
+      "card2__card4": 0.1667,
+      "card3__card4": 0.1606
+    },
+    "phase1_candidate": {
+      "card1__card2": 0.1245,
+      "card1__card3": 0.1937,
+      "card1__card4": 0.1619,
+      "card2__card3": 0.1677,
+      "card2__card4": 0.158,
+      "card3__card4": 0.1611
+    }
+  },
+  "candidate_headlines": {
+    "card1": {
+      "no_astro": {
+        "handler": "The Dog With His Own Opening Line",
+        "direct_to_dog": "Kevin, You Arrive With Notes",
+        "hybrid": "A Detour With an Audience"
+      },
+      "light_astro": {
+        "handler": "Aquarius Entrance, Libra Heart",
+        "direct_to_dog": "Your Strange Route Leads Back to Us",
+        "hybrid": "Originality Meets Fair Play"
+      },
+      "full_astro": {
+        "handler": "An Aquarius Doorway With Deep Libra Stakes",
+        "direct_to_dog": "Freedom and Belonging Share Your Harness",
+        "hybrid": "The Axis That Teaches Partnership"
+      }
+    },
+    "card2": {
+      "no_astro": {
+        "handler": "Kevin’s Day Runs in Chapters",
+        "direct_to_dog": "Chief Explorer, Please File Your Report",
+        "hybrid": "How They Get Home Together"
+      },
+      "light_astro": {
+        "handler": "A Sensitive Explorer’s Daily Circuit",
+        "direct_to_dog": "The Neighborhood Is Never Just a Block",
+        "hybrid": "One Reads the Map, One Reads the Air"
+      },
+      "full_astro": {
+        "handler": "A Chart That Benefits From Clear Transitions",
+        "direct_to_dog": "You Need Openings and Landings",
+        "hybrid": "The Household Gives the Day Its Punctuation"
+      }
+    },
+    "card3": {
+      "no_astro": {
+        "handler": "The Frame and the Freedom Inside It",
+        "direct_to_dog": "Your Curiosity Needs Good Office Hours",
+        "hybrid": "The Rule Holds, and Kevin Gets a Say"
+      },
+      "light_astro": {
+        "handler": "Ground the Pisces Moon, Respect the Aquarius Doorway",
+        "direct_to_dog": "Soft Landing, Clear Edge, Fine Assignment",
+        "hybrid": "A Choice Menu, Not a Free-for-All"
+      },
+      "full_astro": {
+        "handler": "Care for the Linked Moon, Axis, Sixth House, and Eighth House",
+        "direct_to_dog": "Your Needs Belong to One System",
+        "hybrid": "A Home Built for Safe Return"
+      }
+    },
+    "card4": {
+      "no_astro": {
+        "handler": "Keep the Spark, Teach the Return",
+        "direct_to_dog": "Keep the Plot Twist; Learn the Ending",
+        "hybrid": "A Better Way Back to Each Other"
+      },
+      "light_astro": {
+        "handler": "Let Uranian Surprise Learn Libra Coordination",
+        "direct_to_dog": "Your Surprise Response Has a Bridge",
+        "hybrid": "Rehearsing Novelty Into Teamwork"
+      },
+      "full_astro": {
+        "handler": "Train the Supportive Channels Before the Hard Geometry",
+        "direct_to_dog": "Your Difficult Aspects Have Exits",
+        "hybrid": "Aspect Geometry Becomes a Repair Ritual"
+      }
+    }
+  }
+}

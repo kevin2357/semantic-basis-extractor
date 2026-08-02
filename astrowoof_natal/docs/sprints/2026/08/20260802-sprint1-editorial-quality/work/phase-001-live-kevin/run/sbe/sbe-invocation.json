@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\Users\\kevin\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\build_projected_semantic_basis.py",
+    "--input-package",
+    "C:\\tmp\\kevin-semantic-closure-batch-input",
+    "--output-dir",
+    "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\semantic-basis-output",
+    "--bundle-dir",
+    "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\sbe\\llm-handoff-bundle",
+    "--handoff-profile",
+    "authoring-workspace",
+    "--workspace-layout",
+    "split",
+    "--workspace-card-limit",
+    "50",
+    "--fail-fast",
+    "--subject",
+    "kevin"
+  ],
+  "returncode": 0,
+  "stdout": "{\n  \"schema_version\": \"semantic_basis.batch_run.v0.1\",\n  \"input_package\": \"C:\\\\tmp\\\\kevin-semantic-closure-batch-input\",\n  \"subject_filter\": \"kevin\",\n  \"subject_count\": 1,\n  \"status\": \"pass\",\n  \"subjects\": [\n    {\n      \"subject\": \"kevin\",\n      \"status\": \"pass\",\n      \"input_files\": {\n        \"direct_to_dog\": \"C:\\\\tmp\\\\kevin-semantic-closure-batch-input\\\\natal.kevin.woof.d2d.json\",\n        \"general\": \"C:\\\\tmp\\\\kevin-semantic-closure-batch-input\\\\natal.kevin.woof.general.json\",\n        \"handler\": \"C:\\\\tmp\\\\kevin-semantic-closure-batch-input\\\\natal.kevin.woof.handler.json\",\n        \"hybrid\": \"C:\\\\tmp\\\\kevin-semantic-closure-batch-input\\\\natal.kevin.woof.hybrid.json\"\n      },\n      \"candidate_count\": 108,\n      \"selected_count\": 50,\n      \"unselected_count\": 58,\n      \"synthesized_selected\": 13,\n      \"registry_unique_term_count\": 47,\n      \"output\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\semantic-basis-output\\\\kevin\",\n      \"bundle\": [\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_1\",\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_2\",\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_3\",\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_4\",\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_5\",\n        \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-001-live-kevin\\\\run\\\\sbe\\\\llm-handoff-bundle\\\\kevin_6\"\n      ]\n    }\n  ]\n}\n",
+  "stderr": ""
+}

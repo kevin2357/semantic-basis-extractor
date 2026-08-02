@@ -1,0 +1,27 @@
+{
+  "source_run": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801",
+  "reused_passes": {
+    "kevin_1": {
+      "source": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801\\passes\\kevin_1\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_1\\accepted"
+    },
+    "kevin_2": {
+      "source": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801\\passes\\kevin_2\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_2\\accepted"
+    },
+    "kevin_3": {
+      "source": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801\\passes\\kevin_3\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_3\\accepted"
+    },
+    "kevin_4": {
+      "source": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801\\passes\\kevin_4\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_4\\accepted"
+    },
+    "kevin_5": {
+      "source": "C:\\tmp\\kevin-semantic-closure-batch-live-20260801\\passes\\kevin_5\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-001-live-kevin\\run\\passes\\kevin_5\\accepted"
+    }
+  },
+  "experimental_pass": "kevin_6",
+  "assembly_control": "The newly authored summary pass is retained in full, but its theme-group assignment is replaced with the accepted baseline assignment before assembly so only summary values may differ."
+}

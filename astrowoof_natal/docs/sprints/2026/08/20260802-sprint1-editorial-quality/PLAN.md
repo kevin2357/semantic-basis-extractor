@@ -236,6 +236,24 @@ basis while keeping output approachable and non-astrology-centric.
 - Generated workspaces remain deterministic.
 - Existing authoring and assembly tests continue to pass.
 
+### Live checkpoint
+
+An isolated Kevin pass-6 API test confirmed that the four-thesis plan produces
+distinct identity, daily-life, present-needs, and developmental arguments. The
+new summaries recovered the manual reference's richness and materially
+improved lens separation over the historical automated baseline.
+
+Because Kevin was also the subject of the complete prose gold, the test exposed
+same-subject reference leakage: 30 distinct shared twelve-word sequences and
+several transferred organizing frames remained despite explicit anti-copying
+instructions. Treat the thesis plan as accepted and the complete prose gold as
+experimental. Before making gold always-on, perform a cross-subject pass-6 test
+and inspect both quality transfer and structural/phrase leakage.
+
+The live test also exposed a separate pass-6/final-validator contract gap for
+theme-group balance. Preserve it as a defect to address without conflating it
+with summary calibration.
+
 ## Phase 2 — Deterministic diversified claim assignment
 
 ### Design
