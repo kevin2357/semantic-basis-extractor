@@ -3331,7 +3331,8 @@ def polish_subject(
             "category, filter, and identity value. Edit only "
             "reader-facing prose needed to resolve the supplied lint findings. "
             "Theme groups may change only when validation explicitly requires "
-            "rebalancing. "
+            "rebalancing. Summary prose may change only when its path is "
+            "explicitly included in the editable targets. "
             "Do not homogenize distinct cards or rewrite clean material."
         )
         current_deck = load_json(best_path)
@@ -3341,6 +3342,9 @@ def polish_subject(
             validation_report=validation_report,
             include_theme_groups=allow_theme_group_edits,
             expand_related=expand_related,
+        )
+        allow_summary_edits = any(
+            path.startswith("summary.") for path in target_paths
         )
         if not target_paths:
             record["polish_unaddressable"] = {
@@ -3444,6 +3448,8 @@ def polish_subject(
                 ]
             if allow_theme_group_edits:
                 validation_command.append("--allow-theme-group-edits")
+            if allow_summary_edits:
+                validation_command.append("--allow-summary-edits")
             validation = run_json_command(
                 validation_command,
                 validation_path,

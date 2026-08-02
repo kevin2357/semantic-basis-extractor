@@ -193,6 +193,8 @@ fields are rejected before validation. Evidence, claim selection, categories,
 filters, identity, and all other non-authoring data remain unavailable for
 editing. Theme groups remain unavailable unless the validator explicitly
 reports invalid balance; that repair exposes only existing theme-group fields.
+Summary prose remains locked unless a deterministic finding explicitly adds
+that exact summary field to the sparse edit allowlist.
 
 The first attempt targets only fields named or implicated by deterministic
 findings. If it does not improve QA, a second attempt may expand to other

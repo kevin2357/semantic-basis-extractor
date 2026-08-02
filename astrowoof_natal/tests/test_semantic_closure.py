@@ -549,7 +549,16 @@ class TestSemanticClosure(SemanticClosureFixture):
             )
             lint_path = final_root / "lint.json"
             lint_path.write_text(
-                json.dumps({"warning_count": 2, "warnings": []}),
+                json.dumps({
+                    "warning_count": 2,
+                    "decks": [{"warnings": [{
+                        "code": "failure_signature",
+                        "details": {
+                            "location": "summary:card1",
+                            "field": "no_astro.body.handler",
+                        },
+                    }]}],
+                }),
                 encoding="utf-8",
             )
             record = {
@@ -564,6 +573,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "delivery": None,
             }
             submitted: list[dict] = []
+            qa_commands: list[list[str]] = []
 
             class Provider:
                 model = "fake-polish"
@@ -588,6 +598,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     }, {"provider": "fake"}
 
             def fake_qa(command, report_path, *, accepted_returncodes):
+                qa_commands.append(command)
                 if "validate_astrowoof_editorial.py" in command[1]:
                     report = {"status": "pass", "warnings": []}
                 else:
@@ -614,6 +625,11 @@ class TestSemanticClosure(SemanticClosureFixture):
                 )
             self.assertEqual("DELIVERY_COMPLETE", record["state"])
             self.assertTrue(record["polish_attempts"][0]["accepted"])
+            validation_command = next(
+                command for command in qa_commands
+                if "validate_astrowoof_editorial.py" in command[1]
+            )
+            self.assertIn("--allow-summary-edits", validation_command)
             self.assertEqual("astrowoof_sparse_polish", submitted[0]["schema_name"])
             transport = record["polish_attempts"][0]["transport"]
             self.assertLess(
