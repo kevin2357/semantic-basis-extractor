@@ -1,0 +1,2173 @@
+{
+  "id": "resp_0cf0bd9d2d016fc6006a6f831f08348198b8bd71c74281d133",
+  "object": "response",
+  "created_at": 1785692959,
+  "status": "completed",
+  "background": true,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1785693265,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": 100000,
+  "max_tool_calls": null,
+  "model": "gpt-5.6-terra",
+  "moderation": null,
+  "output": [
+    {
+      "id": "rs_0cf0bd9d2d016fc6006a6f8321792c8198b6b86d63c1f735c4",
+      "type": "reasoning",
+      "content": [],
+      "summary": []
+    },
+    {
+      "id": "msg_0cf0bd9d2d016fc6006a6f83229064819887848b977662490b",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\"files\":{\"cards/Story 002 -- placement_2fe48d9251284733/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s first impression is delightfully off-script: he meets ordinary moments with an unexpected angle rather than a standard dog response.\",\"plan.memorable_takeaway\":\"Kevin is not trying to be difficult when he makes a familiar moment strange; his individuality is part of how he says hello to the world.\",\"plan.recognizable_behavior\":\"At a threshold, greeting, or new situation, Kevin may pause, approach sideways, inspect an overlooked detail, or suddenly invent his own sequence.\",\"plan.likely_misunderstanding\":\"A handler may read the unconventional pause or detour as stubbornness, when it can be Kevin’s way of getting oriented.\",\"plan.grounded_surprise\":\"His odd little detours are often not disengagement. They are his particular form of attention.\",\"plan.neighbor_distinction\":\"This is Kevin’s distinctive entrance style alone, not the push-pull between that style and play drive or novelty.\",\"plan.writing_form\":\"An affectionate field guide to Kevin’s unconventional entrances.\",\"plan.comic_premise\":\"Kevin treats every doorway as if it might contain a secret alternate route.\",\"plan.creative_approach\":\"Make the overlooked pause feel observant and charming; offer room for a safe, brief investigation before inviting him onward.\",\"no_astro.headline.handler\":\"Kevin Takes the Scenic Route Into Everything\",\"no_astro.body.handler\":\"Some dogs enter a room. Kevin appears to conduct a small survey of its possibilities. He may approach a greeting sideways, inspect the edge of the doorway, or pause where everyone expected a simple hello. That does not have to mean he is refusing the moment. His first response is often original because he notices the moment from an original angle.\\n\\nGive him a beat to look, sniff, or choose his approach when it is safe. Then make your cue clear and cheerful. Kevin is more likely to join in when he has had the dignity of arriving as himself.\",\"no_astro.headline.direct_to_dog\":\"Your Hello Has Footnotes\",\"no_astro.body.direct_to_dog\":\"Kevin, you do not always burst through the obvious opening. You may examine the hinge, circle the rug, or make a thoughtful side entrance before your tail delivers the official greeting. Fair enough: the world is full of details other dogs leave unreviewed.\\n\\nYour people can help by letting a new moment become familiar at your pace. Once you have read the room, you are ready to be wonderfully, unmistakably Kevin.\",\"no_astro.headline.hybrid\":\"The Doorway Is a Conversation\",\"no_astro.body.hybrid\":\"A person opens the door expecting Kevin to walk through it. Kevin briefly proposes an amendment: first the threshold, then the air beyond it, then perhaps the corner nobody else considered. When his person waits instead of tugging him into the expected script, Kevin finishes his inspection and comes along.\\n\\nThat tiny exchange matters. He learns that guidance need not erase his style, and his person learns that an unusual entrance can still be a cooperative one.\",\"light_astro.headline.handler\":\"Aquarius Rising, Kevin-Style\",\"light_astro.body.handler\":\"Kevin’s Aquarius Ascendant describes the face he presents to new situations: inventive, a little unconventional, and unlikely to follow the most predictable route just because it is available. Watch for his quirky first beat around arrivals, greetings, and transitions.\\n\\nRather than correcting every harmless oddity, give him a simple cue and enough slack to orient. His individuality becomes easier to enjoy when the boundaries remain kind and clear.\",\"light_astro.headline.direct_to_dog\":\"Aquarius Rising Wants a Different Entrance\",\"light_astro.body.direct_to_dog\":\"Kevin, your Aquarius Ascendant gives your first responses a pleasantly unusual stamp. You may meet a new thing by taking the side path, checking its details, or briefly making the ordinary less ordinary.\\n\\nYou do not need to perform the same greeting as every other dog. With a patient person and a reliable cue, your eccentric little opening act can lead right into connection.\",\"light_astro.headline.hybrid\":\"An Aquarius Ascendant at the Threshold\",\"light_astro.body.hybrid\":\"Kevin’s Aquarius Ascendant makes the first moment of contact a place for originality. His person may offer a straightforward invitation; Kevin may answer with a sideways look and an inspection of the threshold. Neither is wrong.\\n\\nWhen the person holds the destination steady while allowing Kevin’s oddball route toward it, the greeting becomes a shared ritual: structure from one end of the leash, inventiveness from the other.\",\"full_astro.headline.handler\":\"Kevin’s Aquarius Ascendant Makes an Entrance\",\"full_astro.body.handler\":\"The Ascendant describes Kevin’s behavioral doorway: how he first meets the world and what others notice immediately. In Aquarius, that doorway works through pattern-breaking originality. He may not respond to a new setting, visitor, or transition in the expected canine order; his visible temperament wants a moment to find its own angle.\\n\\nThis placement does not ask you to indulge unsafe wandering. It asks you to distinguish harmless individuality from a real need for intervention. Build a dependable arrival cue, allow a brief look or sniff when appropriate, and reward the return to you. Kevin’s unusual first beat can become part of a confident routine.\",\"full_astro.headline.direct_to_dog\":\"Aquarius at Your Front Door\",\"full_astro.body.direct_to_dog\":\"Kevin, the Ascendant is the part of your chart that shows how you step into experience. Yours is in Aquarius, so your behavioral doorway is wired for the unexpected. A plain entrance may inspire a pause, a curve, or a private investigation before you decide what comes next.\\n\\nThat is not a flaw in your welcome. It is your signature. A steady human can keep the route safe without asking you to pretend that every new moment is boring.\",\"full_astro.headline.hybrid\":\"A Pattern-Breaking Welcome\",\"full_astro.body.hybrid\":\"Astrologically, Kevin’s Aquarius Ascendant governs his first response and visible presence. It gives his behavioral doorway a pattern-breaking mode: a greeting can begin with a detour, a transition with a pause, and an obvious route with one unnecessary-but-important inspection.\\n\\nHis human’s task is not to win an argument with the Ascendant. It is to supply the container: a cue, a safe boundary, a moment of patience. Kevin supplies the unexpected flourish. Together they make arrivals that are both orderly and genuinely his.\",\"dos.0\":\"At new places, allow Kevin a short, safe sniff-and-look pause before asking for the next cue.\",\"dos.1\":\"Use the same simple arrival cue and reward him when he turns his attention back to you.\",\"dos.2\":\"Notice which harmless quirks help Kevin settle, and preserve them when practical.\",\"donts.0\":\"Do not assume every sideways pause is defiance.\",\"donts.1\":\"Do not rush him through every transition before he has oriented himself.\",\"donts.2\":\"Do not let “he is being quirky” override leash safety or clear boundaries.\",\"funny_dog_quotes.0\":\"“I entered normally once. The room seemed suspiciously under-reviewed.” —Kevin\",\"imperative_dog_quotes.0\":\"“Inspect the threshold, Kevin—but come when called.”\",\"applicable_canine_jokes.0\":\"Why did Kevin pause at the doorway? He was waiting for the room’s alternate entrance to reveal itself.\",\"context_filter_groups.high_level\":\"Personality\\nCommunication\",\"context_filter_groups.detail_level\":\"Core Personality\\nCommunication\"},\"cards/Story 003 -- relationship_4e0c5f290f0c410c/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s urge to do things his own way can collide with his equally vivid desire to launch into play and be seen doing it.\",\"plan.memorable_takeaway\":\"Kevin needs an outlet where individuality and action cooperate, rather than forcing him to choose between hanging back and exploding forward.\",\"plan.recognizable_behavior\":\"He may hesitate or take an unusual approach, then suddenly surge toward a game, chase, or attention-grabbing task.\",\"plan.likely_misunderstanding\":\"The quick change can look inconsistent, but it reflects two strong drives taking turns at the wheel.\",\"plan.grounded_surprise\":\"A pause before play may be Kevin organizing his own entrance, not losing interest.\",\"plan.neighbor_distinction\":\"Unlike Story 002’s entry style, this card is about the polarity between unconventional presentation and demonstrative action.\",\"plan.writing_form\":\"A trainer’s note about the two-speed start.\",\"plan.comic_premise\":\"Kevin’s internal committee cannot decide whether to be avant-garde or the halftime show, so it does both.\",\"plan.creative_approach\":\"Describe the stop-start launch and recommend structured games with a clear beginning, action phase, and finish.\",\"no_astro.headline.handler\":\"The Pause Before the Pounce\",\"no_astro.body.handler\":\"Kevin can look as if he is still deciding whether the game is worth his time—then suddenly become the entire game. His first response may be quirky or indirect, while his action drive wants a bold, visible outlet. The result can be a dog who pauses, pivots, and then launches with theatrical conviction.\\n\\nHelp him by making play predictable without making it dull. Ask for one easy start behavior, release him into a chase or tug game, then build in a clear finish. He gets room for his style and practice turning big energy back toward you.\",\"no_astro.headline.direct_to_dog\":\"You Like a Dramatic Launch\",\"no_astro.body.direct_to_dog\":\"Kevin, you may need a second to decide how you wish to enter the party. Then—behold—the party has become you. Your quieter, unusual opening and your big chase-and-play engine are both real parts of you.\\n\\nA good game gives you a runway: one small cue, one clear release, plenty of motion, and a satisfying end. You do not have to choose between being original and being all in.\",\"no_astro.headline.hybrid\":\"Kevin’s Opening Act Has an Encore\",\"no_astro.body.hybrid\":\"The ball comes out. Kevin studies the situation with a peculiar little pause, as though consulting artistic direction. His person waits for a hand target, gives the release word, and Kevin answers with a magnificent burst of pursuit.\\n\\nThat sequence lets both sides of him work. He has not been shoved past his first response, and his person has not been left guessing when the rocket will ignite. The game becomes a bridge between pause and propulsion.\",\"light_astro.headline.handler\":\"Aquarius Rising Opposite Leo Mars\",\"light_astro.body.handler\":\"Kevin’s Aquarius Ascendant has an unconventional way of meeting a moment, while Mars in Leo wants action, pursuit, and a little fanfare. Their opposition can make his opening beat and his play drive feel like competing instructions: first do it differently, then do it grandly.\\n\\nUse brief, repeatable play rituals. A cue before the release and a calm reset afterward help Kevin turn that polarity into responsive energy rather than a confusing burst.\",\"light_astro.headline.direct_to_dog\":\"Aquarius and Mars Give You Two Entrances\",\"light_astro.body.direct_to_dog\":\"Kevin, Aquarius Rising likes the unexpected route, while your Leo Mars likes to chase, act, and make the moment count. Sometimes you seem to pause at the door of an activity and then arrive with trumpets.\\n\\nPractice a simple launch routine with your person. It gives your big drive a job and leaves room for your unmistakably Kevin way of beginning.\",\"light_astro.headline.hybrid\":\"When Aquarius Meets Leo on the Leash\",\"light_astro.body.hybrid\":\"Kevin’s Aquarius Ascendant says, “Let me approach this my way.” His Leo Mars says, “Now watch me do it!” Across an opposition, those impulses can pull apart before they learn to cooperate.\\n\\nHis person creates a small ritual—check in, release, play, settle. Kevin brings the flair. The polarity becomes less like a tug-of-war and more like a well-timed relay.\",\"full_astro.headline.handler\":\"A Tight Ascendant–Mars Opposition Needs a Runway\",\"full_astro.body.handler\":\"Kevin’s Aquarius Ascendant describes his unconventional behavioral doorway; Mars in Leo describes assertion, pursuit, and visible play drive in Doghouse 6, the realm of routine and training. They oppose each other with a very close 0.50° orb, so the contrast is pronounced: his way of entering a situation may not match the speed and display of his immediate action.\\n\\nTreat the opposition as a rhythm to organize, not a trait to suppress. In daily training, cue a brief orientation behavior, release him into an active task, then reward a return to calm. That sequence gives the Aquarius entrance and Leo Mars performance equal useful roles.\",\"full_astro.headline.direct_to_dog\":\"Your Close Mars Opposition Has a Rhythm\",\"full_astro.body.direct_to_dog\":\"Kevin, your Aquarius Ascendant and Leo Mars stand opposite each other within half a degree. One describes the odd, independent way you meet a moment; the other wants to chase, assert, play, and be noticed through action. No wonder your starts can have suspense before the sprint.\\n\\nA practiced routine is your runway. Check in, hear the release, pour your heart into the game, and come back for the next cue. You get to be both the inventive opener and the spectacular finisher.\",\"full_astro.headline.hybrid\":\"The 0.50° Opposition, Put to Work\",\"full_astro.body.hybrid\":\"With Kevin’s Aquarius Ascendant opposite Mars in Leo by only 0.50°, his first-response style and action drive face one another vividly. He may offer a strange little prelude just when his person expects immediate play, then become intensely demonstrative once the action begins.\\n\\nHis human can choreograph rather than correct: a brief check-in honors the Ascendant, a release gives Mars its chase-and-play outlet, and a finish cue reconnects them. Kevin learns that freedom of style and cooperation can share the same game.\",\"dos.0\":\"Begin high-energy games with one familiar cue Kevin can succeed at immediately.\",\"dos.1\":\"Offer legal chase, tug, or fetch outlets with a clear release word.\",\"dos.2\":\"Practice a calm finish cue after the action, then reward the return.\",\"donts.0\":\"Do not punish Kevin for needing a beat before he commits to play.\",\"donts.1\":\"Do not repeatedly rev him up without teaching how the game ends.\",\"donts.2\":\"Do not interpret a big burst as proof that he ignored the earlier cue.\",\"funny_dog_quotes.0\":\"“My warm-up is conceptual. My sprint is not.” —Kevin\",\"imperative_dog_quotes.0\":\"“Check in, Kevin—then make your grand entrance.”\",\"applicable_canine_jokes.0\":\"Kevin’s favorite sport is synchronized hesitation followed by an unsolicited victory lap.\",\"context_filter_groups.high_level\":\"Play\\nTraining\",\"context_filter_groups.detail_level\":\"Play & Adventure\\nLearning & Training\"},\"cards/Story 014 -- synthesis_5c82513dbc5fdfa7/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Novelty is Kevin’s spark and his snag: it naturally fuels learning, while also disrupting his first response and his connection to a person.\",\"plan.memorable_takeaway\":\"Kevin learns beautifully through surprise when surprise is given a job, not allowed to run the whole interaction.\",\"plan.recognizable_behavior\":\"A new sound, object, route, or change can make him intensely interested, briefly scattered, and ready to investigate.\",\"plan.likely_misunderstanding\":\"Excitement around novelty can be mistaken for disobedience rather than information-seeking energy without a channel.\",\"plan.grounded_surprise\":\"The very thing that interrupts Kevin can become the material of his best practice.\",\"plan.neighbor_distinction\":\"This synthesis joins novelty’s training talent with its friction in both first impressions and one-to-one connection.\",\"plan.writing_form\":\"A practical novelty curriculum.\",\"plan.comic_premise\":\"Kevin believes every unexpected object has arrived specifically to audition him for a starring role.\",\"plan.creative_approach\":\"Turn surprise into short observation games, rewarding a look at the novel thing and a return to the handler.\",\"no_astro.headline.handler\":\"Make the Surprise Part of the Lesson\",\"no_astro.body.handler\":\"For Kevin, a new thing is rarely just background. It can become a full assignment: inspect it, rethink the plan, perhaps add a burst of movement. That intensity can interrupt a greeting or pull his focus away from you—but it also gives training a powerful ingredient.\\n\\nUse novelty in tiny doses. Let him notice the unfamiliar object or sound, mark a glance back at you, and reward the check-in. The lesson is not “ignore the world.” It is “the world can be interesting, and you can still stay connected.”\",\"no_astro.headline.direct_to_dog\":\"New Things Are Your Homework\",\"no_astro.body.direct_to_dog\":\"Kevin, surprises make your brain light up. A changed route, a strange box, a noise from nowhere: naturally you feel compelled to investigate. You are not wrong for finding the world important.\\n\\nYour cleverest trick is learning to carry your person’s voice with you into the interesting part. Look at the mystery, look back, and discover that curiosity and connection can travel together.\",\"no_astro.headline.hybrid\":\"The Strange Box Becomes a Lesson\",\"no_astro.body.hybrid\":\"A box appears where no box belonged yesterday. Kevin notices immediately; his person knows this is not the time to demand that he become blind to it. They stand at a comfortable distance. Kevin looks, sniffs the air, turns back for a treat, then looks again.\\n\\nBy the end, the box has not been defeated. It has been recruited. Kevin gets an investigation, and his person gets a practiced return of attention.\",\"light_astro.headline.handler\":\"Uranus Can Be Kevin’s Training Spark\",\"light_astro.body.handler\":\"Kevin’s Uranian novelty response is naturally linked with his learning path, so surprise can be fertile training material. Yet that same current can create friction with how he first meets situations and with his focus on a companion.\\n\\nKeep novelty exercises short and successful: notice, check in, move on. Kevin does not need a flat environment; he needs a repeatable way to process an interesting one with you.\",\"light_astro.headline.direct_to_dog\":\"Your Uranus Likes a Good Plot Twist\",\"light_astro.body.direct_to_dog\":\"Kevin, Uranus gives you a lively response to the unexpected. It can turn a surprise into a learning opportunity, provided you have one dependable habit beside all that curiosity: coming back to your person.\\n\\nYou may investigate the plot twist. Just practice returning for the next chapter.\",\"light_astro.headline.hybrid\":\"Training With Kevin’s Uranian Curiosity\",\"light_astro.body.hybrid\":\"Kevin’s Uranian spark makes novelty easy to turn into practice, but it can also scramble his entry into a situation and his attention to his human. So his person makes a small game of it: see the new thing, find the human, earn the next step.\\n\\nThe surprise remains Kevin’s. The shared routine makes it usable.\",\"full_astro.headline.handler\":\"A Whole Novelty Pattern: Talent, Friction, and Repair\",\"full_astro.body.handler\":\"Kevin’s novelty-and-surprise response has three linked jobs in this chart. Its natural channel to the training development vector makes fresh experiences good raw material for learning. Its squares to the Aquarius Ascendant and the primary-companion interface create behavioral friction: the same surprise can disrupt his first response and temporarily compete with connection.\\n\\nThat combination calls for training, not avoidance. Set up low-stakes novelty sessions with distance, a simple check-in cue, and an easy exit. Reward Kevin for noticing and reorienting. He learns that unexpected experience can widen his skills without taking him away from his person.\",\"full_astro.headline.direct_to_dog\":\"Your Chart Makes Surprise Both Teacher and Temptation\",\"full_astro.body.direct_to_dog\":\"Kevin, your novelty response is woven into your learning path, so unfamiliar things wake up your curiosity fast. But it also squares your behavioral doorway and companion interface, which means a surprise can knock your usual social rhythm sideways.\\n\\nYou are not asked to stop noticing. You are asked to practice a bridge: investigate a little, hear your cue, return to your person, and continue together. That is how your plot twists become wisdom.\",\"full_astro.headline.hybrid\":\"Three Paths Lead Back From the Plot Twist\",\"full_astro.body.hybrid\":\"Kevin’s chart repeats one message about novelty. Uranian surprise supports his training development, yet it strains both his first-response style and his one-to-one bond. A new thing can therefore make him bright, busy, and briefly hard to reach.\\n\\nHis human answers with an elegant routine: offer space, invite a check-in, reward it, and choose whether to approach or leave. Kevin keeps the adventure of discovery; the relationship becomes the reliable return address.\",\"dos.0\":\"Create brief “notice and check in” games with safe new objects or locations.\",\"dos.1\":\"Increase distance from a surprise until Kevin can take a cue and respond.\",\"dos.2\":\"Reward the first moment Kevin turns from novelty back toward you.\",\"donts.0\":\"Do not demand that Kevin ignore every unfamiliar stimulus immediately.\",\"donts.1\":\"Do not keep adding novelty once he can no longer respond to simple cues.\",\"donts.2\":\"Do not treat an interrupted response as a moral failure.\",\"funny_dog_quotes.0\":\"“The box was unexpected, which means it was clearly scheduled for my investigation.” —Kevin\",\"imperative_dog_quotes.0\":\"“Look at the mystery, Kevin, then find your human.”\",\"applicable_canine_jokes.0\":\"Kevin does not get distracted by surprises; he accepts them as urgent consulting contracts.\",\"context_filter_groups.high_level\":\"Learning\\nTraining\",\"context_filter_groups.detail_level\":\"Learning & Training\\nStress & Resilience\"},\"cards/Story 018 -- relationship_8a2fc135ec0d2311/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin can learn to turn sensitivity to atmosphere into a trust-building public role rather than becoming flooded by it.\",\"plan.memorable_takeaway\":\"When Kevin feels securely connected, his sensitivity can make him an unusually thoughtful companion in changing environments.\",\"plan.recognizable_behavior\":\"He may absorb the mood of a setting, become watchful around uncertain social energy, and do best with a calm person-led ritual.\",\"plan.likely_misunderstanding\":\"His attentiveness to atmosphere may look like fragility, though it can be developed into steady social awareness.\",\"plan.grounded_surprise\":\"Trust is not separate from Kevin’s adventures; it is what lets him carry his soft antennae into the wider world.\",\"plan.neighbor_distinction\":\"This is the cooperative practice between deep trust and atmosphere sensitivity, not novelty conflict or adventure confidence alone.\",\"plan.writing_form\":\"A quiet portrait of the dog who reads the weather in a room.\",\"plan.comic_premise\":\"Kevin’s invisible job title is Assistant Director of Vibes, and he takes the clipboard seriously.\",\"plan.creative_approach\":\"Use a calm outing ritual to show trust turning porous attention into grounded companionship.\",\"no_astro.headline.handler\":\"Give the Sensitive Scout a Steady Base\",\"no_astro.body.handler\":\"Kevin may read a room before he fully enters it. A shifted mood, busy social energy, or unfamiliar atmosphere can catch his attention, especially when he is trying to decide how safe and connected he feels. This is not a reason to hide him from every changing setting. It is a reason to give him a dependable base inside them.\\n\\nUse a familiar check-in ritual on outings: pause, offer a cue he knows, and let him choose a little space if needed. With practice, Kevin can carry his sensitivity as awareness rather than burden.\",\"no_astro.headline.direct_to_dog\":\"Your Soft Antennae Need a Home Signal\",\"no_astro.body.direct_to_dog\":\"Kevin, you notice the weather in a room even when there are no clouds. That can make a new place feel full of information. A trusted person, a familiar cue, and a little room to breathe tell you that you do not have to solve every feeling you detect.\\n\\nYou can be the dog who notices deeply and still walks forward with a loose leash.\",\"no_astro.headline.hybrid\":\"A Calm Person Makes Room for Kevin’s Radar\",\"no_astro.body.hybrid\":\"At the edge of a busy setting, Kevin takes in more than the visible traffic. His person does not drag him into the center or turn his watchfulness into a crisis. They pause, share a familiar cue, and move only when Kevin can reconnect.\\n\\nEach repetition teaches the same useful truth: Kevin can sense the atmosphere without carrying it alone. His person becomes the steady note beneath all the changing noise.\",\"light_astro.headline.handler\":\"Pluto and Neptune Help Kevin Practice Trust\",\"light_astro.body.handler\":\"Kevin’s Pluto–Neptune sextile links deep trust with sensitivity to atmosphere. It is a cooperative aspect, but one that becomes stronger through practice. He may be highly aware of emotional weather; reliable rituals help that awareness settle into thoughtful companionship.\\n\\nBring familiar cues, predictable pacing, and permission for space to new social settings. Trust gives Kevin’s sensitivity somewhere stable to land.\",\"light_astro.headline.direct_to_dog\":\"Your Pluto–Neptune Sextile Can Be a Shelter\",\"light_astro.body.direct_to_dog\":\"Kevin, Pluto gives your trust feelings depth, and Neptune gives you porous, imaginative antennae. Their sextile says you can practice using both together. You may feel the atmosphere, then lean into a familiar connection instead of getting lost in it.\\n\\nA calm cue from your person is not an interruption. It is a handrail for your sensitive bravery.\",\"light_astro.headline.hybrid\":\"Trust and Atmosphere Learn to Cooperate\",\"light_astro.body.hybrid\":\"Kevin’s Pluto–Neptune sextile offers a workable alliance between deep trust and sensitivity. In a new environment, his person supplies the reliable ritual; Kevin supplies the fine-grained awareness. Neither has to cancel the other.\\n\\nAs they practice, Kevin becomes more able to take his emotional radar on adventures without letting every passing signal steer the whole outing.\",\"full_astro.headline.handler\":\"Pluto in Libra Sextile Neptune in Sagittarius: Trust With Antennae\",\"full_astro.body.handler\":\"Kevin’s Pluto in Libra, in Doghouse 8 of deep trust and vulnerability, forms a 1.53° sextile to Neptune in Sagittarius in Doghouse 10 of visible pack role. Pluto intensifies questions of trust and social harmony; Neptune absorbs atmosphere and carries a dreamy, adventurous sensitivity. The sextile creates a trainable channel between them.\\n\\nIn practical terms, Kevin can learn that his public, outward-facing life need not overwhelm his deeper need for secure connection. Rehearse calm arrival routines in mildly stimulating places, reward engagement with you, and give him a graceful way to step back. Practice turns emotional permeability into social poise.\",\"full_astro.headline.direct_to_dog\":\"A Sextile Between Your Deep Trust and Your Wide Horizon\",\"full_astro.body.direct_to_dog\":\"Kevin, your Libra Pluto lives deep in the territory of trust, while Sagittarius Neptune reaches into atmosphere, imagination, and adventure. Their sextile, only 1.53° apart, gives you a usable path between feeling deeply and moving through a large, changing world.\\n\\nYou can pause beside your person, take in the scene, and then proceed one manageable step at a time. Your sensitivity is not a command to retreat; with trust, it can become discernment.\",\"full_astro.headline.hybrid\":\"Kevin’s Trust Becomes His Public Compass\",\"full_astro.body.hybrid\":\"The Pluto–Neptune sextile connects Kevin’s Doghouse 8 vulnerability with his Doghouse 10 visible role. He may register a setting’s mood strongly, yet the aspect offers practice-based cooperation: secure relationship can support outward participation.\\n\\nHis person makes the first minutes of an outing familiar—same cue, same pace, same permission to create distance. Kevin begins to discover that he can be visible, curious, and socially graceful without surrendering the safety of the bond.\",\"dos.0\":\"Use the same brief grounding routine when arriving in a stimulating place.\",\"dos.1\":\"Keep enough distance that Kevin can respond to his name and an easy cue.\",\"dos.2\":\"End practice while he is still successful, so new settings predict manageable connection.\",\"donts.0\":\"Do not force greetings when Kevin is busy reading the environment.\",\"donts.1\":\"Do not label all sensitivity as weakness or all watchfulness as a problem.\",\"donts.2\":\"Do not make unpredictable social exposure his only form of enrichment.\",\"funny_dog_quotes.0\":\"“I am not judging the vibe. I am filing a highly detailed report on it.” —Kevin\",\"imperative_dog_quotes.0\":\"“Check your person’s signal, Kevin, before you audit the room.”\",\"applicable_canine_jokes.0\":\"Kevin’s weather forecast: partly cloudy, with a strong chance of needing one familiar cue.\",\"context_filter_groups.high_level\":\"Trust\\nCommunication\",\"context_filter_groups.detail_level\":\"Trust & Security\\nEmotions & Inner World\"},\"cards/Story 022 -- placement_2600077993c79923/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s action drive comes alive through useful routine, playful pursuit, and the pleasure of being noticed for doing a job well.\",\"plan.memorable_takeaway\":\"For Kevin, training is not merely restraint; it is a stage where effort, play, and recognition can meet.\",\"plan.recognizable_behavior\":\"He may brighten at a familiar game or task, bring strong chase energy, and enjoy an enthusiastic response to a completed cue.\",\"plan.likely_misunderstanding\":\"His desire for lively feedback can be mistaken for vanity or excess energy rather than motivation that can be directed.\",\"plan.grounded_surprise\":\"A small daily task may satisfy Kevin more deeply when it feels like a performance with a clear purpose.\",\"plan.neighbor_distinction\":\"This is Mars’s independent routine-and-action signature, not its opposition to Kevin’s unconventional first response.\",\"plan.writing_form\":\"A profile of Kevin as the eager employee of the day.\",\"plan.comic_premise\":\"Kevin does not simply complete a cue; he expects the audience to acknowledge the achievement.\",\"plan.creative_approach\":\"Frame daily practice as short jobs with a cue, action, praise, and reset.\",\"no_astro.headline.handler\":\"Kevin Wants a Job With Applause\",\"no_astro.body.handler\":\"Kevin’s energy likes to have somewhere to go, preferably somewhere that includes movement, a clear task, and a person who notices his effort. A routine retrieve, a brisk cue sequence, or a playful chase game can bring out his focus. He is not merely burning fuel; he is answering an invitation to do something well.\\n\\nMake everyday training active and brief. Ask for one known behavior, give him a lively release into the next task, and acknowledge the finish. Kevin’s enthusiasm becomes easier to guide when it has a regular place to shine.\",\"no_astro.headline.direct_to_dog\":\"You Were Built for the Big Finish\",\"no_astro.body.direct_to_dog\":\"Kevin, you like action with a point. A cue, a dash, a retrieve, a triumphant return—now that is a respectable agenda. You enjoy knowing that your effort landed somewhere and that your person saw it.\\n\\nKeep showing up for your little daily jobs. They are not boring chores when they let you move, succeed, and share a moment of celebration.\",\"no_astro.headline.hybrid\":\"The Daily Task Gets a Curtain Call\",\"no_astro.body.hybrid\":\"Kevin’s person asks for a simple cue before a game begins. Kevin complies, receives the release, races after the toy, and returns as though delivering the evening’s keynote address. His person praises the return, resets the toy, and gives him another turn.\\n\\nThis is more than exercise. Kevin learns that restraint opens the door to action, and his person learns that recognition is part of what makes the routine work.\",\"light_astro.headline.handler\":\"Leo Mars Loves a Useful Performance\",\"light_astro.body.handler\":\"Kevin’s Mars in Leo gives his action and play drive warmth, visibility, and a desire to throw himself into the moment. In the training-and-care part of his chart, that energy responds especially well to regular active tasks and clear feedback.\\n\\nUse upbeat, short practice sessions. Give his pursuit drive an appropriate game, then praise the completed return or settle. Kevin’s Mars is easier to live with when it gets an honest round of applause.\",\"light_astro.headline.direct_to_dog\":\"Leo Mars Gives You a Mission\",\"light_astro.body.direct_to_dog\":\"Kevin, your Leo Mars wants to act with heart. You may chase, play, and tackle a familiar task as if it deserves a banner overhead. Because Mars sits in your daily-routine territory, regular practice gives that fire a friendly home.\\n\\nDo the cue, take the release, bring the toy back, and enjoy being noticed. A good job is one of your favorite games.\",\"light_astro.headline.hybrid\":\"Mars Makes the Routine Feel Like a Game\",\"light_astro.body.hybrid\":\"Kevin’s Leo Mars turns routine action into a chance to show up brightly. His person supplies the structure—a cue, a release, a finish—while Kevin supplies the wholehearted pursuit. The praise at the end is not fluff; it completes the loop.\\n\\nTogether they make daily care and training feel less like compliance and more like a shared sport.\",\"full_astro.headline.handler\":\"Mars in Leo in Doghouse 6: The Proud Working Playmate\",\"full_astro.body.handler\":\"Mars describes Kevin’s immediate action, assertion, pursuit, and play drive. In Leo, it operates with visible enthusiasm and an appetite for acknowledgement; in Doghouse 6, its outlet is daily training, routine, and care. His chase-and-play drive is therefore best served by regular, concrete tasks that let him act and succeed.\\n\\nOffer structured movement rather than vague arousal. A short sequence might be hand target, release to retrieve, return, then settle on a mat. Praise the useful part—the return, the response, the recovery. Kevin learns that his impressive energy belongs inside a cooperative routine.\",\"full_astro.headline.direct_to_dog\":\"Leo Mars Gives Your Daily Work Some Flair\",\"full_astro.body.direct_to_dog\":\"Kevin, Mars is your engine for pursuit, action, and assertion. Yours is in Leo, where effort likes to be wholehearted and noticed, and in Doghouse 6, where everyday routines give that engine direction. You are allowed to enjoy doing things with style.\\n\\nLet your person make the rules of the game clear. Then chase, fetch, respond, and recover like the capable dog you are. The applause is best when it follows the whole sequence.\",\"full_astro.headline.hybrid\":\"A Leo Mars Routine for Kevin\",\"full_astro.body.hybrid\":\"Kevin’s Mars in Leo sits in Doghouse 6, binding his active chase-and-play drive to training routine and care. He may bring showmanship to a simple task, especially when his person makes the task active and recognizes the completion.\\n\\nA consistent game sequence gives both partners something useful: Kevin gets motion and a visible win; his person gets a dog who rehearses impulse control before and after the exciting part. The routine becomes a stage with good manners.\",\"dos.0\":\"Schedule short active training games rather than waiting for Kevin to create his own outlet.\",\"dos.1\":\"Praise specific successes such as a recall, return, or calm finish.\",\"dos.2\":\"Pair exciting play with a practiced settle behavior.\",\"donts.0\":\"Do not rely on endless hype without a task or recovery cue.\",\"donts.1\":\"Do not make every exercise slow and static if Kevin is ready for an active job.\",\"donts.2\":\"Do not withhold all feedback when he completes a clear request.\",\"funny_dog_quotes.0\":\"“I did sit, but I also delivered it with emotional range.” —Kevin\",\"imperative_dog_quotes.0\":\"“Bring it back, Kevin, and take your bow.”\",\"applicable_canine_jokes.0\":\"Kevin’s training résumé lists “retrieval specialist” and “accepts praise in all currencies.”\",\"context_filter_groups.high_level\":\"Training\\nPlay\",\"context_filter_groups.detail_level\":\"Learning & Training\\nEnergy & Motivation\"},\"cards/Story 026 -- synthesis_2f9e924cb6145c62/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s attachment, outward adventure, and play impulse tend to light up together: shared action is how he feels part of the pack.\",\"plan.memorable_takeaway\":\"For Kevin, “come with me” and “let’s play” are often the same invitation to belong.\",\"plan.recognizable_behavior\":\"He may become especially animated when a person joins an outing, game, or pursuit rather than merely providing it from afar.\",\"plan.likely_misunderstanding\":\"His eagerness can look like simple demand for activity, when the social partnership is a crucial part of the reward.\",\"plan.grounded_surprise\":\"Kevin is not choosing between companionship and adventure; companionship is what makes adventure feel complete.\",\"plan.neighbor_distinction\":\"This synthesis combines pack-adventure fusion and companion-play fusion into one whole-dog social-action pattern.\",\"plan.writing_form\":\"A manifesto for the two-member expedition.\",\"plan.comic_premise\":\"Kevin assumes every thrown toy is a formal invitation to co-author an epic.\",\"plan.creative_approach\":\"Show shared movement as a relationship ritual, with practical turns and cooperative games rather than solitary frenzy.\",\"no_astro.headline.handler\":\"For Kevin, Fun Has a Plus-One\",\"no_astro.body.handler\":\"Kevin’s appetite for movement is often social at its core. A walk becomes brighter when it is an expedition with you; a game becomes more compelling when it has turns, cues, and a shared finish. He may not merely want the ball or the route. He wants the feeling that his person is in the adventure with him.\\n\\nUse that gift deliberately. Build cooperative games into the day: hide-and-seek recalls, a retrieve with a handoff, or a walk with planned check-ins. Kevin’s enthusiasm has more shape when belonging and action arrive together.\",\"no_astro.headline.direct_to_dog\":\"Your Best Adventures Include Your Team\",\"no_astro.body.direct_to_dog\":\"Kevin, a good adventure is improved by witnesses, collaborators, and preferably one beloved human who understands the assignment. You like to move toward things, but you also like the moving-toward to mean something between you and your people.\\n\\nLet your games include returns and check-ins. They do not spoil the expedition. They prove you are traveling as a team.\",\"no_astro.headline.hybrid\":\"The Ball Is a Group Project\",\"no_astro.body.hybrid\":\"Kevin sees the toy. His person sees a chance for a game. Kevin races out; the person becomes important again at the handoff, the praise, and the next release. Later, on a walk, the same pattern returns: Kevin explores, checks back, and heads onward with renewed purpose.\\n\\nHis joy is not split between his pack and his momentum. The bond is the engine that makes movement feel worth repeating.\",\"light_astro.headline.handler\":\"Kevin’s Chart Fuses Bonding With Motion\",\"light_astro.body.handler\":\"Two conjunction patterns in Kevin’s chart tell the same story: pack identity runs with adventure confidence, and his primary bond runs with his action-and-play drive. For him, connection and movement naturally co-activate.\\n\\nMake training and recreation relational. Invite him into games that require a return to you, not just an independent burst. Kevin is likely to find shared action especially rewarding.\",\"light_astro.headline.direct_to_dog\":\"Your Chart Says Adventure Is Better Together\",\"light_astro.body.direct_to_dog\":\"Kevin, your chart ties your pack feeling to your adventurous confidence, and your favorite-person bond to your play drive. That is why a game can feel like affection in motion.\\n\\nRun, explore, retrieve, and come back to your people. You are not interrupting your fun when you reconnect; you are completing it.\",\"light_astro.headline.hybrid\":\"Two Conjunctions, One Team Spirit\",\"light_astro.body.hybrid\":\"Kevin’s chart joins pack identity with adventure and joins his primary companionship with play drive. His person may notice that he comes alive most fully when activity is shared rather than merely supplied.\\n\\nA cooperative game gives both conjunctions a voice: Kevin gets to pursue and perform; his human becomes partner, guide, and delighted audience. The return is part of the thrill.\",\"full_astro.headline.handler\":\"Kevin’s Repeating Conjunction Pattern: Belonging in Motion\",\"full_astro.body.handler\":\"This synthesis gathers two conjunctions, relationships in which systems run together. Kevin’s pack identity is fused with adventure confidence, while his primary companion interface is fused with his chase-and-play drive. The repeating theme is an inseparable impulse: group belonging, outward exploration, one-to-one connection, and active play tend to arrive as one package.\\n\\nGive that package constructive form. Use side-by-side walks with recalls, cooperative retrieves, and games in which Kevin’s pursuit ends in reconnecting with you. His energy is not only a request for exercise; it is a request for shared participation.\",\"full_astro.headline.direct_to_dog\":\"Your Conjunctions Make a Traveling Pack\",\"full_astro.body.direct_to_dog\":\"Kevin, two conjunctions in your chart keep making the same suggestion. Your pack identity travels with your confidence to explore, and your companion bond travels with your urge to chase and play. You are a dog whose joy likes company and motion at once.\\n\\nGo investigate the world, then turn back and include your person in the story. The check-in is not the end of the adventure. It is the part that makes it yours together.\",\"full_astro.headline.hybrid\":\"When Kevin’s Pack Instinct Starts Running\",\"full_astro.body.hybrid\":\"Kevin’s conjunction pattern fuses systems that many dogs experience separately: pack role with adventure confidence, and primary companionship with immediate play drive. A shared outing can therefore switch on his whole social engine.\\n\\nHis person can meet that engine with collaboration rather than constant restraint—give Kevin an exploratory task, call him back, release him again, celebrate the return. He learns that freedom has a partner, and the human learns that connection can be active.\",\"dos.0\":\"Choose games where Kevin’s exciting action ends with a return, handoff, or check-in.\",\"dos.1\":\"Invite him into shared exploration with pauses to reconnect before moving on.\",\"dos.2\":\"Let family members take turns being part of a predictable cooperative game.\",\"donts.0\":\"Do not assume solitary exercise will meet every need behind Kevin’s excitement.\",\"donts.1\":\"Do not make recalls mean that all fun instantly ends every time.\",\"donts.2\":\"Do not mistake his request for shared activity as mere attention-seeking.\",\"funny_dog_quotes.0\":\"“I did not request a walk. I requested a joint expedition with snacks and witnesses.” —Kevin\",\"imperative_dog_quotes.0\":\"“Bring your person into the game, Kevin.”\",\"applicable_canine_jokes.0\":\"Kevin’s favorite team sport is fetch, because the roster has exactly two players and one ball.\",\"context_filter_groups.high_level\":\"Pack\\nAdventure\\nPlay\",\"context_filter_groups.detail_level\":\"Social & Pack Life\\nPlay & Adventure\"},\"cards/Story 034 -- relationship_9c454989bd05aa64/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s affection is gently shaped by information: he bonds through shared exploration, but small scent and cue details subtly influence where his attention and trust go.\",\"plan.memorable_takeaway\":\"Kevin’s fondness often grows through the tiny facts he gathers along the way.\",\"plan.recognizable_behavior\":\"On an outing, he may show warm interest while repeatedly pausing to decipher scents, signals, and changes in routine.\",\"plan.likely_misunderstanding\":\"A handler may think sniffing interrupts social connection, when it can be part of how Kevin makes sense of a pleasant shared experience.\",\"plan.grounded_surprise\":\"For Kevin, information-gathering can be a form of intimacy rather than a distraction from it.\",\"plan.neighbor_distinction\":\"This is a subtle bonding-and-signal nudge, not a sweeping account of his affection or his investigative mind separately.\",\"plan.writing_form\":\"A miniature essay about the social meaning of a sniff.\",\"plan.comic_premise\":\"Kevin’s affectionate outing includes a mandatory forensic department.\",\"plan.creative_approach\":\"Portray a shared walk where affection and investigation make small adjustments to each other.\",\"no_astro.headline.handler\":\"Kevin Bonds by Reading the Fine Print\",\"no_astro.body.handler\":\"Kevin may enjoy heading out with you and still insist on stopping to read the ground. His affection does not disappear when his nose goes to work. Often, the shared outing becomes richer because he is gathering little pieces of information while remaining in your company.\\n\\nTry giving him planned sniff breaks, then inviting him onward with a cheerful cue. You are not competing with the scent trail. You are teaching Kevin that exploration and connection can take turns in the same walk.\",\"no_astro.headline.direct_to_dog\":\"Your Nose Is Part of the Date\",\"no_astro.body.direct_to_dog\":\"Kevin, you like companionship with a side of investigation. A pleasant walk is not complete until you have checked the local messages, compared a few scents, and decided what they might mean. Your person can still be central to the adventure.\\n\\nTake your sniff, then answer the invitation to continue. You can be devoted and deeply interested in that leaf at the same time.\",\"no_astro.headline.hybrid\":\"A Walk With Detours and Devotion\",\"no_astro.body.hybrid\":\"Kevin heads out happily beside his person, then brakes for a scent patch with the seriousness of a detective. The person allows a brief read, offers an onward cue, and Kevin resumes the walk with a soft, satisfied bounce.\\n\\nTheir compromise is small but revealing. Kevin gets to understand the territory, while his person stays woven into the experience rather than becoming the enemy of every interesting smell.\",\"light_astro.headline.handler\":\"Venus and Mercury Make Small Adjustments\",\"light_astro.body.handler\":\"Kevin’s Venus–Mercury semisextile creates a subtle conversation between bonding and information processing. His Venus enjoys the shared adventure; his Mercury wants to decode signals and scents. Neither overwhelms the other, but each can nudge the rhythm of an outing.\\n\\nUse sniff breaks as part of connection, then practice a friendly transition cue. Kevin can learn that investigating and traveling with you belong in the same pleasant routine.\",\"light_astro.headline.direct_to_dog\":\"Venus Likes the Walk; Mercury Reads the Trail\",\"light_astro.body.direct_to_dog\":\"Kevin, your Venus enjoys the adventure with your people, while Mercury wants to inspect every useful clue along the route. Their small semisextile means each one quietly nudges the other.\\n\\nKeep your curious nose, and practice leaving a scent when your human asks. The best walks let you gather information without losing the companion beside you.\",\"light_astro.headline.hybrid\":\"Venus and Mercury Share Kevin’s Leash\",\"light_astro.body.hybrid\":\"Kevin’s Venus wants the pleasure of a shared outing. His Mercury wants the trail’s details. In their semisextile, these are not dramatic rivals; they make tiny adjustments all along the walk.\\n\\nHis person can honor both by granting a sniff break and then inviting movement. Kevin learns that the leash is not a deadline—it is the thread connecting investigation to companionship.\",\"full_astro.headline.handler\":\"Venus in Sagittarius Semisextile Mercury in Scorpio\",\"full_astro.body.handler\":\"Kevin’s Venus in Sagittarius describes an adventurous, affiliative bonding style, while Mercury in Scorpio gives attention a searching, signal-reading quality. Their semisextile is very close at 0.37°, a subtle aspect of adjacent adjustment rather than a dramatic merger. Venus wants shared pleasure and outward territory; Mercury keeps adding small questions, scents, and clues, especially around deeper trust.\\n\\nWork with the nudge. On walks, schedule a few sniff windows and use one consistent cue to resume. Kevin does not need affection and investigation separated; he needs them gently coordinated.\",\"full_astro.headline.direct_to_dog\":\"A 0.37° Nudge Between Affection and Clues\",\"full_astro.body.direct_to_dog\":\"Kevin, your Sagittarius Venus loves companionship on the open route, while Scorpio Mercury wants to decode what the route is saying. They sit in a close 0.37° semisextile, so your fondness and your investigation make quiet adjustments to one another.\\n\\nYou may pause to read the news in the grass. Then follow your person onward. Your curiosity can make shared adventure more meaningful, not less loving.\",\"full_astro.headline.hybrid\":\"The Small Aspect That Changes the Pace\",\"full_astro.body.hybrid\":\"The close Venus–Mercury semisextile gives Kevin a modest but persistent rhythm: the desire to share adventure is continually nudged by the urge to interpret scent and signal. His person experiences this as a dog who is warmly present, then suddenly absorbed in a clue.\\n\\nA planned sniff break and an easy onward cue meet both planets. Kevin gets to be the explorer-detective; his human gets a walk where connection stays intact through the detours.\",\"dos.0\":\"Build brief sniff opportunities into walks before asking Kevin to move on.\",\"dos.1\":\"Use a consistent onward cue and reward him for leaving a scent patch with you.\",\"dos.2\":\"Notice whether shared exploration increases Kevin’s ease and engagement.\",\"donts.0\":\"Do not treat all scent investigation as a refusal to connect.\",\"donts.1\":\"Do not yank Kevin away from every smell without offering an alternative task.\",\"donts.2\":\"Do not let unlimited sniffing replace practicing transitions.\",\"funny_dog_quotes.0\":\"“I love you deeply. I also need to question this shrub.” —Kevin\",\"imperative_dog_quotes.0\":\"“Read the trail, Kevin, then rejoin the expedition.”\",\"applicable_canine_jokes.0\":\"Kevin’s love language is quality time, followed closely by scent-based peer review.\",\"context_filter_groups.high_level\":\"Communication\\nTrust\\nAdventure\",\"context_filter_groups.detail_level\":\"Communication\\nTrust & Security\\nPlay & Adventure\"},\"cards/Story 038 -- relationship_c3f0e739cbea5734/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s unusual first response can be knocked off course by novelty, producing a need to investigate or burst into motion before he can re-engage.\",\"plan.memorable_takeaway\":\"Kevin needs a practiced recovery from surprise, not a demand to have no reaction to it.\",\"plan.recognizable_behavior\":\"An unexpected stimulus may interrupt his normal greeting or route and lead to intense scanning, a detour, or sudden movement.\",\"plan.likely_misunderstanding\":\"The handler may view the reaction as random misbehavior, rather than friction between how Kevin presents himself and how novelty pulls him outward.\",\"plan.grounded_surprise\":\"The solution is not making Kevin less curious; it is giving curiosity an exit ramp back to cooperation.\",\"plan.neighbor_distinction\":\"This card isolates the square between first response and novelty, rather than the broader novelty synthesis or Kevin’s basic oddball style.\",\"plan.writing_form\":\"A recovery protocol for the interrupted entrance.\",\"plan.comic_premise\":\"Kevin’s greeting software occasionally installs an urgent update from a suspicious leaf.\",\"plan.creative_approach\":\"Explain the interruption sequence and teach distance, orienting, and a simple re-entry cue.\",\"no_astro.headline.handler\":\"When the Unexpected Hijacks the Greeting\",\"no_astro.body.handler\":\"Kevin may begin a situation with his own distinctive style, then have that plan derailed by a surprise. A sound, movement, or unfamiliar detail can pull him into scanning, investigating, or a quick burst of energy. The important skill is not instant indifference. It is recovery.\\n\\nCreate space first. When he can notice the surprise without being swept away, ask for an easy orienting cue and reward his return to you. Rehearsed often, that small sequence gives Kevin a way back into the moment after novelty interrupts it.\",\"no_astro.headline.direct_to_dog\":\"Surprises Can Borrow the Steering Wheel\",\"no_astro.body.direct_to_dog\":\"Kevin, you already have your own interesting way of entering a situation. Then something unexpected appears, and suddenly it seems extremely important to investigate, reorganize, or zoom. That is a lot of input for one handsome brain.\\n\\nYour people can help you practice a return route: notice it, take a breath of distance, find your cue, and come back to the shared plan.\",\"no_astro.headline.hybrid\":\"A Detour Needs a Return Ramp\",\"no_astro.body.hybrid\":\"Kevin and his person are halfway through an ordinary transition when an unexpected stimulus changes the script. Kevin’s attention flies outward. Instead of tightening the argument, his person adds distance, waits for one glance back, and rewards it.\\n\\nThe surprise remains surprising. But the pair now has a route through it. Kevin is allowed to react, and his human becomes the place where the reaction can resolve.\",\"light_astro.headline.handler\":\"Aquarius Rising Squares Kevin’s Uranus\",\"light_astro.body.handler\":\"Kevin’s Aquarius Ascendant already makes his first response unconventional. Uranus adds surprise, independence, and disruption; their square creates friction between how he enters a moment and how strongly novelty can pull him off course.\\n\\nTrain a recovery cue in low-distraction settings, then use it at a comfortable distance from interesting surprises. Kevin needs repetition that says: “You may notice that—and you can come back.”\",\"light_astro.headline.direct_to_dog\":\"Your Aquarius–Uranus Square Wants a Reset\",\"light_astro.body.direct_to_dog\":\"Kevin, your Aquarius Rising likes its own approach, and Uranus loves an unexpected interruption. Their square can make a surprise feel like it has rearranged the whole agenda.\\n\\nYou do not have to pretend the surprise is nothing. Practice the reset with your person: see it, turn back, get rewarded, and decide the next step together.\",\"light_astro.headline.hybrid\":\"A Square Makes Kevin Practice the Reset\",\"light_astro.body.hybrid\":\"Kevin’s Aquarius Ascendant wants to meet the world in his personal style. Uranus throws in odd, compelling plot twists. The square between them can turn a simple entrance into an abrupt detour.\\n\\nHis person responds with a practiced reset instead of a scolding: gain distance, ask for orientation, reinforce the return. Each success makes novelty less likely to take over the whole shared moment.\",\"full_astro.headline.handler\":\"Ascendant Square Uranus: Practice the Re-Entry\",\"full_astro.body.handler\":\"Kevin’s Aquarius Ascendant is his behavioral doorway—his first response and visible way of meeting the world. Uranus in Scorpio, operating through obsessive investigation in Doghouse 9 adventure territory, forms a 3.40° square to that Ascendant. Squares create friction requiring usable action: surprise can interrupt Kevin’s already unconventional entry style and pull him into intense curiosity or abrupt movement.\\n\\nGive the square an outlet through a recovery routine. Increase distance from the novel trigger, cue a familiar hand target or name response, reward the turn back, and then choose whether to investigate safely. The goal is not a blank reaction; it is a dog who can re-enter connection.\",\"full_astro.headline.direct_to_dog\":\"Your Uranus Square Has an Exit Ramp\",\"full_astro.body.direct_to_dog\":\"Kevin, your Aquarius Ascendant gives you a distinctive way of meeting experience. Uranus in Scorpio is captivated by novelty and investigation, and its 3.40° square can make an unexpected thing pull hard against your original plan.\\n\\nThat tension needs a usable outlet. At a safe distance, notice the strange thing, answer your person’s cue, and earn the chance to move forward wisely. You can keep your curiosity without letting it drive alone.\",\"full_astro.headline.hybrid\":\"Kevin and the 3.40° Plot Twist\",\"full_astro.body.hybrid\":\"The square from Uranus in Scorpio to Kevin’s Aquarius Ascendant makes novelty a practical challenge at the point of first contact. He may approach a moment in an individual way, then have an unexpected detail provoke an investigative detour or energetic disruption.\\n\\nHis human can turn the square into training: create room, invite a simple response, reinforce it, and only then decide on access. Kevin experiences both freedom to notice and the security of a joint plan.\",\"dos.0\":\"Practice a name response or hand target in easy settings before using it around surprises.\",\"dos.1\":\"Move farther away from the unexpected stimulus until Kevin can orient back to you.\",\"dos.2\":\"Reward recovery quickly, even if Kevin first needed a moment to notice.\",\"donts.0\":\"Do not crowd Kevin closer to a surprise to prove that he can handle it.\",\"donts.1\":\"Do not punish the first sign that novelty has caught his attention.\",\"donts.2\":\"Do not keep repeating a cue when he is too activated to process it.\",\"funny_dog_quotes.0\":\"“I had a plan until that leaf behaved independently.” —Kevin\",\"imperative_dog_quotes.0\":\"“Notice the surprise, Kevin, then take the return ramp.”\",\"applicable_canine_jokes.0\":\"Kevin’s GPS recalculates whenever the environment submits a weirdness update.\",\"context_filter_groups.high_level\":\"Training\\nAdventure\",\"context_filter_groups.detail_level\":\"Stress & Resilience\\nLearning & Training\"},\"cards/Story 042 -- placement_fe632b84573cdc98/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin’s confidence expands most naturally when exploration feels socially harmonious and securely shared.\",\"plan.memorable_takeaway\":\"Kevin is a diplomat of adventure: he is most willing to widen his world when the relationship feels good inside it.\",\"plan.recognizable_behavior\":\"He may approach new territory with warm curiosity, checking the social atmosphere and looking for a cooperative route rather than charging ahead alone.\",\"plan.likely_misunderstanding\":\"His social check-ins may be mistaken for hesitation, though they can be how he builds confidence.\",\"plan.grounded_surprise\":\"Kevin’s courage is relational; agreement and goodwill can be the launchpad for exploration.\",\"plan.neighbor_distinction\":\"This is Jupiter’s individual pattern of socially attuned confidence, not the fusion of adventure with pack identity.\",\"plan.writing_form\":\"A portrait of a courteous explorer.\",\"plan.comic_premise\":\"Kevin believes every expedition deserves a committee vote and excellent morale.\",\"plan.creative_approach\":\"Show confidence as an expanding circle anchored by gentle social coordination.\",\"no_astro.headline.handler\":\"Kevin Explores Best in Good Company\",\"no_astro.body.handler\":\"Kevin’s confidence may grow through a surprisingly gentle route. He is drawn toward new ground, but he also seems to care whether the shared atmosphere feels right. A calm companion, an unhurried pace, and a cooperative check-in can make him readier to widen his circle.\\n\\nLet exploration be social rather than pushy. Invite him to investigate, praise his voluntary movement forward, and keep the leash conversation light. Kevin’s curiosity is likely to bloom when adventure feels like a mutual agreement.\",\"no_astro.headline.direct_to_dog\":\"You Are a Courteous Explorer\",\"no_astro.body.direct_to_dog\":\"Kevin, you are interested in what lies beyond the familiar, but you do not have to thunder into it alone. You can look to your people, read the social weather, and then take one more curious step.\\n\\nYour confidence has manners. That does not make it smaller. It gives your adventures a warm, steady center.\",\"no_astro.headline.hybrid\":\"The Expedition Checks In\",\"no_astro.body.hybrid\":\"At a new stretch of path, Kevin looks outward and then back toward his person. The person answers with a relaxed invitation, not a tug. Kevin steps forward, sniffs, and returns another glance before moving farther.\\n\\nTheir progress is not dramatic, but it is real. Kevin’s world grows because the relationship travels with him, making each new patch of ground feel less like a test and more like a shared discovery.\",\"light_astro.headline.handler\":\"Jupiter in Libra Expands Through Harmony\",\"light_astro.body.handler\":\"Kevin’s Jupiter in Libra describes confidence and exploration that grow through balance, social ease, and cooperative pacing. In the deep-trust area of his chart, he may become bolder when a relationship feels secure and mutually respectful.\\n\\nUse calm companionship as part of exploration. Reward his choices to approach, keep the pace manageable, and let connection be the bridge to new experiences.\",\"light_astro.headline.direct_to_dog\":\"Libra Jupiter Makes Bravery Social\",\"light_astro.body.direct_to_dog\":\"Kevin, Jupiter in Libra gives your adventurous confidence a gracious style. You may expand your world by making sure the social thread still feels good: a glance at your person, a shared pause, then onward.\\n\\nKeep taking those small brave steps. Harmony is not a detour from your adventure; it is often how your adventure begins.\",\"light_astro.headline.hybrid\":\"Kevin’s Libra Jupiter Walks Beside You\",\"light_astro.body.hybrid\":\"Kevin’s Jupiter in Libra wants possibility, but it prefers possibility with balance. His person’s relaxed invitation and Kevin’s check-in become a cooperative rhythm that lets him explore farther.\\n\\nThe result is not dependence. It is confidence built in relationship: Kevin learns he can roam outward and still remain part of a friendly, responsive team.\",\"full_astro.headline.handler\":\"Jupiter in Libra in Doghouse 8: Confidence Through Trust\",\"full_astro.body.handler\":\"Jupiter describes Kevin’s appetite for possibility, confidence, and expanding range. In Libra, it operates through social harmony; in Doghouse 8, its growth is tied to deep trust and vulnerability. Kevin may therefore explore most freely when the interpersonal atmosphere feels balanced and his connection with a person is secure.\\n\\nSupport this style with consent-based exploration. Offer slack where safe, invite rather than drag, and reward voluntary approaches to new terrain. His check-ins are not necessarily uncertainty to eliminate; they can be the relational mechanism that lets Jupiter expand his world.\",\"full_astro.headline.direct_to_dog\":\"Jupiter in Libra Makes Trust Your Launchpad\",\"full_astro.body.direct_to_dog\":\"Kevin, your Jupiter in Libra wants your confidence to grow through harmony, and its place in Doghouse 8 ties adventure to the feeling of deep trust. You may look back before you range forward—not because you lack courage, but because shared goodwill helps courage become usable.\\n\\nKeep checking the connection and taking the next step. You are learning that security can travel, even into unfamiliar territory.\",\"full_astro.headline.hybrid\":\"A Doghouse 8 Adventure Is Built Together\",\"full_astro.body.hybrid\":\"Kevin’s Jupiter in Libra sits in Doghouse 8, where confidence meets trust and vulnerability. His adventurous optimism is socially attuned: he often expands best when he and his person are in a quiet agreement about the next move.\\n\\nThe human can make that agreement visible through relaxed pacing, an invitation cue, and praise for voluntary exploration. Kevin’s glance back becomes a resource, not a delay. It is how he carries safety into a larger world.\",\"dos.0\":\"Reward Kevin’s voluntary steps toward safe new terrain or objects.\",\"dos.1\":\"Use a relaxed check-in cue during exploration instead of constant leash pressure.\",\"dos.2\":\"Choose new experiences with enough space for Kevin to approach at his own pace.\",\"donts.0\":\"Do not equate confidence with forcing Kevin to lead or endure everything alone.\",\"donts.1\":\"Do not rush past his social check-ins when he is exploring somewhere unfamiliar.\",\"donts.2\":\"Do not turn every new outing into a high-pressure test.\",\"funny_dog_quotes.0\":\"“I am prepared to explore, pending a brief morale check.” —Kevin\",\"imperative_dog_quotes.0\":\"“Check in, Kevin, then expand your map.”\",\"applicable_canine_jokes.0\":\"Kevin is an adventurer with one rule: no expedition begins until everyone agrees the vibe is excellent.\",\"context_filter_groups.high_level\":\"Adventure\\nTrust\",\"context_filter_groups.detail_level\":\"Play & Adventure\\nTrust & Security\"},\"cards/Story 050 -- placement_8cf9ef33127798ae/WRITE THIS CARD.md\":{\"plan.center_of_gravity\":\"Kevin finds easy happiness in playful success that also reinforces the feeling of home, safety, and inclusion.\",\"plan.memorable_takeaway\":\"Kevin’s most fluent rewards are warm little wins: play that says both “you did it” and “you belong here.”\",\"plan.recognizable_behavior\":\"He may relish familiar tricks, gentle play, or a predictable reward ritual, especially when a person is present and pleased.\",\"plan.likely_misunderstanding\":\"A handler may see these as mere treats or entertainment, overlooking their role in making success feel secure.\",\"plan.grounded_surprise\":\"The reward is not just the prize; it is the cozy social afterglow around the prize.\",\"plan.neighbor_distinction\":\"This card focuses on Kevin’s easy reward channel in play, not Mars’s performance drive or his pack-and-adventure fusion.\",\"plan.writing_form\":\"A love letter to the tiny victory lap.\",\"plan.comic_premise\":\"Kevin believes a completed trick deserves both payment and a family press conference.\",\"plan.creative_approach\":\"Emphasize reliable, low-pressure play rituals that pair success with comfort and connection.\",\"no_astro.headline.handler\":\"Kevin Thrives on Cozy Wins\",\"no_astro.body.handler\":\"Kevin may be especially easy to delight when play, success, and a feeling of togetherness arrive in one small package. A familiar trick followed by a cheerful reward, a gentle game with a trusted person, or a predictable victory ritual can fill his cup without requiring a huge production.\\n\\nKeep a few of these low-pressure wins available every day. They are useful training currency, but they are also emotional housekeeping: Kevin learns that trying, succeeding, and belonging often happen together.\",\"no_astro.headline.direct_to_dog\":\"Your Favorite Prize Feels Like Home\",\"no_astro.body.direct_to_dog\":\"Kevin, you appreciate a reward with warmth around it. A game you know, a trick that works, a pleased human, and a little celebration afterward can make the whole day feel properly arranged.\\n\\nEnjoy your easy wins. They remind you that effort can lead somewhere safe, playful, and full of good company.\",\"no_astro.headline.hybrid\":\"A Treat Is Better With a Victory Ritual\",\"no_astro.body.hybrid\":\"Kevin offers a familiar trick. His person responds with the reward, a bright word, and one more small round of play. Kevin does not receive only a snack or only a game; he receives the whole message: we are together, you succeeded, this is good.\\n\\nThose modest rituals are powerful because they are repeatable. They give Kevin a dependable channel into joy without asking him to get overexcited to earn it.\",\"light_astro.headline.handler\":\"The Part of Fortune Favors Playful Security\",\"light_astro.body.handler\":\"Kevin’s Part of Fortune in Cancer points to ease through comfort, belonging, and emotionally satisfying rewards. In the play-and-tricks part of his chart, that ease appears through familiar games, successful practice, and secure social rituals.\\n\\nUse rewards that feel both fun and reassuring: a known cue, a treat or toy, warm praise, and a calm finish. Kevin’s good fortune often looks like a small shared success.\",\"light_astro.headline.direct_to_dog\":\"Cancer Fortune Likes a Safe Celebration\",\"light_astro.body.direct_to_dog\":\"Kevin, your Part of Fortune in Cancer says that good things flow easily when play also feels secure and connected. A familiar trick can be more than a trick when it ends with praise, reward, and your people’s happy attention.\\n\\nKeep collecting these cozy victories. They are little reminders that the pack is a good place to do your best.\",\"light_astro.headline.hybrid\":\"A Cancer Fortune Makes Play Feel Like Belonging\",\"light_astro.body.hybrid\":\"Kevin’s Cancer Part of Fortune favors playful moments that also reinforce security. His person can turn a simple cue into a tiny ritual—ask, succeed, reward, celebrate, settle—and Kevin receives both stimulation and reassurance.\\n\\nThe game works because it is not only about excitement. It becomes a familiar way for dog and human to say, “Good job; you are safely included here.”\",\"full_astro.headline.handler\":\"Part of Fortune in Cancer in Doghouse 5: Easy, Secure Delight\",\"full_astro.body.handler\":\"The Part of Fortune describes conditions that tend to bring Kevin fluent reward and easy enlivening. In Cancer, its channel favors comfort, resource, and pack security; in Doghouse 5, it comes alive through play, zoomies, tricks, and creative fun. Kevin may therefore find his most natural pleasure in familiar playful success that is warmly shared.\\n\\nUse this as a humane training resource. Keep several easy cues in rotation, pair them with rewards Kevin enjoys, and end with calm affectionate acknowledgment. These are not trivial indulgences; they create a reliable association between effort, success, and emotional safety.\",\"full_astro.headline.direct_to_dog\":\"Your Doghouse 5 Fortune Is a Warm Little Win\",\"full_astro.body.direct_to_dog\":\"Kevin, your Part of Fortune is in Cancer and Doghouse 5. That means your easy-good-things channel runs through playful success, comfort, and the secure feeling of being part of your people’s happy world. A trick, a toy, a reward, and a kind voice can all belong to the same blessing.\\n\\nTake joy seriously. Your small victory rituals help you feel ready to try again tomorrow.\",\"full_astro.headline.hybrid\":\"Kevin’s Easy Reward Channel Has a Home Base\",\"full_astro.body.hybrid\":\"With the Part of Fortune in Cancer in Doghouse 5, Kevin’s most fluent rewards combine play with security. A familiar game is especially nourishing when his human is present, responsive, and pleased with the result.\\n\\nHis person can make this channel dependable through short, winnable rituals: cue, success, reward, praise, quiet finish. Kevin gets more than excitement; he gets a repeatable experience of being capable and safely cherished.\",\"dos.0\":\"Keep several easy, well-loved tricks available for short daily success sessions.\",\"dos.1\":\"Pair play rewards with warm praise and a calm, predictable finish.\",\"dos.2\":\"Use familiar games after a challenging moment to restore a sense of easy success.\",\"donts.0\":\"Do not make every reward contingent on difficult or prolonged performance.\",\"donts.1\":\"Do not use high-arousal play without helping Kevin settle afterward.\",\"donts.2\":\"Do not dismiss simple shared rituals as unimportant because they are easy.\",\"funny_dog_quotes.0\":\"“My trick was flawless. Please notify the household.” —Kevin\",\"imperative_dog_quotes.0\":\"“Take your cozy victory lap, Kevin.”\",\"applicable_canine_jokes.0\":\"Kevin’s reward program has one point system: perform one trick, receive one treat and universal acclaim.\",\"context_filter_groups.high_level\":\"Play\\nTraining\\nPack\",\"context_filter_groups.detail_level\":\"Play & Adventure\\nLearning & Training\\nSocial & Pack Life\"},\"WRITE WHOLE DOG PROFILE.md\":{\"profile.integrated_portrait\":\"Kevin is a warm, socially responsive Golden Retriever with an inventive first response, a flair for active participation, and a remarkable tendency to make shared experiences feel like joint expeditions. He is curious without being merely restless, affectionate without being blandly easygoing, and often most confident when a trusted person is visibly part of the plan. His chart suggests a dog who reads atmosphere, investigates novelty, enjoys an appreciative audience, and wants his place in the pack to be both useful and emotionally real. He is at once the cheerful performer, the sensitive scout, and the slightly unconventional visitor who needs to inspect the threshold before joining the party.\",\"profile.core_temperament\":\"Kevin meets the world with an individual, pattern-breaking style. He may approach a familiar situation from an unexpected angle, pause where another dog would charge in, or make a small ritual of an ordinary transition. Beneath that originality is a strong impulse toward social harmony and participation. He is not best characterized as aloof or purely independent: his distinctiveness is usually expressed in the presence of relationship, activity, and shared attention.\",\"profile.emotional_regulation\":\"Kevin appears sensitive to emotional atmosphere and may take in more of a setting than he can immediately organize. Calm routines, predictable cues, manageable distance, and a familiar person help him regulate. His deeper trust needs are important: when he feels securely connected, he can carry his sensitivity into new or public situations with more grace. Avoid assuming that every pause is fear or every burst is misbehavior; he benefits from room to orient and a practiced route back to connection.\",\"profile.learning_motivation\":\"Kevin learns best when training is lively, concrete, and relational. His Mars pattern favors active tasks, chase-and-play outlets, and clear acknowledgment of a job well done. Novelty can be both a distraction and an excellent training ingredient, especially when sessions teach him to notice something interesting and return his attention to a cue. Short sequences with a recognizable beginning, release, active middle, and calm finish are likely to suit him better than either constant restraint or unstructured excitement.\",\"profile.relationships_trust\":\"One-to-one companionship is a major organizing force for Kevin. He tends to find shared activity rewarding, and his confidence to explore is strengthened by social harmony, patient invitations, and reliable check-ins. Trust is not simply comfort after the adventure; it is the base from which he can venture outward. He may enjoy affection through movement, joint games, walks, and small routines as much as through quiet closeness. His person should be a partner in experience, not only a source of commands.\",\"profile.play_adventure_rhythm\":\"Kevin has an expansive appetite for play, pursuit, exploration, and visible participation. He can bring theatrical energy to a simple retrieve or daily cue, particularly when his effort is noticed. His happiest rhythm combines freedom with cooperative structure: investigate, check in, release into action, return, and settle. Familiar playful victories also replenish him. A known trick, an enjoyable reward, and warm praise can provide a sense of security as well as fun.\",\"profile.tensions_counterweights\":\"Several chart patterns point to a recurring tension between attachment and autonomy, first response and action, or connection and novelty. Kevin may need a moment to approach something in his own way, then become suddenly emphatic about playing, pursuing, or investigating it. Surprises can pull him outward and briefly interrupt his usual social rhythm. The counterweight is not control for its own sake. It is consistent choreography: safe distance, simple cues, legal outlets, return-to-handler reinforcement, and enough slack for harmless individuality.\",\"profile.strengths_growth\":\"Kevin’s strengths include social attunement, wholehearted participation, curiosity, capacity for cooperative learning, and a talent for making routines feel meaningful. His growth edge is developing recovery skills when excitement, novelty, or atmosphere becomes loud: orienting to his person, accepting a transition cue, and settling after a successful burst. He is likely to thrive when his humans reward re-engagement, treat his check-ins as assets, and build his confidence through many small, successful adventures rather than demanding instant composure in every new situation.\",\"profile.voice_humor_imagery\":\"Write Kevin as a courteous explorer, a sensitive scout, and a performer who enjoys a well-earned round of applause. His humor belongs in threshold inspections, scent-based investigations, morale checks before expeditions, ceremonial retrieves, and the idea that every odd object has arrived for his professional review. Keep the warmth generous: he is never a caricature of neediness, chaos, or stubbornness. Images of maps, runways, handrails, field notes, small ceremonies, and collaborative adventures fit his character.\",\"profile.factual_cautions\":\"Kevin is a male Golden Retriever born October 7, 2020, in Denver, Colorado. Do not invent specific history, household composition, trauma, diagnoses, service roles, visitor incidents, medical needs, or observed behaviors as facts. Treat scenes such as walks, greetings, toys, and sniffing as illustrative possibilities, not biographical reports. Ordinary cards must stay within their own claim and evidence; do not import unrelated chart factors merely because they fit the broader portrait. Astrology should be presented as interpretive language, not certainty or behavioral diagnosis.\"}}}"
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": "astrowoof:gpt-5.6-terra:0b01e871ba63256dba0d5bfbb3d01356",
+  "prompt_cache_options": {
+    "mode": "explicit",
+    "ttl": "30m"
+  },
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "medium",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "description": null,
+      "name": "astrowoof_authoring_pass",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "object",
+            "properties": {
+              "cards/Story 002 -- placement_2fe48d9251284733/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 003 -- relationship_4e0c5f290f0c410c/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 014 -- synthesis_5c82513dbc5fdfa7/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 018 -- relationship_8a2fc135ec0d2311/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 022 -- placement_2600077993c79923/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 026 -- synthesis_2f9e924cb6145c62/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 034 -- relationship_9c454989bd05aa64/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 038 -- relationship_c3f0e739cbea5734/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 042 -- placement_fe632b84573cdc98/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 050 -- placement_8cf9ef33127798ae/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "WRITE WHOLE DOG PROFILE.md": {
+                "type": "object",
+                "properties": {
+                  "profile.integrated_portrait": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.core_temperament": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.emotional_regulation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.learning_motivation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.relationships_trust": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.play_adventure_rhythm": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.tensions_counterweights": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.strengths_growth": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.voice_humor_imagery": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.factual_cautions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "profile.integrated_portrait",
+                  "profile.core_temperament",
+                  "profile.emotional_regulation",
+                  "profile.learning_motivation",
+                  "profile.relationships_trust",
+                  "profile.play_adventure_rhythm",
+                  "profile.tensions_counterweights",
+                  "profile.strengths_growth",
+                  "profile.voice_humor_imagery",
+                  "profile.factual_cautions"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "cards/Story 002 -- placement_2fe48d9251284733/WRITE THIS CARD.md",
+              "cards/Story 003 -- relationship_4e0c5f290f0c410c/WRITE THIS CARD.md",
+              "cards/Story 014 -- synthesis_5c82513dbc5fdfa7/WRITE THIS CARD.md",
+              "cards/Story 018 -- relationship_8a2fc135ec0d2311/WRITE THIS CARD.md",
+              "cards/Story 022 -- placement_2600077993c79923/WRITE THIS CARD.md",
+              "cards/Story 026 -- synthesis_2f9e924cb6145c62/WRITE THIS CARD.md",
+              "cards/Story 034 -- relationship_9c454989bd05aa64/WRITE THIS CARD.md",
+              "cards/Story 038 -- relationship_c3f0e739cbea5734/WRITE THIS CARD.md",
+              "cards/Story 042 -- placement_fe632b84573cdc98/WRITE THIS CARD.md",
+              "cards/Story 050 -- placement_8cf9ef33127798ae/WRITE THIS CARD.md",
+              "WRITE WHOLE DOG PROFILE.md"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "files"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    },
+    "verbosity": "high"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 55220,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 16137,
+    "output_tokens_details": {
+      "reasoning_tokens": 66
+    },
+    "total_tokens": 71357
+  },
+  "user": null,
+  "metadata": {}
+}

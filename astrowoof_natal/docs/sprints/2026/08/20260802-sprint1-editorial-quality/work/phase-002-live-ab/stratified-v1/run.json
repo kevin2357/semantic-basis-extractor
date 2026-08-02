@@ -1,0 +1,1111 @@
+{
+  "schema_version": "astrowoof.semantic_closure_run.v0.5",
+  "status": "FINAL_QA_FAILED",
+  "created_at": "2026-08-02T17:45:52.613772+00:00",
+  "updated_at": "2026-08-02T18:28:32.687923+00:00",
+  "input_package": "C:\\tmp\\kevin-semantic-closure-batch-input",
+  "run_dir": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1",
+  "provider": "openai",
+  "service_level": "interactive",
+  "provider_configuration": {
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "medium",
+    "background": true,
+    "base_url": "https://api.openai.com/v1",
+    "max_output_tokens": 100000,
+    "prompt_cache_mode": "explicit",
+    "prompt_cache_ttl": "30m"
+  },
+  "max_attempts": 3,
+  "sbe": {
+    "status": "pass",
+    "subject_count": 1,
+    "manifest": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\semantic-basis-output\\run-manifest.json"
+  },
+  "passes": {
+    "kevin_1": {
+      "pass_id": "kevin_1",
+      "subject": "kevin",
+      "pass_number": 1,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_1.zip",
+      "source_sha256": "4ac1f2ad79e684ee345f2abe0bb4c2c02b560188e85a167d40764005495f6adf",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-02T17:45:54.181127+00:00",
+          "finished_at": "2026-08-02T17:49:19.123958+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\attempt-001\\response\\kevin_1",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_0f8ce5f8c322392a006a6f8251a28c8198b40a6a9b40c0af26",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 83,
+            "transport_attempts": {
+              "create": 1,
+              "retrieve": 83
+            },
+            "usage": {
+              "input_tokens": 55063,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 14294,
+              "reasoning_tokens": 85,
+              "total_tokens": 69357
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.3520675,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 55063,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 14294
+              },
+              "components": {
+                "uncached_input": 0.1376575,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.21441
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_1",
+              "subject": "kevin",
+              "pass_number": 1,
+              "source_sha256": "4ac1f2ad79e684ee345f2abe0bb4c2c02b560188e85a167d40764005495f6adf",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 104572,
+                  "utf8_bytes": 104662,
+                  "estimated_tokens": 26166,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "53b610329c6c5af280cfef62bf63b3f453e2c85e6b7640abafd7efaf513e14bb"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "4c0bf4a755de2d2ad75e9d3ae2c110eea3ff0b497573571612216d8115957aa4"
+                }
+              },
+              "request_estimated_tokens": 64025,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 204.188,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\passes\\\\kevin_1\\\\attempt-001\\\\response\\\\kevin_1\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\attempt-001\\response\\kevin_1",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_1\\accepted",
+      "accepted_attempt": 1
+    },
+    "kevin_2": {
+      "pass_id": "kevin_2",
+      "subject": "kevin",
+      "pass_number": 2,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_2.zip",
+      "source_sha256": "d8c94525bb2bce6579e5b884535c120680ce197fd2cfcbda7a96b3655fdd98d8",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-02T17:49:19.354869+00:00",
+          "finished_at": "2026-08-02T18:11:08.464308+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\attempt-001\\response\\kevin_2",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_096e3e1223ea41ea006a6f831f0c1081988f35a0265f6c3c0e",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 516,
+            "transport_attempts": {
+              "create": 1,
+              "retrieve": 516
+            },
+            "usage": {
+              "input_tokens": 55128,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 13044,
+              "reasoning_tokens": 71,
+              "total_tokens": 68172
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.33348,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 55128,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 13044
+              },
+              "components": {
+                "uncached_input": 0.13782,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.19566
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_2",
+              "subject": "kevin",
+              "pass_number": 2,
+              "source_sha256": "d8c94525bb2bce6579e5b884535c120680ce197fd2cfcbda7a96b3655fdd98d8",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 104514,
+                  "utf8_bytes": 104604,
+                  "estimated_tokens": 26151,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "7807790e723e6d4b6c8f3ab3f775746b202815ece2e57032b682a5f98c3d2b40"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "cadd2653978865c3e48adead18bf7217af9922cd19ace76dbf81547d67500a94"
+                }
+              },
+              "request_estimated_tokens": 64010,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 1308.375,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\passes\\\\kevin_2\\\\attempt-001\\\\response\\\\kevin_2\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\attempt-001\\response\\kevin_2",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_2\\accepted",
+      "accepted_attempt": 1
+    },
+    "kevin_3": {
+      "pass_id": "kevin_3",
+      "subject": "kevin",
+      "pass_number": 3,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_3.zip",
+      "source_sha256": "8abac7505cd69098ea3b885dafd673d25117d0c5a7650f3703ad47c2a16eeb12",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-02T17:49:19.333824+00:00",
+          "finished_at": "2026-08-02T17:54:28.775239+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\attempt-001\\response\\kevin_3",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_0cf0bd9d2d016fc6006a6f831f08348198b8bd71c74281d133",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 123,
+            "transport_attempts": {
+              "create": 1,
+              "retrieve": 123
+            },
+            "usage": {
+              "input_tokens": 55220,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 16137,
+              "reasoning_tokens": 66,
+              "total_tokens": 71357
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.380105,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 55220,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 16137
+              },
+              "components": {
+                "uncached_input": 0.13805,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.242055
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_3",
+              "subject": "kevin",
+              "pass_number": 3,
+              "source_sha256": "8abac7505cd69098ea3b885dafd673d25117d0c5a7650f3703ad47c2a16eeb12",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 104985,
+                  "utf8_bytes": 105075,
+                  "estimated_tokens": 26269,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "b9ab47fe8c457eba5caa7c69723b7c8aa7dbe7029a857c671e6c0725d7a97211"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "329df97221d1d89bfc0952d618c398ffdab7fa821beda14446abf016fbd85c27"
+                }
+              },
+              "request_estimated_tokens": 64128,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 308.672,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\passes\\\\kevin_3\\\\attempt-001\\\\response\\\\kevin_3\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\attempt-001\\response\\kevin_3",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_3\\accepted",
+      "accepted_attempt": 1
+    },
+    "kevin_4": {
+      "pass_id": "kevin_4",
+      "subject": "kevin",
+      "pass_number": 4,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_4.zip",
+      "source_sha256": "3e928b98b638d9b874c219c6df0076f8d692b545fef574e82a18459285070240",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-02T17:49:19.373155+00:00",
+          "finished_at": "2026-08-02T17:57:56.889832+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\attempt-001\\response\\kevin_4",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_013f4165459a2c88006a6f831f1e2881989301d328b9784fbb",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 204,
+            "transport_attempts": {
+              "create": 1,
+              "retrieve": 204
+            },
+            "usage": {
+              "input_tokens": 55249,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 13504,
+              "reasoning_tokens": 97,
+              "total_tokens": 68753
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.3406825,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 55249,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 13504
+              },
+              "components": {
+                "uncached_input": 0.1381225,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.20256
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_4",
+              "subject": "kevin",
+              "pass_number": 4,
+              "source_sha256": "3e928b98b638d9b874c219c6df0076f8d692b545fef574e82a18459285070240",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 105825,
+                  "utf8_bytes": 105915,
+                  "estimated_tokens": 26479,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2c8728630e84ee176f5f8c01e0c152f71882052412967c7b1221d19b330f9886"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0ac654f324601299fd8b89c7562849da60117fc10ada5745287c9d781fbd51f6"
+                }
+              },
+              "request_estimated_tokens": 64338,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 516.609,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\passes\\\\kevin_4\\\\attempt-001\\\\response\\\\kevin_4\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\attempt-001\\response\\kevin_4",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_4\\accepted",
+      "accepted_attempt": 1
+    },
+    "kevin_5": {
+      "pass_id": "kevin_5",
+      "subject": "kevin",
+      "pass_number": 5,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_5.zip",
+      "source_sha256": "2988f3d87d2b4877fd3601879153c2d10d7174e83f47d956b22bfbd6b095e7e0",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "ATTEMPT_ERROR",
+          "started_at": "2026-08-02T17:49:19.354036+00:00",
+          "finished_at": "2026-08-02T18:19:22.934868+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-001\\response\\kevin_5",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_034bdc5e534afd8e006a6f831eef6881998458aa2927f28b64",
+            "response_status": "cancelled",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 171,
+            "transport_attempts": {
+              "create": 0,
+              "retrieve": 172
+            },
+            "usage": {
+              "input_tokens": 0,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 0,
+              "reasoning_tokens": 0,
+              "total_tokens": 0
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.0,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 0,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 0
+              },
+              "components": {
+                "uncached_input": 0.0,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.0
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_5",
+              "subject": "kevin",
+              "pass_number": 5,
+              "source_sha256": "2988f3d87d2b4877fd3601879153c2d10d7174e83f47d956b22bfbd6b095e7e0",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 104790,
+                  "utf8_bytes": 104880,
+                  "estimated_tokens": 26220,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "88f3ce700344d3009b67740abb3ce657c3377b837980138c8cbb08788ea98285"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "a8ca62fc567cc231d5d13867d25cecaf3d0d7b90b27b2e47416abd8b78dc08c5"
+                }
+              },
+              "request_estimated_tokens": 64079,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 429.328,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": null,
+          "error": {
+            "type": "AuthoringProviderError",
+            "message": "OpenAI response resp_034bdc5e534afd8e006a6f831eef6881998458aa2927f28b64 ended with status 'cancelled': None"
+          }
+        },
+        {
+          "attempt_number": 2,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-02T18:19:22.942433+00:00",
+          "finished_at": "2026-08-02T18:21:57.759318+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-002\\response\\kevin_5",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_0b565298f0c9be4f006a6f8a290ec481988518f5a302002299",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 60,
+            "transport_attempts": {
+              "create": 0,
+              "retrieve": 61
+            },
+            "usage": {
+              "input_tokens": 55160,
+              "cached_input_tokens": 30646,
+              "cache_write_tokens": 0,
+              "output_tokens": 13012,
+              "reasoning_tokens": 67,
+              "total_tokens": 68172
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.2641265,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 24514,
+                "cached_input": 30646,
+                "cache_write": 0,
+                "output": 13012
+              },
+              "components": {
+                "uncached_input": 0.061285,
+                "cached_input": 0.0076615,
+                "cache_write": 0.0,
+                "output": 0.19518
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "kevin_5",
+              "subject": "kevin",
+              "pass_number": 5,
+              "source_sha256": "2988f3d87d2b4877fd3601879153c2d10d7174e83f47d956b22bfbd6b095e7e0",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 18639,
+                  "utf8_bytes": 18673,
+                  "estimated_tokens": 4669,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "2a5412dd1115e0b11003c6b25f6501ef34990122b38a02c2134acf42afd8f2d9"
+                },
+                "subject_prefix": {
+                  "characters": 75785,
+                  "utf8_bytes": 75785,
+                  "estimated_tokens": 18947,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0b01e871ba63256dba0d5bfbb3d01356d025ed5dc941f0535acda4a1c7302501"
+                },
+                "pass_assignment": {
+                  "characters": 105179,
+                  "utf8_bytes": 105269,
+                  "estimated_tokens": 26318,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "0f1f1628f04561c2a82bebc60d63daeeebb0f82cc5058962d09632ff74566834"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "a8ca62fc567cc231d5d13867d25cecaf3d0d7b90b27b2e47416abd8b78dc08c5"
+                }
+              },
+              "request_estimated_tokens": 64177,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 154.188,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-002\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-002\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-002\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\passes\\\\kevin_5\\\\attempt-002\\\\response\\\\kevin_5\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\attempt-002\\response\\kevin_5",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_5\\accepted",
+      "accepted_attempt": 2
+    },
+    "kevin_6": {
+      "pass_id": "kevin_6",
+      "subject": "kevin",
+      "pass_number": 6,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\llm-handoff-bundle\\kevin_6.zip",
+      "source_sha256": "55b23926f58fa7459bdafcbe64f5e9a2d320807ffd4856761e11c7b820e1b7d1",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_6\\accepted",
+      "accepted_attempt": "reused-from-contiguous-control"
+    }
+  },
+  "subjects": {
+    "kevin": {
+      "subject": "kevin",
+      "state": "FINAL_QA_FAILED",
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\sbe\\semantic-basis-output\\kevin\\kevin.selected-authoring-packet.json",
+      "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\final\\kevin\\natal.kevin.cards.json",
+      "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\final\\kevin\\natal.kevin.assembly-report.json",
+      "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\final\\kevin\\natal.kevin.validation-report.json",
+      "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\final\\kevin\\natal.kevin.lint-report.json",
+      "validation": {
+        "accepted": false,
+        "returncode": 1,
+        "stdout": "{\n  \"status\": \"fail\",\n  \"errors\": [\n    \"Selected aspects and syntheses together must use three or four theme groups; found 5.\",\n    \"Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Spark & Autonomy': 7, 'Trust in Action': 8, 'Home and Public Purpose': 3, 'Novelty and Learning': 5, 'Adventure and Atmosphere': 10}.\"\n  ],\n  \"warnings\": [],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 58,\n    \"placeholder_free\": true\n  }\n}\n",
+        "stderr": "",
+        "report": {
+          "status": "fail",
+          "errors": [
+            "Selected aspects and syntheses together must use three or four theme groups; found 5.",
+            "Selected aspects and syntheses theme groups are not approximately balanced: {'Bond, Spark & Autonomy': 7, 'Trust in Action': 8, 'Home and Public Purpose': 3, 'Novelty and Learning': 5, 'Adventure and Atmosphere': 10}."
+          ],
+          "warnings": [],
+          "checks": {
+            "card_count": 50,
+            "phase": "authoring",
+            "polish_edit_overrides": {
+              "context_filters": false,
+              "theme_groups": false,
+              "summary": false
+            },
+            "locked_top_level_fields_checked": [
+              "subject",
+              "source",
+              "coverage",
+              "categories",
+              "behavioral_domains",
+              "context_filter_groups",
+              "unselected_claims",
+              "projected_term_registry"
+            ],
+            "locked_card_fields_checked": [
+              "claim_id",
+              "claim_type",
+              "categories",
+              "importance",
+              "confidence",
+              "strength",
+              "priority_id",
+              "selection",
+              "behavioral_domains",
+              "tags",
+              "evidence",
+              "relations"
+            ],
+            "summary_card_count": 4,
+            "unselected_claim_count": 58,
+            "placeholder_free": true
+          }
+        }
+      },
+      "lint": {
+        "accepted": true,
+        "returncode": 2,
+        "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 2,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-002-live-ab\\\\stratified-v1\\\\final\\\\kevin\\\\natal.kevin.cards.json\",\n      \"subject\": \"kevin\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 2,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_opening\",\n          \"message\": \"A three-word body opening is used six or more times.\",\n          \"details\": {\n            \"field\": \"no_astro.body.direct_to_dog\",\n            \"opening\": \"kevin you are\",\n            \"count\": 7,\n            \"claim_ids\": [\n              \"placement_e862557046de33cb\",\n              \"relationship_6b3de5e16913e82a\",\n              \"placement_85df75689829f069\",\n              \"synthesis_0db15a33ea59ebe2\",\n              \"synthesis_b97e4fa25d4751db\",\n              \"placement_f2815d5a01cc7e75\",\n              \"placement_fe632b84573cdc98\"\n            ]\n          }\n        },\n        {\n          \"code\": \"repeated_failure_signature\",\n          \"message\": \"The 'fine-print humor' mechanism appears three or more times.\",\n          \"details\": {\n            \"count\": 3,\n            \"locations\": [\n              \"card:relationship_9c454989bd05aa64:no_astro.headline.handler\",\n              \"card:placement_2de9d192f7bc9a4c:no_astro.headline.direct_to_dog\",\n              \"summary:card2:full_astro.body.direct_to_dog\"\n            ],\n            \"excerpts\": [\n              \"Kevin Bonds by Reading the Fine Print\",\n              \"You Read the Fine Print\",\n              \"Your Pisces Moon takes the atmosphere in through your body. Your Leo Mars in the sixth Doghouse wants a job in the daily program. Sagittarius Venus and Neptune \"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 0,\n        \"dominant_openings\": [],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+        "stderr": "",
+        "report": {
+          "schema_version": "astrowoof.editorial_lint.v0.1",
+          "status": "warn",
+          "warning_count": 2,
+          "decks": [
+            {
+              "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\final\\kevin\\natal.kevin.cards.json",
+              "subject": "kevin",
+              "reader_facing_field_count": 1458,
+              "warning_count": 2,
+              "warnings": [
+                {
+                  "code": "repeated_opening",
+                  "message": "A three-word body opening is used six or more times.",
+                  "details": {
+                    "field": "no_astro.body.direct_to_dog",
+                    "opening": "kevin you are",
+                    "count": 7,
+                    "claim_ids": [
+                      "placement_e862557046de33cb",
+                      "relationship_6b3de5e16913e82a",
+                      "placement_85df75689829f069",
+                      "synthesis_0db15a33ea59ebe2",
+                      "synthesis_b97e4fa25d4751db",
+                      "placement_f2815d5a01cc7e75",
+                      "placement_fe632b84573cdc98"
+                    ]
+                  }
+                },
+                {
+                  "code": "repeated_failure_signature",
+                  "message": "The 'fine-print humor' mechanism appears three or more times.",
+                  "details": {
+                    "count": 3,
+                    "locations": [
+                      "card:relationship_9c454989bd05aa64:no_astro.headline.handler",
+                      "card:placement_2de9d192f7bc9a4c:no_astro.headline.direct_to_dog",
+                      "summary:card2:full_astro.body.direct_to_dog"
+                    ],
+                    "excerpts": [
+                      "Kevin Bonds by Reading the Fine Print",
+                      "You Read the Fine Print",
+                      "Your Pisces Moon takes the atmosphere in through your body. Your Leo Mars in the sixth Doghouse wants a job in the daily program. Sagittarius Venus and Neptune "
+                    ]
+                  }
+                }
+              ],
+              "authoring_pass_acceptance": {
+                "status": "accept",
+                "deterministic": true,
+                "thresholds": {
+                  "ngram_words": 12,
+                  "ngram_min_distinct_claims": 3
+                },
+                "reader_facing_field_count": 1458,
+                "distinct_location_count": 54,
+                "exact_duplicate_group_count": 0,
+                "exact_duplicate_groups": [],
+                "repeated_ngram_group_count": 0,
+                "repeated_ngrams": [],
+                "suspicious_artifact_count": 0,
+                "suspicious_artifacts": [],
+                "dominant_opening_group_count": 0,
+                "dominant_openings": [],
+                "rejection_reasons": []
+              }
+            }
+          ],
+          "cross_subject_warnings": []
+        }
+      },
+      "baseline_warning_count": 2,
+      "baseline_warning_components": {
+        "validation": 0,
+        "lint": 2
+      },
+      "polish_attempts": [],
+      "delivery": null
+    }
+  },
+  "prompt_cache": {
+    "mode": "tiered_prefix",
+    "static_protocol_sha256": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+    "subject_context_sha256": {
+      "kevin": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e"
+    },
+    "passes": {
+      "kevin_1": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "29e1f678bfae295cb93ee16f752960653882795f457c5c2d1a7ab00ea4eaaa18"
+      },
+      "kevin_2": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "ae1a9f59d6c1a06d80ad73cef4daa373f7ca9be91d9d54153caa28629908e9b5"
+      },
+      "kevin_3": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "7b8eaad6903859f1340047f2a28d556eadf5025517a559bae44a291322cfe581"
+      },
+      "kevin_4": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "f5f9f9be7c8a4b73a4d3b21bd98aeca30f3df139e05831665c00a48e8ebafae1"
+      },
+      "kevin_5": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "90a690532ab60f3df8beaa0e119fb4d73411800f78ab44e5a33508057b859a35"
+      },
+      "kevin_6": {
+        "static": "c31c5ef401aea0b8a142d85f6b9e431959f14f16ffa61040a36ce15e991bb942",
+        "subject": "8148734698fa20e8657ca44b2a690db7eacc39b193172ce13079980a1256374e",
+        "assignment": "78cf538253fb038260b05ef1d0a09f12ace9956184ec63e0d2f25373d13416a4"
+      }
+    },
+    "warming": {
+      "pass_id": "kevin_1",
+      "selection": "smallest_source_archive",
+      "state": "PASS_QA_ACCEPTED",
+      "started_at": "2026-08-02T17:45:54.110522+00:00",
+      "finished_at": "2026-08-02T17:49:19.200137+00:00"
+    }
+  },
+  "accounting": {
+    "usage": {
+      "input_tokens": 275820,
+      "cached_input_tokens": 30646,
+      "cache_write_tokens": 0,
+      "output_tokens": 69991,
+      "reasoning_tokens": 386,
+      "total_tokens": 345811
+    },
+    "estimated_cost": {
+      "currency": "USD",
+      "estimated_amount": 1.6704615,
+      "priced_attempt_count": 6,
+      "note": "Attempt-level estimates use the configured model rate table; the OpenAI usage dashboard remains authoritative."
+    },
+    "response_ids": [
+      "resp_0f8ce5f8c322392a006a6f8251a28c8198b40a6a9b40c0af26",
+      "resp_096e3e1223ea41ea006a6f831f0c1081988f35a0265f6c3c0e",
+      "resp_0cf0bd9d2d016fc6006a6f831f08348198b8bd71c74281d133",
+      "resp_013f4165459a2c88006a6f831f1e2881989301d328b9784fbb",
+      "resp_034bdc5e534afd8e006a6f831eef6881998458aa2927f28b64",
+      "resp_0b565298f0c9be4f006a6f8a290ec481988518f5a302002299"
+    ],
+    "stages": {
+      "authoring_initial": {
+        "attempt_count": 5,
+        "accepted_attempt_count": 4,
+        "priced_attempt_count": 5,
+        "response_ids": [
+          "resp_0f8ce5f8c322392a006a6f8251a28c8198b40a6a9b40c0af26",
+          "resp_096e3e1223ea41ea006a6f831f0c1081988f35a0265f6c3c0e",
+          "resp_0cf0bd9d2d016fc6006a6f831f08348198b8bd71c74281d133",
+          "resp_013f4165459a2c88006a6f831f1e2881989301d328b9784fbb",
+          "resp_034bdc5e534afd8e006a6f831eef6881998458aa2927f28b64"
+        ],
+        "usage": {
+          "input_tokens": 220660,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 56979,
+          "reasoning_tokens": 319,
+          "total_tokens": 277639
+        },
+        "cache_hit_ratio": 0.0,
+        "estimated_prompt_tokens": 320580,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 1.406335
+        }
+      },
+      "creative_retries": {
+        "attempt_count": 1,
+        "accepted_attempt_count": 1,
+        "priced_attempt_count": 1,
+        "response_ids": [
+          "resp_0b565298f0c9be4f006a6f8a290ec481988518f5a302002299"
+        ],
+        "usage": {
+          "input_tokens": 55160,
+          "cached_input_tokens": 30646,
+          "cache_write_tokens": 0,
+          "output_tokens": 13012,
+          "reasoning_tokens": 67,
+          "total_tokens": 68172
+        },
+        "cache_hit_ratio": 0.555584,
+        "estimated_prompt_tokens": 64177,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.2641265
+        }
+      },
+      "polish": {
+        "attempt_count": 0,
+        "accepted_attempt_count": 0,
+        "priced_attempt_count": 0,
+        "response_ids": [],
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "total_tokens": 0
+        },
+        "cache_hit_ratio": null,
+        "estimated_prompt_tokens": 0,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.0
+        }
+      }
+    },
+    "models": {
+      "gpt-5.6-terra": {
+        "attempt_count": 6,
+        "usage": {
+          "input_tokens": 275820,
+          "cached_input_tokens": 30646,
+          "cache_write_tokens": 0,
+          "output_tokens": 69991,
+          "reasoning_tokens": 386,
+          "total_tokens": 345811
+        },
+        "estimated_cost_usd": 1.6704615
+      }
+    },
+    "service_levels": {
+      "interactive": {
+        "attempt_count": 6,
+        "usage": {
+          "input_tokens": 275820,
+          "cached_input_tokens": 30646,
+          "cache_write_tokens": 0,
+          "output_tokens": 69991,
+          "reasoning_tokens": 386,
+          "total_tokens": 345811
+        },
+        "estimated_cost_usd": 1.6704615,
+        "cache_hit_ratio": 0.111109
+      }
+    },
+    "cost_per_accepted_card": null,
+    "cost_per_delivered_deck": null
+  }
+}

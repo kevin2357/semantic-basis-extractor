@@ -368,3 +368,26 @@ category imbalance from 14 to 6. The full 74-test suite passed. A token-free
 end-to-end Bre generation produced six valid pass directories and six ZIPs;
 the exact-once 50-card map was recorded with replay seed
 `5a985d114fe6fba4`, and pass 6 remained summary-only.
+
+### Live Kevin A/B
+
+A current-code live A/B authored five contiguous and five stratified card
+passes, with one byte-identical control pass 6 reused in treatment. Both decks
+were assembled without polish. `stratified-v1` passed whole-deck authoring
+acceptance; contiguous failed because of one exact duplicate. Treatment also
+removed the control's card-level grammar error and all repeated cross-claim
+sequences of ten or more words. Repeated eight-word groups fell from 12 to 4.
+
+The result was not one-sided. Treatment had slightly lower vocabulary breadth,
+slightly higher broad body similarity, slightly higher handler/hybrid lexical
+overlap, and a seven-card `Kevin, you are` opening family. The policy reduces
+literal carryover but does not replace claim-specific rhetorical planning.
+Retain it as the semantic-closure default and continue Phase 3.
+
+Service stress exposed three runner defects: polling timeout resubmits a still
+durable background response; an omitted reconstructed story file causes a
+checker crash instead of a first-class incomplete-delivery result; and resume
+can demote an already accepted final attempt when its attempt number equals the
+ceiling. The known pass-6 theme-group gate mismatch also reproduced. Full
+analysis and examples are in
+`results/PHASE 2 - Diversified Assignment Live AB.md`.

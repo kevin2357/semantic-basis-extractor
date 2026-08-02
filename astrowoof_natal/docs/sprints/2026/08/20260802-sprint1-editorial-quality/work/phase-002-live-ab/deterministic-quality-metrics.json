@@ -1,0 +1,1048 @@
+{
+  "contiguous": {
+    "item_count": 1200,
+    "total_words": 32120,
+    "unique_words": 3022,
+    "type_token_ratio": 0.09408,
+    "mean_body_words": 56.74,
+    "mean_headline_words": 6.27,
+    "exact_duplicate_headlines": [
+      {
+        "text": "the ritual that says \u2018still here\u2019",
+        "claim_ids": [
+          "relationship_8a2fc135ec0d2311",
+          "relationship_d401f0b1a118fb52"
+        ]
+      }
+    ],
+    "repeated_openings": [
+      {
+        "field": "light_astro.body.hybrid",
+        "opening": "kevin s chart",
+        "claim_count": 7,
+        "claim_ids": [
+          "synthesis_08631040add14d5b",
+          "synthesis_0db15a33ea59ebe2",
+          "synthesis_4883de73692b5b8c",
+          "synthesis_4a19efe12f54c74d",
+          "synthesis_5c82513dbc5fdfa7",
+          "synthesis_b97e4fa25d4751db",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "opening": "kevin your chart",
+        "claim_count": 5,
+        "claim_ids": [
+          "synthesis_1068425d2897ed9c",
+          "synthesis_2f9e924cb6145c62",
+          "synthesis_4883de73692b5b8c",
+          "synthesis_553f9fdca867a3b5",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s neptune",
+        "claim_count": 5,
+        "claim_ids": [
+          "relationship_0fb623f7bece88e2",
+          "relationship_380ae214d4a88980",
+          "relationship_96d0869a851b619d",
+          "relationship_ce916583b7c67f12",
+          "synthesis_707675a3ca907d5d"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you are",
+        "claim_count": 5,
+        "claim_ids": [
+          "relationship_5e63acfa56ece81d",
+          "relationship_bd235e06b11e29af",
+          "synthesis_0db15a33ea59ebe2",
+          "synthesis_707675a3ca907d5d",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you do",
+        "claim_count": 5,
+        "claim_ids": [
+          "placement_af301822d66f8d0e",
+          "relationship_011406d66cbaab68",
+          "relationship_ce916583b7c67f12",
+          "relationship_d401f0b1a118fb52",
+          "relationship_ee265ac315162d87"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "kevin s uranus",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_26a344f555dc94dc",
+          "relationship_9f56c44fd55e5c10",
+          "relationship_caffe06d5a64022b",
+          "synthesis_5c82513dbc5fdfa7"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may be",
+        "claim_count": 4,
+        "claim_ids": [
+          "relationship_0fb623f7bece88e2",
+          "relationship_6b3de5e16913e82a",
+          "synthesis_3877e3c4d3704b2b",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may not",
+        "claim_count": 4,
+        "claim_ids": [
+          "relationship_9c454989bd05aa64",
+          "relationship_bd235e06b11e29af",
+          "relationship_bfc2c827df58870e",
+          "synthesis_2f9e924cb6145c62"
+        ]
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "opening": "your leo descendant",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_97378bb1a752b883",
+          "relationship_caffe06d5a64022b",
+          "synthesis_553f9fdca867a3b5"
+        ]
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "opening": "your sagittarius neptune",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_0fb623f7bece88e2",
+          "relationship_380ae214d4a88980",
+          "relationship_96d0869a851b619d"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "kevin s neptune",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_58dde150f872609a",
+          "relationship_ce916583b7c67f12",
+          "synthesis_707675a3ca907d5d"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "this synthesis combines",
+        "claim_count": 3,
+        "claim_ids": [
+          "synthesis_1068425d2897ed9c",
+          "synthesis_b97e4fa25d4751db",
+          "synthesis_e76e387c57979a59"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "this synthesis gathers",
+        "claim_count": 3,
+        "claim_ids": [
+          "synthesis_2f9e924cb6145c62",
+          "synthesis_553f9fdca867a3b5",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "opening": "in kevin s",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2600077993c79923",
+          "relationship_0fb623f7bece88e2",
+          "synthesis_4883de73692b5b8c"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2fe48d9251284733",
+          "relationship_4e0c5f290f0c410c",
+          "relationship_bd235e06b11e29af"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s chart",
+        "claim_count": 3,
+        "claim_ids": [
+          "synthesis_1068425d2897ed9c",
+          "synthesis_553f9fdca867a3b5",
+          "synthesis_e76e387c57979a59"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s mars",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_559bd87e20fcfbcc",
+          "relationship_97378bb1a752b883",
+          "synthesis_b97e4fa25d4751db"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s pluto",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_8a2fc135ec0d2311",
+          "relationship_bfc2c827df58870e",
+          "relationship_d401f0b1a118fb52"
+        ]
+      },
+      {
+        "field": "light_astro.body.hybrid",
+        "opening": "kevin s aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2fe48d9251284733",
+          "relationship_4e0c5f290f0c410c",
+          "relationship_bd235e06b11e29af"
+        ]
+      },
+      {
+        "field": "light_astro.body.hybrid",
+        "opening": "kevin s human",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_96d0869a851b619d",
+          "synthesis_1068425d2897ed9c",
+          "synthesis_2f9e924cb6145c62"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you have",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_b2c332f5559c165f",
+          "synthesis_3877e3c4d3704b2b",
+          "synthesis_553f9fdca867a3b5"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you notice",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_26a344f555dc94dc",
+          "placement_e862557046de33cb",
+          "relationship_380ae214d4a88980"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may have",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_58dde150f872609a",
+          "placement_b2c332f5559c165f",
+          "relationship_f080856101fe0836"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may learn",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_af301822d66f8d0e",
+          "relationship_9f56c44fd55e5c10",
+          "synthesis_e76e387c57979a59"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may meet",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_ee265ac315162d87",
+          "synthesis_1068425d2897ed9c",
+          "synthesis_4883de73692b5b8c"
+        ]
+      }
+    ],
+    "repeated_cross_claim_ngrams": {
+      "5": {
+        "group_count": 156,
+        "same_pass_group_count": 35
+      },
+      "6": {
+        "group_count": 54,
+        "same_pass_group_count": 14
+      },
+      "7": {
+        "group_count": 22,
+        "same_pass_group_count": 6
+      },
+      "8": {
+        "group_count": 12,
+        "same_pass_group_count": 3
+      },
+      "9": {
+        "group_count": 8,
+        "same_pass_group_count": 2
+      },
+      "10": {
+        "group_count": 6,
+        "same_pass_group_count": 1
+      },
+      "11": {
+        "group_count": 4,
+        "same_pass_group_count": 0
+      },
+      "12": {
+        "group_count": 3,
+        "same_pass_group_count": 0
+      }
+    },
+    "top_body_similarity_pairs": [
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.7144,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "relationship_9c454989bd05aa64",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6944,
+        "a": "synthesis_3877e3c4d3704b2b",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.69,
+        "a": "relationship_4e0c5f290f0c410c",
+        "b": "relationship_559bd87e20fcfbcc",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6681,
+        "a": "placement_f2815d5a01cc7e75",
+        "b": "synthesis_3877e3c4d3704b2b",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6601,
+        "a": "placement_2600077993c79923",
+        "b": "placement_b2c332f5559c165f",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6585,
+        "a": "placement_f2815d5a01cc7e75",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6563,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "relationship_011406d66cbaab68",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.652,
+        "a": "synthesis_0db15a33ea59ebe2",
+        "b": "relationship_9c454989bd05aa64",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "score": 0.6512,
+        "a": "relationship_011406d66cbaab68",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6501,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "synthesis_4883de73692b5b8c",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6492,
+        "a": "synthesis_707675a3ca907d5d",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6444,
+        "a": "relationship_bd235e06b11e29af",
+        "b": "relationship_9c454989bd05aa64",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6441,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "synthesis_0db15a33ea59ebe2",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6429,
+        "a": "synthesis_5c82513dbc5fdfa7",
+        "b": "synthesis_707675a3ca907d5d",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.handler",
+        "score": 0.6428,
+        "a": "relationship_bd235e06b11e29af",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6391,
+        "a": "synthesis_553f9fdca867a3b5",
+        "b": "relationship_ce916583b7c67f12",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6388,
+        "a": "relationship_bd235e06b11e29af",
+        "b": "placement_f2815d5a01cc7e75",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6377,
+        "a": "placement_f2815d5a01cc7e75",
+        "b": "synthesis_707675a3ca907d5d",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.handler",
+        "score": 0.6356,
+        "a": "synthesis_553f9fdca867a3b5",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "score": 0.6354,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "relationship_d401f0b1a118fb52",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.handler",
+        "score": 0.6341,
+        "a": "relationship_011406d66cbaab68",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6339,
+        "a": "placement_2600077993c79923",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6333,
+        "a": "relationship_ce916583b7c67f12",
+        "b": "placement_b2c332f5559c165f",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.632,
+        "a": "relationship_9c454989bd05aa64",
+        "b": "placement_da8add1d453bf0b5",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.handler",
+        "score": 0.631,
+        "a": "relationship_ce916583b7c67f12",
+        "b": "relationship_8a2fc135ec0d2311",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6305,
+        "a": "relationship_ce916583b7c67f12",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6298,
+        "a": "relationship_559bd87e20fcfbcc",
+        "b": "relationship_f080856101fe0836",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6283,
+        "a": "relationship_bd235e06b11e29af",
+        "b": "relationship_caffe06d5a64022b",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.628,
+        "a": "placement_e862557046de33cb",
+        "b": "synthesis_0db15a33ea59ebe2",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6279,
+        "a": "relationship_011406d66cbaab68",
+        "b": "relationship_9c454989bd05aa64",
+        "same_pass": false
+      }
+    ],
+    "body_pair_count_over_0_65": 10,
+    "body_pair_count_over_0_55": 413,
+    "mean_top_100_body_similarity": 0.6209,
+    "same_pass_share_top_100": 0.23,
+    "voice_jaccard_means": {
+      "handler_hybrid": 0.157,
+      "handler_d2d": 0.1339,
+      "hybrid_d2d": 0.1262
+    }
+  },
+  "stratified-v1": {
+    "item_count": 1200,
+    "total_words": 32018,
+    "unique_words": 2890,
+    "type_token_ratio": 0.09026,
+    "mean_body_words": 55.62,
+    "mean_headline_words": 6.91,
+    "exact_duplicate_headlines": [],
+    "repeated_openings": [
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you are",
+        "claim_count": 7,
+        "claim_ids": [
+          "placement_85df75689829f069",
+          "placement_e862557046de33cb",
+          "placement_f2815d5a01cc7e75",
+          "placement_fe632b84573cdc98",
+          "relationship_6b3de5e16913e82a",
+          "synthesis_0db15a33ea59ebe2",
+          "synthesis_b97e4fa25d4751db"
+        ]
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "opening": "kevin pluto gives",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_e4d48d4ede858bb5",
+          "relationship_8a2fc135ec0d2311",
+          "relationship_d401f0b1a118fb52",
+          "synthesis_4a19efe12f54c74d"
+        ]
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "opening": "kevin your chart",
+        "claim_count": 4,
+        "claim_ids": [
+          "synthesis_2f9e924cb6145c62",
+          "synthesis_4883de73692b5b8c",
+          "synthesis_553f9fdca867a3b5",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s neptune",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_58dde150f872609a",
+          "relationship_0fb623f7bece88e2",
+          "relationship_96d0869a851b619d",
+          "relationship_ce916583b7c67f12"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s pluto",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_e4d48d4ede858bb5",
+          "relationship_8a2fc135ec0d2311",
+          "relationship_bfc2c827df58870e",
+          "relationship_d401f0b1a118fb52"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you like",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_2600077993c79923",
+          "placement_b2c332f5559c165f",
+          "relationship_9c454989bd05aa64",
+          "synthesis_ca7411eac40647d2"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may not",
+        "claim_count": 4,
+        "claim_ids": [
+          "placement_e4d48d4ede858bb5",
+          "relationship_380ae214d4a88980",
+          "relationship_bfc2c827df58870e",
+          "synthesis_707675a3ca907d5d"
+        ]
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "opening": "kevin your aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_4e0c5f290f0c410c",
+          "relationship_bd235e06b11e29af",
+          "relationship_c3f0e739cbea5734"
+        ]
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "opening": "kevin your libra",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_df46a990db23a75d",
+          "relationship_8a2fc135ec0d2311",
+          "relationship_d401f0b1a118fb52"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "kevin s aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_4e0c5f290f0c410c",
+          "relationship_bfc2c827df58870e",
+          "relationship_c3f0e739cbea5734"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "kevin s sun",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_1796adf72f899654",
+          "synthesis_08631040add14d5b",
+          "synthesis_3877e3c4d3704b2b"
+        ]
+      },
+      {
+        "field": "full_astro.body.handler",
+        "opening": "this synthesis gathers",
+        "claim_count": 3,
+        "claim_ids": [
+          "synthesis_0db15a33ea59ebe2",
+          "synthesis_2f9e924cb6145c62",
+          "synthesis_4883de73692b5b8c"
+        ]
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "opening": "kevin s chart",
+        "claim_count": 3,
+        "claim_ids": [
+          "synthesis_0db15a33ea59ebe2",
+          "synthesis_3877e3c4d3704b2b",
+          "synthesis_5c82513dbc5fdfa7"
+        ]
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "opening": "kevin s pluto",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_bfc2c827df58870e",
+          "relationship_d401f0b1a118fb52",
+          "synthesis_1068425d2897ed9c"
+        ]
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "opening": "kevin uranus gives",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_9f56c44fd55e5c10",
+          "relationship_caffe06d5a64022b",
+          "synthesis_5c82513dbc5fdfa7"
+        ]
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "opening": "kevin your libra",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_1796adf72f899654",
+          "relationship_011406d66cbaab68",
+          "synthesis_3877e3c4d3704b2b"
+        ]
+      },
+      {
+        "field": "light_astro.body.handler",
+        "opening": "kevin s aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2fe48d9251284733",
+          "relationship_4e0c5f290f0c410c",
+          "relationship_c3f0e739cbea5734"
+        ]
+      },
+      {
+        "field": "light_astro.body.hybrid",
+        "opening": "kevin s aquarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2fe48d9251284733",
+          "relationship_4e0c5f290f0c410c",
+          "relationship_c3f0e739cbea5734"
+        ]
+      },
+      {
+        "field": "light_astro.body.hybrid",
+        "opening": "kevin s sagittarius",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_58dde150f872609a",
+          "placement_b2c332f5559c165f",
+          "placement_e08d946bcae8e677"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin when you",
+        "claim_count": 3,
+        "claim_ids": [
+          "relationship_011406d66cbaab68",
+          "synthesis_08631040add14d5b",
+          "synthesis_1068425d2897ed9c"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you do",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2fe48d9251284733",
+          "relationship_bfc2c827df58870e",
+          "synthesis_553f9fdca867a3b5"
+        ]
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "opening": "kevin you notice",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_2de9d192f7bc9a4c",
+          "relationship_8a2fc135ec0d2311",
+          "synthesis_3877e3c4d3704b2b"
+        ]
+      },
+      {
+        "field": "no_astro.body.handler",
+        "opening": "kevin may be",
+        "claim_count": 3,
+        "claim_ids": [
+          "placement_8cf9ef33127798ae",
+          "placement_f2815d5a01cc7e75",
+          "relationship_caffe06d5a64022b"
+        ]
+      }
+    ],
+    "repeated_cross_claim_ngrams": {
+      "5": {
+        "group_count": 144,
+        "same_pass_group_count": 23
+      },
+      "6": {
+        "group_count": 43,
+        "same_pass_group_count": 4
+      },
+      "7": {
+        "group_count": 15,
+        "same_pass_group_count": 2
+      },
+      "8": {
+        "group_count": 4,
+        "same_pass_group_count": 0
+      },
+      "9": {
+        "group_count": 1,
+        "same_pass_group_count": 0
+      },
+      "10": {
+        "group_count": 0,
+        "same_pass_group_count": 0
+      },
+      "11": {
+        "group_count": 0,
+        "same_pass_group_count": 0
+      },
+      "12": {
+        "group_count": 0,
+        "same_pass_group_count": 0
+      }
+    },
+    "top_body_similarity_pairs": [
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.7044,
+        "a": "placement_2600077993c79923",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": true
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "score": 0.6881,
+        "a": "synthesis_553f9fdca867a3b5",
+        "b": "relationship_0fb623f7bece88e2",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6786,
+        "a": "relationship_6b3de5e16913e82a",
+        "b": "placement_1796adf72f899654",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6761,
+        "a": "synthesis_ca7411eac40647d2",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "score": 0.6698,
+        "a": "synthesis_ca7411eac40647d2",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6667,
+        "a": "placement_e862557046de33cb",
+        "b": "synthesis_553f9fdca867a3b5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6636,
+        "a": "placement_2600077993c79923",
+        "b": "placement_8cf9ef33127798ae",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6618,
+        "a": "synthesis_2f9e924cb6145c62",
+        "b": "relationship_9c454989bd05aa64",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6558,
+        "a": "placement_85df75689829f069",
+        "b": "relationship_96d0869a851b619d",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6552,
+        "a": "placement_e862557046de33cb",
+        "b": "placement_2de9d192f7bc9a4c",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6552,
+        "a": "synthesis_3877e3c4d3704b2b",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.654,
+        "a": "relationship_8a2fc135ec0d2311",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.6531,
+        "a": "relationship_8a2fc135ec0d2311",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6522,
+        "a": "synthesis_553f9fdca867a3b5",
+        "b": "placement_2de9d192f7bc9a4c",
+        "same_pass": true
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "score": 0.6497,
+        "a": "relationship_4e0c5f290f0c410c",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6495,
+        "a": "placement_85df75689829f069",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6473,
+        "a": "placement_85df75689829f069",
+        "b": "relationship_0fb623f7bece88e2",
+        "same_pass": false
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "score": 0.6446,
+        "a": "synthesis_2f9e924cb6145c62",
+        "b": "synthesis_b97e4fa25d4751db",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "score": 0.6442,
+        "a": "placement_2fe48d9251284733",
+        "b": "synthesis_b97e4fa25d4751db",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.direct_to_dog",
+        "score": 0.6428,
+        "a": "placement_2600077993c79923",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6407,
+        "a": "placement_e862557046de33cb",
+        "b": "placement_af301822d66f8d0e",
+        "same_pass": true
+      },
+      {
+        "field": "light_astro.body.direct_to_dog",
+        "score": 0.6407,
+        "a": "synthesis_0db15a33ea59ebe2",
+        "b": "synthesis_2f9e924cb6145c62",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6393,
+        "a": "placement_2fe48d9251284733",
+        "b": "placement_e862557046de33cb",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.639,
+        "a": "relationship_8a2fc135ec0d2311",
+        "b": "placement_8cf9ef33127798ae",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.handler",
+        "score": 0.6383,
+        "a": "placement_2fe48d9251284733",
+        "b": "relationship_5e63acfa56ece81d",
+        "same_pass": false
+      },
+      {
+        "field": "full_astro.body.hybrid",
+        "score": 0.638,
+        "a": "relationship_d401f0b1a118fb52",
+        "b": "synthesis_08631040add14d5b",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6378,
+        "a": "relationship_4e0c5f290f0c410c",
+        "b": "placement_1796adf72f899654",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.hybrid",
+        "score": 0.637,
+        "a": "synthesis_2f9e924cb6145c62",
+        "b": "relationship_c3f0e739cbea5734",
+        "same_pass": true
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6368,
+        "a": "placement_e862557046de33cb",
+        "b": "placement_e4d48d4ede858bb5",
+        "same_pass": false
+      },
+      {
+        "field": "no_astro.body.direct_to_dog",
+        "score": 0.6356,
+        "a": "relationship_96d0869a851b619d",
+        "b": "relationship_0fb623f7bece88e2",
+        "same_pass": false
+      }
+    ],
+    "body_pair_count_over_0_65": 14,
+    "body_pair_count_over_0_55": 454,
+    "mean_top_100_body_similarity": 0.6266,
+    "same_pass_share_top_100": 0.31,
+    "voice_jaccard_means": {
+      "handler_hybrid": 0.1618,
+      "handler_d2d": 0.1419,
+      "hybrid_d2d": 0.1317
+    }
+  },
+  "summary_identical": true
+}

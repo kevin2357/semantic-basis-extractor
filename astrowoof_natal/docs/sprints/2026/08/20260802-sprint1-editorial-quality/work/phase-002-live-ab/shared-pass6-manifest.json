@@ -1,0 +1,25 @@
+{
+  "source": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\contiguous\\passes\\kevin_6\\accepted",
+  "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-002-live-ab\\stratified-v1\\passes\\kevin_6\\accepted",
+  "files": {
+    "ASSIGN THEME GROUPS.md": "bfb2bbdd713ed47810a36f4de965542da526e8c375a4af1c135ddc8d9223bd1d",
+    "AUTHORING BRIEF.md": "26a0fa10a348b817b977f76cbb3a4cf922099aeee0ebee9b8373bebdea490ead",
+    "DOG DETAILS.md": "7edfbc0020f2f9ede175b8826be48ab757d9df7be75edb88dd6d2197489ffcfd",
+    "FULL CHART BASIS.md": "12536c9934c9509542dabe78879a26f972e1cfd323ab93f63c86252801f4b33b",
+    "GUIDING LIGHTS.md": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7",
+    "lint_authoring_pass.py": "66743def576aa7e1bb27f996149221d3541e895495a90e219f9d973864c73c75",
+    "START HERE.md": "00be7e8fd7513b6e2e2317051c195c570f89b2092ff207d882514f2fafe1964e",
+    "summaries/Summary 01 -- Who the Dog Is/SUMMARY BASIS.md": "d34f669be62adbd591ccb61b7a313d57e94538cefebb142812e1e8491d871740",
+    "summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md": "2871f1d7ba0297ffa28a33cb0723ff5dfce94adb7cc9fd8e4d0986a3cb68ee8a",
+    "summaries/Summary 02 -- How the Dog Lives/SUMMARY BASIS.md": "d34f669be62adbd591ccb61b7a313d57e94538cefebb142812e1e8491d871740",
+    "summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md": "74c78dbca9b5fa3fb1123be999252bfbc2c986faab8757723bf1f838709dbaea",
+    "summaries/Summary 03 -- What the Dog Needs/SUMMARY BASIS.md": "d34f669be62adbd591ccb61b7a313d57e94538cefebb142812e1e8491d871740",
+    "summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md": "90199bbf72c620ff13df42a408211f0062aff3d0eef148638c6b383f4d981a90",
+    "summaries/Summary 04 -- How the Dog Grows/SUMMARY BASIS.md": "d34f669be62adbd591ccb61b7a313d57e94538cefebb142812e1e8491d871740",
+    "summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md": "b7abdc21f35c823c73bdb88a46838272aeb149e831f48385c89aa36a7eac7b80",
+    "SUMMARY GOLD REFERENCE.md": "7203009ab7cf39a87f3bdf4fe191001852aa98bb30c6d012f39b7e35c3bb9995",
+    "WORKSPACE MANIFEST.md": "de1cd2bb3859785184771f09297f40249c5a2365cef341ec51aedd66a2b52503",
+    "WRITE SUMMARY THESIS PLAN.md": "bfdc138c910375a15ee92c6e172c03729cc89424204726dcfb9883d0cab958c1",
+    "WRITE WHOLE DOG PROFILE.md": "119525df97d2dbd9a5fcdb17496aee30931656acca6bd09a4558f8f0bfdeb3db"
+  }
+}
