@@ -162,17 +162,21 @@ result set after all cards are written.
 
 ## Theme groups
 
-Every selected aspect and synthesis contains a `theme_group` placeholder.
+Every selected aspect and synthesis contains a `theme_group_id` placeholder,
+and the deck contains independent structured registries for Interdogpendence
+and Takeaways.
 
-Read all selected aspects, then organize them into three or four approximately
-balanced chapters with recognizable subject-specific themes. Independently do
-the same for selected syntheses. Semantic coherence takes priority over exact
-equality.
+Read all selected aspects and plan three to five subject-specific
+Interdogpendence chapters around relationship and interaction dynamics.
+Independently read all selected syntheses and plan three to five Takeaways
+chapters around integrated conclusions. Each chapter must contain at least two
+claims, and the largest may contain no more than twice as many as the smallest.
 
-Do not reuse a fixed generic chapter taxonomy across subjects. Avoid one
-miscellaneous group, single-card groups, or unique labels per claim unless an
-unavoidable count edge case requires one. Do not add `theme_group` to
-placements.
+The two taxonomies must be foundationally different. Do not repeat, reorder,
+synonymize, or cosmetically reword one section's chapter titles for the other.
+For every chapter provide stable `id`, reader-facing `title`, concise
+`short_title`, relevant `emoji`, and consecutive `order`; cards reference the
+stable ID. Do not add `theme_group_id` to other claim types.
 
 ## Summary cards
 

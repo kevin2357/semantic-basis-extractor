@@ -417,3 +417,33 @@ Regression coverage was added for durable timeout/resume without a second POST,
 waiting-state attempt preservation, pre-checker incomplete delivery, accepted
 state restoration, and pass-6 theme-group parity. Existing authoring behavior
 remained green alongside the new cases.
+
+## 2026-08-03 — Phase 3 UI-derived semantic contract
+
+The Ella desktop/mobile review converted two presentation observations into
+backend authoring contracts. Density variants are now documented as a
+progressive disclosure ladder rather than three parallel rewrites. The
+authoring packet and generated card template preserve one semantic insight
+while moving from lived meaning, to principal astrological basis, to complete
+relevant support.
+
+Pass 6 now authors two independent structured chapter registries:
+Interdogpendence for selected system interactions and Takeaways for selected
+syntheses. Registry entries carry stable ID, full title, short navigation
+title, relevant emoji, and display order; cards reference stable IDs. Both
+sections require three to five chapters, two or more claims per chapter, and a
+maximum 2:1 largest-to-smallest ratio. Exact and trivially reordered title
+reuse across sections is rejected mechanically; the guidance additionally
+forbids synonymous or conceptually mirrored taxonomies.
+
+The contract is enforced at pass-local opaque QA, assembly, final editorial
+validation, and theme-rebalancing polish transport. The assembler independently
+checks registry membership, complete assignment coverage, balance, and
+cross-section title collision so malformed handoffs cannot bypass pass QA.
+Canonical authoring guidance and compact-mode guidance were updated together.
+
+Focused and full regression suites passed: 82 tests, including explicit
+rejection tests for too few chapters, lopsided distribution, and cross-section
+title collision. Legacy final decks remain on the validator's legacy contract;
+semantic migration requires a fresh two-section chapter-planning pass rather
+than fabricated deterministic relabeling.

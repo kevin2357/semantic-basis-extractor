@@ -68,7 +68,12 @@ technical provenance, or the writing process.
 
 ## Nine renderings
 
-All nine renderings express the same underlying insight.
+All nine renderings express the same underlying insight. Astrology density is
+progressive disclosure, not three unrelated interpretations: `no_astro`
+establishes the complete lived meaning, `light_astro` adds the principal
+astrological explanation, and `full_astro` adds the complete relevant support.
+Each level should preserve what the preceding level helps the reader
+understand while making the explanatory lens deeper.
 
 Handler helps a person recognize what may be happening and respond usefully.
 
@@ -107,14 +112,22 @@ Use only these registered filters:
   Adventure; Learning & Training; Communication; Social & Pack Life; Trust &
   Security; Stress & Resilience.
 
-Fill `Theme Group` when that field appears. Theme groups organize aspects and
-syntheses into a few coherent chapters.
+When `ASSIGN THEME GROUPS.md` is supplied, it owns two independent chapter
+plans. Interdogpendence organizes selected aspects as relationship and
+interaction dynamics. Takeaways organizes selected syntheses as integrated
+conclusions. Never force both sections into one shared taxonomy.
 
-When `ASSIGN THEME GROUPS.md` is supplied, it owns chapter assignment for the
-entire deck. Organize all listed aspect and synthesis stories into three or
-four approximately equal, meaningfully related chapters. Reuse each chosen
-chapter name exactly. Card passes without this file leave theme grouping to the
-summary pass.
+For each section, create three to five semantically coherent chapters, put at
+least two claims in every chapter, and keep the largest chapter no more than
+twice the size of the smallest. The two collective taxonomies must feel
+foundationally different. No title may recur across them, including reordered,
+synonymous, or cosmetically reworded equivalents.
+
+Define each chapter once in its section's structured registry with a stable
+snake-case `id`, reader-facing `title`, concise `short_title`, relevant emoji,
+and display `order`. Assign cards by registry ID. The emoji is meaningful
+AstroWoof navigation language, not ornamental filler. Card passes without the
+assignment file leave chapter planning to the summary pass.
 
 ## Workspace care
 

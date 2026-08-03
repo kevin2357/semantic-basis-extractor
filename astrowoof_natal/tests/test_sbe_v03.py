@@ -107,7 +107,22 @@ def complete_packet(packet: dict) -> dict:
     edited = fill(deepcopy(packet))
     edited["generator"]["editorial_status"] = "llm_completed"
     edited["statistics"]["editorial_placeholders"] = 0
-    theme_index = 0
+    registries = {
+        "interdogpendence": [
+            {"id": "bond_dynamics", "title": "Bond Dynamics", "short_title": "Bonds", "emoji": "🔗", "order": 1},
+            {"id": "shared_rhythms", "title": "Shared Rhythms", "short_title": "Rhythms", "emoji": "🐾", "order": 2},
+            {"id": "productive_tensions", "title": "Productive Tensions", "short_title": "Tensions", "emoji": "⚡", "order": 3},
+            {"id": "mutual_adjustments", "title": "Mutual Adjustments", "short_title": "Adjustments", "emoji": "🤝", "order": 4},
+        ],
+        "takeaways": [
+            {"id": "essential_character", "title": "Essential Character", "short_title": "Character", "emoji": "✨", "order": 1},
+            {"id": "daily_wisdom", "title": "Daily Wisdom", "short_title": "Daily Life", "emoji": "🏡", "order": 2},
+            {"id": "growth_lessons", "title": "Growth Lessons", "short_title": "Growth", "emoji": "🌱", "order": 3},
+            {"id": "lasting_gifts", "title": "Lasting Gifts", "short_title": "Gifts", "emoji": "🎁", "order": 4},
+        ],
+    }
+    edited["theme_group_registry"] = registries
+    theme_indexes = {section: 0 for section in registries}
     for claim in edited["cards"]:
         claim["context_filter_groups"] = {
             "high_level": ["Personality"],
@@ -115,13 +130,46 @@ def complete_packet(packet: dict) -> dict:
         }
         claim["dos"] = ["Do one", "Do two", "Do three"]
         claim["donts"] = ["Avoid one", "Avoid two", "Avoid three"]
-        if "theme_group" in claim:
-            claim["theme_group"] = f"Chapter {(theme_index % 4) + 1}"
-            theme_index += 1
+        if "theme_group_id" in claim:
+            section = (
+                "interdogpendence"
+                if claim["claim_type"] == "system_interaction"
+                else "takeaways"
+            )
+            index = theme_indexes[section]
+            claim["theme_group_id"] = registries[section][index % 4]["id"]
+            theme_indexes[section] += 1
     for summary in edited["summary"].values():
         summary["dos"] = ["Do one", "Do two", "Do three"]
         summary["donts"] = ["Avoid one", "Avoid two", "Avoid three"]
     return edited
+
+
+def complete_theme_plan(path: Path, packet: dict) -> None:
+    text = path.read_text(encoding="utf-8")
+    completed = complete_packet(packet)
+    replacements = {
+        f"theme_group_registry.{section}": json.dumps(entries, ensure_ascii=False)
+        for section, entries in completed["theme_group_registry"].items()
+    }
+    replacements.update({
+        f"theme_group.{section}.{card['priority_id']}": card["theme_group_id"]
+        for card in completed["cards"]
+        if (section := (
+            "interdogpendence"
+            if card["claim_type"] == "system_interaction"
+            else "takeaways"
+            if card["claim_type"] == "synthesized_theme"
+            else None
+        ))
+    })
+    for field, value in replacements.items():
+        text = re.sub(
+            rf"(<!-- BEGIN FIELD: {re.escape(field)} -->\s*)__WRITE__(\s*<!-- END FIELD: {re.escape(field)} -->)",
+            lambda match, replacement=value: f"{match.group(1)}{replacement}{match.group(2)}",
+            text,
+        )
+    path.write_text(text, encoding="utf-8")
 
 
 def run_editorial_validator(
@@ -218,7 +266,7 @@ class TestBrePacket(unittest.TestCase):
                 candidate.candidate_type == "projected_relationship"
                 or candidate.claim_type == "synthesized_theme"
             )
-            self.assertEqual(expected, "theme_group" in claim)
+            self.assertEqual(expected, "theme_group_id" in claim)
 
     def test_context_and_summary_scaffolding(self) -> None:
         self.assertEqual(CONTEXT_FILTER_GROUPS, self.packet["context_filter_groups"])
@@ -305,6 +353,73 @@ class TestBrePacket(unittest.TestCase):
         edited = complete_packet(self.packet)
         report = run_editorial_validator(
             self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_editorial_validator_rejects_too_few_section_chapters(self) -> None:
+        edited = complete_packet(self.packet)
+        edited["theme_group_registry"]["takeaways"] = (
+            edited["theme_group_registry"]["takeaways"][:2]
+        )
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any(
+            "takeaways must define three to five" in error
+            for error in report["errors"]
+        ))
+
+    def test_editorial_validator_rejects_lopsided_chapters(self) -> None:
+        edited = complete_packet(self.packet)
+        ids = [
+            entry["id"]
+            for entry in edited["theme_group_registry"]["interdogpendence"]
+        ]
+        cards = [
+            card for card in edited["cards"]
+            if card["claim_type"] == "system_interaction"
+        ]
+        for index, card in enumerate(cards):
+            card["theme_group_id"] = ids[index // 2] if index < 6 else ids[-1]
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any(
+            "2:1 balance boundary" in error for error in report["errors"]
+        ))
+
+    def test_editorial_validator_rejects_cross_section_title_collision(self) -> None:
+        edited = complete_packet(self.packet)
+        edited["theme_group_registry"]["takeaways"][0]["title"] = (
+            edited["theme_group_registry"]["interdogpendence"][0]["title"]
+        )
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any(
+            "repeat or trivially reorder" in error
+            for error in report["errors"]
+        ))
+
+    def test_editorial_validator_preserves_legacy_theme_group_contract(self) -> None:
+        baseline = deepcopy(self.packet)
+        edited = complete_packet(self.packet)
+        baseline.pop("theme_group_registry", None)
+        edited.pop("theme_group_registry", None)
+        theme_index = 0
+        for before, after in zip(baseline["cards"], edited["cards"]):
+            if "theme_group_id" not in before:
+                continue
+            before.pop("theme_group_id")
+            after.pop("theme_group_id")
+            before["theme_group"] = "__LLM_FILL__"
+            after["theme_group"] = f"Chapter {(theme_index % 4) + 1}"
+            theme_index += 1
+        report = run_editorial_validator(
+            baseline, edited, "--phase", "authoring"
         )
         self.assertEqual("pass", report["status"], report["errors"])
 
@@ -677,20 +792,7 @@ class TestBrePacket(unittest.TestCase):
                     )
                 theme_path = workspace / "ASSIGN THEME GROUPS.md"
                 if theme_path.exists():
-                    text = theme_path.read_text(encoding="utf-8")
-                    markers = list(
-                        re.finditer(
-                            r"<!-- BEGIN FIELD: theme_group\.(\d+) -->",
-                            text,
-                        )
-                    )
-                    for index, marker in enumerate(markers):
-                        text = text.replace(
-                            "__WRITE__",
-                            f"Chapter {(index % 4) + 1}",
-                            1,
-                        )
-                    theme_path.write_text(text, encoding="utf-8")
+                    complete_theme_plan(theme_path, self.packet)
             deck, report = assemble(
                 self.packet,
                 root,
@@ -807,15 +909,10 @@ class TestBrePacket(unittest.TestCase):
                     ),
                     encoding="utf-8",
                 )
-            theme_path = summary_workspace / "ASSIGN THEME GROUPS.md"
-            theme_text = theme_path.read_text(encoding="utf-8")
-            theme_index = 0
-            while "__WRITE__" in theme_text:
-                theme_text = theme_text.replace(
-                    "__WRITE__", f"Chapter {(theme_index % 4) + 1}", 1
-                )
-                theme_index += 1
-            theme_path.write_text(theme_text, encoding="utf-8")
+            complete_theme_plan(
+                summary_workspace / "ASSIGN THEME GROUPS.md",
+                self.packet,
+            )
             deck, report = assemble(self.packet, root, allow_partial=False)
             self.assertEqual(list(range(1, 51)), report["authored_priority_ids"])
             self.assertEqual(

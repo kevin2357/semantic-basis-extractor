@@ -129,9 +129,12 @@ would be satisfied to see the card. Tangential relevance is insufficient.
 Empty arrays are preferable to false retrieval promises, but an almost
 entirely empty deck requires reconsideration.
 
-Assign `theme_group` only to selected aspects and syntheses. Organize each set
-into three or four approximately balanced, subject-specific chapters.
-Coherence matters more than exact equality. Do not add `theme_group` to
+Assign `theme_group_id` only to selected aspects and syntheses. Plan aspects
+and syntheses independently in their section-scoped registries. Each section
+requires three to five subject-specific chapters, at least two claims per
+chapter, and no more than a 2:1 largest-to-smallest size ratio. The two
+taxonomies must be foundationally different and may not reuse chapter titles.
+Do not add `theme_group_id` to
 placements.
 
 ## Four Summary cards
@@ -161,7 +164,8 @@ Preserve exactly:
 
 Populate:
 
-- every selected aspect and synthesis `theme_group`;
+- both structured chapter registries and every selected aspect and synthesis
+  `theme_group_id`;
 - selected-card context filters;
 - all handler, direct-to-dog, and hybrid headlines and bodies;
 - all no-, light-, and full-astrology branches;

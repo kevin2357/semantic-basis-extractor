@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from collections import Counter
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,11 @@ HUMOR_FIELDS = {
     "imperative_dog_quotes",
     "applicable_canine_jokes",
 }
+
+
+def normalized_chapter_title(value: str) -> tuple[str, tuple[str, ...]]:
+    words = re.findall(r"[a-z0-9]+", value.casefold().replace("&", " and "))
+    return " ".join(words), tuple(sorted(word for word in words if word != "and"))
 
 
 def load_json(path: Path) -> Any:
@@ -75,6 +81,55 @@ def parse_list(value: str) -> list[str]:
         if item:
             lines.append(item)
     return lines
+
+
+def theme_section(card: dict[str, Any]) -> str | None:
+    if card.get("claim_type") == "system_interaction":
+        return "interdogpendence"
+    if card.get("claim_type") == "synthesized_theme":
+        return "takeaways"
+    return None
+
+
+def parse_theme_registry(value: str, *, section: str, source: Path) -> list[dict[str, Any]]:
+    try:
+        registry = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"{source}: {section} registry is not valid JSON: {exc}"
+        ) from exc
+    if not isinstance(registry, list) or not 3 <= len(registry) <= 5:
+        raise ValueError(
+            f"{source}: {section} registry must contain three to five chapters"
+        )
+    required = {"id", "title", "short_title", "emoji", "order"}
+    ids: list[str] = []
+    titles: list[str] = []
+    for index, item in enumerate(registry, 1):
+        if not isinstance(item, dict) or set(item) != required:
+            raise ValueError(
+                f"{source}: {section} registry entry {index} must contain "
+                f"exactly {sorted(required)}"
+            )
+        if item["order"] != index:
+            raise ValueError(
+                f"{source}: {section} registry orders must be consecutive "
+                "integers starting at 1"
+            )
+        for field in ("id", "title", "short_title", "emoji"):
+            if not isinstance(item[field], str) or not item[field].strip():
+                raise ValueError(
+                    f"{source}: {section} entry {index} has invalid {field}"
+                )
+        if not re.fullmatch(r"[a-z][a-z0-9_]*", item["id"]):
+            raise ValueError(
+                f"{source}: {section} entry {index} has invalid snake_case id"
+            )
+        ids.append(item["id"])
+        titles.append(item["title"].casefold().strip())
+    if len(ids) != len(set(ids)) or len(titles) != len(set(titles)):
+        raise ValueError(f"{source}: {section} registry repeats an ID or title")
+    return registry
 
 
 def assign_path(target: dict[str, Any], path: str, value: str) -> None:
@@ -247,29 +302,88 @@ def assemble(
         raise ValueError("Theme-group assignment appears in more than one pass")
     authored_theme_priorities: list[int] = []
     if theme_plan_paths:
-        for field_path, value in parse_fields(theme_plan_paths[0]).items():
-            match = re.fullmatch(r"theme_group\.(\d+)", field_path)
+        theme_fields = parse_fields(theme_plan_paths[0])
+        registries: dict[str, list[dict[str, Any]]] = {}
+        for section in ("interdogpendence", "takeaways"):
+            field = f"theme_group_registry.{section}"
+            if field not in theme_fields:
+                raise ValueError(f"{theme_plan_paths[0]}: missing field {field}")
+            registries[section] = parse_theme_registry(
+                theme_fields.pop(field),
+                section=section,
+                source=theme_plan_paths[0],
+            )
+        deck["theme_group_registry"] = registries
+        registry_ids = {
+            section: {entry["id"] for entry in entries}
+            for section, entries in registries.items()
+        }
+        for field_path, value in theme_fields.items():
+            match = re.fullmatch(
+                r"theme_group\.(interdogpendence|takeaways)\.(\d+)",
+                field_path,
+            )
             if not match:
                 raise ValueError(
                     f"{theme_plan_paths[0]}: unexpected field {field_path}"
                 )
-            priority_id = int(match.group(1))
+            section = match.group(1)
+            priority_id = int(match.group(2))
             if not 1 <= priority_id <= len(deck["cards"]):
                 raise ValueError(
                     f"{theme_plan_paths[0]}: unknown priority {priority_id}"
                 )
             card = deck["cards"][priority_id - 1]
-            if "theme_group" not in card:
+            if "theme_group_id" not in card:
                 raise ValueError(
                     f"{theme_plan_paths[0]}: Story {priority_id} does not accept "
                     "a theme group"
                 )
-            card["theme_group"] = value
+            expected_section = theme_section(card)
+            if section != expected_section:
+                raise ValueError(
+                    f"{theme_plan_paths[0]}: Story {priority_id} belongs to "
+                    f"{expected_section}, not {section}"
+                )
+            if value not in registry_ids[section]:
+                raise ValueError(
+                    f"{theme_plan_paths[0]}: Story {priority_id} references "
+                    f"unknown {section} chapter {value!r}"
+                )
+            card["theme_group_id"] = value
             authored_theme_priorities.append(priority_id)
+        normalized_titles = {
+            section: {
+                normalized_chapter_title(entry["title"])
+                for entry in entries
+            }
+            for section, entries in registries.items()
+        }
+        if normalized_titles["interdogpendence"] & normalized_titles["takeaways"]:
+            raise ValueError(
+                "Interdogpendence and Takeaways may not repeat or trivially "
+                "reorder chapter titles"
+            )
+        for section, ids in registry_ids.items():
+            counts = Counter(
+                card.get("theme_group_id")
+                for card in deck["cards"]
+                if theme_section(card) == section
+            )
+            if set(counts) != ids:
+                raise ValueError(
+                    f"{section} assignments must use every registered chapter"
+                )
+            sizes = list(counts.values())
+            if min(sizes) < 2 or max(sizes) > 2 * min(sizes):
+                raise ValueError(
+                    f"{section} chapters violate the two-claim minimum or "
+                    f"2:1 balance boundary: {dict(counts)}"
+                )
     expected_theme_priorities = [
         card["priority_id"]
         for card in deck["cards"]
-        if "theme_group" in card
+        if "theme_group_id" in card
     ]
     authored_theme_priorities.sort()
     if (

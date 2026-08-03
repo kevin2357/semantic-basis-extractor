@@ -111,9 +111,11 @@ Before the opaque editorial checker runs, the runner verifies that every
 expected writable file and field is present and populated. Missing material is
 reported as `incomplete_delivery`, with the missing paths retained in the run
 ledger for the next creative attempt. Pass 6 additionally enforces the final
-deck contract for aspect/synthesis chapters: exactly three or four theme
-groups, each containing at least two cards, with largest and smallest group
-sizes differing by no more than two.
+deck contract for aspect/synthesis chapters: independent section-scoped
+registries with three to five theme groups per section, each containing at
+least two cards, with the largest group no more than twice the size of the
+smallest. Interdogpendence and Takeaways may not reuse or trivially reorder
+chapter titles.
 
 Fatal request problems such as authentication, permission, and invalid-request
 errors stop the affected pass immediately rather than repeating an identical

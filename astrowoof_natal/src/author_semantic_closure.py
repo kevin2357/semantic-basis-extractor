@@ -221,8 +221,36 @@ def _fake_field_value(
             if field.endswith("high_level")
             else "Core Personality"
         )
-    if field.startswith("theme_group."):
-        return f"Chapter {(ordinal % 4) + 1}"
+    if field.startswith("theme_group_registry."):
+        section = field.split(".")[1]
+        titles = {
+            "interdogpendence": [
+                ("bond_dynamics", "Bond Dynamics", "Bonds", "🔗"),
+                ("shared_rhythms", "Shared Rhythms", "Rhythms", "🐾"),
+                ("productive_tensions", "Productive Tensions", "Tensions", "⚡"),
+                ("mutual_adjustments", "Mutual Adjustments", "Adjustments", "🤝"),
+            ],
+            "takeaways": [
+                ("essential_character", "Essential Character", "Character", "✨"),
+                ("daily_wisdom", "Daily Wisdom", "Daily Life", "🏡"),
+                ("growth_lessons", "Growth Lessons", "Growth", "🌱"),
+                ("lasting_gifts", "Lasting Gifts", "Gifts", "🎁"),
+            ],
+        }
+        return json.dumps([
+            {
+                "id": item[0],
+                "title": item[1],
+                "short_title": item[2],
+                "emoji": item[3],
+                "order": index,
+            }
+            for index, item in enumerate(titles[section], start=1)
+        ], ensure_ascii=False)
+    if field.startswith("theme_group.interdogpendence."):
+        return ["bond_dynamics", "shared_rhythms", "productive_tensions", "mutual_adjustments"][(ordinal - 1) % 4]
+    if field.startswith("theme_group.takeaways."):
+        return ["essential_character", "daily_wisdom", "growth_lessons", "lasting_gifts"][(ordinal - 1) % 4]
     if field.startswith("plan."):
         return (
             f"Editorial plan {identity} follows a singular behavioral doorway "
@@ -2963,8 +2991,8 @@ def editable_deck_fields(
 
     for card_index, claim in enumerate(deck["cards"]):
         prefix = f"cards.{card_index}"
-        if include_theme_groups and "theme_group" in claim:
-            fields[f"{prefix}.theme_group"] = claim["theme_group"]
+        if include_theme_groups and "theme_group_id" in claim:
+            fields[f"{prefix}.theme_group_id"] = claim["theme_group_id"]
         for name in ("dos", "donts"):
             for item_index, value in enumerate(claim[name]):
                 fields[f"{prefix}.{name}.{item_index}"] = value
@@ -2975,6 +3003,13 @@ def editable_deck_fields(
             for item_index, value in enumerate(summary[name]):
                 fields[f"{prefix}.{name}.{item_index}"] = value
         collect_card(prefix, summary)
+    if include_theme_groups:
+        for section, entries in deck.get("theme_group_registry", {}).items():
+            for index, entry in enumerate(entries):
+                for name in ("id", "title", "short_title", "emoji"):
+                    fields[
+                        f"theme_group_registry.{section}.{index}.{name}"
+                    ] = entry[name]
     return fields
 
 
@@ -3149,7 +3184,10 @@ def polish_target_paths(
     ]
     if include_theme_groups:
         targets.update(
-            path for path in all_fields if path.endswith(".theme_group")
+            path
+            for path in all_fields
+            if path.endswith(".theme_group_id")
+            or path.startswith("theme_group_registry.")
         )
     for error in validation_errors:
         card_match = re.search(r"\bCard\s+(\d+)\b", error, re.IGNORECASE)
@@ -3192,7 +3230,9 @@ def sparse_polish_context(
         if target.startswith("cards."):
             card_index = int(parts[1])
             card_prefix = f"cards.{card_index}"
-            if target.endswith(".theme_group"):
+            if target.endswith(".theme_group_id") or target.startswith(
+                "theme_group_registry."
+            ):
                 continue
             if len(parts) >= 6 and parts[2] == "card" and parts[3] in {
                 "no_astro",
@@ -3386,7 +3426,10 @@ def apply_sparse_polish(
             raise ValueError(f"Sparse polish repeats field: {path}")
         if not isinstance(replacement, str) or not replacement.strip():
             raise ValueError(f"Sparse polish field {path} must be nonempty")
-        if path.endswith(".theme_group") and not include_theme_groups:
+        if (
+            path.endswith(".theme_group_id")
+            or path.startswith("theme_group_registry.")
+        ) and not include_theme_groups:
             raise ValueError("Theme groups are locked for this polish attempt")
         current: Any = result
         parts = path.split(".")

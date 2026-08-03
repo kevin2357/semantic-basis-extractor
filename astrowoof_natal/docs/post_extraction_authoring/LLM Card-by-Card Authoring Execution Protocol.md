@@ -268,7 +268,12 @@ reader should recognize hybrid mode without seeing its label.
 
 ## 8. Astrology-density contracts
 
-All densities express the same semantic claim.
+All densities express the same semantic claim through progressive disclosure.
+They are three depths of one interpretation, not parallel opportunities to
+invent different theses. No astrology establishes the lived insight; light
+astrology adds its principal astrological basis; full astrology adds the
+complete relevant support without abandoning the established behavioral
+meaning.
 
 ### 7.1 No astrology
 
@@ -380,11 +385,26 @@ saved for later inspection.
 
 ## 13. Theme groups and filters
 
-Read the full selected aspect set before finalizing aspect `theme_group`
-labels, and independently read the full selected synthesis set before
-finalizing synthesis labels. Discover subject-specific chapters; do not reuse
-a fixed generic taxonomy across subjects. Approximate balance is a secondary
-constraint, not the source of group meaning.
+Read the full selected aspect set before planning Interdogpendence, and
+independently read the full selected synthesis set before planning Takeaways.
+Discover subject-specific chapters; do not reuse a fixed generic taxonomy
+across subjects or share one taxonomy between the two sections.
+
+Each section must contain three to five chapters, each with at least two
+claims. The largest chapter may contain no more than twice as many claims as
+the smallest. Within those bounds, semantic coherence outranks visual grid
+packing.
+
+Interdogpendence titles should organize relationship geometry, interaction,
+reciprocity, friction, reinforcement, or other system dynamics. Takeaways
+titles should organize integrated conclusions, recurring lessons,
+developmental patterns, or whole-chart meaning. No chapter title may repeat
+across the sections, and their collective organizing schemes must remain
+foundationally different even when wording is not identical.
+
+Define chapters in the supplied section-scoped registry using stable IDs,
+full titles, short navigation titles, relevant emoji, and display order. Cards
+reference the stable IDs rather than copying display titles.
 
 Context filters are retrieval promises. Assign a value only when a reader
 choosing that filter would be satisfied to see the card. Record a brief

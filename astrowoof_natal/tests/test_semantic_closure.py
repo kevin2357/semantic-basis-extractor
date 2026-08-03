@@ -468,9 +468,9 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.packet,
             include_theme_groups=True,
         )
-        self.assertFalse(any(path.endswith(".theme_group") for path in normal))
+        self.assertFalse(any(path.endswith(".theme_group_id") for path in normal))
         self.assertTrue(
-            any(path.endswith(".theme_group") for path in rebalancing)
+            any(path.endswith(".theme_group_id") for path in rebalancing)
         )
 
     def test_sparse_polish_targets_only_reported_opening_fields(self) -> None:
@@ -1135,19 +1135,22 @@ class TestSemanticClosure(SemanticClosureFixture):
     def test_pass_six_theme_groups_match_final_validator_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            assignment = root / "ASSIGN THEME GROUPS.md"
-            groups = ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E"]
-            assignment.write_text(
-                "\n".join(
-                    f"<!-- BEGIN FIELD: theme_group.{index} -->\n{group}\n"
-                    f"<!-- END FIELD: theme_group.{index} -->"
-                    for index, group in enumerate(groups, 1)
-                ),
-                encoding="utf-8",
+            build_story_workspace(
+                root,
+                self.packet,
+                ROOT,
+                0,
+                card_start=51,
+                include_summaries=True,
+                include_theme_plan=True,
+                pass_number=6,
+                pass_count=6,
+                assigned_cards=[],
             )
+            fill_fake_workspace(root)
             affected, issue = invalid_theme_group_claim_ids(root)
-            self.assertEqual("theme_group_count", issue)
-            self.assertEqual([str(index) for index in range(1, 11)], affected)
+            self.assertIsNone(issue)
+            self.assertEqual([], affected)
 
     def test_completed_malformed_output_preserves_billable_metadata(
         self,

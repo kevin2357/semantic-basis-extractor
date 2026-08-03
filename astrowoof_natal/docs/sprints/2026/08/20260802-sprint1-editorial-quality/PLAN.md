@@ -341,6 +341,32 @@ Candidates include:
 Do not add every candidate automatically. Each addition consumes author
 attention and tokens. Implement only changes supported by Phase-0 evidence.
 
+### UI-derived chapter and density contract
+
+The first full Ella UI review established two immediate semantic-contract
+changes:
+
+- astrology density is progressive disclosure of one interpretation: None
+  establishes lived meaning, Light adds the principal astrological basis, and
+  Full adds the complete relevant support;
+- aspects and syntheses require independent chapter plans because
+  Interdogpendence organizes interaction dynamics while Takeaways organizes
+  integrated conclusions.
+
+Replace the shared `theme_group` label with section-scoped structured
+registries and stable `theme_group_id` references. Each registry contains
+three to five chapters with `id`, `title`, `short_title`, `emoji`, and `order`.
+Every chapter contains at least two claims; the largest may not exceed twice
+the smallest. Reject exact or trivially reordered cross-section title reuse,
+and instruct the author that synonymous or conceptually mirrored taxonomies
+also fail the editorial goal.
+
+Apply the contract at packet generation, pass-6 handoff, opaque pass QA,
+assembly, final validation, polish transport, documentation, and tests.
+Preserve legacy final-deck validation as a compatibility path; do not pretend
+that an old shared taxonomy can be deterministically upgraded into two
+semantically independent plans.
+
 ### Full-chart basis transport review
 
 Review the `FULL CHART BASIS.md` representation supplied to authoring and

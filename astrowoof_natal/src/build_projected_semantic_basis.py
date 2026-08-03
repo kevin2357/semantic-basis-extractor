@@ -1184,7 +1184,7 @@ def compile_packet(
             "claim_type": candidate.claim_type,
             "categories": candidate.categories,
             **({
-                "theme_group": "__LLM_FILL__",
+                "theme_group_id": "__LLM_FILL__",
             } if (
                 candidate.candidate_type == "projected_relationship"
                 or candidate.claim_type == "synthesized_theme"
@@ -1236,7 +1236,7 @@ def compile_packet(
         for index in range(1, 5)
     }
     return {
-        "schema_version": "astrowoof.projected_natal_cards.authoring_packet.v0.3",
+        "schema_version": "astrowoof.projected_natal_cards.authoring_packet.v0.4",
         "generator": {
             "semantic_basis_extractor": "projected-sbe.v0.2",
             "candidate_generator": "projected-candidates.v0.2",
@@ -1292,6 +1292,10 @@ def compile_packet(
         "categories": categories,
         "behavioral_domains": domains,
         "context_filter_groups": deepcopy(CONTEXT_FILTER_GROUPS),
+        "theme_group_registry": {
+            "interdogpendence": [],
+            "takeaways": [],
+        },
         "whole_graph_analysis": analysis,
         "summary": summary,
         "cards": cards,
@@ -1339,10 +1343,14 @@ def qa_report(
             candidate.candidate_type == "projected_relationship"
             or candidate.claim_type == "synthesized_theme"
         )
-        if needs_theme and card.get("theme_group") != "__LLM_FILL__":
-            errors.append(f"Card {index} must contain a theme_group placeholder.")
-        if not needs_theme and "theme_group" in card:
-            errors.append(f"Card {index} placement unexpectedly contains theme_group.")
+        if needs_theme and card.get("theme_group_id") != "__LLM_FILL__":
+            errors.append(
+                f"Card {index} must contain a theme_group_id placeholder."
+            )
+        if not needs_theme and "theme_group_id" in card:
+            errors.append(
+                f"Card {index} placement unexpectedly contains theme_group_id."
+            )
         if len(card.get("dos", [])) != 3 or len(card.get("donts", [])) != 3:
             errors.append(
                 f"Card {index} must scaffold exactly three dos and three donts."
@@ -1536,6 +1544,12 @@ def render_story_writing_template(
         "this claim as an independent miniature essay before filling its "
         "renderings.",
         "",
+        "Treat No, Light, and Full Astrology as progressive depths of this one "
+        "insight. No Astrology establishes what the insight means in lived "
+        "behavior; Light reveals its principal astrological basis; Full exposes "
+        "the complete relevant chart support. Their prose may differ, but their "
+        "center of meaning must remain visibly identical.",
+        "",
         "## Editorial Plan",
         "",
         _field_block("Center of Gravity", "plan.center_of_gravity"),
@@ -1630,47 +1644,88 @@ def render_story_writing_template(
                 "",
             ]
         )
-        if "theme_group" in item and include_theme_group:
+        if "theme_group_id" in item and include_theme_group:
             lines.extend(
-                [_field_block("Theme Group", "theme_group"), ""]
+                [_field_block("Theme Group ID", "theme_group_id"), ""]
             )
     return "\n".join(lines).rstrip() + "\n"
 
 
 def render_theme_group_assignment(packet: dict[str, Any]) -> str:
     cards_by_id = {item["claim_id"]: item for item in packet["cards"]}
-    themed_cards = [
-        card for card in packet["cards"] if "theme_group" in card
-    ]
+    sections = {
+        "interdogpendence": [
+            card
+            for card in packet["cards"]
+            if card.get("claim_type") == "system_interaction"
+        ],
+        "takeaways": [
+            card
+            for card in packet["cards"]
+            if card.get("claim_type") == "synthesized_theme"
+        ],
+    }
     lines = [
-        "# Global Theme-Group Assignment",
+        "# Independent Dynamic Chapter Plans",
         "",
-        "Organize all aspect and synthesis stories below into three or four "
-        "approximately equal chapters. Use one concise chapter name for each "
-        "group and reuse that exact name for every story assigned to it. Base "
-        "the chapters on meaningful similarities in the stories, not their "
-        "priority numbers or claim types.",
+        "Create two independent chapter systems: one for Interdogpendence "
+        "(aspects and interacting chart forces), and one for Takeaways "
+        "(synthetic claims and higher-order conclusions about the dog).",
+        "",
+        "For each section, choose three to five semantically crisp chapters. "
+        "Every chapter must contain at least two claims, and the largest may "
+        "not contain more than twice as many claims as the smallest. Semantic "
+        "coherence decides among plans that satisfy those broad boundaries.",
+        "",
+        "The two organizational systems must be foundationally different. No "
+        "title may appear in both sections. Do not create synonymous, lightly "
+        "reworded, token-reordered, or structurally mirrored taxonomies. A "
+        "reader should immediately understand that Interdogpendence explains "
+        "interacting forces while Takeaways presents integrated conclusions.",
+        "",
+        "Each registry is a JSON array. Every entry must contain exactly: `id` "
+        "(stable lowercase snake_case within its section), `title` (full "
+        "editorial title), `short_title` (best compact navigation label), "
+        "`emoji` (one relevant visual marker), and `order` (consecutive integer "
+        "starting at 1). Assign each story using one ID from its own registry.",
         "",
     ]
-    for card in themed_cards:
-        brief, facts, focus = _story_brief(card, cards_by_id)
+    for section, themed_cards in sections.items():
+        label = (
+            "Interdogpendence — Relationship Dynamics"
+            if section == "interdogpendence"
+            else "Takeaways — Integrated Conclusions"
+        )
         lines.extend(
             [
-                f"## Story {card['priority_id']:03d}",
-                "",
-                brief,
-                "",
-                *[f"- {fact}" for fact in facts if fact],
-                "",
-                focus,
+                f"## {label}",
                 "",
                 _field_block(
-                    "Chapter Name",
-                    f"theme_group.{card['priority_id']}",
+                    f"{label} Registry JSON",
+                    f"theme_group_registry.{section}",
                 ),
                 "",
             ]
         )
+        for card in themed_cards:
+            brief, facts, focus = _story_brief(card, cards_by_id)
+            lines.extend(
+                [
+                    f"### Story {card['priority_id']:03d}",
+                    "",
+                    brief,
+                    "",
+                    *[f"- {fact}" for fact in facts if fact],
+                    "",
+                    focus,
+                    "",
+                    _field_block(
+                        "Chapter ID",
+                        f"theme_group.{section}.{card['priority_id']}",
+                    ),
+                    "",
+                ]
+            )
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -2558,7 +2613,8 @@ def build_story_workspace(
             "the dog lives, what the dog needs, and how the dog grows. Give "
             "each summary its own central argument, examples, advice, and "
             "language. Also complete `ASSIGN THEME GROUPS.md`, which creates "
-            "one coherent chapter plan for every aspect and synthesis story."
+            "independent structured chapter plans for Interdogpendence aspects "
+            "and Takeaways syntheses."
         )
         sequence = (
             "Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read "

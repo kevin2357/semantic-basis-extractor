@@ -2,7 +2,8 @@
 
 ## Editable
 
-- Selected aspect and synthesis `theme_group` placeholders
+- Section-scoped Interdogpendence and Takeaways chapter registries
+- Selected aspect and synthesis `theme_group_id` placeholders
 - Selected-claim `context_filter_groups.high_level`
 - Selected-claim `context_filter_groups.detail_level`
 - Selected-claim `dos` and `donts`
@@ -30,12 +31,12 @@ including `unselected_claims`.
 
 - Exactly 50 selected cards
 - No `__LLM_FILL__` placeholders
-- Every selected aspect and synthesis has a nonempty `theme_group`
-- No placement has an added `theme_group`
+- Every selected aspect and synthesis has a registered `theme_group_id`
+- No other claim type has an added `theme_group_id`
 - Every filter value occurs in the registered vocabulary at the matching level
 - Humor occurs at card level and never inside density branches
 - All four summary cards are complete
-- At least two `dos` and two `donts` exist for every selected and summary card
+- Exactly three `dos` and three `donts` exist for every selected and summary card
 - `unselected_claims` is structurally equivalent to the request packet
 - `projected_term_registry` is unchanged
 - The deterministic editorial validator passes
@@ -140,10 +141,15 @@ frame with only a projected term changed also counts as reuse.
 
 ## Theme-group audit
 
-- Selected aspects form three or four approximately balanced, coherent
+- Selected aspects form three to five coherent Interdogpendence chapters.
+- Selected syntheses independently form three to five coherent Takeaways
   chapters.
-- Selected syntheses independently form three or four approximately balanced,
-  coherent chapters.
+- Every chapter contains at least two claims and the largest contains no more
+  than twice as many claims as the smallest.
+- The two taxonomies are foundationally different and share no exact,
+  reordered, synonymous, or cosmetically reworded chapter titles.
+- Every registry entry provides stable `id`, `title`, `short_title`, `emoji`,
+  and consecutive `order` values.
 - Labels were discovered from this subject's claims rather than copied as a
   generic cross-subject taxonomy.
 - Balance did not override semantic coherence.

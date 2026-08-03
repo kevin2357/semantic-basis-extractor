@@ -140,27 +140,139 @@ def invalid_context_filter_claim_ids(workspace: Path) -> list[str]:
     return sorted(invalid)
 
 
-def invalid_theme_group_claim_ids(workspace: Path) -> tuple[list[str], str | None]:
-    """Enforce the same chapter-count and balance contract as final QA."""
+def normalized_chapter_title(value: str) -> tuple[str, tuple[str, ...]]:
+    words = re.findall(
+        r"[a-z0-9]+",
+        value.casefold().replace("&", " and "),
+    )
+    normalized = " ".join(words)
+    return normalized, tuple(sorted(word for word in words if word != "and"))
+
+
+def theme_group_plan_issues(
+    workspace: Path,
+) -> list[dict[str, Any]]:
+    """Validate independent aspect and synthesis chapter plans."""
     assignment = workspace / "ASSIGN THEME GROUPS.md"
     if not assignment.is_file():
-        return [], None
+        return []
     fields = parse_fields(assignment)
-    assignments = {
-        field.removeprefix("theme_group."): value.strip()
-        for field, value in fields.items()
-        if field.startswith("theme_group.") and value.strip()
-    }
-    counts = Counter(assignments.values())
-    claim_ids = sorted(assignments, key=lambda value: int(value))
-    if not counts:
-        return claim_ids, "missing_theme_group_plan"
-    sizes = list(counts.values())
-    if len(counts) not in {3, 4}:
-        return claim_ids, "theme_group_count"
-    if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
-        return claim_ids, "theme_group_balance"
-    return [], None
+    issues: list[dict[str, Any]] = []
+    titles_by_section: dict[str, list[str]] = {}
+    for section in ("interdogpendence", "takeaways"):
+        registry_field = f"theme_group_registry.{section}"
+        affected = sorted(
+            (
+                field.rsplit(".", 1)[-1]
+                for field in fields
+                if field.startswith(f"theme_group.{section}.")
+            ),
+            key=int,
+        )
+        try:
+            registry = json.loads(fields.get(registry_field, ""))
+        except json.JSONDecodeError:
+            registry = None
+        if not isinstance(registry, list) or not 3 <= len(registry) <= 5:
+            issues.append({
+                "code": "theme_group_registry",
+                "message": (
+                    f"{section} must define a valid registry with three to "
+                    "five chapters."
+                ),
+                "claim_ids": affected,
+            })
+            continue
+        required = {"id", "title", "short_title", "emoji", "order"}
+        valid_registry = all(
+            isinstance(item, dict)
+            and set(item) == required
+            and item.get("order") == index
+            and all(
+                isinstance(item.get(field), str) and item[field].strip()
+                for field in ("id", "title", "short_title", "emoji")
+            )
+            and re.fullmatch(r"[a-z][a-z0-9_]*", item["id"])
+            for index, item in enumerate(registry, 1)
+        )
+        ids = [item.get("id") for item in registry if isinstance(item, dict)]
+        titles = [
+            item.get("title", "") for item in registry if isinstance(item, dict)
+        ]
+        if (
+            not valid_registry
+            or len(ids) != len(set(ids))
+            or len(titles) != len(set(title.casefold() for title in titles))
+        ):
+            issues.append({
+                "code": "theme_group_registry",
+                "message": f"{section} contains invalid chapter metadata.",
+                "claim_ids": affected,
+            })
+            continue
+        titles_by_section[section] = titles
+        assignments = {
+            field.rsplit(".", 1)[-1]: value.strip()
+            for field, value in fields.items()
+            if field.startswith(f"theme_group.{section}.") and value.strip()
+        }
+        counts = Counter(assignments.values())
+        if set(counts) != set(ids):
+            issues.append({
+                "code": "theme_group_coverage",
+                "message": (
+                    f"{section} assignments must use every registered chapter "
+                    "and no unregistered chapter."
+                ),
+                "claim_ids": affected,
+            })
+            continue
+        sizes = list(counts.values())
+        if min(sizes) < 2 or max(sizes) > 2 * min(sizes):
+            issues.append({
+                "code": "theme_group_balance",
+                "message": (
+                    f"{section} chapters must contain at least two claims and "
+                    "the largest may not exceed twice the smallest."
+                ),
+                "claim_ids": affected,
+            })
+    if set(titles_by_section) == {"interdogpendence", "takeaways"}:
+        first = {
+            normalized_chapter_title(title)
+            for title in titles_by_section["interdogpendence"]
+        }
+        second = {
+            normalized_chapter_title(title)
+            for title in titles_by_section["takeaways"]
+        }
+        if first & second:
+            affected = sorted(
+                (
+                    field.rsplit(".", 1)[-1]
+                    for field in fields
+                    if field.startswith("theme_group.interdogpendence.")
+                    or field.startswith("theme_group.takeaways.")
+                ),
+                key=int,
+            )
+            issues.append({
+                "code": "cross_section_theme_mirroring",
+                "message": (
+                    "Interdogpendence and Takeaways may not reuse or trivially "
+                    "reorder chapter titles."
+                ),
+                "claim_ids": affected,
+            })
+    return issues
+
+
+def invalid_theme_group_claim_ids(workspace: Path) -> tuple[list[str], str | None]:
+    """Backward-compatible first-issue view used by callers and tests."""
+    issues = theme_group_plan_issues(workspace)
+    if not issues:
+        return [], None
+    return issues[0]["claim_ids"], issues[0]["code"]
 
 
 def main() -> None:
@@ -182,19 +294,15 @@ def main() -> None:
             "message": "One or more cards use an unregistered context filter.",
             "claim_ids": invalid_filter_claim_ids,
         })
-    invalid_theme_claim_ids, theme_issue = invalid_theme_group_claim_ids(
-        args.workspace
-    )
-    if theme_issue:
+    theme_issues = theme_group_plan_issues(args.workspace)
+    invalid_theme_claim_ids = sorted({
+        claim_id
+        for issue in theme_issues
+        for claim_id in issue["claim_ids"]
+    })
+    for theme_issue in theme_issues:
         full_report["status"] = "reject"
-        full_report["rejection_reasons"].append({
-            "code": theme_issue,
-            "message": (
-                "The aspect and synthesis chapter plan must contain three or "
-                "four approximately balanced groups."
-            ),
-            "claim_ids": invalid_theme_claim_ids,
-        })
+        full_report["rejection_reasons"].append(theme_issue)
     if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
         affected_claim_ids = sorted({
             claim_id
