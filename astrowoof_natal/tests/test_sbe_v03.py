@@ -22,6 +22,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
     archive_story_workspace,
     authoring_projection_payload,
+    build_compact_full_chart_basis,
     build_candidates,
     build_split_assignment_plan,
     build_story_workspace,
@@ -32,6 +33,7 @@ from build_projected_semantic_basis import (  # noqa: E402
     load_subject_params,
     optimize,
     qa_report,
+    render_full_chart_basis,
     subject_record,
 )
 from assemble_authoring_workspace import assemble  # noqa: E402
@@ -618,6 +620,7 @@ class TestBrePacket(unittest.TestCase):
                 "Treat a rejection as an editorial signal",
                 start_here,
             )
+
             self.assertIn(
                 "rewrite the prose in a natural voice",
                 start_here,
@@ -729,6 +732,59 @@ class TestBrePacket(unittest.TestCase):
             self.assertEqual(
                 "Personality",
                 deck["cards"][0]["card"]["no_astro"]["body"]["handler"],
+            )
+
+    def test_compact_full_chart_basis_preserves_contexts_and_traceability(
+        self,
+    ) -> None:
+        basis = build_compact_full_chart_basis(self.packet)
+        self.assertEqual(
+            "deterministic_downstream_reconstruction",
+            basis["authority"],
+        )
+        self.assertEqual(50, len(basis["selected_claims"]))
+        self.assertEqual(
+            len(self.packet.get("unselected_claims", [])),
+            len(basis["additional_claims"]),
+        )
+        self.assertEqual(
+            {card["claim_id"] for card in self.packet["cards"]},
+            {claim["claim_id"] for claim in basis["selected_claims"]},
+        )
+        object_contexts = {
+            context
+            for item in basis["objects"]
+            for group in item["context_projections"]
+            for context in group["contexts"]
+        }
+        self.assertEqual(
+            {"general", "direct_to_dog", "handler", "hybrid"},
+            object_contexts,
+        )
+        self.assertTrue(all(item["source_ref"] for item in basis["objects"]))
+        self.assertTrue(
+            all(item["source_ref"] for item in basis["relationships"])
+        )
+        compact = render_full_chart_basis(self.packet, "compact-v1")
+        legacy = render_full_chart_basis(self.packet)
+        self.assertIn("## Source and Projected Objects", compact)
+        self.assertIn("## Concise Projected-Term Decoder", compact)
+        self.assertIn("not a canonical chart export", compact)
+        self.assertLess(len(compact), len(legacy))
+
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                2,
+                full_chart_basis_format="compact-v1",
+            )
+            self.assertFalse((workspace / "FULL CHART BASIS.json").exists())
+            self.assertIn(
+                "## Source and Projected Relationships",
+                (workspace / "FULL CHART BASIS.md").read_text(encoding="utf-8"),
             )
 
     def test_split_story_workspaces_combine_into_one_complete_deck(self) -> None:

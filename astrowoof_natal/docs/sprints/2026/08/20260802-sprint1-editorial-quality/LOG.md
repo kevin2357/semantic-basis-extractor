@@ -463,3 +463,66 @@ and the already-authored deck passed revalidation without another API call.
 The delivery completed with warnings. Full method, costs, chapter names, and
 interpretation are recorded in
 `results/PHASE 3 - Ella Structured Chapters Live Test.md`.
+
+## 2026-08-03 — Phase 3 full-chart basis transport audit
+
+Audited the production `FULL CHART BASIS.md` against a deterministic compact
+authoring-map prototype for Ashley, Brandi, Bre, Ella, and Kevin. Production
+inputs measured approximately 18.3–19.0k estimated tokens; the recursive
+projected-term registry alone represented 55.7–58.5%. The prototype reduced
+estimated tokens by 49.7–51.8% while retaining the complete selected and
+additional claim lists, 17 recoverable objects per subject, 37–43 recoverable
+relationships, source references, and a concise projected decoder.
+
+The audit established that SBE can build a useful projected chart summary but
+cannot reconstruct canonical source data losslessly: precise positions are not
+retained, canonical relationship endpoints depend on joins, and completeness
+cannot be proven downstream. The architectural recommendation is a hybrid:
+SPC owns a projection-neutral canonical source-chart capsule; SBE owns the
+author-facing projected map and semantic basis. No production transport changed
+in this step. A controlled live A/B is required before replacement.
+
+Detailed findings and examples are in
+`results/PHASE 3 - Full Chart Basis Transport Audit.md`; reproducible metrics,
+current renders, compact prototypes, and reconstructed maps are under
+`work/phase-003-full-chart-basis-audit/`.
+
+## 2026-08-03 — Compact full-chart experimental implementation
+
+Implemented `compact-v1` behind an explicit SBE and semantic-closure flag while
+preserving `legacy` as the default. The production candidate preserves all
+distinct general, handler, direct-to-dog, and hybrid projections rather than
+the audit prototype's single representative context. It emits clean Markdown
+to each pass and one structured traceability sidecar in local SBE output; the
+JSON is intentionally excluded from authoring ZIPs and API prompt assembly.
+
+Across five reference packets, the context-complete Markdown reduced estimated
+basis tokens by 35.8–39.0%. Matched Ella closure layouts reduced the shared
+subject prefix from 19,416 to 12,138 estimated tokens and aggregate six-request
+input from 381,673 to 338,005. Both modes produced identical stratified
+assignments. Matched six-pass SBE smoke builds passed, compact ZIPs contained
+only the author-facing Markdown, and the full 84-test suite passed.
+
+No OpenAI request was made. The next checkpoint is a controlled live A/B of
+whole-dog portrait and four-summary quality.
+
+## 2026-08-03 — Ella compact full-chart live A/B
+
+Ran one fresh Ella pass-6 request using `compact-v1` and reused preserved
+accepted card passes 1–5. The treatment passed opaque QA on attempt 1, assembled,
+validated, and reached `DELIVERY_COMPLETE_WITH_WARNINGS`. It used 36,841 input
+and 8,089 output tokens at an estimated $0.2134, versus 44,451 input tokens on
+the legacy control's first request.
+
+The treatment's 899-word private portrait retained every major control motif
+and was more explicit about canonical placements and counterweights. Its four
+summary arguments remained distinct and evidence-bounded. Summary prose was
+9.5% shorter overall but remained at miniature-essay scale. The new five-chapter
+Interdogpendence and four-chapter Takeaways plans were semantically independent,
+balanced, and visually suitable. The control retained a few stronger individual
+phrases, but no material treatment quality loss was found.
+
+Keep compact transport experimental pending one second-subject, current-code,
+fresh legacy-versus-compact pass-6 comparison. Detailed matched examples and
+cost interpretation are in
+`results/PHASE 3 - Ella Compact Full Chart Live AB.md`.

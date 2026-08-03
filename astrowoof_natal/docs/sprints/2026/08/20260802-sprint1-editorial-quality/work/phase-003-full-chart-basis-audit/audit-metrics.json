@@ -1,0 +1,245 @@
+{
+  "schema_version": "astrowoof.full_chart_basis_audit.v0.1",
+  "subjects": {
+    "ashley": {
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\ashley\\selected-authoring-packet.json",
+      "selected_claim_count": 50,
+      "additional_claim_count": 58,
+      "claim_types": {
+        "angle": 4,
+        "system_interaction": 37,
+        "placement": 12,
+        "synthesized_theme": 54,
+        "orientation": 1
+      },
+      "registry_term_count": 49,
+      "reconstructed_object_count": 17,
+      "reconstructed_relationship_count": 37,
+      "referenced_glossary_term_count": 49,
+      "current": {
+        "characters": 74814,
+        "utf8_bytes": 74814,
+        "estimated_tokens": 18704,
+        "lines": 1709,
+        "sections": {
+          "Selected Chart Material": {
+            "characters": 17086,
+            "utf8_bytes": 17086,
+            "estimated_tokens": 4272,
+            "lines": 371
+          },
+          "Additional Chart Material": {
+            "characters": 14885,
+            "utf8_bytes": 14885,
+            "estimated_tokens": 3722,
+            "lines": 311
+          },
+          "Complete Projected-Term Registry": {
+            "characters": 42624,
+            "utf8_bytes": 42624,
+            "estimated_tokens": 10656,
+            "lines": 1023
+          }
+        }
+      },
+      "prototype": {
+        "characters": 36518,
+        "utf8_bytes": 36737,
+        "estimated_tokens": 9185,
+        "lines": 235
+      }
+    },
+    "brandi": {
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\brandi\\selected-authoring-packet.json",
+      "selected_claim_count": 50,
+      "additional_claim_count": 58,
+      "claim_types": {
+        "angle": 4,
+        "system_interaction": 43,
+        "placement": 12,
+        "synthesized_theme": 48,
+        "orientation": 1
+      },
+      "registry_term_count": 50,
+      "reconstructed_object_count": 17,
+      "reconstructed_relationship_count": 43,
+      "referenced_glossary_term_count": 50,
+      "current": {
+        "characters": 76163,
+        "utf8_bytes": 76163,
+        "estimated_tokens": 19041,
+        "lines": 1738,
+        "sections": {
+          "Selected Chart Material": {
+            "characters": 17465,
+            "utf8_bytes": 17465,
+            "estimated_tokens": 4367,
+            "lines": 376
+          },
+          "Additional Chart Material": {
+            "characters": 14941,
+            "utf8_bytes": 14941,
+            "estimated_tokens": 3736,
+            "lines": 313
+          },
+          "Complete Projected-Term Registry": {
+            "characters": 43538,
+            "utf8_bytes": 43538,
+            "estimated_tokens": 10885,
+            "lines": 1045
+          }
+        }
+      },
+      "prototype": {
+        "characters": 37303,
+        "utf8_bytes": 37552,
+        "estimated_tokens": 9388,
+        "lines": 242
+      }
+    },
+    "bre": {
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\bre\\selected-authoring-packet.json",
+      "selected_claim_count": 50,
+      "additional_claim_count": 53,
+      "claim_types": {
+        "placement": 12,
+        "system_interaction": 37,
+        "synthesized_theme": 49,
+        "angle": 4,
+        "orientation": 1
+      },
+      "registry_term_count": 50,
+      "reconstructed_object_count": 17,
+      "reconstructed_relationship_count": 37,
+      "referenced_glossary_term_count": 50,
+      "current": {
+        "characters": 74390,
+        "utf8_bytes": 74390,
+        "estimated_tokens": 18598,
+        "lines": 1705,
+        "sections": {
+          "Selected Chart Material": {
+            "characters": 17126,
+            "utf8_bytes": 17126,
+            "estimated_tokens": 4282,
+            "lines": 372
+          },
+          "Additional Chart Material": {
+            "characters": 13558,
+            "utf8_bytes": 13558,
+            "estimated_tokens": 3390,
+            "lines": 285
+          },
+          "Complete Projected-Term Registry": {
+            "characters": 43490,
+            "utf8_bytes": 43490,
+            "estimated_tokens": 10873,
+            "lines": 1044
+          }
+        }
+      },
+      "prototype": {
+        "characters": 35610,
+        "utf8_bytes": 35829,
+        "estimated_tokens": 8958,
+        "lines": 231
+      }
+    },
+    "ella": {
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\ella\\selected-authoring-packet.json",
+      "selected_claim_count": 50,
+      "additional_claim_count": 56,
+      "claim_types": {
+        "angle": 4,
+        "system_interaction": 37,
+        "placement": 12,
+        "synthesized_theme": 52,
+        "orientation": 1
+      },
+      "registry_term_count": 50,
+      "reconstructed_object_count": 17,
+      "reconstructed_relationship_count": 37,
+      "referenced_glossary_term_count": 50,
+      "current": {
+        "characters": 75215,
+        "utf8_bytes": 75215,
+        "estimated_tokens": 18804,
+        "lines": 1720,
+        "sections": {
+          "Selected Chart Material": {
+            "characters": 17107,
+            "utf8_bytes": 17107,
+            "estimated_tokens": 4277,
+            "lines": 371
+          },
+          "Additional Chart Material": {
+            "characters": 14369,
+            "utf8_bytes": 14369,
+            "estimated_tokens": 3593,
+            "lines": 301
+          },
+          "Complete Projected-Term Registry": {
+            "characters": 43522,
+            "utf8_bytes": 43522,
+            "estimated_tokens": 10881,
+            "lines": 1044
+          }
+        }
+      },
+      "prototype": {
+        "characters": 36273,
+        "utf8_bytes": 36492,
+        "estimated_tokens": 9123,
+        "lines": 234
+      }
+    },
+    "kevin": {
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\qa\\reference_decks\\kevin\\selected-authoring-packet.json",
+      "selected_claim_count": 50,
+      "additional_claim_count": 58,
+      "claim_types": {
+        "system_interaction": 41,
+        "angle": 4,
+        "placement": 12,
+        "synthesized_theme": 50,
+        "orientation": 1
+      },
+      "registry_term_count": 47,
+      "reconstructed_object_count": 17,
+      "reconstructed_relationship_count": 41,
+      "referenced_glossary_term_count": 47,
+      "current": {
+        "characters": 73339,
+        "utf8_bytes": 73339,
+        "estimated_tokens": 18335,
+        "lines": 1670,
+        "sections": {
+          "Selected Chart Material": {
+            "characters": 17327,
+            "utf8_bytes": 17327,
+            "estimated_tokens": 4332,
+            "lines": 372
+          },
+          "Additional Chart Material": {
+            "characters": 14958,
+            "utf8_bytes": 14958,
+            "estimated_tokens": 3740,
+            "lines": 314
+          },
+          "Complete Projected-Term Registry": {
+            "characters": 40836,
+            "utf8_bytes": 40836,
+            "estimated_tokens": 10209,
+            "lines": 980
+          }
+        }
+      },
+      "prototype": {
+        "characters": 36637,
+        "utf8_bytes": 36876,
+        "estimated_tokens": 9219,
+        "lines": 237
+      }
+    }
+  }
+}

@@ -2221,7 +2221,280 @@ def _authoring_registry(value: Any) -> Any:
     return value
 
 
-def render_full_chart_basis(packet: dict[str, Any]) -> str:
+def _compact_projection_record(wrapper: dict[str, Any]) -> dict[str, Any]:
+    """Keep the semantic projection fields useful for whole-chart authoring."""
+    record = wrapper.get("record") or {}
+    attributes = record.get("attributes") or {}
+    return {
+        "projected_name": record.get("name"),
+        "projected_relationship": record.get("relationship_type"),
+        "projected_mode": attributes.get("projected_mode"),
+        "projected_domain": attributes.get("projected_domain"),
+        "doghouse_number": attributes.get("doghouse_number"),
+        "interaction_mode": attributes.get("interaction_mode"),
+        "source_canine_subsystem": attributes.get("source_canine_subsystem"),
+        "target_canine_subsystem": attributes.get("target_canine_subsystem"),
+    }
+
+
+def _group_compact_contexts(
+    contexts: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, Any]] = {}
+    for context, wrapper in sorted(contexts.items()):
+        projection = {
+            key: value
+            for key, value in _compact_projection_record(wrapper).items()
+            if value not in (None, [], {})
+        }
+        fingerprint = json.dumps(
+            projection,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        group = grouped.setdefault(
+            fingerprint,
+            {"contexts": [], "projection": projection},
+        )
+        group["contexts"].append(context)
+    return list(grouped.values())
+
+
+def build_compact_full_chart_basis(packet: dict[str, Any]) -> dict[str, Any]:
+    """Build a traceable authoring map from all retained projected evidence.
+
+    This is deliberately labeled as a downstream reconstruction. It preserves
+    every distinct context projection but does not claim canonical completeness.
+    """
+    all_claims = [*packet.get("cards", []), *packet.get("unselected_claims", [])]
+    projected_ids: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    objects: dict[str, dict[str, Any]] = {}
+    relationships: dict[str, dict[str, Any]] = {}
+
+    for claim in all_claims:
+        for evidence in claim.get("evidence", []):
+            if evidence.get("kind") != "projected_object":
+                continue
+            contexts = evidence.get("context_records") or {}
+            for context, wrapper in contexts.items():
+                record = wrapper.get("record") or {}
+                attributes = record.get("attributes") or {}
+                projected_ids[context][record.get("id", "")] = {
+                    "canonical_name": attributes.get("canonical_object_name"),
+                    "projected_name": record.get("name"),
+                }
+            source_refs = evidence.get("source_refs") or []
+            if not source_refs:
+                continue
+            first_wrapper = contexts[sorted(contexts)[0]] if contexts else {}
+            first_record = first_wrapper.get("record") or {}
+            attributes = first_record.get("attributes") or {}
+            for source_ref in source_refs:
+                objects.setdefault(
+                    source_ref,
+                    {
+                        "source_ref": source_ref,
+                        "canonical_name": attributes.get("canonical_object_name"),
+                        "source_sign": attributes.get("source_sign"),
+                        "source_house": attributes.get("source_house"),
+                        "context_projections": _group_compact_contexts(contexts),
+                    },
+                )
+
+    for claim in all_claims:
+        for evidence in claim.get("evidence", []):
+            if evidence.get("kind") != "projected_relationship":
+                continue
+            contexts = evidence.get("context_records") or {}
+            if not contexts:
+                continue
+            first_context = sorted(contexts)[0]
+            record = contexts[first_context].get("record") or {}
+            attributes = record.get("attributes") or {}
+            source_refs = (
+                evidence.get("source_refs")
+                or record.get("source_relationship_refs")
+                or []
+            )
+            source_object = projected_ids.get(first_context, {}).get(
+                record.get("source_id", ""), {}
+            )
+            target_object = projected_ids.get(first_context, {}).get(
+                record.get("target_id", ""), {}
+            )
+            for source_ref in source_refs:
+                relationships.setdefault(
+                    source_ref,
+                    {
+                        "source_ref": source_ref,
+                        "source_canonical_name": source_object.get("canonical_name"),
+                        "target_canonical_name": target_object.get("canonical_name"),
+                        "canonical_aspect": attributes.get("canonical_aspect"),
+                        "orb": attributes.get("orb"),
+                        "context_projections": _group_compact_contexts(contexts),
+                    },
+                )
+
+    registry_terms = packet.get("projected_term_registry", {}).get("terms", {})
+    referenced_terms: set[str] = set()
+    for claim in all_claims:
+        referenced_terms.update(
+            _collect_registry_terms(claim.get("evidence", []), registry_terms)
+        )
+        referenced_terms.update(
+            _collect_registry_terms(claim.get("relations", []), registry_terms)
+        )
+    glossary = {
+        term: {
+            key: value
+            for key, value in {
+                "label": entry.get("canonical_label"),
+                "short_description": entry.get("short_description"),
+                "meaning": entry.get("long_description")
+                or entry.get("short_description"),
+            }.items()
+            if value
+        }
+        for term, entry in sorted(registry_terms.items())
+        if term in referenced_terms
+    }
+
+    def compact_claim(claim: dict[str, Any], selected: bool) -> dict[str, Any]:
+        result = {
+            "claim_id": claim.get("claim_id", claim.get("candidate_id")),
+            "claim_type": claim.get("claim_type", "unspecified"),
+            "claim": claim.get(
+                "canonical_claim", claim.get("claim", "No claim text supplied.")
+            ),
+            "source_refs": sorted({
+                source_ref
+                for evidence in claim.get("evidence", [])
+                for source_ref in evidence.get("source_refs", [])
+            }),
+            "dependencies": sorted({
+                claim_id
+                for evidence in claim.get("evidence", [])
+                for claim_id in evidence.get("claim_ids", [])
+            }),
+        }
+        if selected:
+            result["priority_id"] = claim.get("priority_id")
+            result["priority_weight"] = claim.get(
+                "pct_total_priority", claim.get("importance")
+            )
+        return result
+
+    return {
+        "schema_version": "astrowoof.compact_full_chart_basis.v0.1",
+        "authority": "deterministic_downstream_reconstruction",
+        "subject": packet.get("subject", {}),
+        "objects": sorted(objects.values(), key=lambda item: item["source_ref"]),
+        "relationships": sorted(
+            relationships.values(), key=lambda item: item["source_ref"]
+        ),
+        "selected_claims": [
+            compact_claim(claim, True) for claim in packet.get("cards", [])
+        ],
+        "additional_claims": [
+            compact_claim(claim, False)
+            for claim in packet.get("unselected_claims", [])
+        ],
+        "projected_decoder": glossary,
+        "reconstruction_limits": [
+            "Canonical longitude and exact degree are not retained in this packet.",
+            "Canonical relationship endpoints are recovered by joining projected object IDs when possible.",
+            "Only material retained in projected artifacts and the SBE candidate pool is represented.",
+        ],
+    }
+
+
+def render_compact_full_chart_basis(
+    packet: dict[str, Any],
+    basis: dict[str, Any] | None = None,
+) -> str:
+    basis = basis or build_compact_full_chart_basis(packet)
+    display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
+    lines = [
+        f"# Compact Full Chart Basis: {display_name}",
+        "",
+        "Read this complete authoring map before writing the whole-dog profile. "
+        "It is a deterministic downstream reconstruction from all selected and "
+        "additional projected evidence, not a canonical chart export.",
+        "",
+        "## Source and Projected Objects",
+        "",
+    ]
+    for item in basis["objects"]:
+        source = ", ".join(
+            value for value in (
+                item.get("canonical_name"),
+                item.get("source_sign"),
+                f"house {item['source_house']}" if item.get("source_house") else None,
+            ) if value
+        )
+        lines.append(f"- **{source or item['source_ref']}**")
+        for group in item["context_projections"]:
+            contexts = ", ".join(
+                value.replace("_", " ") for value in group["contexts"]
+            )
+            projection = "; ".join(
+                f"{key.replace('_', ' ')}: {_markdown_scalar(value)}"
+                for key, value in group["projection"].items()
+            )
+            lines.append(f"  - {contexts}: {projection}")
+    lines.extend(["", "## Source and Projected Relationships", ""])
+    for item in basis["relationships"]:
+        endpoints = " — ".join(
+            value for value in (
+                item.get("source_canonical_name"), item.get("target_canonical_name")
+            ) if value
+        )
+        aspect = item.get("canonical_aspect") or "relationship"
+        orb = (
+            f", orb {item['orb']:.3f}°"
+            if isinstance(item.get("orb"), (int, float)) else ""
+        )
+        lines.append(
+            f"- **{endpoints or item['source_ref']}: {aspect}{orb}**"
+        )
+        for group in item["context_projections"]:
+            contexts = ", ".join(
+                value.replace("_", " ") for value in group["contexts"]
+            )
+            projection = "; ".join(
+                f"{key.replace('_', ' ')}: {_markdown_scalar(value)}"
+                for key, value in group["projection"].items()
+            )
+            lines.append(f"  - {contexts}: {projection}")
+    for heading, key in (
+        ("Selected Chart Material", "selected_claims"),
+        ("Additional Chart Material", "additional_claims"),
+    ):
+        lines.extend(["", f"## {heading}", ""])
+        for claim in basis[key]:
+            metadata = [claim["claim_type"]]
+            if claim.get("priority_id") is not None:
+                metadata.append(f"priority {claim['priority_id']}")
+            lines.append(
+                f"- **{claim['claim_id']}** ({'; '.join(metadata)}): {claim['claim']}"
+            )
+    lines.extend(["", "## Concise Projected-Term Decoder", ""])
+    for term, entry in basis["projected_decoder"].items():
+        lines.append(f"- **{term}:** {entry.get('meaning', entry.get('short_description', ''))}")
+    lines.extend(["", "## Reconstruction Limits", ""])
+    lines.extend(f"- {value}" for value in basis["reconstruction_limits"])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_full_chart_basis(
+    packet: dict[str, Any],
+    basis_format: str = "legacy",
+) -> str:
+    if basis_format == "compact-v1":
+        return render_compact_full_chart_basis(packet)
+    if basis_format != "legacy":
+        raise ValueError(f"Unknown full-chart basis format: {basis_format}")
     display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
     lines = [
         f"# Full Chart Basis: {display_name}",
@@ -2547,6 +2820,7 @@ def build_story_workspace(
     pass_number: int | None = None,
     pass_count: int | None = None,
     assigned_cards: list[dict[str, Any]] | None = None,
+    full_chart_basis_format: str = "legacy",
 ) -> None:
     if card_start < 1 or card_limit < 0:
         raise ValueError("card_start must be positive and card_limit nonnegative")
@@ -2678,7 +2952,7 @@ def build_story_workspace(
         encoding="utf-8",
     )
     (subject_bundle / "FULL CHART BASIS.md").write_text(
-        render_full_chart_basis(packet),
+        render_full_chart_basis(packet, full_chart_basis_format),
         encoding="utf-8",
     )
     (subject_bundle / "WRITE WHOLE DOG PROFILE.md").write_text(
@@ -2952,6 +3226,16 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--full-chart-basis-format",
+        choices=("legacy", "compact-v1"),
+        default="legacy",
+        help=(
+            "Whole-chart transport for authoring workspaces. 'legacy' preserves "
+            "the current claim-plus-registry rendering; 'compact-v1' emits an "
+            "experimental traceable projected chart map and structured JSON."
+        ),
+    )
+    parser.add_argument(
         "--fail-fast",
         action="store_true",
         help="Stop at the first invalid subject rather than finishing the batch manifest.",
@@ -2974,11 +3258,12 @@ def main() -> None:
             args.workspace_card_limit != 50
             or args.workspace_layout != "split"
             or args.split_assignment_policy != "contiguous"
+            or args.full_chart_basis_format != "legacy"
         )
     ):
         parser.error(
-            "--workspace-card-limit, --workspace-layout, and "
-            "--split-assignment-policy are only valid with "
+            "--workspace-card-limit, --workspace-layout, "
+            "--split-assignment-policy, and --full-chart-basis-format are only valid with "
             "--handoff-profile authoring-workspace"
         )
     input_package = args.legacy_input_dir or args.input_package
@@ -3078,6 +3363,11 @@ def main() -> None:
             })
             write_json(root / f"{subject}.selected-authoring-packet.json", packet)
             write_json(root / f"{subject}.selection-qa.json", qa)
+            if args.full_chart_basis_format == "compact-v1":
+                write_json(
+                    root / f"{subject}.compact-full-chart-basis.json",
+                    build_compact_full_chart_basis(packet),
+                )
 
             subject_bundle = args.bundle_dir / subject
             subject_bundles: list[Path] = []
@@ -3137,6 +3427,7 @@ def main() -> None:
                             pass_number=pass_number,
                             pass_count=6,
                             assigned_cards=assigned_cards,
+                            full_chart_basis_format=args.full_chart_basis_format,
                         )
                         assignment = (
                             "Stories with canonical priority IDs "
@@ -3176,6 +3467,7 @@ def main() -> None:
                         packet,
                         repo_root,
                         args.workspace_card_limit,
+                        full_chart_basis_format=args.full_chart_basis_format,
                     )
                     subject_bundles.append(subject_bundle)
             else:
@@ -3298,13 +3590,15 @@ def main() -> None:
         "subject_count": len(packages),
         "status": "fail" if failed else "pass",
         "split_assignment_policy": args.split_assignment_policy,
+        "full_chart_basis_format": args.full_chart_basis_format,
         "subjects": run_records,
     }
     write_json(args.output_dir / "run-manifest.json", run_manifest)
     bundle_manifest = {
             "bundle_version": "astrowoof.llm_handoff.v0.5.0",
-            "handoff_profile": args.handoff_profile,
-            "split_assignment_policy": args.split_assignment_policy,
+        "handoff_profile": args.handoff_profile,
+        "split_assignment_policy": args.split_assignment_policy,
+        "full_chart_basis_format": args.full_chart_basis_format,
             "instruction": (
                 "Read README.md, then process each passing subject independently "
                 + (

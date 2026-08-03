@@ -1,0 +1,235 @@
+# Authoring Chart Map: Ashley
+
+This is a deterministic downstream reconstruction from projected evidence. It is not a canonical chart export.
+
+## Recovered Objects
+
+- **ASC:** Scorpio → behavioral_doorway / obsessive_investigation_mode
+- **DSC:** Taurus → primary_companion_interface / nap_spot_loyalty_mode
+- **IC:** Pisces → safe_den_baseline / emotional_sponge_dream_dog_mode
+- **Jupiter:** Leo / house 9 → adventure_optimism / attention_seeking_display_mode / Doghouse 9
+- **MC:** Virgo → visible_pack_function / patrol_inspection_mode
+- **Mars:** Taurus / house 6 → chase_play_defense_drive / nap_spot_loyalty_mode / Doghouse 6
+- **Mercury:** Cancer / house 8 → scent_signal_interpretation / pack_security_focus_mode / Doghouse 8
+- **Moon:** Taurus / house 5 → comfort_safety_regulation / nap_spot_loyalty_mode / Doghouse 5
+- **Neptune:** Sagittarius / house 1 → atmosphere_dream_permeability / adventure_dog_mode / Doghouse 1
+- **Part of Fortune:** Libra / house 10 → easy_good_thing_channel / social_harmony_maintenance_mode / Doghouse 10
+- **Pluto:** Libra / house 11 → primal_trust_intensity / social_harmony_maintenance_mode / Doghouse 11
+- **Saturn:** Virgo / house 9 → training_rule_structure / patrol_inspection_mode / Doghouse 9
+- **Sun:** Gemini / house 7 → pack_role_identity / information_sniffing_mode / Doghouse 7
+- **North Node:** Virgo / house 9 → training_development_vector / patrol_inspection_mode / Doghouse 9
+- **Uranus:** Scorpio / house 12 → novelty_zoomie_response / obsessive_investigation_mode / Doghouse 12
+- **Venus:** Gemini / house 7 → bonding_preference / information_sniffing_mode / Doghouse 7
+- **Vertex:** Cancer / house 8 → unexpected_encounter_trigger / pack_security_focus_mode / Doghouse 8
+
+## Recovered Interactions
+
+- **novelty_zoomie_response sextile visible_pack_function** (Uranus — MC), orb 3.875° → trainable_usable_channel / developable_coordination
+- **chase_play_defense_drive opposition behavioral_doorway** (Mars — ASC), orb 3.791° → drives_face_off / bond_freedom_axis_tension
+- **behavioral_doorway opposition primary_companion_interface** (ASC — DSC), orb 0.000° → drives_face_off / bond_freedom_axis_tension
+- **visible_pack_function conjunction training_development_vector** (MC — North Node), orb 1.950° → subsystems_run_together / inseparable_dog_impulse
+- **primary_companion_interface semisextile pack_role_identity** (DSC — Sun), orb 1.338° → subtle_adjacent_nudge / minor_behavioral_nudge
+- **novelty_zoomie_response trine unexpected_encounter_trigger** (Uranus — Vertex), orb 3.552° → natural_behavioral_channel / easy_habit_or_talent
+- **primary_companion_interface conjunction chase_play_defense_drive** (DSC — Mars), orb 3.791° → subsystems_run_together / inseparable_dog_impulse
+- **training_development_vector square bonding_preference** (North Node — Venus), orb 1.606° → drive_conflict_requires_outlet / behavioral_friction
+- **pack_role_identity semisextile chase_play_defense_drive** (Sun — Mars), orb 2.453° → subtle_adjacent_nudge / minor_behavioral_nudge
+- **adventure_optimism semisextile training_rule_structure** (Jupiter — Saturn), orb 0.099° → subtle_adjacent_nudge / minor_behavioral_nudge
+- **safe_den_baseline square atmosphere_dream_permeability** (IC — Neptune), orb 5.282° → drive_conflict_requires_outlet / behavioral_friction
+- **safe_den_baseline opposition training_rule_structure** (IC — Saturn), orb 5.071° → drives_face_off / bond_freedom_axis_tension
+- **visible_pack_function square bonding_preference** (MC — Venus), orb 3.556° → drive_conflict_requires_outlet / behavioral_friction
+- **bonding_preference sextile adventure_optimism** (Venus — Jupiter), orb 1.416° → trainable_usable_channel / developable_coordination
+- **atmosphere_dream_permeability quincunx scent_signal_interpretation** (Neptune — Mercury), orb 0.515° → awkward_system_recalibration / odd_behavior_needing_adjustment
+- **behavioral_doorway quincunx pack_role_identity** (ASC — Sun), orb 1.338° → awkward_system_recalibration / odd_behavior_needing_adjustment
+- **comfort_safety_regulation square adventure_optimism** (Moon — Jupiter), orb 4.763° → drive_conflict_requires_outlet / behavioral_friction
+- **comfort_safety_regulation quincunx easy_good_thing_channel** (Moon — Part of Fortune), orb 1.338° → awkward_system_recalibration / odd_behavior_needing_adjustment
+- **training_development_vector conjunction training_rule_structure** (North Node — Saturn), orb 3.121° → subsystems_run_together / inseparable_dog_impulse
+- **comfort_safety_regulation trine training_rule_structure** (Moon — Saturn), orb 4.664° → natural_behavioral_channel / easy_habit_or_talent
+- **atmosphere_dream_permeability sextile primal_trust_intensity** (Neptune — Pluto), orb 2.434° → trainable_usable_channel / developable_coordination
+- **visible_pack_function square atmosphere_dream_permeability** (MC — Neptune), orb 5.282° → drive_conflict_requires_outlet / behavioral_friction
+- **primal_trust_intensity quincunx safe_den_baseline** (Pluto — IC), orb 2.848° → awkward_system_recalibration / odd_behavior_needing_adjustment
+- **visible_pack_function sextile unexpected_encounter_trigger** (MC — Vertex), orb 0.323° → trainable_usable_channel / developable_coordination
+- **safe_den_baseline trine unexpected_encounter_trigger** (IC — Vertex), orb 0.323° → natural_behavioral_channel / easy_habit_or_talent
+- **visible_pack_function conjunction training_rule_structure** (MC — Saturn), orb 5.071° → subsystems_run_together / inseparable_dog_impulse
+- **safe_den_baseline opposition training_development_vector** (IC — North Node), orb 1.950° → drives_face_off / bond_freedom_axis_tension
+- **safe_den_baseline trine scent_signal_interpretation** (IC — Mercury), orb 5.798° → natural_behavioral_channel / easy_habit_or_talent
+- **novelty_zoomie_response trine safe_den_baseline** (Uranus — IC), orb 3.875° → natural_behavioral_channel / easy_habit_or_talent
+- **training_development_vector sextile unexpected_encounter_trigger** (North Node — Vertex), orb 2.273° → trainable_usable_channel / developable_coordination
+- **training_rule_structure square bonding_preference** (Saturn — Venus), orb 1.515° → drive_conflict_requires_outlet / behavioral_friction
+- **primal_trust_intensity square scent_signal_interpretation** (Pluto — Mercury), orb 2.949° → drive_conflict_requires_outlet / behavioral_friction
+- **adventure_optimism sextile easy_good_thing_channel** (Jupiter — Part of Fortune), orb 3.425° → trainable_usable_channel / developable_coordination
+- **safe_den_baseline square bonding_preference** (IC — Venus), orb 3.556° → drive_conflict_requires_outlet / behavioral_friction
+- **safe_den_baseline opposition visible_pack_function** (IC — MC), orb 0.000° → drives_face_off / bond_freedom_axis_tension
+- **primal_trust_intensity square unexpected_encounter_trigger** (Pluto — Vertex), orb 2.525° → drive_conflict_requires_outlet / behavioral_friction
+- **scent_signal_interpretation trine novelty_zoomie_response** (Mercury — Uranus), orb 1.923° → natural_behavioral_channel / easy_habit_or_talent
+
+## Selected Semantic Basis
+
+- **placement_063abab2b91a3869:** Safe-Den Baseline operates in emotional sponge dream dog mode through unspecified pattern.
+- **relationship_08b8c937891adf8f:** Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- **placement_75db161f64e1de81:** Atmosphere and Dream Permeability operates in adventure dog mode through body temperament presence.
+- **placement_afc604ba7300db80:** Adventure Confidence operates in attention seeking display mode through adventure territory.
+- **synthesis_c022badabeb4bbff:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_083ccc9f4faa46ab:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_dca45ab8d052158a:** Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+- **synthesis_71c73c494be53c95:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_1faf9e072be8d634:** Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_d79e00dfc16651f6:** Training Rule Structure and Bonding Preference are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_d8056a46b40441d3:** Safe-Den Baseline and Training Development Vector are linked through drives face off, creating bond freedom axis tension.
+- **relationship_9c8d21b91121f24a:** Visible Pack Function and Training Development Vector are linked through subsystems run together, creating inseparable dog impulse.
+- **relationship_f8e551a02d7aa744:** Training Development Vector and Bonding Preference are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_c956807b9f3eef84:** Bonding Preference and Adventure Confidence are linked through trainable usable channel, creating developable coordination.
+- **synthesis_24a9f3ace6671ece:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_2abfd6408871e3ed:** Adventure Confidence and Training Rule Structure are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **synthesis_0d32868638d7574f:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_e25ff43c59a55c17:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+- **placement_e373ffac624d062d:** Bonding Preference operates in information sniffing mode through favorite human primary bond.
+- **synthesis_e30de08c5b9d0874:** Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_5c76233405d5eb55:** Signals and Scent and Novelty and Surprise Response are linked through natural behavioral channel, creating easy habit or talent.
+- **synthesis_2ff3fdea4f20bf3d:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_9d02413a013e415b:** Atmosphere and Dream Permeability and Signals and Scent are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **synthesis_ff30178c88e41d8b:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+- **placement_b3c8750af486a9ca:** Signals and Scent operates in pack security focus mode through deep trust vulnerability.
+- **synthesis_3b753c147d9386a3:** Action and Play Drive, Primary Companion Interface and Comfort and Regulation repeatedly express nap spot loyalty mode, making that style a recurring part of the dog's behavior.
+- **relationship_d77ad0a2fa2b61ee:** Safe-Den Baseline and Bonding Preference are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_c92c4db532759212:** Training Development Vector and Training Rule Structure are linked through subsystems run together, creating inseparable dog impulse.
+- **placement_46ee26aa2fc63f9e:** Training Rule Structure operates in patrol inspection mode through adventure territory.
+- **synthesis_fb6905c58912c23c:** Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_3fcda59940d78b4d:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_31116d530a021922:** Safe-Den Baseline and Unexpected Encounter Trigger are linked through natural behavioral channel, creating easy habit or talent.
+- **relationship_e46ea52dac2f2033:** Atmosphere and Dream Permeability and Deep Trust Intensity are linked through trainable usable channel, creating developable coordination.
+- **relationship_ffc10e59b66d5d1e:** Visible Pack Function and Bonding Preference are linked through drive conflict requires outlet, creating behavioral friction.
+- **synthesis_a094bd4654830e99:** Training Rule Structure, Visible Pack Function and Training Development Vector repeatedly express patrol inspection mode, making that style a recurring part of the dog's behavior.
+- **placement_e3381c03b40ecab5:** Deep Trust Intensity operates in social harmony maintenance mode through social pack network.
+- **relationship_dd79d716a32b0cfe:** Deep Trust Intensity and Signals and Scent are linked through drive conflict requires outlet, creating behavioral friction.
+- **placement_583cfb0056ab1e36:** Pack Identity operates in information sniffing mode through favorite human primary bond.
+- **placement_ab02953dc979825a:** Novelty and Surprise Response operates in obsessive investigation mode through deep instinct hidden fear.
+- **placement_4a66c03ae32b4da6:** Visible Pack Function operates in patrol inspection mode through unspecified pattern.
+- **relationship_44bfaca4296fa802:** Visible Pack Function and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- **placement_197f19a37f94ac33:** Behavioral Doorway operates in obsessive investigation mode through unspecified pattern.
+- **relationship_668f0fa7f1cf8b6a:** Behavioral Doorway and Pack Identity are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **relationship_b308355633932d86:** Action and Play Drive and Behavioral Doorway are linked through drives face off, creating bond freedom axis tension.
+- **placement_75c435a20f2ee296:** Action and Play Drive operates in nap spot loyalty mode through training routine care.
+- **placement_67d2fdc454f0aa92:** Comfort and Regulation operates in nap spot loyalty mode through play zoomies tricks.
+- **placement_c1186f7c2e386b08:** Training Development Vector operates in patrol inspection mode through adventure territory.
+- **placement_7081a34a6734e720:** Primary Companion Interface operates in nap spot loyalty mode through unspecified pattern.
+- **placement_9578fcb9d0224ce0:** Easy Reward Channel operates in social harmony maintenance mode through visible pack role.
+- **placement_03b15d169e37357c:** Unexpected Encounter Trigger operates in pack security focus mode through deep trust vulnerability.
+
+## Additional Semantic Basis
+
+- **synthesis_variant_b9fdc8d38e00ec1c:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_e1800be97da95751:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_3efc070c1ea85353:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_a8798df3fdbbb01a:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_f2f2ce630844f5a1:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_2acfb0d6afb5d215:** Several systems repeatedly participate in unexpected encounter trigger, making unexpected encounter trigger a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_b55353dec4d177fb:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_cc0d8d237a1ba3bf:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_d77a8abcb56716c9:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_a051a8426f0b6ab5:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_e77da240c3991910:** Several systems repeatedly participate in unexpected encounter trigger, making unexpected encounter trigger a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_f4034bdfc7d51532:** Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_830baf6247380d33:** Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_83d834cac09106ff:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_29d71e6f0073dfb8:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_a168770a8afa6fb8:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_8efbb2e81ae61c21:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_c228ed8e811b6e0d:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_9350425faecce0d5:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_914bc75295cf638a:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_86c3ef0f51431517:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_d8e31802d6c2f325:** Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_b3d96f6985251c3b:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_1bac16a22d0e3c2d:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_22c2c3844b047796:** Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_117d41485074c554:** Several systems repeatedly participate in minor behavioral nudge, making minor behavioral nudge a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_variant_7e4b2139715024ef:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_967035fe13a86b21:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_2075830a22fc34cb:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_9d40aebc366401fb:** Novelty and Surprise Response and Safe-Den Baseline are linked through natural behavioral channel, creating easy habit or talent.
+- **relationship_12bd47c8d22d9d4a:** Safe-Den Baseline and Training Rule Structure are linked through drives face off, creating bond freedom axis tension.
+- **synthesis_a787aee09e941f1f:** Training Rule Structure, Adventure Confidence and Training Development Vector converge in adventure territory, concentrating several needs in the same life domain.
+- **synthesis_2515da1cbfcd0a07:** Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_acad8212512594b2:** Several systems repeatedly participate in minor behavioral nudge, making minor behavioral nudge a recurring whole-chart pattern rather than a one-off interaction.
+- **synthesis_0bc058aada1b588c:** Several systems repeatedly participate in easy good thing channel, making easy good thing channel a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_badd705d07157313:** Visible Pack Function and Training Rule Structure are linked through subsystems run together, creating inseparable dog impulse.
+- **relationship_eccf634755b782d1:** Deep Trust Intensity and Safe-Den Baseline are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **relationship_9bb2835beb21d5ea:** Novelty and Surprise Response and Visible Pack Function are linked through trainable usable channel, creating developable coordination.
+- **synthesis_ed57ea2545c97979:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+- **relationship_73d6349beeed3f33:** Primary Companion Interface and Action and Play Drive are linked through subsystems run together, creating inseparable dog impulse.
+- **relationship_5fd8ccc8df6fd71a:** Safe-Den Baseline and Atmosphere and Dream Permeability are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_9ac16ec46b2baf19:** Primary Companion Interface and Pack Identity are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **relationship_70fe5bb2c0585ed5:** Comfort and Regulation and Training Rule Structure are linked through natural behavioral channel, creating easy habit or talent.
+- **synthesis_56568e5c351be695:** Novelty and Surprise Response and Behavioral Doorway repeatedly express obsessive investigation mode, making that style a recurring part of the dog's behavior.
+- **relationship_b1feddb4884aef75:** Visible Pack Function and Atmosphere and Dream Permeability are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_a1e39d2fbd106c95:** Safe-Den Baseline and Signals and Scent are linked through natural behavioral channel, creating easy habit or talent.
+- **synthesis_98187f889059f000:** Bonding Preference and Pack Identity converge in favorite human primary bond, concentrating several needs in the same life domain.
+- **synthesis_ee026ee058b72ca0:** Bonding Preference and Pack Identity repeatedly express information sniffing mode, making that style a recurring part of the dog's behavior.
+- **relationship_7871a659f6107050:** Pack Identity and Action and Play Drive are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **synthesis_c51d927d2ac5ff09:** Easy Reward Channel and Deep Trust Intensity repeatedly express social harmony maintenance mode, making that style a recurring part of the dog's behavior.
+- **relationship_3272e8c7a458de7c:** Comfort and Regulation and Adventure Confidence are linked through drive conflict requires outlet, creating behavioral friction.
+- **synthesis_1f21f04fed49d6a0:** Unexpected Encounter Trigger and Signals and Scent converge in deep trust vulnerability, concentrating several needs in the same life domain.
+- **synthesis_533ba9c54d2c5607:** Unexpected Encounter Trigger and Signals and Scent repeatedly express pack security focus mode, making that style a recurring part of the dog's behavior.
+- **relationship_9e40b5b2ec07f440:** Deep Trust Intensity and Unexpected Encounter Trigger are linked through drive conflict requires outlet, creating behavioral friction.
+- **relationship_ece41399abad3004:** Comfort and Regulation and Easy Reward Channel are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **relationship_8cfef6f5d4168aad:** Adventure Confidence and Easy Reward Channel are linked through trainable usable channel, creating developable coordination.
+- **relationship_de58fa621b9789b6:** Training Development Vector and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- **relationship_79fe137bd4948454:** Novelty and Surprise Response and Unexpected Encounter Trigger are linked through natural behavioral channel, creating easy habit or talent.
+
+## Projected Decoder
+
+- **adventure_dog_mode:** This mode describes how a projected operator tends to perform its function: through adventure dog mode. It modifies the operator rather than replacing it.
+- **adventure_optimism:** This term represents the target-ontology function of adventure optimism. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **atmosphere_dream_permeability:** This term represents the target-ontology function of atmosphere dream permeability. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **attention_seeking_display_mode:** This mode describes how a projected operator tends to perform its function: through attention seeking display mode. It modifies the operator rather than replacing it.
+- **awkward_system_recalibration:** This relation describes how two projected endpoints interact: they awkward system recalibration. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **behavioral_doorway:** This term represents the target-ontology function of behavioral doorway. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **behavioral_friction:** This theme identifies behavioral friction as a recurring semantic facet in the projected graph.
+- **bond_freedom_axis_tension:** This theme identifies bond freedom axis tension as a recurring semantic facet in the projected graph.
+- **bonding_preference:** This term represents the target-ontology function of bonding preference. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **chase_play_defense_drive:** This term represents the target-ontology function of chase play defense drive. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **comfort_safety_regulation:** This term represents the target-ontology function of comfort safety regulation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **developable_coordination:** This theme identifies developable coordination as a recurring semantic facet in the projected graph.
+- **doghouse_10_visible_pack_role:** This domain describes where the projected operator is organized or expressed, with doghouse 10 visible pack role providing the structural context.
+- **doghouse_11_social_pack_network:** This domain describes where the projected operator is organized or expressed, with doghouse 11 social pack network providing the structural context.
+- **doghouse_12_deep_instinct_hidden_fear:** This domain describes where the projected operator is organized or expressed, with doghouse 12 deep instinct hidden fear providing the structural context.
+- **doghouse_1_body_temperament_presence:** This domain describes where the projected operator is organized or expressed, with doghouse 1 body temperament presence providing the structural context.
+- **doghouse_5_play_zoomies_tricks:** This domain describes where the projected operator is organized or expressed, with doghouse 5 play zoomies tricks providing the structural context.
+- **doghouse_6_training_routine_care:** This domain describes where the projected operator is organized or expressed, with doghouse 6 training routine care providing the structural context.
+- **doghouse_7_favorite_human_primary_bond:** This domain describes where the projected operator is organized or expressed, with doghouse 7 favorite human primary bond providing the structural context.
+- **doghouse_8_deep_trust_vulnerability:** This domain describes where the projected operator is organized or expressed, with doghouse 8 deep trust vulnerability providing the structural context.
+- **doghouse_9_adventure_territory:** This domain describes where the projected operator is organized or expressed, with doghouse 9 adventure territory providing the structural context.
+- **drive_conflict_requires_outlet:** This relation describes how two projected endpoints interact: they drive conflict requires outlet. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **drives_face_off:** This relation describes how two projected endpoints interact: they drives face off. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **easy_good_thing_channel:** This term represents the target-ontology function of easy good thing channel. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **easy_habit_or_talent:** This theme identifies easy habit or talent as a recurring semantic facet in the projected graph.
+- **emotional_sponge_dream_dog_mode:** This mode describes how a projected operator tends to perform its function: through emotional sponge dream dog mode. It modifies the operator rather than replacing it.
+- **information_sniffing_mode:** This mode describes how a projected operator tends to perform its function: through information sniffing mode. It modifies the operator rather than replacing it.
+- **inseparable_dog_impulse:** This theme identifies inseparable dog impulse as a recurring semantic facet in the projected graph.
+- **minor_behavioral_nudge:** This theme identifies minor behavioral nudge as a recurring semantic facet in the projected graph.
+- **nap_spot_loyalty_mode:** This mode describes how a projected operator tends to perform its function: through nap spot loyalty mode. It modifies the operator rather than replacing it.
+- **natural_behavioral_channel:** This relation describes how two projected endpoints interact: they natural behavioral channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **novelty_zoomie_response:** This term represents the target-ontology function of novelty zoomie response. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **obsessive_investigation_mode:** This mode describes how a projected operator tends to perform its function: through obsessive investigation mode. It modifies the operator rather than replacing it.
+- **odd_behavior_needing_adjustment:** This theme identifies odd behavior needing adjustment as a recurring semantic facet in the projected graph.
+- **pack_role_identity:** This term represents the target-ontology function of pack role identity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **pack_security_focus_mode:** This mode describes how a projected operator tends to perform its function: through pack security focus mode. It modifies the operator rather than replacing it.
+- **patrol_inspection_mode:** This mode describes how a projected operator tends to perform its function: through patrol inspection mode. It modifies the operator rather than replacing it.
+- **primal_trust_intensity:** This term represents the target-ontology function of primal trust intensity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **primary_companion_interface:** This term represents the target-ontology function of primary companion interface. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **safe_den_baseline:** This term represents the target-ontology function of safe den baseline. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **scent_signal_interpretation:** This term represents the target-ontology function of scent signal interpretation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **social_harmony_maintenance_mode:** This mode describes how a projected operator tends to perform its function: through social harmony maintenance mode. It modifies the operator rather than replacing it.
+- **subsystems_run_together:** This relation describes how two projected endpoints interact: they subsystems run together. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **subtle_adjacent_nudge:** This relation describes how two projected endpoints interact: they subtle adjacent nudge. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **trainable_usable_channel:** This relation describes how two projected endpoints interact: they trainable usable channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+- **training_development_vector:** This term represents the target-ontology function of training development vector. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **training_rule_structure:** This term represents the target-ontology function of training rule structure. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **unexpected_encounter_trigger:** This term represents the target-ontology function of unexpected encounter trigger. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+- **visible_pack_function:** This term represents the target-ontology function of visible pack function. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+
+## Reconstruction Limits
+
+- Projected object records preserve canonical name, sign, and house/doghouse mapping but not canonical longitude or degree in this packet.
+- Projected relationship records preserve aspect geometry and orb, but canonical endpoint identity must be inferred through projected object IDs or dependency claims.
+- Only material retained in projected artifacts and the SBE candidate pool can be reconstructed; absence cannot be distinguished from upstream omission.

@@ -1,0 +1,1157 @@
+{
+  "id": "resp_0b8a8f549019244c006a709f7c06c88198acf9558b49fe48b8",
+  "object": "response",
+  "created_at": 1785765756,
+  "status": "completed",
+  "background": true,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1785765875,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": 100000,
+  "max_tool_calls": null,
+  "model": "gpt-5.6-terra",
+  "moderation": null,
+  "output": [
+    {
+      "id": "rs_0b8a8f549019244c006a709f7dd2808198b822284e9e831500",
+      "type": "reasoning",
+      "content": [],
+      "summary": []
+    },
+    {
+      "id": "msg_0b8a8f549019244c006a709f7e736c8198a3f59184d591fd96",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\"files\":{\"ASSIGN THEME GROUPS.md\":{\"theme_group_registry.interdogpendence\":\"[{\\\"id\\\":\\\"shared_momentum\\\",\\\"title\\\":\\\"When Drive Becomes a Public Force\\\",\\\"short_title\\\":\\\"Public Drive\\\",\\\"emoji\\\":\\\"🏁\\\",\\\"order\\\":1},{\\\"id\\\":\\\"bond_and_boundary\\\",\\\"title\\\":\\\"Partnership Across the Leash\\\",\\\"short_title\\\":\\\"Partnership\\\",\\\"emoji\\\":\\\"🤝\\\",\\\"order\\\":2},{\\\"id\\\":\\\"home_and_visibility\\\",\\\"title\\\":\\\"Private Refuge, Visible Role\\\",\\\"short_title\\\":\\\"Refuge & Role\\\",\\\"emoji\\\":\\\"🏠\\\",\\\"order\\\":3},{\\\"id\\\":\\\"attention_and_training\\\",\\\"title\\\":\\\"Attention Shaped Into Skill\\\",\\\"short_title\\\":\\\"Skill Building\\\",\\\"emoji\\\":\\\"🎓\\\",\\\"order\\\":4},{\\\"id\\\":\\\"novelty_and_recalibration\\\",\\\"title\\\":\\\"Surprise, Intensity, and Adjustment\\\",\\\"short_title\\\":\\\"Adjustment\\\",\\\"emoji\\\":\\\"⚡\\\",\\\"order\\\":5}]\",\"theme_group.interdogpendence.2\":\"shared_momentum\",\"theme_group.interdogpendence.3\":\"bond_and_boundary\",\"theme_group.interdogpendence.4\":\"home_and_visibility\",\"theme_group.interdogpendence.8\":\"attention_and_training\",\"theme_group.interdogpendence.17\":\"bond_and_boundary\",\"theme_group.interdogpendence.18\":\"bond_and_boundary\",\"theme_group.interdogpendence.19\":\"shared_momentum\",\"theme_group.interdogpendence.21\":\"shared_momentum\",\"theme_group.interdogpendence.22\":\"novelty_and_recalibration\",\"theme_group.interdogpendence.23\":\"home_and_visibility\",\"theme_group.interdogpendence.24\":\"novelty_and_recalibration\",\"theme_group.interdogpendence.26\":\"home_and_visibility\",\"theme_group.interdogpendence.29\":\"novelty_and_recalibration\",\"theme_group.interdogpendence.30\":\"bond_and_boundary\",\"theme_group.interdogpendence.36\":\"home_and_visibility\",\"theme_group.interdogpendence.39\":\"novelty_and_recalibration\",\"theme_group.interdogpendence.41\":\"attention_and_training\",\"theme_group.interdogpendence.46\":\"attention_and_training\",\"theme_group.interdogpendence.48\":\"attention_and_training\",\"theme_group_registry.takeaways\":\"[{\\\"id\\\":\\\"practiced_coordination\\\",\\\"title\\\":\\\"The Skills That Become Easier Together\\\",\\\"short_title\\\":\\\"Practice Links\\\",\\\"emoji\\\":\\\"🧩\\\",\\\"order\\\":1},{\\\"id\\\":\\\"activation_management\\\",\\\"title\\\":\\\"Making Big Energy Usable\\\",\\\"short_title\\\":\\\"Energy Use\\\",\\\"emoji\\\":\\\"🔥\\\",\\\"order\\\":2},{\\\"id\\\":\\\"belonging_and_retreat\\\",\\\"title\\\":\\\"A Social Dog With a Private Reset\\\",\\\"short_title\\\":\\\"Social Reset\\\",\\\"emoji\\\":\\\"🛋️\\\",\\\"order\\\":3},{\\\"id\\\":\\\"curiosity_with_company\\\",\\\"title\\\":\\\"Exploration That Keeps the Bond in View\\\",\\\"short_title\\\":\\\"Shared Discovery\\\",\\\"emoji\\\":\\\"🧭\\\",\\\"order\\\":4}]\",\"theme_group.takeaways.7\":\"practiced_coordination\",\"theme_group.takeaways.10\":\"activation_management\",\"theme_group.takeaways.11\":\"activation_management\",\"theme_group.takeaways.12\":\"belonging_and_retreat\",\"theme_group.takeaways.13\":\"belonging_and_retreat\",\"theme_group.takeaways.14\":\"activation_management\",\"theme_group.takeaways.15\":\"belonging_and_retreat\",\"theme_group.takeaways.16\":\"belonging_and_retreat\",\"theme_group.takeaways.25\":\"curiosity_with_company\",\"theme_group.takeaways.27\":\"curiosity_with_company\",\"theme_group.takeaways.35\":\"practiced_coordination\",\"theme_group.takeaways.37\":\"belonging_and_retreat\",\"theme_group.takeaways.38\":\"practiced_coordination\",\"theme_group.takeaways.40\":\"curiosity_with_company\"},\"summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md\":{\"plan.center_of_gravity\":\"Ella is a discerning little presence whose curiosity, loyalty, and desire to matter arrive as one package.\",\"plan.memorable_takeaway\":\"Ella does not merely enter a room; she assesses it, joins it, and quietly claims a role in it.\",\"plan.recognizable_behavior\":\"She may inspect a sound or scent with grave concentration, then reappear near her person as if ready for the next assignment.\",\"plan.likely_misunderstanding\":\"Her watchfulness can be mistaken for aloofness, when it is often her careful way of deciding how to participate.\",\"plan.grounded_surprise\":\"Her need to investigate and her wish to belong are allies more often than opposites.\",\"plan.neighbor_distinction\":\"This is her essential character, not her daily schedule, present care plan, or training trajectory.\",\"plan.writing_form\":\"An affectionate personality portrait.\",\"plan.comic_premise\":\"Ella treats ordinary household developments as matters requiring a small, competent supervisor.\",\"plan.creative_approach\":\"Show her as a conscientious scout who wants both information and inclusion.\",\"no_astro.headline.handler\":\"The Little Inspector Who Wants In\",\"no_astro.body.handler\":\"Ella has the air of a dog who believes every room has a job description, even if nobody has printed it yet. She notices the change in sound, the unexplained bag, the person who has moved one chair over. Her attention is deliberate rather than scattered. Once she has taken stock, she wants to be part of the human world she has assessed.\\n\\nMeet that seriousness with warm clarity. Let her have a brief look, then invite her into a simple shared activity or resting place. Ella is at her most herself when her sharp mind is not treated as a problem and her loyalty is not taken for granted.\",\"no_astro.headline.direct_to_dog\":\"Ella, Keeper of the Small Facts\",\"no_astro.body.direct_to_dog\":\"You have standards, Ella. A new noise deserves review; a familiar person deserves recognition; a day without a little purpose is suspiciously underplanned. You are not here to drift through the household unnoticed.\\n\\nYour careful eyes do not make you distant. They are how you learn where you stand, who is with you, and whether the operation is proceeding acceptably. The people who understand you will let you look, then make room for you beside them.\",\"no_astro.headline.hybrid\":\"Her Report, Their Welcome\",\"no_astro.body.hybrid\":\"Ella pauses at the threshold while her person waits without turning the pause into a contest. She gathers the relevant evidence, then hears the familiar invitation to come along. That small exchange says a great deal: her attention has been respected, and the relationship still has direction.\\n\\nTogether they make a workable bargain. Ella brings the alertness; her human supplies the steady frame. Neither has to pretend she is a carefree bystander.\",\"light_astro.headline.handler\":\"Virgo Purpose, Leo Presence\",\"light_astro.body.handler\":\"Ella's Virgo Sun gives her identity a practical, observant cast, while her Leo emphasis wants that competence to be visible and warmly received. She is likely to feel most like herself when she can notice something, do something with it, and receive a little acknowledgment for the effort.\\n\\nThis is not vanity. It is pack participation. Give her clear invitations and praise for useful choices, and her bright seriousness has somewhere generous to go.\",\"light_astro.headline.direct_to_dog\":\"A Useful Heart With a Golden Edge\",\"light_astro.body.direct_to_dog\":\"Virgo makes you attentive to what needs checking, Ella; Leo makes you want your contribution to count. You may be small, but you have no interest in being irrelevant. A glance, a cue, a shared task—these tell you that your careful presence has a place.\\n\\nKeep bringing your bright, exact self. The right pack will recognize the devotion inside the inspection.\",\"light_astro.headline.hybrid\":\"The Scout Meets the Applause\",\"light_astro.body.hybrid\":\"Virgo helps Ella read the detail; Leo lets her carry that discovery into the room with flair. Her person need not choose between structure and affection. One clear cue, followed by genuine appreciation, gives Ella both.\\n\\nTheir bond grows through these tiny recognitions: she pays attention, they notice that she did, and the household gains an enthusiastic little official.\",\"full_astro.headline.handler\":\"A Scorpio Doorway With a Virgo Calling\",\"full_astro.body.handler\":\"Ella's Scorpio Ascendant and Saturn in the first Doghouse give her visible style focus, reserve, and a need to understand what she is meeting. Her Virgo Sun and Jupiter are tightly conjunct in the tenth Doghouse, joining identity to confidence, usefulness, and a visible pack role. Mercury in Virgo adds a finely tuned interest in signals and local information, while Venus and Mars in Leo near the MC make affection, action, and public contribution hard to separate.\\n\\nThe result is not simply a vigilant dog or a social dog. Ella is a purposeful participant. Her exact observations want a relational destination. Respect the initial assessment, then offer a concrete role: a station, a cue, a brief search, or a companionable place nearby.\",\"full_astro.headline.direct_to_dog\":\"Your Serious Entrance Has a Purpose\",\"full_astro.body.direct_to_dog\":\"Scorpio rising gives you a concentrated first look, Ella, and Saturn beside that doorway asks you to take the world seriously. But your Virgo Sun is almost exactly joined to Jupiter in the tenth Doghouse: being useful, capable, and visibly part of the pack enlarges you. Leo Venus and Mars at the top of the chart add affectionate gusto to your contribution.\\n\\nYou are not a background ornament. You are the dog who checks the conditions, accepts the assignment, and expects the team to appreciate good work.\",\"full_astro.headline.hybrid\":\"A Role Big Enough for a Careful Dog\",\"full_astro.body.hybrid\":\"Ella's chart places an investigative Scorpio Ascendant opposite the companion-oriented Taurus Descendant, so her independent first response and her wish for close partnership must meet in practice. Virgo Sun–Jupiter in the tenth Doghouse gives that practice a purpose: she thrives when her awareness becomes a visible contribution. Venus and Mars conjunct the Leo MC add warmth and action to that role.\\n\\nHer human can make the geometry livable by allowing a moment of observation, offering one simple job, and welcoming her completion. Ella gets to be discerning without being left alone with the assignment.\",\"dos.0\":\"Acknowledge Ella's check-in with a calm word or touch before asking for the next cue.\",\"dos.1\":\"Give her small, repeatable household roles such as going to a mat while gear is prepared.\",\"dos.2\":\"Praise the moment she reorients from an investigation to you.\",\"donts.0\":\"Do not dismiss every careful pause as stubbornness or make it a reason to rush her.\",\"donts.1\":\"Do not expect affection alone to replace clear expectations.\",\"donts.2\":\"Do not make her work hard to discover whether she is included.\",\"funny_dog_quotes.0\":\"I am not monitoring you. I am maintaining household standards.\",\"imperative_dog_quotes.0\":\"Conduct the inspection, then report for cuddles.\",\"applicable_canine_jokes.0\":\"Ella was promoted to quality control because she had already begun the job.\"},\"summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md\":{\"plan.center_of_gravity\":\"Ella lives best in a rhythm of purposeful outings, lively participation, and clearly marked returns to quiet.\",\"plan.memorable_takeaway\":\"For Ella, a good day has both a patrol and a proper closing ceremony.\",\"plan.recognizable_behavior\":\"She may become animated by a walk, a visitor, or a household task and need a recognizable transition before settling.\",\"plan.likely_misunderstanding\":\"More activity is not always the answer; unfinished stimulation can follow her home.\",\"plan.grounded_surprise\":\"A predictable ending can make exploration feel safer, not smaller.\",\"plan.neighbor_distinction\":\"This concerns the cadence of everyday life rather than identity, needs infrastructure, or developmental practice.\",\"plan.writing_form\":\"A day-in-the-life field note.\",\"plan.comic_premise\":\"Ella runs each outing as a compact patrol with a surprisingly serious debrief.\",\"plan.creative_approach\":\"Follow momentum from alert beginning through active middle to intentional landing.\",\"no_astro.headline.handler\":\"Ella Likes a Day With Chapters\",\"no_astro.body.handler\":\"Ella may approach daily life in sequences: notice, investigate, participate, then decide whether the event has truly concluded. A walk is not merely exercise; it is information gathering. A visitor is not merely a visitor; it is a change in the local administration. Her energy becomes easier to live with when each chapter has an ending she can recognize.\\n\\nBuild gentle punctuation into the day. After an outing, slow the pace, offer water, use one easy familiar cue, and guide her toward a quiet activity. This does not make her world dull. It tells a dog with a busy inner clipboard that the report may be filed for now.\",\"no_astro.headline.direct_to_dog\":\"Every Patrol Needs a Debrief\",\"no_astro.body.direct_to_dog\":\"Ella, you can make a short walk feel like a neighborhood summit. There are scents to read, corners to audit, and possibly a leaf with an agenda. You deserve interesting days.\\n\\nYou also deserve a landing. When the leash comes off and the water arrives, when the house grows quieter and a familiar place is waiting, your whole system gets permission to stop carrying the outside world. Rest is not missing the next development; it is how you prepare to notice it brilliantly.\",\"no_astro.headline.hybrid\":\"From Front Door to Soft Landing\",\"no_astro.body.hybrid\":\"Ella heads out ready to collect the day. Her person sets the route, makes room for selected sniffing, and later repeats the same homecoming sequence. At first it may look ordinary: leash away, drink, mat, settle. For Ella, it is the bridge between an active world and a safe room.\\n\\nThe ritual belongs to both of them. She learns that adventure ends without being snatched away; her human learns that calm starts before the door closes.\",\"light_astro.headline.handler\":\"Virgo Patrol, Pisces Atmosphere\",\"light_astro.body.handler\":\"Virgo placements give Ella a patrol-like attention to detail, while Neptune in Pisces makes atmosphere and home feeling especially important. She can relish an active, useful outing and still be affected by its sensory residue. Her life works best when engagement is followed by a softer emotional climate.\\n\\nLet her explore with purpose, then deliberately lower the household tempo. A repeated return routine lets her Virgo mind finish its work and gives her Pisces sensitivity somewhere to dissolve.\",\"light_astro.headline.direct_to_dog\":\"You Read the Ground and the Mood\",\"light_astro.body.direct_to_dog\":\"Virgo asks you to inspect the evidence, Ella. Pisces lets you notice the feeling around the evidence too. That is why a day can be full even when it looks simple from the human calendar.\\n\\nGo out, read your world, and come back to the familiar softness that lets the impressions settle. You are allowed to be both alert and dreamy.\",\"light_astro.headline.hybrid\":\"A Route for Her Nose, a Harbor for Her Nerves\",\"light_astro.body.hybrid\":\"Ella's Virgo attention gives the outing texture; Pisces Neptune makes the return atmosphere matter. Her person can offer both without overcomplicating either: a few minutes to investigate, then a recognizable homecoming.\\n\\nThe result is a rhythm rather than a tug-of-war. Ella gets a real day; the household gets a dog who knows how to come down from it.\",\"full_astro.headline.handler\":\"A Circuit Between the Tenth House and the Den\",\"full_astro.body.handler\":\"Ella's Virgo Sun and Jupiter in the tenth Doghouse make visible participation and purposeful patrol a major source of vitality. Mercury in Virgo in the eleventh keeps her interested in signals, scents, and the social field. Mars in Leo in the ninth adds zest for action beyond the immediate room, while Neptune in Pisces in the fourth leaves her porous to the atmosphere of home. The exact IC–MC opposition places private restoration and public contribution on one living axis.\\n\\nHer daily rhythm needs both poles. Let activity have an intelligible purpose, then make the descent equally intelligible: predictable route home, water, quiet station, low-demand companionship. That sequence helps her move from eager contributor back to settled resident.\",\"full_astro.headline.direct_to_dog\":\"Your Day Runs From Mission to Den\",\"full_astro.body.direct_to_dog\":\"Your Virgo Sun–Jupiter conjunction in the tenth Doghouse loves a mission, Ella. Mercury thereabouts keeps your nose and mind on the social bulletin. Leo Mars in the ninth can make the larger territory feel inviting. Then Pisces Neptune in the fourth reminds everyone that your home is not just a location; it is an atmosphere your body absorbs.\\n\\nThe IC–MC opposition means you need both the outing and the return. You are happiest when neither is treated as an interruption of the other.\",\"full_astro.headline.hybrid\":\"The Ritual That Joins Her Two Worlds\",\"full_astro.body.hybrid\":\"The chart's IC–MC opposition can show up when Ella is fully engaged in a visible task yet still needs the privacy of her own reset. Virgo tenth-house energy wants to do and notice; Pisces Neptune in the fourth wants a gentle home field. Mars in the ninth adds propulsion, not endless capacity.\\n\\nHer human provides transitions rather than abrupt switches. A consistent final cue, a slower pace through the door, and a familiar resting destination turn the active half of the day into material Ella can safely put down.\",\"dos.0\":\"End stimulating outings with the same short sequence: water, one easy cue, then quiet time.\",\"dos.1\":\"Alternate brisk activity with sniffing, searching, or calm companionship.\",\"dos.2\":\"Give Ella a predictable place to settle after guests or adventures.\",\"donts.0\":\"Do not stack exciting events without a recovery interval.\",\"donts.1\":\"Do not assume she has settled simply because the leash is off.\",\"donts.2\":\"Do not turn every transition into another training test.\",\"funny_dog_quotes.0\":\"The excursion is over when I have signed off on the sidewalk.\",\"imperative_dog_quotes.0\":\"Close the patrol with water and dignity.\",\"applicable_canine_jokes.0\":\"Ella's walk had a route, a review board, and one unresolved shrubbery matter.\"},\"summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md\":{\"plan.center_of_gravity\":\"Ella needs clear, kind structure that protects quiet recovery while giving her attention and drive meaningful outlets.\",\"plan.memorable_takeaway\":\"Ella needs a dependable base and approved ways to be brilliantly busy.\",\"plan.recognizable_behavior\":\"She benefits when a calm resting place, clear access rules, and a small task are available before excitement spills over.\",\"plan.likely_misunderstanding\":\"Structure can be mistaken for restriction, though she experiences fair structure as usable information.\",\"plan.grounded_surprise\":\"Choice works best for her inside a frame, not in the absence of one.\",\"plan.neighbor_distinction\":\"This is a present-tense care blueprint, unlike the daily rhythm card or the future-facing growth card.\",\"plan.writing_form\":\"A practical household design memo.\",\"plan.comic_premise\":\"Ella would like a well-run home with a designated lounge and occasional investigative assignments.\",\"plan.creative_approach\":\"Translate temperament into concrete environmental supports.\",\"no_astro.headline.handler\":\"Give Ella a Base and a Brief\",\"no_astro.body.handler\":\"Ella does not need a household that entertains her every second. She needs one that makes sense. A low-traffic resting spot gives her somewhere to let go of the day. Consistent rules around doors, greetings, and shared spaces reduce needless negotiation. Brief searches, simple cues, and useful little jobs give her alertness a legitimate destination.\\n\\nThink of support as an arrangement, not a rescue. Offer two safe choices rather than a chaotic menu. Protect her quiet place without isolating her. Let activity end clearly. Ella is likely to feel secure when she can predict the edges of life and still find something worthwhile inside them.\",\"no_astro.headline.direct_to_dog\":\"A Quiet Corner and an Important Assignment\",\"no_astro.body.direct_to_dog\":\"You need a place where nobody expects an immediate committee meeting, Ella. You also need a life with enough interesting business that your careful mind does not create emergency paperwork.\\n\\nClear rules are not a personal insult. They tell you which doors are open, where your effort belongs, and when you may finally clock out. Give yourself a good sniff, a small choice, and a reliable place to land.\",\"no_astro.headline.hybrid\":\"The House Says Yes, No, and Here\",\"no_astro.body.hybrid\":\"Ella's person makes the boundary plain: this room is quiet, this greeting is brief, this toy is available, this search begins now. Ella does not have to guess whether she is welcome or invent a project to find out what happens next.\\n\\nIn return, she can bring her lively attention to the invitation instead of the uncertainty. Their household becomes less about stopping behavior and more about showing her where the good behavior can live.\",\"light_astro.headline.handler\":\"Scorpio Boundaries, Pisces Softness\",\"light_astro.body.handler\":\"Ella's Scorpio Ascendant and Saturn favor clear limits and deliberate handling, while Neptune in Pisces points to a sensitive need for a soothing home atmosphere. Her Virgo emphasis also wants useful mental engagement. The answer is neither hard control nor endless accommodation.\\n\\nGive her a calm base, unambiguous routines, and small tasks with a clear finish. A structured choice—two approved toys, a permitted sniff zone, one station—honors her agency without making the world vague.\",\"light_astro.headline.direct_to_dog\":\"Clear Edges, Gentle Weather\",\"light_astro.body.direct_to_dog\":\"Scorpio in your doorway appreciates knowing what is what, Ella. Pisces Neptune needs the room around you to feel gentle enough to rest in. Virgo wants a puzzle with an answer.\\n\\nYour people can give you all three: a boundary you can understand, a peaceful place to exhale, and a little job that lets your brain shine.\",\"light_astro.headline.hybrid\":\"The Boundary Becomes an Invitation\",\"light_astro.body.hybrid\":\"Ella's handler does not use structure to flatten her personality. With Scorpio-Saturn steadiness and Pisces softness in mind, they make the limit clear and then point to an available option.\\n\\nElla hears more than “no.” She hears where to go, what to do, and how to come back. That is the kind of care that lets her intensity become cooperation.\",\"full_astro.headline.handler\":\"Support the Whole System, Not One Mood\",\"full_astro.body.handler\":\"Ella's Scorpio Ascendant with Saturn in the first Doghouse asks for reliable behavioral boundaries; the exact opposition to the Taurus Descendant makes close partnership a central regulation channel. Neptune in Pisces in the fourth Doghouse heightens the importance of a calm home atmosphere. Moon and Pluto in Capricorn in the third show that local cues, sounds, and routines can carry emotional weight. Virgo Sun, Jupiter, and Mercury need engagement through observation and useful information, while Uranus in Aries in the sixth makes novelty in routine care a real factor.\\n\\nHer support system should therefore be concrete: protect a quiet den, use stable cues across people, offer bounded choices, and provide short scent or training tasks with obvious endings. This is not overmanagement. It is a way to give every active part of Ella a safe place to operate.\",\"full_astro.headline.direct_to_dog\":\"Your Needs Fit Together, Ella\",\"full_astro.body.direct_to_dog\":\"Saturn at your Scorpio Ascendant needs rules that hold. Your Taurus Descendant wants a dependable companion on the other end of those rules. Pisces Neptune in the fourth needs a peaceful den, while Capricorn Moon and Pluto take local sounds and cues seriously. Your Virgo planets want useful detail; Uranus in the sixth wants routine to leave room for a little freshness.\\n\\nA good care plan does not make you choose between safety, interest, closeness, and independence. It arranges them so you can have all four.\",\"full_astro.headline.hybrid\":\"A Home With a Return Route\",\"full_astro.body.hybrid\":\"Ella's handler can read the chart as design guidance. Scorpio ASC–Saturn supplies the sturdy perimeter; Taurus DSC supplies the relationship that makes it trustworthy. Pisces Neptune in the fourth softens the den. Virgo placements offer a job, and Uranus in the sixth receives novelty through planned choices rather than surprise chaos.\\n\\nThe practical pattern is simple: name the boundary, offer one permitted activity, complete it together, and let Ella return to quiet. The household does not demand calm from nowhere; it builds the route by which calm becomes possible.\",\"dos.0\":\"Keep one resting area low-traffic, familiar, and free from unnecessary interruption.\",\"dos.1\":\"Use the same access and greeting rules across the household whenever possible.\",\"dos.2\":\"Offer brief find-it games or simple tasks that have a visible finish cue.\",\"donts.0\":\"Do not answer every restless moment by adding more speed or stimulation.\",\"donts.1\":\"Do not remove all choice in the name of consistency.\",\"donts.2\":\"Do not make her settle in the busiest part of the room if another option is available.\",\"funny_dog_quotes.0\":\"I require a private office and a modest caseload.\",\"imperative_dog_quotes.0\":\"Provide the assignment, then defend the nap.\",\"applicable_canine_jokes.0\":\"Ella supports open-door policy, provided she approves the door.\"},\"summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md\":{\"plan.center_of_gravity\":\"Ella grows by turning intense noticing and quick activation into practiced reorientation, cooperative skill, and flexible confidence.\",\"plan.memorable_takeaway\":\"Progress for Ella is not less spark; it is a faster, happier return to choice.\",\"plan.recognizable_behavior\":\"When novelty catches her, she can learn to pause, orient to her person, perform a known action, and resume.\",\"plan.likely_misunderstanding\":\"Growth is not becoming blandly unresponsive or never noticing a trigger.\",\"plan.grounded_surprise\":\"Her strong reactions contain usable energy when practice gives them a sequence.\",\"plan.neighbor_distinction\":\"This concerns change over time and trainable capacity, not the support she needs today.\",\"plan.writing_form\":\"A trainer's progress note.\",\"plan.comic_premise\":\"Ella does not need fewer alerts; she needs better procedures for processing them.\",\"plan.creative_approach\":\"Define development as recovery and repair rather than personality suppression.\",\"no_astro.headline.handler\":\"Keep the Spark; Practice the Return\",\"no_astro.body.handler\":\"Ella's development is not measured by whether the world ever catches her attention. She is built to notice. The useful question is what happens next. Can she take in the surprise, hear a familiar cue, choose a known behavior, and reconnect before the moment gathers too much force?\\n\\nPractice that sequence where success is easy. Use a mild distraction, give her enough distance to think, reward the first honest glance back, and end before frustration accumulates. Over time, the goal is not obedience without personality. It is a dog whose alertness has a well-rehearsed route back to partnership.\",\"no_astro.headline.direct_to_dog\":\"You May Notice It All\",\"no_astro.body.direct_to_dog\":\"Ella, nobody needs you to become less interested in the world. Your interest is real intelligence. The next trick is learning that a surprise can be followed by a choice.\\n\\nLook at the thing. Hear your person. Do the familiar move. Return to the shared plan. Each time you manage that little sequence, you become more capable without becoming any less yourself.\",\"no_astro.headline.hybrid\":\"Their Best Skill Is the Repair\",\"no_astro.body.hybrid\":\"Something unexpected changes the air. Ella leans toward it; her person notices before the leash becomes a debate. Instead of escalating, they use the cue they have practiced in easy moments. Ella turns back, earns a reward, and the pair continues.\\n\\nThat is growth in their relationship: not a life without interruptions, but a reliable way to find one another after one. Ella keeps her sharpness. Her human gains a way to guide it kindly.\",\"light_astro.headline.handler\":\"Uranus Learns a Virgo Sequence\",\"light_astro.body.handler\":\"Uranus in Aries can make Ella's response to novelty quick and independent, while her Virgo planets excel at practice, detail, and repeatable skill. Her North Node in Libra points toward increasingly graceful coordination with others.\\n\\nUse Virgo methods for Uranian moments: break the response into small steps, reward precision, and increase difficulty gradually. Ella can learn that an exciting interruption is not the end of the plan; it is a cue to use one.\",\"light_astro.headline.direct_to_dog\":\"Surprise Can Become a Skill\",\"light_astro.body.direct_to_dog\":\"Uranus gives you the fast turn toward the new, Ella. Virgo gives you the patient mind that can learn a sequence. Libra's North Node invites you to make that sequence more cooperative over time.\\n\\nYour flash of interest does not have to run the whole meeting. It can become the first step toward a smart check-in.\",\"light_astro.headline.hybrid\":\"A Small Bridge Over the Big Moment\",\"light_astro.body.hybrid\":\"When Uranus supplies a surprise, Ella's Virgo attention can be recruited rather than fought. Her person offers one practiced, precise cue; Ella discovers that responding does not mean she has missed the news. Libra's developmental direction lives in that shared adjustment.\\n\\nRepeated in manageable settings, the bridge becomes familiar enough to use when life gets more interesting.\",\"full_astro.headline.handler\":\"Use Ella's Cooperative Channels to Meet Her Friction\",\"full_astro.body.handler\":\"Ella's Moon in Capricorn squares Uranus in Aries, and Mars in Leo squares both her Scorpio Ascendant and Taurus Descendant. These aspects can make novelty, action, first responses, and relationship expectations collide in the same moment. Pluto quincunx Mars adds a need to recalibrate intensity rather than simply push through it. Yet Mercury in Virgo sextiles Saturn almost exactly, Mercury conjoins the Libra North Node, and Saturn sextiles that Node: attention, structure, and social development have unusually usable links.\\n\\nTrain from these strengths. Establish a simple reorientation cue in quiet places, pair it with a clear station or scent task, then change one variable at a time—distance, motion, duration, or social pressure. Reward recovery and cooperation. The squares may always provide heat, but practiced coordination can increasingly determine the ending.\",\"full_astro.headline.direct_to_dog\":\"Your Difficult Angles Have Detours\",\"full_astro.body.direct_to_dog\":\"Moon square Uranus can make a surprise feel like it has interrupted your whole internal schedule, Ella. Mars square your Ascendant and Descendant can make action bump into both your first instinct and your bond. Pluto's quincunx to Mars asks for adjustment when intensity rises.\\n\\nBut Mercury's near-exact sextile to Saturn gives you a beautiful training tool: clear information joined to patient repetition. With Mercury and Saturn both linked to your Libra North Node, every practiced check-in can become a little more natural. You have routes through the hard moments.\",\"full_astro.headline.hybrid\":\"From Hot Geometry to a Shared Routine\",\"full_astro.body.hybrid\":\"Ella's Moon–Uranus square can start the disruption, while Mars squares the ASC–DSC axis and brings urgency into both self-expression and companionship. Her human does not need to win against that energy. Mercury sextile Saturn offers another strategy: a cue Ella knows, delivered consistently, followed by a simple task she can complete.\\n\\nMercury's conjunction with the Libra North Node turns that repeated sequence into developmental work. They practice orient, create space, do one cooperative action, then release. Over time, Ella learns that surprise can lead back into relationship instead of away from it.\",\"dos.0\":\"Reward the first reorientation toward you after Ella notices something novel.\",\"dos.1\":\"Practice one simple recovery cue in calm settings before using it in busy ones.\",\"dos.2\":\"Raise only one challenge at a time: distance, duration, movement, or social intensity.\",\"donts.0\":\"Do not punish the initial look or alert response to a new event.\",\"donts.1\":\"Do not repeat cues louder when she cannot comfortably think; simplify or add space.\",\"donts.2\":\"Do not call progress a failure because Ella remains vivid and observant.\",\"funny_dog_quotes.0\":\"I have completed the surprise assessment and recommend snacks.\",\"imperative_dog_quotes.0\":\"Notice boldly; return brilliantly.\",\"applicable_canine_jokes.0\":\"Ella's character development includes a cue, a turn, and no reduction in executive authority.\"},\"WRITE SUMMARY THESIS PLAN.md\":{\"summary_plan.identity_thesis\":\"Ella is a purposeful, discerning companion: a careful investigator whose deepest satisfaction comes from having a recognized place beside her people.\",\"summary_plan.daily_life_thesis\":\"Ella thrives in days shaped like complete cycles—active patrol and participation followed by an unmistakable descent into home-based quiet.\",\"summary_plan.needs_support_thesis\":\"Ella needs an environment with dependable boundaries, protected recovery space, bounded choices, and meaningful outlets for attention and action.\",\"summary_plan.growth_development_thesis\":\"Ella develops when practice turns novelty and intensity into a sequence of orienting, choosing, cooperating, and recovering.\",\"summary_plan.needs_vs_growth_distinction\":\"Needs are the present conditions that let Ella feel regulated and included today; growth is the learned capacity she builds over repeated experiences, especially when those conditions support successful practice.\"},\"WRITE WHOLE DOG PROFILE.md\":{\"profile.integrated_portrait\":\"Ella is an alert, purposeful Miniature Schnauzer whose presence combines careful investigation with a clear wish to participate in her people’s world. She is not merely busy or merely sensitive: she appears to gather information, assess the terms of an interaction, and then bring considerable warmth and gusto to a role that feels meaningful. Her strongest portrait is that of a small, serious scout who wants a dependable home base and an acknowledged place in the visible pack.\",\"profile.core_temperament\":\"Scorpio rising and Saturn in the first Doghouse suggest a concentrated, self-possessed first response. Ella may meet novelty with a long look, a thorough sniff, or a moment of watchful reserve rather than immediate surrender. Virgo Sun, Jupiter, and Mercury add an exacting, practical intelligence: she is likely to value details, patterns, and tasks with a point. Leo Mars, Venus, and MC give this seriousness a warmer public face—she can want attention, affection, and a role that lets her energy show.\",\"profile.emotional_regulation\":\"Ella’s Moon and Pluto in Capricorn suggest that comfort may be tied to reliable local cues, orderly transitions, and a sense that someone competent is handling the situation. Neptune in Pisces in the fourth makes the emotional weather of home important; she may be responsive to tone, atmosphere, and the difference between an active room and a peaceful den. Moon square Uranus indicates that surprise can interrupt her equilibrium. A consistent recovery ritual is likely to help more than pressure or repeated demands.\",\"profile.learning_motivation\":\"Mercury in Virgo sextile Saturn almost exactly is a strong image of attention becoming durable skill through clear, patient repetition. Ella is likely to learn well when cues are specific, expectations stable, and success easy to identify. Mercury conjunct the Libra North Node suggests that learning increasingly serves coordination and social harmony, not just individual cleverness. Short scent work, pattern games, stations, and useful household jobs suit a dog whose information-gathering wants an outcome.\",\"profile.relationships_trust\":\"The exact Scorpio ASC–Taurus DSC opposition makes Ella’s independent first response and her need for one-to-one steadiness a central life axis. She may require a moment to assess, but close companionship is not peripheral to her. Neptune sextile the DSC can make gentle atmosphere and patient presence especially bonding. Her trust is likely to deepen through fair, repeated interactions: clear limits, warm reunions, and no need to guess whether closeness remains available.\",\"profile.play_adventure_rhythm\":\"Sun conjunct Jupiter in Virgo in the tenth Doghouse links vitality with useful participation and confident patrol. Mars in Leo in the ninth adds an active, exploratory streak and a taste for bold movement or dramatic play. Venus conjunct Mars and MC means affection, action, and being noticed can become fused. Yet the IC–MC and Mars–IC oppositions show that her outward engagement needs a genuine counterweight in private restoration. Ella benefits from adventures with clear beginnings and endings.\",\"profile.tensions_counterweights\":\"Ella’s chart repeatedly holds pairs that need negotiation: home versus visible role, private reset versus active pursuit, independent assessment versus companion expectations, and regulation versus novelty. Moon square Uranus and Mars squares to the ASC–DSC axis can create quick activation. Pluto quincunx Mars and MC asks for periodic adjustment around intensity and public behavior. The counterweights are substantial: Mercury–Saturn, Saturn–North Node, Neptune–DSC, Uranus–Venus, and several supportive links show that skillful routines, gentle relationship, and bounded novelty can make friction productive.\",\"profile.strengths_growth\":\"Ella’s strengths include tenacity, observational intelligence, loyalty, and a capacity to make training feel meaningful when it is clear and fair. Her growth edge is not to become less interested, intense, or expressive. It is to develop smoother transitions from investigation into cooperation and from activation into recovery. Rehearsed reorientation cues, gradual novelty, and rewarding the return can turn her natural alertness into increasingly flexible confidence.\",\"profile.voice_humor_imagery\":\"Write Ella with affectionate respect for her competent little gravity. Her comic world is not generic mischief; it is the solemnity with which she might supervise a hallway, audit a shrub, or expect a briefing before proceeding. Use imagery of patrols, reports, assignments, thresholds, and homecoming rituals. Keep the humor warm: Ella is a tiny official with a soft place to land, not a caricature of control.\",\"profile.factual_cautions\":\"Do not infer medical issues, fear, aggression, breed-specific behavior, a particular household history, or actual incidents. Treat all behavioral language as likely tendencies suggested by the supplied chart, not diagnosis or certainty. Keep ordinary claims within their stated evidence when writing individual stories. Astrology may be named in full-chart summaries, but projected labels and source machinery should be translated into natural reader-facing language.\"}}}"
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": "astrowoof:gpt-5.6-terra:585c1a0bdad6d32acda6134f19efd675",
+  "prompt_cache_options": {
+    "mode": "explicit",
+    "ttl": "30m"
+  },
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "medium",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "description": null,
+      "name": "astrowoof_authoring_pass",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "object",
+            "properties": {
+              "ASSIGN THEME GROUPS.md": {
+                "type": "object",
+                "properties": {
+                  "theme_group_registry.interdogpendence": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.3": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.4": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.8": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.17": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.18": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.19": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.21": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.22": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.23": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.24": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.26": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.29": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.30": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.36": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.39": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.41": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.46": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.interdogpendence.48": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group_registry.takeaways": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.7": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.10": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.11": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.12": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.13": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.14": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.15": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.16": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.25": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.27": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.35": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.37": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.38": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "theme_group.takeaways.40": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "theme_group_registry.interdogpendence",
+                  "theme_group.interdogpendence.2",
+                  "theme_group.interdogpendence.3",
+                  "theme_group.interdogpendence.4",
+                  "theme_group.interdogpendence.8",
+                  "theme_group.interdogpendence.17",
+                  "theme_group.interdogpendence.18",
+                  "theme_group.interdogpendence.19",
+                  "theme_group.interdogpendence.21",
+                  "theme_group.interdogpendence.22",
+                  "theme_group.interdogpendence.23",
+                  "theme_group.interdogpendence.24",
+                  "theme_group.interdogpendence.26",
+                  "theme_group.interdogpendence.29",
+                  "theme_group.interdogpendence.30",
+                  "theme_group.interdogpendence.36",
+                  "theme_group.interdogpendence.39",
+                  "theme_group.interdogpendence.41",
+                  "theme_group.interdogpendence.46",
+                  "theme_group.interdogpendence.48",
+                  "theme_group_registry.takeaways",
+                  "theme_group.takeaways.7",
+                  "theme_group.takeaways.10",
+                  "theme_group.takeaways.11",
+                  "theme_group.takeaways.12",
+                  "theme_group.takeaways.13",
+                  "theme_group.takeaways.14",
+                  "theme_group.takeaways.15",
+                  "theme_group.takeaways.16",
+                  "theme_group.takeaways.25",
+                  "theme_group.takeaways.27",
+                  "theme_group.takeaways.35",
+                  "theme_group.takeaways.37",
+                  "theme_group.takeaways.38",
+                  "theme_group.takeaways.40"
+                ],
+                "additionalProperties": false
+              },
+              "summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0"
+                ],
+                "additionalProperties": false
+              },
+              "summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0"
+                ],
+                "additionalProperties": false
+              },
+              "summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0"
+                ],
+                "additionalProperties": false
+              },
+              "summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0"
+                ],
+                "additionalProperties": false
+              },
+              "WRITE SUMMARY THESIS PLAN.md": {
+                "type": "object",
+                "properties": {
+                  "summary_plan.identity_thesis": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "summary_plan.daily_life_thesis": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "summary_plan.needs_support_thesis": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "summary_plan.growth_development_thesis": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "summary_plan.needs_vs_growth_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "summary_plan.identity_thesis",
+                  "summary_plan.daily_life_thesis",
+                  "summary_plan.needs_support_thesis",
+                  "summary_plan.growth_development_thesis",
+                  "summary_plan.needs_vs_growth_distinction"
+                ],
+                "additionalProperties": false
+              },
+              "WRITE WHOLE DOG PROFILE.md": {
+                "type": "object",
+                "properties": {
+                  "profile.integrated_portrait": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.core_temperament": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.emotional_regulation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.learning_motivation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.relationships_trust": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.play_adventure_rhythm": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.tensions_counterweights": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.strengths_growth": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.voice_humor_imagery": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.factual_cautions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "profile.integrated_portrait",
+                  "profile.core_temperament",
+                  "profile.emotional_regulation",
+                  "profile.learning_motivation",
+                  "profile.relationships_trust",
+                  "profile.play_adventure_rhythm",
+                  "profile.tensions_counterweights",
+                  "profile.strengths_growth",
+                  "profile.voice_humor_imagery",
+                  "profile.factual_cautions"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "ASSIGN THEME GROUPS.md",
+              "summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md",
+              "summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md",
+              "summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md",
+              "summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md",
+              "WRITE SUMMARY THESIS PLAN.md",
+              "WRITE WHOLE DOG PROFILE.md"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "files"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    },
+    "verbosity": "high"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 36841,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 8089,
+    "output_tokens_details": {
+      "reasoning_tokens": 53
+    },
+    "total_tokens": 44930
+  },
+  "user": null,
+  "metadata": {}
+}

@@ -662,6 +662,15 @@ SBE supports two instruction profiles:
   aspect and synthesis. Use `--workspace-layout single` only for legacy or
   controlled experiments.
 
+  `--full-chart-basis-format legacy` preserves the historical complete-claim
+  plus recursive-registry transport. Experimental `compact-v1` instead emits
+  an author-oriented pass-local `FULL CHART BASIS.md` and a structured local
+  `<subject>.compact-full-chart-basis.json` traceability sidecar. The sidecar is
+  excluded from authoring ZIPs and API prompts. The representation preserves
+  all selected and additional claims and every distinct projected context
+  available in retained evidence, while explicitly identifying itself as a downstream
+  reconstruction rather than a canonical chart export.
+
 Compact mode treats checkpointing as interruption recovery rather than the
 normal unit of authorship. It exists for execution environments where the
 rigorous protocol's operational surface consumes disproportionate authoring

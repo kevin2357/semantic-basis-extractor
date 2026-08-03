@@ -1,0 +1,30 @@
+{
+  "source_run": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801",
+  "legacy_control_deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-chapters\\run\\final\\ella\\natal.ella.cards.json",
+  "legacy_control_sha256": "e47c4089ede3e8a9e371d33ac1fbe78267e08bf7c68a824740331bee00890128",
+  "reused_passes": {
+    "ella_1": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_1\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\passes\\ella_1\\accepted"
+    },
+    "ella_2": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_2\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\passes\\ella_2\\accepted"
+    },
+    "ella_3": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_3\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\passes\\ella_3\\accepted"
+    },
+    "ella_4": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_4\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\passes\\ella_4\\accepted"
+    },
+    "ella_5": {
+      "source": "C:\\tmp\\ella-semantic-closure-batch-recovery-live-20260801\\passes\\ella_5\\accepted",
+      "destination": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\passes\\ella_5\\accepted"
+    }
+  },
+  "experimental_pass": "ella_6",
+  "independent_variable": "full_chart_basis_format=compact-v1",
+  "known_incidental_change": "The authoring brief now says projected-term decoder rather than projected-term registry so it accurately names both transports."
+}

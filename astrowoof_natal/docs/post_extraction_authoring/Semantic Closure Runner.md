@@ -61,6 +61,27 @@ passes receive priority IDs 1–10, 11–20, and so on. Direct SBE invocation ke
 `contiguous` as its backward-compatible default; semantic closure explicitly
 selects `stratified-v1` unless overridden.
 
+### Experimental compact full-chart transport
+
+Semantic closure preserves the historical full-chart rendering by default.
+Use `--full-chart-basis-format compact-v1` for a controlled experiment with
+the deterministic compact authoring map. The compact build contains:
+
+- pass-local `FULL CHART BASIS.md`, a human-readable chart and semantic-claim
+  view;
+- `<subject>.compact-full-chart-basis.json` in SBE's local subject output, a
+  structured sidecar retaining stable source
+  references, dependencies, all distinct projection contexts, and explicit
+  reconstruction limits.
+
+The JSON sidecar is excluded from authoring ZIPs and API prompts. It exists for
+deterministic audit and future consumers without adding authoring load.
+
+The compact representation is a downstream reconstruction from projected
+evidence, not a canonical natal export. It does not contact SPC or infer exact
+source degrees. The legacy mode remains the production default until matched
+live comparisons establish equivalent or better whole-dog and summary quality.
+
 GPT-5.6 authoring calls use explicit prompt caching by default. The request is
 ordered as a stable editorial-guidance prefix, a subject-specific full-chart
 prefix, and finally the pass-local assignment. Explicit breakpoints follow the

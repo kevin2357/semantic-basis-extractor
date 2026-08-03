@@ -1,0 +1,52 @@
+{
+  "schema_version": "astrowoof.editorial_lint.v0.1",
+  "status": "warn",
+  "warning_count": 1,
+  "decks": [
+    {
+      "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-basis\\run\\final\\ella\\natal.ella.cards.json",
+      "subject": "ella",
+      "reader_facing_field_count": 1458,
+      "warning_count": 1,
+      "warnings": [
+        {
+          "code": "repeated_failure_signature",
+          "message": "The 'fine-print humor' mechanism appears three or more times.",
+          "details": {
+            "count": 3,
+            "locations": [
+              "card:relationship_7d55305feb3af96a:light_astro.headline.handler",
+              "card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog",
+              "card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog"
+            ],
+            "excerpts": [
+              "Pluto Makes Mars Stop for the Fine Print",
+              "Your Pluto Can Read the Fine Print Before Mars Plays Again",
+              "Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t"
+            ]
+          }
+        }
+      ],
+      "authoring_pass_acceptance": {
+        "status": "accept",
+        "deterministic": true,
+        "thresholds": {
+          "ngram_words": 12,
+          "ngram_min_distinct_claims": 3
+        },
+        "reader_facing_field_count": 1458,
+        "distinct_location_count": 54,
+        "exact_duplicate_group_count": 0,
+        "exact_duplicate_groups": [],
+        "repeated_ngram_group_count": 0,
+        "repeated_ngrams": [],
+        "suspicious_artifact_count": 0,
+        "suspicious_artifacts": [],
+        "dominant_opening_group_count": 0,
+        "dominant_openings": [],
+        "rejection_reasons": []
+      }
+    }
+  ],
+  "cross_subject_warnings": []
+}

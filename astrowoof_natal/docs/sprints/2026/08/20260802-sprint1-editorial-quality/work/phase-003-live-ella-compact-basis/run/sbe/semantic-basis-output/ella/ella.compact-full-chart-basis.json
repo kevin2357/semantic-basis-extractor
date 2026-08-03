@@ -1,0 +1,2563 @@
+{
+  "schema_version": "astrowoof.compact_full_chart_basis.v0.1",
+  "authority": "deterministic_downstream_reconstruction",
+  "subject": {
+    "subject_id": "ella",
+    "display_name": "Ella",
+    "subject_type": "dog",
+    "gender": "female",
+    "pronouns": {
+      "subject": "she",
+      "object": "her",
+      "possessive_adjective": "her",
+      "possessive_pronoun": "hers",
+      "reflexive": "herself"
+    },
+    "breed": "Miniature Schnauzer",
+    "birth_date": "2015-08-26",
+    "birth_datetime": "2015-08-26T12:00:00-06:00",
+    "birth_latitude": 38.7422,
+    "birth_longitude": -108.069,
+    "birth_location": "Delta, Colorado",
+    "birth_date_precision": "minute"
+  },
+  "objects": [
+    {
+      "source_ref": "canonical:object:natal:ella:ASC",
+      "canonical_name": "ASC",
+      "source_sign": "Scorpio",
+      "source_house": null,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "behavioral_doorway",
+            "projected_mode": "obsessive_investigation_mode"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:DSC",
+      "canonical_name": "DSC",
+      "source_sign": "Taurus",
+      "source_house": null,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "primary_companion_interface",
+            "projected_mode": "nap_spot_loyalty_mode"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:IC",
+      "canonical_name": "IC",
+      "source_sign": "Aquarius",
+      "source_house": null,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "safe_den_baseline",
+            "projected_mode": "pattern_breaking_oddball_mode"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Jupiter",
+      "canonical_name": "Jupiter",
+      "source_sign": "Virgo",
+      "source_house": 10,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "adventure_optimism",
+            "projected_mode": "patrol_inspection_mode",
+            "projected_domain": "doghouse_10_visible_pack_role",
+            "doghouse_number": 10
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:MC",
+      "canonical_name": "MC",
+      "source_sign": "Leo",
+      "source_house": null,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "visible_pack_function",
+            "projected_mode": "attention_seeking_display_mode"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Mars",
+      "canonical_name": "Mars",
+      "source_sign": "Leo",
+      "source_house": 9,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "chase_play_defense_drive",
+            "projected_mode": "attention_seeking_display_mode",
+            "projected_domain": "doghouse_9_adventure_territory",
+            "doghouse_number": 9
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Mercury",
+      "canonical_name": "Mercury",
+      "source_sign": "Virgo",
+      "source_house": 11,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "scent_signal_interpretation",
+            "projected_mode": "patrol_inspection_mode",
+            "projected_domain": "doghouse_11_social_pack_network",
+            "doghouse_number": 11
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Moon",
+      "canonical_name": "Moon",
+      "source_sign": "Capricorn",
+      "source_house": 3,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "comfort_safety_regulation",
+            "projected_mode": "working_dog_seriousness_mode",
+            "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+            "doghouse_number": 3
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Neptune",
+      "canonical_name": "Neptune",
+      "source_sign": "Pisces",
+      "source_house": 4,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "atmosphere_dream_permeability",
+            "projected_mode": "emotional_sponge_dream_dog_mode",
+            "projected_domain": "doghouse_4_den_home_base_safety",
+            "doghouse_number": 4
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Part_of_Fortune",
+      "canonical_name": "Part of Fortune",
+      "source_sign": "Pisces",
+      "source_house": 5,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "easy_good_thing_channel",
+            "projected_mode": "emotional_sponge_dream_dog_mode",
+            "projected_domain": "doghouse_5_play_zoomies_tricks",
+            "doghouse_number": 5
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Pluto",
+      "canonical_name": "Pluto",
+      "source_sign": "Capricorn",
+      "source_house": 3,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "primal_trust_intensity",
+            "projected_mode": "working_dog_seriousness_mode",
+            "projected_domain": "doghouse_3_smells_barks_cues_local_data",
+            "doghouse_number": 3
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Saturn",
+      "canonical_name": "Saturn",
+      "source_sign": "Scorpio",
+      "source_house": 1,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "training_rule_structure",
+            "projected_mode": "obsessive_investigation_mode",
+            "projected_domain": "doghouse_1_body_temperament_presence",
+            "doghouse_number": 1
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Sun",
+      "canonical_name": "Sun",
+      "source_sign": "Virgo",
+      "source_house": 10,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "pack_role_identity",
+            "projected_mode": "patrol_inspection_mode",
+            "projected_domain": "doghouse_10_visible_pack_role",
+            "doghouse_number": 10
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:True_Node",
+      "canonical_name": "North Node",
+      "source_sign": "Libra",
+      "source_house": 11,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "training_development_vector",
+            "projected_mode": "social_harmony_maintenance_mode",
+            "projected_domain": "doghouse_11_social_pack_network",
+            "doghouse_number": 11
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Uranus",
+      "canonical_name": "Uranus",
+      "source_sign": "Aries",
+      "source_house": 6,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "novelty_zoomie_response",
+            "projected_mode": "immediate_chase_mode",
+            "projected_domain": "doghouse_6_training_routine_care",
+            "doghouse_number": 6
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Venus",
+      "canonical_name": "Venus",
+      "source_sign": "Leo",
+      "source_house": 10,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "bonding_preference",
+            "projected_mode": "attention_seeking_display_mode",
+            "projected_domain": "doghouse_10_visible_pack_role",
+            "doghouse_number": 10
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:object:natal:ella:Vertex",
+      "canonical_name": "Vertex",
+      "source_sign": "Gemini",
+      "source_house": 8,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_name": "unexpected_encounter_trigger",
+            "projected_mode": "information_sniffing_mode",
+            "projected_domain": "doghouse_8_deep_trust_vulnerability",
+            "doghouse_number": 8
+          }
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "source_ref": "canonical:relationship:rel:aspect:011b89aca4ae66fb",
+      "source_canonical_name": "IC",
+      "target_canonical_name": "MC",
+      "canonical_aspect": "opposition",
+      "orb": 2.842170943040401e-14,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "safe_den_baseline",
+            "target_canine_subsystem": "visible_pack_function"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:086e0307b3ed1acd",
+      "source_canonical_name": "Saturn",
+      "target_canonical_name": "Part of Fortune",
+      "canonical_aspect": "trine",
+      "orb": 2.898940589778988,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "training_rule_structure",
+            "target_canine_subsystem": "easy_good_thing_channel"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:089c8d1f84519943",
+      "source_canonical_name": "DSC",
+      "target_canonical_name": "Sun",
+      "canonical_aspect": "trine",
+      "orb": 4.233663574471848,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "primary_companion_interface",
+            "target_canine_subsystem": "pack_role_identity"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:14d961852a9609f7",
+      "source_canonical_name": "Venus",
+      "target_canonical_name": "Vertex",
+      "canonical_aspect": "sextile",
+      "orb": 2.8629119003345807,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "bonding_preference",
+            "target_canine_subsystem": "unexpected_encounter_trigger"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:1f0c1c3e453e5a54",
+      "source_canonical_name": "MC",
+      "target_canonical_name": "Uranus",
+      "canonical_aspect": "trine",
+      "orb": 5.985221852237132,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "visible_pack_function",
+            "target_canine_subsystem": "novelty_zoomie_response"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:214941ebe73b30b3",
+      "source_canonical_name": "Saturn",
+      "target_canonical_name": "Jupiter",
+      "canonical_aspect": "square",
+      "orb": 4.54863239963575,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drive_conflict_requires_outlet",
+            "interaction_mode": "behavioral_friction",
+            "source_canine_subsystem": "training_rule_structure",
+            "target_canine_subsystem": "adventure_optimism"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:2871a0daff1ce7f2",
+      "source_canonical_name": "Neptune",
+      "target_canonical_name": "Sun",
+      "canonical_aspect": "opposition",
+      "orb": 5.364595802416773,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "atmosphere_dream_permeability",
+            "target_canine_subsystem": "pack_role_identity"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:2a4af3be3eb30e44",
+      "source_canonical_name": "Pluto",
+      "target_canonical_name": "Mars",
+      "canonical_aspect": "quincunx",
+      "orb": 1.7504331995495193,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "awkward_system_recalibration",
+            "interaction_mode": "odd_behavior_needing_adjustment",
+            "source_canine_subsystem": "primal_trust_intensity",
+            "target_canine_subsystem": "chase_play_defense_drive"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:2e923f2c8d47e638",
+      "source_canonical_name": "Moon",
+      "target_canonical_name": "Part of Fortune",
+      "canonical_aspect": "sextile",
+      "orb": 4.233663574471848,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "comfort_safety_regulation",
+            "target_canine_subsystem": "easy_good_thing_channel"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:2f9f94b73ee0d53a",
+      "source_canonical_name": "Sun",
+      "target_canonical_name": "Jupiter",
+      "canonical_aspect": "conjunction",
+      "orb": 0.1256432002242036,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subsystems_run_together",
+            "interaction_mode": "inseparable_dog_impulse",
+            "source_canine_subsystem": "pack_role_identity",
+            "target_canine_subsystem": "adventure_optimism"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:32717f58c3254c04",
+      "source_canonical_name": "Jupiter",
+      "target_canonical_name": "ASC",
+      "canonical_aspect": "sextile",
+      "orb": 4.108020374247644,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "adventure_optimism",
+            "target_canine_subsystem": "behavioral_doorway"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:34cf5e8f5ffc5f39",
+      "source_canonical_name": "Uranus",
+      "target_canonical_name": "Vertex",
+      "canonical_aspect": "sextile",
+      "orb": 0.6262651994982207,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "novelty_zoomie_response",
+            "target_canine_subsystem": "unexpected_encounter_trigger"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:41f949134410ed2d",
+      "source_canonical_name": "DSC",
+      "target_canonical_name": "Mars",
+      "canonical_aspect": "square",
+      "orb": 4.01234238275083,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drive_conflict_requires_outlet",
+            "interaction_mode": "behavioral_friction",
+            "source_canine_subsystem": "primary_companion_interface",
+            "target_canine_subsystem": "chase_play_defense_drive"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:4f08b4703544c5a3",
+      "source_canonical_name": "Neptune",
+      "target_canonical_name": "DSC",
+      "canonical_aspect": "sextile",
+      "orb": 1.1309322279449248,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "atmosphere_dream_permeability",
+            "target_canine_subsystem": "primary_companion_interface"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:591435e28c22cd26",
+      "source_canonical_name": "ASC",
+      "target_canonical_name": "DSC",
+      "canonical_aspect": "opposition",
+      "orb": 0.0,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "behavioral_doorway",
+            "target_canine_subsystem": "primary_companion_interface"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:5d73542bc1350840",
+      "source_canonical_name": "IC",
+      "target_canonical_name": "Venus",
+      "canonical_aspect": "opposition",
+      "orb": 2.4960447524042877,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "safe_den_baseline",
+            "target_canine_subsystem": "bonding_preference"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:5f7ab6cf6f380f68",
+      "source_canonical_name": "MC",
+      "target_canonical_name": "Pluto",
+      "canonical_aspect": "quincunx",
+      "orb": 0.9482621058759548,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "awkward_system_recalibration",
+            "interaction_mode": "odd_behavior_needing_adjustment",
+            "source_canine_subsystem": "visible_pack_function",
+            "target_canine_subsystem": "primal_trust_intensity"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:6117aff1a9e1def5",
+      "source_canonical_name": "Venus",
+      "target_canonical_name": "Mars",
+      "canonical_aspect": "conjunction",
+      "orb": 5.19474005782979,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subsystems_run_together",
+            "interaction_mode": "inseparable_dog_impulse",
+            "source_canine_subsystem": "bonding_preference",
+            "target_canine_subsystem": "chase_play_defense_drive"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:6c72796f6df68cc8",
+      "source_canonical_name": "ASC",
+      "target_canonical_name": "Mars",
+      "canonical_aspect": "square",
+      "orb": 4.012342382750802,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drive_conflict_requires_outlet",
+            "interaction_mode": "behavioral_friction",
+            "source_canine_subsystem": "behavioral_doorway",
+            "target_canine_subsystem": "chase_play_defense_drive"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:7791c60da82b3c3b",
+      "source_canonical_name": "DSC",
+      "target_canonical_name": "Pluto",
+      "canonical_aspect": "trine",
+      "orb": 5.762775582300321,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "primary_companion_interface",
+            "target_canine_subsystem": "primal_trust_intensity"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:7bde94fef51ad94c",
+      "source_canonical_name": "Venus",
+      "target_canonical_name": "MC",
+      "canonical_aspect": "conjunction",
+      "orb": 2.496044752404316,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subsystems_run_together",
+            "interaction_mode": "inseparable_dog_impulse",
+            "source_canine_subsystem": "bonding_preference",
+            "target_canine_subsystem": "visible_pack_function"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:89926a68709d62cf",
+      "source_canonical_name": "Neptune",
+      "target_canonical_name": "Jupiter",
+      "canonical_aspect": "opposition",
+      "orb": 5.238952602192597,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "atmosphere_dream_permeability",
+            "target_canine_subsystem": "adventure_optimism"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:8e72ef04a72053f0",
+      "source_canonical_name": "Moon",
+      "target_canonical_name": "Uranus",
+      "canonical_aspect": "square",
+      "orb": 1.5144835214523482,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drive_conflict_requires_outlet",
+            "interaction_mode": "behavioral_friction",
+            "source_canine_subsystem": "comfort_safety_regulation",
+            "target_canine_subsystem": "novelty_zoomie_response"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:8f8fa10ef4f269b0",
+      "source_canonical_name": "Pluto",
+      "target_canonical_name": "IC",
+      "canonical_aspect": "semisextile",
+      "orb": 0.9482621058759833,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subtle_adjacent_nudge",
+            "interaction_mode": "minor_behavioral_nudge",
+            "source_canine_subsystem": "primal_trust_intensity",
+            "target_canine_subsystem": "safe_den_baseline"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:91b67f6850e84d14",
+      "source_canonical_name": "Mars",
+      "target_canonical_name": "MC",
+      "canonical_aspect": "conjunction",
+      "orb": 2.698695305425474,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subsystems_run_together",
+            "interaction_mode": "inseparable_dog_impulse",
+            "source_canine_subsystem": "chase_play_defense_drive",
+            "target_canine_subsystem": "visible_pack_function"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:9869080b3954403e",
+      "source_canonical_name": "Sun",
+      "target_canonical_name": "Saturn",
+      "canonical_aspect": "square",
+      "orb": 4.422989199411575,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drive_conflict_requires_outlet",
+            "interaction_mode": "behavioral_friction",
+            "source_canine_subsystem": "pack_role_identity",
+            "target_canine_subsystem": "training_rule_structure"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:a5a4cb1f577b3446",
+      "source_canonical_name": "DSC",
+      "target_canonical_name": "Jupiter",
+      "canonical_aspect": "trine",
+      "orb": 4.108020374247673,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "primary_companion_interface",
+            "target_canine_subsystem": "adventure_optimism"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:a98f2f942f138381",
+      "source_canonical_name": "Mars",
+      "target_canonical_name": "IC",
+      "canonical_aspect": "opposition",
+      "orb": 2.6986953054255025,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "chase_play_defense_drive",
+            "target_canine_subsystem": "safe_den_baseline"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:b59bce6711da55b1",
+      "source_canonical_name": "Moon",
+      "target_canonical_name": "Vertex",
+      "canonical_aspect": "quincunx",
+      "orb": 2.140748720950569,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "awkward_system_recalibration",
+            "interaction_mode": "odd_behavior_needing_adjustment",
+            "source_canine_subsystem": "comfort_safety_regulation",
+            "target_canine_subsystem": "unexpected_encounter_trigger"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:beae6e1093c32595",
+      "source_canonical_name": "Mercury",
+      "target_canonical_name": "North Node",
+      "canonical_aspect": "conjunction",
+      "orb": 2.4066419746719703,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subsystems_run_together",
+            "interaction_mode": "inseparable_dog_impulse",
+            "source_canine_subsystem": "scent_signal_interpretation",
+            "target_canine_subsystem": "training_development_vector"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:c4bbe4f9ae738081",
+      "source_canonical_name": "Mercury",
+      "target_canonical_name": "Saturn",
+      "canonical_aspect": "sextile",
+      "orb": 0.09626173832765517,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "scent_signal_interpretation",
+            "target_canine_subsystem": "training_rule_structure"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:c80a8b3695ef3065",
+      "source_canonical_name": "Sun",
+      "target_canonical_name": "ASC",
+      "canonical_aspect": "sextile",
+      "orb": 4.233663574471848,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "pack_role_identity",
+            "target_canine_subsystem": "behavioral_doorway"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:cf1a2f7008c9c2db",
+      "source_canonical_name": "Neptune",
+      "target_canonical_name": "ASC",
+      "canonical_aspect": "trine",
+      "orb": 1.1309322279449248,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "atmosphere_dream_permeability",
+            "target_canine_subsystem": "behavioral_doorway"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:d2f485ce3488b0fe",
+      "source_canonical_name": "Saturn",
+      "target_canonical_name": "North Node",
+      "canonical_aspect": "sextile",
+      "orb": 2.502903712999654,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "trainable_usable_channel",
+            "interaction_mode": "developable_coordination",
+            "source_canine_subsystem": "training_rule_structure",
+            "target_canine_subsystem": "training_development_vector"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:d670913db8804b78",
+      "source_canonical_name": "Uranus",
+      "target_canonical_name": "Venus",
+      "canonical_aspect": "trine",
+      "orb": 3.4891770998328298,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "natural_behavioral_channel",
+            "interaction_mode": "easy_habit_or_talent",
+            "source_canine_subsystem": "novelty_zoomie_response",
+            "target_canine_subsystem": "bonding_preference"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:dcc99c6cb4ff59ab",
+      "source_canonical_name": "Mercury",
+      "target_canonical_name": "Part of Fortune",
+      "canonical_aspect": "opposition",
+      "orb": 2.995202328106643,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "drives_face_off",
+            "interaction_mode": "bond_freedom_axis_tension",
+            "source_canine_subsystem": "scent_signal_interpretation",
+            "target_canine_subsystem": "easy_good_thing_channel"
+          }
+        }
+      ]
+    },
+    {
+      "source_ref": "canonical:relationship:rel:aspect:f89962700ef7c273",
+      "source_canonical_name": "Sun",
+      "target_canonical_name": "North Node",
+      "canonical_aspect": "semisextile",
+      "orb": 1.9200854864119492,
+      "context_projections": [
+        {
+          "contexts": [
+            "direct_to_dog",
+            "general",
+            "handler",
+            "hybrid"
+          ],
+          "projection": {
+            "projected_relationship": "subtle_adjacent_nudge",
+            "interaction_mode": "minor_behavioral_nudge",
+            "source_canine_subsystem": "pack_role_identity",
+            "target_canine_subsystem": "training_development_vector"
+          }
+        }
+      ]
+    }
+  ],
+  "selected_claims": [
+    {
+      "claim_id": "placement_2cd8d9c528a3b907",
+      "claim_type": "angle",
+      "claim": "Primary Companion Interface operates in nap spot loyalty mode through unspecified pattern.",
+      "source_refs": [
+        "canonical:object:natal:ella:DSC"
+      ],
+      "dependencies": [],
+      "priority_id": 1,
+      "priority_weight": 1.0
+    },
+    {
+      "claim_id": "relationship_f9e1abc982cc18e7",
+      "claim_type": "system_interaction",
+      "claim": "Pack Identity and Adventure Confidence are linked through subsystems run together, creating inseparable dog impulse.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:2f9f94b73ee0d53a"
+      ],
+      "dependencies": [
+        "placement_a6fa68acce77e893",
+        "placement_a7e3da63bfe6bc8a"
+      ],
+      "priority_id": 2,
+      "priority_weight": 0.995239
+    },
+    {
+      "claim_id": "relationship_b48b4f13a7246f6f",
+      "claim_type": "system_interaction",
+      "claim": "Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:591435e28c22cd26"
+      ],
+      "dependencies": [
+        "placement_2cd8d9c528a3b907",
+        "placement_4e222a95196f3c94"
+      ],
+      "priority_id": 3,
+      "priority_weight": 0.97419
+    },
+    {
+      "claim_id": "relationship_69721f3448127380",
+      "claim_type": "system_interaction",
+      "claim": "Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:011b89aca4ae66fb"
+      ],
+      "dependencies": [
+        "placement_4bf918541cde26c7",
+        "placement_dc164328846fb8ac"
+      ],
+      "priority_id": 4,
+      "priority_weight": 0.960533
+    },
+    {
+      "claim_id": "placement_fff70f55ee2c4e03",
+      "claim_type": "placement",
+      "claim": "Novelty and Surprise Response operates in immediate chase mode through training routine care.",
+      "source_refs": [
+        "canonical:object:natal:ella:Uranus"
+      ],
+      "dependencies": [],
+      "priority_id": 5,
+      "priority_weight": 0.954882
+    },
+    {
+      "claim_id": "placement_dc164328846fb8ac",
+      "claim_type": "angle",
+      "claim": "Safe-Den Baseline operates in pattern breaking oddball mode through unspecified pattern.",
+      "source_refs": [
+        "canonical:object:natal:ella:IC"
+      ],
+      "dependencies": [],
+      "priority_id": 6,
+      "priority_weight": 0.948261
+    },
+    {
+      "claim_id": "synthesis_d97913987ccbf648",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_3734a82f55646d37",
+        "relationship_841480d5cfb20ed8",
+        "relationship_b3e70bbfe1f0a007"
+      ],
+      "priority_id": 7,
+      "priority_weight": 0.9461
+    },
+    {
+      "claim_id": "relationship_841480d5cfb20ed8",
+      "claim_type": "system_interaction",
+      "claim": "Signals and Scent and Training Rule Structure are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:c4bbe4f9ae738081"
+      ],
+      "dependencies": [
+        "placement_5e782c78da816ec3",
+        "placement_e1eea7e6ab19d40a"
+      ],
+      "priority_id": 8,
+      "priority_weight": 0.921827
+    },
+    {
+      "claim_id": "placement_3140a08b036e3427",
+      "claim_type": "orientation",
+      "claim": "Training Development Vector operates in social harmony maintenance mode through social pack network.",
+      "source_refs": [
+        "canonical:object:natal:ella:True_Node"
+      ],
+      "dependencies": [],
+      "priority_id": 9,
+      "priority_weight": 0.918883
+    },
+    {
+      "claim_id": "synthesis_2efcc3c374206c29",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_08b96edeb0fa98fe",
+        "relationship_3734a82f55646d37",
+        "relationship_d02272528c2f3708"
+      ],
+      "priority_id": 10,
+      "priority_weight": 0.916001
+    },
+    {
+      "claim_id": "synthesis_35efbb0070eb68fc",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_08b96edeb0fa98fe",
+        "relationship_633bff8041349a14",
+        "relationship_c54fc6148c6bab37"
+      ],
+      "priority_id": 11,
+      "priority_weight": 0.914236
+    },
+    {
+      "claim_id": "synthesis_d351f00df22fcd2d",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_69721f3448127380",
+        "relationship_8ee4327f0fe346a3",
+        "relationship_9ce8bb1ace8836da"
+      ],
+      "priority_id": 12,
+      "priority_weight": 0.91214
+    },
+    {
+      "claim_id": "synthesis_bee80ae645394990",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_2cd64e1ae0d05763",
+        "relationship_69721f3448127380",
+        "relationship_957188921f7e84ba"
+      ],
+      "priority_id": 13,
+      "priority_weight": 0.908299
+    },
+    {
+      "claim_id": "synthesis_873a695dbd1a70b5",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_633bff8041349a14",
+        "relationship_b48b4f13a7246f6f",
+        "relationship_bca803fca9e65d9c"
+      ],
+      "priority_id": 14,
+      "priority_weight": 0.907554
+    },
+    {
+      "claim_id": "synthesis_98484f9b7a0e6394",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_2cd64e1ae0d05763",
+        "relationship_69721f3448127380",
+        "relationship_b48b4f13a7246f6f"
+      ],
+      "priority_id": 15,
+      "priority_weight": 0.907047
+    },
+    {
+      "claim_id": "synthesis_c185b740c926794f",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_b3e70bbfe1f0a007",
+        "relationship_b48b4f13a7246f6f",
+        "relationship_c54fc6148c6bab37"
+      ],
+      "priority_id": 16,
+      "priority_weight": 0.903131
+    },
+    {
+      "claim_id": "relationship_b3e70bbfe1f0a007",
+      "claim_type": "system_interaction",
+      "claim": "Atmosphere and Dream Permeability and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:4f08b4703544c5a3"
+      ],
+      "dependencies": [
+        "placement_2cd8d9c528a3b907",
+        "placement_c0e36c7de94fae94"
+      ],
+      "priority_id": 17,
+      "priority_weight": 0.89255
+    },
+    {
+      "claim_id": "relationship_bca803fca9e65d9c",
+      "claim_type": "system_interaction",
+      "claim": "Atmosphere and Dream Permeability and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:cf1a2f7008c9c2db"
+      ],
+      "dependencies": [
+        "placement_4e222a95196f3c94",
+        "placement_c0e36c7de94fae94"
+      ],
+      "priority_id": 18,
+      "priority_weight": 0.88614
+    },
+    {
+      "claim_id": "relationship_8ee4327f0fe346a3",
+      "claim_type": "system_interaction",
+      "claim": "Action and Play Drive and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:91b67f6850e84d14"
+      ],
+      "dependencies": [
+        "placement_4bf918541cde26c7",
+        "placement_9bb77a9481dcd811"
+      ],
+      "priority_id": 19,
+      "priority_weight": 0.875441
+    },
+    {
+      "claim_id": "placement_e1eea7e6ab19d40a",
+      "claim_type": "placement",
+      "claim": "Training Rule Structure operates in obsessive investigation mode through body temperament presence.",
+      "source_refs": [
+        "canonical:object:natal:ella:Saturn"
+      ],
+      "dependencies": [],
+      "priority_id": 20,
+      "priority_weight": 0.872906
+    },
+    {
+      "claim_id": "relationship_9ce8bb1ace8836da",
+      "claim_type": "system_interaction",
+      "claim": "Bonding Preference and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:7bde94fef51ad94c"
+      ],
+      "dependencies": [
+        "placement_266252bd4c92f745",
+        "placement_4bf918541cde26c7"
+      ],
+      "priority_id": 21,
+      "priority_weight": 0.863374
+    },
+    {
+      "claim_id": "relationship_08b96edeb0fa98fe",
+      "claim_type": "system_interaction",
+      "claim": "Comfort and Regulation and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:8e72ef04a72053f0"
+      ],
+      "dependencies": [
+        "placement_c680024104669bad",
+        "placement_fff70f55ee2c4e03"
+      ],
+      "priority_id": 22,
+      "priority_weight": 0.863186
+    },
+    {
+      "claim_id": "relationship_957188921f7e84ba",
+      "claim_type": "system_interaction",
+      "claim": "Action and Play Drive and Safe-Den Baseline are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:a98f2f942f138381"
+      ],
+      "dependencies": [
+        "placement_9bb77a9481dcd811",
+        "placement_dc164328846fb8ac"
+      ],
+      "priority_id": 23,
+      "priority_weight": 0.857039
+    },
+    {
+      "claim_id": "relationship_620cff15d4fd07e2",
+      "claim_type": "system_interaction",
+      "claim": "Visible Pack Function and Deep Trust Intensity are linked through awkward system recalibration, creating odd behavior needing adjustment.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:5f7ab6cf6f380f68"
+      ],
+      "dependencies": [
+        "placement_4bf918541cde26c7",
+        "placement_b3a9d32a3aa0a321"
+      ],
+      "priority_id": 24,
+      "priority_weight": 0.85044
+    },
+    {
+      "claim_id": "synthesis_6397e52027ae7f85",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_cf1dd8f75cd33a77",
+        "relationship_f9e1abc982cc18e7"
+      ],
+      "priority_id": 25,
+      "priority_weight": 0.847353
+    },
+    {
+      "claim_id": "relationship_2cd64e1ae0d05763",
+      "claim_type": "system_interaction",
+      "claim": "Safe-Den Baseline and Bonding Preference are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:5d73542bc1350840"
+      ],
+      "dependencies": [
+        "placement_266252bd4c92f745",
+        "placement_dc164328846fb8ac"
+      ],
+      "priority_id": 26,
+      "priority_weight": 0.843505
+    },
+    {
+      "claim_id": "synthesis_a0451dfb9d6b6143",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_bca803fca9e65d9c",
+        "relationship_d02272528c2f3708"
+      ],
+      "priority_id": 27,
+      "priority_weight": 0.841835
+    },
+    {
+      "claim_id": "placement_9bb77a9481dcd811",
+      "claim_type": "placement",
+      "claim": "Action and Play Drive operates in attention seeking display mode through adventure territory.",
+      "source_refs": [
+        "canonical:object:natal:ella:Mars"
+      ],
+      "dependencies": [],
+      "priority_id": 28,
+      "priority_weight": 0.841674
+    },
+    {
+      "claim_id": "relationship_7d55305feb3af96a",
+      "claim_type": "system_interaction",
+      "claim": "Deep Trust Intensity and Action and Play Drive are linked through awkward system recalibration, creating odd behavior needing adjustment.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:2a4af3be3eb30e44"
+      ],
+      "dependencies": [
+        "placement_9bb77a9481dcd811",
+        "placement_b3a9d32a3aa0a321"
+      ],
+      "priority_id": 29,
+      "priority_weight": 0.841414
+    },
+    {
+      "claim_id": "relationship_c54fc6148c6bab37",
+      "claim_type": "system_interaction",
+      "claim": "Primary Companion Interface and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:41f949134410ed2d"
+      ],
+      "dependencies": [
+        "placement_2cd8d9c528a3b907",
+        "placement_9bb77a9481dcd811"
+      ],
+      "priority_id": 30,
+      "priority_weight": 0.838229
+    },
+    {
+      "claim_id": "placement_a6fa68acce77e893",
+      "claim_type": "placement",
+      "claim": "Pack Identity operates in patrol inspection mode through visible pack role.",
+      "source_refs": [
+        "canonical:object:natal:ella:Sun"
+      ],
+      "dependencies": [],
+      "priority_id": 31,
+      "priority_weight": 0.836355
+    },
+    {
+      "claim_id": "placement_c0e36c7de94fae94",
+      "claim_type": "placement",
+      "claim": "Atmosphere and Dream Permeability operates in emotional sponge dream dog mode through den home base safety.",
+      "source_refs": [
+        "canonical:object:natal:ella:Neptune"
+      ],
+      "dependencies": [],
+      "priority_id": 32,
+      "priority_weight": 0.836293
+    },
+    {
+      "claim_id": "placement_4e222a95196f3c94",
+      "claim_type": "angle",
+      "claim": "Behavioral Doorway operates in obsessive investigation mode through unspecified pattern.",
+      "source_refs": [
+        "canonical:object:natal:ella:ASC"
+      ],
+      "dependencies": [],
+      "priority_id": 33,
+      "priority_weight": 0.836256
+    },
+    {
+      "claim_id": "placement_b3a9d32a3aa0a321",
+      "claim_type": "placement",
+      "claim": "Deep Trust Intensity operates in working dog seriousness mode through smells barks cues local data.",
+      "source_refs": [
+        "canonical:object:natal:ella:Pluto"
+      ],
+      "dependencies": [],
+      "priority_id": 34,
+      "priority_weight": 0.835967
+    },
+    {
+      "claim_id": "synthesis_8b5b7e9779b7cb5d",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_841480d5cfb20ed8",
+        "relationship_cf1dd8f75cd33a77"
+      ],
+      "priority_id": 35,
+      "priority_weight": 0.830845
+    },
+    {
+      "claim_id": "relationship_ba0d3a3bbc73115b",
+      "claim_type": "system_interaction",
+      "claim": "Deep Trust Intensity and Safe-Den Baseline are linked through subtle adjacent nudge, creating minor behavioral nudge.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:8f8fa10ef4f269b0"
+      ],
+      "dependencies": [
+        "placement_b3a9d32a3aa0a321",
+        "placement_dc164328846fb8ac"
+      ],
+      "priority_id": 36,
+      "priority_weight": 0.830324
+    },
+    {
+      "claim_id": "synthesis_8fee2a8a1b04da94",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_2cd64e1ae0d05763",
+        "relationship_9ce8bb1ace8836da"
+      ],
+      "priority_id": 37,
+      "priority_weight": 0.825916
+    },
+    {
+      "claim_id": "synthesis_280e33897928aa55",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_b3e70bbfe1f0a007",
+        "relationship_bca803fca9e65d9c"
+      ],
+      "priority_id": 38,
+      "priority_weight": 0.824896
+    },
+    {
+      "claim_id": "relationship_633bff8041349a14",
+      "claim_type": "system_interaction",
+      "claim": "Behavioral Doorway and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:6c72796f6df68cc8"
+      ],
+      "dependencies": [
+        "placement_4e222a95196f3c94",
+        "placement_9bb77a9481dcd811"
+      ],
+      "priority_id": 39,
+      "priority_weight": 0.824209
+    },
+    {
+      "claim_id": "synthesis_0e2890c90bad8bd7",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": [
+        "relationship_8ee4327f0fe346a3",
+        "relationship_957188921f7e84ba"
+      ],
+      "priority_id": 40,
+      "priority_weight": 0.823222
+    },
+    {
+      "claim_id": "relationship_cf1dd8f75cd33a77",
+      "claim_type": "system_interaction",
+      "claim": "Signals and Scent and Training Development Vector are linked through subsystems run together, creating inseparable dog impulse.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:beae6e1093c32595"
+      ],
+      "dependencies": [
+        "placement_3140a08b036e3427",
+        "placement_5e782c78da816ec3"
+      ],
+      "priority_id": 41,
+      "priority_weight": 0.814724
+    },
+    {
+      "claim_id": "placement_a7e3da63bfe6bc8a",
+      "claim_type": "placement",
+      "claim": "Adventure Confidence operates in patrol inspection mode through visible pack role.",
+      "source_refs": [
+        "canonical:object:natal:ella:Jupiter"
+      ],
+      "dependencies": [],
+      "priority_id": 42,
+      "priority_weight": 0.811681
+    },
+    {
+      "claim_id": "placement_266252bd4c92f745",
+      "claim_type": "placement",
+      "claim": "Bonding Preference operates in attention seeking display mode through visible pack role.",
+      "source_refs": [
+        "canonical:object:natal:ella:Venus"
+      ],
+      "dependencies": [],
+      "priority_id": 43,
+      "priority_weight": 0.806615
+    },
+    {
+      "claim_id": "placement_4bf918541cde26c7",
+      "claim_type": "angle",
+      "claim": "Visible Pack Function operates in attention seeking display mode through unspecified pattern.",
+      "source_refs": [
+        "canonical:object:natal:ella:MC"
+      ],
+      "dependencies": [],
+      "priority_id": 44,
+      "priority_weight": 0.797986
+    },
+    {
+      "claim_id": "placement_c680024104669bad",
+      "claim_type": "placement",
+      "claim": "Comfort and Regulation operates in working dog seriousness mode through smells barks cues local data.",
+      "source_refs": [
+        "canonical:object:natal:ella:Moon"
+      ],
+      "dependencies": [],
+      "priority_id": 45,
+      "priority_weight": 0.794974
+    },
+    {
+      "claim_id": "relationship_d02272528c2f3708",
+      "claim_type": "system_interaction",
+      "claim": "Novelty and Surprise Response and Bonding Preference are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:d670913db8804b78"
+      ],
+      "dependencies": [
+        "placement_266252bd4c92f745",
+        "placement_fff70f55ee2c4e03"
+      ],
+      "priority_id": 46,
+      "priority_weight": 0.794403
+    },
+    {
+      "claim_id": "placement_5e782c78da816ec3",
+      "claim_type": "placement",
+      "claim": "Signals and Scent operates in patrol inspection mode through social pack network.",
+      "source_refs": [
+        "canonical:object:natal:ella:Mercury"
+      ],
+      "dependencies": [],
+      "priority_id": 47,
+      "priority_weight": 0.766274
+    },
+    {
+      "claim_id": "relationship_3734a82f55646d37",
+      "claim_type": "system_interaction",
+      "claim": "Novelty and Surprise Response and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:34cf5e8f5ffc5f39"
+      ],
+      "dependencies": [
+        "placement_1c796fe1f0db3dcc",
+        "placement_fff70f55ee2c4e03"
+      ],
+      "priority_id": 48,
+      "priority_weight": 0.756291
+    },
+    {
+      "claim_id": "placement_1c796fe1f0db3dcc",
+      "claim_type": "placement",
+      "claim": "Unexpected Encounter Trigger operates in information sniffing mode through deep trust vulnerability.",
+      "source_refs": [
+        "canonical:object:natal:ella:Vertex"
+      ],
+      "dependencies": [],
+      "priority_id": 49,
+      "priority_weight": 0.754469
+    },
+    {
+      "claim_id": "placement_b934bf06d6e2bca8",
+      "claim_type": "placement",
+      "claim": "Easy Reward Channel operates in emotional sponge dream dog mode through play zoomies tricks.",
+      "source_refs": [
+        "canonical:object:natal:ella:Part_of_Fortune"
+      ],
+      "dependencies": [],
+      "priority_id": 50,
+      "priority_weight": 0.729815
+    }
+  ],
+  "additional_claims": [
+    {
+      "claim_id": "synthesis_variant_9e6fddabc77d28ec",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_ca9ac276de32ff6b",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_9e376c25cb4488fd",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_a033629ad8de69bf",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_b84474e1f59ac81d",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_0276ead3f4bc5de8",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_6178a3867b347d7e",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_4ea3f866b628f72f",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_e6778b1711a89daa",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_b3e4cc6b5f75bff0",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_e0cb3a7ee0976479",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_feb2be7e804abb70",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_d38acbcf8b207b01",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_df90bf1239f76491",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_0bfe4e6bfcfac1bf",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_b4a736c5b30fe9e3",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_c409374651c94bde",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_ea380083e78db3e2",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_a75f91cf4d63b310",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_2c4a2e504585c9b3",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in unexpected encounter trigger, making unexpected encounter trigger a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_c3ce9e028eaff78f",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_variant_e73532de254db736",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_169202430e17e57a",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in easy good thing channel, making easy good thing channel a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_ea9c7fb7ea8d6010",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_7cea055510bd2595",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_44aeaa87a6abfcd3",
+      "claim_type": "synthesized_theme",
+      "claim": "Bonding Preference, Visible Pack Function and Action and Play Drive repeatedly express attention seeking display mode, making that style a recurring part of the dog's behavior.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_1fefc00556465a17",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_97fcff14c56f3ba8",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_def08524230171ca",
+      "claim_type": "system_interaction",
+      "claim": "Pack Identity and Training Rule Structure are linked through drive conflict requires outlet, creating behavioral friction.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:9869080b3954403e"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_033d0f3b66d119a4",
+      "claim_type": "synthesized_theme",
+      "claim": "Pack Identity, Adventure Confidence and Signals and Scent repeatedly express patrol inspection mode, making that style a recurring part of the dog's behavior.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_75e537e9f6d5c6ed",
+      "claim_type": "system_interaction",
+      "claim": "Training Rule Structure and Training Development Vector are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:d2f485ce3488b0fe"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_2492f633bb757509",
+      "claim_type": "system_interaction",
+      "claim": "Primary Companion Interface and Pack Identity are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:089c8d1f84519943"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_9805442616eac159",
+      "claim_type": "system_interaction",
+      "claim": "Primary Companion Interface and Adventure Confidence are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:a5a4cb1f577b3446"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_f3a2ba8a7fc2fd1c",
+      "claim_type": "system_interaction",
+      "claim": "Training Rule Structure and Adventure Confidence are linked through drive conflict requires outlet, creating behavioral friction.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:214941ebe73b30b3"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_6ca4d50d7304c46f",
+      "claim_type": "synthesized_theme",
+      "claim": "Pack Identity, Adventure Confidence and Bonding Preference converge in visible pack role, concentrating several needs in the same life domain.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_76c874a8541b1055",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_f321eeed364fc045",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_cefaa2a9f4bf5307",
+      "claim_type": "system_interaction",
+      "claim": "Pack Identity and Training Development Vector are linked through subtle adjacent nudge, creating minor behavioral nudge.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:f89962700ef7c273"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_8a05528ab4f63732",
+      "claim_type": "synthesized_theme",
+      "claim": "Several systems repeatedly participate in minor behavioral nudge, making minor behavioral nudge a recurring whole-chart pattern rather than a one-off interaction.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_4f7959104a4077b7",
+      "claim_type": "system_interaction",
+      "claim": "Pack Identity and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:c80a8b3695ef3065"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_db9b3b1a56539f94",
+      "claim_type": "system_interaction",
+      "claim": "Bonding Preference and Action and Play Drive are linked through subsystems run together, creating inseparable dog impulse.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:6117aff1a9e1def5"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_b6a171551da1fbcf",
+      "claim_type": "system_interaction",
+      "claim": "Adventure Confidence and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:32717f58c3254c04"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_fecc6031f1c58a7d",
+      "claim_type": "system_interaction",
+      "claim": "Atmosphere and Dream Permeability and Pack Identity are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:2871a0daff1ce7f2"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_9b50c0fb8d251495",
+      "claim_type": "system_interaction",
+      "claim": "Atmosphere and Dream Permeability and Adventure Confidence are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:89926a68709d62cf"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_5a3b17624660c1d0",
+      "claim_type": "synthesized_theme",
+      "claim": "Training Rule Structure and Behavioral Doorway repeatedly express obsessive investigation mode, making that style a recurring part of the dog's behavior.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_916f26dfd12db946",
+      "claim_type": "system_interaction",
+      "claim": "Primary Companion Interface and Deep Trust Intensity are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:7791c60da82b3c3b"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_70cf8b6b5ac964b9",
+      "claim_type": "synthesized_theme",
+      "claim": "Comfort and Regulation and Deep Trust Intensity repeatedly express working dog seriousness mode, making that style a recurring part of the dog's behavior.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_a4038894250ae339",
+      "claim_type": "synthesized_theme",
+      "claim": "Comfort and Regulation and Deep Trust Intensity converge in smells barks cues local data, concentrating several needs in the same life domain.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_04dfd80abcf8c846",
+      "claim_type": "system_interaction",
+      "claim": "Training Rule Structure and Easy Reward Channel are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:086e0307b3ed1acd"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_63a20eb67f49d273",
+      "claim_type": "synthesized_theme",
+      "claim": "Training Development Vector and Signals and Scent converge in social pack network, concentrating several needs in the same life domain.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "synthesis_4cfff43f0d8a7cd1",
+      "claim_type": "synthesized_theme",
+      "claim": "Atmosphere and Dream Permeability and Easy Reward Channel repeatedly express emotional sponge dream dog mode, making that style a recurring part of the dog's behavior.",
+      "source_refs": [],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_c73cb9b51a97d440",
+      "claim_type": "system_interaction",
+      "claim": "Signals and Scent and Easy Reward Channel are linked through drives face off, creating bond freedom axis tension.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:dcc99c6cb4ff59ab"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_df300bef3bdbded8",
+      "claim_type": "system_interaction",
+      "claim": "Visible Pack Function and Novelty and Surprise Response are linked through natural behavioral channel, creating easy habit or talent.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:1f0c1c3e453e5a54"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_c8a67f144b81df19",
+      "claim_type": "system_interaction",
+      "claim": "Bonding Preference and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:14d961852a9609f7"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_a53919483a340e1c",
+      "claim_type": "system_interaction",
+      "claim": "Comfort and Regulation and Easy Reward Channel are linked through trainable usable channel, creating developable coordination.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:2e923f2c8d47e638"
+      ],
+      "dependencies": []
+    },
+    {
+      "claim_id": "relationship_d0da9b6718a217e2",
+      "claim_type": "system_interaction",
+      "claim": "Comfort and Regulation and Unexpected Encounter Trigger are linked through awkward system recalibration, creating odd behavior needing adjustment.",
+      "source_refs": [
+        "canonical:relationship:rel:aspect:b59bce6711da55b1"
+      ],
+      "dependencies": []
+    }
+  ],
+  "projected_decoder": {
+    "adventure_optimism": {
+      "label": "Adventure Optimism",
+      "short_description": "A projected operator describing adventure optimism.",
+      "meaning": "This term represents the target-ontology function of adventure optimism. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "atmosphere_dream_permeability": {
+      "label": "Atmosphere Dream Permeability",
+      "short_description": "A projected operator describing atmosphere dream permeability.",
+      "meaning": "This term represents the target-ontology function of atmosphere dream permeability. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "attention_seeking_display_mode": {
+      "label": "Attention Seeking Display Mode",
+      "short_description": "An operating style characterized by attention seeking display mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through attention seeking display mode. It modifies the operator rather than replacing it."
+    },
+    "awkward_system_recalibration": {
+      "label": "Awkward System Recalibration",
+      "short_description": "A projected relationship in which two subsystems awkward system recalibration.",
+      "meaning": "This relation describes how two projected endpoints interact: they awkward system recalibration. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "behavioral_doorway": {
+      "label": "Behavioral Doorway",
+      "short_description": "A projected interface describing behavioral doorway.",
+      "meaning": "This term represents the target-ontology function of behavioral doorway. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "behavioral_friction": {
+      "label": "Behavioral Friction",
+      "short_description": "A projected semantic theme concerning behavioral friction.",
+      "meaning": "This theme identifies behavioral friction as a recurring semantic facet in the projected graph."
+    },
+    "bond_freedom_axis_tension": {
+      "label": "Bond Freedom Axis Tension",
+      "short_description": "A projected semantic theme concerning bond freedom axis tension.",
+      "meaning": "This theme identifies bond freedom axis tension as a recurring semantic facet in the projected graph."
+    },
+    "bonding_preference": {
+      "label": "Bonding Preference",
+      "short_description": "A projected operator describing bonding preference.",
+      "meaning": "This term represents the target-ontology function of bonding preference. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "chase_play_defense_drive": {
+      "label": "Chase Play Defense Drive",
+      "short_description": "A projected operator describing chase play defense drive.",
+      "meaning": "This term represents the target-ontology function of chase play defense drive. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "comfort_safety_regulation": {
+      "label": "Comfort Safety Regulation",
+      "short_description": "A projected operator describing comfort safety regulation.",
+      "meaning": "This term represents the target-ontology function of comfort safety regulation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "developable_coordination": {
+      "label": "Developable Coordination",
+      "short_description": "A projected semantic theme concerning developable coordination.",
+      "meaning": "This theme identifies developable coordination as a recurring semantic facet in the projected graph."
+    },
+    "doghouse_10_visible_pack_role": {
+      "label": "Doghouse 10 Visible Pack Role",
+      "short_description": "A projected context or life domain centered on doghouse 10 visible pack role.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 10 visible pack role providing the structural context."
+    },
+    "doghouse_11_social_pack_network": {
+      "label": "Doghouse 11 Social Pack Network",
+      "short_description": "A projected context or life domain centered on doghouse 11 social pack network.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 11 social pack network providing the structural context."
+    },
+    "doghouse_1_body_temperament_presence": {
+      "label": "Doghouse 1 Body Temperament Presence",
+      "short_description": "A projected context or life domain centered on doghouse 1 body temperament presence.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 1 body temperament presence providing the structural context."
+    },
+    "doghouse_3_smells_barks_cues_local_data": {
+      "label": "Doghouse 3 Smells Barks Cues Local Data",
+      "short_description": "A projected context or life domain centered on doghouse 3 smells barks cues local data.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 3 smells barks cues local data providing the structural context."
+    },
+    "doghouse_4_den_home_base_safety": {
+      "label": "Doghouse 4 Den Home Base Safety",
+      "short_description": "A projected context or life domain centered on doghouse 4 den home base safety.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 4 den home base safety providing the structural context."
+    },
+    "doghouse_5_play_zoomies_tricks": {
+      "label": "Doghouse 5 Play Zoomies Tricks",
+      "short_description": "A projected context or life domain centered on doghouse 5 play zoomies tricks.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 5 play zoomies tricks providing the structural context."
+    },
+    "doghouse_6_training_routine_care": {
+      "label": "Doghouse 6 Training Routine Care",
+      "short_description": "A projected context or life domain centered on doghouse 6 training routine care.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 6 training routine care providing the structural context."
+    },
+    "doghouse_8_deep_trust_vulnerability": {
+      "label": "Doghouse 8 Deep Trust Vulnerability",
+      "short_description": "A projected context or life domain centered on doghouse 8 deep trust vulnerability.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 8 deep trust vulnerability providing the structural context."
+    },
+    "doghouse_9_adventure_territory": {
+      "label": "Doghouse 9 Adventure Territory",
+      "short_description": "A projected context or life domain centered on doghouse 9 adventure territory.",
+      "meaning": "This domain describes where the projected operator is organized or expressed, with doghouse 9 adventure territory providing the structural context."
+    },
+    "drive_conflict_requires_outlet": {
+      "label": "Drive Conflict Requires Outlet",
+      "short_description": "A projected relationship in which two subsystems drive conflict requires outlet.",
+      "meaning": "This relation describes how two projected endpoints interact: they drive conflict requires outlet. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "drives_face_off": {
+      "label": "Drives Face Off",
+      "short_description": "A projected relationship in which two subsystems drives face off.",
+      "meaning": "This relation describes how two projected endpoints interact: they drives face off. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "easy_good_thing_channel": {
+      "label": "Easy Good Thing Channel",
+      "short_description": "A projected orientation describing easy good thing channel.",
+      "meaning": "This term represents the target-ontology function of easy good thing channel. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "easy_habit_or_talent": {
+      "label": "Easy Habit Or Talent",
+      "short_description": "A projected semantic theme concerning easy habit or talent.",
+      "meaning": "This theme identifies easy habit or talent as a recurring semantic facet in the projected graph."
+    },
+    "emotional_sponge_dream_dog_mode": {
+      "label": "Emotional Sponge Dream Dog Mode",
+      "short_description": "An operating style characterized by emotional sponge dream dog mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through emotional sponge dream dog mode. It modifies the operator rather than replacing it."
+    },
+    "immediate_chase_mode": {
+      "label": "Immediate Chase Mode",
+      "short_description": "An operating style characterized by immediate chase mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through immediate chase mode. It modifies the operator rather than replacing it."
+    },
+    "information_sniffing_mode": {
+      "label": "Information Sniffing Mode",
+      "short_description": "An operating style characterized by information sniffing mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through information sniffing mode. It modifies the operator rather than replacing it."
+    },
+    "inseparable_dog_impulse": {
+      "label": "Inseparable Dog Impulse",
+      "short_description": "A projected semantic theme concerning inseparable dog impulse.",
+      "meaning": "This theme identifies inseparable dog impulse as a recurring semantic facet in the projected graph."
+    },
+    "minor_behavioral_nudge": {
+      "label": "Minor Behavioral Nudge",
+      "short_description": "A projected semantic theme concerning minor behavioral nudge.",
+      "meaning": "This theme identifies minor behavioral nudge as a recurring semantic facet in the projected graph."
+    },
+    "nap_spot_loyalty_mode": {
+      "label": "Nap Spot Loyalty Mode",
+      "short_description": "An operating style characterized by nap spot loyalty mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through nap spot loyalty mode. It modifies the operator rather than replacing it."
+    },
+    "natural_behavioral_channel": {
+      "label": "Natural Behavioral Channel",
+      "short_description": "A projected relationship in which two subsystems natural behavioral channel.",
+      "meaning": "This relation describes how two projected endpoints interact: they natural behavioral channel. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "novelty_zoomie_response": {
+      "label": "Novelty Zoomie Response",
+      "short_description": "A projected operator describing novelty zoomie response.",
+      "meaning": "This term represents the target-ontology function of novelty zoomie response. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "obsessive_investigation_mode": {
+      "label": "Obsessive Investigation Mode",
+      "short_description": "An operating style characterized by obsessive investigation mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through obsessive investigation mode. It modifies the operator rather than replacing it."
+    },
+    "odd_behavior_needing_adjustment": {
+      "label": "Odd Behavior Needing Adjustment",
+      "short_description": "A projected semantic theme concerning odd behavior needing adjustment.",
+      "meaning": "This theme identifies odd behavior needing adjustment as a recurring semantic facet in the projected graph."
+    },
+    "pack_role_identity": {
+      "label": "Pack Role Identity",
+      "short_description": "A projected operator describing pack role identity.",
+      "meaning": "This term represents the target-ontology function of pack role identity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "patrol_inspection_mode": {
+      "label": "Patrol Inspection Mode",
+      "short_description": "An operating style characterized by patrol inspection mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through patrol inspection mode. It modifies the operator rather than replacing it."
+    },
+    "pattern_breaking_oddball_mode": {
+      "label": "Pattern Breaking Oddball Mode",
+      "short_description": "An operating style characterized by pattern breaking oddball mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through pattern breaking oddball mode. It modifies the operator rather than replacing it."
+    },
+    "primal_trust_intensity": {
+      "label": "Primal Trust Intensity",
+      "short_description": "A projected operator describing primal trust intensity.",
+      "meaning": "This term represents the target-ontology function of primal trust intensity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "primary_companion_interface": {
+      "label": "Primary Companion Interface",
+      "short_description": "A projected interface describing primary companion interface.",
+      "meaning": "This term represents the target-ontology function of primary companion interface. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "safe_den_baseline": {
+      "label": "Safe Den Baseline",
+      "short_description": "A projected interface describing safe den baseline.",
+      "meaning": "This term represents the target-ontology function of safe den baseline. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "scent_signal_interpretation": {
+      "label": "Scent Signal Interpretation",
+      "short_description": "A projected operator describing scent signal interpretation.",
+      "meaning": "This term represents the target-ontology function of scent signal interpretation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "social_harmony_maintenance_mode": {
+      "label": "Social Harmony Maintenance Mode",
+      "short_description": "An operating style characterized by social harmony maintenance mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through social harmony maintenance mode. It modifies the operator rather than replacing it."
+    },
+    "subsystems_run_together": {
+      "label": "Subsystems Run Together",
+      "short_description": "A projected relationship in which two subsystems subsystems run together.",
+      "meaning": "This relation describes how two projected endpoints interact: they subsystems run together. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "subtle_adjacent_nudge": {
+      "label": "Subtle Adjacent Nudge",
+      "short_description": "A projected relationship in which two subsystems subtle adjacent nudge.",
+      "meaning": "This relation describes how two projected endpoints interact: they subtle adjacent nudge. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "trainable_usable_channel": {
+      "label": "Trainable Usable Channel",
+      "short_description": "A projected relationship in which two subsystems trainable usable channel.",
+      "meaning": "This relation describes how two projected endpoints interact: they trainable usable channel. It preserves source relationship geometry while expressing the interaction in target-domain language."
+    },
+    "training_development_vector": {
+      "label": "Training Development Vector",
+      "short_description": "A projected orientation describing training development vector.",
+      "meaning": "This term represents the target-ontology function of training development vector. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "training_rule_structure": {
+      "label": "Training Rule Structure",
+      "short_description": "A projected operator describing training rule structure.",
+      "meaning": "This term represents the target-ontology function of training rule structure. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "unexpected_encounter_trigger": {
+      "label": "Unexpected Encounter Trigger",
+      "short_description": "A projected interface describing unexpected encounter trigger.",
+      "meaning": "This term represents the target-ontology function of unexpected encounter trigger. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "visible_pack_function": {
+      "label": "Visible Pack Function",
+      "short_description": "A projected interface describing visible pack function.",
+      "meaning": "This term represents the target-ontology function of visible pack function. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile."
+    },
+    "working_dog_seriousness_mode": {
+      "label": "Working Dog Seriousness Mode",
+      "short_description": "An operating style characterized by working dog seriousness mode.",
+      "meaning": "This mode describes how a projected operator tends to perform its function: through working dog seriousness mode. It modifies the operator rather than replacing it."
+    }
+  },
+  "reconstruction_limits": [
+    "Canonical longitude and exact degree are not retained in this packet.",
+    "Canonical relationship endpoints are recovered by joining projected object IDs when possible.",
+    "Only material retained in projected artifacts and the SBE candidate pool is represented."
+  ]
+}

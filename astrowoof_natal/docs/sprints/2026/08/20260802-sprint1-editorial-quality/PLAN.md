@@ -380,6 +380,56 @@ resulting whole-dog comprehension. Compare the current rendering with at least
 one more compact, author-oriented representation before changing the
 production handoff.
 
+### Full-chart basis audit conclusion
+
+The five-subject audit found that the current basis costs approximately
+18.3–19.0k estimated tokens per subject, with the recursively rendered term
+registry consuming 55.7–58.5%. A deterministic compact authoring-map prototype
+retained the complete selected/additional claim inventory and every recoverable
+projected object and relationship while reducing estimated tokens by
+49.7–51.8%.
+
+SBE can reconstruct a useful projected chart map, but not a guaranteed
+canonical chart: exact source degrees are absent, relationship endpoints
+require joins, and downstream absence cannot be distinguished from upstream
+omission. Adopt a hybrid architectural direction:
+
+- SPC should own a compact, projection-neutral canonical
+  `source_chart_summary` with exact source facts and provenance;
+- SBE should own the compact author-facing projected map, semantic claim basis,
+  concise decoder, and AstroWoof-specific rendering;
+- authoring should receive both layers when available, with a clearly labeled
+  SBE reconstruction fallback for older artifacts.
+
+Do not change production transport solely from this static audit. First run a
+controlled compact-vs-current live comparison of whole-dog portrait and summary
+quality. The full findings and proposed boundary are preserved in
+`results/PHASE 3 - Full Chart Basis Transport Audit.md`.
+
+The experimental implementation is now available behind
+`--full-chart-basis-format compact-v1`, with `legacy` still the default. Unlike
+the initial measurement prototype, it preserves all distinct projection
+contexts and therefore reduces the full basis by 35.8–39.0% across the five
+reference dogs. Ella's cached subject prefix falls by 37.5%; matched no-service
+six-request layout falls by 11.4% in aggregate. Structured traceability remains
+local and is excluded from LLM ZIPs and prompts. The deterministic stage is
+complete; proceed to an isolated live quality A/B before considering default
+migration.
+
+### Compact-basis live checkpoint
+
+The isolated Ella pass-6 treatment passed opaque QA on attempt 1 and preserved
+the legacy control's whole-dog portrait, four distinct summary arguments,
+audience functions, density ladder, and independent chapter plans. Actual input
+fell from 44,451 tokens on the legacy control's first request to 36,841; compact
+summary prose remained rich while becoming 9.5% shorter overall. No material
+quality loss was found, though the control retained a few stronger individual
+literary peaks.
+
+Retain experimental status until one second-subject matched current-code test
+compares fresh legacy and compact pass-6 responses. Full findings are in
+`results/PHASE 3 - Ella Compact Full Chart Live AB.md`.
+
 ## Phase 3.5 — Narrow production-polish hardening
 
 Apply only the inexpensive, low-disruption Phase-0 findings that fit the
