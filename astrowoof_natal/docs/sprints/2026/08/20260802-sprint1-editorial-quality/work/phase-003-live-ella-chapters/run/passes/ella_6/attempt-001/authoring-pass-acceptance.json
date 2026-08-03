@@ -1,0 +1,25 @@
+{
+  "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+  "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-chapters\\run\\passes\\ella_6\\attempt-001\\response\\ella_6",
+  "status": "reject",
+  "editorial_issue_codes": [
+    "theme_group_balance"
+  ],
+  "affected_claim_ids": [
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "25",
+    "27",
+    "35",
+    "37",
+    "38",
+    "40",
+    "7"
+  ],
+  "guidance": "Treat this result as an editorial signal rather than a puzzle about the checker. Return to the affected plans and rewrite the cards as natural, memorable, genuinely independent pieces. Follow GUIDING LIGHTS.md, then rerun this check."
+}

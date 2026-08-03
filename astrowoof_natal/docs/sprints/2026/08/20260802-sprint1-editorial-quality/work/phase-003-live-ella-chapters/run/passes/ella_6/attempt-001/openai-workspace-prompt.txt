@@ -1,0 +1,4450 @@
+Use the following shared AstroWoof editorial guidance for this bounded authoring pass. These documents govern every subject and every pass.
+
+STATIC GUIDANCE FILES:
+
+===== BEGIN FILE: AUTHORING BRIEF.md =====
+# AstroWoof Story Workspace Authoring Brief v0.5.1
+
+## The assignment
+
+This pass contains one bounded portion of a larger deck about one dog. A card
+pass contains ten independent miniature essays. The summary pass contains four
+full-chart summaries and the global theme-group assignment. Follow the exact
+assignment in `START HERE.md`.
+
+Begin with the whole dog:
+
+1. read `DOG DETAILS.md`;
+2. read all of `FULL CHART BASIS.md`, including the projected-term registry;
+3. complete every field in `WRITE WHOLE DOG PROFILE.md`;
+4. use that profile as the shared characterization for every story.
+
+The full chart may inform the whole-dog profile. Each ordinary story remains
+bounded by the astrology and evidence in its own `CLAIM AND EVIDENCE.md`.
+
+When the summary pass supplies `SUMMARY GOLD REFERENCE.md`, use it only to
+study four-lens separation, synthesis depth, and finished craft. Never transfer
+the example dog's facts or language. Complete `WRITE SUMMARY THESIS PLAN.md`
+before drafting: identity, daily life, present-tense needs, and growth over time
+must become four distinct remembered ideas, not four paraphrases of one motif.
+
+## The creative standard
+
+Treat each story as a fresh writing assignment. The dog should remain
+recognizable throughout, while pacing, imagery, sentence architecture, humor,
+and narrative approach vary naturally.
+
+Before drafting a story, complete its Editorial Plan substantively:
+
+- identify the insight's center of gravity;
+- picture behavior a handler could recognize;
+- locate the likely misunderstanding;
+- find a grounded surprise or useful reframing;
+- distinguish the insight from its named neighbors;
+- choose the creative approach best suited to this particular material.
+
+Then write all nine renderings from that plan.
+
+Before each new story, set aside the wording, sentence structures, scenes,
+jokes, and rhetorical approach used previously. Retain the whole-dog profile
+and your semantic memory of completed stories so characterization stays
+coherent and lessons do not repeat.
+
+If ten random stories were shuffled, they should feel like ten distinct
+creative starting points about the same dog.
+
+## Evidence boundary
+
+Ordinary stories may assert only what that directory's claim and evidence
+support. The whole-dog profile supplies coherent characterization, voice, and
+context; it does not add unrelated astrological facts to an ordinary story.
+
+Do not invent biography, breed traits, diagnoses, medical claims, or behavior
+unsupported by the evidence.
+
+## Reader-facing language
+
+Use projected-term definitions to understand compound concepts, then express
+them through natural astrology and recognizable canine behavior.
+
+Keep authoring machinery behind the scenes. Reader-facing prose should concern
+the dog, the handler, their relationship, and the astrology—not source labels,
+technical provenance, or the writing process.
+
+## Nine renderings
+
+All nine renderings express the same underlying insight. Astrology density is
+progressive disclosure, not three unrelated interpretations: `no_astro`
+establishes the complete lived meaning, `light_astro` adds the principal
+astrological explanation, and `full_astro` adds the complete relevant support.
+Each level should preserve what the preceding level helps the reader
+understand while making the explanatory lens deeper.
+
+Handler helps a person recognize what may be happening and respond usefully.
+
+Direct-to-dog addresses the dog as `you`, offering perspective and dignity. It
+is composed independently for the dog rather than adapted from handler prose.
+
+Hybrid reveals the reciprocal dog-human situation. Reciprocity may appear
+through a scene, ritual, misunderstanding, sequence, mutual adjustment, or
+relationship outcome.
+
+No astrology fully translates the insight into ordinary dog life.
+
+Light astrology names and interprets the one or two most useful actual
+astrological sources.
+
+Full astrology explains relevant planets, angles, nodes, signs, Doghouses,
+aspects, geometry, and orb strength while remaining warm and readable.
+
+## Advice, humor, filters, and chapters
+
+Advice must be observable and specific. Show what patience, space,
+consistency, practice, or enrichment looks like in the relevant situation.
+
+Humor should arise from the exact behavior or tension. Let each story discover
+its own comic world.
+
+Assign a context filter when a user deliberately choosing it would be
+satisfied to see this story.
+
+Use only these registered filters:
+
+- High level: Personality; Learning; Play; Adventure; Communication; Trust;
+  Training; Pack.
+- Detail level: Core Personality; Mind & Intelligence; Emotions & Inner World;
+  Energy & Motivation; Strengths & Talents; Growth & Potential; Play &
+  Adventure; Learning & Training; Communication; Social & Pack Life; Trust &
+  Security; Stress & Resilience.
+
+When `ASSIGN THEME GROUPS.md` is supplied, it owns two independent chapter
+plans. Interdogpendence organizes selected aspects as relationship and
+interaction dynamics. Takeaways organizes selected syntheses as integrated
+conclusions. Never force both sections into one shared taxonomy.
+
+For each section, create three to five semantically coherent chapters, put at
+least two claims in every chapter, and keep the largest chapter no more than
+twice the size of the smallest. The two collective taxonomies must feel
+foundationally different. No title may recur across them, including reordered,
+synonymous, or cosmetically reworded equivalents.
+
+Define each chapter once in its section's structured registry with a stable
+snake-case `id`, reader-facing `title`, concise `short_title`, relevant emoji,
+and display `order`. Assign cards by registry ID. The emoji is meaningful
+AstroWoof navigation language, not ornamental filler. Card passes without the
+assignment file leave chapter planning to the summary pass.
+
+## Workspace care
+
+- Write in `WRITE WHOLE DOG PROFILE.md`, `WRITE THIS CARD.md`, and summary
+  writing files when supplied. Complete `WRITE SUMMARY THESIS PLAN.md` and
+  `ASSIGN THEME GROUPS.md` when they are present.
+- Preserve every `BEGIN FIELD` and `END FIELD` marker exactly.
+- Replace every `__WRITE__` placeholder.
+- Keep reader-facing prose inside marked fields.
+- Preserve file and directory names.
+- Return the completed workspace directory as a ZIP archive.
+
+===== END FILE: AUTHORING BRIEF.md =====
+
+===== BEGIN FILE: GUIDING LIGHTS.md =====
+# AstroWoof Authoring Guiding Lights
+
+This document describes the creative posture that produces a strong AstroWoof
+deck. The schema is only a container. The real assignment is to understand one
+dog deeply and write a collection of individually observed miniature essays
+about that dog.
+
+The dog should remain recognizable throughout the deck. The prose should not.
+
+Imagine that ten different magazine writers were commissioned to describe ten
+different aspects of the same remarkable dog. Their understanding of the dog
+should agree. Their prose should not. The assignment is to create that
+editorial diversity while preserving one coherent characterization.
+
+## One card is one writing assignment
+
+Do not experience the pass as ten adjacent objects waiting to be completed.
+Before each card, imagine that you have been handed exactly one behavioral
+insight about one dog and commissioned to write a small magazine piece about
+it. The neighboring cards do not supply a prose template.
+
+If a card were printed by itself and shuffled into a physical deck, it should
+feel complete. If ten random cards were read aloud without their titles, they
+should sound like ten essays begun from ten different creative starting
+points—not one essay divided into pieces.
+
+This independence includes headlines, openings, paragraph movement,
+transitions, advice, endings, jokes, and sentence rhythm. Filling each slot
+with different nouns does not create different writing.
+
+Do not experience one card as eighteen empty headline and body fields. First
+understand one editorial subject completely. Then write nine purposeful
+renderings of that subject, allowing audience and astrology density to change
+what each rendering contributes. They are siblings, not copies.
+
+## Plan the meaning before writing the prose
+
+Templating often begins when the writer jumps directly from a claim label to
+headline, body, and advice. Use the editorial-plan fields to discover the
+card's real subject first.
+
+Ask:
+
+- What is this claim truly about in the dog's life?
+- What is its emotional or behavioral center?
+- What would a handler actually recognize?
+- What might a loving handler misunderstand?
+- What would surprise the reader?
+- What concrete moment, image, or contrast would make it memorable?
+- What can this card teach that no neighboring card teaches?
+
+The answers should be specific enough that another claim could not inherit
+them unchanged. Distinct semantic briefs naturally support distinct prose.
+
+## Begin with lived behavior
+
+Projected and astrological language explains the dog, but observable life
+introduces the dog. Look for the doorway pause, the check-in during a walk, the
+toy presented like evidence, the visitor inspected from a strategic angle, or
+the settling ritual that only works after one final patrol.
+
+Specific behavior makes an interpretation testable and affectionate. It gives
+the reader something to recognize rather than merely something to believe.
+
+Do not turn every card into a staged anecdote. A vivid comparison, practical
+observation, intimate character sketch, misconception correction, or concise
+piece of training guidance may be the right form. The principle is concrete
+life, not mandatory scene writing.
+
+## Rotate the narrative question
+
+Cards become repetitive when every one answers the same question in the same
+order. Choose the question that best unlocks this claim. For example:
+
+- What does this behavior look like?
+- What is the dog experiencing internally?
+- What mistake might a handler make?
+- What situation reveals this trait most clearly?
+- What strengthens it or makes it harder?
+- Why might this confuse a family member?
+- What would another dog notice?
+- What would a trainer, sitter, or veterinarian observe?
+- What practical accommodation turns friction into cooperation?
+- What hidden strength sits underneath the inconvenient behavior?
+
+Do not rotate these mechanically as another ten-card template. They are
+possible doors. Choose the door demanded by the individual claim.
+
+## Give every card a center of gravity
+
+A strong card revolves around one memorable proposition, not around a
+projected term or a list of evidence. Examples of centers of gravity include:
+
+- this dog conserves emotional energy;
+- this dog negotiates before committing;
+- routine functions as emotional infrastructure;
+- uncertainty becomes investigation;
+- exploration works because the bond provides a return address.
+
+The center of gravity is the card's spine. Every paragraph should deepen,
+complicate, demonstrate, or apply it. Evidence may contain several facts, but
+the prose should not become an inventory.
+
+Before writing, privately answer:
+
+> What is the one thing I hope the reader remembers an hour after reading this
+> card?
+
+Do not draft until the answer is singular and memorable. Every sentence should
+support that remembered idea. If it could describe a neighboring card equally
+well, return to the plan and find the sharper thesis.
+
+## Choose a writing form
+
+Different subjects invite different forms. A story might read like:
+
+- a field observation;
+- a trainer's notebook;
+- an owner's realization;
+- a quiet character sketch;
+- a misunderstanding being corrected;
+- a moment during a walk;
+- practical coaching;
+- an affectionate anecdote;
+- a personality profile;
+- an account of what surprises people.
+
+The list is a set of possibilities, not a rotation schedule. Name the chosen
+form in the editorial plan, then let that form influence the opening,
+paragraph movement, level of detail, and ending. The form should arise from
+the claim's remembered idea.
+
+## Do not translate labels
+
+A projected term is a semantic decoding aid, not a phrase to define in public.
+Do not begin with the label and paraphrase it word by word. Imagine that the
+label has disappeared. What does the dog do? What relationship pattern does
+the handler experience? What becomes newly understandable?
+
+After writing, check the result against the claim and evidence to ensure that
+the interpretation remains faithful. The registry helps recover meaning; it
+does not dictate reader-facing diction.
+
+## Let audience change purpose, not grammar
+
+The three audiences have different jobs:
+
+- Handler voice helps a person recognize, understand, and respond to the dog.
+- Direct-to-dog voice addresses the dog with dignity, affection, reassurance,
+  challenge, or encouragement.
+- Hybrid voice shows the dog and human making meaning together in a shared
+  moment.
+
+These purposes must not harden into fixed sentence structures. Handler voice
+is not always observation followed by interpretation followed by advice.
+Direct-to-dog is not three consecutive sentences beginning with “you.”
+Hybrid is not always “the dog does X, the human does Y, together they do Z.”
+
+Audience determines the relationship to the reader. The claim determines the
+shape of the writing.
+
+## Vary prose architecture deliberately
+
+Before beginning a new card, notice the previous card's architecture:
+
+- how it opened;
+- whether it used a scene, declaration, question, or contrast;
+- how many conceptual turns it made;
+- where advice entered;
+- how it ended;
+- what kind of headline it used;
+- how humor worked.
+
+Then select a different architecture. Change pacing, sentence length,
+paragraph movement, rhetorical stance, imagery, and ending strategy where the
+claim allows it.
+
+Before writing the opening, imagine the most obvious way to begin. If it
+resembles generic horoscope prose or a completed card, choose the second or
+third doorway instead. The direct opening may still be best when it is truly
+specific; the purpose of this exercise is to interrupt autopilot.
+
+Let paragraphs travel different roads. One may begin with observation, another
+with surprise, misconception, question, contrast, or a practical situation.
+Advice need not always arrive last. Explanation need not always sit between
+observation and advice.
+
+## Make headlines inseparable from their cards
+
+A headline should arise from the remembered idea, not from the schema slot.
+It may be playful, practical, intimate, surprising, or quietly descriptive,
+but it should identify the particular insight.
+
+Use the card-swap test: if two headlines could exchange cards without feeling
+clearly wrong, at least one needs rewriting.
+
+## Give humor a claim-specific premise
+
+Before writing humor, answer:
+
+> What is funny about this trait—not merely about dogs in general?
+
+The comic premise may come from a recognizable contradiction, an exaggerated
+but faithful priority, the dog's imagined interpretation of a household
+ritual, or the disproportion between a small event and the importance the dog
+assigns to it. Record that premise in the editorial plan.
+
+Treats, squirrels, paperwork, management titles, and “I am a dog” jokes are not
+inherently forbidden. They are simply not a substitute for finding the comedy
+inside this claim.
+
+## Seek grounded surprise
+
+The strongest cards contain at least one thought that makes the reader pause:
+an unexpected causal connection, a generous reinterpretation of an awkward
+behavior, or a precise image that suddenly organizes several observations.
+
+Surprise must remain supported by the supplied claim and evidence. It is not a
+license to invent biography, diagnosis, or dramatic incidents. The goal is a
+fresh angle on grounded material.
+
+If the entire card could have been produced from a generic dog-personality
+article, look again for the specific tension, cooperation, mode, or behavioral
+sequence preserved by this claim.
+
+## Surprise yourself
+
+If, halfway through a story, you already know exactly how all remaining
+sentences will unfold, you may be writing from a familiar structure rather
+than from the claim.
+
+Pause. Return to the remembered idea and editorial plan. Ask what would
+genuinely surprise, delight, or clarify for the reader, then continue from
+that discovery.
+
+## Audit repeated lessons, not only repeated words
+
+Lexical variation can hide conceptual duplication:
+
+- “He prefers predictable routines.”
+- “Stable expectations help him relax.”
+- “Familiar structure gives him security.”
+
+These may be the same lesson. Neighboring claims sometimes share motifs, but
+each selected card still needs a distinct editorial job. When themes overlap,
+differentiate the mechanism, situation, misunderstanding, developmental use,
+or relationship consequence.
+
+Retain semantic memory of completed cards so the deck does not keep teaching
+the same lesson. Set aside their prose so they do not become templates.
+
+Watch for theme leakage. A motif activated by one card—trust, adventure,
+sensitivity, fairness, independence—can remain mentally prominent and spill
+into every card that follows. If a neighboring story already teaches that
+lesson well, let the current story emphasize a different truth unless its own
+evidence genuinely requires the same theme. When it does recur, show a
+different mechanism or consequence.
+
+## Keep characterization consistent and expression diverse
+
+Do not optimize for uniform writing style across cards. Optimize for a stable
+understanding of the dog.
+
+The same dog should appear throughout: the same underlying sensitivities,
+drives, social tendencies, humor, and contradictions. But one card may read
+like observational natural history, another like practical handling advice,
+another like a warm conversation, another like a miniature character sketch,
+and another like a shared domestic comedy.
+
+Uniform prose is a defect. Diverse prose attached to contradictory
+characterization is also a defect. The quality target is consistent
+characterization expressed through varied forms.
+
+## The checker establishes a floor
+
+The deterministic checker detects selected failure signatures without
+publishing its measurements or thresholds. An `accept` verdict does not
+establish that the writing is vivid, insightful, natural, semantically
+distinct, or enjoyable. It proves only that the pass cleared that mechanical
+gate.
+
+Write to the creative standard in this guide. Use the checker as a final
+safety net, not as the target.
+
+## Final independent-card test
+
+Before considering a card complete, ask:
+
+1. Could its prose architecture be exchanged with another card without much
+   changing?
+2. Does it contain a sentence I have used as a general-purpose explanation
+   elsewhere?
+3. Is its headline about this claim, or merely about its audience and
+   astrology density?
+4. Does each voice perform its audience purpose without relying on a stock
+   grammar?
+5. Does the card teach a distinguishable lesson?
+6. Is there at least one concrete, memorable, or genuinely clarifying idea?
+7. Does it sound like this dog?
+8. What will the reader remember an hour later?
+9. Does the humor emerge from this trait?
+
+If the first three answers expose reuse, rewrite before moving on. The
+deterministic checker catches copied language; this test catches the creative
+repetition that copied-language detection cannot see.
+
+===== END FILE: GUIDING LIGHTS.md =====
+
+
+The following full-chart context describes ella and is shared by all six passes for this subject. Use it for coherent characterization while keeping each assignment bounded to its own evidence.
+
+SUBJECT CONTEXT FILES:
+
+===== BEGIN FILE: DOG DETAILS.md =====
+# Dog Details: Ella
+
+- **Display name:** Ella
+- **Subject ID:** ella
+- **Pronouns:** she / her / her
+- **Gender:** female
+- **Breed:** Miniature Schnauzer
+- **Birth date:** 2015-08-26
+- **Birth datetime:** 2015-08-26T12:00:00-06:00
+- **Birth location:** Delta, Colorado
+- **Birth latitude:** 38.7422
+- **Birth longitude:** -108.069
+- **Birth-date precision:** minute
+
+===== END FILE: DOG DETAILS.md =====
+
+===== BEGIN FILE: FULL CHART BASIS.md =====
+# Full Chart Basis: Ella
+
+Read this complete chart basis before writing the whole-dog profile. It includes the selected insights and additional chart material so the profile can recognize the dog's complete pattern.
+
+## Selected Chart Material
+
+### 001: placement_2cd8d9c528a3b907
+
+- **Claim:** Primary Companion Interface operates in nap spot loyalty mode through unspecified pattern.
+- **Type:** angle
+- **Priority weight:** 1.0
+- **Source references:** canonical:object:natal:ella:DSC
+
+### 002: relationship_f9e1abc982cc18e7
+
+- **Claim:** Pack Identity and Adventure Confidence are linked through subsystems run together, creating inseparable dog impulse.
+- **Type:** system_interaction
+- **Priority weight:** 0.995239
+- **Source references:** canonical:relationship:rel:aspect:2f9f94b73ee0d53a
+- **Depends on:** placement_a6fa68acce77e893, placement_a7e3da63bfe6bc8a
+
+### 003: relationship_b48b4f13a7246f6f
+
+- **Claim:** Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Priority weight:** 0.97419
+- **Source references:** canonical:relationship:rel:aspect:591435e28c22cd26
+- **Depends on:** placement_2cd8d9c528a3b907, placement_4e222a95196f3c94
+
+### 004: relationship_69721f3448127380
+
+- **Claim:** Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Priority weight:** 0.960533
+- **Source references:** canonical:relationship:rel:aspect:011b89aca4ae66fb
+- **Depends on:** placement_4bf918541cde26c7, placement_dc164328846fb8ac
+
+### 005: placement_fff70f55ee2c4e03
+
+- **Claim:** Novelty and Surprise Response operates in immediate chase mode through training routine care.
+- **Type:** placement
+- **Priority weight:** 0.954882
+- **Source references:** canonical:object:natal:ella:Uranus
+
+### 006: placement_dc164328846fb8ac
+
+- **Claim:** Safe-Den Baseline operates in pattern breaking oddball mode through unspecified pattern.
+- **Type:** angle
+- **Priority weight:** 0.948261
+- **Source references:** canonical:object:natal:ella:IC
+
+### 007: synthesis_d97913987ccbf648
+
+- **Claim:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.9461
+- **Depends on:** relationship_3734a82f55646d37, relationship_841480d5cfb20ed8, relationship_b3e70bbfe1f0a007
+
+### 008: relationship_841480d5cfb20ed8
+
+- **Claim:** Signals and Scent and Training Rule Structure are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Priority weight:** 0.921827
+- **Source references:** canonical:relationship:rel:aspect:c4bbe4f9ae738081
+- **Depends on:** placement_5e782c78da816ec3, placement_e1eea7e6ab19d40a
+
+### 009: placement_3140a08b036e3427
+
+- **Claim:** Training Development Vector operates in social harmony maintenance mode through social pack network.
+- **Type:** orientation
+- **Priority weight:** 0.918883
+- **Source references:** canonical:object:natal:ella:True_Node
+
+### 010: synthesis_2efcc3c374206c29
+
+- **Claim:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.916001
+- **Depends on:** relationship_08b96edeb0fa98fe, relationship_3734a82f55646d37, relationship_d02272528c2f3708
+
+### 011: synthesis_35efbb0070eb68fc
+
+- **Claim:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.914236
+- **Depends on:** relationship_08b96edeb0fa98fe, relationship_633bff8041349a14, relationship_c54fc6148c6bab37
+
+### 012: synthesis_d351f00df22fcd2d
+
+- **Claim:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.91214
+- **Depends on:** relationship_69721f3448127380, relationship_8ee4327f0fe346a3, relationship_9ce8bb1ace8836da
+
+### 013: synthesis_bee80ae645394990
+
+- **Claim:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.908299
+- **Depends on:** relationship_2cd64e1ae0d05763, relationship_69721f3448127380, relationship_957188921f7e84ba
+
+### 014: synthesis_873a695dbd1a70b5
+
+- **Claim:** Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.907554
+- **Depends on:** relationship_633bff8041349a14, relationship_b48b4f13a7246f6f, relationship_bca803fca9e65d9c
+
+### 015: synthesis_98484f9b7a0e6394
+
+- **Claim:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.907047
+- **Depends on:** relationship_2cd64e1ae0d05763, relationship_69721f3448127380, relationship_b48b4f13a7246f6f
+
+### 016: synthesis_c185b740c926794f
+
+- **Claim:** Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.903131
+- **Depends on:** relationship_b3e70bbfe1f0a007, relationship_b48b4f13a7246f6f, relationship_c54fc6148c6bab37
+
+### 017: relationship_b3e70bbfe1f0a007
+
+- **Claim:** Atmosphere and Dream Permeability and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Priority weight:** 0.89255
+- **Source references:** canonical:relationship:rel:aspect:4f08b4703544c5a3
+- **Depends on:** placement_2cd8d9c528a3b907, placement_c0e36c7de94fae94
+
+### 018: relationship_bca803fca9e65d9c
+
+- **Claim:** Atmosphere and Dream Permeability and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Priority weight:** 0.88614
+- **Source references:** canonical:relationship:rel:aspect:cf1a2f7008c9c2db
+- **Depends on:** placement_4e222a95196f3c94, placement_c0e36c7de94fae94
+
+### 019: relationship_8ee4327f0fe346a3
+
+- **Claim:** Action and Play Drive and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+- **Type:** system_interaction
+- **Priority weight:** 0.875441
+- **Source references:** canonical:relationship:rel:aspect:91b67f6850e84d14
+- **Depends on:** placement_4bf918541cde26c7, placement_9bb77a9481dcd811
+
+### 020: placement_e1eea7e6ab19d40a
+
+- **Claim:** Training Rule Structure operates in obsessive investigation mode through body temperament presence.
+- **Type:** placement
+- **Priority weight:** 0.872906
+- **Source references:** canonical:object:natal:ella:Saturn
+
+### 021: relationship_9ce8bb1ace8836da
+
+- **Claim:** Bonding Preference and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+- **Type:** system_interaction
+- **Priority weight:** 0.863374
+- **Source references:** canonical:relationship:rel:aspect:7bde94fef51ad94c
+- **Depends on:** placement_266252bd4c92f745, placement_4bf918541cde26c7
+
+### 022: relationship_08b96edeb0fa98fe
+
+- **Claim:** Comfort and Regulation and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.
+- **Type:** system_interaction
+- **Priority weight:** 0.863186
+- **Source references:** canonical:relationship:rel:aspect:8e72ef04a72053f0
+- **Depends on:** placement_c680024104669bad, placement_fff70f55ee2c4e03
+
+### 023: relationship_957188921f7e84ba
+
+- **Claim:** Action and Play Drive and Safe-Den Baseline are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Priority weight:** 0.857039
+- **Source references:** canonical:relationship:rel:aspect:a98f2f942f138381
+- **Depends on:** placement_9bb77a9481dcd811, placement_dc164328846fb8ac
+
+### 024: relationship_620cff15d4fd07e2
+
+- **Claim:** Visible Pack Function and Deep Trust Intensity are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **Type:** system_interaction
+- **Priority weight:** 0.85044
+- **Source references:** canonical:relationship:rel:aspect:5f7ab6cf6f380f68
+- **Depends on:** placement_4bf918541cde26c7, placement_b3a9d32a3aa0a321
+
+### 025: synthesis_6397e52027ae7f85
+
+- **Claim:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.847353
+- **Depends on:** relationship_cf1dd8f75cd33a77, relationship_f9e1abc982cc18e7
+
+### 026: relationship_2cd64e1ae0d05763
+
+- **Claim:** Safe-Den Baseline and Bonding Preference are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Priority weight:** 0.843505
+- **Source references:** canonical:relationship:rel:aspect:5d73542bc1350840
+- **Depends on:** placement_266252bd4c92f745, placement_dc164328846fb8ac
+
+### 027: synthesis_a0451dfb9d6b6143
+
+- **Claim:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.841835
+- **Depends on:** relationship_bca803fca9e65d9c, relationship_d02272528c2f3708
+
+### 028: placement_9bb77a9481dcd811
+
+- **Claim:** Action and Play Drive operates in attention seeking display mode through adventure territory.
+- **Type:** placement
+- **Priority weight:** 0.841674
+- **Source references:** canonical:object:natal:ella:Mars
+
+### 029: relationship_7d55305feb3af96a
+
+- **Claim:** Deep Trust Intensity and Action and Play Drive are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **Type:** system_interaction
+- **Priority weight:** 0.841414
+- **Source references:** canonical:relationship:rel:aspect:2a4af3be3eb30e44
+- **Depends on:** placement_9bb77a9481dcd811, placement_b3a9d32a3aa0a321
+
+### 030: relationship_c54fc6148c6bab37
+
+- **Claim:** Primary Companion Interface and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+- **Type:** system_interaction
+- **Priority weight:** 0.838229
+- **Source references:** canonical:relationship:rel:aspect:41f949134410ed2d
+- **Depends on:** placement_2cd8d9c528a3b907, placement_9bb77a9481dcd811
+
+### 031: placement_a6fa68acce77e893
+
+- **Claim:** Pack Identity operates in patrol inspection mode through visible pack role.
+- **Type:** placement
+- **Priority weight:** 0.836355
+- **Source references:** canonical:object:natal:ella:Sun
+
+### 032: placement_c0e36c7de94fae94
+
+- **Claim:** Atmosphere and Dream Permeability operates in emotional sponge dream dog mode through den home base safety.
+- **Type:** placement
+- **Priority weight:** 0.836293
+- **Source references:** canonical:object:natal:ella:Neptune
+
+### 033: placement_4e222a95196f3c94
+
+- **Claim:** Behavioral Doorway operates in obsessive investigation mode through unspecified pattern.
+- **Type:** angle
+- **Priority weight:** 0.836256
+- **Source references:** canonical:object:natal:ella:ASC
+
+### 034: placement_b3a9d32a3aa0a321
+
+- **Claim:** Deep Trust Intensity operates in working dog seriousness mode through smells barks cues local data.
+- **Type:** placement
+- **Priority weight:** 0.835967
+- **Source references:** canonical:object:natal:ella:Pluto
+
+### 035: synthesis_8b5b7e9779b7cb5d
+
+- **Claim:** Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.830845
+- **Depends on:** relationship_841480d5cfb20ed8, relationship_cf1dd8f75cd33a77
+
+### 036: relationship_ba0d3a3bbc73115b
+
+- **Claim:** Deep Trust Intensity and Safe-Den Baseline are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **Type:** system_interaction
+- **Priority weight:** 0.830324
+- **Source references:** canonical:relationship:rel:aspect:8f8fa10ef4f269b0
+- **Depends on:** placement_b3a9d32a3aa0a321, placement_dc164328846fb8ac
+
+### 037: synthesis_8fee2a8a1b04da94
+
+- **Claim:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.825916
+- **Depends on:** relationship_2cd64e1ae0d05763, relationship_9ce8bb1ace8836da
+
+### 038: synthesis_280e33897928aa55
+
+- **Claim:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.824896
+- **Depends on:** relationship_b3e70bbfe1f0a007, relationship_bca803fca9e65d9c
+
+### 039: relationship_633bff8041349a14
+
+- **Claim:** Behavioral Doorway and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+- **Type:** system_interaction
+- **Priority weight:** 0.824209
+- **Source references:** canonical:relationship:rel:aspect:6c72796f6df68cc8
+- **Depends on:** placement_4e222a95196f3c94, placement_9bb77a9481dcd811
+
+### 040: synthesis_0e2890c90bad8bd7
+
+- **Claim:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+- **Priority weight:** 0.823222
+- **Depends on:** relationship_8ee4327f0fe346a3, relationship_957188921f7e84ba
+
+### 041: relationship_cf1dd8f75cd33a77
+
+- **Claim:** Signals and Scent and Training Development Vector are linked through subsystems run together, creating inseparable dog impulse.
+- **Type:** system_interaction
+- **Priority weight:** 0.814724
+- **Source references:** canonical:relationship:rel:aspect:beae6e1093c32595
+- **Depends on:** placement_3140a08b036e3427, placement_5e782c78da816ec3
+
+### 042: placement_a7e3da63bfe6bc8a
+
+- **Claim:** Adventure Confidence operates in patrol inspection mode through visible pack role.
+- **Type:** placement
+- **Priority weight:** 0.811681
+- **Source references:** canonical:object:natal:ella:Jupiter
+
+### 043: placement_266252bd4c92f745
+
+- **Claim:** Bonding Preference operates in attention seeking display mode through visible pack role.
+- **Type:** placement
+- **Priority weight:** 0.806615
+- **Source references:** canonical:object:natal:ella:Venus
+
+### 044: placement_4bf918541cde26c7
+
+- **Claim:** Visible Pack Function operates in attention seeking display mode through unspecified pattern.
+- **Type:** angle
+- **Priority weight:** 0.797986
+- **Source references:** canonical:object:natal:ella:MC
+
+### 045: placement_c680024104669bad
+
+- **Claim:** Comfort and Regulation operates in working dog seriousness mode through smells barks cues local data.
+- **Type:** placement
+- **Priority weight:** 0.794974
+- **Source references:** canonical:object:natal:ella:Moon
+
+### 046: relationship_d02272528c2f3708
+
+- **Claim:** Novelty and Surprise Response and Bonding Preference are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Priority weight:** 0.794403
+- **Source references:** canonical:relationship:rel:aspect:d670913db8804b78
+- **Depends on:** placement_266252bd4c92f745, placement_fff70f55ee2c4e03
+
+### 047: placement_5e782c78da816ec3
+
+- **Claim:** Signals and Scent operates in patrol inspection mode through social pack network.
+- **Type:** placement
+- **Priority weight:** 0.766274
+- **Source references:** canonical:object:natal:ella:Mercury
+
+### 048: relationship_3734a82f55646d37
+
+- **Claim:** Novelty and Surprise Response and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Priority weight:** 0.756291
+- **Source references:** canonical:relationship:rel:aspect:34cf5e8f5ffc5f39
+- **Depends on:** placement_1c796fe1f0db3dcc, placement_fff70f55ee2c4e03
+
+### 049: placement_1c796fe1f0db3dcc
+
+- **Claim:** Unexpected Encounter Trigger operates in information sniffing mode through deep trust vulnerability.
+- **Type:** placement
+- **Priority weight:** 0.754469
+- **Source references:** canonical:object:natal:ella:Vertex
+
+### 050: placement_b934bf06d6e2bca8
+
+- **Claim:** Easy Reward Channel operates in emotional sponge dream dog mode through play zoomies tricks.
+- **Type:** placement
+- **Priority weight:** 0.729815
+- **Source references:** canonical:object:natal:ella:Part_of_Fortune
+
+## Additional Chart Material
+
+### synthesis_variant_9e6fddabc77d28ec
+
+- **Claim:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_ca9ac276de32ff6b
+
+- **Claim:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_9e376c25cb4488fd
+
+- **Claim:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_a033629ad8de69bf
+
+- **Claim:** Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_b84474e1f59ac81d
+
+- **Claim:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_0276ead3f4bc5de8
+
+- **Claim:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_6178a3867b347d7e
+
+- **Claim:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_4ea3f866b628f72f
+
+- **Claim:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_e6778b1711a89daa
+
+- **Claim:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_b3e4cc6b5f75bff0
+
+- **Claim:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_e0cb3a7ee0976479
+
+- **Claim:** Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_feb2be7e804abb70
+
+- **Claim:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_d38acbcf8b207b01
+
+- **Claim:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_df90bf1239f76491
+
+- **Claim:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_0bfe4e6bfcfac1bf
+
+- **Claim:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_b4a736c5b30fe9e3
+
+- **Claim:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_c409374651c94bde
+
+- **Claim:** Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_ea380083e78db3e2
+
+- **Claim:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_a75f91cf4d63b310
+
+- **Claim:** Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_2c4a2e504585c9b3
+
+- **Claim:** Several systems repeatedly participate in unexpected encounter trigger, making unexpected encounter trigger a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_c3ce9e028eaff78f
+
+- **Claim:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_variant_e73532de254db736
+
+- **Claim:** Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_169202430e17e57a
+
+- **Claim:** Several systems repeatedly participate in easy good thing channel, making easy good thing channel a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_ea9c7fb7ea8d6010
+
+- **Claim:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_7cea055510bd2595
+
+- **Claim:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_44aeaa87a6abfcd3
+
+- **Claim:** Bonding Preference, Visible Pack Function and Action and Play Drive repeatedly express attention seeking display mode, making that style a recurring part of the dog's behavior.
+- **Type:** synthesized_theme
+
+### synthesis_1fefc00556465a17
+
+- **Claim:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_97fcff14c56f3ba8
+
+- **Claim:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### relationship_def08524230171ca
+
+- **Claim:** Pack Identity and Training Rule Structure are linked through drive conflict requires outlet, creating behavioral friction.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:9869080b3954403e
+
+### synthesis_033d0f3b66d119a4
+
+- **Claim:** Pack Identity, Adventure Confidence and Signals and Scent repeatedly express patrol inspection mode, making that style a recurring part of the dog's behavior.
+- **Type:** synthesized_theme
+
+### relationship_75e537e9f6d5c6ed
+
+- **Claim:** Training Rule Structure and Training Development Vector are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:d2f485ce3488b0fe
+
+### relationship_2492f633bb757509
+
+- **Claim:** Primary Companion Interface and Pack Identity are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:089c8d1f84519943
+
+### relationship_9805442616eac159
+
+- **Claim:** Primary Companion Interface and Adventure Confidence are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:a5a4cb1f577b3446
+
+### relationship_f3a2ba8a7fc2fd1c
+
+- **Claim:** Training Rule Structure and Adventure Confidence are linked through drive conflict requires outlet, creating behavioral friction.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:214941ebe73b30b3
+
+### synthesis_6ca4d50d7304c46f
+
+- **Claim:** Pack Identity, Adventure Confidence and Bonding Preference converge in visible pack role, concentrating several needs in the same life domain.
+- **Type:** synthesized_theme
+
+### synthesis_76c874a8541b1055
+
+- **Claim:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### synthesis_f321eeed364fc045
+
+- **Claim:** Several systems repeatedly participate in odd behavior needing adjustment, making odd behavior needing adjustment a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### relationship_cefaa2a9f4bf5307
+
+- **Claim:** Pack Identity and Training Development Vector are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:f89962700ef7c273
+
+### synthesis_8a05528ab4f63732
+
+- **Claim:** Several systems repeatedly participate in minor behavioral nudge, making minor behavioral nudge a recurring whole-chart pattern rather than a one-off interaction.
+- **Type:** synthesized_theme
+
+### relationship_4f7959104a4077b7
+
+- **Claim:** Pack Identity and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:c80a8b3695ef3065
+
+### relationship_db9b3b1a56539f94
+
+- **Claim:** Bonding Preference and Action and Play Drive are linked through subsystems run together, creating inseparable dog impulse.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:6117aff1a9e1def5
+
+### relationship_b6a171551da1fbcf
+
+- **Claim:** Adventure Confidence and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:32717f58c3254c04
+
+### relationship_fecc6031f1c58a7d
+
+- **Claim:** Atmosphere and Dream Permeability and Pack Identity are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:2871a0daff1ce7f2
+
+### relationship_9b50c0fb8d251495
+
+- **Claim:** Atmosphere and Dream Permeability and Adventure Confidence are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:89926a68709d62cf
+
+### synthesis_5a3b17624660c1d0
+
+- **Claim:** Training Rule Structure and Behavioral Doorway repeatedly express obsessive investigation mode, making that style a recurring part of the dog's behavior.
+- **Type:** synthesized_theme
+
+### relationship_916f26dfd12db946
+
+- **Claim:** Primary Companion Interface and Deep Trust Intensity are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:7791c60da82b3c3b
+
+### synthesis_70cf8b6b5ac964b9
+
+- **Claim:** Comfort and Regulation and Deep Trust Intensity repeatedly express working dog seriousness mode, making that style a recurring part of the dog's behavior.
+- **Type:** synthesized_theme
+
+### synthesis_a4038894250ae339
+
+- **Claim:** Comfort and Regulation and Deep Trust Intensity converge in smells barks cues local data, concentrating several needs in the same life domain.
+- **Type:** synthesized_theme
+
+### relationship_04dfd80abcf8c846
+
+- **Claim:** Training Rule Structure and Easy Reward Channel are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:086e0307b3ed1acd
+
+### synthesis_63a20eb67f49d273
+
+- **Claim:** Training Development Vector and Signals and Scent converge in social pack network, concentrating several needs in the same life domain.
+- **Type:** synthesized_theme
+
+### synthesis_4cfff43f0d8a7cd1
+
+- **Claim:** Atmosphere and Dream Permeability and Easy Reward Channel repeatedly express emotional sponge dream dog mode, making that style a recurring part of the dog's behavior.
+- **Type:** synthesized_theme
+
+### relationship_c73cb9b51a97d440
+
+- **Claim:** Signals and Scent and Easy Reward Channel are linked through drives face off, creating bond freedom axis tension.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:dcc99c6cb4ff59ab
+
+### relationship_df300bef3bdbded8
+
+- **Claim:** Visible Pack Function and Novelty and Surprise Response are linked through natural behavioral channel, creating easy habit or talent.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:1f0c1c3e453e5a54
+
+### relationship_c8a67f144b81df19
+
+- **Claim:** Bonding Preference and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:14d961852a9609f7
+
+### relationship_a53919483a340e1c
+
+- **Claim:** Comfort and Regulation and Easy Reward Channel are linked through trainable usable channel, creating developable coordination.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:2e923f2c8d47e638
+
+### relationship_d0da9b6718a217e2
+
+- **Claim:** Comfort and Regulation and Unexpected Encounter Trigger are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **Type:** system_interaction
+- **Source references:** canonical:relationship:rel:aspect:b59bce6711da55b1
+
+
+## Complete Projected-Term Registry
+
+- **registry id:** woofmapped_astrology.projected_terms
+- **registry version:** 0.1.0
+- **target ontology:** woofmapped_astrology.v0
+- **materialization:** used_terms_subset
+- **terms:**
+  - **adventure optimism:**
+    - **term type:** operator
+    - **canonical label:** Adventure Optimism
+    - **friendly labels:**
+      - adventure optimism
+    - **short description:** A projected operator describing adventure optimism.
+    - **long description:** This term represents the target-ontology function of adventure optimism. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - encourage
+      - expand_radius
+      - explore
+      - roam
+    - **semantic facets:**
+      - adventure
+      - confidence
+      - curiosity_radius
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** adventure optimism
+      - **possessive phrase:** the subject's adventure optimism
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **atmosphere dream permeability:**
+    - **term type:** operator
+    - **canonical label:** Atmosphere Dream Permeability
+    - **friendly labels:**
+      - atmosphere dream permeability
+    - **short description:** A projected operator describing atmosphere dream permeability.
+    - **long description:** This term represents the target-ontology function of atmosphere dream permeability. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - absorb_atmosphere
+      - blur_signal
+      - dream
+      - drift
+    - **semantic facets:**
+      - dreaming
+      - emotional_atmosphere
+      - scent_memory_haze
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** atmosphere dream permeability
+      - **possessive phrase:** the subject's atmosphere dream permeability
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **attention seeking display mode:**
+    - **term type:** mode
+    - **canonical label:** Attention Seeking Display Mode
+    - **friendly labels:**
+      - attention seeking display mode
+    - **short description:** An operating style characterized by attention seeking display mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through attention seeking display mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - attention
+      - display
+      - mode
+      - seeking
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a attention seeking display mode style
+      - **verb phrase:** operates through attention seeking display mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **awkward system recalibration:**
+    - **term type:** relation
+    - **canonical label:** Awkward System Recalibration
+    - **friendly labels:**
+      - awkward system recalibration
+    - **short description:** A projected relationship in which two subsystems awkward system recalibration.
+    - **long description:** This relation describes how two projected endpoints interact: they awkward system recalibration. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - manage
+      - misfit
+      - recalibrate
+    - **semantic facets:**
+      - odd_behavior_needing_adjustment
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** awkward system recalibration
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **behavioral doorway:**
+    - **term type:** interface
+    - **canonical label:** Behavioral Doorway
+    - **friendly labels:**
+      - behavioral doorway
+    - **short description:** A projected interface describing behavioral doorway.
+    - **long description:** This term represents the target-ontology function of behavioral doorway. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - first_respond
+      - meet_world
+      - present
+    - **semantic facets:**
+      - doorway_behavior
+      - first_impression
+      - visible_temperament
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** behavioral doorway
+      - **possessive phrase:** the subject's behavioral doorway
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **behavioral friction:**
+    - **term type:** theme
+    - **canonical label:** Behavioral Friction
+    - **friendly labels:**
+      - behavioral friction
+    - **short description:** A projected semantic theme concerning behavioral friction.
+    - **long description:** This theme identifies behavioral friction as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - behavioral
+      - friction
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** behavioral friction
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **bond freedom axis tension:**
+    - **term type:** theme
+    - **canonical label:** Bond Freedom Axis Tension
+    - **friendly labels:**
+      - bond freedom axis tension
+    - **short description:** A projected semantic theme concerning bond freedom axis tension.
+    - **long description:** This theme identifies bond freedom axis tension as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - axis
+      - bond
+      - freedom
+      - tension
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** bond freedom axis tension
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **bonding preference:**
+    - **term type:** operator
+    - **canonical label:** Bonding Preference
+    - **friendly labels:**
+      - bonding preference
+    - **short description:** A projected operator describing bonding preference.
+    - **long description:** This term represents the target-ontology function of bonding preference. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - affiliate
+      - bond
+      - enjoy
+      - prefer
+    - **semantic facets:**
+      - affection_style
+      - favorite_humans
+      - toys
+      - treats
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** bonding preference
+      - **possessive phrase:** the subject's bonding preference
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **chase play defense drive:**
+    - **term type:** operator
+    - **canonical label:** Chase Play Defense Drive
+    - **friendly labels:**
+      - chase play defense drive
+    - **short description:** A projected operator describing chase play defense drive.
+    - **long description:** This term represents the target-ontology function of chase play defense drive. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - assert
+      - chase
+      - defend
+      - execute
+      - play_attack
+    - **semantic facets:**
+      - defense
+      - immediate_action
+      - play
+      - pursuit
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** chase play defense drive
+      - **possessive phrase:** the subject's chase play defense drive
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **comfort safety regulation:**
+    - **term type:** operator
+    - **canonical label:** Comfort Safety Regulation
+    - **friendly labels:**
+      - comfort safety regulation
+    - **short description:** A projected operator describing comfort safety regulation.
+    - **long description:** This term represents the target-ontology function of comfort safety regulation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - regulate_body_state
+      - retain_comfort_memory
+      - seek_safety
+    - **semantic facets:**
+      - attachment
+      - body_state
+      - comfort
+      - safety
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** comfort safety regulation
+      - **possessive phrase:** the subject's comfort safety regulation
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **developable coordination:**
+    - **term type:** theme
+    - **canonical label:** Developable Coordination
+    - **friendly labels:**
+      - developable coordination
+    - **short description:** A projected semantic theme concerning developable coordination.
+    - **long description:** This theme identifies developable coordination as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - coordination
+      - developable
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** developable coordination
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 10 visible pack role:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 10 Visible Pack Role
+    - **friendly labels:**
+      - doghouse 10 visible pack role
+    - **short description:** A projected context or life domain centered on doghouse 10 visible pack role.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 10 visible pack role providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 10
+      - doghouse
+      - pack
+      - role
+      - visible
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 10 visible pack role
+      - **location phrase:** in doghouse 10 visible pack role
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 11 social pack network:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 11 Social Pack Network
+    - **friendly labels:**
+      - doghouse 11 social pack network
+    - **short description:** A projected context or life domain centered on doghouse 11 social pack network.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 11 social pack network providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 11
+      - doghouse
+      - network
+      - pack
+      - social
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 11 social pack network
+      - **location phrase:** in doghouse 11 social pack network
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 1 body temperament presence:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 1 Body Temperament Presence
+    - **friendly labels:**
+      - doghouse 1 body temperament presence
+    - **short description:** A projected context or life domain centered on doghouse 1 body temperament presence.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 1 body temperament presence providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 1
+      - body
+      - doghouse
+      - presence
+      - temperament
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 1 body temperament presence
+      - **location phrase:** in doghouse 1 body temperament presence
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 3 smells barks cues local data:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 3 Smells Barks Cues Local Data
+    - **friendly labels:**
+      - doghouse 3 smells barks cues local data
+    - **short description:** A projected context or life domain centered on doghouse 3 smells barks cues local data.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 3 smells barks cues local data providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 3
+      - barks
+      - cues
+      - data
+      - doghouse
+      - local
+      - smells
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 3 smells barks cues local data
+      - **location phrase:** in doghouse 3 smells barks cues local data
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 4 den home base safety:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 4 Den Home Base Safety
+    - **friendly labels:**
+      - doghouse 4 den home base safety
+    - **short description:** A projected context or life domain centered on doghouse 4 den home base safety.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 4 den home base safety providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 4
+      - base
+      - den
+      - doghouse
+      - home
+      - safety
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 4 den home base safety
+      - **location phrase:** in doghouse 4 den home base safety
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 5 play zoomies tricks:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 5 Play Zoomies Tricks
+    - **friendly labels:**
+      - doghouse 5 play zoomies tricks
+    - **short description:** A projected context or life domain centered on doghouse 5 play zoomies tricks.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 5 play zoomies tricks providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 5
+      - doghouse
+      - play
+      - tricks
+      - zoomies
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 5 play zoomies tricks
+      - **location phrase:** in doghouse 5 play zoomies tricks
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 6 training routine care:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 6 Training Routine Care
+    - **friendly labels:**
+      - doghouse 6 training routine care
+    - **short description:** A projected context or life domain centered on doghouse 6 training routine care.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 6 training routine care providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 6
+      - care
+      - doghouse
+      - routine
+      - training
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 6 training routine care
+      - **location phrase:** in doghouse 6 training routine care
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 8 deep trust vulnerability:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 8 Deep Trust Vulnerability
+    - **friendly labels:**
+      - doghouse 8 deep trust vulnerability
+    - **short description:** A projected context or life domain centered on doghouse 8 deep trust vulnerability.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 8 deep trust vulnerability providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 8
+      - deep
+      - doghouse
+      - trust
+      - vulnerability
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 8 deep trust vulnerability
+      - **location phrase:** in doghouse 8 deep trust vulnerability
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 9 adventure territory:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 9 Adventure Territory
+    - **friendly labels:**
+      - doghouse 9 adventure territory
+    - **short description:** A projected context or life domain centered on doghouse 9 adventure territory.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 9 adventure territory providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 9
+      - adventure
+      - doghouse
+      - territory
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 9 adventure territory
+      - **location phrase:** in doghouse 9 adventure territory
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **drive conflict requires outlet:**
+    - **term type:** relation
+    - **canonical label:** Drive Conflict Requires Outlet
+    - **friendly labels:**
+      - drive conflict requires outlet
+    - **short description:** A projected relationship in which two subsystems drive conflict requires outlet.
+    - **long description:** This relation describes how two projected endpoints interact: they drive conflict requires outlet. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - activate
+      - frustrate
+      - require_training_or_outlet
+    - **semantic facets:**
+      - behavioral_friction
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** drive conflict requires outlet
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **drives face off:**
+    - **term type:** relation
+    - **canonical label:** Drives Face Off
+    - **friendly labels:**
+      - drives face off
+    - **short description:** A projected relationship in which two subsystems drives face off.
+    - **long description:** This relation describes how two projected endpoints interact: they drives face off. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - alternate
+      - mirror
+      - polarize
+    - **semantic facets:**
+      - bond_freedom_axis_tension
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** drives face off
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **easy good thing channel:**
+    - **term type:** orientation
+    - **canonical label:** Easy Good Thing Channel
+    - **friendly labels:**
+      - easy good thing channel
+    - **short description:** A projected orientation describing easy good thing channel.
+    - **long description:** This term represents the target-ontology function of easy good thing channel. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - ease
+      - resource
+      - reward
+    - **semantic facets:**
+      - comfort_resource
+      - easy_success
+      - treat_flow
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** easy good thing channel
+      - **possessive phrase:** the subject's easy good thing channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **easy habit or talent:**
+    - **term type:** theme
+    - **canonical label:** Easy Habit Or Talent
+    - **friendly labels:**
+      - easy habit or talent
+    - **short description:** A projected semantic theme concerning easy habit or talent.
+    - **long description:** This theme identifies easy habit or talent as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - easy
+      - habit
+      - or
+      - talent
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** easy habit or talent
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **emotional sponge dream dog mode:**
+    - **term type:** mode
+    - **canonical label:** Emotional Sponge Dream Dog Mode
+    - **friendly labels:**
+      - emotional sponge dream dog mode
+    - **short description:** An operating style characterized by emotional sponge dream dog mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through emotional sponge dream dog mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - dog
+      - dream
+      - emotional
+      - mode
+      - sponge
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a emotional sponge dream dog mode style
+      - **verb phrase:** operates through emotional sponge dream dog mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **immediate chase mode:**
+    - **term type:** mode
+    - **canonical label:** Immediate Chase Mode
+    - **friendly labels:**
+      - immediate chase mode
+    - **short description:** An operating style characterized by immediate chase mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through immediate chase mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - chase
+      - immediate
+      - mode
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a immediate chase mode style
+      - **verb phrase:** operates through immediate chase mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **information sniffing mode:**
+    - **term type:** mode
+    - **canonical label:** Information Sniffing Mode
+    - **friendly labels:**
+      - information sniffing mode
+    - **short description:** An operating style characterized by information sniffing mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through information sniffing mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - information
+      - mode
+      - sniffing
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a information sniffing mode style
+      - **verb phrase:** operates through information sniffing mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **inseparable dog impulse:**
+    - **term type:** theme
+    - **canonical label:** Inseparable Dog Impulse
+    - **friendly labels:**
+      - inseparable dog impulse
+    - **short description:** A projected semantic theme concerning inseparable dog impulse.
+    - **long description:** This theme identifies inseparable dog impulse as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - dog
+      - impulse
+      - inseparable
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** inseparable dog impulse
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **minor behavioral nudge:**
+    - **term type:** theme
+    - **canonical label:** Minor Behavioral Nudge
+    - **friendly labels:**
+      - minor behavioral nudge
+    - **short description:** A projected semantic theme concerning minor behavioral nudge.
+    - **long description:** This theme identifies minor behavioral nudge as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - behavioral
+      - minor
+      - nudge
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** minor behavioral nudge
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **nap spot loyalty mode:**
+    - **term type:** mode
+    - **canonical label:** Nap Spot Loyalty Mode
+    - **friendly labels:**
+      - nap spot loyalty mode
+    - **short description:** An operating style characterized by nap spot loyalty mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through nap spot loyalty mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - loyalty
+      - mode
+      - nap
+      - spot
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a nap spot loyalty mode style
+      - **verb phrase:** operates through nap spot loyalty mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **natural behavioral channel:**
+    - **term type:** relation
+    - **canonical label:** Natural Behavioral Channel
+    - **friendly labels:**
+      - natural behavioral channel
+    - **short description:** A projected relationship in which two subsystems natural behavioral channel.
+    - **long description:** This relation describes how two projected endpoints interact: they natural behavioral channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - flow
+      - habitualize
+      - support
+    - **semantic facets:**
+      - easy_habit_or_talent
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** natural behavioral channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **novelty zoomie response:**
+    - **term type:** operator
+    - **canonical label:** Novelty Zoomie Response
+    - **friendly labels:**
+      - novelty zoomie response
+    - **short description:** A projected operator describing novelty zoomie response.
+    - **long description:** This term represents the target-ontology function of novelty zoomie response. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - disrupt
+      - individuate
+      - startle
+      - zoom
+    - **semantic facets:**
+      - independence
+      - novelty
+      - surprise
+      - weirdness
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** novelty zoomie response
+      - **possessive phrase:** the subject's novelty zoomie response
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **obsessive investigation mode:**
+    - **term type:** mode
+    - **canonical label:** Obsessive Investigation Mode
+    - **friendly labels:**
+      - obsessive investigation mode
+    - **short description:** An operating style characterized by obsessive investigation mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through obsessive investigation mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - investigation
+      - mode
+      - obsessive
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a obsessive investigation mode style
+      - **verb phrase:** operates through obsessive investigation mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **odd behavior needing adjustment:**
+    - **term type:** theme
+    - **canonical label:** Odd Behavior Needing Adjustment
+    - **friendly labels:**
+      - odd behavior needing adjustment
+    - **short description:** A projected semantic theme concerning odd behavior needing adjustment.
+    - **long description:** This theme identifies odd behavior needing adjustment as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - adjustment
+      - behavior
+      - needing
+      - odd
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** odd behavior needing adjustment
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **pack role identity:**
+    - **term type:** operator
+    - **canonical label:** Pack Role Identity
+    - **friendly labels:**
+      - pack role identity
+    - **short description:** A projected operator describing pack role identity.
+    - **long description:** This term represents the target-ontology function of pack role identity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - coordinate_whole_dog
+      - express_pack_role
+      - vitalize
+    - **semantic facets:**
+      - pack_identity
+      - vitality
+      - whole_dog_coordination
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** pack role identity
+      - **possessive phrase:** the subject's pack role identity
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **patrol inspection mode:**
+    - **term type:** mode
+    - **canonical label:** Patrol Inspection Mode
+    - **friendly labels:**
+      - patrol inspection mode
+    - **short description:** An operating style characterized by patrol inspection mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through patrol inspection mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - inspection
+      - mode
+      - patrol
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a patrol inspection mode style
+      - **verb phrase:** operates through patrol inspection mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **pattern breaking oddball mode:**
+    - **term type:** mode
+    - **canonical label:** Pattern Breaking Oddball Mode
+    - **friendly labels:**
+      - pattern breaking oddball mode
+    - **short description:** An operating style characterized by pattern breaking oddball mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through pattern breaking oddball mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - breaking
+      - mode
+      - oddball
+      - pattern
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a pattern breaking oddball mode style
+      - **verb phrase:** operates through pattern breaking oddball mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **primal trust intensity:**
+    - **term type:** operator
+    - **canonical label:** Primal Trust Intensity
+    - **friendly labels:**
+      - primal trust intensity
+    - **short description:** A projected operator describing primal trust intensity.
+    - **long description:** This term represents the target-ontology function of primal trust intensity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - fixate
+      - guard
+      - intensify
+      - transform_trust
+    - **semantic facets:**
+      - deep_trust_fear
+      - hierarchy
+      - primal_drive
+      - territory
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** primal trust intensity
+      - **possessive phrase:** the subject's primal trust intensity
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **primary companion interface:**
+    - **term type:** interface
+    - **canonical label:** Primary Companion Interface
+    - **friendly labels:**
+      - primary companion interface
+    - **short description:** A projected interface describing primary companion interface.
+    - **long description:** This term represents the target-ontology function of primary companion interface. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - bond_with_other
+      - mirror
+      - receive_companion
+    - **semantic facets:**
+      - counterpart_style
+      - favorite_human
+      - one_to_one_bond
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** primary companion interface
+      - **possessive phrase:** the subject's primary companion interface
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **safe den baseline:**
+    - **term type:** interface
+    - **canonical label:** Safe Den Baseline
+    - **friendly labels:**
+      - safe den baseline
+    - **short description:** A projected interface describing safe den baseline.
+    - **long description:** This term represents the target-ontology function of safe den baseline. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - retreat
+      - root
+      - secure_den
+    - **semantic facets:**
+      - base_camp
+      - home_base
+      - private_safety
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** safe den baseline
+      - **possessive phrase:** the subject's safe den baseline
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **scent signal interpretation:**
+    - **term type:** operator
+    - **canonical label:** Scent Signal Interpretation
+    - **friendly labels:**
+      - scent signal interpretation
+    - **short description:** A projected operator describing scent signal interpretation.
+    - **long description:** This term represents the target-ontology function of scent signal interpretation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - decode_cue
+      - interpret_scent
+      - predict_routine
+      - signal
+    - **semantic facets:**
+      - cue_processing
+      - routine_prediction
+      - scent_ecology
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** scent signal interpretation
+      - **possessive phrase:** the subject's scent signal interpretation
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **social harmony maintenance mode:**
+    - **term type:** mode
+    - **canonical label:** Social Harmony Maintenance Mode
+    - **friendly labels:**
+      - social harmony maintenance mode
+    - **short description:** An operating style characterized by social harmony maintenance mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through social harmony maintenance mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - harmony
+      - maintenance
+      - mode
+      - social
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a social harmony maintenance mode style
+      - **verb phrase:** operates through social harmony maintenance mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **subsystems run together:**
+    - **term type:** relation
+    - **canonical label:** Subsystems Run Together
+    - **friendly labels:**
+      - subsystems run together
+    - **short description:** A projected relationship in which two subsystems subsystems run together.
+    - **long description:** This relation describes how two projected endpoints interact: they subsystems run together. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - amplify
+      - co_activate
+      - fuse_impulses
+    - **semantic facets:**
+      - inseparable_dog_impulse
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** subsystems run together
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **subtle adjacent nudge:**
+    - **term type:** relation
+    - **canonical label:** Subtle Adjacent Nudge
+    - **friendly labels:**
+      - subtle adjacent nudge
+    - **short description:** A projected relationship in which two subsystems subtle adjacent nudge.
+    - **long description:** This relation describes how two projected endpoints interact: they subtle adjacent nudge. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - incrementally_coordinate
+      - irritate_lightly
+      - nudge
+    - **semantic facets:**
+      - minor_behavioral_nudge
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** subtle adjacent nudge
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **trainable usable channel:**
+    - **term type:** relation
+    - **canonical label:** Trainable Usable Channel
+    - **friendly labels:**
+      - trainable usable channel
+    - **short description:** A projected relationship in which two subsystems trainable usable channel.
+    - **long description:** This relation describes how two projected endpoints interact: they trainable usable channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - coordinate
+      - enable
+      - practice
+    - **semantic facets:**
+      - developable_coordination
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** trainable usable channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **training development vector:**
+    - **term type:** orientation
+    - **canonical label:** Training Development Vector
+    - **friendly labels:**
+      - training development vector
+    - **short description:** A projected orientation describing training development vector.
+    - **long description:** This term represents the target-ontology function of training development vector. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - develop
+      - learn_toward
+      - practice
+    - **semantic facets:**
+      - growth_direction
+      - training_path
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** training development vector
+      - **possessive phrase:** the subject's training development vector
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **training rule structure:**
+    - **term type:** operator
+    - **canonical label:** Training Rule Structure
+    - **friendly labels:**
+      - training rule structure
+    - **short description:** A projected operator describing training rule structure.
+    - **long description:** This term represents the target-ontology function of training rule structure. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - inhibit_impulse
+      - limit
+      - routinize
+      - sequence
+      - train
+    - **semantic facets:**
+      - impulse_control
+      - routine
+      - rules
+      - training
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** training rule structure
+      - **possessive phrase:** the subject's training rule structure
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **unexpected encounter trigger:**
+    - **term type:** interface
+    - **canonical label:** Unexpected Encounter Trigger
+    - **friendly labels:**
+      - unexpected encounter trigger
+    - **short description:** A projected interface describing unexpected encounter trigger.
+    - **long description:** This term represents the target-ontology function of unexpected encounter trigger. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - encounter
+      - externalize
+      - trigger
+    - **semantic facets:**
+      - externally_evoked_behavior
+      - surprise_meeting
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** unexpected encounter trigger
+      - **possessive phrase:** the subject's unexpected encounter trigger
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **visible pack function:**
+    - **term type:** interface
+    - **canonical label:** Visible Pack Function
+    - **friendly labels:**
+      - visible pack function
+    - **short description:** A projected interface describing visible pack function.
+    - **long description:** This term represents the target-ontology function of visible pack function. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - be_known_for
+      - direct_function
+      - perform_pack_role
+    - **semantic facets:**
+      - couch_supervision
+      - greeter_role
+      - guardian_role
+      - helper_role
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** visible pack function
+      - **possessive phrase:** the subject's visible pack function
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **working dog seriousness mode:**
+    - **term type:** mode
+    - **canonical label:** Working Dog Seriousness Mode
+    - **friendly labels:**
+      - working dog seriousness mode
+    - **short description:** An operating style characterized by working dog seriousness mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through working dog seriousness mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - dog
+      - mode
+      - seriousness
+      - working
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a working dog seriousness mode style
+      - **verb phrase:** operates through working dog seriousness mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+
+===== END FILE: FULL CHART BASIS.md =====
+
+===== BEGIN FILE: WRITE WHOLE DOG PROFILE.md =====
+# Whole-Dog Authoring Profile: Ella
+
+Complete this profile first, using `DOG DETAILS.md` and the entire `FULL CHART BASIS.md`. This becomes the shared characterization for every story in the workspace.
+
+### Integrated Portrait
+
+<!-- BEGIN FIELD: profile.integrated_portrait -->
+__WRITE__
+<!-- END FIELD: profile.integrated_portrait -->
+
+### Core Temperament
+
+<!-- BEGIN FIELD: profile.core_temperament -->
+__WRITE__
+<!-- END FIELD: profile.core_temperament -->
+
+### Emotional Life and Regulation
+
+<!-- BEGIN FIELD: profile.emotional_regulation -->
+__WRITE__
+<!-- END FIELD: profile.emotional_regulation -->
+
+### Learning and Motivation
+
+<!-- BEGIN FIELD: profile.learning_motivation -->
+__WRITE__
+<!-- END FIELD: profile.learning_motivation -->
+
+### Relationships and Trust
+
+<!-- BEGIN FIELD: profile.relationships_trust -->
+__WRITE__
+<!-- END FIELD: profile.relationships_trust -->
+
+### Play, Adventure, and Daily Rhythm
+
+<!-- BEGIN FIELD: profile.play_adventure_rhythm -->
+__WRITE__
+<!-- END FIELD: profile.play_adventure_rhythm -->
+
+### Tensions and Counterweights
+
+<!-- BEGIN FIELD: profile.tensions_counterweights -->
+__WRITE__
+<!-- END FIELD: profile.tensions_counterweights -->
+
+### Strengths and Growth Edges
+
+<!-- BEGIN FIELD: profile.strengths_growth -->
+__WRITE__
+<!-- END FIELD: profile.strengths_growth -->
+
+### Voice, Warmth, Humor, and Imagery
+
+<!-- BEGIN FIELD: profile.voice_humor_imagery -->
+__WRITE__
+<!-- END FIELD: profile.voice_humor_imagery -->
+
+### Factual Cautions
+
+<!-- BEGIN FIELD: profile.factual_cautions -->
+__WRITE__
+<!-- END FIELD: profile.factual_cautions -->
+
+===== END FILE: WRITE WHOLE DOG PROFILE.md =====
+
+
+Author pass 6 of 6 for ella. Complete every marked writing field in every supplied writable file. Preserve evidence boundaries and follow the requested voice and astrology-density distinctions. The structured response is transport only; experience the work as the set of individual writing assignments described by the files.
+
+PASS-SPECIFIC ASSIGNMENT FILES:
+
+===== BEGIN FILE: ASSIGN THEME GROUPS.md =====
+# Independent Dynamic Chapter Plans
+
+Create two independent chapter systems: one for Interdogpendence (aspects and interacting chart forces), and one for Takeaways (synthetic claims and higher-order conclusions about the dog).
+
+For each section, choose three to five semantically crisp chapters. Every chapter must contain at least two claims, and the largest may not contain more than twice as many claims as the smallest. Semantic coherence decides among plans that satisfy those broad boundaries.
+
+The two organizational systems must be foundationally different. No title may appear in both sections. Do not create synonymous, lightly reworded, token-reordered, or structurally mirrored taxonomies. A reader should immediately understand that Interdogpendence explains interacting forces while Takeaways presents integrated conclusions.
+
+Each registry is a JSON array. Every entry must contain exactly: `id` (stable lowercase snake_case within its section), `title` (full editorial title), `short_title` (best compact navigation label), `emoji` (one relevant visual marker), and `order` (consecutive integer starting at 1). Assign each story using one ID from its own registry.
+
+## Interdogpendence — Relationship Dynamics
+
+### Interdogpendence — Relationship Dynamics Registry JSON
+
+<!-- BEGIN FIELD: theme_group_registry.interdogpendence -->
+__WRITE__
+<!-- END FIELD: theme_group_registry.interdogpendence -->
+
+### Story 002
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the conjunction.
+
+- Sun in Virgo forms a conjunction to Jupiter in Virgo with an orb of 0.1256432002242036°.
+- Sun describes identity, vitality, and the way the dog most naturally feels like themself. Jupiter describes confidence, exploration, growth, and appetite for possibility. The two functions are fused and tend to activate together.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.2 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.2 -->
+
+### Story 003
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the opposition.
+
+- ASC in Scorpio forms an exact opposition to DSC in Taurus with an orb of 0.0°.
+- ASC describes the dog's first response to situations and visible way of meeting the world. DSC describes one-to-one bonds and what the dog seeks or encounters in a close counterpart. The two functions pull across a polarity and ask for an active balance rather than a permanent winner.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.3 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.3 -->
+
+### Story 004
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the opposition.
+
+- IC in Aquarius forms an opposition to MC in Leo with an orb of 2.842170943040401e-14°.
+- IC describes private safety, home base, roots, and innermost comfort. MC describes visible role, pack contribution, and outward development. The two functions pull across a polarity and ask for an active balance rather than a permanent winner.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.4 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.4 -->
+
+### Story 008
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the sextile.
+
+- Mercury in Virgo forms a sextile to Saturn in Scorpio with an orb of 0.09626173832765517°.
+- Mercury describes attention, learning, signaling, and information processing. Saturn describes limits, rules, patience, responsibility, and durable structure. The two functions offer a cooperative possibility that becomes more useful through practice.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.8 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.8 -->
+
+### Story 017
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the sextile.
+
+- Neptune in Pisces forms a sextile to DSC in Taurus with an orb of 1.1309322279449248°.
+- Neptune describes sensitivity, imagination, atmosphere, and porous boundaries. DSC describes one-to-one bonds and what the dog seeks or encounters in a close counterpart. The two functions offer a cooperative possibility that becomes more useful through practice.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.17 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.17 -->
+
+### Story 018
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the trine.
+
+- Neptune in Pisces forms a trine to ASC in Scorpio with an orb of 1.1309322279449248°.
+- Neptune describes sensitivity, imagination, atmosphere, and porous boundaries. ASC describes the dog's first response to situations and visible way of meeting the world. The two functions reinforce one another easily and can become a strong natural habit.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.18 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.18 -->
+
+### Story 019
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the conjunction.
+
+- Mars in Leo forms a conjunction to MC in Leo with an orb of 2.698695305425474°.
+- Mars describes action, pursuit, play drive, assertion, and frustration. MC describes visible role, pack contribution, and outward development. The two functions are fused and tend to activate together.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.19 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.19 -->
+
+### Story 021
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the conjunction.
+
+- Venus in Leo forms a conjunction to MC in Leo with an orb of 2.496044752404316°.
+- Venus describes bonding style, pleasure, affection, and social preference. MC describes visible role, pack contribution, and outward development. The two functions are fused and tend to activate together.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.21 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.21 -->
+
+### Story 022
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the square.
+
+- Moon in Capricorn forms a square to Uranus in Aries with an orb of 1.5144835214523482°.
+- Moon describes emotional regulation, instinctive comfort, and private needs. Uranus describes novelty, independence, disruption, and unconventional response. The two functions create friction that demands adjustment, effort, and usable action.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.22 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.22 -->
+
+### Story 023
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the opposition.
+
+- Mars in Leo forms an opposition to IC in Aquarius with an orb of 2.6986953054255025°.
+- Mars describes action, pursuit, play drive, assertion, and frustration. IC describes private safety, home base, roots, and innermost comfort. The two functions pull across a polarity and ask for an active balance rather than a permanent winner.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.23 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.23 -->
+
+### Story 024
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the quincunx.
+
+- MC in Leo forms a quincunx to Pluto in Capricorn with an orb of 0.9482621058759548°.
+- MC describes visible role, pack contribution, and outward development. Pluto describes intensity, deep trust, control, and transformative pressure. The two functions do not naturally speak the same language and require repeated recalibration.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.24 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.24 -->
+
+### Story 026
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the opposition.
+
+- IC in Aquarius forms an opposition to Venus in Leo with an orb of 2.4960447524042877°.
+- IC describes private safety, home base, roots, and innermost comfort. Venus describes bonding style, pleasure, affection, and social preference. The two functions pull across a polarity and ask for an active balance rather than a permanent winner.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.26 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.26 -->
+
+### Story 029
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the quincunx.
+
+- Pluto in Capricorn forms a quincunx to Mars in Leo with an orb of 1.7504331995495193°.
+- Pluto describes intensity, deep trust, control, and transformative pressure. Mars describes action, pursuit, play drive, assertion, and frustration. The two functions do not naturally speak the same language and require repeated recalibration.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.29 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.29 -->
+
+### Story 030
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the square.
+
+- DSC in Taurus forms a square to Mars in Leo with an orb of 4.01234238275083°.
+- DSC describes one-to-one bonds and what the dog seeks or encounters in a close counterpart. Mars describes action, pursuit, play drive, assertion, and frustration. The two functions create friction that demands adjustment, effort, and usable action.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.30 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.30 -->
+
+### Story 036
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the semisextile.
+
+- Pluto in Capricorn forms a semisextile to IC in Aquarius with an orb of 0.9482621058759833°.
+- Pluto describes intensity, deep trust, control, and transformative pressure. IC describes private safety, home base, roots, and innermost comfort. The two functions create a subtle nudge toward awareness and small adjustments.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.36 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.36 -->
+
+### Story 039
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the square.
+
+- ASC in Scorpio forms a square to Mars in Leo with an orb of 4.012342382750802°.
+- ASC describes the dog's first response to situations and visible way of meeting the world. Mars describes action, pursuit, play drive, assertion, and frustration. The two functions create friction that demands adjustment, effort, and usable action.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.39 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.39 -->
+
+### Story 041
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the conjunction.
+
+- Mercury in Virgo forms a conjunction to North Node in Libra with an orb of 2.4066419746719703°.
+- Mercury describes attention, learning, signaling, and information processing. North Node describes a developmental direction that becomes more natural through experience. The two functions are fused and tend to activate together.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.41 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.41 -->
+
+### Story 046
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the trine.
+
+- Uranus in Aries forms a trine to Venus in Leo with an orb of 3.4891770998328298°.
+- Uranus describes novelty, independence, disruption, and unconventional response. Venus describes bonding style, pleasure, affection, and social preference. The two functions reinforce one another easily and can become a strong natural habit.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.46 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.46 -->
+
+### Story 048
+
+Explore how the two functions named below interact in this dog. Show the recognizable behavioral tension, cooperation, or adjustment created by the sextile.
+
+- Uranus in Aries forms a sextile to Vertex in Gemini with an orb of 0.6262651994982207°.
+- Uranus describes novelty, independence, disruption, and unconventional response. The two functions offer a cooperative possibility that becomes more useful through practice.
+
+Keep both endpoints present. This story is about their interaction, not a generic description of either endpoint alone.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.interdogpendence.48 -->
+__WRITE__
+<!-- END FIELD: theme_group.interdogpendence.48 -->
+
+## Takeaways — Integrated Conclusions
+
+### Takeaways — Integrated Conclusions Registry JSON
+
+<!-- BEGIN FIELD: theme_group_registry.takeaways -->
+__WRITE__
+<!-- END FIELD: theme_group_registry.takeaways -->
+
+### Story 007
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Novelty and Surprise Response and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- Signals and Scent and Training Rule Structure are linked through trainable usable channel, creating developable coordination.
+- Atmosphere and Dream Permeability and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.7 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.7 -->
+
+### Story 010
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Comfort and Regulation and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.
+- Novelty and Surprise Response and Unexpected Encounter Trigger are linked through trainable usable channel, creating developable coordination.
+- Novelty and Surprise Response and Bonding Preference are linked through natural behavioral channel, creating easy habit or talent.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.10 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.10 -->
+
+### Story 011
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Comfort and Regulation and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.
+- Behavioral Doorway and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+- Primary Companion Interface and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.11 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.11 -->
+
+### Story 012
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- Action and Play Drive and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+- Bonding Preference and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.12 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.12 -->
+
+### Story 013
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Safe-Den Baseline and Bonding Preference are linked through drives face off, creating bond freedom axis tension.
+- Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- Action and Play Drive and Safe-Den Baseline are linked through drives face off, creating bond freedom axis tension.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.13 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.13 -->
+
+### Story 014
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Behavioral Doorway and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+- Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+- Atmosphere and Dream Permeability and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.14 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.14 -->
+
+### Story 015
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Safe-Den Baseline and Bonding Preference are linked through drives face off, creating bond freedom axis tension.
+- Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.15 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.15 -->
+
+### Story 016
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Atmosphere and Dream Permeability and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+- Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+- Primary Companion Interface and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.16 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.16 -->
+
+### Story 025
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Signals and Scent and Training Development Vector are linked through subsystems run together, creating inseparable dog impulse.
+- Pack Identity and Adventure Confidence are linked through subsystems run together, creating inseparable dog impulse.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.25 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.25 -->
+
+### Story 027
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Atmosphere and Dream Permeability and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+- Novelty and Surprise Response and Bonding Preference are linked through natural behavioral channel, creating easy habit or talent.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.27 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.27 -->
+
+### Story 035
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Signals and Scent and Training Rule Structure are linked through trainable usable channel, creating developable coordination.
+- Signals and Scent and Training Development Vector are linked through subsystems run together, creating inseparable dog impulse.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.35 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.35 -->
+
+### Story 037
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Safe-Den Baseline and Bonding Preference are linked through drives face off, creating bond freedom axis tension.
+- Bonding Preference and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.37 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.37 -->
+
+### Story 038
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Atmosphere and Dream Permeability and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+- Atmosphere and Dream Permeability and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.38 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.38 -->
+
+### Story 040
+
+Develop the repeated or compound pattern supported by the facts below. Explain what becomes visible only when those pieces are considered together.
+
+- Action and Play Drive and Visible Pack Function are linked through subsystems run together, creating inseparable dog impulse.
+- Action and Play Drive and Safe-Den Baseline are linked through drives face off, creating bond freedom axis tension.
+
+Preserve the synthesis: do not flatten it into a restatement of only one supporting fact.
+
+### Chapter ID
+
+<!-- BEGIN FIELD: theme_group.takeaways.40 -->
+__WRITE__
+<!-- END FIELD: theme_group.takeaways.40 -->
+
+===== END FILE: ASSIGN THEME GROUPS.md =====
+
+===== BEGIN FILE: START HERE.md =====
+# Start Here — Pass 6 of 6
+
+## Assignment
+
+This is the summary pass. Complete the four supplied Summary directories through their distinct lenses: who the dog is, how the dog lives, what the dog needs, and how the dog grows. Give each summary its own central argument, examples, advice, and language. Also complete `ASSIGN THEME GROUPS.md`, which creates independent structured chapter plans for Interdogpendence aspects and Takeaways syntheses.
+
+## Read first
+
+Read `GUIDING LIGHTS.md` as the creative doctrine for this pass. Its independent-card standard is part of the assignment, not optional inspiration.
+
+For this summary pass, also read `SUMMARY GOLD REFERENCE.md`. Transfer its quality principles, never its Kevin-specific content or language. Complete `WRITE SUMMARY THESIS PLAN.md` before drafting any summary.
+
+## Working sequence
+
+Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read `FULL CHART BASIS.md` in full and complete `WRITE WHOLE DOG PROFILE.md`. Study `SUMMARY GOLD REFERENCE.md` for craft only, then complete `WRITE SUMMARY THESIS PLAN.md`. Only after the four arguments are distinct should you write all four summaries from the complete chart understanding of Ella.
+
+## Mechanical acceptance requirements
+
+Your completed pass will be checked automatically before it is accepted.
+
+- No reader-facing field may be copied exactly between cards.
+- Reused language, recurring prose frames, metric-gaming artifacts, and cosmetic word insertion do not satisfy editorial independence.
+
+These are rejection boundaries, not the creative quality standard. An `accept` verdict proves that detectable copying was avoided; it does not prove that the prose is insightful, natural, memorable, or sufficiently varied. Use `GUIDING LIGHTS.md` as the higher standard.
+
+## Required pre-delivery check
+
+After completing every field, run:
+
+```text
+python lint_authoring_pass.py . --output authoring-pass-acceptance.json
+```
+
+A report status of `reject` means the pass is not complete. Rewrite the identified cross-card reuse and run the checker again until its status is `accept`. Include `authoring-pass-acceptance.json` in the returned ZIP.
+
+## If the gate rejects the pass
+
+Treat a rejection as an editorial signal, not as a puzzle about the checker. The most reliable response is to return to the affected cards' plans, recover what makes each insight memorable, and rewrite the prose in a natural voice with genuinely distinct movement and character. Surface-level interventions—filler, recurring catchphrases, bracketed insertions, or cosmetic paraphrase—do not create editorial independence. Writing that sincerely follows `GUIDING LIGHTS.md` is the best route to a successful pass.
+
+Preserve every field marker and replace every unfinished field. Return this complete pass directory as a ZIP archive.
+
+===== END FILE: START HERE.md =====
+
+===== BEGIN FILE: summaries/Summary 01 -- Who the Dog Is/SUMMARY BASIS.md =====
+# Summary Basis
+
+Use `WRITE WHOLE DOG PROFILE.md` and `FULL CHART BASIS.md` for this full-chart summary.
+
+===== END FILE: summaries/Summary 01 -- Who the Dog Is/SUMMARY BASIS.md =====
+
+===== BEGIN FILE: summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md =====
+# Summary Writing File
+
+Replace every `__WRITE__` value. Preserve all field markers exactly.
+Write no reader-facing prose outside marked fields.
+
+Write this evidence-bounded insight about the dog described in `WRITE WHOLE DOG PROFILE.md`.
+
+Let the previous page leave your desk. Use the shared guidance to plan this claim as an independent miniature essay before filling its renderings.
+
+Treat No, Light, and Full Astrology as progressive depths of this one insight. No Astrology establishes what the insight means in lived behavior; Light reveals its principal astrological basis; Full exposes the complete relevant chart support. Their prose may differ, but their center of meaning must remain visibly identical.
+
+## Editorial Plan
+
+### Center of Gravity
+
+<!-- BEGIN FIELD: plan.center_of_gravity -->
+__WRITE__
+<!-- END FIELD: plan.center_of_gravity -->
+
+### Remembered Idea — What Should Remain an Hour Later?
+
+<!-- BEGIN FIELD: plan.memorable_takeaway -->
+__WRITE__
+<!-- END FIELD: plan.memorable_takeaway -->
+
+### Recognizable Behavior
+
+<!-- BEGIN FIELD: plan.recognizable_behavior -->
+__WRITE__
+<!-- END FIELD: plan.recognizable_behavior -->
+
+### Likely Misunderstanding
+
+<!-- BEGIN FIELD: plan.likely_misunderstanding -->
+__WRITE__
+<!-- END FIELD: plan.likely_misunderstanding -->
+
+### Grounded Surprise
+
+<!-- BEGIN FIELD: plan.grounded_surprise -->
+__WRITE__
+<!-- END FIELD: plan.grounded_surprise -->
+
+### Distinct From Neighboring Stories
+
+<!-- BEGIN FIELD: plan.neighbor_distinction -->
+__WRITE__
+<!-- END FIELD: plan.neighbor_distinction -->
+
+### Chosen Writing Form
+
+<!-- BEGIN FIELD: plan.writing_form -->
+__WRITE__
+<!-- END FIELD: plan.writing_form -->
+
+### Comic Premise — What Is Funny About This Trait?
+
+<!-- BEGIN FIELD: plan.comic_premise -->
+__WRITE__
+<!-- END FIELD: plan.comic_premise -->
+
+### Chosen Creative Approach
+
+<!-- BEGIN FIELD: plan.creative_approach -->
+__WRITE__
+<!-- END FIELD: plan.creative_approach -->
+
+## No Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: no_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: no_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: no_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: no_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: no_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: no_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.body.hybrid -->
+
+## Light Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: light_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: light_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: light_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: light_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: light_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: light_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.body.hybrid -->
+
+## Full Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: full_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: full_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: full_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: full_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: full_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: full_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.body.hybrid -->
+
+## Practical Guidance
+
+### Do 1
+
+<!-- BEGIN FIELD: dos.0 -->
+__WRITE__
+<!-- END FIELD: dos.0 -->
+
+### Do 2
+
+<!-- BEGIN FIELD: dos.1 -->
+__WRITE__
+<!-- END FIELD: dos.1 -->
+
+### Do 3
+
+<!-- BEGIN FIELD: dos.2 -->
+__WRITE__
+<!-- END FIELD: dos.2 -->
+
+### Don't 1
+
+<!-- BEGIN FIELD: donts.0 -->
+__WRITE__
+<!-- END FIELD: donts.0 -->
+
+### Don't 2
+
+<!-- BEGIN FIELD: donts.1 -->
+__WRITE__
+<!-- END FIELD: donts.1 -->
+
+### Don't 3
+
+<!-- BEGIN FIELD: donts.2 -->
+__WRITE__
+<!-- END FIELD: donts.2 -->
+
+## Humor
+
+### Funny Dog Quote 1
+
+<!-- BEGIN FIELD: funny_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: funny_dog_quotes.0 -->
+
+### Imperative Dog Quote 1
+
+<!-- BEGIN FIELD: imperative_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: imperative_dog_quotes.0 -->
+
+### Canine Joke 1
+
+<!-- BEGIN FIELD: applicable_canine_jokes.0 -->
+__WRITE__
+<!-- END FIELD: applicable_canine_jokes.0 -->
+
+===== END FILE: summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md =====
+
+===== BEGIN FILE: summaries/Summary 02 -- How the Dog Lives/SUMMARY BASIS.md =====
+# Summary Basis
+
+Use `WRITE WHOLE DOG PROFILE.md` and `FULL CHART BASIS.md` for this full-chart summary.
+
+===== END FILE: summaries/Summary 02 -- How the Dog Lives/SUMMARY BASIS.md =====
+
+===== BEGIN FILE: summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md =====
+# Summary Writing File
+
+Replace every `__WRITE__` value. Preserve all field markers exactly.
+Write no reader-facing prose outside marked fields.
+
+Write this evidence-bounded insight about the dog described in `WRITE WHOLE DOG PROFILE.md`.
+
+Let the previous page leave your desk. Use the shared guidance to plan this claim as an independent miniature essay before filling its renderings.
+
+Treat No, Light, and Full Astrology as progressive depths of this one insight. No Astrology establishes what the insight means in lived behavior; Light reveals its principal astrological basis; Full exposes the complete relevant chart support. Their prose may differ, but their center of meaning must remain visibly identical.
+
+## Editorial Plan
+
+### Center of Gravity
+
+<!-- BEGIN FIELD: plan.center_of_gravity -->
+__WRITE__
+<!-- END FIELD: plan.center_of_gravity -->
+
+### Remembered Idea — What Should Remain an Hour Later?
+
+<!-- BEGIN FIELD: plan.memorable_takeaway -->
+__WRITE__
+<!-- END FIELD: plan.memorable_takeaway -->
+
+### Recognizable Behavior
+
+<!-- BEGIN FIELD: plan.recognizable_behavior -->
+__WRITE__
+<!-- END FIELD: plan.recognizable_behavior -->
+
+### Likely Misunderstanding
+
+<!-- BEGIN FIELD: plan.likely_misunderstanding -->
+__WRITE__
+<!-- END FIELD: plan.likely_misunderstanding -->
+
+### Grounded Surprise
+
+<!-- BEGIN FIELD: plan.grounded_surprise -->
+__WRITE__
+<!-- END FIELD: plan.grounded_surprise -->
+
+### Distinct From Neighboring Stories
+
+<!-- BEGIN FIELD: plan.neighbor_distinction -->
+__WRITE__
+<!-- END FIELD: plan.neighbor_distinction -->
+
+### Chosen Writing Form
+
+<!-- BEGIN FIELD: plan.writing_form -->
+__WRITE__
+<!-- END FIELD: plan.writing_form -->
+
+### Comic Premise — What Is Funny About This Trait?
+
+<!-- BEGIN FIELD: plan.comic_premise -->
+__WRITE__
+<!-- END FIELD: plan.comic_premise -->
+
+### Chosen Creative Approach
+
+<!-- BEGIN FIELD: plan.creative_approach -->
+__WRITE__
+<!-- END FIELD: plan.creative_approach -->
+
+## No Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: no_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: no_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: no_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: no_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: no_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: no_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.body.hybrid -->
+
+## Light Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: light_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: light_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: light_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: light_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: light_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: light_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.body.hybrid -->
+
+## Full Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: full_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: full_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: full_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: full_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: full_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: full_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.body.hybrid -->
+
+## Practical Guidance
+
+### Do 1
+
+<!-- BEGIN FIELD: dos.0 -->
+__WRITE__
+<!-- END FIELD: dos.0 -->
+
+### Do 2
+
+<!-- BEGIN FIELD: dos.1 -->
+__WRITE__
+<!-- END FIELD: dos.1 -->
+
+### Do 3
+
+<!-- BEGIN FIELD: dos.2 -->
+__WRITE__
+<!-- END FIELD: dos.2 -->
+
+### Don't 1
+
+<!-- BEGIN FIELD: donts.0 -->
+__WRITE__
+<!-- END FIELD: donts.0 -->
+
+### Don't 2
+
+<!-- BEGIN FIELD: donts.1 -->
+__WRITE__
+<!-- END FIELD: donts.1 -->
+
+### Don't 3
+
+<!-- BEGIN FIELD: donts.2 -->
+__WRITE__
+<!-- END FIELD: donts.2 -->
+
+## Humor
+
+### Funny Dog Quote 1
+
+<!-- BEGIN FIELD: funny_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: funny_dog_quotes.0 -->
+
+### Imperative Dog Quote 1
+
+<!-- BEGIN FIELD: imperative_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: imperative_dog_quotes.0 -->
+
+### Canine Joke 1
+
+<!-- BEGIN FIELD: applicable_canine_jokes.0 -->
+__WRITE__
+<!-- END FIELD: applicable_canine_jokes.0 -->
+
+===== END FILE: summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md =====
+
+===== BEGIN FILE: summaries/Summary 03 -- What the Dog Needs/SUMMARY BASIS.md =====
+# Summary Basis
+
+Use `WRITE WHOLE DOG PROFILE.md` and `FULL CHART BASIS.md` for this full-chart summary.
+
+===== END FILE: summaries/Summary 03 -- What the Dog Needs/SUMMARY BASIS.md =====
+
+===== BEGIN FILE: summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md =====
+# Summary Writing File
+
+Replace every `__WRITE__` value. Preserve all field markers exactly.
+Write no reader-facing prose outside marked fields.
+
+Write this evidence-bounded insight about the dog described in `WRITE WHOLE DOG PROFILE.md`.
+
+Let the previous page leave your desk. Use the shared guidance to plan this claim as an independent miniature essay before filling its renderings.
+
+Treat No, Light, and Full Astrology as progressive depths of this one insight. No Astrology establishes what the insight means in lived behavior; Light reveals its principal astrological basis; Full exposes the complete relevant chart support. Their prose may differ, but their center of meaning must remain visibly identical.
+
+## Editorial Plan
+
+### Center of Gravity
+
+<!-- BEGIN FIELD: plan.center_of_gravity -->
+__WRITE__
+<!-- END FIELD: plan.center_of_gravity -->
+
+### Remembered Idea — What Should Remain an Hour Later?
+
+<!-- BEGIN FIELD: plan.memorable_takeaway -->
+__WRITE__
+<!-- END FIELD: plan.memorable_takeaway -->
+
+### Recognizable Behavior
+
+<!-- BEGIN FIELD: plan.recognizable_behavior -->
+__WRITE__
+<!-- END FIELD: plan.recognizable_behavior -->
+
+### Likely Misunderstanding
+
+<!-- BEGIN FIELD: plan.likely_misunderstanding -->
+__WRITE__
+<!-- END FIELD: plan.likely_misunderstanding -->
+
+### Grounded Surprise
+
+<!-- BEGIN FIELD: plan.grounded_surprise -->
+__WRITE__
+<!-- END FIELD: plan.grounded_surprise -->
+
+### Distinct From Neighboring Stories
+
+<!-- BEGIN FIELD: plan.neighbor_distinction -->
+__WRITE__
+<!-- END FIELD: plan.neighbor_distinction -->
+
+### Chosen Writing Form
+
+<!-- BEGIN FIELD: plan.writing_form -->
+__WRITE__
+<!-- END FIELD: plan.writing_form -->
+
+### Comic Premise — What Is Funny About This Trait?
+
+<!-- BEGIN FIELD: plan.comic_premise -->
+__WRITE__
+<!-- END FIELD: plan.comic_premise -->
+
+### Chosen Creative Approach
+
+<!-- BEGIN FIELD: plan.creative_approach -->
+__WRITE__
+<!-- END FIELD: plan.creative_approach -->
+
+## No Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: no_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: no_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: no_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: no_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: no_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: no_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.body.hybrid -->
+
+## Light Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: light_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: light_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: light_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: light_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: light_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: light_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.body.hybrid -->
+
+## Full Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: full_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: full_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: full_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: full_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: full_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: full_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.body.hybrid -->
+
+## Practical Guidance
+
+### Do 1
+
+<!-- BEGIN FIELD: dos.0 -->
+__WRITE__
+<!-- END FIELD: dos.0 -->
+
+### Do 2
+
+<!-- BEGIN FIELD: dos.1 -->
+__WRITE__
+<!-- END FIELD: dos.1 -->
+
+### Do 3
+
+<!-- BEGIN FIELD: dos.2 -->
+__WRITE__
+<!-- END FIELD: dos.2 -->
+
+### Don't 1
+
+<!-- BEGIN FIELD: donts.0 -->
+__WRITE__
+<!-- END FIELD: donts.0 -->
+
+### Don't 2
+
+<!-- BEGIN FIELD: donts.1 -->
+__WRITE__
+<!-- END FIELD: donts.1 -->
+
+### Don't 3
+
+<!-- BEGIN FIELD: donts.2 -->
+__WRITE__
+<!-- END FIELD: donts.2 -->
+
+## Humor
+
+### Funny Dog Quote 1
+
+<!-- BEGIN FIELD: funny_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: funny_dog_quotes.0 -->
+
+### Imperative Dog Quote 1
+
+<!-- BEGIN FIELD: imperative_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: imperative_dog_quotes.0 -->
+
+### Canine Joke 1
+
+<!-- BEGIN FIELD: applicable_canine_jokes.0 -->
+__WRITE__
+<!-- END FIELD: applicable_canine_jokes.0 -->
+
+===== END FILE: summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md =====
+
+===== BEGIN FILE: summaries/Summary 04 -- How the Dog Grows/SUMMARY BASIS.md =====
+# Summary Basis
+
+Use `WRITE WHOLE DOG PROFILE.md` and `FULL CHART BASIS.md` for this full-chart summary.
+
+===== END FILE: summaries/Summary 04 -- How the Dog Grows/SUMMARY BASIS.md =====
+
+===== BEGIN FILE: summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md =====
+# Summary Writing File
+
+Replace every `__WRITE__` value. Preserve all field markers exactly.
+Write no reader-facing prose outside marked fields.
+
+Write this evidence-bounded insight about the dog described in `WRITE WHOLE DOG PROFILE.md`.
+
+Let the previous page leave your desk. Use the shared guidance to plan this claim as an independent miniature essay before filling its renderings.
+
+Treat No, Light, and Full Astrology as progressive depths of this one insight. No Astrology establishes what the insight means in lived behavior; Light reveals its principal astrological basis; Full exposes the complete relevant chart support. Their prose may differ, but their center of meaning must remain visibly identical.
+
+## Editorial Plan
+
+### Center of Gravity
+
+<!-- BEGIN FIELD: plan.center_of_gravity -->
+__WRITE__
+<!-- END FIELD: plan.center_of_gravity -->
+
+### Remembered Idea — What Should Remain an Hour Later?
+
+<!-- BEGIN FIELD: plan.memorable_takeaway -->
+__WRITE__
+<!-- END FIELD: plan.memorable_takeaway -->
+
+### Recognizable Behavior
+
+<!-- BEGIN FIELD: plan.recognizable_behavior -->
+__WRITE__
+<!-- END FIELD: plan.recognizable_behavior -->
+
+### Likely Misunderstanding
+
+<!-- BEGIN FIELD: plan.likely_misunderstanding -->
+__WRITE__
+<!-- END FIELD: plan.likely_misunderstanding -->
+
+### Grounded Surprise
+
+<!-- BEGIN FIELD: plan.grounded_surprise -->
+__WRITE__
+<!-- END FIELD: plan.grounded_surprise -->
+
+### Distinct From Neighboring Stories
+
+<!-- BEGIN FIELD: plan.neighbor_distinction -->
+__WRITE__
+<!-- END FIELD: plan.neighbor_distinction -->
+
+### Chosen Writing Form
+
+<!-- BEGIN FIELD: plan.writing_form -->
+__WRITE__
+<!-- END FIELD: plan.writing_form -->
+
+### Comic Premise — What Is Funny About This Trait?
+
+<!-- BEGIN FIELD: plan.comic_premise -->
+__WRITE__
+<!-- END FIELD: plan.comic_premise -->
+
+### Chosen Creative Approach
+
+<!-- BEGIN FIELD: plan.creative_approach -->
+__WRITE__
+<!-- END FIELD: plan.creative_approach -->
+
+## No Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: no_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: no_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: no_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: no_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: no_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: no_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: no_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: no_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: no_astro.body.hybrid -->
+
+## Light Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: light_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: light_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: light_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: light_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: light_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: light_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: light_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: light_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: light_astro.body.hybrid -->
+
+## Full Astrology
+
+### Handler Headline
+
+<!-- BEGIN FIELD: full_astro.headline.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.handler -->
+
+### Handler Story
+
+<!-- BEGIN FIELD: full_astro.body.handler -->
+__WRITE__
+<!-- END FIELD: full_astro.body.handler -->
+
+### Direct to Dog Headline
+
+<!-- BEGIN FIELD: full_astro.headline.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.direct_to_dog -->
+
+### Direct to Dog Story
+
+<!-- BEGIN FIELD: full_astro.body.direct_to_dog -->
+__WRITE__
+<!-- END FIELD: full_astro.body.direct_to_dog -->
+
+### Hybrid Headline
+
+<!-- BEGIN FIELD: full_astro.headline.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.headline.hybrid -->
+
+### Hybrid Story
+
+<!-- BEGIN FIELD: full_astro.body.hybrid -->
+__WRITE__
+<!-- END FIELD: full_astro.body.hybrid -->
+
+## Practical Guidance
+
+### Do 1
+
+<!-- BEGIN FIELD: dos.0 -->
+__WRITE__
+<!-- END FIELD: dos.0 -->
+
+### Do 2
+
+<!-- BEGIN FIELD: dos.1 -->
+__WRITE__
+<!-- END FIELD: dos.1 -->
+
+### Do 3
+
+<!-- BEGIN FIELD: dos.2 -->
+__WRITE__
+<!-- END FIELD: dos.2 -->
+
+### Don't 1
+
+<!-- BEGIN FIELD: donts.0 -->
+__WRITE__
+<!-- END FIELD: donts.0 -->
+
+### Don't 2
+
+<!-- BEGIN FIELD: donts.1 -->
+__WRITE__
+<!-- END FIELD: donts.1 -->
+
+### Don't 3
+
+<!-- BEGIN FIELD: donts.2 -->
+__WRITE__
+<!-- END FIELD: donts.2 -->
+
+## Humor
+
+### Funny Dog Quote 1
+
+<!-- BEGIN FIELD: funny_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: funny_dog_quotes.0 -->
+
+### Imperative Dog Quote 1
+
+<!-- BEGIN FIELD: imperative_dog_quotes.0 -->
+__WRITE__
+<!-- END FIELD: imperative_dog_quotes.0 -->
+
+### Canine Joke 1
+
+<!-- BEGIN FIELD: applicable_canine_jokes.0 -->
+__WRITE__
+<!-- END FIELD: applicable_canine_jokes.0 -->
+
+===== END FILE: summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md =====
+
+===== BEGIN FILE: SUMMARY GOLD REFERENCE.md =====
+# AstroWoof Four-Summary Gold Reference
+
+## Transfer target
+
+This is a craft reference for four-lens separation, full-chart synthesis, prose depth, audience purpose, and astrology-density control. Kevin is an example subject, not evidence about the current dog.
+
+Do not copy Kevin's facts, astrology, wording, metaphors, jokes, headlines, sentence structures, or organizing devices. Phrases such as `anchor`, `gate`, `laboratory`, `stage`, and `train the landing` are examples, not templates. Do not imitate lengths mechanically. The current dog's full chart basis and whole-dog profile are the only authority for what the new summaries may claim.
+
+Study how the four cards form a coordinated set while making different arguments: identity, lived rhythm, present-tense support, and development over time. Then close this reference conceptually and write the current dog from the four-thesis plan.
+
+## Summary 1: Who He Is
+
+### Do 1
+
+Give him a brief, named investigation window—such as “check it out”—followed by a consistent return cue.
+
+### Do 2
+
+Use fair rules that remain stable across people, especially around access, greetings, and shared objects.
+
+### Do 3
+
+Acknowledge his social bids before redirecting: eye contact, a touch, or one clear cue can keep the bond online.
+
+### Don't 1
+
+Do not label every unconventional response as stubbornness before checking what information caught his attention.
+
+### Don't 2
+
+Do not make affection unpredictable as a way to force compliance; clarity builds more trust than emotional leverage.
+
+### Don't 3
+
+Do not confuse sociability with shallowness or assume a quick recovery means the interaction did not matter.
+
+### Funny Dog Quote
+
+I am not off course. I am expanding the definition of the course.
+
+### Imperative Dog Quote
+
+Respect the inspection, then cue the reunion.
+
+### Applicable Canine Joke
+
+Kevin joined the welcoming committee, then rewrote its bylaws during the greeting.
+
+### No Astrology
+
+#### Handler headline
+
+The Friendly Original With a Serious Heart
+
+#### Handler body
+
+Kevin may greet the world as though every ordinary event has an unpublished footnote. He notices the side door, the new smell, the person standing slightly apart, and the toy nobody officially selected. Then he brings his discovery into relationship. His independence is rarely a rejection of company; it is an invitation to meet him where the interesting thing is.
+
+What can be missed is the gravity beneath the charm. Kevin appears social and expressive, but trust is not casual for him. He is likely to care about fairness, consistent access, and the emotional terms of belonging. Treat his quirks as communication rather than decoration. When his person can appreciate the unusual entrance and still provide dependable limits, Kevin gets to be both unmistakably himself and securely part of the team.
+
+#### Direct to Dog headline
+
+You Were Not Built for Background Duty
+
+#### Direct to Dog body
+
+Kevin, you have a way of arriving with an observation. Perhaps the hallway has changed. Perhaps a glove requires review. Perhaps everyone has forgotten that you are available for consultation. You do not simply occupy a room; you establish a point of view.
+
+Under that bright presentation is a loyal, careful heart. You want closeness that can survive your curiosity and rules that do not erase your personality. Your best people will understand that your little departures are not always departures from them. Often you are circling back with news.
+
+#### Hybrid headline
+
+A Bond Spacious Enough for a Plot Twist
+
+#### Hybrid body
+
+Kevin spots the unexpected path; his person remembers the destination. He offers a dramatic proposal; they offer a boundary sturdy enough to negotiate with. Their relationship works when neither role wins completely. He does not have to surrender curiosity to prove loyalty, and the human does not have to abandon structure to honor individuality.
+
+Over time, the pair develops a shared language: a moment to investigate, a cue to rejoin, a laugh at the theatrical pause, and a reliable return to one another. The result is not a perfectly predictable dog. It is a recognizable partnership.
+
+### Light Astrology
+
+#### Handler headline
+
+Aquarius at the Door, Libra at the Heart
+
+#### Handler body
+
+Kevin's Aquarius Ascendant gives his visible style an inventive, pattern-breaking quality. He may meet situations sideways—observing first, trying an unusual response, or changing the expected sequence. Meanwhile, his strong Libra emphasis places identity, confidence, discipline, and deep trust inside the territory of relationship and fairness.
+
+This combination explains why he can seem independent and deeply companionable at once. Give the Aquarius doorway room for a brief original response, then support the Libra core with clear, even-handed expectations. He is more cooperative when belonging does not require sameness.
+
+#### Direct to Dog headline
+
+Your Weird Little Entrance Has a Loyal Destination
+
+#### Direct to Dog body
+
+Your Aquarius rising likes to test the door before walking through it the usual way. Your Libra core keeps asking who is with you, whether the exchange is fair, and what the bond means. So yes, Kevin: you may improvise the opening and still care deeply about the ending.
+
+You are not inconsistent. You are a social original. The mission is to keep your freedom curious rather than chaotic and your loyalty strong without making it heavy.
+
+#### Hybrid headline
+
+The Original and the Diplomat Share One Leash
+
+#### Hybrid body
+
+Aquarius rising supplies the surprise; Libra supplies the relationship intelligence. Kevin changes the route by three feet to examine a mystery, and his person gives that mystery a brief audience before inviting him onward. The compromise is small, but it carries the whole chart's lesson: individuality can live inside cooperation.
+
+Each successful return tells Kevin that the bond is flexible. Each fair boundary tells the human that flexibility does not require losing direction.
+
+### Full Astrology
+
+#### Handler headline
+
+A Pattern-Breaking Ascendant Anchored by Deep Libra Trust
+
+#### Handler body
+
+Kevin's Aquarius ASC describes a first response that is independent, experimental, and visibly unlike the standard script. Uranus in Scorpio squares both the ASC and Leo DSC, intensifying the tension between spontaneous investigation and the expectations of close partnership. The exact ASC–DSC opposition already makes self-presentation and one-to-one bonding a central axis; Uranus turns that axis into a live negotiation around novelty and freedom.
+
+At the same time, Sun, Jupiter, Saturn, and Pluto gather in Libra in the eighth Doghouse. Identity, growth, structure, and intensity therefore converge around fairness, sharing, vulnerability, and deep trust. Jupiter conjunct Pluto enlarges emotional stakes, while Mars conjunct the Leo DSC fuses action with companion attention. Kevin's chart is not describing a detached eccentric. It describes an original social being whose strongest independence questions arise inside meaningful bonds. The practical response is dignified flexibility: permit investigation, keep agreements consistent, and make reunion part of the ritual.
+
+#### Direct to Dog headline
+
+You Carry Freedom and Belonging in the Same Harness
+
+#### Direct to Dog body
+
+Your Aquarius Ascendant wants an unscripted first move. Uranus in Scorpio squares your ASC–DSC axis, so novelty can arrive like an urgent amendment to the social contract. But your Libra Sun, Jupiter, Saturn, and Pluto in the eighth Doghouse make trust, fairness, and shared stakes central to who you are.
+
+Mars beside your Leo DSC means relationship often comes alive through action: a game, a display, a bold invitation. You are not choosing between being free and being loved. Your chart keeps teaching you to practice both at once—explore, signal, return, and discover that the bond remains.
+
+#### Hybrid headline
+
+The Exact Opposition That Becomes a Partnership Practice
+
+#### Hybrid body
+
+Kevin's Aquarius ASC stands exactly opposite his Leo DSC, placing self-directed entry and vivid companionship across one axis. Mars conjunct the DSC adds action and play to the companion side, while Uranus squares both ends from Scorpio, supplying abrupt investigations and unconventional responses. The human experiences a dog who can seek attention wholeheartedly and then pivot toward a private mystery.
+
+The deeper Libra eighth-Doghouse concentration supplies the reason this tension matters: Kevin is invested in trust. Their shared practice is therefore neither constant control nor unlimited improvisation. It is a repeatable sequence—notice the novelty, allow a bounded inquiry, cue reconnection, reward the return. Geometry becomes relationship craft.
+
+## Summary 2: How He Lives
+
+### Do 1
+
+Create a consistent end-of-outing sequence: water, one easy cue, then five quiet minutes in a familiar place.
+
+### Do 2
+
+Alternate high-energy games with sniffing or slow searching rather than stacking arousing activities.
+
+### Do 3
+
+Give routine chores a visible role, such as carrying an approved object or going to a station while gear is prepared.
+
+### Don't 1
+
+Do not assume physical arrival at home means his arousal has already arrived there too.
+
+### Don't 2
+
+Do not fill every pause with another command; some pauses are how he processes the previous scene.
+
+### Don't 3
+
+Do not offer endless novelty without a predictable finish and then fault him for staying activated.
+
+### Funny Dog Quote
+
+The walk is over when the final scent submits its report.
+
+### Imperative Dog Quote
+
+Close the expedition gently and officially.
+
+### Applicable Canine Joke
+
+Kevin's five-minute walk has an intermission, a subplot, and director's commentary.
+
+### No Astrology
+
+#### Handler headline
+
+Kevin's Day Has Acts, Not Just Hours
+
+#### Handler body
+
+Kevin may not experience a walk, meal, visitor, or training session as an isolated event. Each one has an opening scan, an investigative middle, a social question, and an aftereffect. He gathers atmosphere quickly, pursues details intensely, and often turns action into a shared performance. When the sequence ends clearly, he can settle. When it simply stops, some part of him may keep looking for the missing final scene.
+
+Build days with contrast. Let a sniff-rich outing contain choices, then mark its conclusion with water, a simple cue, and a familiar resting place. Pair energetic play with a low-key transition rather than another demand. Kevin's life becomes smoother when curiosity has permission, activity has purpose, and recovery has a recognizable address.
+
+#### Direct to Dog headline
+
+Every Expedition Needs a Base Camp
+
+#### Direct to Dog body
+
+You begin by reading the room, Kevin. Then you read the ground. Then, because scholarship should be shared, you involve a human. Your days are richest when there is something to discover and someone to report to.
+
+But even the chief investigator needs an ending. A drink, a mat, a chew, a slow exhale—these tell your whole system that the case may close for now. Rest is not surrender. It is where tomorrow's excellent ideas charge.
+
+#### Hybrid headline
+
+The Walk Continues After the Leash Comes Off
+
+#### Hybrid body
+
+Outside, Kevin's person sees the route. Kevin sees layers: scent, motion, mood, possibility, audience. Back home, the person may think the activity is finished while Kevin is still carrying its momentum through the hallway.
+
+Their best routine includes a bridge. The human lowers pace, repeats the same closing cues, and gives Kevin a simple settling job. Kevin learns that returning home is not an abrupt loss of the world; it is the final movement of the outing. Both arrive together.
+
+### Light Astrology
+
+#### Handler headline
+
+Sagittarius Adventure, Scorpio Investigation, Pisces Sensitivity
+
+#### Handler body
+
+Kevin's Sagittarius Venus and Neptune favor exploration, novelty, and an open horizon. Mercury and Uranus in Scorpio add depth: he does not merely notice; he investigates. A Pisces Moon increases sensitivity to atmosphere, so the same dog who charges toward possibility may also carry the emotional weather home.
+
+Daily rhythm should honor all three. Offer genuine exploration, let him examine selected details, and create predictable downshifts. The chart suggests that a good life is not nonstop stimulation; it is meaningful movement followed by enough quiet for a porous system to settle.
+
+#### Direct to Dog headline
+
+You Travel Far, Even on a Neighborhood Block
+
+#### Direct to Dog body
+
+Sagittarius in you calls the corner an expedition. Scorpio makes one mailbox worthy of forensic attention. Your Pisces Moon notices the wind, the voices, and the mood behind the voices. No wonder a short outing can become a large internal journey.
+
+Your rhythm works when the world opens and then gently closes: explore, investigate, connect, return, soften.
+
+#### Hybrid headline
+
+One Holds the Map; One Reads the Weather
+
+#### Hybrid body
+
+Kevin's Sagittarius side widens the walk, his Scorpio side deepens it, and his Pisces Moon absorbs the atmosphere around it. His person provides the practical frame: where they go, when they turn, how they come down.
+
+Neither contribution is decorative. Kevin brings richness; the human brings shape. Together they turn routine into adventure without letting adventure consume the whole evening.
+
+### Full Astrology
+
+#### Handler headline
+
+A Daily Circuit From Porous Moon to Performative Mars
+
+#### Handler body
+
+Kevin's Pisces Moon in the first Doghouse makes comfort and regulation bodily, visible, and atmosphere-sensitive. Neptune in Sagittarius in the tenth Doghouse carries imagination into his visible pack role, while Venus in Sagittarius in the ninth Doghouse links pleasure and bonding with adventure territory. Mercury and Uranus in Scorpio add concentrated investigation, and Mars in Leo in the sixth Doghouse channels action through training, routine, and care.
+
+Several flowing aspects help these systems cooperate: Neptune trines Mars and the DSC, and sextiles Jupiter, while Pluto trines the ASC and sextiles Mars. Yet squares involving Uranus, the ASC–DSC axis, and Mars mean novelty can disrupt the sequence. Daily life benefits from explicit phase changes. Use a start cue, a bounded exploration period, a social task, and a consistent closing ritual. That structure lets the trines become usable habits instead of leaving sensitive energy open-ended.
+
+#### Direct to Dog headline
+
+Your Chart Runs on Openings and Landings
+
+#### Direct to Dog body
+
+Your Pisces Moon receives the atmosphere through your whole body. Sagittarius Venus and Neptune want a larger world; Scorpio Mercury and Uranus want the hidden detail; Leo Mars in the sixth Doghouse wants action to become a visible job. You are a complete daily circuit, Kevin, not a single speed.
+
+The trines help imagination flow into play and partnership. The squares make novelty capable of changing the program mid-scene. Your growth is rhythmic: begin clearly, investigate well, perform the useful action, and accept the gentle landing.
+
+#### Hybrid headline
+
+The Household Becomes a Sequence Kevin Can Trust
+
+#### Hybrid body
+
+A Pisces first-Doghouse Moon means Kevin's regulation shows up in posture, pace, and presence. Mars in Leo in the sixth makes routine active and relational; Neptune in Sagittarius in the tenth sends atmosphere and imagination into public participation. The human therefore cannot manage only the task. They also manage the transition between tasks.
+
+When the pair uses repeated thresholds—leash on, permission to sniff, check-in, home, water, mat—the chart's flowing channels gain form. Kevin contributes sensitivity and adventurous engagement. His person supplies punctuation. The day stops feeling like a string of interruptions and becomes a story with chapters.
+
+## Summary 3: What He Needs
+
+### Do 1
+
+Offer bounded choices—two approved toys, two walking directions, or two station locations—before he invents a third option.
+
+### Do 2
+
+Keep one low-traffic resting area predictable and protect it from unnecessary interruption.
+
+### Do 3
+
+Schedule brief scent searches or “find it” tasks that end with an obvious success and release cue.
+
+### Don't 1
+
+Do not respond to every restless moment by adding more speed or distance; first test whether he needs a downshift.
+
+### Don't 2
+
+Do not change access rules casually between family members and expect him to understand the hidden exception.
+
+### Don't 3
+
+Do not remove all choice in the name of consistency; consistency can define the menu without choosing every bite.
+
+### Funny Dog Quote
+
+I accept boundaries, provided they include visiting hours for the shrubbery.
+
+### Imperative Dog Quote
+
+Build the return path before opening the gate.
+
+### Applicable Canine Joke
+
+Kevin does not need unlimited freedom; he needs freedom with office hours.
+
+### No Astrology
+
+#### Handler headline
+
+Give Him an Anchor, a Gate, a Laboratory, and a Stage
+
+#### Handler body
+
+Kevin needs an anchor: a relationship whose rules and warmth remain dependable. He needs a gate: boundaries that clearly show when access opens and closes. He needs a laboratory: approved chances to sniff, search, compare, and solve. And he needs a stage: small roles through which his energy becomes useful and socially acknowledged.
+
+Missing one piece can distort the others. Without an anchor, attention-seeking may become urgent. Without a gate, curiosity can sprawl. Without a laboratory, he invents research. Without a stage, ordinary care may feel like something done around him instead of with him. Meet these needs in modest, repeatable ways; Kevin is likely to value coherence more than extravagance.
+
+#### Direct to Dog headline
+
+Your Curiosity Deserves a Job Description
+
+#### Direct to Dog body
+
+You need to know where home is in a person, Kevin. You also need the dignity of a little choice: which direction to sniff, which toy to bring, where to settle within the allowed area. Your mind likes evidence, and your heart likes dependable terms.
+
+Give you a search, a role, and a clean finish, and much of your dramatic administration becomes unnecessary. Not all of it, obviously. Standards must be maintained.
+
+#### Hybrid headline
+
+Security Is the Frame Around Freedom
+
+#### Hybrid body
+
+The human sets the perimeter; Kevin animates the space inside it. A gate means “not now,” but a sniff cue means “yes, here.” A mat creates stillness, but a search game gives investigation somewhere to go. Attention is warm, yet not available only after escalation.
+
+This reciprocity matters. Kevin learns that limits are information, not rejection. His person learns that choice is not loss of authority. The household becomes easier because both can predict how freedom begins and ends.
+
+### Light Astrology
+
+#### Handler headline
+
+A Pisces Moon Needs Grounding; Aquarius Rising Needs Choice
+
+#### Handler body
+
+Kevin's Pisces Moon points to a sensitive regulation system that benefits from calm sensory anchors. Aquarius rising and strong Uranian tension favor autonomy, novelty, and unconventional response. His Libra concentration needs fairness and stable relationship terms, while Mars in Leo wants active participation.
+
+Care should combine these instead of choosing one. Use a quiet den, consistent boundaries, real choice within safe options, and visible jobs. He is not asking for either softness or discipline. He needs grounded sensitivity and respectful structure together.
+
+#### Direct to Dog headline
+
+Soft Landing, Clear Edges, Excellent Assignment
+
+#### Direct to Dog body
+
+Your Pisces Moon needs the room to become calm enough for your body to believe it. Your Aquarius doorway needs some say in how you enter. Your Libra planets need fair terms. Your Leo Mars would appreciate a role with appropriate ceremony.
+
+So the recipe is not mysterious: steady person, clear boundary, interesting task, graceful exit.
+
+#### Hybrid headline
+
+The Rule Holds; the Dog Still Gets a Vote
+
+#### Hybrid body
+
+Kevin's Aquarius and Uranus signatures ask for agency, while his Libra trust pattern asks for dependable agreements. His person can answer both by offering structured choices: two routes, two toys, one designated sniff zone, one clear station.
+
+The Pisces Moon receives the calm tone and repeated ritual; Leo Mars receives the chance to participate. The dog gets dignity. The human keeps the frame. Cooperation becomes less of a contest.
+
+### Full Astrology
+
+#### Handler headline
+
+Care for the Whole Axis: Moon, ASC–DSC, Sixth House, and Eighth House
+
+#### Handler body
+
+Kevin's care needs emerge from several linked systems. The Pisces Moon in the first Doghouse makes regulation embodied and atmosphere-sensitive. Aquarius ASC opposite Leo DSC creates an exact self–companion axis, while Uranus squares both ends, requiring usable outlets for autonomy and novelty. Mars conjunct the DSC in Leo and placed in the sixth Doghouse ties action, attention, and daily care together. Sun, Jupiter, Saturn, and Pluto in Libra in the eighth Doghouse make fairness, boundaries, shared resources, and deep trust structurally important.
+
+Translate that geometry into infrastructure. Provide a low-stimulation resting base; establish stable rules around access; use permission cues for investigation; include choice inside training; and give action a household purpose. Because Saturn quincunxes the Moon, rules may need small recalibrations to become regulating rather than merely restrictive. Because Neptune trines Mars and the DSC, gentle imagination—searches, pattern games, ritualized roles—can connect sensitivity to cooperation.
+
+#### Direct to Dog headline
+
+Your Needs Are a System, Not a Demand List
+
+#### Direct to Dog body
+
+Your Pisces Moon needs a bodily sense of safety. Your Aquarius ASC needs an honest first response, and Uranus squaring the ASC–DSC axis needs novelty to have a legal outlet. Mars beside the Leo DSC wants action with a companion. The Libra eighth-Doghouse gathering needs fair, reliable terms around closeness and limits.
+
+When all of these are honored together, Kevin, you do not have to choose between being soothed, engaged, trusted, and free. The care plan can hold the whole dog.
+
+#### Hybrid headline
+
+A Household Designed for Return
+
+#### Hybrid body
+
+The chart's central oppositions and squares do not ask Kevin's person to eliminate tension; they ask for a reliable way through it. A Uranian impulse may pull him toward the new thing while the Leo DSC and Mars pull him toward visible companionship. The Pisces Moon absorbs the handler's state, and the Libra eighth-house planets evaluate the fairness of the exchange.
+
+A practical ritual integrates them: name the boundary, offer one permitted option, complete a shared task, and return to a calm base. Repetition teaches Kevin that every opening has a route home. It teaches the human that security can be designed rather than demanded.
+
+## Summary 4: How He Grows
+
+### Do 1
+
+Measure progress by recovery time, response at workable distance, and ability to resume—not by never noticing the trigger.
+
+### Do 2
+
+Practice one reorientation cue in easy environments before using it around major novelty.
+
+### Do 3
+
+Increase difficulty one variable at a time: distance, duration, movement, or social intensity.
+
+### Don't 1
+
+Do not punish the first look toward something new; train what he does after the look.
+
+### Don't 2
+
+Do not repeat a cue louder when his body is over threshold; change distance or simplify the task.
+
+### Don't 3
+
+Do not call progress a failure because his personality remains vivid.
+
+### Funny Dog Quote
+
+Personal growth, yes. Personal blandness, absolutely not.
+
+### Imperative Dog Quote
+
+Reward the return, not the disappearance of curiosity.
+
+### Applicable Canine Joke
+
+Kevin's character arc includes character, which he has declined to remove.
+
+### No Astrology
+
+#### Handler headline
+
+Do Not Train Out the Spark; Train the Landing
+
+#### Handler body
+
+Kevin's growth is not a march toward bland predictability. The useful goal is that his curiosity becomes easier to steer, his excitement easier to complete, and his relationship bids easier to read. A mature response may still begin with a dramatic double take. The difference is that he can take in information, choose a known action, and come back into contact.
+
+Practice in small doses. Introduce a manageable novelty at enough distance for thinking, cue one familiar behavior, reward orientation, and leave before repetition becomes strain. Track recovery time rather than demanding instant neutrality. Kevin grows when originality gains brakes, trust gains flexibility, and the pair can repair a disrupted moment without turning it into a referendum on character.
+
+#### Direct to Dog headline
+
+Keep the Plot Twist; Learn the Final Line
+
+#### Direct to Dog body
+
+You do not need to stop noticing everything, Kevin. Your noticing is one of your gifts. The next skill is deciding what happens after the notice. Can you look, breathe, hear your cue, and choose the action that brings everyone back into the same scene?
+
+Each return makes you more capable, not less yourself. The world stays interesting. You simply become better at carrying your interest without being carried away by it.
+
+#### Hybrid headline
+
+Progress Is a Shorter Distance Back to Each Other
+
+#### Hybrid body
+
+A surprise happens. Kevin turns toward it; the human feels the leash change. Old versions of the moment might have escalated into competing agendas. The growing version contains a pause. The person lowers pressure, uses a practiced cue, and rewards the smallest honest reorientation. Kevin returns without being dragged away from his own perception.
+
+That is the metric: not no disruption, but a cleaner repair. Their shared skill becomes the ability to lose the thread briefly and find it again.
+
+### Light Astrology
+
+#### Handler headline
+
+Uranian Surprise Can Become Libra Coordination
+
+#### Handler body
+
+Uranus strongly challenges Kevin's ASC–DSC axis, so novelty and relationship expectations can collide quickly. Yet his chart also contains many trines and sextiles connecting trust, action, imagination, confidence, and companionship. Libra emphasis adds a natural concern with balance and cooperation.
+
+Development comes from practicing those supportive routes. Let him notice; then cue a simple action that reconnects him. Reward recovery, not only perfect prevention. Over time, the Uranian spark becomes adaptable intelligence rather than repeated derailment.
+
+#### Direct to Dog headline
+
+Your Surprise Response Has Somewhere to Go
+
+#### Direct to Dog body
+
+Uranus gives you the lightning turn toward the unexpected. Libra gives you the ability to coordinate with a partner. Your chart's flowing connections mean the path between intensity and useful action can be strengthened.
+
+You grow each time the flash becomes a choice: look, check in, do the known thing, continue with dignity.
+
+#### Hybrid headline
+
+Rehearsing the Bridge Between Novelty and Trust
+
+#### Hybrid body
+
+Kevin supplies the live stimulus test; his person supplies a repeatable bridge. Uranian novelty activates the body, and Libra relationship intelligence offers a route back through fairness and familiar cooperation.
+
+The pair rehearses below threshold, then gradually in richer settings. They celebrate the return as its own achievement. The dog keeps his alert originality; the human gains confidence in the repair process.
+
+### Full Astrology
+
+#### Handler headline
+
+Use the Trines to Train the Squares
+
+#### Handler body
+
+Kevin's developmental map is unusually clear. Uranus in Scorpio squares the Aquarius ASC, Leo DSC, and Mars, making surprise, independence, and investigation capable of disrupting visible behavior, companionship, and action. Jupiter also squares the Part of Fortune, so expansive confidence does not always lead automatically to what feels most rewarding. Saturn quincunx the Pisces Moon shows that rules and regulation may require adjustment rather than simple repetition.
+
+But the chart supplies bridges. Pluto trines the ASC and sextiles Mars; Neptune trines Mars and the DSC and sextiles Jupiter; Jupiter sextiles Mars and the DSC; Uranus trines the North Node; Venus trines the North Node. These aspects describe trainable coordination among deep trust, imagination, confidence, action, bonding, and development. Work from easy channels toward hard geometry: establish a calm cue in simple settings, pair it with movement or scent work, add novelty gradually, and reinforce the return. Growth is the increasing availability of the bridge under pressure.
+
+#### Direct to Dog headline
+
+Your Hard Aspects Are Not Dead Ends
+
+#### Direct to Dog body
+
+Uranus squares your ASC, DSC, and Mars, so the unexpected can light up your whole social-action system. Saturn's quincunx to your Pisces Moon means the rule may need translating before it feels regulating. Jupiter's square to the Part of Fortune means bigger is not always better.
+
+Yet Pluto, Neptune, Jupiter, Venus, and the North Node form usable channels through trust, imagination, action, bonding, and practice. Kevin, your chart is full of bridges. Your work is to cross them often enough that they remain available when the weather changes.
+
+#### Hybrid headline
+
+From Aspect Geometry to a Repair Ritual
+
+#### Hybrid body
+
+When Uranus triggers the ASC–DSC–Mars configuration, Kevin can pivot from companion engagement to intense novelty in a breath. The handler's task is not to overpower the square. It is to recruit the supportive aspects: Neptune's trines favor a soft, imaginative cue; Jupiter's sextiles favor confident encouragement; Pluto's channels favor grounded trust; North Node links favor repetition as development.
+
+They build a repair ritual with four parts: orient to the trigger, create enough space for choice, perform one known cooperative action, and release into a safe next step. As the ritual becomes familiar, the square still supplies energy, but it no longer owns the ending.
+
+===== END FILE: SUMMARY GOLD REFERENCE.md =====
+
+===== BEGIN FILE: WORKSPACE MANIFEST.md =====
+# AstroWoof Authoring Pass
+
+- **Subject:** ella
+- **Pass:** 6 of 6
+- **Assignment:** Four full-chart summaries
+- **Assignment policy:** contiguous
+- **Replay seed:** 0bbecdc7cb193ce7
+- **Expected return:** `ella_6-authored.zip`
+- **Start with:** `START HERE.md`
+- **Summary craft reference:** `SUMMARY GOLD REFERENCE.md`
+- **Required private plan:** `WRITE SUMMARY THESIS PLAN.md`
+
+===== END FILE: WORKSPACE MANIFEST.md =====
+
+===== BEGIN FILE: WRITE SUMMARY THESIS PLAN.md =====
+# Four-Summary Thesis Plan: Ella
+
+Complete this private editorial plan after the whole-dog profile and before writing any summary. Give each lens one distinct idea the reader should remember an hour later. The four theses must describe the same dog without becoming four paraphrases of one dominant motif.
+
+The needs thesis explains present-tense support, regulation, handling, and enrichment. The growth thesis explains learning, development, challenges, and potential unfolding over time. State their distinction explicitly before drafting prose.
+
+### Who the Dog Is — Identity Thesis
+
+<!-- BEGIN FIELD: summary_plan.identity_thesis -->
+__WRITE__
+<!-- END FIELD: summary_plan.identity_thesis -->
+
+### How the Dog Lives — Daily-Life Thesis
+
+<!-- BEGIN FIELD: summary_plan.daily_life_thesis -->
+__WRITE__
+<!-- END FIELD: summary_plan.daily_life_thesis -->
+
+### What the Dog Needs — Needs and Support Thesis
+
+<!-- BEGIN FIELD: summary_plan.needs_support_thesis -->
+__WRITE__
+<!-- END FIELD: summary_plan.needs_support_thesis -->
+
+### How the Dog Grows — Growth and Development Thesis
+
+<!-- BEGIN FIELD: summary_plan.growth_development_thesis -->
+__WRITE__
+<!-- END FIELD: summary_plan.growth_development_thesis -->
+
+### Why Needs and Growth Are Different Arguments
+
+<!-- BEGIN FIELD: summary_plan.needs_vs_growth_distinction -->
+__WRITE__
+<!-- END FIELD: summary_plan.needs_vs_growth_distinction -->
+
+===== END FILE: WRITE SUMMARY THESIS PLAN.md =====

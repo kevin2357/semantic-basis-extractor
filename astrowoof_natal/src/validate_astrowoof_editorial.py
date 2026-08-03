@@ -28,7 +28,9 @@ ASTRO_TERMS = re.compile(
     re.IGNORECASE,
 )
 BAD_SECOND_PERSON = re.compile(
-    r"(?<!of )\byou\s+(?:is|has|does|regulates|needs|wants|prefers)\b",
+    r"(?<!of )(?<!in )(?<!for )(?<!with )(?<!within )(?<!through )"
+    r"(?<!around )(?<!beside )\byou\s+"
+    r"(?:is|has|does|regulates|needs|wants|prefers)\b",
     re.IGNORECASE,
 )
 

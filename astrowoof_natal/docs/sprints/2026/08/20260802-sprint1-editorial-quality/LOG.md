@@ -447,3 +447,19 @@ rejection tests for too few chapters, lopsided distribution, and cross-section
 title collision. Legacy final decks remain on the validator's legacy contract;
 semantic migration requires a fresh two-section chapter-planning pass rather
 than fabricated deterministic relabeling.
+
+### Live Ella pass-6 isolation
+
+A controlled real-service test regenerated Ella's current SBE package, reused
+accepted card passes 1–5, and authored only the new pass 6. Attempt 1 was
+correctly rejected for `theme_group_balance`; attempt 2 used cached input and
+passed opaque QA. The final registries contain four independent chapters per
+section with Interdogpendence counts 4/4/6/5 and Takeaways counts 4/3/4/3.
+
+Final validation exposed an unrelated false positive on "Virgo in you wants":
+the second-person grammar detector recognized `of you` but not other
+prepositional-object contexts. The detector and regression test were corrected,
+and the already-authored deck passed revalidation without another API call.
+The delivery completed with warnings. Full method, costs, chapter names, and
+interpretation are recorded in
+`results/PHASE 3 - Ella Structured Chapters Live Test.md`.

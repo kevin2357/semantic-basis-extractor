@@ -436,6 +436,8 @@ class TestSemanticClosure(SemanticClosureFixture):
 
     def test_second_person_validator_allows_object_of_preposition(self) -> None:
         self.assertIsNone(BAD_SECOND_PERSON.search("the rest of you has paused"))
+        self.assertIsNone(BAD_SECOND_PERSON.search("Virgo in you wants to inspect"))
+        self.assertIsNone(BAD_SECOND_PERSON.search("the person beside you has paused"))
         self.assertIsNotNone(BAD_SECOND_PERSON.search("you has paused"))
 
     def test_polish_transport_can_only_change_reader_facing_fields(self) -> None:
