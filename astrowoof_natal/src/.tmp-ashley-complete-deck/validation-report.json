@@ -1,0 +1,53 @@
+{
+  "status": "fail",
+  "errors": [
+    "Card 31 has invalid second-person grammar in light_astro.body.",
+    "Card 34 has invalid second-person grammar in no_astro.body.",
+    "Selected aspects and syntheses theme groups are not approximately balanced: {'Inner Weather & Sanctuary': 8, 'Practice, Purpose & Wider Territory': 10, 'Signals, Bonds & Social Intelligence': 8, 'Rhythm, Drive & Daily Cooperation': 7}."
+  ],
+  "warnings": [
+    "Card 1 may contain astrology in no_astro.headline.hybrid.",
+    "Card 1 may contain astrology in no_astro.body.direct_to_dog.",
+    "Card 5 may contain astrology in no_astro.body.handler.",
+    "Card 10 may contain astrology in no_astro.body.hybrid.",
+    "Card 16 may contain astrology in no_astro.body.handler.",
+    "Card 16 may contain astrology in no_astro.body.direct_to_dog.",
+    "Card 16 may contain astrology in no_astro.body.hybrid."
+  ],
+  "checks": {
+    "card_count": 50,
+    "phase": "authoring",
+    "polish_edit_overrides": {
+      "context_filters": false,
+      "theme_groups": false,
+      "summary": false
+    },
+    "locked_top_level_fields_checked": [
+      "subject",
+      "source",
+      "coverage",
+      "categories",
+      "behavioral_domains",
+      "context_filter_groups",
+      "unselected_claims",
+      "projected_term_registry"
+    ],
+    "locked_card_fields_checked": [
+      "claim_id",
+      "claim_type",
+      "categories",
+      "importance",
+      "confidence",
+      "strength",
+      "priority_id",
+      "selection",
+      "behavioral_domains",
+      "tags",
+      "evidence",
+      "relations"
+    ],
+    "summary_card_count": 4,
+    "unselected_claim_count": 58,
+    "placeholder_free": true
+  }
+}

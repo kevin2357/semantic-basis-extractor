@@ -1,0 +1,17 @@
+{
+  "schema_version": "astrowoof.authoring_pass_lint.v0.1",
+  "workspace": ".",
+  "status": "accept",
+  "deterministic": true,
+  "thresholds": {
+    "ngram_words": 12,
+    "ngram_min_distinct_claims": 3
+  },
+  "reader_facing_field_count": 270,
+  "distinct_location_count": 10,
+  "exact_duplicate_group_count": 0,
+  "exact_duplicate_groups": [],
+  "repeated_ngram_group_count": 0,
+  "repeated_ngrams": [],
+  "rejection_reasons": []
+}

@@ -1,0 +1,34 @@
+{
+  "status": "pass",
+  "errors": [],
+  "checks": {
+    "candidate_count": 108,
+    "selected_count": 50,
+    "rejected_count": 58,
+    "mandatory_selected": 16,
+    "dependency_closure": true,
+    "all_selected_have_evidence": true,
+    "unique_claim_ids": true,
+    "unselected_claims_preserved": true,
+    "projected_term_registry_present": true,
+    "summary_template_present": true,
+    "editorial_placeholders_present": true
+  },
+  "selected_type_counts": {
+    "mandatory_basis": 16,
+    "projected_relationship": 24,
+    "synthesized_motif": 10
+  },
+  "selected_claim_type_counts": {
+    "angle": 4,
+    "system_interaction": 24,
+    "placement": 11,
+    "synthesized_theme": 10,
+    "orientation": 1
+  },
+  "score_ranges": {
+    "selected_min": 0.510943,
+    "selected_max": 0.72947,
+    "rejected_max": 0.810129
+  }
+}

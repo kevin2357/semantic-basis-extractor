@@ -1,0 +1,44 @@
+{
+  "subject": "kevin",
+  "input_files": {
+    "direct_to_dog": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.d2d.json",
+    "general": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.general.json",
+    "handler": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.handler.json",
+    "hybrid": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.hybrid.json"
+  },
+  "source_identity": {
+    "source_chart_id": "natal:kevin",
+    "source_chart_ids": [
+      "natal:kevin"
+    ],
+    "sensor_instance_id": "natal:kevin"
+  },
+  "source_graph_ref": {
+    "graph_type": "canonical_astrology_graph",
+    "graph_version": "1.3.0",
+    "source_graph_hash": "f1f1cccab658ad9a25f7d710"
+  },
+  "target_ontology": "woofmapped_astrology.v0",
+  "object_source_ref_count": 17,
+  "relationship_source_ref_count": 75,
+  "registry_merge": {
+    "input_files": [
+      "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.d2d.json",
+      "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.general.json",
+      "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.handler.json",
+      "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.hybrid.json"
+    ],
+    "input_term_counts": {
+      "natal.kevin.woof.d2d.json": 47,
+      "natal.kevin.woof.general.json": 47,
+      "natal.kevin.woof.handler.json": 47,
+      "natal.kevin.woof.hybrid.json": 47
+    },
+    "unique_term_count": 47,
+    "duplicate_occurrences_deduplicated": 141,
+    "conflicts": 0,
+    "terms_present_in_all_inputs": 47
+  },
+  "status": "pass",
+  "params_file": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\params.json"
+}

@@ -1,4 +1,4 @@
-{
+ {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://astrowoof.local/schema/projected-natal-authoring-packet-v0.3.json",
   "title": "AstroWoof Projected Natal Authoring Packet",

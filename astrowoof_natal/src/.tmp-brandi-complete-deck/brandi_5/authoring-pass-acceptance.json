@@ -1,0 +1,8 @@
+{
+  "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+  "workspace": ".",
+  "status": "accept",
+  "editorial_issue_codes": [],
+  "affected_claim_ids": [],
+  "guidance": "The pass cleared the bundled editorial gate."
+}

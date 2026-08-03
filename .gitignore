@@ -1,1 +1,3 @@
 /astrowoof_natal/src/__pycache__
+*.pyc
+/.idea

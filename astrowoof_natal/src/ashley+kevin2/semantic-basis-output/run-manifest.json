@@ -1,0 +1,105 @@
+{
+  "schema_version": "semantic_basis.batch_run.v0.1",
+  "input_package": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts",
+  "subject_filter": null,
+  "subject_count": 4,
+  "status": "pass",
+  "subjects": [
+    {
+      "subject": "ashley",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\ashley\\natal.ashley.woof.d2d.json",
+        "general": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\ashley\\natal.ashley.woof.general.json",
+        "handler": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\ashley\\natal.ashley.woof.handler.json",
+        "hybrid": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\ashley\\natal.ashley.woof.hybrid.json"
+      },
+      "candidate_count": 108,
+      "selected_count": 50,
+      "unselected_count": 58,
+      "synthesized_selected": 14,
+      "registry_unique_term_count": 49,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\semantic-basis-output\\ashley",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\ashley_6"
+      ]
+    },
+    {
+      "subject": "brandi",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\brandi\\natal.brandi.woof.d2d.json",
+        "general": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\brandi\\natal.brandi.woof.general.json",
+        "handler": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\brandi\\natal.brandi.woof.handler.json",
+        "hybrid": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\brandi\\natal.brandi.woof.hybrid.json"
+      },
+      "candidate_count": 108,
+      "selected_count": 50,
+      "unselected_count": 58,
+      "synthesized_selected": 10,
+      "registry_unique_term_count": 50,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\semantic-basis-output\\brandi",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\brandi_6"
+      ]
+    },
+    {
+      "subject": "bre",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\bre\\natal.bre.woof.d2d.json",
+        "general": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\bre\\natal.bre.woof.general.json",
+        "handler": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\bre\\natal.bre.woof.handler.json",
+        "hybrid": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\bre\\natal.bre.woof.hybrid.json"
+      },
+      "candidate_count": 103,
+      "selected_count": 50,
+      "unselected_count": 53,
+      "synthesized_selected": 13,
+      "registry_unique_term_count": 50,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\semantic-basis-output\\bre",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\bre_6"
+      ]
+    },
+    {
+      "subject": "kevin",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.d2d.json",
+        "general": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.general.json",
+        "handler": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.handler.json",
+        "hybrid": "C:\\Users\\kevin\\Dropbox\\personal\\Hobbies\\Astrology\\Semantic Basis Extractor - Pre-Git\\semantic_basis_extractor\\dog_natal\\woof projected natals all contexts\\kevin\\natal.kevin.woof.hybrid.json"
+      },
+      "candidate_count": 108,
+      "selected_count": 50,
+      "unselected_count": 58,
+      "synthesized_selected": 13,
+      "registry_unique_term_count": 47,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\semantic-basis-output\\kevin",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\src\\llm-handoff-bundle\\kevin_6"
+      ]
+    }
+  ]
+}

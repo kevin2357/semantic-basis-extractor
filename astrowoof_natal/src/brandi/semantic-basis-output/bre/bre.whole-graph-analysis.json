@@ -1,0 +1,225 @@
+{
+  "subject": {
+    "source_chart_id": "natal:bre",
+    "source_chart_ids": [
+      "natal:bre"
+    ],
+    "sensor_instance_id": "natal:bre"
+  },
+  "object_count": 17,
+  "relationship_count": 37,
+  "raw_relationship_count": 62,
+  "directional_relationship_duplicates_collapsed": 25,
+  "candidate_counts": {
+    "mandatory_basis": 16,
+    "projected_object": 1,
+    "projected_relationship": 37,
+    "synthesized_motif": 30,
+    "synthesized_motif_variant": 19
+  },
+  "dominant_projected_modes": [
+    [
+      "information_sniffing_mode",
+      3
+    ],
+    [
+      "social_harmony_maintenance_mode",
+      3
+    ],
+    [
+      "immediate_chase_mode",
+      2
+    ],
+    [
+      "patrol_inspection_mode",
+      2
+    ],
+    [
+      "pack_security_focus_mode",
+      2
+    ],
+    [
+      "adventure_dog_mode",
+      1
+    ],
+    [
+      "attention_seeking_display_mode",
+      1
+    ],
+    [
+      "obsessive_investigation_mode",
+      1
+    ],
+    [
+      "nap_spot_loyalty_mode",
+      1
+    ],
+    [
+      "working_dog_seriousness_mode",
+      1
+    ]
+  ],
+  "dominant_projected_domains": [
+    [
+      null,
+      4
+    ],
+    [
+      "doghouse_6_training_routine_care",
+      3
+    ],
+    [
+      "doghouse_2_food_toys_bones_resources",
+      2
+    ],
+    [
+      "doghouse_3_smells_barks_cues_local_data",
+      2
+    ],
+    [
+      "doghouse_7_favorite_human_primary_bond",
+      1
+    ],
+    [
+      "doghouse_9_adventure_territory",
+      1
+    ],
+    [
+      "doghouse_5_play_zoomies_tricks",
+      1
+    ],
+    [
+      "doghouse_1_body_temperament_presence",
+      1
+    ],
+    [
+      "doghouse_8_deep_trust_vulnerability",
+      1
+    ],
+    [
+      "doghouse_4_den_home_base_safety",
+      1
+    ]
+  ],
+  "dominant_interaction_modes": [
+    [
+      "behavioral_friction",
+      13
+    ],
+    [
+      "easy_habit_or_talent",
+      10
+    ],
+    [
+      "bond_freedom_axis_tension",
+      10
+    ],
+    [
+      "developable_coordination",
+      10
+    ],
+    [
+      "inseparable_dog_impulse",
+      9
+    ],
+    [
+      "odd_behavior_needing_adjustment",
+      6
+    ],
+    [
+      "minor_behavioral_nudge",
+      4
+    ]
+  ],
+  "highest_degree_objects": [
+    {
+      "canonical_object_name": "Moon",
+      "projected_name": "comfort_safety_regulation",
+      "degree": 14
+    },
+    {
+      "canonical_object_name": "Venus",
+      "projected_name": "bonding_preference",
+      "degree": 12
+    },
+    {
+      "canonical_object_name": "ASC",
+      "projected_name": "behavioral_doorway",
+      "degree": 10
+    },
+    {
+      "canonical_object_name": "DSC",
+      "projected_name": "primary_companion_interface",
+      "degree": 10
+    },
+    {
+      "canonical_object_name": "Jupiter",
+      "projected_name": "adventure_optimism",
+      "degree": 10
+    },
+    {
+      "canonical_object_name": "Sun",
+      "projected_name": "pack_role_identity",
+      "degree": 9
+    },
+    {
+      "canonical_object_name": "Pluto",
+      "projected_name": "primal_trust_intensity",
+      "degree": 8
+    },
+    {
+      "canonical_object_name": "Saturn",
+      "projected_name": "training_rule_structure",
+      "degree": 8
+    },
+    {
+      "canonical_object_name": "IC",
+      "projected_name": "safe_den_baseline",
+      "degree": 6
+    },
+    {
+      "canonical_object_name": "MC",
+      "projected_name": "visible_pack_function",
+      "degree": 6
+    },
+    {
+      "canonical_object_name": "Mercury",
+      "projected_name": "scent_signal_interpretation",
+      "degree": 6
+    },
+    {
+      "canonical_object_name": "North Node",
+      "projected_name": "training_development_vector",
+      "degree": 6
+    },
+    {
+      "canonical_object_name": "Neptune",
+      "projected_name": "atmosphere_dream_permeability",
+      "degree": 5
+    },
+    {
+      "canonical_object_name": "Part of Fortune",
+      "projected_name": "easy_good_thing_channel",
+      "degree": 5
+    },
+    {
+      "canonical_object_name": "Vertex",
+      "projected_name": "unexpected_encounter_trigger",
+      "degree": 5
+    },
+    {
+      "canonical_object_name": "Mars",
+      "projected_name": "chase_play_defense_drive",
+      "degree": 2
+    },
+    {
+      "canonical_object_name": "Uranus",
+      "projected_name": "novelty_zoomie_response",
+      "degree": 2
+    }
+  ],
+  "whole_graph_voice_brief": {
+    "status": "deterministic_structural_seed_for_llm_editor",
+    "guidance": "Use dominant modes, domains, hubs, and selected tensions to infer a coherent dog-specific voice. Do not treat this seed as evidence and do not import discarded graph facts into card prose."
+  }
+}

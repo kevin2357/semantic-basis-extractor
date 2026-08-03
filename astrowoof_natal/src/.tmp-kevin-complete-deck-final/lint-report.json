@@ -1,0 +1,98 @@
+{
+  "schema_version": "astrowoof.editorial_lint.v0.1",
+  "status": "warn",
+  "warning_count": 5,
+  "decks": [
+    {
+      "path": "C:\\dev\\github\\astrowoof-test\\.tmp-kevin-complete-deck-final\\natal.kevin.cards.json",
+      "subject": "kevin",
+      "reader_facing_field_count": 1458,
+      "warning_count": 5,
+      "warnings": [
+        {
+          "code": "repeated_opening",
+          "message": "A three-word body opening is used six or more times.",
+          "details": {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "you do not",
+            "count": 7,
+            "claim_ids": [
+              "relationship_bd235e06b11e29af",
+              "relationship_bfc2c827df58870e",
+              "placement_2600077993c79923",
+              "synthesis_4a19efe12f54c74d",
+              "placement_e4d48d4ede858bb5",
+              "placement_8cf9ef33127798ae",
+              "summary:card4"
+            ]
+          }
+        },
+        {
+          "code": "repeated_opening",
+          "message": "A three-word body opening is used six or more times.",
+          "details": {
+            "field": "light_astro.body.hybrid",
+            "opening": "kevin and his",
+            "count": 7,
+            "claim_ids": [
+              "synthesis_ca7411eac40647d2",
+              "relationship_5e63acfa56ece81d",
+              "relationship_ce916583b7c67f12",
+              "relationship_9f56c44fd55e5c10",
+              "relationship_8a2fc135ec0d2311",
+              "synthesis_0db15a33ea59ebe2",
+              "synthesis_08631040add14d5b"
+            ]
+          }
+        },
+        {
+          "code": "failure_signature",
+          "message": "Reader-facing text matches the 'whole personality' failure signature.",
+          "details": {
+            "location": "card:relationship_011406d66cbaab68",
+            "field": "no_astro.body.handler",
+            "excerpt": "Kevin may treat a new route, an open gate, or the suggestion of an outing as more than stimulation. Shared exploration can make his whole personality come online. His posture lifts, his interest widens, and the person beside him becomes par"
+          }
+        },
+        {
+          "code": "failure_signature",
+          "message": "Reader-facing text matches the 'whole personality' failure signature.",
+          "details": {
+            "location": "card:relationship_011406d66cbaab68",
+            "field": "light_astro.body.handler",
+            "excerpt": "The Sun and Jupiter sit together in Libra, linking Kevin’s core identity with confidence, growth, and appetite for possibility. Because both operate through a socially harmonizing style, his boldness may be especially visible when explorati"
+          }
+        },
+        {
+          "code": "failure_signature",
+          "message": "Reader-facing text matches the 'whole personality' failure signature.",
+          "details": {
+            "location": "card:relationship_011406d66cbaab68",
+            "field": "full_astro.body.handler",
+            "excerpt": "Kevin’s Libra Sun is conjunct Jupiter in Libra by about 2.53°, fusing identity and vitality with optimism, expansion, and exploration. In the projected chart, both functions occupy Doghouse 8, the territory of deep trust and vulnerability. "
+          }
+        }
+      ],
+      "authoring_pass_acceptance": {
+        "status": "accept",
+        "deterministic": true,
+        "thresholds": {
+          "ngram_words": 12,
+          "ngram_min_distinct_claims": 3
+        },
+        "reader_facing_field_count": 1458,
+        "distinct_location_count": 54,
+        "exact_duplicate_group_count": 0,
+        "exact_duplicate_groups": [],
+        "repeated_ngram_group_count": 0,
+        "repeated_ngrams": [],
+        "suspicious_artifact_count": 0,
+        "suspicious_artifacts": [],
+        "dominant_opening_group_count": 0,
+        "dominant_openings": [],
+        "rejection_reasons": []
+      }
+    }
+  ],
+  "cross_subject_warnings": []
+}

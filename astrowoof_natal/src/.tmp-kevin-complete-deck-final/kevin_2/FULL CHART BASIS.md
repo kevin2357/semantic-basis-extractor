@@ -1,0 +1,5092 @@
+# Full Chart Basis: Kevin
+
+Read this complete chart basis before writing the whole-dog profile. It includes the selected insights and additional chart material so the profile can recognize the dog's complete pattern.
+
+## Selected Chart Material
+
+### 001: relationship_bd235e06b11e29af
+
+- **Claim:** Behavioral Doorway and Primary Companion Interface are linked through drives face off, creating bond freedom axis tension.
+- **id:** projected_relation:woofmapped_astrology.v0:fc42bb0e7b000cfa9e6c50bb
+- **relationship type:** drives_face_off
+- **source id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **target id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:5a6430c639047b23
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.opposition.drives_face_off
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - alternate
+  - enter
+  - externalize
+  - interface
+  - mirror
+  - negotiate
+  - partner
+  - polarize
+  - present
+- **theme tags:**
+  - behavioral_doorway
+  - bond_freedom_axis_tension
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** opposition
+  - **orb:** 0.0
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** behavioral_doorway
+  - **target canine subsystem:** primary_companion_interface
+  - **source mode:** pattern_breaking_oddball_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** not specified
+  - **interaction mode:** bond_freedom_axis_tension
+  - **projection relevance components:**
+    - **structural strength:** 0.55
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** behavioral_doorway
+    - **source mode:** pattern_breaking_oddball_mode
+    - **relationship mapping:** drives_face_off
+    - **target mapping:** primary_companion_interface
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drives_face_off
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:bond_freedom_axis_tension
+- **projection relevance score:** 0.528
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 002: placement_2fe48d9251284733
+
+- **Claim:** Behavioral Doorway operates in pattern breaking oddball mode through unspecified pattern.
+- **id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **object type:** woofmapped_interface
+- **name:** behavioral_doorway
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - enter
+  - first_respond
+  - interface
+  - meet_world
+  - present
+- **source refs:**
+  - canonical:object:natal:kevin:ASC
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.asc.behavioral_doorway
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** ASC
+  - **source names:**
+    - ASC
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - first_impression
+    - visible_temperament
+    - doorway_behavior
+  - **source sign:** Aquarius
+  - **projected mode:** pattern_breaking_oddball_mode
+  - **source house:** not specified
+  - **doghouse number:** not specified
+  - **projected domain:** not specified
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** behavioral_doorway
+    - **mode:** pattern_breaking_oddball_mode
+    - **domain:** not specified
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_doorway
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:pattern_breaking_oddball_mode
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.18865
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** angle
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 003: relationship_4e0c5f290f0c410c
+
+- **Claim:** Behavioral Doorway and Action and Play Drive are linked through drives face off, creating bond freedom axis tension.
+- **id:** projected_relation:woofmapped_astrology.v0:12c9e2a78a4e212cc6ce43a8
+- **relationship type:** drives_face_off
+- **source id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **target id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:cc634365a4d949b7
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.opposition.drives_face_off
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - alternate
+  - assert
+  - defend
+  - enter
+  - initiate
+  - interface
+  - mirror
+  - negotiate
+  - polarize
+  - present
+- **theme tags:**
+  - behavioral_doorway
+  - bond_freedom_axis_tension
+  - chase_play_defense_drive
+- **attributes:**
+  - **canonical aspect:** opposition
+  - **orb:** 0.5042353634594008
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** behavioral_doorway
+  - **target canine subsystem:** chase_play_defense_drive
+  - **source mode:** pattern_breaking_oddball_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** bond_freedom_axis_tension
+  - **projection relevance components:**
+    - **structural strength:** 0.526889
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** behavioral_doorway
+    - **source mode:** pattern_breaking_oddball_mode
+    - **relationship mapping:** drives_face_off
+    - **target mapping:** chase_play_defense_drive
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drives_face_off
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:bond_freedom_axis_tension
+- **projection relevance score:** 0.505813
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 004: relationship_559bd87e20fcfbcc
+
+- **Claim:** Action and Play Drive and Deep Trust Intensity are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:11cd9d4a04515428754c0c3c
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **target id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:f1dc08aa1b45f37b
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - assert
+  - cooperate
+  - coordinate
+  - defend
+  - empower
+  - enable
+  - expose
+  - initiate
+  - intensify
+  - practice
+  - transform
+- **theme tags:**
+  - chase_play_defense_drive
+  - developable_coordination
+  - primal_trust_intensity
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 0.001938398950642295
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** chase_play_defense_drive
+  - **target canine subsystem:** primal_trust_intensity
+  - **source mode:** attention_seeking_display_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_6_training_routine_care
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.549911
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** chase_play_defense_drive
+    - **source mode:** attention_seeking_display_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** primal_trust_intensity
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.450927
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 005: relationship_97378bb1a752b883
+
+- **Claim:** Primary Companion Interface and Action and Play Drive are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:7cf1ad8f53f7f45633e820ef
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **target id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:1bc6607b58ba2104
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - amplify
+  - assert
+  - co_activate
+  - defend
+  - externalize
+  - fuse_impulses
+  - initiate
+  - merge
+  - mirror
+  - partner
+- **theme tags:**
+  - chase_play_defense_drive
+  - inseparable_dog_impulse
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 0.5042353634594008
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** primary_companion_interface
+  - **target canine subsystem:** chase_play_defense_drive
+  - **source mode:** attention_seeking_display_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.526889
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** primary_companion_interface
+    - **source mode:** attention_seeking_display_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** chase_play_defense_drive
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.526889
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 006: placement_e862557046de33cb
+
+- **Claim:** Comfort and Regulation operates in emotional sponge dream dog mode through body temperament presence.
+- **id:** projected:woofmapped_astrology.v0:9e08f57f267c7a2536df35ce
+- **object type:** woofmapped_operator
+- **name:** comfort_safety_regulation
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - need
+  - regulate
+  - regulate_body_state
+  - remember
+  - retain_comfort_memory
+  - seek_safety
+- **source refs:**
+  - canonical:object:natal:kevin:Moon
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.moon.comfort_safety_regulation
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Moon
+  - **source names:**
+    - Moon
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - comfort
+    - safety
+    - body_state
+    - attachment
+  - **source sign:** Pisces
+  - **projected mode:** emotional_sponge_dream_dog_mode
+  - **source house:** 1
+  - **doghouse number:** 1
+  - **projected domain:** doghouse_1_body_temperament_presence
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** comfort_safety_regulation
+    - **mode:** emotional_sponge_dream_dog_mode
+    - **domain:** doghouse_1_body_temperament_presence
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:comfort_safety_regulation
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:emotional_sponge_dream_dog_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_1_body_temperament_presence
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1925
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 007: relationship_6b3de5e16913e82a
+
+- **Claim:** Safe-Den Baseline and Visible Pack Function are linked through drives face off, creating bond freedom axis tension.
+- **id:** projected_relation:woofmapped_astrology.v0:5f073c00e80feeb1e5cd95c7
+- **relationship type:** drives_face_off
+- **source id:** projected:woofmapped_astrology.v0:93e8f7756c4faa4dd923d621
+- **target id:** projected:woofmapped_astrology.v0:f2e06c756709999f600afc68
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:6cfb1322577779a5
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.opposition.drives_face_off
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - alternate
+  - aspire
+  - direct
+  - mirror
+  - negotiate
+  - polarize
+  - privatize
+  - publicize
+  - root
+  - secure
+- **theme tags:**
+  - bond_freedom_axis_tension
+  - safe_den_baseline
+  - visible_pack_function
+- **attributes:**
+  - **canonical aspect:** opposition
+  - **orb:** 2.842170943040401e-14
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** safe_den_baseline
+  - **target canine subsystem:** visible_pack_function
+  - **source mode:** information_sniffing_mode
+  - **target mode:** adventure_dog_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** not specified
+  - **interaction mode:** bond_freedom_axis_tension
+  - **projection relevance components:**
+    - **structural strength:** 0.55
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** safe_den_baseline
+    - **source mode:** information_sniffing_mode
+    - **relationship mapping:** drives_face_off
+    - **target mapping:** visible_pack_function
+    - **target mode:** adventure_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drives_face_off
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:bond_freedom_axis_tension
+- **projection relevance score:** 0.528
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 008: relationship_bfc2c827df58870e
+
+- **Claim:** Deep Trust Intensity and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:3e6dce2ca5429d9fc88d7be7
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **target id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:b94d4b3a0dce0a57
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - empower
+  - enter
+  - expose
+  - flow
+  - habitualize
+  - intensify
+  - interface
+  - present
+  - support
+  - transform
+- **theme tags:**
+  - behavioral_doorway
+  - easy_habit_or_talent
+  - primal_trust_intensity
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 0.5022969645087301
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** primal_trust_intensity
+  - **target canine subsystem:** behavioral_doorway
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** pattern_breaking_oddball_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** not specified
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.526978
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** primal_trust_intensity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** behavioral_doorway
+    - **target mode:** pattern_breaking_oddball_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.463741
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 009: relationship_d401f0b1a118fb52
+
+- **Claim:** Deep Trust Intensity and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:7862f268ff8341dd97e3fbbb
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **target id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:ce46c57eff3f9d09
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - cooperate
+  - coordinate
+  - empower
+  - enable
+  - expose
+  - externalize
+  - intensify
+  - mirror
+  - partner
+  - practice
+  - transform
+- **theme tags:**
+  - developable_coordination
+  - primal_trust_intensity
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 0.5022969645087301
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** primal_trust_intensity
+  - **target canine subsystem:** primary_companion_interface
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** not specified
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.526978
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** primal_trust_intensity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** primary_companion_interface
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.432122
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 010: synthesis_553f9fdca867a3b5
+
+- **Claim:** Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.
+
+### 011: synthesis_4883de73692b5b8c
+
+- **Claim:** Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.
+
+### 012: placement_85df75689829f069
+
+- **Claim:** Safe-Den Baseline operates in information sniffing mode through unspecified pattern.
+- **id:** projected:woofmapped_astrology.v0:93e8f7756c4faa4dd923d621
+- **object type:** woofmapped_interface
+- **name:** safe_den_baseline
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - privatize
+  - retreat
+  - root
+  - secure
+  - secure_den
+- **source refs:**
+  - canonical:object:natal:kevin:IC
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.ic.safe_den_baseline
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** IC
+  - **source names:**
+    - IC
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - private_safety
+    - home_base
+    - base_camp
+  - **source sign:** Gemini
+  - **projected mode:** information_sniffing_mode
+  - **source house:** not specified
+  - **doghouse number:** not specified
+  - **projected domain:** not specified
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** safe_den_baseline
+    - **mode:** information_sniffing_mode
+    - **domain:** not specified
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.94
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:safe_den_baseline
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:information_sniffing_mode
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.18095
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** angle
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 013: synthesis_ca7411eac40647d2
+
+- **Claim:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+
+### 014: synthesis_5c82513dbc5fdfa7
+
+- **Claim:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+
+### 015: relationship_5e63acfa56ece81d
+
+- **Claim:** Training Rule Structure and Comfort and Regulation are linked through awkward system recalibration, creating odd behavior needing adjustment.
+- **id:** projected_relation:woofmapped_astrology.v0:1bb68ae71dfd7871e5c31dfe
+- **relationship type:** awkward_system_recalibration
+- **source id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **target id:** projected:woofmapped_astrology.v0:9e08f57f267c7a2536df35ce
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:ac5941a98786726d
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.quincunx.awkward_system_recalibration
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - adjust
+  - constrain
+  - endure
+  - manage
+  - misfit
+  - need
+  - recalibrate
+  - regulate
+  - remember
+  - stabilize
+  - structure
+- **theme tags:**
+  - comfort_safety_regulation
+  - odd_behavior_needing_adjustment
+  - training_rule_structure
+- **attributes:**
+  - **canonical aspect:** quincunx
+  - **orb:** 1.0241994677149933
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** training_rule_structure
+  - **target canine subsystem:** comfort_safety_regulation
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** emotional_sponge_dream_dog_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_1_body_temperament_presence
+  - **interaction mode:** odd_behavior_needing_adjustment
+  - **projection relevance components:**
+    - **structural strength:** 0.392385
+    - **profile salience:** 0.74
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** training_rule_structure
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** awkward_system_recalibration
+    - **target mapping:** comfort_safety_regulation
+    - **target mode:** emotional_sponge_dream_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:awkward_system_recalibration
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:odd_behavior_needing_adjustment
+- **projection relevance score:** 0.290365
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 016: relationship_ce916583b7c67f12
+
+- **Claim:** Atmosphere and Dream Permeability and Action and Play Drive are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:289d16a97ffa61b436dd021f
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **target id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:8187c4c4c495c3cd
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - assert
+  - defend
+  - dissolve
+  - flow
+  - habitualize
+  - idealize
+  - imagine
+  - initiate
+  - spiritualize
+  - support
+- **theme tags:**
+  - atmosphere_dream_permeability
+  - chase_play_defense_drive
+  - easy_habit_or_talent
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 1.5297252619911603
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** atmosphere_dream_permeability
+  - **target canine subsystem:** chase_play_defense_drive
+  - **source mode:** adventure_dog_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_10_visible_pack_role
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.479888
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** atmosphere_dream_permeability
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** chase_play_defense_drive
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.422301
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 017: relationship_9f56c44fd55e5c10
+
+- **Claim:** Novelty and Surprise Response and Training Development Vector are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:ecc6351665db47b1e3829481
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **target id:** projected:woofmapped_astrology.v0:ed2952ad3ae68380389ed119
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:e9c1e8977d414eac
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - differentiate
+  - disrupt
+  - flow
+  - habitualize
+  - individuate
+  - liberate
+  - support
+- **theme tags:**
+  - easy_habit_or_talent
+  - novelty_zoomie_response
+  - training_development_vector
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 0.44511571641841385
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** novelty_zoomie_response
+  - **target canine subsystem:** training_development_vector
+  - **source mode:** obsessive_investigation_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.529599
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** novelty_zoomie_response
+    - **source mode:** obsessive_investigation_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** training_development_vector
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.466047
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 018: relationship_8a2fc135ec0d2311
+
+- **Claim:** Deep Trust Intensity and Atmosphere and Dream Permeability are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:a0abd8bf6b0d93fdb4aded44
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **target id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:f39a9cf03d8bfd66
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - cooperate
+  - coordinate
+  - dissolve
+  - empower
+  - enable
+  - expose
+  - idealize
+  - imagine
+  - intensify
+  - practice
+  - spiritualize
+  - transform
+- **theme tags:**
+  - atmosphere_dream_permeability
+  - developable_coordination
+  - primal_trust_intensity
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 1.531663660941831
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** primal_trust_intensity
+  - **target canine subsystem:** atmosphere_dream_permeability
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** adventure_dog_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_10_visible_pack_role
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.479799
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** primal_trust_intensity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** atmosphere_dream_permeability
+    - **target mode:** adventure_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.393435
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 019: synthesis_0db15a33ea59ebe2
+
+- **Claim:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+
+### 020: synthesis_08631040add14d5b
+
+- **Claim:** Signals and Scent, Adventure Confidence, Deep Trust Intensity, Training Rule Structure and Pack Identity converge in deep trust vulnerability, concentrating several needs in the same life domain.
+
+### 021: relationship_011406d66cbaab68
+
+- **Claim:** Pack Identity and Adventure Confidence are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:6c646fe3d786d4e460ab4502
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **target id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:66a7db3573cd4e75
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - amplify
+  - co_activate
+  - contextualize
+  - encourage
+  - expand
+  - express
+  - fuse_impulses
+  - illuminate
+  - merge
+  - prioritize
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - inseparable_dog_impulse
+  - pack_role_identity
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 2.527084044211165
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** pack_role_identity
+  - **target canine subsystem:** adventure_optimism
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.434175
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** pack_role_identity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** adventure_optimism
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.434175
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 022: placement_2600077993c79923
+
+- **Claim:** Action and Play Drive operates in attention seeking display mode through training routine care.
+- **id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **object type:** woofmapped_operator
+- **name:** chase_play_defense_drive
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - act
+  - assert
+  - chase
+  - defend
+  - execute
+  - initiate
+  - play_attack
+- **source refs:**
+  - canonical:object:natal:kevin:Mars
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.mars.chase_play_defense_drive
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Mars
+  - **source names:**
+    - Mars
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - pursuit
+    - play
+    - immediate_action
+    - defense
+  - **source sign:** Leo
+  - **projected mode:** attention_seeking_display_mode
+  - **source house:** 6
+  - **doghouse number:** 6
+  - **projected domain:** doghouse_6_training_routine_care
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** chase_play_defense_drive
+    - **mode:** attention_seeking_display_mode
+    - **domain:** doghouse_6_training_routine_care
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:chase_play_defense_drive
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:attention_seeking_display_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_6_training_routine_care
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1848
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 023: relationship_380ae214d4a88980
+
+- **Claim:** Atmosphere and Dream Permeability and Primary Companion Interface are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:28159a811b2aae015a6cc42d
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **target id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:3d7435b227569d2b
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - dissolve
+  - externalize
+  - flow
+  - habitualize
+  - idealize
+  - imagine
+  - mirror
+  - partner
+  - spiritualize
+  - support
+- **theme tags:**
+  - atmosphere_dream_permeability
+  - easy_habit_or_talent
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 2.033960625450561
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** atmosphere_dream_permeability
+  - **target canine subsystem:** primary_companion_interface
+  - **source mode:** adventure_dog_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_10_visible_pack_role
+  - **target doghouse:** not specified
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.456777
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** atmosphere_dream_permeability
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** primary_companion_interface
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.401964
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 024: synthesis_e76e387c57979a59
+
+- **Claim:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+
+### 025: relationship_96d0869a851b619d
+
+- **Claim:** Atmosphere and Dream Permeability and Behavioral Doorway are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:794eaf3337c3435538459a90
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **target id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:a5c54499d7566441
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - cooperate
+  - coordinate
+  - dissolve
+  - enable
+  - enter
+  - idealize
+  - imagine
+  - interface
+  - practice
+  - present
+  - spiritualize
+- **theme tags:**
+  - atmosphere_dream_permeability
+  - behavioral_doorway
+  - developable_coordination
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 2.033960625450561
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** atmosphere_dream_permeability
+  - **target canine subsystem:** behavioral_doorway
+  - **source mode:** adventure_dog_mode
+  - **target mode:** pattern_breaking_oddball_mode
+  - **source doghouse:** doghouse_10_visible_pack_role
+  - **target doghouse:** not specified
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.456777
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** atmosphere_dream_permeability
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** behavioral_doorway
+    - **target mode:** pattern_breaking_oddball_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.374557
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 026: synthesis_2f9e924cb6145c62
+
+- **Claim:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+
+### 027: synthesis_b97e4fa25d4751db
+
+- **Claim:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+
+### 028: relationship_0fb623f7bece88e2
+
+- **Claim:** Atmosphere and Dream Permeability and Adventure Confidence are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:b12d502817d09f088bbace51
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **target id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:7950bc569ca6ae73
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - contextualize
+  - cooperate
+  - coordinate
+  - dissolve
+  - enable
+  - encourage
+  - expand
+  - idealize
+  - imagine
+  - practice
+  - spiritualize
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - atmosphere_dream_permeability
+  - developable_coordination
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 2.4244047876192667
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** atmosphere_dream_permeability
+  - **target canine subsystem:** adventure_optimism
+  - **source mode:** adventure_dog_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_10_visible_pack_role
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.438881
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** atmosphere_dream_permeability
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** adventure_optimism
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.359882
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 029: synthesis_1068425d2897ed9c
+
+- **Claim:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+
+### 030: placement_f2815d5a01cc7e75
+
+- **Claim:** Primary Companion Interface operates in attention seeking display mode through unspecified pattern.
+- **id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **object type:** woofmapped_interface
+- **name:** primary_companion_interface
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - bond_with_other
+  - externalize
+  - mirror
+  - partner
+  - receive_companion
+- **source refs:**
+  - canonical:object:natal:kevin:DSC
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.dsc.primary_companion_interface
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** DSC
+  - **source names:**
+    - DSC
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - favorite_human
+    - one_to_one_bond
+    - counterpart_style
+  - **source sign:** Leo
+  - **projected mode:** attention_seeking_display_mode
+  - **source house:** not specified
+  - **doghouse number:** not specified
+  - **projected domain:** not specified
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** primary_companion_interface
+    - **mode:** attention_seeking_display_mode
+    - **domain:** not specified
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.94
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:primary_companion_interface
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:attention_seeking_display_mode
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.18095
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** angle
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 031: synthesis_4a19efe12f54c74d
+
+- **Claim:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+
+### 032: relationship_ee265ac315162d87
+
+- **Claim:** Adventure Confidence and Deep Trust Intensity are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:82c6ba92189d84e0115781d3
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **target id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:6a757de549966af5
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - amplify
+  - co_activate
+  - contextualize
+  - empower
+  - encourage
+  - expand
+  - expose
+  - fuse_impulses
+  - intensify
+  - merge
+  - synthesize
+  - transform
+- **theme tags:**
+  - adventure_optimism
+  - inseparable_dog_impulse
+  - primal_trust_intensity
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 3.9560684485610977
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** adventure_optimism
+  - **target canine subsystem:** primal_trust_intensity
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.36868
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** adventure_optimism
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** primal_trust_intensity
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.36868
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 033: synthesis_3877e3c4d3704b2b
+
+- **Claim:** Adventure Confidence, Deep Trust Intensity, Training Rule Structure and Pack Identity repeatedly express social harmony maintenance mode, making that style a recurring part of the dog's behavior.
+
+### 034: relationship_9c454989bd05aa64
+
+- **Claim:** Bonding Preference and Signals and Scent are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **id:** projected_relation:woofmapped_astrology.v0:5c3bf4aedd6dca5937a6241c
+- **relationship type:** subtle_adjacent_nudge
+- **source id:** projected:woofmapped_astrology.v0:7f7e9cfe63a156e725a06e98
+- **target id:** projected:woofmapped_astrology.v0:43c619e6cc25d12b6ac6a13f
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:7525fdc873f49065
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.semisextile.subtle_adjacent_nudge
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - adjacent-adjust
+  - attract
+  - bond
+  - compare
+  - connect
+  - incrementally_coordinate
+  - interpret
+  - irritate_lightly
+  - nudge
+  - represent
+  - translate
+  - value
+- **theme tags:**
+  - bonding_preference
+  - minor_behavioral_nudge
+  - scent_signal_interpretation
+- **attributes:**
+  - **canonical aspect:** semisextile
+  - **orb:** 0.3738483921337661
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** bonding_preference
+  - **target canine subsystem:** scent_signal_interpretation
+  - **source mode:** adventure_dog_mode
+  - **target mode:** obsessive_investigation_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** minor_behavioral_nudge
+  - **projection relevance components:**
+    - **structural strength:** 0.415635
+    - **profile salience:** 0.58
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** bonding_preference
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** subtle_adjacent_nudge
+    - **target mapping:** scent_signal_interpretation
+    - **target mode:** obsessive_investigation_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subtle_adjacent_nudge
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:minor_behavioral_nudge
+- **projection relevance score:** 0.241068
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 035: synthesis_707675a3ca907d5d
+
+- **Claim:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+
+### 036: relationship_f080856101fe0836
+
+- **Claim:** Adventure Confidence and Easy Reward Channel are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:1510b1699608dc07f16b2812
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **target id:** projected:woofmapped_astrology.v0:d75486aa58bd7aa194dd6033
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:b3dbf90cd5cfe5cc
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - contextualize
+  - develop
+  - encourage
+  - expand
+  - frustrate
+  - require_training_or_outlet
+  - stress
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - behavioral_friction
+  - easy_good_thing_channel
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 0.6642603318824172
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** adventure_optimism
+  - **target canine subsystem:** easy_good_thing_channel
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_5_play_zoomies_tricks
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.405253
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** adventure_optimism
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** easy_good_thing_channel
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.397148
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 037: placement_26a344f555dc94dc
+
+- **Claim:** Novelty and Surprise Response operates in obsessive investigation mode through adventure territory.
+- **id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **object type:** woofmapped_operator
+- **name:** novelty_zoomie_response
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - differentiate
+  - disrupt
+  - individuate
+  - liberate
+  - startle
+  - zoom
+- **source refs:**
+  - canonical:object:natal:kevin:Uranus
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.uranus.novelty_zoomie_response
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Uranus
+  - **source names:**
+    - Uranus
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - novelty
+    - surprise
+    - independence
+    - weirdness
+  - **source sign:** Scorpio
+  - **projected mode:** obsessive_investigation_mode
+  - **source house:** 9
+  - **doghouse number:** 9
+  - **projected domain:** doghouse_9_adventure_territory
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** novelty_zoomie_response
+    - **mode:** obsessive_investigation_mode
+    - **domain:** doghouse_9_adventure_territory
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.78
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:novelty_zoomie_response
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:obsessive_investigation_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_9_adventure_territory
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.15015
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 038: relationship_c3f0e739cbea5734
+
+- **Claim:** Behavioral Doorway and Novelty and Surprise Response are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:9b86884e81a8fb0a3fdd10c5
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **target id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:b180e4144e244658
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - differentiate
+  - disrupt
+  - enter
+  - frustrate
+  - individuate
+  - interface
+  - liberate
+  - present
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_doorway
+  - behavioral_friction
+  - novelty_zoomie_response
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 3.3987361443613793
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** behavioral_doorway
+  - **target canine subsystem:** novelty_zoomie_response
+  - **source mode:** pattern_breaking_oddball_mode
+  - **target mode:** obsessive_investigation_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_9_adventure_territory
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.394225
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** behavioral_doorway
+    - **source mode:** pattern_breaking_oddball_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** novelty_zoomie_response
+    - **target mode:** obsessive_investigation_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.38634
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 039: relationship_caffe06d5a64022b
+
+- **Claim:** Novelty and Surprise Response and Primary Companion Interface are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:33d57c5b15aff048cb76eac5
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **target id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:4684a850af7f0594
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - differentiate
+  - disrupt
+  - externalize
+  - frustrate
+  - individuate
+  - liberate
+  - mirror
+  - partner
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - novelty_zoomie_response
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 3.3987361443613793
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** novelty_zoomie_response
+  - **target canine subsystem:** primary_companion_interface
+  - **source mode:** obsessive_investigation_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** not specified
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.394225
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** novelty_zoomie_response
+    - **source mode:** obsessive_investigation_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** primary_companion_interface
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.38634
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### 040: placement_58dde150f872609a
+
+- **Claim:** Atmosphere and Dream Permeability operates in adventure dog mode through visible pack role.
+- **id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **object type:** woofmapped_operator
+- **name:** atmosphere_dream_permeability
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - absorb_atmosphere
+  - blur_signal
+  - dissolve
+  - dream
+  - drift
+  - idealize
+  - imagine
+  - spiritualize
+- **source refs:**
+  - canonical:object:natal:kevin:Neptune
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.neptune.atmosphere_dream_permeability
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Neptune
+  - **source names:**
+    - Neptune
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - dreaming
+    - scent_memory_haze
+    - emotional_atmosphere
+  - **source sign:** Sagittarius
+  - **projected mode:** adventure_dog_mode
+  - **source house:** 10
+  - **doghouse number:** 10
+  - **projected domain:** doghouse_10_visible_pack_role
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** atmosphere_dream_permeability
+    - **mode:** adventure_dog_mode
+    - **domain:** doghouse_10_visible_pack_role
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.76
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:atmosphere_dream_permeability
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:adventure_dog_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_10_visible_pack_role
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1463
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 041: placement_e4d48d4ede858bb5
+
+- **Claim:** Deep Trust Intensity operates in social harmony maintenance mode through deep trust vulnerability.
+- **id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **object type:** woofmapped_operator
+- **name:** primal_trust_intensity
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - empower
+  - expose
+  - fixate
+  - guard
+  - intensify
+  - transform
+  - transform_trust
+- **source refs:**
+  - canonical:object:natal:kevin:Pluto
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.pluto.primal_trust_intensity
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Pluto
+  - **source names:**
+    - Pluto
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - primal_drive
+    - territory
+    - hierarchy
+    - deep_trust_fear
+  - **source sign:** Libra
+  - **projected mode:** social_harmony_maintenance_mode
+  - **source house:** 8
+  - **doghouse number:** 8
+  - **projected domain:** doghouse_8_deep_trust_vulnerability
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** primal_trust_intensity
+    - **mode:** social_harmony_maintenance_mode
+    - **domain:** doghouse_8_deep_trust_vulnerability
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.84
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:primal_trust_intensity
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:social_harmony_maintenance_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_8_deep_trust_vulnerability
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1617
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 042: placement_fe632b84573cdc98
+
+- **Claim:** Adventure Confidence operates in social harmony maintenance mode through deep trust vulnerability.
+- **id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **object type:** woofmapped_operator
+- **name:** adventure_optimism
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - contextualize
+  - encourage
+  - expand
+  - expand_radius
+  - explore
+  - roam
+  - synthesize
+- **source refs:**
+  - canonical:object:natal:kevin:Jupiter
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.jupiter.adventure_optimism
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Jupiter
+  - **source names:**
+    - Jupiter
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - curiosity_radius
+    - adventure
+    - confidence
+  - **source sign:** Libra
+  - **projected mode:** social_harmony_maintenance_mode
+  - **source house:** 8
+  - **doghouse number:** 8
+  - **projected domain:** doghouse_8_deep_trust_vulnerability
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** adventure_optimism
+    - **mode:** social_harmony_maintenance_mode
+    - **domain:** doghouse_8_deep_trust_vulnerability
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.84
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:adventure_optimism
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:social_harmony_maintenance_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_8_deep_trust_vulnerability
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1617
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 043: placement_1796adf72f899654
+
+- **Claim:** Pack Identity operates in social harmony maintenance mode through deep trust vulnerability.
+- **id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **object type:** woofmapped_operator
+- **name:** pack_role_identity
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - coordinate_whole_dog
+  - express
+  - express_pack_role
+  - illuminate
+  - prioritize
+  - vitalize
+- **source refs:**
+  - canonical:object:natal:kevin:Sun
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.sun.pack_role_identity
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Sun
+  - **source names:**
+    - Sun
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - pack_identity
+    - whole_dog_coordination
+    - vitality
+  - **source sign:** Libra
+  - **projected mode:** social_harmony_maintenance_mode
+  - **source house:** 8
+  - **doghouse number:** 8
+  - **projected domain:** doghouse_8_deep_trust_vulnerability
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** pack_role_identity
+    - **mode:** social_harmony_maintenance_mode
+    - **domain:** doghouse_8_deep_trust_vulnerability
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:pack_role_identity
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:social_harmony_maintenance_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_8_deep_trust_vulnerability
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1925
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 044: placement_2de9d192f7bc9a4c
+
+- **Claim:** Signals and Scent operates in obsessive investigation mode through deep trust vulnerability.
+- **id:** projected:woofmapped_astrology.v0:43c619e6cc25d12b6ac6a13f
+- **object type:** woofmapped_operator
+- **name:** scent_signal_interpretation
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - compare
+  - decode_cue
+  - interpret
+  - interpret_scent
+  - predict_routine
+  - represent
+  - signal
+  - translate
+- **source refs:**
+  - canonical:object:natal:kevin:Mercury
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.mercury.scent_signal_interpretation
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Mercury
+  - **source names:**
+    - Mercury
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - scent_ecology
+    - cue_processing
+    - routine_prediction
+  - **source sign:** Scorpio
+  - **projected mode:** obsessive_investigation_mode
+  - **source house:** 8
+  - **doghouse number:** 8
+  - **projected domain:** doghouse_8_deep_trust_vulnerability
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** scent_signal_interpretation
+    - **mode:** obsessive_investigation_mode
+    - **domain:** doghouse_8_deep_trust_vulnerability
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.94
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:scent_signal_interpretation
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:obsessive_investigation_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_8_deep_trust_vulnerability
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.18095
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 045: placement_af301822d66f8d0e
+
+- **Claim:** Training Development Vector operates in pack security focus mode through training routine care.
+- **id:** projected:woofmapped_astrology.v0:ed2952ad3ae68380389ed119
+- **object type:** woofmapped_orientation
+- **name:** training_development_vector
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - develop
+  - learn_toward
+  - practice
+- **source refs:**
+  - canonical:object:natal:kevin:True_Node
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.north_node.training_development_vector
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** North Node
+  - **source names:**
+    - True Node
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - growth_direction
+    - training_path
+  - **source sign:** Cancer
+  - **projected mode:** pack_security_focus_mode
+  - **source house:** 6
+  - **doghouse number:** 6
+  - **projected domain:** doghouse_6_training_routine_care
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** training_development_vector
+    - **mode:** pack_security_focus_mode
+    - **domain:** doghouse_6_training_routine_care
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.68
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:training_development_vector
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:pack_security_focus_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_6_training_routine_care
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1309
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 046: placement_df46a990db23a75d
+
+- **Claim:** Training Rule Structure operates in social harmony maintenance mode through deep trust vulnerability.
+- **id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **object type:** woofmapped_operator
+- **name:** training_rule_structure
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - constrain
+  - endure
+  - inhibit_impulse
+  - limit
+  - routinize
+  - sequence
+  - stabilize
+  - structure
+  - train
+- **source refs:**
+  - canonical:object:natal:kevin:Saturn
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.saturn.training_rule_structure
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Saturn
+  - **source names:**
+    - Saturn
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - training
+    - rules
+    - routine
+    - impulse_control
+  - **source sign:** Libra
+  - **projected mode:** social_harmony_maintenance_mode
+  - **source house:** 8
+  - **doghouse number:** 8
+  - **projected domain:** doghouse_8_deep_trust_vulnerability
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** training_rule_structure
+    - **mode:** social_harmony_maintenance_mode
+    - **domain:** doghouse_8_deep_trust_vulnerability
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.92
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:training_rule_structure
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:social_harmony_maintenance_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_8_deep_trust_vulnerability
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1771
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 047: placement_da8add1d453bf0b5
+
+- **Claim:** Unexpected Encounter Trigger operates in patrol inspection mode through favorite human primary bond.
+- **id:** projected:woofmapped_astrology.v0:013455923ef656467e42516a
+- **object type:** woofmapped_interface
+- **name:** unexpected_encounter_trigger
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - encounter
+  - externalize
+  - trigger
+- **source refs:**
+  - canonical:object:natal:kevin:Vertex
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.vertex.unexpected_encounter_trigger
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Vertex
+  - **source names:**
+    - Vertex
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - surprise_meeting
+    - externally_evoked_behavior
+  - **source sign:** Virgo
+  - **projected mode:** patrol_inspection_mode
+  - **source house:** 7
+  - **doghouse number:** 7
+  - **projected domain:** doghouse_7_favorite_human_primary_bond
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** unexpected_encounter_trigger
+    - **mode:** patrol_inspection_mode
+    - **domain:** doghouse_7_favorite_human_primary_bond
+  - **projection relevance components:**
+    - **structural strength:** 0.1694
+    - **profile salience:** 0.52
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:unexpected_encounter_trigger
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:patrol_inspection_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_7_favorite_human_primary_bond
+- **structural strength score:** 0.1694
+- **projection relevance score:** 0.088088
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** angle_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 048: placement_e08d946bcae8e677
+
+- **Claim:** Bonding Preference operates in adventure dog mode through adventure territory.
+- **id:** projected:woofmapped_astrology.v0:7f7e9cfe63a156e725a06e98
+- **object type:** woofmapped_operator
+- **name:** bonding_preference
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - affiliate
+  - attract
+  - bond
+  - connect
+  - enjoy
+  - prefer
+  - value
+- **source refs:**
+  - canonical:object:natal:kevin:Venus
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.venus.bonding_preference
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Venus
+  - **source names:**
+    - Venus
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - favorite_humans
+    - treats
+    - toys
+    - affection_style
+  - **source sign:** Sagittarius
+  - **projected mode:** adventure_dog_mode
+  - **source house:** 9
+  - **doghouse number:** 9
+  - **projected domain:** doghouse_9_adventure_territory
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** bonding_preference
+    - **mode:** adventure_dog_mode
+    - **domain:** doghouse_9_adventure_territory
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.94
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:bonding_preference
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:adventure_dog_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_9_adventure_territory
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.18095
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** planet_or_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 049: placement_b2c332f5559c165f
+
+- **Claim:** Visible Pack Function operates in adventure dog mode through unspecified pattern.
+- **id:** projected:woofmapped_astrology.v0:f2e06c756709999f600afc68
+- **object type:** woofmapped_interface
+- **name:** visible_pack_function
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - aspire
+  - be_known_for
+  - direct
+  - direct_function
+  - perform_pack_role
+  - publicize
+- **source refs:**
+  - canonical:object:natal:kevin:MC
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.mc.visible_pack_function
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** MC
+  - **source names:**
+    - MC
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - guardian_role
+    - greeter_role
+    - helper_role
+    - couch_supervision
+  - **source sign:** Sagittarius
+  - **projected mode:** adventure_dog_mode
+  - **source house:** not specified
+  - **doghouse number:** not specified
+  - **projected domain:** not specified
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** visible_pack_function
+    - **mode:** adventure_dog_mode
+    - **domain:** not specified
+  - **projection relevance components:**
+    - **structural strength:** 0.1925
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:visible_pack_function
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:adventure_dog_mode
+- **structural strength score:** 0.1925
+- **projection relevance score:** 0.1848
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** angle
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+### 050: placement_8cf9ef33127798ae
+
+- **Claim:** Easy Reward Channel operates in pack security focus mode through play zoomies tricks.
+- **id:** projected:woofmapped_astrology.v0:d75486aa58bd7aa194dd6033
+- **object type:** woofmapped_orientation
+- **name:** easy_good_thing_channel
+- **target ontology:** woofmapped_astrology.v0
+- **operators:**
+  - ease
+  - resource
+  - reward
+- **source refs:**
+  - canonical:object:natal:kevin:Part_of_Fortune
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.object.part_of_fortune.easy_good_thing_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **attributes:**
+  - **canonical object name:** Part of Fortune
+  - **source names:**
+    - Part of Fortune
+  - **subject owner:** not specified
+  - **participant role:** not specified
+  - **relationship kind:** not specified
+  - **canine domains:**
+    - treat_flow
+    - comfort_resource
+    - easy_success
+  - **source sign:** Cancer
+  - **projected mode:** pack_security_focus_mode
+  - **source house:** 5
+  - **doghouse number:** 5
+  - **projected domain:** doghouse_5_play_zoomies_tricks
+  - **house mapping policy:** doghouse
+  - **projection composition:**
+    - **operator:** easy_good_thing_channel
+    - **mode:** pack_security_focus_mode
+    - **domain:** doghouse_5_play_zoomies_tricks
+  - **projection relevance components:**
+    - **structural strength:** 0.1386
+    - **profile salience:** 0.56
+    - **context salience:** 1.0
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **term ref:** woofmapped_astrology.projected_terms:0.1.0:easy_good_thing_channel
+  - **mode ref:** woofmapped_astrology.projected_terms:0.1.0:pack_security_focus_mode
+  - **domain ref:** woofmapped_astrology.projected_terms:0.1.0:doghouse_5_play_zoomies_tricks
+- **structural strength score:** 0.1386
+- **projection relevance score:** 0.077616
+- **provenance:**
+  - **profile layer:** woofmapped_object_mapping
+  - **source object type:** calculated_point
+  - **operator preservation policy:** preserve_core_verb_change_species_domain
+
+## Additional Chart Material
+
+### synthesis_variant_3a816687aeb6a62b
+
+- **Claim:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_a1c3d3e853678e87
+
+- **Claim:** Several systems repeatedly participate in easy habit or talent, making easy habit or talent a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_72fa4c11f25eeaa8
+
+- **Claim:** Several systems repeatedly participate in developable coordination, making developable coordination a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_e1955b2fa5790e07
+
+- **Claim:** Several systems repeatedly participate in behavioral doorway, making behavioral doorway a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_86f48324095b831a
+
+- **Claim:** Several systems repeatedly participate in chase play defense drive, making chase play defense drive a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_b9da36164ae97bca
+
+- **Claim:** Several systems repeatedly participate in primary companion interface, making primary companion interface a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_396625fdb41eb54e
+
+- **Claim:** Several systems repeatedly participate in adventure optimism, making adventure optimism a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_d68713fdcc497c01
+
+- **Claim:** Several systems repeatedly participate in primal trust intensity, making primal trust intensity a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_dcef17496789d963
+
+- **Claim:** Several systems repeatedly participate in inseparable dog impulse, making inseparable dog impulse a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_258335e92fd21b8f
+
+- **Claim:** Several systems repeatedly participate in atmosphere dream permeability, making atmosphere dream permeability a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_0eae26604589f80b
+
+- **Claim:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_6f0d3bb9c9e81ee3
+
+- **Claim:** Several systems repeatedly participate in bond freedom axis tension, making bond freedom axis tension a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_5c314e1feaa21054
+
+- **Claim:** Several systems repeatedly participate in novelty zoomie response, making novelty zoomie response a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_41abb30513f4ca86
+
+- **Claim:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_97a744a952dc10dd
+
+- **Claim:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_e72212d1cb6ff17f
+
+- **Claim:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_d597574521001fda
+
+- **Claim:** Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_6d640560fd760a15
+
+- **Claim:** Several systems repeatedly participate in unexpected encounter trigger, making unexpected encounter trigger a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_fd64839657abf3f4
+
+- **Claim:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_dbf82d6343440897
+
+- **Claim:** Several systems repeatedly participate in safe den baseline, making safe den baseline a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_2d41ab72079df197
+
+- **Claim:** Several systems repeatedly participate in comfort safety regulation, making comfort safety regulation a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_6cd99dc99a01b3ab
+
+- **Claim:** Several systems repeatedly participate in visible pack function, making visible pack function a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_variant_bcecded1913a7ae2
+
+- **Claim:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_688b0113f0ac1881
+
+- **Claim:** Several systems repeatedly participate in training development vector, making training development vector a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_d623ff2b40f80483
+
+- **Claim:** Several systems repeatedly participate in behavioral friction, making behavioral friction a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_654cfa844a4b9eab
+
+- **Claim:** Atmosphere and Dream Permeability, Bonding Preference and Visible Pack Function repeatedly express adventure dog mode, making that style a recurring part of the dog's behavior.
+
+### relationship_14618ab8f1dc85e9
+
+- **Claim:** Visible Pack Function and Comfort and Regulation are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:31b7465cafbf25c00f133b51
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:f2e06c756709999f600afc68
+- **target id:** projected:woofmapped_astrology.v0:9e08f57f267c7a2536df35ce
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:91cf4631ec943b73
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - aspire
+  - develop
+  - direct
+  - frustrate
+  - need
+  - publicize
+  - regulate
+  - remember
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - comfort_safety_regulation
+  - visible_pack_function
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 2.559759532215594
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** visible_pack_function
+  - **target canine subsystem:** comfort_safety_regulation
+  - **source mode:** adventure_dog_mode
+  - **target mode:** emotional_sponge_dream_dog_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_1_body_temperament_presence
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.432678
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** visible_pack_function
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** comfort_safety_regulation
+    - **target mode:** emotional_sponge_dream_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.424024
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_78c2302696efb802
+
+- **Claim:** Comfort and Regulation and Safe-Den Baseline are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:1f5809d78a09e5a3891f441c
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:9e08f57f267c7a2536df35ce
+- **target id:** projected:woofmapped_astrology.v0:93e8f7756c4faa4dd923d621
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:81879c5922a40bb7
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - frustrate
+  - need
+  - privatize
+  - regulate
+  - remember
+  - require_training_or_outlet
+  - root
+  - secure
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - comfort_safety_regulation
+  - safe_den_baseline
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 2.559759532215594
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** comfort_safety_regulation
+  - **target canine subsystem:** safe_den_baseline
+  - **source mode:** emotional_sponge_dream_dog_mode
+  - **target mode:** information_sniffing_mode
+  - **source doghouse:** doghouse_1_body_temperament_presence
+  - **target doghouse:** not specified
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.432678
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** comfort_safety_regulation
+    - **source mode:** emotional_sponge_dream_dog_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** safe_den_baseline
+    - **target mode:** information_sniffing_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.424024
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_6479386122ae71e9
+
+- **Claim:** Novelty and Surprise Response and Action and Play Drive are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:2e15f4fdd72ae71f255132c7
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **target id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:55d14ca40146916b
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - activate
+  - assert
+  - defend
+  - develop
+  - differentiate
+  - disrupt
+  - frustrate
+  - individuate
+  - initiate
+  - liberate
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - chase_play_defense_drive
+  - novelty_zoomie_response
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 3.90297150782078
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** novelty_zoomie_response
+  - **target canine subsystem:** chase_play_defense_drive
+  - **source mode:** obsessive_investigation_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.371114
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** novelty_zoomie_response
+    - **source mode:** obsessive_investigation_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** chase_play_defense_drive
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.363692
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### synthesis_dd22d6655e0ed720
+
+- **Claim:** Several systems repeatedly participate in easy good thing channel, making easy good thing channel a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_42266a27d8a3e07f
+
+- **Claim:** Several systems repeatedly participate in pack role identity, making pack role identity a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_b9d8d08f16a371bd
+
+- **Claim:** Several systems repeatedly participate in training rule structure, making training rule structure a recurring whole-chart pattern rather than a one-off interaction.
+
+### relationship_474d47ade2754647
+
+- **Claim:** Pack Identity and Training Rule Structure are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:f590fdc902d30e96265d2b35
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **target id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:650825436af13c95
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - amplify
+  - co_activate
+  - constrain
+  - endure
+  - express
+  - fuse_impulses
+  - illuminate
+  - merge
+  - prioritize
+  - stabilize
+  - structure
+- **theme tags:**
+  - inseparable_dog_impulse
+  - pack_role_identity
+  - training_rule_structure
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 4.0984262772371665
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** pack_role_identity
+  - **target canine subsystem:** training_rule_structure
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.362155
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** pack_role_identity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** training_rule_structure
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.362155
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_f5f22b868d27ff3b
+
+- **Claim:** Adventure Confidence and Action and Play Drive are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:df4b2ab1cda9df015e264faf
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **target id:** projected:woofmapped_astrology.v0:d3c7d40c25b474ac4f2da444
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:f8c42283f297da68
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - act
+  - assert
+  - contextualize
+  - cooperate
+  - coordinate
+  - defend
+  - enable
+  - encourage
+  - expand
+  - initiate
+  - practice
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - chase_play_defense_drive
+  - developable_coordination
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 3.954130049610427
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** adventure_optimism
+  - **target canine subsystem:** chase_play_defense_drive
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.368769
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** adventure_optimism
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** chase_play_defense_drive
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.302391
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### synthesis_4012789176a27cfc
+
+- **Claim:** Several systems repeatedly participate in bonding preference, making bonding preference a recurring whole-chart pattern rather than a one-off interaction.
+
+### synthesis_c7998145264a79f1
+
+- **Claim:** Several systems repeatedly participate in scent signal interpretation, making scent signal interpretation a recurring whole-chart pattern rather than a one-off interaction.
+
+### relationship_d537a5e318893631
+
+- **Claim:** Adventure Confidence and Behavioral Doorway are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:c0bbac4db4f95131b6590689
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **target id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:e8eaa3d1aef7bfd3
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - contextualize
+  - encourage
+  - enter
+  - expand
+  - flow
+  - habitualize
+  - interface
+  - present
+  - support
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - behavioral_doorway
+  - easy_habit_or_talent
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 4.458365413069828
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** adventure_optimism
+  - **target canine subsystem:** behavioral_doorway
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** pattern_breaking_oddball_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** not specified
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.345658
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** adventure_optimism
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** behavioral_doorway
+    - **target mode:** pattern_breaking_oddball_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.304179
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### synthesis_e5159357a0cad66c
+
+- **Claim:** Several systems repeatedly participate in minor behavioral nudge, making minor behavioral nudge a recurring whole-chart pattern rather than a one-off interaction.
+
+### relationship_0b0c9523a1b8e21d
+
+- **Claim:** Deep Trust Intensity and Training Development Vector are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:11d5f0bd8652ad5c543a8897
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **target id:** projected:woofmapped_astrology.v0:ed2952ad3ae68380389ed119
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:6da287e7c6860455
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - empower
+  - expose
+  - frustrate
+  - intensify
+  - require_training_or_outlet
+  - stress
+  - transform
+- **theme tags:**
+  - behavioral_friction
+  - primal_trust_intensity
+  - training_development_vector
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 4.346148825288523
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** primal_trust_intensity
+  - **target canine subsystem:** training_development_vector
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.350802
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** primal_trust_intensity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** training_development_vector
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.343786
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_d70a541a07da3bf5
+
+- **Claim:** Adventure Confidence and Primary Companion Interface are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:5fca32e73de45fe1e34fd490
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:5250a8f586b9915944984281
+- **target id:** projected:woofmapped_astrology.v0:64f1a5e313696be26f3217f9
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:3269d92e75cedc29
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - contextualize
+  - cooperate
+  - coordinate
+  - enable
+  - encourage
+  - expand
+  - externalize
+  - mirror
+  - partner
+  - practice
+  - synthesize
+- **theme tags:**
+  - adventure_optimism
+  - developable_coordination
+  - primary_companion_interface
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 4.458365413069828
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** adventure_optimism
+  - **target canine subsystem:** primary_companion_interface
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** attention_seeking_display_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** not specified
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.345658
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** adventure_optimism
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** primary_companion_interface
+    - **target mode:** attention_seeking_display_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.28344
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_f5fc034a206ac057
+
+- **Claim:** Pack Identity and Easy Reward Channel are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:8d30d66300f75bd3aec3a48e
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **target id:** projected:woofmapped_astrology.v0:d75486aa58bd7aa194dd6033
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:d8a4a9ac9477a97f
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - express
+  - frustrate
+  - illuminate
+  - prioritize
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - easy_good_thing_channel
+  - pack_role_identity
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 1.8628237123287192
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** pack_role_identity
+  - **target canine subsystem:** easy_good_thing_channel
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_5_play_zoomies_tricks
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.362404
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** pack_role_identity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** easy_good_thing_channel
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.355156
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_e2c4358714a65e10
+
+- **Claim:** Novelty and Surprise Response and Bonding Preference are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:e48d154698d0210cd8e386d1
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:5199d8e35be98cdf87f2378a
+- **target id:** projected:woofmapped_astrology.v0:7f7e9cfe63a156e725a06e98
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:e88c5148b9c7a019
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - amplify
+  - attract
+  - bond
+  - co_activate
+  - connect
+  - differentiate
+  - disrupt
+  - fuse_impulses
+  - individuate
+  - liberate
+  - merge
+  - value
+- **theme tags:**
+  - bonding_preference
+  - inseparable_dog_impulse
+  - novelty_zoomie_response
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 4.270007155830854
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** novelty_zoomie_response
+  - **target canine subsystem:** bonding_preference
+  - **source mode:** obsessive_investigation_mode
+  - **target mode:** adventure_dog_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** doghouse_9_adventure_territory
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.354291
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** novelty_zoomie_response
+    - **source mode:** obsessive_investigation_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** bonding_preference
+    - **target mode:** adventure_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.354291
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_67bc8fe99a900cdc
+
+- **Claim:** Safe-Den Baseline and Training Rule Structure are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:ecd93987f33be1fa9f93f028
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:93e8f7756c4faa4dd923d621
+- **target id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:3fc7b7576dd606d6
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - constrain
+  - endure
+  - flow
+  - habitualize
+  - privatize
+  - root
+  - secure
+  - stabilize
+  - structure
+  - support
+- **theme tags:**
+  - easy_habit_or_talent
+  - safe_den_baseline
+  - training_rule_structure
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 3.583958999930587
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** safe_den_baseline
+  - **target canine subsystem:** training_rule_structure
+  - **source mode:** information_sniffing_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.385735
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** safe_den_baseline
+    - **source mode:** information_sniffing_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** training_rule_structure
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.339447
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_15789de5c0893f9f
+
+- **Claim:** Pack Identity and Atmosphere and Dream Permeability are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:6efca828c2997587326ca637
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **target id:** projected:woofmapped_astrology.v0:1315f3f45e1830a3f24b99d3
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:fb51da3d48f09e22
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - cooperate
+  - coordinate
+  - dissolve
+  - enable
+  - express
+  - idealize
+  - illuminate
+  - imagine
+  - practice
+  - prioritize
+  - spiritualize
+- **theme tags:**
+  - atmosphere_dream_permeability
+  - developable_coordination
+  - pack_role_identity
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 4.951488831830375
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** pack_role_identity
+  - **target canine subsystem:** atmosphere_dream_permeability
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** adventure_dog_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_10_visible_pack_role
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.323057
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** pack_role_identity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** atmosphere_dream_permeability
+    - **target mode:** adventure_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.264907
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_8e6594aee121efc4
+
+- **Claim:** Training Rule Structure and Visible Pack Function are linked through trainable usable channel, creating developable coordination.
+- **id:** projected_relation:woofmapped_astrology.v0:0dcc27879511c1da4d516a52
+- **relationship type:** trainable_usable_channel
+- **source id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **target id:** projected:woofmapped_astrology.v0:f2e06c756709999f600afc68
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:1edb6ab89c7d5f88
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.sextile.trainable_usable_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - aspire
+  - constrain
+  - cooperate
+  - coordinate
+  - direct
+  - enable
+  - endure
+  - practice
+  - publicize
+  - stabilize
+  - structure
+- **theme tags:**
+  - developable_coordination
+  - training_rule_structure
+  - visible_pack_function
+- **attributes:**
+  - **canonical aspect:** sextile
+  - **orb:** 3.583958999930587
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** training_rule_structure
+  - **target canine subsystem:** visible_pack_function
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** adventure_dog_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** not specified
+  - **interaction mode:** developable_coordination
+  - **projection relevance components:**
+    - **structural strength:** 0.385735
+    - **profile salience:** 0.82
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** training_rule_structure
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** trainable_usable_channel
+    - **target mapping:** visible_pack_function
+    - **target mode:** adventure_dog_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:trainable_usable_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:developable_coordination
+- **projection relevance score:** 0.316303
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_a76da48209e6de4d
+
+- **Claim:** Pack Identity and Deep Trust Intensity are linked through subsystems run together, creating inseparable dog impulse.
+- **id:** projected_relation:woofmapped_astrology.v0:862c8f567475f49fa399af25
+- **relationship type:** subsystems_run_together
+- **source id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **target id:** projected:woofmapped_astrology.v0:71cb5921d9beafd660d38672
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:52ef30bbd05c2d65
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.conjunction.subsystems_run_together
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - amplify
+  - co_activate
+  - empower
+  - expose
+  - express
+  - fuse_impulses
+  - illuminate
+  - intensify
+  - merge
+  - prioritize
+  - transform
+- **theme tags:**
+  - inseparable_dog_impulse
+  - pack_role_identity
+  - primal_trust_intensity
+- **attributes:**
+  - **canonical aspect:** conjunction
+  - **orb:** 6.483152492772206
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** pack_role_identity
+  - **target canine subsystem:** primal_trust_intensity
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** inseparable_dog_impulse
+  - **projection relevance components:**
+    - **structural strength:** 0.252856
+    - **profile salience:** 1.0
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** pack_role_identity
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** subsystems_run_together
+    - **target mapping:** primal_trust_intensity
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subsystems_run_together
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:inseparable_dog_impulse
+- **projection relevance score:** 0.252856
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### synthesis_5d007a6d0470327c
+
+- **Claim:** Primary Companion Interface and Action and Play Drive repeatedly express attention seeking display mode, making that style a recurring part of the dog's behavior.
+
+### synthesis_4b5fbf705ecb8a88
+
+- **Claim:** Signals and Scent and Novelty and Surprise Response repeatedly express obsessive investigation mode, making that style a recurring part of the dog's behavior.
+
+### relationship_0d5a27abf081d1c7
+
+- **Claim:** Signals and Scent and Training Development Vector are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:3eb3a386fdac45fd70838180
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:43c619e6cc25d12b6ac6a13f
+- **target id:** projected:woofmapped_astrology.v0:ed2952ad3ae68380389ed119
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:55410e0b5bf033ba
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - compare
+  - develop
+  - frustrate
+  - interpret
+  - represent
+  - require_training_or_outlet
+  - stress
+  - translate
+- **theme tags:**
+  - behavioral_friction
+  - scent_signal_interpretation
+  - training_development_vector
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 4.198739831546234
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** scent_signal_interpretation
+  - **target canine subsystem:** training_development_vector
+  - **source mode:** obsessive_investigation_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.357558
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** scent_signal_interpretation
+    - **source mode:** obsessive_investigation_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** training_development_vector
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.350407
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_f0631fde3d0d38ad
+
+- **Claim:** Bonding Preference and Training Development Vector are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:06067b8ea60c9ceba6e04673
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:7f7e9cfe63a156e725a06e98
+- **target id:** projected:woofmapped_astrology.v0:ed2952ad3ae68380389ed119
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:e00a271f1e003c3c
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - attract
+  - bond
+  - connect
+  - flow
+  - habitualize
+  - support
+  - value
+- **theme tags:**
+  - bonding_preference
+  - easy_habit_or_talent
+  - training_development_vector
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 3.8248914394124682
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** bonding_preference
+  - **target canine subsystem:** training_development_vector
+  - **source mode:** adventure_dog_mode
+  - **target mode:** pack_security_focus_mode
+  - **source doghouse:** doghouse_9_adventure_territory
+  - **target doghouse:** doghouse_6_training_routine_care
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.374692
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** bonding_preference
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** training_development_vector
+    - **target mode:** pack_security_focus_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.329729
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_4f1d8c426b3a6c36
+
+- **Claim:** Comfort and Regulation and Unexpected Encounter Trigger are linked through drives face off, creating bond freedom axis tension.
+- **id:** projected_relation:woofmapped_astrology.v0:0c1c330eefd094a1f02e65be
+- **relationship type:** drives_face_off
+- **source id:** projected:woofmapped_astrology.v0:9e08f57f267c7a2536df35ce
+- **target id:** projected:woofmapped_astrology.v0:013455923ef656467e42516a
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:80ca7faafcc10670
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.opposition.drives_face_off
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - alternate
+  - mirror
+  - need
+  - negotiate
+  - polarize
+  - regulate
+  - remember
+- **theme tags:**
+  - bond_freedom_axis_tension
+  - comfort_safety_regulation
+  - unexpected_encounter_trigger
+- **attributes:**
+  - **canonical aspect:** opposition
+  - **orb:** 1.9982371929008877
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** comfort_safety_regulation
+  - **target canine subsystem:** unexpected_encounter_trigger
+  - **source mode:** emotional_sponge_dream_dog_mode
+  - **target mode:** patrol_inspection_mode
+  - **source doghouse:** doghouse_1_body_temperament_presence
+  - **target doghouse:** doghouse_7_favorite_human_primary_bond
+  - **interaction mode:** bond_freedom_axis_tension
+  - **projection relevance components:**
+    - **structural strength:** 0.458414
+    - **profile salience:** 0.96
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** comfort_safety_regulation
+    - **source mode:** emotional_sponge_dream_dog_mode
+    - **relationship mapping:** drives_face_off
+    - **target mapping:** unexpected_encounter_trigger
+    - **target mode:** patrol_inspection_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drives_face_off
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:bond_freedom_axis_tension
+- **projection relevance score:** 0.440077
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### synthesis_e069fcfc5c12b0ce
+
+- **Claim:** Novelty and Surprise Response and Bonding Preference converge in adventure territory, concentrating several needs in the same life domain.
+
+### synthesis_add3783c7c492b6c
+
+- **Claim:** Action and Play Drive and Training Development Vector converge in training routine care, concentrating several needs in the same life domain.
+
+### synthesis_cbe4f1318385f494
+
+- **Claim:** Easy Reward Channel and Training Development Vector repeatedly express pack security focus mode, making that style a recurring part of the dog's behavior.
+
+### relationship_a120f6403621432a
+
+- **Claim:** Training Rule Structure and Unexpected Encounter Trigger are linked through subtle adjacent nudge, creating minor behavioral nudge.
+- **id:** projected_relation:woofmapped_astrology.v0:ab7c4cd6aadc8952da09d2cb
+- **relationship type:** subtle_adjacent_nudge
+- **source id:** projected:woofmapped_astrology.v0:b44b9d5ec166e10da2f885b7
+- **target id:** projected:woofmapped_astrology.v0:013455923ef656467e42516a
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:6509c00c9e08146a
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.semisextile.subtle_adjacent_nudge
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - adjacent-adjust
+  - constrain
+  - endure
+  - incrementally_coordinate
+  - irritate_lightly
+  - nudge
+  - stabilize
+  - structure
+- **theme tags:**
+  - minor_behavioral_nudge
+  - training_rule_structure
+  - unexpected_encounter_trigger
+- **attributes:**
+  - **canonical aspect:** semisextile
+  - **orb:** 0.9740377251858945
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** training_rule_structure
+  - **target canine subsystem:** unexpected_encounter_trigger
+  - **source mode:** social_harmony_maintenance_mode
+  - **target mode:** patrol_inspection_mode
+  - **source doghouse:** doghouse_8_deep_trust_vulnerability
+  - **target doghouse:** doghouse_7_favorite_human_primary_bond
+  - **interaction mode:** minor_behavioral_nudge
+  - **projection relevance components:**
+    - **structural strength:** 0.394178
+    - **profile salience:** 0.58
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** training_rule_structure
+    - **source mode:** social_harmony_maintenance_mode
+    - **relationship mapping:** subtle_adjacent_nudge
+    - **target mapping:** unexpected_encounter_trigger
+    - **target mode:** patrol_inspection_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:subtle_adjacent_nudge
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:minor_behavioral_nudge
+- **projection relevance score:** 0.228623
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_1585bca1596cc710
+
+- **Claim:** Behavioral Doorway and Pack Identity are linked through natural behavioral channel, creating easy habit or talent.
+- **id:** projected_relation:woofmapped_astrology.v0:24ee3737dc67cdde7ebf08df
+- **relationship type:** natural_behavioral_channel
+- **source id:** projected:woofmapped_astrology.v0:86c04b4e5fc23b0d2c792232
+- **target id:** projected:woofmapped_astrology.v0:d7df2ed470f641e081489acf
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:3a403fb41348aba3
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.trine.natural_behavioral_channel
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - enter
+  - express
+  - flow
+  - habitualize
+  - illuminate
+  - interface
+  - present
+  - prioritize
+  - support
+- **theme tags:**
+  - behavioral_doorway
+  - easy_habit_or_talent
+  - pack_role_identity
+- **attributes:**
+  - **canonical aspect:** trine
+  - **orb:** 6.985449457280964
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** behavioral_doorway
+  - **target canine subsystem:** pack_role_identity
+  - **source mode:** pattern_breaking_oddball_mode
+  - **target mode:** social_harmony_maintenance_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_8_deep_trust_vulnerability
+  - **interaction mode:** easy_habit_or_talent
+  - **projection relevance components:**
+    - **structural strength:** 0.229834
+    - **profile salience:** 0.88
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** behavioral_doorway
+    - **source mode:** pattern_breaking_oddball_mode
+    - **relationship mapping:** natural_behavioral_channel
+    - **target mapping:** pack_role_identity
+    - **target mode:** social_harmony_maintenance_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:natural_behavioral_channel
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:easy_habit_or_talent
+- **projection relevance score:** 0.202254
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_54b463c0a6fb26dd
+
+- **Claim:** Visible Pack Function and Unexpected Encounter Trigger are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:b4246a50a49290b655089d8c
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:f2e06c756709999f600afc68
+- **target id:** projected:woofmapped_astrology.v0:013455923ef656467e42516a
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:fd73112524c99f51
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - aspire
+  - develop
+  - direct
+  - frustrate
+  - publicize
+  - require_training_or_outlet
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - unexpected_encounter_trigger
+  - visible_pack_function
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 4.557996725116453
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** visible_pack_function
+  - **target canine subsystem:** unexpected_encounter_trigger
+  - **source mode:** adventure_dog_mode
+  - **target mode:** patrol_inspection_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_7_favorite_human_primary_bond
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.341092
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** visible_pack_function
+    - **source mode:** adventure_dog_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** unexpected_encounter_trigger
+    - **target mode:** patrol_inspection_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.33427
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+### relationship_5d7cdd4593259a15
+
+- **Claim:** Safe-Den Baseline and Unexpected Encounter Trigger are linked through drive conflict requires outlet, creating behavioral friction.
+- **id:** projected_relation:woofmapped_astrology.v0:9e1f46d919bc7f6306280986
+- **relationship type:** drive_conflict_requires_outlet
+- **source id:** projected:woofmapped_astrology.v0:93e8f7756c4faa4dd923d621
+- **target id:** projected:woofmapped_astrology.v0:013455923ef656467e42516a
+- **source relationship refs:**
+  - canonical:relationship:rel:aspect:41a467f7b1455ce2
+- **mapping rule refs:**
+  - woofmapped_astrology.v0.aspect.square.drive_conflict_requires_outlet
+- **context refs:**
+  - woofmapped.doghouse.general.v0
+- **operators:**
+  - activate
+  - develop
+  - frustrate
+  - privatize
+  - require_training_or_outlet
+  - root
+  - secure
+  - stress
+- **theme tags:**
+  - behavioral_friction
+  - safe_den_baseline
+  - unexpected_encounter_trigger
+- **attributes:**
+  - **canonical aspect:** square
+  - **orb:** 4.557996725116482
+  - **relationship kind:** not specified
+  - **source owner:** not specified
+  - **target owner:** not specified
+  - **source participant role:** not specified
+  - **target participant role:** not specified
+  - **inter participant:** no
+  - **relational role composition:**
+    - **source role:** not specified
+    - **target role:** not specified
+    - **asymmetric:** no
+  - **source canine subsystem:** safe_den_baseline
+  - **target canine subsystem:** unexpected_encounter_trigger
+  - **source mode:** information_sniffing_mode
+  - **target mode:** patrol_inspection_mode
+  - **source doghouse:** not specified
+  - **target doghouse:** doghouse_7_favorite_human_primary_bond
+  - **interaction mode:** behavioral_friction
+  - **projection relevance components:**
+    - **structural strength:** 0.341092
+    - **profile salience:** 0.98
+    - **context salience:** 1.0
+  - **projection first reasoning:**
+    - **source mapping:** safe_den_baseline
+    - **source mode:** information_sniffing_mode
+    - **relationship mapping:** drive_conflict_requires_outlet
+    - **target mapping:** unexpected_encounter_trigger
+    - **target mode:** patrol_inspection_mode
+  - **guardrails:**
+    - playful_experimental_projection
+    - not_veterinary_advice
+    - not_behavioral_diagnosis
+    - not_empirically_validated
+  - **relation ref:** woofmapped_astrology.projected_terms:0.1.0:drive_conflict_requires_outlet
+  - **interaction mode ref:** woofmapped_astrology.projected_terms:0.1.0:behavioral_friction
+- **projection relevance score:** 0.33427
+- **provenance:**
+  - **profile layer:** woofmapped_relationship_mapping
+  - **operator preservation policy:** relationship_geometry_preserved
+
+
+## Complete Projected-Term Registry
+
+- **registry id:** woofmapped_astrology.projected_terms
+- **registry version:** 0.1.0
+- **target ontology:** woofmapped_astrology.v0
+- **materialization:** used_terms_subset
+- **terms:**
+  - **adventure dog mode:**
+    - **term type:** mode
+    - **canonical label:** Adventure Dog Mode
+    - **friendly labels:**
+      - adventure dog mode
+    - **short description:** An operating style characterized by adventure dog mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through adventure dog mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - adventure
+      - dog
+      - mode
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a adventure dog mode style
+      - **verb phrase:** operates through adventure dog mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **adventure optimism:**
+    - **term type:** operator
+    - **canonical label:** Adventure Optimism
+    - **friendly labels:**
+      - adventure optimism
+    - **short description:** A projected operator describing adventure optimism.
+    - **long description:** This term represents the target-ontology function of adventure optimism. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - encourage
+      - expand_radius
+      - explore
+      - roam
+    - **semantic facets:**
+      - adventure
+      - confidence
+      - curiosity_radius
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** adventure optimism
+      - **possessive phrase:** the subject's adventure optimism
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **atmosphere dream permeability:**
+    - **term type:** operator
+    - **canonical label:** Atmosphere Dream Permeability
+    - **friendly labels:**
+      - atmosphere dream permeability
+    - **short description:** A projected operator describing atmosphere dream permeability.
+    - **long description:** This term represents the target-ontology function of atmosphere dream permeability. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - absorb_atmosphere
+      - blur_signal
+      - dream
+      - drift
+    - **semantic facets:**
+      - dreaming
+      - emotional_atmosphere
+      - scent_memory_haze
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** atmosphere dream permeability
+      - **possessive phrase:** the subject's atmosphere dream permeability
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **attention seeking display mode:**
+    - **term type:** mode
+    - **canonical label:** Attention Seeking Display Mode
+    - **friendly labels:**
+      - attention seeking display mode
+    - **short description:** An operating style characterized by attention seeking display mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through attention seeking display mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - attention
+      - display
+      - mode
+      - seeking
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a attention seeking display mode style
+      - **verb phrase:** operates through attention seeking display mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **awkward system recalibration:**
+    - **term type:** relation
+    - **canonical label:** Awkward System Recalibration
+    - **friendly labels:**
+      - awkward system recalibration
+    - **short description:** A projected relationship in which two subsystems awkward system recalibration.
+    - **long description:** This relation describes how two projected endpoints interact: they awkward system recalibration. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - manage
+      - misfit
+      - recalibrate
+    - **semantic facets:**
+      - odd_behavior_needing_adjustment
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** awkward system recalibration
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **behavioral doorway:**
+    - **term type:** interface
+    - **canonical label:** Behavioral Doorway
+    - **friendly labels:**
+      - behavioral doorway
+    - **short description:** A projected interface describing behavioral doorway.
+    - **long description:** This term represents the target-ontology function of behavioral doorway. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - first_respond
+      - meet_world
+      - present
+    - **semantic facets:**
+      - doorway_behavior
+      - first_impression
+      - visible_temperament
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** behavioral doorway
+      - **possessive phrase:** the subject's behavioral doorway
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **behavioral friction:**
+    - **term type:** theme
+    - **canonical label:** Behavioral Friction
+    - **friendly labels:**
+      - behavioral friction
+    - **short description:** A projected semantic theme concerning behavioral friction.
+    - **long description:** This theme identifies behavioral friction as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - behavioral
+      - friction
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** behavioral friction
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **bond freedom axis tension:**
+    - **term type:** theme
+    - **canonical label:** Bond Freedom Axis Tension
+    - **friendly labels:**
+      - bond freedom axis tension
+    - **short description:** A projected semantic theme concerning bond freedom axis tension.
+    - **long description:** This theme identifies bond freedom axis tension as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - axis
+      - bond
+      - freedom
+      - tension
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** bond freedom axis tension
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **bonding preference:**
+    - **term type:** operator
+    - **canonical label:** Bonding Preference
+    - **friendly labels:**
+      - bonding preference
+    - **short description:** A projected operator describing bonding preference.
+    - **long description:** This term represents the target-ontology function of bonding preference. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - affiliate
+      - bond
+      - enjoy
+      - prefer
+    - **semantic facets:**
+      - affection_style
+      - favorite_humans
+      - toys
+      - treats
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** bonding preference
+      - **possessive phrase:** the subject's bonding preference
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **chase play defense drive:**
+    - **term type:** operator
+    - **canonical label:** Chase Play Defense Drive
+    - **friendly labels:**
+      - chase play defense drive
+    - **short description:** A projected operator describing chase play defense drive.
+    - **long description:** This term represents the target-ontology function of chase play defense drive. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - assert
+      - chase
+      - defend
+      - execute
+      - play_attack
+    - **semantic facets:**
+      - defense
+      - immediate_action
+      - play
+      - pursuit
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** chase play defense drive
+      - **possessive phrase:** the subject's chase play defense drive
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **comfort safety regulation:**
+    - **term type:** operator
+    - **canonical label:** Comfort Safety Regulation
+    - **friendly labels:**
+      - comfort safety regulation
+    - **short description:** A projected operator describing comfort safety regulation.
+    - **long description:** This term represents the target-ontology function of comfort safety regulation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - regulate_body_state
+      - retain_comfort_memory
+      - seek_safety
+    - **semantic facets:**
+      - attachment
+      - body_state
+      - comfort
+      - safety
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** comfort safety regulation
+      - **possessive phrase:** the subject's comfort safety regulation
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **developable coordination:**
+    - **term type:** theme
+    - **canonical label:** Developable Coordination
+    - **friendly labels:**
+      - developable coordination
+    - **short description:** A projected semantic theme concerning developable coordination.
+    - **long description:** This theme identifies developable coordination as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - coordination
+      - developable
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** developable coordination
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 10 visible pack role:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 10 Visible Pack Role
+    - **friendly labels:**
+      - doghouse 10 visible pack role
+    - **short description:** A projected context or life domain centered on doghouse 10 visible pack role.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 10 visible pack role providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 10
+      - doghouse
+      - pack
+      - role
+      - visible
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 10 visible pack role
+      - **location phrase:** in doghouse 10 visible pack role
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 1 body temperament presence:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 1 Body Temperament Presence
+    - **friendly labels:**
+      - doghouse 1 body temperament presence
+    - **short description:** A projected context or life domain centered on doghouse 1 body temperament presence.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 1 body temperament presence providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 1
+      - body
+      - doghouse
+      - presence
+      - temperament
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 1 body temperament presence
+      - **location phrase:** in doghouse 1 body temperament presence
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 5 play zoomies tricks:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 5 Play Zoomies Tricks
+    - **friendly labels:**
+      - doghouse 5 play zoomies tricks
+    - **short description:** A projected context or life domain centered on doghouse 5 play zoomies tricks.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 5 play zoomies tricks providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 5
+      - doghouse
+      - play
+      - tricks
+      - zoomies
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 5 play zoomies tricks
+      - **location phrase:** in doghouse 5 play zoomies tricks
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 6 training routine care:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 6 Training Routine Care
+    - **friendly labels:**
+      - doghouse 6 training routine care
+    - **short description:** A projected context or life domain centered on doghouse 6 training routine care.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 6 training routine care providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 6
+      - care
+      - doghouse
+      - routine
+      - training
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 6 training routine care
+      - **location phrase:** in doghouse 6 training routine care
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 7 favorite human primary bond:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 7 Favorite Human Primary Bond
+    - **friendly labels:**
+      - doghouse 7 favorite human primary bond
+    - **short description:** A projected context or life domain centered on doghouse 7 favorite human primary bond.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 7 favorite human primary bond providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 7
+      - bond
+      - doghouse
+      - favorite
+      - human
+      - primary
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 7 favorite human primary bond
+      - **location phrase:** in doghouse 7 favorite human primary bond
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 8 deep trust vulnerability:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 8 Deep Trust Vulnerability
+    - **friendly labels:**
+      - doghouse 8 deep trust vulnerability
+    - **short description:** A projected context or life domain centered on doghouse 8 deep trust vulnerability.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 8 deep trust vulnerability providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 8
+      - deep
+      - doghouse
+      - trust
+      - vulnerability
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 8 deep trust vulnerability
+      - **location phrase:** in doghouse 8 deep trust vulnerability
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **doghouse 9 adventure territory:**
+    - **term type:** domain
+    - **canonical label:** Doghouse 9 Adventure Territory
+    - **friendly labels:**
+      - doghouse 9 adventure territory
+    - **short description:** A projected context or life domain centered on doghouse 9 adventure territory.
+    - **long description:** This domain describes where the projected operator is organized or expressed, with doghouse 9 adventure territory providing the structural context.
+    - **core operators:** []
+    - **semantic facets:**
+      - 9
+      - adventure
+      - doghouse
+      - territory
+    - **related terms:** []
+    - **output guidance:**
+      - **context phrase:** within the domain of doghouse 9 adventure territory
+      - **location phrase:** in doghouse 9 adventure territory
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **drive conflict requires outlet:**
+    - **term type:** relation
+    - **canonical label:** Drive Conflict Requires Outlet
+    - **friendly labels:**
+      - drive conflict requires outlet
+    - **short description:** A projected relationship in which two subsystems drive conflict requires outlet.
+    - **long description:** This relation describes how two projected endpoints interact: they drive conflict requires outlet. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - activate
+      - frustrate
+      - require_training_or_outlet
+    - **semantic facets:**
+      - behavioral_friction
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** drive conflict requires outlet
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **drives face off:**
+    - **term type:** relation
+    - **canonical label:** Drives Face Off
+    - **friendly labels:**
+      - drives face off
+    - **short description:** A projected relationship in which two subsystems drives face off.
+    - **long description:** This relation describes how two projected endpoints interact: they drives face off. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - alternate
+      - mirror
+      - polarize
+    - **semantic facets:**
+      - bond_freedom_axis_tension
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** drives face off
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **easy good thing channel:**
+    - **term type:** orientation
+    - **canonical label:** Easy Good Thing Channel
+    - **friendly labels:**
+      - easy good thing channel
+    - **short description:** A projected orientation describing easy good thing channel.
+    - **long description:** This term represents the target-ontology function of easy good thing channel. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - ease
+      - resource
+      - reward
+    - **semantic facets:**
+      - comfort_resource
+      - easy_success
+      - treat_flow
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** easy good thing channel
+      - **possessive phrase:** the subject's easy good thing channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **easy habit or talent:**
+    - **term type:** theme
+    - **canonical label:** Easy Habit Or Talent
+    - **friendly labels:**
+      - easy habit or talent
+    - **short description:** A projected semantic theme concerning easy habit or talent.
+    - **long description:** This theme identifies easy habit or talent as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - easy
+      - habit
+      - or
+      - talent
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** easy habit or talent
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **emotional sponge dream dog mode:**
+    - **term type:** mode
+    - **canonical label:** Emotional Sponge Dream Dog Mode
+    - **friendly labels:**
+      - emotional sponge dream dog mode
+    - **short description:** An operating style characterized by emotional sponge dream dog mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through emotional sponge dream dog mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - dog
+      - dream
+      - emotional
+      - mode
+      - sponge
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a emotional sponge dream dog mode style
+      - **verb phrase:** operates through emotional sponge dream dog mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **information sniffing mode:**
+    - **term type:** mode
+    - **canonical label:** Information Sniffing Mode
+    - **friendly labels:**
+      - information sniffing mode
+    - **short description:** An operating style characterized by information sniffing mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through information sniffing mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - information
+      - mode
+      - sniffing
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a information sniffing mode style
+      - **verb phrase:** operates through information sniffing mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **inseparable dog impulse:**
+    - **term type:** theme
+    - **canonical label:** Inseparable Dog Impulse
+    - **friendly labels:**
+      - inseparable dog impulse
+    - **short description:** A projected semantic theme concerning inseparable dog impulse.
+    - **long description:** This theme identifies inseparable dog impulse as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - dog
+      - impulse
+      - inseparable
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** inseparable dog impulse
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **minor behavioral nudge:**
+    - **term type:** theme
+    - **canonical label:** Minor Behavioral Nudge
+    - **friendly labels:**
+      - minor behavioral nudge
+    - **short description:** A projected semantic theme concerning minor behavioral nudge.
+    - **long description:** This theme identifies minor behavioral nudge as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - behavioral
+      - minor
+      - nudge
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** minor behavioral nudge
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **natural behavioral channel:**
+    - **term type:** relation
+    - **canonical label:** Natural Behavioral Channel
+    - **friendly labels:**
+      - natural behavioral channel
+    - **short description:** A projected relationship in which two subsystems natural behavioral channel.
+    - **long description:** This relation describes how two projected endpoints interact: they natural behavioral channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - flow
+      - habitualize
+      - support
+    - **semantic facets:**
+      - easy_habit_or_talent
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** natural behavioral channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **novelty zoomie response:**
+    - **term type:** operator
+    - **canonical label:** Novelty Zoomie Response
+    - **friendly labels:**
+      - novelty zoomie response
+    - **short description:** A projected operator describing novelty zoomie response.
+    - **long description:** This term represents the target-ontology function of novelty zoomie response. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - disrupt
+      - individuate
+      - startle
+      - zoom
+    - **semantic facets:**
+      - independence
+      - novelty
+      - surprise
+      - weirdness
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** novelty zoomie response
+      - **possessive phrase:** the subject's novelty zoomie response
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **obsessive investigation mode:**
+    - **term type:** mode
+    - **canonical label:** Obsessive Investigation Mode
+    - **friendly labels:**
+      - obsessive investigation mode
+    - **short description:** An operating style characterized by obsessive investigation mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through obsessive investigation mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - investigation
+      - mode
+      - obsessive
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a obsessive investigation mode style
+      - **verb phrase:** operates through obsessive investigation mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **odd behavior needing adjustment:**
+    - **term type:** theme
+    - **canonical label:** Odd Behavior Needing Adjustment
+    - **friendly labels:**
+      - odd behavior needing adjustment
+    - **short description:** A projected semantic theme concerning odd behavior needing adjustment.
+    - **long description:** This theme identifies odd behavior needing adjustment as a recurring semantic facet in the projected graph.
+    - **core operators:** []
+    - **semantic facets:**
+      - adjustment
+      - behavior
+      - needing
+      - odd
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** odd behavior needing adjustment
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **pack role identity:**
+    - **term type:** operator
+    - **canonical label:** Pack Role Identity
+    - **friendly labels:**
+      - pack role identity
+    - **short description:** A projected operator describing pack role identity.
+    - **long description:** This term represents the target-ontology function of pack role identity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - coordinate_whole_dog
+      - express_pack_role
+      - vitalize
+    - **semantic facets:**
+      - pack_identity
+      - vitality
+      - whole_dog_coordination
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** pack role identity
+      - **possessive phrase:** the subject's pack role identity
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **pack security focus mode:**
+    - **term type:** mode
+    - **canonical label:** Pack Security Focus Mode
+    - **friendly labels:**
+      - pack security focus mode
+    - **short description:** An operating style characterized by pack security focus mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through pack security focus mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - focus
+      - mode
+      - pack
+      - security
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a pack security focus mode style
+      - **verb phrase:** operates through pack security focus mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **patrol inspection mode:**
+    - **term type:** mode
+    - **canonical label:** Patrol Inspection Mode
+    - **friendly labels:**
+      - patrol inspection mode
+    - **short description:** An operating style characterized by patrol inspection mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through patrol inspection mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - inspection
+      - mode
+      - patrol
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a patrol inspection mode style
+      - **verb phrase:** operates through patrol inspection mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **pattern breaking oddball mode:**
+    - **term type:** mode
+    - **canonical label:** Pattern Breaking Oddball Mode
+    - **friendly labels:**
+      - pattern breaking oddball mode
+    - **short description:** An operating style characterized by pattern breaking oddball mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through pattern breaking oddball mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - breaking
+      - mode
+      - oddball
+      - pattern
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a pattern breaking oddball mode style
+      - **verb phrase:** operates through pattern breaking oddball mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **primal trust intensity:**
+    - **term type:** operator
+    - **canonical label:** Primal Trust Intensity
+    - **friendly labels:**
+      - primal trust intensity
+    - **short description:** A projected operator describing primal trust intensity.
+    - **long description:** This term represents the target-ontology function of primal trust intensity. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - fixate
+      - guard
+      - intensify
+      - transform_trust
+    - **semantic facets:**
+      - deep_trust_fear
+      - hierarchy
+      - primal_drive
+      - territory
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** primal trust intensity
+      - **possessive phrase:** the subject's primal trust intensity
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **primary companion interface:**
+    - **term type:** interface
+    - **canonical label:** Primary Companion Interface
+    - **friendly labels:**
+      - primary companion interface
+    - **short description:** A projected interface describing primary companion interface.
+    - **long description:** This term represents the target-ontology function of primary companion interface. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - bond_with_other
+      - mirror
+      - receive_companion
+    - **semantic facets:**
+      - counterpart_style
+      - favorite_human
+      - one_to_one_bond
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** primary companion interface
+      - **possessive phrase:** the subject's primary companion interface
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **safe den baseline:**
+    - **term type:** interface
+    - **canonical label:** Safe Den Baseline
+    - **friendly labels:**
+      - safe den baseline
+    - **short description:** A projected interface describing safe den baseline.
+    - **long description:** This term represents the target-ontology function of safe den baseline. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - retreat
+      - root
+      - secure_den
+    - **semantic facets:**
+      - base_camp
+      - home_base
+      - private_safety
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** safe den baseline
+      - **possessive phrase:** the subject's safe den baseline
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **scent signal interpretation:**
+    - **term type:** operator
+    - **canonical label:** Scent Signal Interpretation
+    - **friendly labels:**
+      - scent signal interpretation
+    - **short description:** A projected operator describing scent signal interpretation.
+    - **long description:** This term represents the target-ontology function of scent signal interpretation. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - decode_cue
+      - interpret_scent
+      - predict_routine
+      - signal
+    - **semantic facets:**
+      - cue_processing
+      - routine_prediction
+      - scent_ecology
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** scent signal interpretation
+      - **possessive phrase:** the subject's scent signal interpretation
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **social harmony maintenance mode:**
+    - **term type:** mode
+    - **canonical label:** Social Harmony Maintenance Mode
+    - **friendly labels:**
+      - social harmony maintenance mode
+    - **short description:** An operating style characterized by social harmony maintenance mode.
+    - **long description:** This mode describes how a projected operator tends to perform its function: through social harmony maintenance mode. It modifies the operator rather than replacing it.
+    - **core operators:** []
+    - **semantic facets:**
+      - harmony
+      - maintenance
+      - mode
+      - social
+    - **related terms:** []
+    - **output guidance:**
+      - **adverbial phrase:** in a social harmony maintenance mode style
+      - **verb phrase:** operates through social harmony maintenance mode
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **subsystems run together:**
+    - **term type:** relation
+    - **canonical label:** Subsystems Run Together
+    - **friendly labels:**
+      - subsystems run together
+    - **short description:** A projected relationship in which two subsystems subsystems run together.
+    - **long description:** This relation describes how two projected endpoints interact: they subsystems run together. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - amplify
+      - co_activate
+      - fuse_impulses
+    - **semantic facets:**
+      - inseparable_dog_impulse
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** subsystems run together
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **subtle adjacent nudge:**
+    - **term type:** relation
+    - **canonical label:** Subtle Adjacent Nudge
+    - **friendly labels:**
+      - subtle adjacent nudge
+    - **short description:** A projected relationship in which two subsystems subtle adjacent nudge.
+    - **long description:** This relation describes how two projected endpoints interact: they subtle adjacent nudge. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - incrementally_coordinate
+      - irritate_lightly
+      - nudge
+    - **semantic facets:**
+      - minor_behavioral_nudge
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** subtle adjacent nudge
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **trainable usable channel:**
+    - **term type:** relation
+    - **canonical label:** Trainable Usable Channel
+    - **friendly labels:**
+      - trainable usable channel
+    - **short description:** A projected relationship in which two subsystems trainable usable channel.
+    - **long description:** This relation describes how two projected endpoints interact: they trainable usable channel. It preserves source relationship geometry while expressing the interaction in target-domain language.
+    - **core operators:**
+      - coordinate
+      - enable
+      - practice
+    - **semantic facets:**
+      - developable_coordination
+    - **related terms:** []
+    - **output guidance:**
+      - **verb phrase:** trainable usable channel
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **training development vector:**
+    - **term type:** orientation
+    - **canonical label:** Training Development Vector
+    - **friendly labels:**
+      - training development vector
+    - **short description:** A projected orientation describing training development vector.
+    - **long description:** This term represents the target-ontology function of training development vector. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - develop
+      - learn_toward
+      - practice
+    - **semantic facets:**
+      - growth_direction
+      - training_path
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** training development vector
+      - **possessive phrase:** the subject's training development vector
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **training rule structure:**
+    - **term type:** operator
+    - **canonical label:** Training Rule Structure
+    - **friendly labels:**
+      - training rule structure
+    - **short description:** A projected operator describing training rule structure.
+    - **long description:** This term represents the target-ontology function of training rule structure. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - inhibit_impulse
+      - limit
+      - routinize
+      - sequence
+      - train
+    - **semantic facets:**
+      - impulse_control
+      - routine
+      - rules
+      - training
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** training rule structure
+      - **possessive phrase:** the subject's training rule structure
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **unexpected encounter trigger:**
+    - **term type:** interface
+    - **canonical label:** Unexpected Encounter Trigger
+    - **friendly labels:**
+      - unexpected encounter trigger
+    - **short description:** A projected interface describing unexpected encounter trigger.
+    - **long description:** This term represents the target-ontology function of unexpected encounter trigger. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - encounter
+      - externalize
+      - trigger
+    - **semantic facets:**
+      - externally_evoked_behavior
+      - surprise_meeting
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** unexpected encounter trigger
+      - **possessive phrase:** the subject's unexpected encounter trigger
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no
+  - **visible pack function:**
+    - **term type:** interface
+    - **canonical label:** Visible Pack Function
+    - **friendly labels:**
+      - visible pack function
+    - **short description:** A projected interface describing visible pack function.
+    - **long description:** This term represents the target-ontology function of visible pack function. It should be read as an active subsystem or interface whose core verbs are preserved by the projection profile.
+    - **core operators:**
+      - be_known_for
+      - direct_function
+      - perform_pack_role
+    - **semantic facets:**
+      - couch_supervision
+      - greeter_role
+      - guardian_role
+      - helper_role
+    - **related terms:** []
+    - **output guidance:**
+      - **noun phrase:** visible pack function
+      - **possessive phrase:** the subject's visible pack function
+    - **extensions:**
+      - **authorship:** profile_level
+      - **prescriptive:** no

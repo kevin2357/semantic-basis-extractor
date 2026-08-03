@@ -1,0 +1,51 @@
+{
+  "status": "fail",
+  "errors": [
+    "Card 23 has invalid second-person grammar in no_astro.body.",
+    "Summary card1 has invalid second-person grammar in light_astro.body.",
+    "Summary card1 has invalid second-person grammar in full_astro.body."
+  ],
+  "warnings": [
+    "Card 12 may contain astrology in no_astro.body.handler.",
+    "Card 25 may contain astrology in no_astro.body.handler.",
+    "Card 35 may contain astrology in no_astro.body.hybrid.",
+    "Card 46 may contain astrology in no_astro.headline.handler.",
+    "Summary card3 may contain astrology in no_astro.headline.direct_to_dog."
+  ],
+  "checks": {
+    "card_count": 50,
+    "phase": "authoring",
+    "polish_edit_overrides": {
+      "context_filters": false,
+      "theme_groups": false,
+      "summary": false
+    },
+    "locked_top_level_fields_checked": [
+      "subject",
+      "source",
+      "coverage",
+      "categories",
+      "behavioral_domains",
+      "context_filter_groups",
+      "unselected_claims",
+      "projected_term_registry"
+    ],
+    "locked_card_fields_checked": [
+      "claim_id",
+      "claim_type",
+      "categories",
+      "importance",
+      "confidence",
+      "strength",
+      "priority_id",
+      "selection",
+      "behavioral_domains",
+      "tags",
+      "evidence",
+      "relations"
+    ],
+    "summary_card_count": 4,
+    "unselected_claim_count": 58,
+    "placeholder_free": true
+  }
+}
