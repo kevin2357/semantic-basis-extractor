@@ -43,6 +43,7 @@ from author_semantic_closure import (  # noqa: E402
     finalize_subjects,
     fill_fake_workspace,
     initial_run_state,
+    lint_finding_count,
     load_json,
     normalized_usage,
     polish_subject,
@@ -56,6 +57,7 @@ from author_semantic_closure import (  # noqa: E402
     sanitize_context_filters,
     save_state,
     select_cache_warmer,
+    sparse_polish_basis,
     sparse_polish_output_schema,
     sparse_polish_transport_metrics,
     update_run_status,
@@ -582,6 +584,43 @@ class TestSemanticClosure(SemanticClosureFixture):
             metrics["input_estimated_tokens"]["full_map"] * 0.3,
         )
 
+    def test_sparse_polish_targets_nested_cross_card_duplicates(self) -> None:
+        left = self.packet["cards"][0]
+        right = self.packet["cards"][1]
+        field = "no_astro.headline.hybrid"
+        lint_report = {
+            "warning_count": 0,
+            "decks": [{
+                "warnings": [],
+                "authoring_pass_acceptance": {
+                    "status": "reject",
+                    "exact_duplicate_groups": [{
+                        "locations": [
+                            f"card:{left['claim_id']}:{field}",
+                            f"card:{right['claim_id']}:{field}",
+                        ],
+                    }],
+                    "repeated_ngrams": [],
+                    "suspicious_artifacts": [],
+                    "dominant_openings": [],
+                    "rejection_reasons": [{
+                        "code": "cross_card_exact_duplicate",
+                    }],
+                },
+            }],
+        }
+        targets = polish_target_paths(
+            self.packet,
+            lint_report=lint_report,
+            validation_report={"errors": []},
+            include_theme_groups=False,
+        )
+        self.assertEqual([
+            "cards.0.card.no_astro.headline.hybrid",
+            "cards.1.card.no_astro.headline.hybrid",
+        ], targets)
+        self.assertEqual(1, lint_finding_count(lint_report))
+
     def test_sparse_polish_rejects_locked_and_duplicate_paths(self) -> None:
         target = "cards.0.card.no_astro.body.handler"
         authored = {
@@ -618,6 +657,111 @@ class TestSemanticClosure(SemanticClosureFixture):
                 target_paths=[target],
                 include_theme_groups=False,
             )
+
+    def test_sparse_polish_accepts_explicit_noop(self) -> None:
+        target = "cards.0.card.no_astro.body.handler"
+        schema = sparse_polish_output_schema([target])
+        self.assertEqual(
+            0,
+            schema["properties"]["edits"]["minItems"],
+        )
+        result = apply_sparse_polish(
+            self.packet,
+            {"edits": []},
+            target_paths=[target],
+            include_theme_groups=False,
+        )
+        self.assertEqual(self.packet, result)
+
+    def test_sparse_polish_basis_includes_compact_semantic_evidence(self) -> None:
+        relationship_index = next(
+            index
+            for index, card in enumerate(self.packet["cards"])
+            if card.get("claim_type") == "system_interaction"
+        )
+        target = (
+            f"cards.{relationship_index}.card.no_astro.body.handler"
+        )
+        basis = sparse_polish_basis(self.packet, [target])
+        evidence = basis["cards"][0]["semantic_evidence"]
+        self.assertTrue(evidence)
+        projected = next(
+            item["projected_record"]
+            for item in evidence
+            if "projected_record" in item
+        )
+        self.assertIn("relationship_type", projected)
+        self.assertIn("attributes", projected)
+
+    def test_polish_noop_stops_without_rewriting_advisory_prose(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            original_deck_text = json.dumps(self.packet)
+            deck_path.write_text(original_deck_text, encoding="utf-8")
+            assembly_path = final_root / "assembly.json"
+            assembly_path.write_text("{}", encoding="utf-8")
+            validation_path = final_root / "validation.json"
+            validation_path.write_text(
+                json.dumps({"status": "pass", "errors": [], "warnings": []}),
+                encoding="utf-8",
+            )
+            lint_path = final_root / "lint.json"
+            lint_path.write_text(json.dumps({
+                "status": "warn",
+                "warning_count": 1,
+                "decks": [{"warnings": [{
+                    "code": "failure_signature",
+                    "details": {
+                        "location": "card:" + self.packet["cards"][0]["claim_id"],
+                        "field": "no_astro.body.handler",
+                    },
+                }]}],
+            }), encoding="utf-8")
+            record = {
+                "subject": "bre",
+                "state": "FINAL_QA_WARN",
+                "deck": str(deck_path),
+                "assembly_report": str(assembly_path),
+                "validation_report": str(validation_path),
+                "lint_report": str(lint_path),
+                "baseline_warning_count": 1,
+                "polish_attempts": [],
+                "delivery": None,
+            }
+            submitted: list[dict] = []
+
+            class Provider:
+                model = "fake-polish"
+                reasoning_effort = "low"
+
+                def complete_json(inner_self, **kwargs):
+                    submitted.append(kwargs)
+                    return {"edits": []}, {"provider": "fake"}
+
+            with patch(
+                "author_semantic_closure.run_json_command"
+            ) as qa:
+                polish_subject(
+                    record=record,
+                    provider=Provider(),
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_attempts=2,
+                )
+            self.assertEqual(1, len(submitted))
+            self.assertFalse(qa.called)
+            self.assertEqual(
+                "POLISH_NO_CHANGE",
+                record["polish_attempts"][0]["state"],
+            )
+            self.assertEqual("FINAL_QA_WARN", record["state"])
+            self.assertEqual(original_deck_text, deck_path.read_text())
+            system = submitted[0]["system"]
+            self.assertIn("empty edit list", system)
+            self.assertIn("not automatically shortening", system)
 
     def test_second_sparse_attempt_expands_only_affected_cards(self) -> None:
         claim_id = self.packet["cards"][0]["claim_id"]

@@ -604,3 +604,40 @@ additional use of the already-active `fine print` mechanism. Those cross-pass
 effects were invisible to pass-local QA and provide concrete Phase-3.5 sparse
 polish targets. Detailed design, examples, measurements, and interpretation are
 in `results/PHASE 3 - Ella Editorial Planning Live Test.md`.
+
+## 2026-08-04 — Phase 3.5 narrow production-polish hardening
+
+Hardened the existing sparse mechanical polish without introducing the
+qualitative-critic architecture deferred to Phase 4. Sparse output now permits
+individual target omission and an empty edit list. When structural validation
+already passes, an empty response records `POLISH_NO_CHANGE`, performs no file
+mutation or redundant QA, consumes no second attempt, and preserves advisory
+warnings for the caller's normal delivery policy. Structural failures may not
+be declined as no-ops.
+
+The compact polish prompt now states that preservation is editorial success,
+that each replacement must repair the named mechanism while retaining the
+field's strongest image, behavioral insight, useful guidance, and semantic
+contributions, and that concision is not automatic shortening.
+
+Targeted repair bases now derive compact semantic mechanisms from locked card
+evidence. They include relevant object or relationship operators, modes,
+domains, aspect geometry and orb, participating subsystems, interaction modes,
+and synthesis supports without transporting raw projected graphs. All existing
+sparse allowlists, theme-group locks, validation, lint, retry, resume, and cost
+accounting remain in place. Attempt records now distinguish edited fields from
+targets deliberately omitted.
+
+Integrated the linter's nested deterministic authoring-acceptance report into
+both target resolution and improvement scoring. Exact cross-card duplicates,
+repeated long passages, insertion artifacts, and dominant multi-field openings
+can no longer be invisible to polish or remain while an ordinary-warning-only
+score appears to reach zero.
+
+Against the Ella planning deck, the hardened resolver identifies two finding
+classes and six editable fields: four `fine print` locations plus both sides of
+the `From Clue to Cue` collision. It supplies 36 nearby fields read-only. The
+sparse input transport estimates 4,021 tokens versus 70,234 for the full field
+map; the output ceiling is 288 tokens, and the compact semantic repair basis is
+approximately 2,152 tokens. This remains comfortably within the narrow,
+low-cost Phase-3.5 boundary.

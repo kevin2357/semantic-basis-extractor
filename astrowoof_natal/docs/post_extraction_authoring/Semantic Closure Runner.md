@@ -258,7 +258,21 @@ warns. Polish resolves the structured validation and lint findings to an exact
 allowlist of affected reader-facing field paths. The model receives those
 editable values, compact claim/source grounding, and narrowly related prose as
 read-only context. It returns a sparse list of replacements rather than the
-entire deck. Unknown paths, duplicate edits, blank replacements, and locked
+entire deck. A target omitted from the list is an explicit preservation
+decision. When structural validation already passes, an empty edit list records
+`POLISH_NO_CHANGE`, stops further polish attempts, and leaves the accepted deck
+byte-for-byte untouched. This lets a context-aware editor decline to damage
+strong prose merely because a lexical heuristic produced an advisory.
+
+For targeted cards, the repair basis includes a compact semantic mechanism
+derived from locked evidence: relevant operators, projected modes and domains,
+aspect geometry, participating subsystems, interaction modes, and synthesis
+supports. Raw projected graphs remain excluded. A replacement must repair the
+named finding while retaining the strongest existing image, behavioral insight,
+useful guidance, and every supplied semantic contribution. Concision removes
+duplicated labor; it does not require automatic shortening.
+
+Unknown paths, duplicate edits, blank replacements, and locked
 fields are rejected before validation. Evidence, claim selection, categories,
 filters, identity, and all other non-authoring data remain unavailable for
 editing. Theme groups remain unavailable unless the validator explicitly
@@ -270,13 +284,20 @@ The first attempt targets only fields named or implicated by deterministic
 findings. If it does not improve QA, a second attempt may expand to other
 reader-facing fields on those same affected cards, never to unrelated cards.
 Each attempt records editable-target count, read-only context count, full-deck
-field count, and estimated full-versus-sparse input/output sizes.
+field count, estimated full-versus-sparse input/output sizes, edited-field
+count, and omitted-target count.
 
 Python applies the returned fields to a copy of the accepted baseline and runs
 the validator in polish mode. The first candidate that repairs an invalid
 baseline may replace it only when structural validation passes. After a valid
 baseline exists, a candidate replaces the current best deck only when its
-whole-deck linter warning count is strictly lower. The original assembly
+whole-deck finding count is strictly lower. That count combines ordinary
+linter warnings with unresolved deterministic authoring-rejection classes such
+as exact cross-card duplication, repeated long passages, editorial insertion
+artifacts, and multi-field opening templates. The target resolver reads both
+the ordinary warning list and the nested authoring-acceptance report, so a
+known collision cannot disappear from polish merely because it is reported in
+a different linter section. The original assembly
 therefore remains safe when polish fails, and accepted improvements remain safe
 when a later attempt fails. Polish stops early at zero linter warnings.
 

@@ -2870,7 +2870,13 @@ def assemble_subject(
         lint_path,
         accepted_returncodes={0, 2},
     )
-    lint_warning_count = int(lint["report"].get("warning_count") or 0)
+    ordinary_lint_warning_count = int(
+        lint["report"].get("warning_count") or 0
+    )
+    lint_warning_count = lint_finding_count(lint["report"])
+    authoring_rejection_count = (
+        lint_warning_count - ordinary_lint_warning_count
+    )
     validation_warning_count = len(
         validation["report"].get("warnings") or []
     )
@@ -2895,7 +2901,8 @@ def assemble_subject(
         "baseline_warning_count": warning_count,
         "baseline_warning_components": {
             "validation": validation_warning_count,
-            "lint": lint_warning_count,
+            "lint": ordinary_lint_warning_count,
+            "authoring_rejections": authoring_rejection_count,
         },
         "polish_attempts": [],
         "delivery": None,
@@ -3182,6 +3189,40 @@ def polish_target_paths(
                 location, field = location_field.rsplit(":", 1)
                 add_location_field(location, field)
 
+    for deck_report in lint_report.get("decks", []):
+        acceptance = deck_report.get("authoring_pass_acceptance") or {}
+        for group in acceptance.get("exact_duplicate_groups", []):
+            for location_field in group.get("locations", []):
+                location, field = location_field.rsplit(":", 1)
+                add_location_field(location, field)
+        for group in acceptance.get("repeated_ngrams", []):
+            excerpt = str(group.get("text") or "").lower()
+            claims = set(group.get("claim_ids", []))
+            for item in items:
+                if (
+                    item["kind"] == "body"
+                    and item["claim_id"] in claims
+                    and excerpt in item["text"].lower()
+                ):
+                    add_location_field(item["location"], item["field"])
+        for artifact in acceptance.get("suspicious_artifacts", []):
+            claim_id = artifact.get("claim_id")
+            field = artifact.get("field")
+            for item in items:
+                if item["claim_id"] == claim_id and item["field"] == field:
+                    add_location_field(item["location"], item["field"])
+        for opening in acceptance.get("dominant_openings", []):
+            field = opening.get("field")
+            prefix = str(opening.get("opening") or "").lower()
+            claims = set(opening.get("claim_ids", []))
+            for item in items:
+                if (
+                    item["claim_id"] in claims
+                    and item["field"] == field
+                    and item["text"].lower().startswith(prefix)
+                ):
+                    add_location_field(item["location"], item["field"])
+
     validation_errors = [
         str(error) for error in validation_report.get("errors", [])
     ]
@@ -3219,6 +3260,19 @@ def polish_target_paths(
             if any(path.startswith(f"{prefix}.") for prefix in prefixes)
         )
     return sorted(targets)
+
+
+def lint_finding_count(lint_report: dict[str, Any]) -> int:
+    """Count ordinary warnings plus unresolved deck-level rejection classes."""
+    rejection_count = sum(
+        len(
+            (deck_report.get("authoring_pass_acceptance") or {}).get(
+                "rejection_reasons", []
+            )
+        )
+        for deck_report in lint_report.get("decks", [])
+    )
+    return int(lint_report.get("warning_count") or 0) + rejection_count
 
 
 def sparse_polish_context(
@@ -3286,6 +3340,81 @@ def sparse_polish_basis(
     deck: dict[str, Any],
     target_paths: list[str],
 ) -> dict[str, Any]:
+    def compact_evidence(card: dict[str, Any]) -> list[dict[str, Any]]:
+        compact: list[dict[str, Any]] = []
+        attribute_keys = (
+            "canonical_object_name",
+            "source_sign",
+            "source_house",
+            "doghouse_number",
+            "projected_mode",
+            "projected_domain",
+            "canonical_aspect",
+            "orb",
+            "source_canine_subsystem",
+            "target_canine_subsystem",
+            "source_mode",
+            "target_mode",
+            "source_doghouse",
+            "target_doghouse",
+            "interaction_mode",
+            "projection_composition",
+            "projection_first_reasoning",
+        )
+        for evidence in card.get("evidence", []):
+            item: dict[str, Any] = {
+                key: evidence[key]
+                for key in (
+                    "kind",
+                    "role",
+                    "generation_rule",
+                    "shared_key",
+                    "supporting_candidate_ids",
+                    "claim_ids",
+                    "priority_ids",
+                )
+                if evidence.get(key) not in (None, [], {})
+            }
+            records = evidence.get("context_records") or {}
+            context = records.get("general") or next(
+                iter(records.values()), {}
+            )
+            record = context.get("record") or {}
+            if record:
+                attributes = record.get("attributes") or {}
+                item["projected_record"] = {
+                    key: value
+                    for key, value in {
+                        "name": record.get("name"),
+                        "relationship_type": record.get("relationship_type"),
+                        "operators": record.get("operators"),
+                        "theme_tags": record.get("theme_tags"),
+                        "attributes": {
+                            key: attributes.get(key)
+                            for key in attribute_keys
+                            if attributes.get(key) is not None
+                        },
+                    }.items()
+                    if value not in (None, [], {})
+                }
+            summaries = evidence.get("source_record_summaries")
+            if summaries:
+                item["source_record_summaries"] = [
+                    {
+                        key: summary[key]
+                        for key in (
+                            "relationship_type",
+                            "interaction_mode",
+                            "theme_tags",
+                        )
+                        if summary.get(key) not in (None, [], {})
+                    }
+                    for summary in summaries
+                ]
+            if item:
+                compact.append(item)
+        return compact
+
     card_indexes = sorted({
         int(path.split(".")[1])
         for path in target_paths
@@ -3303,6 +3432,7 @@ def sparse_polish_basis(
                 "behavioral_domains": deck["cards"][index].get(
                     "behavioral_domains", []
                 ),
+                "semantic_evidence": compact_evidence(deck["cards"][index]),
                 "evidence_sources": [
                     {
                         "kind": evidence.get("kind"),
@@ -3376,7 +3506,7 @@ def sparse_polish_output_schema(target_paths: list[str]) -> dict[str, Any]:
         "properties": {
             "edits": {
                 "type": "array",
-                "minItems": 1,
+                "minItems": 0,
                 "maxItems": len(target_paths),
                 "items": {
                     "type": "object",
@@ -3413,8 +3543,8 @@ def apply_sparse_polish(
     include_theme_groups: bool,
 ) -> dict[str, Any]:
     edits = authored.get("edits") if isinstance(authored, dict) else None
-    if not isinstance(edits, list) or not edits:
-        raise ValueError("Sparse polish response must contain edits")
+    if not isinstance(edits, list):
+        raise ValueError("Sparse polish response must contain an edit list")
     allowed = set(target_paths)
     seen: set[str] = set()
     result = deepcopy(deck)
@@ -3461,12 +3591,7 @@ def polish_subject(
     baseline = load_json(baseline_path)
     current_lint_report = load_json(Path(record["lint_report"]))
     current_validation_report = load_json(Path(record["validation_report"]))
-    persisted_warning_count = current_lint_report.get("warning_count")
-    best_warning_count = int(
-        record["baseline_warning_count"]
-        if persisted_warning_count is None
-        else persisted_warning_count
-    )
+    best_warning_count = lint_finding_count(current_lint_report)
     best_validation_passed = current_validation_report.get("status") == "pass"
     best_validation_error_count = len(
         current_validation_report.get("errors") or []
@@ -3499,10 +3624,16 @@ def polish_subject(
         system = (
             "You are performing a surgical whole-deck editorial polish. "
             "Return only a sparse list of necessary replacements chosen from "
-            "the supplied editable target paths. "
+            "the supplied editable target paths. Omit a target when its current "
+            "prose is already the best editorial choice; an empty edit list is "
+            "correct when every finding is advisory or a false positive. "
             "Preserve every factual, evidentiary, structural, selection, "
             "category, filter, and identity value. Edit only "
             "reader-facing prose needed to resolve the supplied lint findings. "
+            "Every replacement must repair the named mechanism while retaining "
+            "the field's strongest image, behavioral insight, useful guidance, "
+            "and all semantic contributions in the repair basis. Concision means "
+            "removing duplicated labor, not automatically shortening prose. "
             "Theme groups may change only when validation explicitly requires "
             "rebalancing. Summary prose may change only when its path is "
             "explicitly included in the editable targets. "
@@ -3522,7 +3653,7 @@ def polish_subject(
         if not target_paths:
             record["polish_unaddressable"] = {
                 "validation_errors": validation_report.get("errors", []),
-                "lint_warning_count": lint_report.get("warning_count", 0),
+                "lint_finding_count": lint_finding_count(lint_report),
                 "reason": "No validator-controlled editable fields matched.",
             }
             break
@@ -3592,6 +3723,29 @@ def polish_subject(
                     provider, "reasoning_effort", "unreported"
                 ),
             }
+            if (
+                "fields" not in authored
+                and isinstance(authored.get("edits"), list)
+                and not authored["edits"]
+            ):
+                if not best_validation_passed:
+                    raise ValueError(
+                        "Polish may not return no-op while structural "
+                        "validation errors remain"
+                    )
+                attempt.update(
+                    {
+                        "state": "POLISH_NO_CHANGE",
+                        "finished_at": utc_now(),
+                        "provider_metadata": metadata,
+                        "warning_count": best_warning_count,
+                        "accepted": False,
+                        "improved": False,
+                        "edited_field_count": 0,
+                        "omitted_target_count": len(target_paths),
+                    }
+                )
+                break
             candidate = (
                 apply_deck_fields(
                     current_deck,
@@ -3640,8 +3794,12 @@ def polish_subject(
                 lint_path,
                 accepted_returncodes={0, 2},
             )
-            lint_warning_count = int(
+            ordinary_lint_warning_count = int(
                 lint["report"].get("warning_count") or 0
+            )
+            lint_warning_count = lint_finding_count(lint["report"])
+            authoring_rejection_count = (
+                lint_warning_count - ordinary_lint_warning_count
             )
             validation_warning_count = len(
                 validation["report"].get("warnings") or []
@@ -3677,11 +3835,23 @@ def polish_subject(
                     "warning_count": warning_count,
                     "warning_components": {
                         "validation": validation_warning_count,
-                        "lint": lint_warning_count,
+                        "lint": ordinary_lint_warning_count,
+                        "authoring_rejections": authoring_rejection_count,
                     },
                     "accepted": accepted,
                     "improved": improved or accepted,
                     "validation_error_count": validation_error_count,
+                    "edited_field_count": (
+                        len(authored.get("edits", []))
+                        if isinstance(authored, dict)
+                        else None
+                    ),
+                    "omitted_target_count": (
+                        len(target_paths) - len(authored.get("edits", []))
+                        if isinstance(authored, dict)
+                        and isinstance(authored.get("edits"), list)
+                        else None
+                    ),
                 }
             )
             if accepted or improved:
