@@ -692,3 +692,23 @@ reader-facing fields, 50 compact semantic descriptors, an 87,248-token estimated
 critic transport, and an approximately 410-token response schema. The transport
 retains all audience and astrology-density variants needed for diagnosis while
 omitting the projected registry, unselected-claim records, and raw graph.
+
+### Live Ella qualitative-critic checkpoint
+
+Ran a diagnosis-only review of the mechanically clean Phase-3.5 Ella deck. Luna
+medium returned five findings in approximately 33 seconds using 83,422 input and
+3,031 output tokens, for an estimated cost of $0.101608. The production deck
+hash remained byte-identical.
+
+The critic strongly identified conceptual convergence among four
+public-participation/protected-retreat cards and overconcentration of the
+administrative-workplace comic engine. It correctly classified both as upstream
+reconception rather than local editing. A repeated reassurance-and-routine
+posture was directionally useful but somewhat overgeneralized; an exchangeable-
+headline finding largely duplicated the first root diagnosis.
+
+Only one finding was locally eligible. Its Card-10 compression target is
+credible, while its already-compact Card-24 target appears questionable. This
+creates a useful next test of whether the candidate editor omits a nominated
+field rather than treating critic output as mandatory. Full field-level analysis
+is in `results/PHASE 4 - Ella Qualitative Critic Live Test.md`.

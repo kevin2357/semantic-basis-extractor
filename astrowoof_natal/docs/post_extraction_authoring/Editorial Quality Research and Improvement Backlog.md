@@ -368,6 +368,32 @@ authoring passes with the entire completed deck merely to solve this; that
 would reintroduce the cognitive-load and templating pressure the split-pass
 architecture was designed to avoid.
 
+### Unique reader contribution, not merely unique evidence
+
+Distinct source claims can still produce exchangeable reader-facing cards.
+This is especially likely when several direct relationships and synthesized
+themes reuse the same placements or converge on the same practical conclusion.
+Selection and pre-prose conception should therefore ask what new causal,
+situational, emotional, or actionable contribution each card adds. Distinct
+astrological provenance is necessary evidence preservation; it is not by itself
+proof of distinct editorial work.
+
+### Mechanism and posture inventories
+
+Lexical variety does not prevent a deck from repeatedly using one comic engine
+or interpretive posture. Future upstream planning and deck-level review should
+track at least:
+
+- the underlying comic premise, not only joke wording;
+- the interpretive movement, such as reassurance followed by operationalization;
+- the lesson or remembered idea contributed by each card;
+- whether recurring characterization remains one strand or has become the
+  default explanation for unrelated claims.
+
+These inventories should inform planning and criticism without becoming rigid
+quotas. A recurring mode may coherently characterize the dog; the defect is
+predictable overconcentration that makes later cards interchangeable.
+
 ## Manual research polish experiment
 
 A manual or human-directed polish of the automated Kevin deck would be useful
@@ -441,3 +467,22 @@ repeated findings into the relevant design sections above.
 - Immediate action: use these as bounded Phase-3.5 polish targets. Deferred
   action: design product-mode depth explicitly and give a future qualitative
   critic deck-level awareness without expanding pass-authoring context.
+
+### 2026-08-04 — Ella qualitative-critic live test
+
+- The critic independently identified strong conceptual convergence among four
+  cards whose astrology sources differed but whose reader contribution did not.
+- It identified administrative-workplace humor as a repeated mechanism rather
+  than being distracted by lexical variation among audits, committees, jobs,
+  reports, and official roles.
+- It found a real recurring reassurance-and-routine posture, but described the
+  cited examples somewhat more uniformly than the prose warrants.
+- It reported exchangeable headlines as a separate finding even though they
+  were largely a symptom of the conceptual-overlap finding. Future critic
+  guidance should prefer root diagnoses and avoid double-counting their obvious
+  surface manifestations unless repair paths materially differ.
+- The initial critic vocabulary needs a general `conceptual_card_overlap`
+  dimension; `summary_thesis_overlap` is too narrow for this valid diagnosis.
+- Only one local-repair finding passed the conservative gate. One of its two
+  fields appears genuinely over-explained and the other already appears compact,
+  creating a useful keep-or-replace editor test.

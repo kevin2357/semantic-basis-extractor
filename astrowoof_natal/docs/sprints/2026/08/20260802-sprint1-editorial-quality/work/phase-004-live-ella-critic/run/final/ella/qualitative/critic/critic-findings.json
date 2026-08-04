@@ -1,0 +1,201 @@
+{
+  "critic": {
+    "deck_assessment": {
+      "strengths": [
+        "The deck has a strong, coherent behavioral vocabulary: investigation, purposeful participation, safe retreat, and practiced return recur as recognizable aspects of Ella rather than as disconnected traits.",
+        "The card architecture generally supports astrology-density progression: no-astrology versions lead with behavior, light-astrology versions introduce placements or relationships, and full-astrology versions usually add aspect geometry, Doghouse context, and actionable synthesis.",
+        "The handler, direct-to-dog, and hybrid versions are usually meaningfully adapted rather than being simple pronoun substitutions. The handler versions tend to give management guidance, the direct versions use affirming second-person characterization, and the hybrid versions stage a shared interaction."
+      ],
+      "primary_risks": [
+        "The deck repeatedly returns to the same central thesis—visible participation and affection must coexist with a protected private retreat—across enough cards that distinct chart relationships begin to feel like alternate justifications for one already-established lesson.",
+        "Administrative and workplace comedy is a very strong characterization device, but its repeated use across inspection, reporting, management, committee, job, and office imagery becomes predictable at deck scale.",
+        "Many bodies use the same reassuring corrective posture: first deny that the behavior is a flaw, rejection, defiance, or failure, then redirect it into a constructive routine. This makes different aspects sound rhetorically interchangeable even when their astrological mechanics differ."
+      ]
+    },
+    "findings": [
+      {
+        "finding_id": "ella-deck-01",
+        "quality_dimension": "summary_thesis_overlap",
+        "scope": "deck",
+        "priority": "high",
+        "confidence": 0.97,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "cards.11.card.full_astro.body.handler",
+          "cards.12.card.full_astro.body.handler",
+          "cards.25.card.full_astro.body.handler",
+          "cards.36.card.full_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "cards.11.card.full_astro.headline.handler",
+          "cards.12.card.full_astro.headline.handler",
+          "cards.25.card.full_astro.headline.handler",
+          "cards.36.card.full_astro.headline.handler"
+        ],
+        "diagnosis": "These cards repeatedly deliver the same reader-facing thesis: Ella is outwardly participatory, affectionate, or energetic, but needs a protected retreat and a voluntary return. The chart inputs differ—IC–MC, IC–Venus, synthesis of bonding with visible role, and related axis material—but the practical and emotional conclusion is substantially the same. Card 11 frames the public role against the safe den; card 12 reframes the same polarity as launch-and-landing; card 25 makes the same point about visible affection versus private space; and card 36 restates it as approach, participation, retreat, and return. This is more than intentional recurring characterization: the cards do not sufficiently distinguish what each relationship newly explains.",
+        "rewrite_objective": "Reconceive these cards around non-overlapping reader takeaways before editing individual wording. Each retained card needs a different causal or situational contribution, not another version of protected retreat supporting outward participation.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "ella-deck-02",
+        "quality_dimension": "repeated_comic_mechanism",
+        "scope": "deck",
+        "priority": "high",
+        "confidence": 0.96,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "summary.card1.funny_dog_quotes.0",
+          "cards.1.card.applicable_canine_jokes.0",
+          "cards.20.card.applicable_canine_jokes.0",
+          "cards.30.card.applicable_canine_jokes.0"
+        ],
+        "comparison_paths": [
+          "cards.30.card.no_astro.body.hybrid",
+          "cards.43.card.no_astro.body.hybrid",
+          "cards.46.card.no_astro.body.hybrid",
+          "cards.33.card.no_astro.body.hybrid"
+        ],
+        "diagnosis": "A recurring bureaucratic-workplace comic engine dominates the deck: Ella audits, files reports, attends meetings, manages departments, serves on committees, performs inspections, and treats ordinary smells or household events as official business. The examples are lexically varied, but conceptually they are the same joke: a tiny dog with an administrative job. Because the same mechanism appears in both headlines/body scenes and joke fields, later cards become predictable before their astrology arrives.",
+        "rewrite_objective": "Reconceive the deck-level comic palette so the administrative-inspector persona remains a deliberate strand rather than the default joke generator. The issue is not Ella’s recurring characterization; it is the lack of other comic mechanisms that reveal different aspects of the chart.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "ella-deck-03",
+        "quality_dimension": "repeated_rhetorical_posture",
+        "scope": "deck",
+        "priority": "high",
+        "confidence": 0.94,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "cards.2.card.full_astro.body.handler",
+          "cards.10.card.full_astro.body.handler",
+          "cards.14.card.full_astro.body.handler",
+          "cards.23.card.full_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "cards.21.card.full_astro.body.handler",
+          "cards.28.card.full_astro.body.handler",
+          "cards.31.card.full_astro.body.handler",
+          "cards.38.card.full_astro.body.handler"
+        ],
+        "diagnosis": "A highly repeated rhetorical sequence governs many cards: first reassure the reader that the behavior is not a flaw or failure, then name a manageable pause, outlet, cue, or return. This posture is appropriate in some behavior-guidance contexts, but its frequency makes opposition, quincunx, square, sensitivity, retreat, and investigation sound like variations of the same correction. The result is a flattened emotional register in which nearly every difficult chart feature is preemptively defended and then operationalized.",
+        "rewrite_objective": "Differentiate the interpretive posture by claim type. Some cards can examine a genuine tradeoff, some can foreground a talent, some can describe uncertainty or context dependence, and only the cards that risk reader misinterpretation need the explicit reassurance-and-repair structure.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "ella-deck-04",
+        "quality_dimension": "exchangeable_headline",
+        "scope": "card",
+        "priority": "medium",
+        "confidence": 0.91,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "cards.11.card.full_astro.headline.handler",
+          "cards.12.card.full_astro.headline.handler",
+          "cards.25.card.full_astro.headline.handler",
+          "cards.36.card.full_astro.headline.handler"
+        ],
+        "comparison_paths": [
+          "cards.11.card.full_astro.body.handler",
+          "cards.12.card.full_astro.body.handler",
+          "cards.25.card.full_astro.body.handler",
+          "cards.36.card.full_astro.body.handler"
+        ],
+        "diagnosis": "At the level of reader promise, these headlines are close to interchangeable. “The Pack Role and the Safe Den,” “The IC as Ella’s Launch-and-Landing System,” “Aquarius IC Opposite Venus in Leo,” and “Ella’s Bonding Pattern: Visible Affection, Protected Retreat” all advertise the same central movement between public connection and private withdrawal. The bodies likewise resolve to a protected retreat, voluntary participation, and a calm return, so the headline differences mostly name the same thesis rather than opening distinct interpretive territory.",
+        "rewrite_objective": "Give each headline a genuinely different promise tied to the specific relationship being explained. If the bodies cannot support distinct promises, the cards need upstream consolidation or differentiated conception rather than headline-level synonym replacement.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "ella-deck-05",
+        "quality_dimension": "over_explained_body",
+        "scope": "card",
+        "priority": "medium",
+        "confidence": 0.86,
+        "repairability": "local_repair",
+        "target_paths": [
+          "cards.10.card.full_astro.body.handler",
+          "cards.24.card.full_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "summary.card4.full_astro.body.handler",
+          "cards.34.card.full_astro.body.handler"
+        ],
+        "diagnosis": "These synthesis bodies explain the same practical loop after the insight is already clear: identify several interacting systems, restate what each contributes, then prescribe investigate or notice, practice, coordinate, and return. Card 10 names the fused burst and then spends additional sentences re-listing the component relationships; card 24 similarly states the Mercury–Node and Sun–Jupiter pairings, explains the loop, and repeats the same loop in its final practical sentence. The added explanation increases astrology inventory more than reader understanding.",
+        "rewrite_objective": "Preserve the compound insight and the astrology-specific distinctions, but remove explanatory restatement once the relationship between the systems and the practical consequence are established.",
+        "required_context": [
+          "nearby_prose",
+          "claim_evidence",
+          "whole_chart"
+        ],
+        "selected_for_candidate": true,
+        "selection_reason": "eligible"
+      }
+    ]
+  },
+  "eligible_findings": [
+    {
+      "finding_id": "ella-deck-05",
+      "quality_dimension": "over_explained_body",
+      "scope": "card",
+      "priority": "medium",
+      "confidence": 0.86,
+      "repairability": "local_repair",
+      "target_paths": [
+        "cards.10.card.full_astro.body.handler",
+        "cards.24.card.full_astro.body.handler"
+      ],
+      "comparison_paths": [
+        "summary.card4.full_astro.body.handler",
+        "cards.34.card.full_astro.body.handler"
+      ],
+      "diagnosis": "These synthesis bodies explain the same practical loop after the insight is already clear: identify several interacting systems, restate what each contributes, then prescribe investigate or notice, practice, coordinate, and return. Card 10 names the fused burst and then spends additional sentences re-listing the component relationships; card 24 similarly states the Mercury–Node and Sun–Jupiter pairings, explains the loop, and repeats the same loop in its final practical sentence. The added explanation increases astrology inventory more than reader understanding.",
+      "rewrite_objective": "Preserve the compound insight and the astrology-specific distinctions, but remove explanatory restatement once the relationship between the systems and the practical consequence are established.",
+      "required_context": [
+        "nearby_prose",
+        "claim_evidence",
+        "whole_chart"
+      ],
+      "selected_for_candidate": true,
+      "selection_reason": "eligible"
+    }
+  ],
+  "selected_target_paths": [
+    "cards.10.card.full_astro.body.handler",
+    "cards.24.card.full_astro.body.handler"
+  ],
+  "selected_location_count": 2,
+  "limits": {
+    "max_findings": 8,
+    "max_target_fields": 12,
+    "max_target_cards": 6,
+    "minimum_confidence": 0.7,
+    "eligible_priorities": [
+      "high",
+      "medium"
+    ],
+    "eligible_repairability": "local_repair"
+  }
+}
