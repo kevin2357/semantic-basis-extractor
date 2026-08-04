@@ -324,6 +324,50 @@ should use one of these acceptance policies:
 Do not use the same critic's unsupported self-score as the sole acceptance
 condition.
 
+## Output depth and product-mode contract
+
+The current authoring protocol asks for satisfying miniature essays but does
+not define a deterministic product length. Live responses can vary
+substantially even under the same subject, assignment, model, and chart
+transport. In the Phase-3 matched Ella pass-1 test, a treatment explicitly
+told not to equate shortness with quality still produced 22.6% fewer words
+across the complete ten-card payload and 27.7% fewer body words than its
+control. Both were publishable; the shorter deck was often punchier, while the
+longer deck retained more behavioral texture and additional conceptual turns.
+
+Do not try to solve this through increasingly emphatic adjectives such as
+`rich`, `complete`, or `concise`. If AstroWoof adopts separate Quick and
+Complete WoofMaps, each mode needs an explicit product contract covering:
+
+- selected-card population and whether Quick is a strict subset;
+- expected interpretive depth per card rather than only word-count ranges;
+- summary purpose and length in each mode;
+- whether one authored deck is transformed or each mode is independently
+  authored;
+- how evidence, density progression, filters, and chapter navigation behave;
+- UI evaluation on desktop and narrow mobile viewports;
+- cost, cache, and storage implications of multiple reads per dog.
+
+Word counts may be useful guardrails after product design, but they are not a
+substitute for defining the reading experience. Preserve multiple strong deck
+lengths as UI research fixtures until that contract is decided.
+
+## Cross-pass editorial awareness
+
+Independent ten-card passes successfully reduce local schema-completion
+pressure, but no pass can know the final prose authored in another pass. The
+Ella planning treatment independently produced `From Clue to Cue`, which
+exactly matched a later preserved card, and added a `fine print` comic device
+to a deck where other passes had already concentrated it.
+
+Phase 3.5 should repair mechanically visible instances through sparse polish.
+Longer-term critic design should treat cross-pass headline convergence, comic
+world concentration, rhetorical-posture concentration, and conceptual lesson
+duplication as first-class deck-level phenomena. Do not burden individual
+authoring passes with the entire completed deck merely to solve this; that
+would reintroduce the cognitive-load and templating pressure the split-pass
+architecture was designed to avoid.
+
 ## Manual research polish experiment
 
 A manual or human-directed polish of the automated Kevin deck would be useful
@@ -382,3 +426,18 @@ Active implementation and testing work is tracked in:
 
 Future comparative reviews should append dated observations here and promote
 repeated findings into the relevant design sections above.
+
+### 2026-08-04 — Ella editorial-planning live test
+
+- Semantic-contribution inventories were substantive and compound claims
+  retained their complete interacting mechanisms.
+- Audience-posture plans preserved already-strong Handler, Direct-to-Dog, and
+  Hybrid differentiation at modest input cost.
+- Craft guidance did not control output depth: the treatment was materially
+  shorter while remaining publishable, reinforcing the need for an eventual
+  Quick-versus-Complete product contract.
+- Whole-deck assembly exposed one headline collision and one cross-pass comic
+  mechanism concentration invisible to pass-local QA.
+- Immediate action: use these as bounded Phase-3.5 polish targets. Deferred
+  action: design product-mode depth explicitly and give a future qualitative
+  critic deck-level awareness without expanding pass-authoring context.

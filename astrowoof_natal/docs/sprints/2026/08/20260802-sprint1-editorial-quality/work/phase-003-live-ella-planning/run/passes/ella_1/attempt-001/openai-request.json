@@ -1,0 +1,2202 @@
+{
+  "model": "gpt-5.6-terra",
+  "input": [
+    {
+      "role": "system",
+      "content": [
+        {
+          "type": "input_text",
+          "text": "You are the author of one bounded AstroWoof authoring pass. Treat each supplied card or summary as an independent finished writing assignment while keeping the dog recognizable across the pass. Read START HERE.md first and follow the workspace's own guidance as authoritative. Do not borrow wording, templates, or content from any prior AstroWoof deck. Return only the field values required by the response schema. Do not include marker comments in field values."
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": "[workspace prompt persisted separately as openai-workspace-prompt.txt]"
+    }
+  ],
+  "background": true,
+  "reasoning": {
+    "effort": "medium"
+  },
+  "text": {
+    "verbosity": "high",
+    "format": {
+      "type": "json_schema",
+      "name": "astrowoof_authoring_pass",
+      "strict": true,
+      "schema": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "object",
+            "properties": {
+              "cards/Story 001 -- placement_2cd8d9c528a3b907/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 002 -- relationship_f9e1abc982cc18e7/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 003 -- relationship_b48b4f13a7246f6f/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 004 -- relationship_69721f3448127380/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 005 -- placement_fff70f55ee2c4e03/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 006 -- placement_dc164328846fb8ac/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 007 -- synthesis_d97913987ccbf648/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 008 -- relationship_841480d5cfb20ed8/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 009 -- placement_3140a08b036e3427/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "cards/Story 010 -- synthesis_2efcc3c374206c29/WRITE THIS CARD.md": {
+                "type": "object",
+                "properties": {
+                  "plan.center_of_gravity": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.semantic_contributions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.memorable_takeaway": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.recognizable_behavior": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.likely_misunderstanding": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.grounded_surprise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.neighbor_distinction": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.writing_form": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.comic_premise": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.audience_postures": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "plan.creative_approach": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "no_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "light_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.handler": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.direct_to_dog": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.headline.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "full_astro.body.hybrid": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "dos.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.1": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "donts.2": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "funny_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "imperative_dog_quotes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "applicable_canine_jokes.0": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.high_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "context_filter_groups.detail_level": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "plan.center_of_gravity",
+                  "plan.semantic_contributions",
+                  "plan.memorable_takeaway",
+                  "plan.recognizable_behavior",
+                  "plan.likely_misunderstanding",
+                  "plan.grounded_surprise",
+                  "plan.neighbor_distinction",
+                  "plan.writing_form",
+                  "plan.comic_premise",
+                  "plan.audience_postures",
+                  "plan.creative_approach",
+                  "no_astro.headline.handler",
+                  "no_astro.body.handler",
+                  "no_astro.headline.direct_to_dog",
+                  "no_astro.body.direct_to_dog",
+                  "no_astro.headline.hybrid",
+                  "no_astro.body.hybrid",
+                  "light_astro.headline.handler",
+                  "light_astro.body.handler",
+                  "light_astro.headline.direct_to_dog",
+                  "light_astro.body.direct_to_dog",
+                  "light_astro.headline.hybrid",
+                  "light_astro.body.hybrid",
+                  "full_astro.headline.handler",
+                  "full_astro.body.handler",
+                  "full_astro.headline.direct_to_dog",
+                  "full_astro.body.direct_to_dog",
+                  "full_astro.headline.hybrid",
+                  "full_astro.body.hybrid",
+                  "dos.0",
+                  "dos.1",
+                  "dos.2",
+                  "donts.0",
+                  "donts.1",
+                  "donts.2",
+                  "funny_dog_quotes.0",
+                  "imperative_dog_quotes.0",
+                  "applicable_canine_jokes.0",
+                  "context_filter_groups.high_level",
+                  "context_filter_groups.detail_level"
+                ],
+                "additionalProperties": false
+              },
+              "WRITE WHOLE DOG PROFILE.md": {
+                "type": "object",
+                "properties": {
+                  "profile.integrated_portrait": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.core_temperament": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.emotional_regulation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.learning_motivation": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.relationships_trust": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.play_adventure_rhythm": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.tensions_counterweights": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.strengths_growth": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.voice_humor_imagery": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  },
+                  "profile.factual_cautions": {
+                    "type": "string",
+                    "description": "Finished field content only, without marker comments."
+                  }
+                },
+                "required": [
+                  "profile.integrated_portrait",
+                  "profile.core_temperament",
+                  "profile.emotional_regulation",
+                  "profile.learning_motivation",
+                  "profile.relationships_trust",
+                  "profile.play_adventure_rhythm",
+                  "profile.tensions_counterweights",
+                  "profile.strengths_growth",
+                  "profile.voice_humor_imagery",
+                  "profile.factual_cautions"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "cards/Story 001 -- placement_2cd8d9c528a3b907/WRITE THIS CARD.md",
+              "cards/Story 002 -- relationship_f9e1abc982cc18e7/WRITE THIS CARD.md",
+              "cards/Story 003 -- relationship_b48b4f13a7246f6f/WRITE THIS CARD.md",
+              "cards/Story 004 -- relationship_69721f3448127380/WRITE THIS CARD.md",
+              "cards/Story 005 -- placement_fff70f55ee2c4e03/WRITE THIS CARD.md",
+              "cards/Story 006 -- placement_dc164328846fb8ac/WRITE THIS CARD.md",
+              "cards/Story 007 -- synthesis_d97913987ccbf648/WRITE THIS CARD.md",
+              "cards/Story 008 -- relationship_841480d5cfb20ed8/WRITE THIS CARD.md",
+              "cards/Story 009 -- placement_3140a08b036e3427/WRITE THIS CARD.md",
+              "cards/Story 010 -- synthesis_2efcc3c374206c29/WRITE THIS CARD.md",
+              "WRITE WHOLE DOG PROFILE.md"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "files"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "max_output_tokens": 100000,
+  "prompt_cache_options": {
+    "mode": "explicit",
+    "ttl": "30m"
+  },
+  "prompt_cache_key": "astrowoof:gpt-5.6-terra:e7ebb86c2b23a22f219b6ae120d6ce76"
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "astrowoof.editorial_lint.v0.1",
+  "status": "warn",
+  "warning_count": 1,
+  "decks": [
+    {
+      "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-planning\\run\\final\\ella\\natal.ella.cards.json",
+      "subject": "ella",
+      "reader_facing_field_count": 1458,
+      "warning_count": 1,
+      "warnings": [
+        {
+          "code": "repeated_failure_signature",
+          "message": "The 'fine-print humor' mechanism appears three or more times.",
+          "details": {
+            "count": 4,
+            "locations": [
+              "card:relationship_841480d5cfb20ed8:no_astro.body.direct_to_dog",
+              "card:relationship_7d55305feb3af96a:light_astro.headline.handler",
+              "card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog",
+              "card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog"
+            ],
+            "excerpts": [
+              "Ella, you pick up the fine print of a room. When your person gives that noticing a clear next move, you can show just how beautifully your attention works.",
+              "Pluto Makes Mars Stop for the Fine Print",
+              "Your Pluto Can Read the Fine Print Before Mars Plays Again",
+              "Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t"
+            ]
+          }
+        }
+      ],
+      "authoring_pass_acceptance": {
+        "status": "reject",
+        "deterministic": true,
+        "thresholds": {
+          "ngram_words": 12,
+          "ngram_min_distinct_claims": 3
+        },
+        "reader_facing_field_count": 1458,
+        "distinct_location_count": 54,
+        "exact_duplicate_group_count": 1,
+        "exact_duplicate_groups": [
+          {
+            "kind": "headline",
+            "claim_count": 2,
+            "claim_ids": [
+              "relationship_841480d5cfb20ed8",
+              "synthesis_8b5b7e9779b7cb5d"
+            ],
+            "locations": [
+              "card:relationship_841480d5cfb20ed8:no_astro.headline.hybrid",
+              "card:synthesis_8b5b7e9779b7cb5d:no_astro.headline.hybrid"
+            ],
+            "excerpt": "from clue to cue"
+          }
+        ],
+        "repeated_ngram_group_count": 0,
+        "repeated_ngrams": [],
+        "suspicious_artifact_count": 0,
+        "suspicious_artifacts": [],
+        "dominant_opening_group_count": 0,
+        "dominant_openings": [],
+        "rejection_reasons": [
+          {
+            "code": "cross_card_exact_duplicate",
+            "message": "Reader-facing text is reused exactly across distinct cards or summaries.",
+            "group_count": 1
+          }
+        ]
+      }
+    }
+  ],
+  "cross_subject_warnings": []
+}

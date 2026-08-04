@@ -582,3 +582,25 @@ The focused 41-test SBE suite and complete 88-test suite pass. No reader-facing
 deck schema or assembly contract changed; the new plan values remain private
 authoring artifacts. The next scheduled stage is Phase 3.5 narrow
 production-polish hardening.
+
+### Live Ella pass-1 isolation
+
+Regenerated only Ella pass 1 under the new planning protocol with compact-v2,
+then assembled it with the immediately preceding control's accepted passes
+2–6. The treatment passed opaque QA on attempt 1 and final validation. All ten
+semantic-contribution inventories and audience-posture plans were substantive;
+compound aspects and syntheses preserved their complete interacting mechanisms
+in reader-facing prose.
+
+Actual input rose 4.1% from 42,414 to 44,171 tokens. Output fell from 13,553 to
+12,371 tokens, leaving estimated cost slightly lower at $0.29599. The complete
+ten-card payload was 22.6% shorter and the nine body matrices 27.7% shorter.
+The prose remained publishable and often punchy, but the control retained more
+texture in several places. Useful-density guidance is not a deterministic
+length policy and should not be treated as one.
+
+Final whole-deck lint found a new `From Clue to Cue` headline collision and an
+additional use of the already-active `fine print` mechanism. Those cross-pass
+effects were invisible to pass-local QA and provide concrete Phase-3.5 sparse
+polish targets. Detailed design, examples, measurements, and interpretation are
+in `results/PHASE 3 - Ella Editorial Planning Live Test.md`.
