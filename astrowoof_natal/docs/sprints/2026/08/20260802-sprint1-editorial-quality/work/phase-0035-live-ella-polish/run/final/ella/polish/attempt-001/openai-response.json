@@ -1,0 +1,148 @@
+{
+  "id": "resp_051378fce5b8c32e006a71aef11cdc819081d432f630b1565e",
+  "object": "response",
+  "created_at": 1785835249,
+  "status": "completed",
+  "background": true,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1785835266,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": 20000,
+  "max_tool_calls": null,
+  "model": "gpt-5.6-luna",
+  "moderation": null,
+  "output": [
+    {
+      "id": "rs_051378fce5b8c32e006a71aefa23d48190a8a41fc6d486e906",
+      "type": "reasoning",
+      "content": [],
+      "summary": []
+    },
+    {
+      "id": "msg_051378fce5b8c32e006a71aefd08a48190865084a7dbf071f5",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\"edits\":[{\"field_path\":\"cards.28.card.light_astro.headline.direct_to_dog\",\"replacement\":\"Your Pluto Reads the Hidden Detail Before Mars Plays Again\",\"reason_codes\":[\"remove_repeated_fine_print_signature\",\"preserve_deep_attention_before_action_image\"]},{\"field_path\":\"cards.28.card.light_astro.headline.handler\",\"replacement\":\"Pluto Makes Mars Pause for the Hidden Detail\",\"reason_codes\":[\"remove_repeated_fine_print_signature\",\"preserve_awkward_system_recalibration\"]},{\"field_path\":\"cards.40.card.light_astro.body.direct_to_dog\",\"replacement\":\"Your Mercury notices the small signals: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect the world and still return to the group. Let one gentle cue be your bridge from private investigation to a choice made with us.\",\"reason_codes\":[\"remove_repeated_fine_print_signature\",\"preserve_signal_interpretation_and_social_return\"]},{\"field_path\":\"cards.7.card.no_astro.body.direct_to_dog\",\"replacement\":\"Ella, you pick up the hidden details of a room. When your person gives that noticing a clear next move, you can show just how beautifully your attention works.\",\"reason_codes\":[\"remove_repeated_fine_print_signature\",\"preserve_attention_to_local_cues_and_trainable_next_step\"]},{\"field_path\":\"cards.34.card.no_astro.headline.hybrid\",\"replacement\":\"From Scent to Shared Cue\",\"reason_codes\":[\"remove_cross_card_exact_duplicate\",\"preserve_scent_to_training_channel_image\"]}]}"
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "description": null,
+      "name": "astrowoof_sparse_polish",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "edits": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_path": {
+                  "type": "string",
+                  "enum": [
+                    "cards.28.card.light_astro.headline.direct_to_dog",
+                    "cards.28.card.light_astro.headline.handler",
+                    "cards.34.card.no_astro.headline.hybrid",
+                    "cards.40.card.light_astro.body.direct_to_dog",
+                    "cards.7.card.no_astro.body.direct_to_dog",
+                    "cards.7.card.no_astro.headline.hybrid"
+                  ]
+                },
+                "replacement": {
+                  "type": "string"
+                },
+                "reason_codes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "field_path",
+                "replacement",
+                "reason_codes"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "edits"
+        ],
+        "additionalProperties": false
+      },
+      "strict": true
+    },
+    "verbosity": "high"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 5498,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 605,
+    "output_tokens_details": {
+      "reasoning_tokens": 267
+    },
+    "total_tokens": 6103
+  },
+  "user": null,
+  "metadata": {}
+}

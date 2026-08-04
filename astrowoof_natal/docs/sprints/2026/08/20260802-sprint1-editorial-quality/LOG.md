@@ -641,3 +641,21 @@ sparse input transport estimates 4,021 tokens versus 70,234 for the full field
 map; the output ceiling is 288 tokens, and the compact semantic repair basis is
 approximately 2,152 tokens. This remains comfortably within the narrow,
 low-cost Phase-3.5 boundary.
+
+### Live Ella sparse-polish test
+
+Ran the preserved Ella planning deck through one Luna/low sparse-polish call.
+The single attempt changed five of six permitted fields and deliberately
+preserved the sixth. Structural validation continued to pass; ordinary lint
+fell from one warning to zero, the nested authoring rejection fell from one to
+zero, and composite findings fell from two to zero.
+
+The repair removed the cross-card `From Clue to Cue` collision by changing only
+the scent-and-training card to `From Scent to Shared Cue`. It removed the
+cross-card `fine print` signature with local, semantically apt phrases such as
+`small signals` and `hidden details`. No unrelated prose or locked data moved.
+
+The call used 5,498 input tokens and 605 output tokens, completed in about 21
+seconds, and cost an estimated $0.009128 without a cache hit. Detailed controls,
+before/after examples, and editorial assessment are in
+`results/PHASE 3.5 - Ella Sparse Polish Live Test.md`.

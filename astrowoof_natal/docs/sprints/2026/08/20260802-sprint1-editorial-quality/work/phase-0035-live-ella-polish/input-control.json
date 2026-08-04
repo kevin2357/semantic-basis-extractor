@@ -1,0 +1,19 @@
+{
+  "source_run": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-planning\\run",
+  "source_deck_sha256": "452282f12b022237be088e0aeec0080ce02dce6ca4730e743a181afe5342684b",
+  "baseline_lint_warning_count": 1,
+  "baseline_composite_finding_count": 2,
+  "baseline_authoring_rejections": [],
+  "editable_target_count": 6,
+  "editable_targets": [
+    "cards.28.card.light_astro.headline.direct_to_dog",
+    "cards.28.card.light_astro.headline.handler",
+    "cards.34.card.no_astro.headline.hybrid",
+    "cards.40.card.light_astro.body.direct_to_dog",
+    "cards.7.card.no_astro.body.direct_to_dog",
+    "cards.7.card.no_astro.headline.hybrid"
+  ],
+  "maximum_polish_attempts": 1,
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "low"
+}

@@ -1,0 +1,129 @@
+{
+  "record": {
+    "subject": "ella",
+    "state": "DELIVERY_COMPLETE",
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\natal.ella.cards.json",
+    "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\natal.ella.assembly-report.json",
+    "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\natal.ella.validation-report.json",
+    "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\natal.ella.lint-report.json",
+    "baseline_warning_count": 2,
+    "baseline_warning_components": {
+      "validation": 5,
+      "lint": 1,
+      "authoring_rejections": 1
+    },
+    "polish_attempts": [
+      {
+        "attempt_number": 1,
+        "state": "POLISH_ACCEPTED",
+        "started_at": "2026-08-04T09:20:48.616100+00:00",
+        "finished_at": "2026-08-04T09:21:08.247809+00:00",
+        "provider_metadata": {
+          "provider": "openai",
+          "response_id": "resp_051378fce5b8c32e006a71aef11cdc819081d432f630b1565e",
+          "response_status": "completed",
+          "model": "gpt-5.6-luna",
+          "requested_model": "gpt-5.6-luna",
+          "reasoning_effort": "low",
+          "usage": {
+            "input_tokens": 5498,
+            "cached_input_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 605,
+            "reasoning_tokens": 267,
+            "total_tokens": 6103
+          },
+          "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": 0.009128,
+            "pricing_version": "2026-07-31",
+            "rates_per_million_tokens": {
+              "input": 1.0,
+              "cached_input": 0.1,
+              "output": 6.0,
+              "cache_write": 1.25
+            },
+            "billable_tokens": {
+              "uncached_input": 5498,
+              "cached_input": 0,
+              "cache_write": 0,
+              "output": 605
+            },
+            "components": {
+              "uncached_input": 0.005498,
+              "cached_input": 0.0,
+              "cache_write": 0.0,
+              "output": 0.00363
+            },
+            "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+          },
+          "poll_count": 7,
+          "transport_attempts": {
+            "create": 1,
+            "retrieve": 7
+          },
+          "routing": {
+            "route": "polish",
+            "model": "gpt-5.6-luna",
+            "reasoning_effort": "low"
+          }
+        },
+        "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\polish\\attempt-001\\validation-report.json",
+        "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\polish\\attempt-001\\lint-report.json",
+        "warning_count": 0,
+        "accepted": true,
+        "transport": {
+          "mode": "sparse_patch",
+          "editable_target_count": 6,
+          "reference_field_count": 36,
+          "full_field_count": 1458,
+          "input_estimated_tokens": {
+            "full_map": 70234,
+            "sparse_transport": 4021
+          },
+          "output_estimated_tokens": {
+            "full_map": 70237,
+            "target_ceiling": 288
+          },
+          "editable_target_paths": [
+            "cards.28.card.light_astro.headline.direct_to_dog",
+            "cards.28.card.light_astro.headline.handler",
+            "cards.34.card.no_astro.headline.hybrid",
+            "cards.40.card.light_astro.body.direct_to_dog",
+            "cards.7.card.no_astro.body.direct_to_dog",
+            "cards.7.card.no_astro.headline.hybrid"
+          ]
+        },
+        "error": null,
+        "warning_components": {
+          "validation": 5,
+          "lint": 0,
+          "authoring_rejections": 0
+        },
+        "improved": true,
+        "validation_error_count": 0,
+        "edited_field_count": 5,
+        "omitted_target_count": 1
+      }
+    ],
+    "delivery": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\astrowoof-ella-delivery.zip",
+    "final_warning_count": 0
+  },
+  "before": {
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\natal.ella.cards.before.json",
+    "sha256": "452282f12b022237be088e0aeec0080ce02dce6ca4730e743a181afe5342684b",
+    "validation_status": "pass",
+    "lint_warning_count": 1,
+    "composite_finding_count": 2
+  },
+  "after": {
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-0035-live-ella-polish\\run\\final\\ella\\natal.ella.cards.json",
+    "sha256": "87b728faaace17914c72e3f95eb241ebd8abb999029ce22878b3c44cd4f15691",
+    "changed": true,
+    "validation_status": "pass",
+    "validation_errors": [],
+    "lint_warning_count": 0,
+    "composite_finding_count": 0,
+    "authoring_pass_acceptance": null
+  }
+}

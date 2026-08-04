@@ -1,0 +1,44 @@
+{
+  "edits": [
+    {
+      "field_path": "cards.28.card.light_astro.headline.direct_to_dog",
+      "replacement": "Your Pluto Reads the Hidden Detail Before Mars Plays Again",
+      "reason_codes": [
+        "remove_repeated_fine_print_signature",
+        "preserve_deep_attention_before_action_image"
+      ]
+    },
+    {
+      "field_path": "cards.28.card.light_astro.headline.handler",
+      "replacement": "Pluto Makes Mars Pause for the Hidden Detail",
+      "reason_codes": [
+        "remove_repeated_fine_print_signature",
+        "preserve_awkward_system_recalibration"
+      ]
+    },
+    {
+      "field_path": "cards.40.card.light_astro.body.direct_to_dog",
+      "replacement": "Your Mercury notices the small signals: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect the world and still return to the group. Let one gentle cue be your bridge from private investigation to a choice made with us.",
+      "reason_codes": [
+        "remove_repeated_fine_print_signature",
+        "preserve_signal_interpretation_and_social_return"
+      ]
+    },
+    {
+      "field_path": "cards.7.card.no_astro.body.direct_to_dog",
+      "replacement": "Ella, you pick up the hidden details of a room. When your person gives that noticing a clear next move, you can show just how beautifully your attention works.",
+      "reason_codes": [
+        "remove_repeated_fine_print_signature",
+        "preserve_attention_to_local_cues_and_trainable_next_step"
+      ]
+    },
+    {
+      "field_path": "cards.34.card.no_astro.headline.hybrid",
+      "replacement": "From Scent to Shared Cue",
+      "reason_codes": [
+        "remove_cross_card_exact_duplicate",
+        "preserve_scent_to_training_channel_image"
+      ]
+    }
+  ]
+}
