@@ -50,7 +50,10 @@ from author_semantic_closure import (  # noqa: E402
     polish_target_paths,
     provider_configuration,
     prompt_cache_manifest,
+    qualitative_critic_output_schema,
+    qualitative_critic_transport,
     resume_run,
+    run_qualitative_review,
     run_sbe,
     run_pass_acceptance,
     safe_extract_zip,
@@ -61,6 +64,7 @@ from author_semantic_closure import (  # noqa: E402
     sparse_polish_output_schema,
     sparse_polish_transport_metrics,
     update_run_status,
+    validate_qualitative_critic_response,
     workspace_file_inventory,
     writable_fields,
     _fake_field_value,
@@ -692,6 +696,226 @@ class TestSemanticClosure(SemanticClosureFixture):
         )
         self.assertIn("relationship_type", projected)
         self.assertIn("attributes", projected)
+
+    def test_qualitative_critic_is_strict_read_only_and_path_validated(
+        self,
+    ) -> None:
+        schema = qualitative_critic_output_schema(3)
+        self.assertNotIn("replacement", json.dumps(schema))
+        self.assertEqual(
+            3,
+            schema["properties"]["findings"]["maxItems"],
+        )
+        transport = qualitative_critic_transport(self.packet)
+        self.assertIn("reader_facing_fields", transport)
+        self.assertIn("semantic_evidence", transport["card_descriptors"][0])
+        self.assertNotIn("projected_term_registry", transport)
+        self.assertNotIn("unselected_claims", transport)
+        target = "cards.0.card.no_astro.headline.handler"
+        comparison = "cards.1.card.no_astro.headline.handler"
+        response = {
+            "deck_assessment": {
+                "strengths": ["Specific behavioral imagery."],
+                "primary_risks": ["Two headlines are exchangeable."],
+            },
+            "findings": [{
+                "finding_id": "q1",
+                "quality_dimension": "exchangeable_headline",
+                "scope": "deck",
+                "priority": "high",
+                "confidence": 0.9,
+                "repairability": "local_repair",
+                "target_paths": [target],
+                "comparison_paths": [comparison],
+                "diagnosis": "The first headline could label either card.",
+                "rewrite_objective": "Anchor it to its own behavior.",
+                "required_context": ["nearby_prose", "claim_evidence"],
+            }],
+        }
+        result = validate_qualitative_critic_response(
+            self.packet,
+            response,
+            max_findings=3,
+            max_target_fields=2,
+            max_target_cards=2,
+        )
+        self.assertEqual([target], result["selected_target_paths"])
+        self.assertTrue(
+            result["critic"]["findings"][0]["selected_for_candidate"]
+        )
+        invented = deepcopy(response)
+        invented["findings"][0]["target_paths"] = ["cards.999.body"]
+        with self.assertRaisesRegex(ValueError, "invented"):
+            validate_qualitative_critic_response(
+                self.packet,
+                invented,
+                max_findings=3,
+                max_target_fields=2,
+                max_target_cards=2,
+            )
+
+    def test_qualitative_selection_caps_and_excludes_reconception(self) -> None:
+        paths = [
+            f"cards.{index}.card.no_astro.headline.handler"
+            for index in range(3)
+        ]
+        findings = []
+        for index, path in enumerate(paths):
+            findings.append({
+                "finding_id": f"q{index}",
+                "quality_dimension": "exchangeable_headline",
+                "scope": "card",
+                "priority": "high",
+                "confidence": 0.95,
+                "repairability": (
+                    "upstream_reconception" if index == 0 else "local_repair"
+                ),
+                "target_paths": [path],
+                "comparison_paths": [],
+                "diagnosis": "Concrete diagnosis.",
+                "rewrite_objective": "Concrete objective.",
+                "required_context": ["claim_evidence"],
+            })
+        response = {
+            "deck_assessment": {"strengths": [], "primary_risks": []},
+            "findings": findings,
+        }
+        result = validate_qualitative_critic_response(
+            self.packet,
+            response,
+            max_findings=3,
+            max_target_fields=1,
+            max_target_cards=1,
+        )
+        self.assertEqual([paths[1]], result["selected_target_paths"])
+        reasons = [
+            item["selection_reason"]
+            for item in result["critic"]["findings"]
+        ]
+        self.assertEqual(
+            ["not_locally_repairable", "eligible", "field_cap"],
+            reasons,
+        )
+
+    def test_qualitative_candidate_never_replaces_production_deck(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            original = json.dumps(self.packet)
+            deck_path.write_text(original, encoding="utf-8")
+            for name, value in {
+                "assembly.json": {},
+                "validation.json": {"status": "pass", "errors": []},
+                "lint.json": {"status": "pass", "warning_count": 0},
+            }.items():
+                (final_root / name).write_text(json.dumps(value), encoding="utf-8")
+            record = {
+                "subject": "bre",
+                "state": "DELIVERY_COMPLETE",
+                "deck": str(deck_path),
+                "assembly_report": str(final_root / "assembly.json"),
+                "validation_report": str(final_root / "validation.json"),
+                "lint_report": str(final_root / "lint.json"),
+                "polish_attempts": [],
+                "delivery": None,
+            }
+            target = "cards.0.card.no_astro.headline.handler"
+            schema_names: list[str] = []
+
+            class Provider:
+                model = "fake-qualitative"
+                reasoning_effort = "low"
+
+                def complete_json(inner_self, **kwargs):
+                    schema_names.append(kwargs["schema_name"])
+                    if kwargs["schema_name"] == "astrowoof_qualitative_critic":
+                        return {
+                            "deck_assessment": {
+                                "strengths": ["Strong deck."],
+                                "primary_risks": ["One exchangeable headline."],
+                            },
+                            "findings": [{
+                                "finding_id": "q1",
+                                "quality_dimension": "exchangeable_headline",
+                                "scope": "card",
+                                "priority": "high",
+                                "confidence": 0.95,
+                                "repairability": "local_repair",
+                                "target_paths": [target],
+                                "comparison_paths": [
+                                    "cards.1.card.no_astro.headline.handler"
+                                ],
+                                "diagnosis": "The headline is exchangeable.",
+                                "rewrite_objective": "Make the behavior specific.",
+                                "required_context": ["claim_evidence"],
+                            }],
+                        }, {"provider": "fake"}
+                    return {"edits": [{
+                        "field_path": target,
+                        "replacement": "A Distinctly Grounded Headline",
+                        "reason_codes": ["exchangeable_headline"],
+                    }]}, {"provider": "fake"}
+
+            def fake_qa(command, report_path, *, accepted_returncodes):
+                if "validate_astrowoof_editorial.py" in command[1]:
+                    report = {"status": "pass", "errors": [], "warnings": []}
+                else:
+                    report = {"status": "pass", "warning_count": 0}
+                report_path.write_text(json.dumps(report), encoding="utf-8")
+                return {
+                    "accepted": True,
+                    "returncode": 0,
+                    "stdout": "",
+                    "stderr": "",
+                    "report": report,
+                }
+
+            with patch(
+                "author_semantic_closure.run_json_command",
+                side_effect=fake_qa,
+            ):
+                run_qualitative_review(
+                    record=record,
+                    critic_provider=Provider(),
+                    editor_provider=None,
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_findings=4,
+                    max_target_fields=4,
+                    max_target_cards=2,
+                )
+                self.assertEqual(
+                    "DIAGNOSIS_COMPLETE",
+                    record["qualitative_review"]["state"],
+                )
+                run_qualitative_review(
+                    record=record,
+                    critic_provider=Provider(),
+                    editor_provider=Provider(),
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_findings=4,
+                    max_target_fields=4,
+                    max_target_cards=2,
+                )
+            self.assertEqual(original, deck_path.read_text(encoding="utf-8"))
+            review = record["qualitative_review"]
+            self.assertEqual("CANDIDATE_READY_FOR_REVIEW", review["state"])
+            self.assertFalse(review["candidate"]["production_deck_replaced"])
+            candidate = load_json(Path(review["candidate"]["artifact"]))
+            self.assertEqual(
+                "A Distinctly Grounded Headline",
+                candidate["cards"][0]["card"]["no_astro"]["headline"]["handler"],
+            )
+            self.assertEqual(
+                [
+                    "astrowoof_qualitative_critic",
+                    "astrowoof_qualitative_candidate",
+                ],
+                schema_names,
+            )
 
     def test_polish_noop_stops_without_rewriting_advisory_prose(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

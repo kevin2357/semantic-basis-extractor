@@ -33,7 +33,7 @@ from assemble_authoring_workspace import assemble
 from lint_astrowoof_editorial import reader_facing_items
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.5"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.6"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -1946,6 +1946,8 @@ def update_run_status(state: dict[str, Any]) -> None:
         "authoring_initial": [],
         "creative_retries": [],
         "polish": [],
+        "qualitative_critic": [],
+        "qualitative_candidate": [],
     }
     for record in state["passes"].values():
         for index, attempt in enumerate(record.get("attempts", [])):
@@ -1954,6 +1956,19 @@ def update_run_status(state: dict[str, Any]) -> None:
             ].append(attempt)
     for record in state.get("subjects", {}).values():
         stage_attempts["polish"].extend(record.get("polish_attempts", []))
+        review = record.get("qualitative_review") or {}
+        critic = review.get("critic") or {}
+        candidate = review.get("candidate") or {}
+        if critic.get("provider_metadata"):
+            stage_attempts["qualitative_critic"].append({
+                "provider_metadata": critic["provider_metadata"],
+                "accepted": review.get("state") != "QUALITATIVE_REVIEW_ERROR",
+            })
+        if candidate.get("provider_metadata"):
+            stage_attempts["qualitative_candidate"].append({
+                "provider_metadata": candidate["provider_metadata"],
+                "accepted": review.get("state") == "CANDIDATE_READY_FOR_REVIEW",
+            })
 
     def summarize_attempts(attempts: list[dict[str, Any]]) -> dict[str, Any]:
         nonlocal estimated_cost_total, priced_attempt_count
@@ -3535,6 +3550,240 @@ def sparse_polish_output_schema(target_paths: list[str]) -> dict[str, Any]:
     }
 
 
+QUALITATIVE_DIMENSIONS = (
+    "summary_thesis_overlap",
+    "repeated_comic_mechanism",
+    "repeated_rhetorical_posture",
+    "exchangeable_headline",
+    "over_explained_body",
+    "incomplete_compound_semantics",
+    "insufficient_audience_distinction",
+    "insufficient_astrology_density_progression",
+    "other_editorial_quality",
+)
+
+
+def qualitative_critic_output_schema(max_findings: int) -> dict[str, Any]:
+    """Strict diagnosis-only response; paths are validated after decoding."""
+    if max_findings < 1:
+        raise ValueError("Qualitative critic requires a positive finding cap")
+    return {
+        "type": "object",
+        "properties": {
+            "deck_assessment": {
+                "type": "object",
+                "properties": {
+                    "strengths": {
+                        "type": "array",
+                        "maxItems": 4,
+                        "items": {"type": "string"},
+                    },
+                    "primary_risks": {
+                        "type": "array",
+                        "maxItems": 4,
+                        "items": {"type": "string"},
+                    },
+                },
+                "required": ["strengths", "primary_risks"],
+                "additionalProperties": False,
+            },
+            "findings": {
+                "type": "array",
+                "maxItems": max_findings,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "finding_id": {"type": "string"},
+                        "quality_dimension": {
+                            "type": "string",
+                            "enum": list(QUALITATIVE_DIMENSIONS),
+                        },
+                        "scope": {
+                            "type": "string",
+                            "enum": ["summary", "card", "deck"],
+                        },
+                        "priority": {
+                            "type": "string",
+                            "enum": ["high", "medium", "low"],
+                        },
+                        "confidence": {
+                            "type": "number",
+                            "minimum": 0.0,
+                            "maximum": 1.0,
+                        },
+                        "repairability": {
+                            "type": "string",
+                            "enum": [
+                                "local_repair",
+                                "upstream_reconception",
+                                "advisory_only",
+                            ],
+                        },
+                        "target_paths": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 4,
+                            "items": {"type": "string"},
+                        },
+                        "comparison_paths": {
+                            "type": "array",
+                            "maxItems": 8,
+                            "items": {"type": "string"},
+                        },
+                        "diagnosis": {"type": "string"},
+                        "rewrite_objective": {"type": "string"},
+                        "required_context": {
+                            "type": "array",
+                            "maxItems": 4,
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "nearby_prose",
+                                    "claim_evidence",
+                                    "whole_chart",
+                                    "none",
+                                ],
+                            },
+                        },
+                    },
+                    "required": [
+                        "finding_id",
+                        "quality_dimension",
+                        "scope",
+                        "priority",
+                        "confidence",
+                        "repairability",
+                        "target_paths",
+                        "comparison_paths",
+                        "diagnosis",
+                        "rewrite_objective",
+                        "required_context",
+                    ],
+                    "additionalProperties": False,
+                },
+            },
+        },
+        "required": ["deck_assessment", "findings"],
+        "additionalProperties": False,
+    }
+
+
+def qualitative_critic_transport(deck: dict[str, Any]) -> dict[str, Any]:
+    """Build a complete but provenance-light read-only editorial deck view."""
+    fields = editable_deck_fields(deck, include_theme_groups=False)
+    basis_targets = [
+        f"cards.{index}.card.no_astro.body.handler"
+        for index in range(len(deck.get("cards", [])))
+    ]
+    semantic_cards = sparse_polish_basis(deck, basis_targets)["cards"]
+    cards = [
+        {
+            "index": index,
+            "claim_id": card.get("claim_id"),
+            "claim_type": card.get("claim_type"),
+            "canonical_claim": card.get("canonical_claim"),
+            "categories": card.get("categories", []),
+            "behavioral_domains": card.get("behavioral_domains", []),
+            "priority_id": card.get("priority_id"),
+            "semantic_evidence": semantic_cards[index].get(
+                "semantic_evidence", []
+            ),
+        }
+        for index, card in enumerate(deck.get("cards", []))
+    ]
+    return {
+        "subject": deck.get("subject", {}),
+        "card_descriptors": cards,
+        "reader_facing_fields": fields,
+    }
+
+
+def validate_qualitative_critic_response(
+    deck: dict[str, Any],
+    response: dict[str, Any],
+    *,
+    max_findings: int,
+    max_target_fields: int,
+    max_target_cards: int,
+) -> dict[str, Any]:
+    """Reject invented paths and cap the critic before it can imply a rewrite."""
+    if not isinstance(response, dict):
+        raise ValueError("Qualitative critic response must be an object")
+    findings = response.get("findings")
+    if not isinstance(findings, list) or len(findings) > max_findings:
+        raise ValueError("Qualitative critic exceeded its finding cap")
+    fields = editable_deck_fields(deck, include_theme_groups=False)
+    valid_paths = set(fields)
+    finding_ids: set[str] = set()
+    eligible: list[dict[str, Any]] = []
+    selected_paths: list[str] = []
+    selected_cards: set[str] = set()
+    normalized = deepcopy(response)
+    for finding in normalized["findings"]:
+        finding_id = finding.get("finding_id")
+        if not isinstance(finding_id, str) or not finding_id.strip():
+            raise ValueError("Qualitative finding ID must be nonempty")
+        if finding_id in finding_ids:
+            raise ValueError(f"Duplicate qualitative finding ID: {finding_id}")
+        finding_ids.add(finding_id)
+        targets = finding.get("target_paths") or []
+        comparisons = finding.get("comparison_paths") or []
+        unknown = [
+            path for path in [*targets, *comparisons] if path not in valid_paths
+        ]
+        if unknown:
+            raise ValueError(
+                f"Qualitative critic invented reader-facing paths: {unknown}"
+            )
+        if len(set(targets)) != len(targets):
+            raise ValueError(
+                f"Qualitative finding {finding_id} repeats target paths"
+            )
+        finding["selected_for_candidate"] = False
+        finding["selection_reason"] = None
+        if finding.get("repairability") != "local_repair":
+            finding["selection_reason"] = "not_locally_repairable"
+            continue
+        if finding.get("priority") == "low":
+            finding["selection_reason"] = "low_priority"
+            continue
+        if float(finding.get("confidence") or 0.0) < 0.70:
+            finding["selection_reason"] = "confidence_below_0.70"
+            continue
+        candidate_new_paths = [path for path in targets if path not in selected_paths]
+        candidate_cards = {
+            ".".join(path.split(".")[:2])
+            if path.startswith(("cards.", "summary."))
+            else path
+            for path in candidate_new_paths
+        }
+        if len(selected_paths) + len(candidate_new_paths) > max_target_fields:
+            finding["selection_reason"] = "field_cap"
+            continue
+        if len(selected_cards | candidate_cards) > max_target_cards:
+            finding["selection_reason"] = "card_cap"
+            continue
+        finding["selected_for_candidate"] = True
+        finding["selection_reason"] = "eligible"
+        selected_paths.extend(candidate_new_paths)
+        selected_cards.update(candidate_cards)
+        eligible.append(finding)
+    return {
+        "critic": normalized,
+        "eligible_findings": eligible,
+        "selected_target_paths": selected_paths,
+        "selected_location_count": len(selected_cards),
+        "limits": {
+            "max_findings": max_findings,
+            "max_target_fields": max_target_fields,
+            "max_target_cards": max_target_cards,
+            "minimum_confidence": 0.70,
+            "eligible_priorities": ["high", "medium"],
+            "eligible_repairability": "local_repair",
+        },
+    }
+
+
 def apply_sparse_polish(
     deck: dict[str, Any],
     authored: dict[str, Any],
@@ -3888,6 +4137,309 @@ def polish_subject(
         package_subject_delivery(record, run_dir=run_dir)
 
 
+def qualitative_whole_deck_context(deck: dict[str, Any]) -> dict[str, Any]:
+    """Compact behavioral overview for the rare repair needing deck context."""
+    fields = editable_deck_fields(deck, include_theme_groups=False)
+    selected = {
+        path: value
+        for path, value in fields.items()
+        if (
+            path.startswith("summary.")
+            and ".no_astro." in path
+            and (".headline.handler" in path or ".body.handler" in path)
+        )
+        or (
+            path.startswith("cards.")
+            and ".card.no_astro." in path
+            and (".headline.handler" in path or ".body.handler" in path)
+        )
+    }
+    return {
+        "subject": deck.get("subject", {}),
+        "behavioral_handler_view": selected,
+    }
+
+
+def run_qualitative_review(
+    *,
+    record: dict[str, Any],
+    critic_provider: OpenAIResponsesProvider,
+    editor_provider: OpenAIResponsesProvider | None,
+    run_dir: Path,
+    python_executable: Path,
+    max_findings: int,
+    max_target_fields: int,
+    max_target_cards: int,
+) -> None:
+    """Diagnose a complete deck and optionally preserve a sparse candidate."""
+    existing = record.get("qualitative_review") or {}
+    resume_diagnosis = (
+        existing.get("state") == "DIAGNOSIS_COMPLETE"
+        and editor_provider is not None
+    )
+    if existing.get("state") in {
+        "NO_ELIGIBLE_FINDINGS",
+        "CANDIDATE_READY_FOR_REVIEW",
+        "CANDIDATE_REJECTED",
+        "CANDIDATE_NO_CHANGE",
+    } or (
+        existing.get("state") == "DIAGNOSIS_COMPLETE"
+        and not resume_diagnosis
+    ):
+        return
+    subject = record["subject"]
+    baseline_path = Path(record["deck"])
+    deck = load_json(baseline_path)
+    final_root = run_dir / "final" / subject
+    qualitative_root = final_root / "qualitative"
+    critic_root = qualitative_root / "critic"
+    review = existing if resume_diagnosis else {
+        "state": "CRITIC_SUBMITTED",
+        "started_at": utc_now(),
+        "finished_at": None,
+        "baseline_deck": normalized_path(baseline_path),
+        "baseline_sha256": sha256_file(baseline_path),
+        "critic": None,
+        "selection": None,
+        "candidate": None,
+        "error": None,
+    }
+    record["qualitative_review"] = review
+    try:
+        if resume_diagnosis:
+            selection = load_json(Path(review["critic"]["artifact"]))
+            review["state"] = "CANDIDATE_SUBMITTED"
+            review["finished_at"] = None
+            review["error"] = None
+        else:
+            transport = qualitative_critic_transport(deck)
+            system = (
+                "You are a read-only senior editorial critic for an AstroWoof "
+                "natal claim deck. Diagnose only substantive, reader-visible "
+                "quality problems; do not rewrite prose, invent defects to fill "
+                "the quota, or penalize intentional recurring characterization. "
+                "Distinguish lexical difference from conceptual difference. "
+                "Exact paths must come from the supplied reader-facing field "
+                "map. Prefer a small number of concrete, comparative findings "
+                "over generic advice. Classify missing conception as "
+                "upstream_reconception rather than pretending it is safely "
+                "editable."
+            )
+            user = (
+                f"Review the complete AstroWoof deck for {subject}. Look "
+                "specifically for overlapping summary theses, repeated comic "
+                "machinery or rhetorical posture, exchangeable headlines, "
+                "bodies whose explanation outlives their insight, incomplete "
+                "compound meaning, insufficiently distinct audiences, and weak "
+                "astrology-density progression. Return at most "
+                f"{max_findings} findings, ordered by priority and confidence, "
+                "and no replacement prose. Empty findings are correct when the "
+                "deck does not contain a sufficiently specific defect.\n\n"
+                "READ-ONLY DECK:\n"
+                f"{json.dumps(transport, ensure_ascii=False)}"
+            )
+            response, metadata = critic_provider.complete_json(
+                system=system,
+                user=user,
+                schema=qualitative_critic_output_schema(max_findings),
+                schema_name="astrowoof_qualitative_critic",
+                attempt_root=critic_root,
+                idempotency_material=(
+                    f"{sha256_file(baseline_path)}:{subject}:"
+                    f"qualitative-critic:{max_findings}:"
+                    f"{critic_provider.model}"
+                ),
+            )
+            metadata["routing"] = {
+                "route": "qualitative_critic",
+                "model": critic_provider.model,
+                "reasoning_effort": critic_provider.reasoning_effort,
+            }
+            selection = validate_qualitative_critic_response(
+                deck,
+                response,
+                max_findings=max_findings,
+                max_target_fields=max_target_fields,
+                max_target_cards=max_target_cards,
+            )
+            write_json_atomic(critic_root / "critic-findings.json", selection)
+            review["critic"] = {
+                "provider_metadata": metadata,
+                "finding_count": len(response.get("findings", [])),
+                "artifact": normalized_path(
+                    critic_root / "critic-findings.json"
+                ),
+            }
+            review["selection"] = {
+                "eligible_finding_count": len(selection["eligible_findings"]),
+                "selected_target_paths": selection["selected_target_paths"],
+                "selected_location_count": selection["selected_location_count"],
+                "limits": selection["limits"],
+            }
+        targets = selection["selected_target_paths"]
+        if not targets:
+            review["state"] = "NO_ELIGIBLE_FINDINGS"
+            review["finished_at"] = utc_now()
+            return
+        if editor_provider is None:
+            review["state"] = "DIAGNOSIS_COMPLETE"
+            review["finished_at"] = utc_now()
+            return
+
+        editor_root = qualitative_root / "candidate"
+        all_fields = editable_deck_fields(deck, include_theme_groups=False)
+        comparison_paths = sorted({
+            path
+            for finding in selection["eligible_findings"]
+            for path in finding.get("comparison_paths", [])
+        })
+        read_only_paths = sorted(set(comparison_paths) - set(targets))
+        nearby = sparse_polish_context(deck, targets)
+        nearby.update({path: all_fields[path] for path in read_only_paths})
+        required_context = {
+            value
+            for finding in selection["eligible_findings"]
+            for value in finding.get("required_context", [])
+        }
+        repair_basis = sparse_polish_basis(deck, targets)
+        whole_deck = (
+            qualitative_whole_deck_context(deck)
+            if "whole_chart" in required_context
+            else None
+        )
+        editor_system = (
+            "You are producing a bounded qualitative-polish candidate for "
+            "human comparison. Edit only the supplied target paths and only "
+            "when the critic diagnosis supports a real improvement. Omit a "
+            "target rather than weakening good prose. Preserve factual meaning, "
+            "the strongest image, behavioral specificity, useful guidance, "
+            "audience purpose, astrology-density role, and compound semantic "
+            "contributions. Do not normalize the deck into one writing style."
+        )
+        editor_user = (
+            f"Prepare a sparse candidate for {subject}. The production deck "
+            "will not be replaced automatically.\n\nCRITIC FINDINGS:\n"
+            f"{json.dumps(selection['eligible_findings'], ensure_ascii=False)}"
+            "\n\nEDITABLE TARGETS:\n"
+            f"{json.dumps({path: all_fields[path] for path in targets}, ensure_ascii=False)}"
+            "\n\nREAD-ONLY COMPARISON AND NEARBY PROSE:\n"
+            f"{json.dumps(nearby, ensure_ascii=False)}"
+            "\n\nSEMANTIC REPAIR BASIS:\n"
+            f"{json.dumps(repair_basis, ensure_ascii=False)}"
+            "\n\nOPTIONAL WHOLE-DECK BEHAVIORAL CONTEXT:\n"
+            f"{json.dumps(whole_deck, ensure_ascii=False)}"
+        )
+        authored, editor_metadata = editor_provider.complete_json(
+            system=editor_system,
+            user=editor_user,
+            schema=sparse_polish_output_schema(targets),
+            schema_name="astrowoof_qualitative_candidate",
+            attempt_root=editor_root,
+            idempotency_material=(
+                f"{sha256_file(baseline_path)}:{subject}:qualitative-candidate:"
+                f"{sha256_file(critic_root / 'critic-findings.json')}:"
+                f"{editor_provider.model}"
+            ),
+        )
+        editor_metadata["routing"] = {
+            "route": "qualitative_candidate",
+            "model": editor_provider.model,
+            "reasoning_effort": editor_provider.reasoning_effort,
+        }
+        if not authored.get("edits"):
+            review["candidate"] = {
+                "provider_metadata": editor_metadata,
+                "artifact": None,
+                "edited_field_count": 0,
+                "omitted_target_count": len(targets),
+                "production_deck_replaced": False,
+                "requires_human_review": False,
+            }
+            review["state"] = "CANDIDATE_NO_CHANGE"
+            review["finished_at"] = utc_now()
+            return
+        candidate = apply_sparse_polish(
+            deck,
+            authored,
+            target_paths=targets,
+            include_theme_groups=False,
+        )
+        candidate_path = editor_root / f"natal.{subject}.cards.candidate.json"
+        write_json_atomic(candidate_path, candidate)
+        validator_path = Path(__file__).resolve().with_name(
+            "validate_astrowoof_editorial.py"
+        )
+        linter_path = Path(__file__).resolve().with_name(
+            "lint_astrowoof_editorial.py"
+        )
+        validation_path = editor_root / "validation-report.json"
+        validation_command = [
+            str(python_executable),
+            str(validator_path),
+            str(baseline_path),
+            str(candidate_path),
+            "--phase",
+            "polish",
+            "--report",
+            str(validation_path),
+        ]
+        if any(path.startswith("summary.") for path in targets):
+            validation_command.append("--allow-summary-edits")
+        validation = run_json_command(
+            validation_command,
+            validation_path,
+            accepted_returncodes={0},
+        )
+        lint_path = editor_root / "lint-report.json"
+        lint = run_json_command(
+            [
+                str(python_executable),
+                str(linter_path),
+                str(candidate_path),
+                "--output",
+                str(lint_path),
+            ],
+            lint_path,
+            accepted_returncodes={0, 2},
+        )
+        baseline_lint_count = lint_finding_count(
+            load_json(Path(record["lint_report"]))
+        )
+        candidate_lint_count = lint_finding_count(lint["report"])
+        structurally_valid = validation["accepted"]
+        mechanically_nonworsening = candidate_lint_count <= baseline_lint_count
+        review["candidate"] = {
+            "provider_metadata": editor_metadata,
+            "artifact": normalized_path(candidate_path),
+            "validation_report": normalized_path(validation_path),
+            "lint_report": normalized_path(lint_path),
+            "edited_field_count": len(authored.get("edits", [])),
+            "omitted_target_count": len(targets) - len(authored.get("edits", [])),
+            "structurally_valid": structurally_valid,
+            "baseline_lint_finding_count": baseline_lint_count,
+            "candidate_lint_finding_count": candidate_lint_count,
+            "mechanically_nonworsening": mechanically_nonworsening,
+            "production_deck_replaced": False,
+            "requires_human_review": True,
+        }
+        review["state"] = (
+            "CANDIDATE_READY_FOR_REVIEW"
+            if structurally_valid and mechanically_nonworsening
+            else "CANDIDATE_REJECTED"
+        )
+        review["finished_at"] = utc_now()
+    except Exception as exc:
+        review["state"] = "QUALITATIVE_REVIEW_ERROR"
+        review["finished_at"] = utc_now()
+        review["error"] = {
+            "type": type(exc).__name__,
+            "message": str(exc),
+            "provider_metadata": getattr(exc, "metadata", None),
+        }
+        if getattr(exc, "fatal", False):
+            raise
+
+
 def finalize_subjects(
     *,
     state: dict[str, Any],
@@ -4006,6 +4558,7 @@ def resume_run(
         "astrowoof.semantic_closure_run.v0.2",
         "astrowoof.semantic_closure_run.v0.3",
         "astrowoof.semantic_closure_run.v0.4",
+        "astrowoof.semantic_closure_run.v0.5",
     }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("service_level", "interactive")
@@ -4361,6 +4914,37 @@ def main() -> None:
     )
     parser.add_argument("--max-polish-attempts", type=int, default=2)
     parser.add_argument(
+        "--qualitative-critic",
+        action="store_true",
+        help=(
+            "Run an optional read-only whole-deck qualitative critic after "
+            "final validation. Findings never replace the production deck."
+        ),
+    )
+    parser.add_argument(
+        "--qualitative-candidate",
+        action="store_true",
+        help=(
+            "After qualitative diagnosis, author a capped sparse candidate "
+            "for human comparison without replacing the production deck."
+        ),
+    )
+    parser.add_argument("--critic-model", default="gpt-5.6-luna")
+    parser.add_argument(
+        "--critic-reasoning-effort",
+        choices=("none", "low", "medium", "high", "xhigh", "max"),
+        default="medium",
+    )
+    parser.add_argument("--qualitative-editor-model", default="gpt-5.6-luna")
+    parser.add_argument(
+        "--qualitative-editor-reasoning-effort",
+        choices=("none", "low", "medium", "high", "xhigh", "max"),
+        default="low",
+    )
+    parser.add_argument("--max-critic-findings", type=int, default=8)
+    parser.add_argument("--max-qualitative-target-fields", type=int, default=12)
+    parser.add_argument("--max-qualitative-target-cards", type=int, default=6)
+    parser.add_argument(
         "--allow-lint-warnings",
         action="store_true",
         help="Package structurally valid decks even when final lint warns.",
@@ -4414,8 +4998,18 @@ def main() -> None:
         parser.error("--max-output-tokens must be at least 1")
     if args.max_polish_attempts < 1:
         parser.error("--max-polish-attempts must be at least 1")
+    if args.max_critic_findings < 1:
+        parser.error("--max-critic-findings must be at least 1")
+    if args.max_qualitative_target_fields < 1:
+        parser.error("--max-qualitative-target-fields must be at least 1")
+    if args.max_qualitative_target_cards < 1:
+        parser.error("--max-qualitative-target-cards must be at least 1")
     if args.polish and args.provider != "openai":
         parser.error("--polish requires --provider openai")
+    if args.qualitative_candidate and not args.qualitative_critic:
+        parser.error("--qualitative-candidate requires --qualitative-critic")
+    if args.qualitative_critic and args.provider != "openai":
+        parser.error("--qualitative-critic requires --provider openai")
     if args.service_level == "batch" and args.provider != "openai":
         parser.error("--service-level batch requires --provider openai")
     if args.batch_detach and args.service_level != "batch":
@@ -4454,6 +5048,8 @@ def main() -> None:
         )
 
     polish_provider: OpenAIResponsesProvider | None = None
+    critic_provider: OpenAIResponsesProvider | None = None
+    qualitative_editor_provider: OpenAIResponsesProvider | None = None
     if args.prompt_layout_report:
         provider = make_openai_provider(
             api_key="prompt-layout-report-does-not-contact-openai",
@@ -4497,6 +5093,18 @@ def main() -> None:
         else:
             provider = initial_provider
             polish_provider = initial_provider
+        if args.qualitative_critic:
+            critic_provider = make_openai_provider(
+                api_key=api_key,
+                model=args.critic_model,
+                reasoning_effort=args.critic_reasoning_effort,
+            )
+        if args.qualitative_candidate:
+            qualitative_editor_provider = make_openai_provider(
+                api_key=api_key,
+                model=args.qualitative_editor_model,
+                reasoning_effort=args.qualitative_editor_reasoning_effort,
+            )
     if args.resume:
         state, run_json = resume_run(
             run_dir=args.run_dir,
@@ -4570,6 +5178,20 @@ def main() -> None:
         polish_provider=polish_provider,
         max_polish_attempts=args.max_polish_attempts,
     )
+    if args.qualitative_critic and critic_provider is not None:
+        for record in state.get("subjects", {}).values():
+            if record.get("state") in FINAL_SUCCESS_STATES:
+                run_qualitative_review(
+                    record=record,
+                    critic_provider=critic_provider,
+                    editor_provider=qualitative_editor_provider,
+                    run_dir=args.run_dir,
+                    python_executable=args.python_executable,
+                    max_findings=args.max_critic_findings,
+                    max_target_fields=args.max_qualitative_target_fields,
+                    max_target_cards=args.max_qualitative_target_cards,
+                )
+    update_run_status(state)
     save_state(run_json, state)
     print(json.dumps(state, ensure_ascii=False, indent=2))
     if state["status"] in {

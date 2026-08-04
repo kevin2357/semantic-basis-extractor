@@ -316,6 +316,73 @@ persisted deck proceeds directly to delivery packaging.
 `--allow-lint-warnings` may be combined with `--polish` to package the best
 structurally valid result when the bounded polish budget does not reach zero.
 
+## Optional qualitative critic and comparison candidate
+
+Phase-4 qualitative review is deliberately separate from mechanical polish.
+Mechanical polish remains the production-authoritative repair layer and is
+bounded to validator and deterministic-linter findings.
+
+Add `--qualitative-critic` to run a read-only whole-deck editorial diagnosis
+after a structurally valid delivery exists:
+
+```powershell
+python src/author_semantic_closure.py `
+  --run-dir C:\path\to\runs\ella `
+  --provider openai `
+  --resume `
+  --qualitative-critic
+```
+
+The critic receives every reader-facing field, lightweight card descriptors,
+and compact semantic evidence. It returns no replacement prose. Its strict
+findings identify exact target and comparison paths, quality dimension, scope,
+priority, confidence, repairability, diagnosis, rewrite objective, and required
+context. The runner rejects invented paths and duplicate targets after decoding.
+
+The default cap is eight findings. Only high- or medium-priority findings with
+confidence of at least `0.70` and `local_repair` classification may proceed.
+The default selection ceiling is twelve fields across six cards or summaries.
+Upstream reconception and advisory-only findings remain useful diagnosis but
+cannot silently become rewrite assignments.
+
+Add `--qualitative-candidate` to run a second, sparse editor call over the
+selected paths:
+
+```powershell
+python src/author_semantic_closure.py `
+  --run-dir C:\path\to\runs\ella `
+  --provider openai `
+  --resume `
+  --qualitative-critic `
+  --qualitative-candidate
+```
+
+The editor receives only selected targets, the critic's concrete diagnoses,
+comparison and nearby prose, compact claim evidence, and whole-deck behavioral
+context only when requested. It may omit any target or return no edits.
+
+Every nonempty candidate runs through polish-mode structural validation and the
+ordinary whole-deck linter. A structurally valid, mechanically non-worsening
+candidate is marked `CANDIDATE_READY_FOR_REVIEW`. This is not production
+acceptance. The original deck and delivery ZIP are never replaced, and the
+candidate always records `production_deck_replaced: false` plus a human-review
+requirement. Initial Phase-4 evaluation therefore measures diagnosis and
+candidate quality without smuggling subjective self-approval into production.
+
+Relevant controls are:
+
+- `--critic-model` and `--critic-reasoning-effort`;
+- `--qualitative-editor-model` and
+  `--qualitative-editor-reasoning-effort`;
+- `--max-critic-findings`;
+- `--max-qualitative-target-fields`;
+- `--max-qualitative-target-cards`.
+
+Both calls use persisted background response IDs and resume through their
+artifact directories. A diagnosis-only run may later resume with
+`--qualitative-candidate`; it reuses the saved findings without repeating the
+critic call. A completed candidate review is skipped on later resumes.
+
 ## Background execution and resume
 
 Background Responses are enabled by default. The runner polls queued and
@@ -387,6 +454,13 @@ final/
     natal.<subject>.lint-report.json
     polish/
       attempt-001/
+    qualitative/
+      critic/
+        critic-findings.json
+      candidate/
+        natal.<subject>.cards.candidate.json
+        validation-report.json
+        lint-report.json
     astrowoof-<subject>-delivery.zip
 ```
 
@@ -396,9 +470,10 @@ usage, estimated cost, QA reports, and delivery paths. The estimate uses a
 versioned local model-rate table and is useful for run comparison; the OpenAI
 usage dashboard remains authoritative.
 
-Accounting is also divided into `authoring_initial`, `creative_retries`, and
-`polish` stages. Each stage records request counts, accepted attempts, response
-IDs, cache-hit ratio, prompt-size estimates, usage, and estimated cost. A
+Accounting is also divided into `authoring_initial`, `creative_retries`,
+`polish`, `qualitative_critic`, and `qualitative_candidate` stages. Each stage
+records request counts, accepted attempts, response IDs, cache-hit ratio,
+prompt-size estimates, usage, and estimated cost. A
 completed delivery additionally reports estimated cost per card and per deck.
 Explicit cache-write tokens are priced separately at 1.25 times ordinary input
 in the local GPT-5.6 estimate.

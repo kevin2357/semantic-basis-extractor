@@ -2,7 +2,7 @@
 
 - **Date:** 2026-08-02
 - **Sprint:** 1
-- **Status:** Phase-0 discovery complete; implementation plan updated from findings
+- **Status:** Phase 4 implemented and deterministic QA complete; live critic checkpoint pending
 - **Primary subject:** Kevin
 - **Supporting subjects:** Ella and future comparison subjects as needed
 - **Related backlog:** `docs/post_extraction_authoring/Editorial Quality Research and Improvement Backlog.md`

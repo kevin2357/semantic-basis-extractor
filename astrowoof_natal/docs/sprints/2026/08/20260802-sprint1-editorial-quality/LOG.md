@@ -659,3 +659,36 @@ The call used 5,498 input tokens and 605 output tokens, completed in about 21
 seconds, and cost an estimated $0.009128 without a cache hit. Detailed controls,
 before/after examples, and editorial assessment are in
 `results/PHASE 3.5 - Ella Sparse Polish Live Test.md`.
+
+## 2026-08-04 — Phase 4 qualitative architecture implementation
+
+Implemented the optional diagnosis-and-candidate boundary established by the
+Phase-0 study. Mechanical polish remains production-authoritative and unchanged.
+A new read-only critic consumes the complete reader-facing deck plus compact
+semantic evidence and returns strictly structured findings without replacement
+prose.
+
+Critic paths are deterministically validated after structured decoding. Only
+high- or medium-priority, confidence-0.70-or-higher, locally repairable findings
+may enter the candidate set, capped by default at twelve fields across six
+locations. Invented paths reject the response; upstream reconception, advisory,
+low-confidence, low-priority, and over-cap findings remain recorded with an
+explicit exclusion reason.
+
+An optional second call authors a sparse comparison candidate from selected
+diagnoses, target fields, comparison prose, nearby prose, claim evidence, and
+whole-deck behavioral context only when requested. The candidate must pass
+structural validation without worsening deterministic findings. It never
+replaces the production deck during this sprint and is always marked for human
+review. Critic and candidate calls have independent resume artifacts and cost
+accounting stages.
+
+The focused semantic-closure suite now passes 54 tests. Detailed architecture
+and the initial live-evaluation contract are in
+`results/PHASE 4 - Qualitative Critic Architecture.md`.
+
+The complete 95-test suite passes. A token-free Ella measurement reports 1,458
+reader-facing fields, 50 compact semantic descriptors, an 87,248-token estimated
+critic transport, and an approximately 410-token response schema. The transport
+retains all audience and astrology-density variants needed for diagnosis while
+omitting the projected registry, unselected-claim records, and raw graph.
