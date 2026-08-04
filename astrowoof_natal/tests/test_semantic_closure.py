@@ -66,6 +66,7 @@ from author_semantic_closure import (  # noqa: E402
     update_run_status,
     validate_qualitative_critic_response,
     workspace_file_inventory,
+    write_json_atomic,
     writable_fields,
     _fake_field_value,
 )
@@ -2345,6 +2346,28 @@ class TestSemanticClosure(SemanticClosureFixture):
                 original,
                 json.loads(run_json.read_text(encoding="utf-8")),
             )
+
+    def test_atomic_state_write_retries_transient_permission_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "state.json"
+            replacement = {"status": "saved"}
+            original_replace = Path.replace
+            calls = 0
+
+            def transient_replace(source: Path, target: Path) -> Path:
+                nonlocal calls
+                calls += 1
+                if calls == 1:
+                    raise PermissionError("temporarily locked")
+                return original_replace(source, target)
+
+            with patch("pathlib.Path.replace", new=transient_replace), patch(
+                "time.sleep"
+            ) as sleep:
+                write_json_atomic(path, replacement)
+            self.assertEqual(2, calls)
+            sleep.assert_called_once_with(0.05)
+            self.assertEqual(replacement, load_json(path))
 
 
 if __name__ == "__main__":

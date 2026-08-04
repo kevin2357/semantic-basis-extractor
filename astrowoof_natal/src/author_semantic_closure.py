@@ -107,7 +107,17 @@ def write_json_atomic(path: Path, value: Any) -> None:
         temporary = Path(handle.name)
         handle.write(rendered)
         handle.flush()
-    temporary.replace(path)
+    for attempt in range(5):
+        try:
+            temporary.replace(path)
+            break
+        except PermissionError:
+            if attempt == 4:
+                raise
+            # Windows virus scanners and indexers can briefly hold either the
+            # destination or freshly flushed temporary file. Preserve atomic
+            # replacement while tolerating that transient lock.
+            time.sleep(0.05 * (attempt + 1))
 
 
 def sha256_file(path: Path) -> str:
