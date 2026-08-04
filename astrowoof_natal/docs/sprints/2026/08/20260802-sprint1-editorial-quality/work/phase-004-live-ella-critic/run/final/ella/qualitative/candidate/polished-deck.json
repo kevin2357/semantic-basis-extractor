@@ -1,0 +1,24 @@
+{
+  "edits": [
+    {
+      "field_path": "cards.10.card.full_astro.body.handler",
+      "replacement": "Ella's Moon-based Comfort and Regulation is linked with Uranian Novelty and Surprise Response by a drive-conflict pattern: the body wants regulation while the alert system wants disruption and movement. Her Scorpio Ascendant's Behavioral Doorway also faces Mars's Chase Play Defense Drive, tied to the Descendant's Primary Companion Interface. Settling, reacting, playing, and seeking her person can therefore arrive as one fused burst. Use a trained outlet: sniffing or inspection, controlled action, reunion, and rest, rather than punishing the gear change.",
+      "reason_codes": [
+        "remove_explanatory_restatement",
+        "preserve_compound_insight",
+        "retain_astrology_distinctions",
+        "tighten_practical_guidance"
+      ]
+    },
+    {
+      "field_path": "cards.24.card.full_astro.body.handler",
+      "replacement": "This synthesis joins Mercury's Scent Signal Interpretation with the True Node's Training Development Vector, and the Sun's Pack Role Identity with Jupiter's Adventure Optimism. Ella's way forward is to read local information, practice a response, and use growing confidence to participate in the wider pack. Build walks and enrichment around that loop—investigate, learn, coordinate, explore—without turning every outing into a test.",
+      "reason_codes": [
+        "remove_repeated_loop_explanation",
+        "preserve_compound_insight",
+        "retain_astrology_distinctions",
+        "tighten_practical_guidance"
+      ]
+    }
+  ]
+}

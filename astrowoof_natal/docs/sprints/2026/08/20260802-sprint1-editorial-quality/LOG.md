@@ -712,3 +712,16 @@ credible, while its already-compact Card-24 target appears questionable. This
 creates a useful next test of whether the candidate editor omits a nominated
 field rather than treating critic output as mandatory. Full field-level analysis
 is in `results/PHASE 4 - Ella Qualitative Critic Live Test.md`.
+
+Resumed the saved diagnosis into one Luna/low sparse candidate call without
+repeating the critic. The editor used 9,995 input and 356 output tokens for an
+estimated $0.012131. It edited both permitted synthesis bodies; structural QA
+passed, deterministic findings remained zero, and the production deck remained
+byte-identical.
+
+Card 10 became meaningfully cleaner by removing connective and chart-meta
+explanation while preserving its compound mechanism. Card 24 received a much
+smaller but defensible removal of generic synthesis explanation while retaining
+both conjunctions and the memorable practical loop. The call did not prove
+omission behavior, but neither edit was indiscriminate compression. Combined
+critic and editor cost was an estimated $0.113739.

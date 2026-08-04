@@ -152,3 +152,49 @@ two nominated bodies independently. The critical question is whether the editor
 uses omission as judgment—especially for Card 24—rather than treating critic
 selection as a command to rewrite both.
 
+## Candidate-editor follow-up
+
+The saved diagnosis was resumed without repeating the critic request. Luna at
+low reasoning edited both permitted fields.
+
+- Input tokens: 9,995
+- Output tokens: 356
+- Reasoning tokens: 49
+- Estimated cost: **$0.012131**
+- Structural validation: pass
+- Composite deterministic findings: 0 before, 0 after
+- Production deck hash changed: no
+
+### Card 10
+
+The editor removed connective and meta-explanatory padding while preserving all
+four interacting systems, their fused behavioral consequence, and the trained-
+outlet sequence. In particular, it replaced `Use the chart's practical
+implication—a trained outlet—to create a small sequence` with the more direct
+`Use a trained outlet`.
+
+This is a modest but real improvement. The card remains semantically complete
+and becomes easier to read.
+
+### Card 24
+
+The editor removed `The repeated pattern is larger than any one conjunction:`
+but retained both conjunctions, the integrated developmental meaning, and the
+`investigate, learn, coordinate, explore` practical loop.
+
+This edit is smaller than Card 10's, but defensible. The removed clause explained
+the fact of synthesis rather than adding much reader understanding. The result
+is marginally cleaner without collapsing the compound claim.
+
+### Follow-up judgment
+
+The call did not demonstrate target omission; it edited both nominated fields.
+It also did not display indiscriminate shortening. Both replacements were
+surgical, with Card 10 meaningfully cleaner and Card 24 marginally cleaner.
+
+The candidate is suitable for human approval, not automatic promotion. This
+supports the Phase-4 architecture: the critic/editor pair can produce useful
+incremental gains, while the small magnitude and debatable edge cases justify
+keeping qualitative acceptance separate from structural and mechanical QA.
+
+Combined critic-plus-editor estimated cost was **$0.113739**.
