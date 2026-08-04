@@ -100,8 +100,12 @@ The automated summaries were clear and useful, but `What Kevin Needs` and
 outlets, regulation, and calm landings. They passed structural QA while losing
 some of the product-level distinction between support and development.
 
-This is a strong candidate for a pass-6-only gold reference and a summary plan
-that requires four non-overlapping remembered ideas before prose begins.
+Implemented upstream safeguards now include a pass-6-only cross-subject gold
+reference and a summary plan that requires four distinct remembered ideas,
+four explicit lens boundaries, and allocation of recurring motifs before prose
+begins. The next controlled run should test whether those planning fields reduce
+thesis convergence in actual summaries; the implementation is not evidence of
+the literary result by itself.
 
 ### 3. Conceptual duplication without textual duplication
 

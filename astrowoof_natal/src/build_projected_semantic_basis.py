@@ -2830,6 +2830,26 @@ def render_summary_thesis_plan(packet: dict[str, Any]) -> str:
             "summary_plan.growth_development_thesis",
         ),
         (
+            "Who the Dog Is — Lens Boundary",
+            "summary_plan.identity_lens_boundary",
+        ),
+        (
+            "How the Dog Lives — Lens Boundary",
+            "summary_plan.daily_life_lens_boundary",
+        ),
+        (
+            "What the Dog Needs — Lens Boundary",
+            "summary_plan.needs_lens_boundary",
+        ),
+        (
+            "How the Dog Grows — Lens Boundary",
+            "summary_plan.growth_lens_boundary",
+        ),
+        (
+            "Recurring Motif Allocation",
+            "summary_plan.recurring_motif_allocation",
+        ),
+        (
             "Why Needs and Growth Are Different Arguments",
             "summary_plan.needs_vs_growth_distinction",
         ),
@@ -2841,6 +2861,18 @@ def render_summary_thesis_plan(packet: dict[str, Any]) -> str:
         "before writing any summary. Give each lens one distinct idea the "
         "reader should remember an hour later. The four theses must describe "
         "the same dog without becoming four paraphrases of one dominant motif.",
+        "",
+        "For each lens boundary, state the unique reader question it answers, "
+        "its one-sentence memorable answer, and at least one tempting chart "
+        "motif or conclusion that belongs primarily in another lens. Shared "
+        "facts may support several summaries, but the same motif may not serve "
+        "as the remembered conclusion of more than one.",
+        "",
+        "In the recurring-motif allocation, name the strongest motifs in the "
+        "whole-dog profile and assign each a distinct editorial job: identity, "
+        "daily life, present-tense support, development over time, supporting "
+        "evidence only, or deliberately omitted. Do not solve four lenses by "
+        "repeating one formula with different nouns.",
         "",
         "The needs thesis explains present-tense support, regulation, handling, "
         "and enrichment. The growth thesis explains learning, development, "

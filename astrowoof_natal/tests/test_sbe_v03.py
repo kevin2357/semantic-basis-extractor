@@ -859,7 +859,26 @@ class TestBrePacket(unittest.TestCase):
                     thesis_text = thesis_path.read_text(encoding="utf-8")
                     self.assertIn("summary_plan.identity_thesis", thesis_text)
                     self.assertIn(
+                        "summary_plan.identity_lens_boundary", thesis_text
+                    )
+                    self.assertIn(
+                        "summary_plan.daily_life_lens_boundary", thesis_text
+                    )
+                    self.assertIn(
+                        "summary_plan.needs_lens_boundary", thesis_text
+                    )
+                    self.assertIn(
+                        "summary_plan.growth_lens_boundary", thesis_text
+                    )
+                    self.assertIn(
+                        "summary_plan.recurring_motif_allocation", thesis_text
+                    )
+                    self.assertIn(
                         "summary_plan.needs_vs_growth_distinction",
+                        thesis_text,
+                    )
+                    self.assertIn(
+                        "same motif may not serve as the remembered conclusion",
                         thesis_text,
                     )
                     start_here = (workspace / "START HERE.md").read_text(

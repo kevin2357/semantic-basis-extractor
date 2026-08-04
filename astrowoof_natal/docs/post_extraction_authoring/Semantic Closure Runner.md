@@ -43,6 +43,10 @@ Passes 1–5 contain card assignments only. Pass 6 receives a writable
 four-thesis plan and, for subjects other than Kevin, the versioned four-summary
 Kevin craft reference. The reference demonstrates coordinated identity,
 daily-life, needs, and growth lenses but is not evidence about the current dog.
+The plan requires a distinct remembered thesis and lens boundary for each
+summary, plus an explicit allocation of recurring whole-chart motifs. A motif
+may support several lenses, but it cannot silently become the concluding answer
+to all four; the author must give it a different editorial job or omit it.
 It is deterministically omitted when Kevin is the current subject so previously
 authored Kevin prose cannot leak into a same-subject rerun. These files live in
 the pass-local assignment tier: card passes incur no gold-reference tokens,
