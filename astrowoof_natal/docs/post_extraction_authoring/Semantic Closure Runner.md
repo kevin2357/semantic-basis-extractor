@@ -39,14 +39,16 @@ Markdown files around their original field markers. The model cannot rename
 files, alter source guidance, edit the bundled checker, or omit a required
 field without deterministic rejection.
 
-Passes 1–5 contain card assignments only. Pass 6 additionally receives the
-versioned four-summary Kevin craft reference and a writable four-thesis plan.
-The reference demonstrates coordinated identity, daily-life, needs, and growth
-lenses but is not evidence about the current dog. Both files live in the
-pass-local assignment tier: card passes incur no gold-reference tokens, while
-the shared editorial and subject prefixes remain cache-stable across all six
-passes. The completed thesis plan remains in the accepted workspace for audit
-and does not alter the assembled deck schema.
+Passes 1–5 contain card assignments only. Pass 6 receives a writable
+four-thesis plan and, for subjects other than Kevin, the versioned four-summary
+Kevin craft reference. The reference demonstrates coordinated identity,
+daily-life, needs, and growth lenses but is not evidence about the current dog.
+It is deterministically omitted when Kevin is the current subject so previously
+authored Kevin prose cannot leak into a same-subject rerun. These files live in
+the pass-local assignment tier: card passes incur no gold-reference tokens,
+while the shared editorial and subject prefixes remain cache-stable across all
+six passes. The completed thesis plan remains in the accepted workspace for
+audit and does not alter the assembled deck schema.
 
 By default, semantic closure uses `stratified-v1` to distribute the 50 cards
 across passes 1–5. The deterministic assignment balances claim types,

@@ -538,7 +538,8 @@ baseline; that would obscure causality.
 
 Reuse accepted original card passes 1-5 so only pass 6 changes.
 
-- **K3:** rerun Kevin pass 6 with summary gold and four-thesis planning; no qualitative polish.
+- **K3:** historical Kevin pass-6 rerun with same-subject summary gold and
+  four-thesis planning; retain only as evidence of the leakage failure mode.
 - **K4:** K3 plus existing mechanical polish only, if deterministic findings require it.
 - **K5:** K3 plus the proposed qualitative critic and bounded qualitative polish.
 
@@ -550,7 +551,9 @@ qualitative polish adds value after better summary authoring.
 
 Pass-6-only reruns cannot test claim reordering. Use separate full-card runs:
 
-- **K6:** passes 1-5 rerun under `stratified-v1`, paired with the best approved summary-pass configuration, without qualitative polish.
+- **K6:** passes 1-5 rerun under `stratified-v1`, paired with a fresh Kevin
+  summary pass using four-thesis planning but no same-subject prose gold,
+  without qualitative polish.
 - **K7:** K6 plus mechanical polish as needed.
 - **K8:** K6 plus qualitative critic and bounded qualitative polish.
 
@@ -579,7 +582,8 @@ human preference notes.
 At the end of the comparison matrix:
 
 1. Select the default pass-assignment strategy.
-2. Decide whether summary gold is always enabled.
+2. Confirm the cross-subject-only summary-gold policy; same-subject prose gold
+   is prohibited.
 3. Decide whether qualitative critique is default, opt-in, sampled, or deferred.
 4. Decide whether qualitative rewrites may be retained automatically.
 5. Promote successful examples into versioned gold only when their lesson is clear.
@@ -588,7 +592,7 @@ At the end of the comparison matrix:
 
 ## Cost controls
 
-- Restrict complete summary gold to pass 6.
+- Restrict complete summary gold to pass 6 and omit it for its own subject.
 - Keep card gold small and experimental.
 - Reuse accepted passes for isolated pass-6 tests.
 - Keep qualitative critique read-only and structured.

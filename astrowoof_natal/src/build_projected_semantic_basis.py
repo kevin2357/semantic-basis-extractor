@@ -2936,6 +2936,19 @@ def render_summary_gold_reference(repo_root: Path) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def should_include_summary_gold_reference(packet: dict[str, Any]) -> bool:
+    """Exclude the Kevin craft reference when Kevin is the current subject."""
+    subject = packet.get("subject", {})
+    identifiers = (
+        subject.get("subject_id"),
+        subject.get("display_name"),
+    )
+    return not any(
+        isinstance(value, str) and value.strip().casefold() == "kevin"
+        for value in identifiers
+    )
+
+
 def _assignment_features(card: dict[str, Any]) -> dict[str, Any]:
     return {
         "claim_type": str(card.get("claim_type") or "unknown"),
@@ -3131,6 +3144,9 @@ def build_story_workspace(
         packet["subject"].get("display_name")
         or packet["subject"].get("subject_id")
     )
+    include_summary_gold = (
+        include_summaries and should_include_summary_gold_reference(packet)
+    )
     pass_label = (
         f"Pass {pass_number} of {pass_count}"
         if pass_number is not None and pass_count is not None
@@ -3160,22 +3176,35 @@ def build_story_workspace(
             "independent structured chapter plans for Interdogpendence aspects "
             "and Takeaways syntheses."
         )
+        gold_step = (
+            "Study `SUMMARY GOLD REFERENCE.md` for craft only, then "
+            if include_summary_gold
+            else ""
+        )
         sequence = (
             "Begin by reading `AUTHORING BRIEF.md` and `DOG DETAILS.md`. Read "
             "`FULL CHART BASIS.md` in full and complete "
-            "`WRITE WHOLE DOG PROFILE.md`. Study `SUMMARY GOLD REFERENCE.md` "
-            "for craft only, then complete `WRITE SUMMARY THESIS PLAN.md`. "
-            "Only after the four arguments are distinct should you write all "
-            f"four summaries from the complete chart understanding of {display_name}."
+            f"`WRITE WHOLE DOG PROFILE.md`. {gold_step}Complete "
+            "`WRITE SUMMARY THESIS PLAN.md`. Only after the four arguments "
+            "are distinct should you write all four summaries from the "
+            f"complete chart understanding of {display_name}."
         )
-    pass_specific_reading = (
-        "\n\nFor this summary pass, also read `SUMMARY GOLD REFERENCE.md`. "
-        "Transfer its quality principles, never its Kevin-specific content or "
-        "language. Complete `WRITE SUMMARY THESIS PLAN.md` before drafting any "
-        "summary."
-        if include_summaries
-        else ""
-    )
+    if include_summary_gold:
+        pass_specific_reading = (
+            "\n\nFor this summary pass, also read `SUMMARY GOLD REFERENCE.md`. "
+            "Transfer its quality principles, never its Kevin-specific content or "
+            "language. Complete `WRITE SUMMARY THESIS PLAN.md` before drafting any "
+            "summary."
+        )
+    elif include_summaries:
+        pass_specific_reading = (
+            "\n\nNo prose reference is supplied because the current subject is "
+            "the summary craft-reference subject. Build all four theses from "
+            "this subject's chart, whole-dog profile, and `WRITE SUMMARY THESIS "
+            "PLAN.md` only."
+        )
+    else:
+        pass_specific_reading = ""
     (subject_bundle / "START HERE.md").write_text(
         f"# Start Here — {pass_label}\n\n"
         f"## Assignment\n\n{assignment}\n\n"
@@ -3260,11 +3289,12 @@ def build_story_workspace(
             render_theme_group_assignment(packet),
             encoding="utf-8",
         )
-    if include_summaries:
+    if include_summary_gold:
         (subject_bundle / "SUMMARY GOLD REFERENCE.md").write_text(
             render_summary_gold_reference(repo_root),
             encoding="utf-8",
         )
+    if include_summaries:
         (subject_bundle / "WRITE SUMMARY THESIS PLAN.md").write_text(
             render_summary_thesis_plan(packet),
             encoding="utf-8",

@@ -731,3 +731,17 @@ structured vocabulary now includes `conceptual_card_overlap`, and the critic is
 instructed to consolidate a root problem with its obvious headline, body, or
 joke symptoms unless those symptoms require materially different repair
 decisions. Selection caps and production mutation policy are unchanged.
+
+## 2026-08-04 — Phase 5 lineage-control audit
+
+The controlled Kevin matrix inventory found that the SBE implementation still
+materialized the Kevin summary craft reference for a Kevin pass, despite the
+Phase-1 decision to forbid same-subject prose gold. That would contaminate a
+fresh K6 baseline with the already-demonstrated leakage mechanism.
+
+SBE now identifies Kevin by subject ID or display name and omits
+`SUMMARY GOLD REFERENCE.md` from his summary workspace. The four-thesis plan,
+full chart basis, and whole-dog profile remain. Other subjects continue to
+receive the Kevin reference in pass 6 only. A regression test covers the Kevin
+exclusion while the existing Bre split-workspace test preserves the
+cross-subject behavior.

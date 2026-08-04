@@ -893,6 +893,36 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue(report["placeholder_free"])
             self.assertNotIn("__LLM_FILL__", json.dumps(deck))
 
+    def test_summary_workspace_excludes_same_subject_gold_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "kevin_6"
+            packet = deepcopy(self.packet)
+            packet["subject"]["subject_id"] = "kevin"
+            packet["subject"]["display_name"] = "Kevin"
+            build_story_workspace(
+                workspace,
+                packet,
+                ROOT,
+                0,
+                card_start=51,
+                include_summaries=True,
+                include_theme_plan=True,
+                pass_number=6,
+                pass_count=6,
+            )
+            self.assertFalse(
+                (workspace / "SUMMARY GOLD REFERENCE.md").exists()
+            )
+            self.assertTrue(
+                (workspace / "WRITE SUMMARY THESIS PLAN.md").is_file()
+            )
+            start_here = (workspace / "START HERE.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertNotIn("read `SUMMARY GOLD REFERENCE.md`", start_here)
+            self.assertIn("No prose reference is supplied", start_here)
+            self.assertIn("WRITE SUMMARY THESIS PLAN.md", start_here)
+
     def test_stratified_split_assignment_is_deterministic_and_complete(self) -> None:
         first = build_split_assignment_plan(self.packet, "stratified-v1")
         second = build_split_assignment_plan(self.packet, "stratified-v1")
