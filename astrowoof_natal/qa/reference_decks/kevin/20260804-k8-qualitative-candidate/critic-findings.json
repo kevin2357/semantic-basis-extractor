@@ -1,0 +1,267 @@
+{
+  "critic": {
+    "deck_assessment": {
+      "strengths": [
+        "The deck has a clear behavioral-to-astrological escalation: most cards move from practical observation to light chart language and then to specific placements, aspects, and Doghouse context.",
+        "The handler, direct-to-dog, and hybrid audiences are generally differentiated by address and framing rather than being mechanically duplicated.",
+        "The chart contains enough distinct material—bond/freedom tension, trust intensity, novelty, emotional permeability, training structure, and visible pack role—to support a substantial deck.",
+        "Many cards translate astrology into actionable, low-pressure handling guidance instead of treating placements as fixed behavioral verdicts."
+      ],
+      "primary_risks": [
+        "The deck repeatedly returns to the same compound thesis—Kevin investigates or moves independently, then reconnects through a trusted person—until several cards become difficult to distinguish by reader-visible insight.",
+        "Investigation, expedition, map, report, case-file, and plot-twist jokes recur so frequently that the comic voice starts to feel generated from one mechanism rather than discovered anew for each card.",
+        "The four summary cards are individually coherent but collectively reiterate the same secure-base/novelty/clear-cue/return solution, weakening summary-level hierarchy.",
+        "Several late full-astrology cards re-explain the same Libra Doghouse 8 concentration and trust-through-structure conclusion after the reader has already received it in more focused cards."
+      ]
+    },
+    "findings": [
+      {
+        "finding_id": "F1",
+        "quality_dimension": "conceptual_card_overlap",
+        "scope": "card",
+        "priority": "high",
+        "confidence": 0.98,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "cards.0.card.full_astro.body.handler",
+          "cards.10.card.full_astro.body.handler",
+          "cards.26.card.full_astro.body.handler",
+          "cards.38.card.full_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "cards.1.card.full_astro.body.handler",
+          "cards.12.card.full_astro.body.handler"
+        ],
+        "diagnosis": "Cards 0, 10, 26, and 38 repeatedly develop the same reader-facing proposition: Kevin's unusual or novelty-driven first move should be allowed, then converted into a check-in or reconnection with his person. The chart inputs differ—ASC–DSC opposition, ASC–Mars opposition, Mars–DSC conjunction, and Uranus–DSC square—but the behavioral consequence and handling solution remain nearly interchangeable. Card 12 then promotes the same bond–freedom threshold into a whole-pattern synthesis. This is not merely shared vocabulary; the cards do not provide sufficiently different situations, stakes, or developmental conclusions.",
+        "rewrite_objective": "Reconceive these cards around genuinely different behavioral questions before editing their prose: for example, distinguish first-contact style, self-started play, novelty interruption of partnership, and whole-chart transition management. Each surviving card should earn its place through a different observable situation and a different astrological interaction, rather than another version of independent launch followed by return.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "F2",
+        "quality_dimension": "summary_thesis_overlap",
+        "scope": "summary",
+        "priority": "high",
+        "confidence": 0.95,
+        "repairability": "upstream_reconception",
+        "target_paths": [
+          "summary.card1.no_astro.body.handler",
+          "summary.card2.no_astro.body.handler",
+          "summary.card3.no_astro.body.handler",
+          "summary.card4.no_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "summary.card1.full_astro.body.handler",
+          "summary.card2.full_astro.body.handler",
+          "summary.card3.full_astro.body.handler",
+          "summary.card4.full_astro.body.handler"
+        ],
+        "diagnosis": "The four summaries appear to offer different lenses—overall character, daily rhythm, support/handling, and growth—but each ultimately repeats the same thesis: preserve Kevin's curiosity and intensity, add a clear cue or bounded outlet, and provide a dependable return to safety or relationship. The distinctions are mostly organizational and lexical. As a result, the summary section does not progressively narrow from identity to rhythm to intervention to development; it circles one solution.",
+        "rewrite_objective": "Reconceive the summary architecture so each summary has a non-substitutable job and makes a different claim about Kevin. The cards should progress in thesis, not merely in amount of astrological detail: one should establish the central identity, another should explain a distinct daily mechanism, another should isolate a specific support problem, and another should define a developmental direction with consequences not already stated.",
+        "required_context": [
+          "whole_chart",
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "not_locally_repairable"
+      },
+      {
+        "finding_id": "F3",
+        "quality_dimension": "repeated_comic_mechanism",
+        "scope": "deck",
+        "priority": "medium",
+        "confidence": 0.96,
+        "repairability": "local_repair",
+        "target_paths": [
+          "cards.0.card.funny_dog_quotes.0",
+          "cards.6.card.funny_dog_quotes.0",
+          "cards.11.card.funny_dog_quotes.0",
+          "cards.13.card.funny_dog_quotes.0"
+        ],
+        "comparison_paths": [
+          "cards.16.card.funny_dog_quotes.0",
+          "cards.33.card.funny_dog_quotes.0",
+          "cards.36.card.funny_dog_quotes.0",
+          "cards.43.card.funny_dog_quotes.0",
+          "cards.46.card.funny_dog_quotes.0"
+        ],
+        "diagnosis": "A large cluster of jokes uses the same machinery: Kevin treats a scent, change, visitor, or route as an official investigation and speaks like a detective, editor, customs officer, or bureaucrat filing a report. The characterization of Kevin as observant is intentional and well supported, but the comic conversion is repeatedly the same anthropomorphic office/investigation bit. The repetition is visible across unrelated astrological subjects, including home regulation, novelty, bonding, and surprise encounters.",
+        "rewrite_objective": "Retain the investigative characterization while varying the comic engine by card function. Some cards need observational humor, others physical comedy, relational comedy, escalation, reversal, or situational contrast; not every instance of scent-reading or novelty needs to become a case file, report, audit, or official inquiry.",
+        "required_context": [
+          "nearby_prose",
+          "none"
+        ],
+        "selected_for_candidate": true,
+        "selection_reason": "eligible"
+      },
+      {
+        "finding_id": "F4",
+        "quality_dimension": "repeated_rhetorical_posture",
+        "scope": "deck",
+        "priority": "medium",
+        "confidence": 0.94,
+        "repairability": "local_repair",
+        "target_paths": [
+          "cards.0.card.no_astro.body.handler",
+          "cards.1.card.no_astro.body.handler",
+          "cards.6.card.no_astro.body.handler",
+          "cards.10.card.no_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "cards.13.card.no_astro.body.handler",
+          "cards.37.card.no_astro.body.handler",
+          "cards.38.card.no_astro.body.handler",
+          "cards.43.card.no_astro.body.handler"
+        ],
+        "diagnosis": "Many handler bodies adopt the same corrective-defense posture: first deny a negative interpretation—this is not rejection, stubbornness, failure, defiance, or a problem—then validate the behavior and prescribe a pause, cue, outlet, or return. That posture is appropriate for some cards, but it becomes the deck's default sentence logic. The reader repeatedly receives reassurance against the same imagined misreading before reaching the practical distinction.",
+        "rewrite_objective": "Vary the rhetorical entry point and make the affirmative insight lead more often. Some cards should begin with the observable sequence, some with the handler's decision point, some with the benefit or risk, and some with the astrology. Reserve explicit corrective disclaimers for places where the negative misreading is materially important.",
+        "required_context": [
+          "nearby_prose",
+          "none"
+        ],
+        "selected_for_candidate": true,
+        "selection_reason": "eligible"
+      },
+      {
+        "finding_id": "F5",
+        "quality_dimension": "exchangeable_headline",
+        "scope": "card",
+        "priority": "medium",
+        "confidence": 0.92,
+        "repairability": "local_repair",
+        "target_paths": [
+          "cards.0.card.no_astro.headline.handler",
+          "cards.1.card.no_astro.headline.handler",
+          "cards.10.card.no_astro.headline.handler",
+          "cards.26.card.no_astro.headline.handler"
+        ],
+        "comparison_paths": [
+          "cards.0.card.full_astro.headline.handler",
+          "cards.10.card.full_astro.headline.handler",
+          "cards.26.card.full_astro.headline.handler",
+          "cards.38.card.no_astro.headline.handler"
+        ],
+        "diagnosis": "The headlines for the ASC/DSC, Aquarius doorway, ASC–Mars play, and self-started-game cards are individually polished but largely interchangeable at the level of promise: Kevin makes an unusual entrance or launch, then the handler should let him retain authorship while joining or cueing the action. A reader scanning headlines would not reliably know whether the card concerns greeting, transition, play initiation, or novelty disrupting companionship.",
+        "rewrite_objective": "Make headline promises identify the card's unique behavioral scene and consequence, not only its shared independence-and-connection theme. The headline layer should separate greeting, play authorship, novelty interruption, and check-in choreography before the body supplies the nuance.",
+        "required_context": [
+          "nearby_prose",
+          "none"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "card_cap"
+      },
+      {
+        "finding_id": "F6",
+        "quality_dimension": "over_explained_body",
+        "scope": "card",
+        "priority": "medium",
+        "confidence": 0.9,
+        "repairability": "local_repair",
+        "target_paths": [
+          "cards.19.card.full_astro.body.handler",
+          "cards.32.card.full_astro.body.handler"
+        ],
+        "comparison_paths": [
+          "cards.20.card.full_astro.body.handler",
+          "cards.31.card.full_astro.body.handler",
+          "cards.42.card.full_astro.body.handler"
+        ],
+        "diagnosis": "The full handler bodies for the Doghouse 8 concentration and the Libra social-trust council spend substantial space enumerating the same Sun/Jupiter/Saturn/Pluto cluster, assigning each planet a role, and returning to fair boundaries, durable expectations, and trust built through repetition. Cards 20, 31, and 42 already distribute much of that interpretation through focused conjunction and identity cards. In cards 19 and 32, the explanatory inventory outlasts the incremental insight, so the reader receives more chart accounting than new behavioral understanding.",
+        "rewrite_objective": "Keep only the chart evidence that changes the practical conclusion of each card. One card should own the concentration-as-organizing-domain insight; the other should contribute a distinct implication of the cluster, rather than re-listing the same planets and restating trust-through-structure.",
+        "required_context": [
+          "nearby_prose",
+          "claim_evidence"
+        ],
+        "selected_for_candidate": false,
+        "selection_reason": "card_cap"
+      }
+    ]
+  },
+  "eligible_findings": [
+    {
+      "finding_id": "F3",
+      "quality_dimension": "repeated_comic_mechanism",
+      "scope": "deck",
+      "priority": "medium",
+      "confidence": 0.96,
+      "repairability": "local_repair",
+      "target_paths": [
+        "cards.0.card.funny_dog_quotes.0",
+        "cards.6.card.funny_dog_quotes.0",
+        "cards.11.card.funny_dog_quotes.0",
+        "cards.13.card.funny_dog_quotes.0"
+      ],
+      "comparison_paths": [
+        "cards.16.card.funny_dog_quotes.0",
+        "cards.33.card.funny_dog_quotes.0",
+        "cards.36.card.funny_dog_quotes.0",
+        "cards.43.card.funny_dog_quotes.0",
+        "cards.46.card.funny_dog_quotes.0"
+      ],
+      "diagnosis": "A large cluster of jokes uses the same machinery: Kevin treats a scent, change, visitor, or route as an official investigation and speaks like a detective, editor, customs officer, or bureaucrat filing a report. The characterization of Kevin as observant is intentional and well supported, but the comic conversion is repeatedly the same anthropomorphic office/investigation bit. The repetition is visible across unrelated astrological subjects, including home regulation, novelty, bonding, and surprise encounters.",
+      "rewrite_objective": "Retain the investigative characterization while varying the comic engine by card function. Some cards need observational humor, others physical comedy, relational comedy, escalation, reversal, or situational contrast; not every instance of scent-reading or novelty needs to become a case file, report, audit, or official inquiry.",
+      "required_context": [
+        "nearby_prose",
+        "none"
+      ],
+      "selected_for_candidate": true,
+      "selection_reason": "eligible"
+    },
+    {
+      "finding_id": "F4",
+      "quality_dimension": "repeated_rhetorical_posture",
+      "scope": "deck",
+      "priority": "medium",
+      "confidence": 0.94,
+      "repairability": "local_repair",
+      "target_paths": [
+        "cards.0.card.no_astro.body.handler",
+        "cards.1.card.no_astro.body.handler",
+        "cards.6.card.no_astro.body.handler",
+        "cards.10.card.no_astro.body.handler"
+      ],
+      "comparison_paths": [
+        "cards.13.card.no_astro.body.handler",
+        "cards.37.card.no_astro.body.handler",
+        "cards.38.card.no_astro.body.handler",
+        "cards.43.card.no_astro.body.handler"
+      ],
+      "diagnosis": "Many handler bodies adopt the same corrective-defense posture: first deny a negative interpretation—this is not rejection, stubbornness, failure, defiance, or a problem—then validate the behavior and prescribe a pause, cue, outlet, or return. That posture is appropriate for some cards, but it becomes the deck's default sentence logic. The reader repeatedly receives reassurance against the same imagined misreading before reaching the practical distinction.",
+      "rewrite_objective": "Vary the rhetorical entry point and make the affirmative insight lead more often. Some cards should begin with the observable sequence, some with the handler's decision point, some with the benefit or risk, and some with the astrology. Reserve explicit corrective disclaimers for places where the negative misreading is materially important.",
+      "required_context": [
+        "nearby_prose",
+        "none"
+      ],
+      "selected_for_candidate": true,
+      "selection_reason": "eligible"
+    }
+  ],
+  "selected_target_paths": [
+    "cards.0.card.funny_dog_quotes.0",
+    "cards.6.card.funny_dog_quotes.0",
+    "cards.11.card.funny_dog_quotes.0",
+    "cards.13.card.funny_dog_quotes.0",
+    "cards.0.card.no_astro.body.handler",
+    "cards.1.card.no_astro.body.handler",
+    "cards.6.card.no_astro.body.handler",
+    "cards.10.card.no_astro.body.handler"
+  ],
+  "selected_location_count": 6,
+  "limits": {
+    "max_findings": 8,
+    "max_target_fields": 12,
+    "max_target_cards": 6,
+    "minimum_confidence": 0.7,
+    "eligible_priorities": [
+      "high",
+      "medium"
+    ],
+    "eligible_repairability": "local_repair"
+  }
+}

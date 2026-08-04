@@ -17,3 +17,8 @@ reference. It derives from an immutable fresh K6 baseline, passes structural
 validation, and has zero whole-deck lint warnings. Use it as the source for K8
 qualitative diagnosis and candidate comparison, not as evidence that advisory
 validator warnings were repaired.
+
+`20260804-k8-qualitative-candidate` is a non-production research candidate
+derived from K7. It preserves the critic's upstream/local diagnosis and seven
+bounded edits. Use it for comparative review; do not treat it as promoted gold
+or a replacement for K7.

@@ -795,3 +795,27 @@ because validator warnings are outside the current mechanical-polish allowlist.
 K7 reached `DELIVERY_COMPLETE` and is preserved under
 `qa/reference_decks/kevin/20260804-k7-mechanical`. Detailed analysis is in
 `results/PHASE 5 - Kevin K7 Mechanical Polish.md`.
+
+## 2026-08-04 — Phase 5 K8 qualitative review
+
+Ran the read-only Luna/medium critic against committed K7. It returned six
+findings using 84,585 input and 3,646 output tokens for an estimated `$0.106461`.
+K7 remained byte-identical.
+
+The critic correctly reserved the two highest-priority findings for upstream
+reconception: conceptual convergence among four independence/reconnection cards
+and thesis convergence across all four summaries. Two local findings were
+selected under the six-card cap: repeated investigation/bureaucracy humor and a
+repeated defensive handler posture. Exchangeable headlines and two over-
+explained full-astro bodies were diagnosed but not selected.
+
+The Luna/low candidate editor used 6,611 input and 547 output tokens for an
+estimated `$0.009893`. It edited seven of eight paths, preserved one, passed
+structural validation, and retained zero lint warnings. Six edits are clear
+improvements; one dog quote is a defensible diversity repair but loses some of
+the original comic snap. The candidate remains separate from K7 and requires
+human comparison.
+
+K8 is preserved under
+`qa/reference_decks/kevin/20260804-k8-qualitative-candidate`. Full analysis is
+in `results/PHASE 5 - Kevin K8 Qualitative Review.md`.

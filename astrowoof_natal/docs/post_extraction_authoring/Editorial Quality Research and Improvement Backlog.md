@@ -526,3 +526,23 @@ repeated findings into the relevant design sections above.
 - Mechanical polish is effective for bounded surface convergence at very low
   incremental cost. It does not test or resolve conceptual card overlap; that
   remains K8 critic territory or upstream planning work.
+
+### 2026-08-04 — Kevin K8 qualitative review
+
+- The critic produced six concrete findings and independently separated two
+  major upstream problems from locally repairable prose issues.
+- It identified four cards converging on an independent-launch/return story and
+  all four summaries converging on curiosity plus cue plus safe return. Neither
+  was incorrectly sent to local editing.
+- It also identified investigation/bureaucracy joke concentration, defensive
+  handler-body posture, exchangeable headlines, and two over-explained full-
+  astrology bodies.
+- The candidate editor changed seven of eight permitted fields, preserved one,
+  passed structural validation, and retained zero lint warnings for `$0.009893`
+  after a `$0.106461` critic call.
+- Six edits are clear improvements. One quote traded a sharper original joke for
+  a less repetitive but flatter alternative. Mechanical non-worsening is not
+  proof of unanimous editorial improvement; candidates remain review artifacts.
+- The critic's strongest value may be upstream feedback, not candidate prose.
+  Findings about conceptual overlap and summary architecture should inform
+  future planning changes rather than expanding local edit authority.

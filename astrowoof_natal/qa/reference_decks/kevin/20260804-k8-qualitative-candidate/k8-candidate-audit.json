@@ -1,0 +1,167 @@
+{
+  "record": {
+    "subject": "kevin",
+    "state": "DELIVERY_COMPLETE",
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\natal.kevin.cards.json",
+    "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\natal.kevin.assembly-report.json",
+    "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\natal.kevin.validation-report.json",
+    "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\natal.kevin.lint-report.json",
+    "polish_attempts": [],
+    "delivery": null,
+    "qualitative_review": {
+      "state": "CANDIDATE_READY_FOR_REVIEW",
+      "started_at": "2026-08-04T11:46:34.448874+00:00",
+      "finished_at": "2026-08-04T12:02:51.664614+00:00",
+      "baseline_deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\natal.kevin.cards.json",
+      "baseline_sha256": "6b90acb393459dcab37fcea6d8e7cf1366ea731c04aa8afb40d647a0540f8a77",
+      "critic": {
+        "provider_metadata": {
+          "provider": "openai",
+          "response_id": "resp_04b9e9c594bafe8f006a71d11b2d888197b4408d68dd4fed2e",
+          "response_status": "completed",
+          "model": "gpt-5.6-luna",
+          "requested_model": "gpt-5.6-luna",
+          "reasoning_effort": "medium",
+          "usage": {
+            "input_tokens": 84585,
+            "cached_input_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 3646,
+            "reasoning_tokens": 1552,
+            "total_tokens": 88231
+          },
+          "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": 0.106461,
+            "pricing_version": "2026-07-31",
+            "rates_per_million_tokens": {
+              "input": 1.0,
+              "cached_input": 0.1,
+              "output": 6.0,
+              "cache_write": 1.25
+            },
+            "billable_tokens": {
+              "uncached_input": 84585,
+              "cached_input": 0,
+              "cache_write": 0,
+              "output": 3646
+            },
+            "components": {
+              "uncached_input": 0.084585,
+              "cached_input": 0.0,
+              "cache_write": 0.0,
+              "output": 0.021876
+            },
+            "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+          },
+          "poll_count": 15,
+          "transport_attempts": {
+            "create": 1,
+            "retrieve": 15
+          },
+          "routing": {
+            "route": "qualitative_critic",
+            "model": "gpt-5.6-luna",
+            "reasoning_effort": "medium"
+          }
+        },
+        "finding_count": 6,
+        "artifact": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\qualitative\\critic\\critic-findings.json"
+      },
+      "selection": {
+        "eligible_finding_count": 2,
+        "selected_target_paths": [
+          "cards.0.card.funny_dog_quotes.0",
+          "cards.6.card.funny_dog_quotes.0",
+          "cards.11.card.funny_dog_quotes.0",
+          "cards.13.card.funny_dog_quotes.0",
+          "cards.0.card.no_astro.body.handler",
+          "cards.1.card.no_astro.body.handler",
+          "cards.6.card.no_astro.body.handler",
+          "cards.10.card.no_astro.body.handler"
+        ],
+        "selected_location_count": 6,
+        "limits": {
+          "max_findings": 8,
+          "max_target_fields": 12,
+          "max_target_cards": 6,
+          "minimum_confidence": 0.7,
+          "eligible_priorities": [
+            "high",
+            "medium"
+          ],
+          "eligible_repairability": "local_repair"
+        }
+      },
+      "candidate": {
+        "provider_metadata": {
+          "provider": "openai",
+          "response_id": "resp_0b9127a2b7fb01de006a71d4e295908197b4bbcad5252ba4ee",
+          "response_status": "completed",
+          "model": "gpt-5.6-luna",
+          "requested_model": "gpt-5.6-luna",
+          "reasoning_effort": "low",
+          "usage": {
+            "input_tokens": 6611,
+            "cached_input_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 547,
+            "reasoning_tokens": 69,
+            "total_tokens": 7158
+          },
+          "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": 0.009893,
+            "pricing_version": "2026-07-31",
+            "rates_per_million_tokens": {
+              "input": 1.0,
+              "cached_input": 0.1,
+              "output": 6.0,
+              "cache_write": 1.25
+            },
+            "billable_tokens": {
+              "uncached_input": 6611,
+              "cached_input": 0,
+              "cache_write": 0,
+              "output": 547
+            },
+            "components": {
+              "uncached_input": 0.006611,
+              "cached_input": 0.0,
+              "cache_write": 0.0,
+              "output": 0.003282
+            },
+            "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+          },
+          "poll_count": 3,
+          "transport_attempts": {
+            "create": 1,
+            "retrieve": 3
+          },
+          "routing": {
+            "route": "qualitative_candidate",
+            "model": "gpt-5.6-luna",
+            "reasoning_effort": "low"
+          }
+        },
+        "artifact": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\qualitative\\candidate\\natal.kevin.cards.candidate.json",
+        "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\qualitative\\candidate\\validation-report.json",
+        "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k8-qualitative\\final\\kevin\\qualitative\\candidate\\lint-report.json",
+        "edited_field_count": 7,
+        "omitted_target_count": 1,
+        "structurally_valid": true,
+        "baseline_lint_finding_count": 0,
+        "candidate_lint_finding_count": 0,
+        "mechanically_nonworsening": true,
+        "production_deck_replaced": false,
+        "requires_human_review": true
+      },
+      "error": null
+    }
+  },
+  "production_deck": {
+    "before_sha256": "6b90acb393459dcab37fcea6d8e7cf1366ea731c04aa8afb40d647a0540f8a77",
+    "after_sha256": "6b90acb393459dcab37fcea6d8e7cf1366ea731c04aa8afb40d647a0540f8a77",
+    "unchanged": true
+  }
+}

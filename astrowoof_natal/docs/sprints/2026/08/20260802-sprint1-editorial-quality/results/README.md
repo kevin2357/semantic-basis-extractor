@@ -8,6 +8,7 @@ Expected compact artifacts include:
 - `kevin-comparison-report.md`
 - `PHASE 5 - Kevin K6 Upstream Baseline.md`
 - `PHASE 5 - Kevin K7 Mechanical Polish.md`
+- `PHASE 5 - Kevin K8 Qualitative Review.md`
 - cost and latency summaries
 - final sprint conclusions
 
