@@ -590,6 +590,28 @@ At the end of the comparison matrix:
 6. Update authoring and runner documentation plus the quality backlog.
 7. Run the full test suite and one fresh live subject QA.
 
+### Decision record — 2026-08-04
+
+- **Pass assignment:** `stratified-v1` is the production default.
+- **Summary gold:** prose gold is cross-subject only. Same-subject prose gold
+  is prohibited and omitted deterministically.
+- **Mechanical polish:** bounded validator/linter repair is the
+  production-authoritative downstream correction layer when blocking findings
+  remain.
+- **Qualitative critic:** retain as sampled or explicitly requested diagnosis,
+  not a required call on every deck.
+- **Qualitative candidates:** never promote automatically. Mechanically valid
+  candidate prose remains a comparison artifact until editorial review.
+- **Gold promotion:** preserve an example only when its transferable craft
+  lesson is named and the subject facts cannot silently become a template.
+- **Upstream integration:** invalid context-filter metadata is repaired before
+  creative retry; pass 6 now plans explicit lens boundaries and recurring-motif
+  allocation before summary prose.
+- **Verification:** all 98 repository tests pass. A fresh end-to-end Ella Batch
+  run reached `DELIVERY_COMPLETE`; all six passes were accepted on attempt 1,
+  metadata recovery prevented two unnecessary pass retries, mechanical polish
+  reached zero lint warnings, and the four summaries retained distinct theses.
+
 ## Cost controls
 
 - Restrict complete summary gold to pass 6 and omit it for its own subject.

@@ -840,3 +840,48 @@ failure-aware metadata recovery as a priority.
 
 Full findings are in `results/kevin-comparison-report.md`; deterministic metrics
 are in `results/kevin-comparison-matrix.json`.
+
+## 2026-08-04 — Phase 6 integration and final live QA launch
+
+Implemented failure-aware repair for constrained context-filter metadata.
+Before opaque pass acceptance, the runner now removes only invalid or duplicate
+labels, preserves valid labels and all prose, records repairs in the attempt
+ledger, and immediately rechecks the same authored artifact. Responses and
+Batch ingestion use the same path. This directly removes the cause of K6's four
+unnecessary full-pass Terra retries while retaining ordinary creative rejection
+for failures that remain after repair.
+
+Strengthened the pass-6 four-summary thesis plan with explicit identity,
+daily-life, needs, and growth lens boundaries plus recurring-motif allocation.
+Each lens must name its unique question, remembered answer, and tempting motif
+that belongs elsewhere. Shared chart facts may support several summaries, but
+one dominant motif may not become all four conclusions.
+
+All 98 tests pass after both changes. Launched a fresh Ella end-to-end Batch QA
+from the four projected chart contexts using `stratified-v1`, compact-v2 chart
+basis, cost-optimized Luna/Terra routing, cross-subject Kevin summary gold, and
+mechanical polish. The initial six-request Luna Batch is
+`batch_6a724b0bfcb88190a19d077d9dd1a2d1`. Final sprint closure awaits returned
+artifacts, deterministic QA, cost accounting, and editorial comparison of the
+four-summary set.
+
+The Batch completed all six requests and every pass passed acceptance on its
+first Luna attempt. Pre-acceptance metadata recovery removed four invalid
+high-level context labels across passes 3 and 5, so no Terra retry Batch was
+needed. This directly validates the new failure-aware path against the failure
+mode observed in K6.
+
+Assembly and structural validation passed. Initial whole-deck lint reported one
+three-location `fine print` mechanism. One `$0.003919` Luna/low sparse-polish
+call offered three fields, changed one, and reached zero lint warnings. The
+complete run cost an estimated `$0.48054136` for 340,726 input and 88,669 output
+tokens. No cached-input tokens were reported.
+
+Close reading found four distinct summary arguments: investigation as identity,
+phased experience as daily life, environmental support as needs, and practiced
+post-surprise choice as growth. The no-astro handler set is about 8% shorter
+than Ella compact-v2 while preserving or improving lens separation.
+
+The versioned deck, QA reports, and accepted thesis plan are preserved under
+`qa/reference_decks/ella/20260804-phase6-final-live`. Full analysis is in
+`results/PHASE 6 - Final Ella Live QA.md`. The sprint exit criteria are met.
