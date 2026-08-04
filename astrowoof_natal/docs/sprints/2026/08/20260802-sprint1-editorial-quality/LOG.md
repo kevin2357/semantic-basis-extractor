@@ -776,3 +776,22 @@ General conclusions and deferred work are recorded in
 `results/PHASE 5 - Kevin K6 Upstream Baseline.md` and the editorial-quality
 backlog. K6 remains immutable; K7 will derive bounded mechanical repairs from a
 copy, and K8 will add qualitative diagnosis/candidate work separately.
+
+## 2026-08-04 — Phase 5 K7 mechanical polish
+
+Derived K7 from a byte-identical copy of K6. Two Luna/low interactive sparse
+polish calls changed four reader-facing fields while preserving all other deck
+content.
+
+- Attempt 1: 14 targets offered, 3 edited, lint `3 → 1`, cost `$0.018404`.
+- Attempt 2: 3 targets offered, 1 edited, lint `1 → 0`, cost `$0.006020`.
+- Combined: 19,732 input tokens, 782 output tokens, estimated cost `$0.024424`.
+
+The accepted edits broke both six-card direct-to-dog opening families and
+reduced the fine-print comic mechanism below the linter threshold. Structural
+validation continues to pass. Five advisory no-astro warnings remain unchanged
+because validator warnings are outside the current mechanical-polish allowlist.
+
+K7 reached `DELIVERY_COMPLETE` and is preserved under
+`qa/reference_decks/kevin/20260804-k7-mechanical`. Detailed analysis is in
+`results/PHASE 5 - Kevin K7 Mechanical Polish.md`.

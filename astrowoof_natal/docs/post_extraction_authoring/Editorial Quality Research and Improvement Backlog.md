@@ -509,3 +509,20 @@ repeated findings into the relevant design sections above.
   should add qualitative diagnosis and a separate candidate artifact.
 - Future routing and cost reporting should distinguish creative failures from
   deterministic metadata failures.
+
+### 2026-08-04 — Kevin K7 mechanical-polish run
+
+- Two sparse Luna/low calls changed four fields and reduced three whole-deck
+  lint findings to zero for approximately $0.024424.
+- Attempt 1 edited three of fourteen permitted targets, breaking both repeated
+  direct-to-dog opening families and removing one fine-print headline. Attempt
+  2 edited one of three targets and eliminated the remaining fine-print warning.
+- Thirteen offered targets were preserved. This supports keep-or-replace sparse
+  editing rather than automatic rewriting of every nominated field.
+- Five advisory no-astro warnings remained because the current allowlist uses
+  validator errors and linter findings, not validator warnings. Preserve this
+  conservative boundary until the warning class's false-positive rate and safe
+  repair basis are studied.
+- Mechanical polish is effective for bounded surface convergence at very low
+  incremental cost. It does not test or resolve conceptual card overlap; that
+  remains K8 critic territory or upstream planning work.

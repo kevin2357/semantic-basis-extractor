@@ -11,3 +11,9 @@ to metadata/polish-control defects later fixed in the pipeline.
 
 `selected-authoring-packet.json` is the packet from that automated live run and
 is the preferred validator basis for current Kevin comparisons.
+
+`20260804-k7-mechanical` is the current controlled Phase-5 mechanical-polish
+reference. It derives from an immutable fresh K6 baseline, passes structural
+validation, and has zero whole-deck lint warnings. Use it as the source for K8
+qualitative diagnosis and candidate comparison, not as evidence that advisory
+validator warnings were repaired.

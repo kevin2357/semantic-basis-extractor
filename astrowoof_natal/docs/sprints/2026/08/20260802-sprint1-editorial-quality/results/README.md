@@ -7,6 +7,7 @@ Expected compact artifacts include:
 - `kevin-comparison-matrix.json`
 - `kevin-comparison-report.md`
 - `PHASE 5 - Kevin K6 Upstream Baseline.md`
+- `PHASE 5 - Kevin K7 Mechanical Polish.md`
 - cost and latency summaries
 - final sprint conclusions
 

@@ -1,0 +1,234 @@
+{
+  "record": {
+    "subject": "kevin",
+    "state": "DELIVERY_COMPLETE",
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\natal.kevin.cards.json",
+    "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\natal.kevin.assembly-report.json",
+    "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\natal.kevin.validation-report.json",
+    "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\natal.kevin.lint-report.json",
+    "baseline_warning_count": 3,
+    "baseline_warning_components": {
+      "validation": 5,
+      "lint": 3,
+      "authoring_rejections": 0
+    },
+    "polish_attempts": [
+      {
+        "attempt_number": 1,
+        "state": "POLISH_ACCEPTED",
+        "started_at": "2026-08-04T11:37:14.355460+00:00",
+        "finished_at": "2026-08-04T11:37:25.084183+00:00",
+        "provider_metadata": {
+          "provider": "openai",
+          "response_id": "resp_0d8af609dfeceb38006a71ceeacc0c819698a52f9cce6d8d16",
+          "response_status": "completed",
+          "model": "gpt-5.6-luna",
+          "requested_model": "gpt-5.6-luna",
+          "reasoning_effort": "low",
+          "usage": {
+            "input_tokens": 14750,
+            "cached_input_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 609,
+            "reasoning_tokens": 400,
+            "total_tokens": 15359
+          },
+          "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": 0.018404,
+            "pricing_version": "2026-07-31",
+            "rates_per_million_tokens": {
+              "input": 1.0,
+              "cached_input": 0.1,
+              "output": 6.0,
+              "cache_write": 1.25
+            },
+            "billable_tokens": {
+              "uncached_input": 14750,
+              "cached_input": 0,
+              "cache_write": 0,
+              "output": 609
+            },
+            "components": {
+              "uncached_input": 0.01475,
+              "cached_input": 0.0,
+              "cache_write": 0.0,
+              "output": 0.003654
+            },
+            "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+          },
+          "poll_count": 3,
+          "transport_attempts": {
+            "create": 1,
+            "retrieve": 3
+          },
+          "routing": {
+            "route": "polish",
+            "model": "gpt-5.6-luna",
+            "reasoning_effort": "low"
+          }
+        },
+        "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\polish\\attempt-001\\validation-report.json",
+        "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\polish\\attempt-001\\lint-report.json",
+        "warning_count": 1,
+        "accepted": true,
+        "transport": {
+          "mode": "sparse_patch",
+          "editable_target_count": 14,
+          "reference_field_count": 116,
+          "full_field_count": 1458,
+          "input_estimated_tokens": {
+            "full_map": 72088,
+            "sparse_transport": 13419
+          },
+          "output_estimated_tokens": {
+            "full_map": 72091,
+            "target_ceiling": 1212
+          },
+          "editable_target_paths": [
+            "cards.0.card.no_astro.body.direct_to_dog",
+            "cards.13.card.no_astro.body.direct_to_dog",
+            "cards.26.card.no_astro.body.direct_to_dog",
+            "cards.27.card.no_astro.body.direct_to_dog",
+            "cards.30.card.no_astro.body.direct_to_dog",
+            "cards.32.card.no_astro.headline.handler",
+            "cards.33.card.no_astro.body.direct_to_dog",
+            "cards.33.card.no_astro.headline.handler",
+            "cards.35.card.no_astro.body.direct_to_dog",
+            "cards.36.card.no_astro.body.direct_to_dog",
+            "cards.41.card.no_astro.body.direct_to_dog",
+            "cards.43.card.no_astro.headline.handler",
+            "cards.7.card.no_astro.body.direct_to_dog",
+            "summary.card1.no_astro.body.handler"
+          ]
+        },
+        "error": null,
+        "warning_components": {
+          "validation": 5,
+          "lint": 1,
+          "authoring_rejections": 0
+        },
+        "improved": true,
+        "validation_error_count": 0,
+        "edited_field_count": 3,
+        "omitted_target_count": 11
+      },
+      {
+        "attempt_number": 2,
+        "state": "POLISH_ACCEPTED",
+        "started_at": "2026-08-04T11:39:03.180292+00:00",
+        "finished_at": "2026-08-04T11:39:10.720547+00:00",
+        "provider_metadata": {
+          "provider": "openai",
+          "response_id": "resp_0302c7b1c4787e37006a71cf580b288190aa6d23339d0a7365",
+          "response_status": "completed",
+          "model": "gpt-5.6-luna",
+          "requested_model": "gpt-5.6-luna",
+          "reasoning_effort": "low",
+          "usage": {
+            "input_tokens": 4982,
+            "cached_input_tokens": 0,
+            "cache_write_tokens": 0,
+            "output_tokens": 173,
+            "reasoning_tokens": 108,
+            "total_tokens": 5155
+          },
+          "estimated_cost": {
+            "currency": "USD",
+            "estimated_amount": 0.00602,
+            "pricing_version": "2026-07-31",
+            "rates_per_million_tokens": {
+              "input": 1.0,
+              "cached_input": 0.1,
+              "output": 6.0,
+              "cache_write": 1.25
+            },
+            "billable_tokens": {
+              "uncached_input": 4982,
+              "cached_input": 0,
+              "cache_write": 0,
+              "output": 173
+            },
+            "components": {
+              "uncached_input": 0.004982,
+              "cached_input": 0.0,
+              "cache_write": 0.0,
+              "output": 0.001038
+            },
+            "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+          },
+          "poll_count": 2,
+          "transport_attempts": {
+            "create": 1,
+            "retrieve": 2
+          },
+          "routing": {
+            "route": "polish",
+            "model": "gpt-5.6-luna",
+            "reasoning_effort": "low"
+          }
+        },
+        "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\polish\\attempt-002\\validation-report.json",
+        "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\polish\\attempt-002\\lint-report.json",
+        "warning_count": 0,
+        "accepted": true,
+        "transport": {
+          "mode": "sparse_patch",
+          "editable_target_count": 3,
+          "reference_field_count": 43,
+          "full_field_count": 1458,
+          "input_estimated_tokens": {
+            "full_map": 72090,
+            "sparse_transport": 4306
+          },
+          "output_estimated_tokens": {
+            "full_map": 72092,
+            "target_ceiling": 323
+          },
+          "editable_target_paths": [
+            "cards.32.card.no_astro.headline.handler",
+            "cards.43.card.no_astro.headline.handler",
+            "summary.card1.no_astro.body.handler"
+          ]
+        },
+        "error": null,
+        "warning_components": {
+          "validation": 5,
+          "lint": 0,
+          "authoring_rejections": 0
+        },
+        "improved": true,
+        "validation_error_count": 0,
+        "edited_field_count": 1,
+        "omitted_target_count": 2
+      }
+    ],
+    "delivery": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\astrowoof-kevin-delivery.zip",
+    "final_warning_count": 0
+  },
+  "before": {
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\natal.kevin.k6-before-polish.json",
+    "sha256": "faf95bbf72ef7ceda10bfc942d62e374532e8f61fc758cb6170f96b685b04a95",
+    "validation_status": "pass",
+    "validation_warning_count": 5,
+    "lint_warning_count": 3,
+    "composite_finding_count": 3
+  },
+  "after": {
+    "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k7-mechanical\\final\\kevin\\natal.kevin.cards.json",
+    "sha256": "6b90acb393459dcab37fcea6d8e7cf1366ea731c04aa8afb40d647a0540f8a77",
+    "changed": true,
+    "validation_status": "pass",
+    "validation_errors": [],
+    "validation_warnings": [
+      "Card 13 may contain astrology in no_astro.body.hybrid.",
+      "Card 43 may contain astrology in no_astro.body.direct_to_dog.",
+      "Card 48 may contain astrology in no_astro.body.hybrid.",
+      "Card 49 may contain astrology in no_astro.headline.hybrid.",
+      "Summary card3 may contain astrology in no_astro.body.hybrid."
+    ],
+    "lint_warning_count": 0,
+    "composite_finding_count": 0,
+    "authoring_pass_acceptance": null
+  }
+}

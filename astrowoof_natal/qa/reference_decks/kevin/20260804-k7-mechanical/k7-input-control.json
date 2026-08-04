@@ -1,0 +1,29 @@
+{
+  "lineage": "K6 -> K7",
+  "source_run": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-005-controlled-kevin\\k6-upstream",
+  "source_deck_sha256": "faf95bbf72ef7ceda10bfc942d62e374532e8f61fc758cb6170f96b685b04a95",
+  "baseline_validation_status": "pass",
+  "baseline_validation_warning_count": 5,
+  "baseline_lint_warning_count": 3,
+  "baseline_composite_finding_count": 3,
+  "editable_target_count": 14,
+  "editable_targets": [
+    "cards.0.card.no_astro.body.direct_to_dog",
+    "cards.13.card.no_astro.body.direct_to_dog",
+    "cards.26.card.no_astro.body.direct_to_dog",
+    "cards.27.card.no_astro.body.direct_to_dog",
+    "cards.30.card.no_astro.body.direct_to_dog",
+    "cards.32.card.no_astro.headline.handler",
+    "cards.33.card.no_astro.body.direct_to_dog",
+    "cards.33.card.no_astro.headline.handler",
+    "cards.35.card.no_astro.body.direct_to_dog",
+    "cards.36.card.no_astro.body.direct_to_dog",
+    "cards.41.card.no_astro.body.direct_to_dog",
+    "cards.43.card.no_astro.headline.handler",
+    "cards.7.card.no_astro.body.direct_to_dog",
+    "summary.card1.no_astro.body.handler"
+  ],
+  "maximum_polish_attempts": 1,
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "low"
+}

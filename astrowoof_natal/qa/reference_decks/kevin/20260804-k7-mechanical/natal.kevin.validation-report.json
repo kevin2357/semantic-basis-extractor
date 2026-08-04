@@ -1,0 +1,47 @@
+{
+  "status": "pass",
+  "errors": [],
+  "warnings": [
+    "Card 13 may contain astrology in no_astro.body.hybrid.",
+    "Card 43 may contain astrology in no_astro.body.direct_to_dog.",
+    "Card 48 may contain astrology in no_astro.body.hybrid.",
+    "Card 49 may contain astrology in no_astro.headline.hybrid.",
+    "Summary card3 may contain astrology in no_astro.body.hybrid."
+  ],
+  "checks": {
+    "card_count": 50,
+    "phase": "polish",
+    "polish_edit_overrides": {
+      "context_filters": false,
+      "theme_groups": false,
+      "summary": true
+    },
+    "locked_top_level_fields_checked": [
+      "subject",
+      "source",
+      "coverage",
+      "categories",
+      "behavioral_domains",
+      "context_filter_groups",
+      "unselected_claims",
+      "projected_term_registry"
+    ],
+    "locked_card_fields_checked": [
+      "claim_id",
+      "claim_type",
+      "categories",
+      "importance",
+      "confidence",
+      "strength",
+      "priority_id",
+      "selection",
+      "behavioral_domains",
+      "tags",
+      "evidence",
+      "relations"
+    ],
+    "summary_card_count": 4,
+    "unselected_claim_count": 58,
+    "placeholder_free": true
+  }
+}

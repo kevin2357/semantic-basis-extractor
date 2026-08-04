@@ -276,6 +276,14 @@ must continue. By default, unresolved lint warnings leave the subject in
 `final/<subject>/`. Use `--allow-lint-warnings` when linter warnings should be
 reported but should not block packaging.
 
+The sparse-polish allowlist currently includes validator errors and linter
+findings, not advisory validator warnings. Consequently, possible no-astro
+astrology warnings can remain in a structurally valid, zero-lint
+`DELIVERY_COMPLETE` deck. This is a deliberate current safety boundary: an
+advisory heuristic does not automatically authorize prose mutation. Future work
+may promote selected warning classes into separately bounded polish targets
+after false-positive behavior is measured.
+
 The delivery ZIP contains the cards JSON, assembly report, structural
 validation report, and whole-deck lint report. Multi-subject runs assemble and
 validate each subject independently.
