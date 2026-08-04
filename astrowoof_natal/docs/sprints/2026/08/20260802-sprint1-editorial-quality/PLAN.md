@@ -430,6 +430,29 @@ Retain experimental status until one second-subject matched current-code test
 compares fresh legacy and compact pass-6 responses. Full findings are in
 `results/PHASE 3 - Ella Compact Full Chart Live AB.md`.
 
+### Claim-free compact-v2 sub-phase
+
+The full-chart map is an ephemeral authoring aid rather than a provenance or
+delivery artifact. Direct claims repeat placements, angles, and aspects already
+present in the chart; selected and additional syntheses can be rediscovered by
+the author from complete chart structure and deterministic concentrations.
+Create `compact-v2` without any claim portfolio or reconstruction-limit prose.
+Retain full traceability only in a local machine-audit sidecar.
+
+The author view must include a short reading grammar, subject metadata, every
+reconstructed placement and aspect, deterministic concentrations and major
+axis attachments, and a concise used-term decoder. Collapse repeated contexts
+only after equality comparison and preserve every genuine context variant.
+Keep both earlier formats available for reproducible comparison.
+
+End the sub-phase with one fresh Ella pass-1 live call. Compare actual service
+usage against the preserved pre-compaction and compact-v1 calls, while clearly
+labeling their pass-6 assignment difference. Generate matched no-service Ella
+pass-1 layouts for all three transports to isolate prompt effects. Compare the
+new private portrait and ten cards against the preserved Ella pass-1 baseline
+for whole-dog comprehension, evidence boundaries, audience distinction,
+astrology-density progression, prose variety, and length.
+
 ## Phase 3.5 — Narrow production-polish hardening
 
 Apply only the inexpensive, low-disruption Phase-0 findings that fit the

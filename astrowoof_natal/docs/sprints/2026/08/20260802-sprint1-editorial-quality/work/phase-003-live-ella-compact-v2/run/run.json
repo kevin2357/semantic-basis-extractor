@@ -1,0 +1,493 @@
+{
+  "schema_version": "astrowoof.semantic_closure_run.v0.5",
+  "status": "DELIVERY_COMPLETE_WITH_WARNINGS",
+  "created_at": "2026-08-04T07:51:08.611681+00:00",
+  "updated_at": "2026-08-04T07:54:17.069936+00:00",
+  "input_package": "C:\\tmp\\ella-semantic-closure-input",
+  "run_dir": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run",
+  "provider": "openai",
+  "service_level": "interactive",
+  "provider_configuration": {
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "medium",
+    "background": true,
+    "base_url": "https://api.openai.com/v1",
+    "max_output_tokens": 100000,
+    "prompt_cache_mode": "explicit",
+    "prompt_cache_ttl": "30m"
+  },
+  "max_attempts": 3,
+  "sbe": {
+    "status": "pass",
+    "subject_count": 1,
+    "manifest": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\semantic-basis-output\\run-manifest.json"
+  },
+  "passes": {
+    "ella_1": {
+      "pass_id": "ella_1",
+      "subject": "ella",
+      "pass_number": 1,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_1.zip",
+      "source_sha256": "dcb78fa350d3361d135f07985059359f3de47d6af5ac6c32b28d0ac2a30e7d02",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [
+        {
+          "attempt_number": 1,
+          "state": "PASS_QA_ACCEPTED",
+          "started_at": "2026-08-04T07:51:09.686037+00:00",
+          "finished_at": "2026-08-04T07:54:15.134762+00:00",
+          "response_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\attempt-001\\response\\ella_1",
+          "provider_metadata": {
+            "provider": "openai",
+            "response_id": "resp_030b184c46804c03006a7199eebd9c81938d1e9836f7e95c34",
+            "response_status": "completed",
+            "model": "gpt-5.6-terra",
+            "requested_model": "gpt-5.6-terra",
+            "reasoning_effort": "medium",
+            "background": true,
+            "poll_count": 70,
+            "transport_attempts": {
+              "create": 1,
+              "retrieve": 70
+            },
+            "usage": {
+              "input_tokens": 42414,
+              "cached_input_tokens": 0,
+              "cache_write_tokens": 0,
+              "output_tokens": 13553,
+              "reasoning_tokens": 76,
+              "total_tokens": 55967
+            },
+            "estimated_cost": {
+              "currency": "USD",
+              "estimated_amount": 0.30933,
+              "pricing_version": "2026-07-31",
+              "rates_per_million_tokens": {
+                "input": 2.5,
+                "cached_input": 0.25,
+                "output": 15.0,
+                "cache_write": 3.125
+              },
+              "billable_tokens": {
+                "uncached_input": 42414,
+                "cached_input": 0,
+                "cache_write": 0,
+                "output": 13553
+              },
+              "components": {
+                "uncached_input": 0.106035,
+                "cached_input": 0.0,
+                "cache_write": 0.0,
+                "output": 0.203295
+              },
+              "note": "Estimate includes explicit cache writes at 1.25x ordinary input; the OpenAI usage dashboard remains authoritative."
+            },
+            "prompt_layout": {
+              "pass_id": "ella_1",
+              "subject": "ella",
+              "pass_number": 1,
+              "source_sha256": "dcb78fa350d3361d135f07985059359f3de47d6af5ac6c32b28d0ac2a30e7d02",
+              "writable_field_count": 11,
+              "segments": {
+                "system_instructions": {
+                  "characters": 462,
+                  "utf8_bytes": 462,
+                  "estimated_tokens": 116,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+                },
+                "static_prefix": {
+                  "characters": 19574,
+                  "utf8_bytes": 19608,
+                  "estimated_tokens": 4902,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+                },
+                "subject_prefix": {
+                  "characters": 16489,
+                  "utf8_bytes": 16575,
+                  "estimated_tokens": 4144,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+                },
+                "pass_assignment": {
+                  "characters": 107974,
+                  "utf8_bytes": 108064,
+                  "estimated_tokens": 27016,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "a163dddc9e0798bda10f9a3254fc032cbe44f9fdeffe542c2dd47d979c375713"
+                },
+                "response_schema": {
+                  "characters": 56508,
+                  "utf8_bytes": 56508,
+                  "estimated_tokens": 14127,
+                  "token_estimate_method": "utf8_bytes_divided_by_4",
+                  "sha256": "a9856507cd2717fe59109ba1b079cfb5aecb30d1502ef8cbd40fa147044d5cf6"
+                }
+              },
+              "request_estimated_tokens": 50305,
+              "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+            },
+            "elapsed_seconds": 184.891,
+            "request_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\attempt-001\\openai-request.json",
+            "response_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\attempt-001\\openai-response.json",
+            "authored_fields_path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\attempt-001\\openai-authored-fields.json"
+          },
+          "qa": {
+            "accepted": true,
+            "returncode": 0,
+            "stdout": "{\n  \"schema_version\": \"astrowoof.authoring_pass_gate.v0.1\",\n  \"workspace\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-003-live-ella-compact-v2\\\\run\\\\passes\\\\ella_1\\\\attempt-001\\\\response\\\\ella_1\",\n  \"status\": \"accept\",\n  \"editorial_issue_codes\": [],\n  \"affected_claim_ids\": [],\n  \"guidance\": \"The pass cleared the bundled editorial gate.\"\n}\n",
+            "stderr": "",
+            "report": {
+              "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+              "workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\attempt-001\\response\\ella_1",
+              "status": "accept",
+              "editorial_issue_codes": [],
+              "affected_claim_ids": [],
+              "guidance": "The pass cleared the bundled editorial gate."
+            }
+          },
+          "error": null
+        }
+      ],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_1\\accepted",
+      "accepted_attempt": 1
+    },
+    "ella_2": {
+      "pass_id": "ella_2",
+      "subject": "ella",
+      "pass_number": 2,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_2.zip",
+      "source_sha256": "77c40dcf61548713d544bf51910857960eb1f3b5c1bcb337c5b987020d93a672",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_2\\accepted",
+      "accepted_attempt": "reused-compact-v1-baseline"
+    },
+    "ella_3": {
+      "pass_id": "ella_3",
+      "subject": "ella",
+      "pass_number": 3,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_3.zip",
+      "source_sha256": "429746cf7adf35a34feb2d6430e5f86126ebb51615caf47ede7a3c6ae0e90da8",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_3\\accepted",
+      "accepted_attempt": "reused-compact-v1-baseline"
+    },
+    "ella_4": {
+      "pass_id": "ella_4",
+      "subject": "ella",
+      "pass_number": 4,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_4.zip",
+      "source_sha256": "cb21261266e5192c4a39aa6b4166d3171293c6fb9a6a03289a1d510e6d56e415",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_4\\accepted",
+      "accepted_attempt": "reused-compact-v1-baseline"
+    },
+    "ella_5": {
+      "pass_id": "ella_5",
+      "subject": "ella",
+      "pass_number": 5,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_5.zip",
+      "source_sha256": "6261f916d7d89b25a423255f49f090de1a7b946934039e57b62404646b36c194",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_5\\accepted",
+      "accepted_attempt": "reused-compact-v1-baseline"
+    },
+    "ella_6": {
+      "pass_id": "ella_6",
+      "subject": "ella",
+      "pass_number": 6,
+      "source_zip": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_6.zip",
+      "source_sha256": "b4457973a8969fdfc0e5f3423d0b7cc3f387a25cbd32514954c0e13109606994",
+      "state": "PASS_QA_ACCEPTED",
+      "attempts": [],
+      "accepted_workspace": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\passes\\ella_6\\accepted",
+      "accepted_attempt": "reused-compact-v1-baseline"
+    }
+  },
+  "subjects": {
+    "ella": {
+      "subject": "ella",
+      "state": "DELIVERY_COMPLETE_WITH_WARNINGS",
+      "packet": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\semantic-basis-output\\ella\\ella.selected-authoring-packet.json",
+      "deck": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\natal.ella.cards.json",
+      "assembly_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\natal.ella.assembly-report.json",
+      "validation_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\natal.ella.validation-report.json",
+      "lint_report": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\natal.ella.lint-report.json",
+      "validation": {
+        "accepted": true,
+        "returncode": 0,
+        "stdout": "{\n  \"status\": \"pass\",\n  \"errors\": [],\n  \"warnings\": [\n    \"Card 32 may contain astrology in no_astro.headline.direct_to_dog.\",\n    \"Card 45 may contain astrology in no_astro.body.handler.\",\n    \"Summary card2 may contain astrology in no_astro.body.direct_to_dog.\",\n    \"Summary card3 may contain astrology in no_astro.headline.hybrid.\"\n  ],\n  \"checks\": {\n    \"card_count\": 50,\n    \"phase\": \"authoring\",\n    \"polish_edit_overrides\": {\n      \"context_filters\": false,\n      \"theme_groups\": false,\n      \"summary\": false\n    },\n    \"locked_top_level_fields_checked\": [\n      \"subject\",\n      \"source\",\n      \"coverage\",\n      \"categories\",\n      \"behavioral_domains\",\n      \"context_filter_groups\",\n      \"unselected_claims\",\n      \"projected_term_registry\"\n    ],\n    \"locked_card_fields_checked\": [\n      \"claim_id\",\n      \"claim_type\",\n      \"categories\",\n      \"importance\",\n      \"confidence\",\n      \"strength\",\n      \"priority_id\",\n      \"selection\",\n      \"behavioral_domains\",\n      \"tags\",\n      \"evidence\",\n      \"relations\"\n    ],\n    \"summary_card_count\": 4,\n    \"unselected_claim_count\": 56,\n    \"placeholder_free\": true\n  }\n}\n",
+        "stderr": "",
+        "report": {
+          "status": "pass",
+          "errors": [],
+          "warnings": [
+            "Card 32 may contain astrology in no_astro.headline.direct_to_dog.",
+            "Card 45 may contain astrology in no_astro.body.handler.",
+            "Summary card2 may contain astrology in no_astro.body.direct_to_dog.",
+            "Summary card3 may contain astrology in no_astro.headline.hybrid."
+          ],
+          "checks": {
+            "card_count": 50,
+            "phase": "authoring",
+            "polish_edit_overrides": {
+              "context_filters": false,
+              "theme_groups": false,
+              "summary": false
+            },
+            "locked_top_level_fields_checked": [
+              "subject",
+              "source",
+              "coverage",
+              "categories",
+              "behavioral_domains",
+              "context_filter_groups",
+              "unselected_claims",
+              "projected_term_registry"
+            ],
+            "locked_card_fields_checked": [
+              "claim_id",
+              "claim_type",
+              "categories",
+              "importance",
+              "confidence",
+              "strength",
+              "priority_id",
+              "selection",
+              "behavioral_domains",
+              "tags",
+              "evidence",
+              "relations"
+            ],
+            "summary_card_count": 4,
+            "unselected_claim_count": 56,
+            "placeholder_free": true
+          }
+        }
+      },
+      "lint": {
+        "accepted": true,
+        "returncode": 2,
+        "stdout": "{\n  \"schema_version\": \"astrowoof.editorial_lint.v0.1\",\n  \"status\": \"warn\",\n  \"warning_count\": 1,\n  \"decks\": [\n    {\n      \"path\": \"C:\\\\dev\\\\github\\\\semantic-basis-extractor\\\\astrowoof_natal\\\\docs\\\\sprints\\\\2026\\\\08\\\\20260802-sprint1-editorial-quality\\\\work\\\\phase-003-live-ella-compact-v2\\\\run\\\\final\\\\ella\\\\natal.ella.cards.json\",\n      \"subject\": \"ella\",\n      \"reader_facing_field_count\": 1458,\n      \"warning_count\": 1,\n      \"warnings\": [\n        {\n          \"code\": \"repeated_failure_signature\",\n          \"message\": \"The 'fine-print humor' mechanism appears three or more times.\",\n          \"details\": {\n            \"count\": 3,\n            \"locations\": [\n              \"card:relationship_7d55305feb3af96a:light_astro.headline.handler\",\n              \"card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog\",\n              \"card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog\"\n            ],\n            \"excerpts\": [\n              \"Pluto Makes Mars Stop for the Fine Print\",\n              \"Your Pluto Can Read the Fine Print Before Mars Plays Again\",\n              \"Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t\"\n            ]\n          }\n        }\n      ],\n      \"authoring_pass_acceptance\": {\n        \"status\": \"accept\",\n        \"deterministic\": true,\n        \"thresholds\": {\n          \"ngram_words\": 12,\n          \"ngram_min_distinct_claims\": 3\n        },\n        \"reader_facing_field_count\": 1458,\n        \"distinct_location_count\": 54,\n        \"exact_duplicate_group_count\": 0,\n        \"exact_duplicate_groups\": [],\n        \"repeated_ngram_group_count\": 0,\n        \"repeated_ngrams\": [],\n        \"suspicious_artifact_count\": 0,\n        \"suspicious_artifacts\": [],\n        \"dominant_opening_group_count\": 0,\n        \"dominant_openings\": [],\n        \"rejection_reasons\": []\n      }\n    }\n  ],\n  \"cross_subject_warnings\": []\n}\n",
+        "stderr": "",
+        "report": {
+          "schema_version": "astrowoof.editorial_lint.v0.1",
+          "status": "warn",
+          "warning_count": 1,
+          "decks": [
+            {
+              "path": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\natal.ella.cards.json",
+              "subject": "ella",
+              "reader_facing_field_count": 1458,
+              "warning_count": 1,
+              "warnings": [
+                {
+                  "code": "repeated_failure_signature",
+                  "message": "The 'fine-print humor' mechanism appears three or more times.",
+                  "details": {
+                    "count": 3,
+                    "locations": [
+                      "card:relationship_7d55305feb3af96a:light_astro.headline.handler",
+                      "card:relationship_7d55305feb3af96a:light_astro.headline.direct_to_dog",
+                      "card:relationship_cf1dd8f75cd33a77:light_astro.body.direct_to_dog"
+                    ],
+                    "excerpts": [
+                      "Pluto Makes Mars Stop for the Fine Print",
+                      "Your Pluto Can Read the Fine Print Before Mars Plays Again",
+                      "Your Mercury notices the fine print: scent, tone, footsteps, sequence. With the North Node beside it, that noticing can become a social skill. You can inspect t"
+                    ]
+                  }
+                }
+              ],
+              "authoring_pass_acceptance": {
+                "status": "accept",
+                "deterministic": true,
+                "thresholds": {
+                  "ngram_words": 12,
+                  "ngram_min_distinct_claims": 3
+                },
+                "reader_facing_field_count": 1458,
+                "distinct_location_count": 54,
+                "exact_duplicate_group_count": 0,
+                "exact_duplicate_groups": [],
+                "repeated_ngram_group_count": 0,
+                "repeated_ngrams": [],
+                "suspicious_artifact_count": 0,
+                "suspicious_artifacts": [],
+                "dominant_opening_group_count": 0,
+                "dominant_openings": [],
+                "rejection_reasons": []
+              }
+            }
+          ],
+          "cross_subject_warnings": []
+        }
+      },
+      "baseline_warning_count": 1,
+      "baseline_warning_components": {
+        "validation": 4,
+        "lint": 1
+      },
+      "polish_attempts": [],
+      "delivery": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\final\\ella\\astrowoof-ella-delivery.zip"
+    }
+  },
+  "prompt_cache": {
+    "mode": "tiered_prefix",
+    "static_protocol_sha256": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+    "subject_context_sha256": {
+      "ella": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3"
+    },
+    "passes": {
+      "ella_1": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "0b4c79379e197449062280521b3b85da32a135bce5ea45ff9b858f92486bc3cc"
+      },
+      "ella_2": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "f2e1d01d1f988dba33a90183e413acc22186e2f0e33669101e9c1163dadfeff1"
+      },
+      "ella_3": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "a262797d9a5281f326868d096fad4c340f84337d44f8a9f577e49dc5d48ab114"
+      },
+      "ella_4": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "0afe8f3861ac9f4d0db4638714204d2b332b75d2cd3c2d682b6a01a1e9338b4d"
+      },
+      "ella_5": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "65f224227350ba6c4ea424603aa5594406caca10aac88cf75193075e74eea09c"
+      },
+      "ella_6": {
+        "static": "d15f5506cd9da242f4a63104fa780c46ccaa631dca12e03b10555ac6b84aac8f",
+        "subject": "328512d1b482256ad20a7a16e33373f67ec043d06560e86bfbeaf83ea990efe3",
+        "assignment": "3dcdaa042a8b79b009a8d502f4b75822f4477f5df8302940b25b48dbc02a14dd"
+      }
+    }
+  },
+  "accounting": {
+    "usage": {
+      "input_tokens": 42414,
+      "cached_input_tokens": 0,
+      "cache_write_tokens": 0,
+      "output_tokens": 13553,
+      "reasoning_tokens": 76,
+      "total_tokens": 55967
+    },
+    "estimated_cost": {
+      "currency": "USD",
+      "estimated_amount": 0.30933,
+      "priced_attempt_count": 1,
+      "note": "Attempt-level estimates use the configured model rate table; the OpenAI usage dashboard remains authoritative."
+    },
+    "response_ids": [
+      "resp_030b184c46804c03006a7199eebd9c81938d1e9836f7e95c34"
+    ],
+    "stages": {
+      "authoring_initial": {
+        "attempt_count": 1,
+        "accepted_attempt_count": 1,
+        "priced_attempt_count": 1,
+        "response_ids": [
+          "resp_030b184c46804c03006a7199eebd9c81938d1e9836f7e95c34"
+        ],
+        "usage": {
+          "input_tokens": 42414,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 13553,
+          "reasoning_tokens": 76,
+          "total_tokens": 55967
+        },
+        "cache_hit_ratio": 0.0,
+        "estimated_prompt_tokens": 50305,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.30933
+        }
+      },
+      "creative_retries": {
+        "attempt_count": 0,
+        "accepted_attempt_count": 0,
+        "priced_attempt_count": 0,
+        "response_ids": [],
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "total_tokens": 0
+        },
+        "cache_hit_ratio": null,
+        "estimated_prompt_tokens": 0,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.0
+        }
+      },
+      "polish": {
+        "attempt_count": 0,
+        "accepted_attempt_count": 0,
+        "priced_attempt_count": 0,
+        "response_ids": [],
+        "usage": {
+          "input_tokens": 0,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 0,
+          "reasoning_tokens": 0,
+          "total_tokens": 0
+        },
+        "cache_hit_ratio": null,
+        "estimated_prompt_tokens": 0,
+        "estimated_cost": {
+          "currency": "USD",
+          "estimated_amount": 0.0
+        }
+      }
+    },
+    "models": {
+      "gpt-5.6-terra": {
+        "attempt_count": 1,
+        "usage": {
+          "input_tokens": 42414,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 13553,
+          "reasoning_tokens": 76,
+          "total_tokens": 55967
+        },
+        "estimated_cost_usd": 0.30933
+      }
+    },
+    "service_levels": {
+      "interactive": {
+        "attempt_count": 1,
+        "usage": {
+          "input_tokens": 42414,
+          "cached_input_tokens": 0,
+          "cache_write_tokens": 0,
+          "output_tokens": 13553,
+          "reasoning_tokens": 76,
+          "total_tokens": 55967
+        },
+        "estimated_cost_usd": 0.30933,
+        "cache_hit_ratio": 0.0
+      }
+    },
+    "cost_per_accepted_card": 0.0061866,
+    "cost_per_delivered_deck": 0.30933
+  }
+}

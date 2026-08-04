@@ -2353,8 +2353,10 @@ def build_compact_full_chart_basis(packet: dict[str, Any]) -> dict[str, Any]:
                 "short_description": entry.get("short_description"),
                 "meaning": entry.get("long_description")
                 or entry.get("short_description"),
+                "core_operators": entry.get("core_operators"),
+                "semantic_facets": entry.get("semantic_facets"),
             }.items()
-            if value
+            if value not in (None, [], {})
         }
         for term, entry in sorted(registry_terms.items())
         if term in referenced_terms
@@ -2487,12 +2489,270 @@ def render_compact_full_chart_basis(
     return "\n".join(lines).rstrip() + "\n"
 
 
+_AUTHORING_OBJECT_ORDER = {
+    name: index
+    for index, name in enumerate((
+        "Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn",
+        "Uranus", "Neptune", "Pluto", "ASC", "DSC", "MC", "IC",
+        "North Node", "South Node", "Part of Fortune", "Vertex",
+    ))
+}
+
+
+def _compact_v2_projection_expression(
+    projection: dict[str, Any], *, relationship: bool
+) -> str:
+    if relationship:
+        operator = projection.get("projected_relationship", "relationship")
+        mode = projection.get("interaction_mode")
+        source = projection.get("source_canine_subsystem", "source")
+        target = projection.get("target_canine_subsystem", "target")
+        head = f"{operator}({mode})" if mode else str(operator)
+        return f"{head}: {source} <> {target}"
+    operator = projection.get("projected_name", "projected_function")
+    mode = projection.get("projected_mode")
+    domain = projection.get("projected_domain")
+    head = f"{operator}({mode})" if mode else str(operator)
+    return f"{head} @ {domain}" if domain else head
+
+
+def _compact_v2_projection_lines(
+    groups: list[dict[str, Any]], *, relationship: bool
+) -> list[str]:
+    expressions = [
+        _compact_v2_projection_expression(
+            group["projection"], relationship=relationship
+        )
+        for group in groups
+    ]
+    if len(groups) == 1:
+        return [expressions[0]]
+    return [
+        f"[{', '.join(context.replace('_', '-') for context in group['contexts'])}] "
+        f"{expression}"
+        for group, expression in zip(groups, expressions)
+    ]
+
+
+def _compact_v2_term_counts(
+    items: list[dict[str, Any]], field_name: str
+) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        values = {
+            group.get("projection", {}).get(field_name)
+            for group in item.get("context_projections", [])
+        }
+        for value in values - {None, ""}:
+            counts[str(value)] += 1
+    return counts
+
+
+def _compact_v2_used_terms(basis: dict[str, Any]) -> set[str]:
+    fields = (
+        "projected_name", "projected_relationship", "projected_mode",
+        "projected_domain", "interaction_mode", "source_canine_subsystem",
+        "target_canine_subsystem",
+    )
+    return {
+        str(value)
+        for item in [*basis["objects"], *basis["relationships"]]
+        for group in item.get("context_projections", [])
+        for field_name in fields
+        if (value := group.get("projection", {}).get(field_name))
+    }
+
+
+def render_compact_v2_full_chart_basis(
+    packet: dict[str, Any],
+    basis: dict[str, Any] | None = None,
+) -> str:
+    """Render an author-only chart map without repeating claim artifacts."""
+    basis = basis or build_compact_full_chart_basis(packet)
+    display_name = (
+        packet["subject"].get("display_name")
+        or packet["subject"]["subject_id"]
+    )
+    subject = basis.get("subject", {})
+    pronouns = subject.get("pronouns") or {}
+    details = [
+        display_name,
+        subject.get("breed"),
+        "/".join(
+            value for value in (
+                pronouns.get("subject"), pronouns.get("object"),
+            ) if value
+        ),
+        subject.get("birth_datetime") or subject.get("birth_local"),
+        subject.get("birth_location_label") or subject.get("birth_location"),
+    ]
+    lines = [
+        f"# Authoring Chart Map: {display_name}",
+        "",
+        "Build the richest coherent picture of this dog that the supplied chart supports, then use that picture as shared characterization while authoring.",
+        "",
+        "## How to Read This Map",
+        "",
+        "- `function(mode) @ domain` describes what a chart object does, how it operates, and where it tends to show up.",
+        "- `relationship(mode): source <> target` describes how two projected subsystems interact.",
+        "- Unqualified projections apply in every supplied context. Bracketed context names mark genuine semantic variants.",
+        "- Aspects are ordered from tightest to widest orb. Orb strength is important evidence, not a substitute for whole-chart synthesis.",
+        "- Repeated terms and connected objects are structural clues. Reconcile tensions as conditional or balancing parts of one dog rather than discarding either side.",
+        "",
+        "## Subject",
+        "",
+        " | ".join(str(value) for value in details if value),
+        "",
+        "## Placements and Angles",
+        "",
+    ]
+    objects = sorted(
+        basis["objects"],
+        key=lambda item: (
+            _AUTHORING_OBJECT_ORDER.get(item.get("canonical_name"), 999),
+            item.get("canonical_name") or item["source_ref"],
+        ),
+    )
+    for item in objects:
+        source = " ".join(
+            str(value) for value in (
+                item.get("canonical_name"), item.get("source_sign"),
+                f"H{item['source_house']}" if item.get("source_house") else None,
+            ) if value
+        ) or item["source_ref"]
+        expressions = _compact_v2_projection_lines(
+            item["context_projections"], relationship=False
+        )
+        lines.append(f"- **{source}** => {expressions[0]}")
+        lines.extend(f"  - {expression}" for expression in expressions[1:])
+
+    lines.extend(["", "## Aspects and Interactions", ""])
+    relationships = sorted(
+        basis["relationships"],
+        key=lambda item: (
+            item.get("orb")
+            if isinstance(item.get("orb"), (int, float)) else math.inf,
+            item.get("source_canonical_name") or "",
+            item.get("target_canonical_name") or "",
+        ),
+    )
+    for item in relationships:
+        endpoints = (
+            f"{item.get('source_canonical_name', '?')} "
+            f"{item.get('canonical_aspect', 'rel')} "
+            f"{item.get('target_canonical_name', '?')}"
+        )
+        orb = (
+            f" {item['orb']:.3f}°"
+            if isinstance(item.get("orb"), (int, float)) else ""
+        )
+        expressions = _compact_v2_projection_lines(
+            item["context_projections"], relationship=True
+        )
+        lines.append(f"- **{endpoints}{orb}** => {expressions[0]}")
+        lines.extend(f"  - {expression}" for expression in expressions[1:])
+
+    count_groups = (
+        ("Domain concentrations", _compact_v2_term_counts(
+            objects, "projected_domain"
+        )),
+        ("Repeated object modes", _compact_v2_term_counts(
+            objects, "projected_mode"
+        )),
+        ("Repeated interaction modes", _compact_v2_term_counts(
+            relationships, "interaction_mode"
+        )),
+    )
+    connectivity: Counter[str] = Counter()
+    for item in relationships:
+        connectivity.update(
+            value for value in (
+                item.get("source_canonical_name"),
+                item.get("target_canonical_name"),
+            ) if value
+        )
+    lines.extend(["", "## Chart Structure at a Glance", ""])
+    for label, counts in count_groups:
+        repeated = [
+            (term, count) for term, count in counts.most_common() if count > 1
+        ]
+        if repeated:
+            lines.append(f"- **{label}:** " + "; ".join(
+                f"{term} ×{count}" for term, count in repeated
+            ))
+    connected = [
+        (name, count) for name, count in connectivity.most_common()
+        if count >= 4
+    ]
+    if connected:
+        lines.append("- **Most connected objects:** " + "; ".join(
+            f"{name} ×{count}" for name, count in connected
+        ))
+    for left, right in (("ASC", "DSC"), ("IC", "MC")):
+        axis = next((
+            item for item in relationships
+            if {
+                item.get("source_canonical_name"),
+                item.get("target_canonical_name"),
+            } == {left, right}
+        ), None)
+        if not axis:
+            continue
+        attachments = [
+            item for item in relationships
+            if item is not axis and (
+                left in {
+                    item.get("source_canonical_name"),
+                    item.get("target_canonical_name"),
+                }
+                or right in {
+                    item.get("source_canonical_name"),
+                    item.get("target_canonical_name"),
+                }
+            )
+        ]
+        attachment_text = "; ".join(
+            f"{item.get('source_canonical_name')} "
+            f"{item.get('canonical_aspect')} "
+            f"{item.get('target_canonical_name')} {item.get('orb'):.3f}°"
+            for item in attachments
+            if isinstance(item.get("orb"), (int, float))
+        )
+        lines.append(
+            f"- **{left}–{right} axis:** "
+            f"{axis.get('canonical_aspect')} {axis.get('orb', 0):.3f}°"
+            + (f"; attached: {attachment_text}" if attachment_text else "")
+        )
+
+    lines.extend(["", "## Projected-Term Decoder", ""])
+    used_terms = _compact_v2_used_terms(basis)
+    for term in sorted(used_terms):
+        entry = basis.get("projected_decoder", {}).get(term, {})
+        semantic = []
+        if entry.get("core_operators"):
+            semantic.append("verbs " + ", ".join(entry["core_operators"]))
+        if entry.get("semantic_facets"):
+            semantic.append("facets " + ", ".join(entry["semantic_facets"]))
+        if not semantic and entry.get("short_description"):
+            semantic.append(entry["short_description"])
+        label = entry.get("label")
+        normalized_label = (label or "").lower().replace(" ", "_")
+        prefix = f"{term} ({label})" if label and normalized_label != term.lower() else term
+        lines.append(
+            f"- **{prefix}:** "
+            f"{' ; '.join(semantic) or 'read literally as a projected semantic term'}"
+        )
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def render_full_chart_basis(
     packet: dict[str, Any],
     basis_format: str = "legacy",
 ) -> str:
     if basis_format == "compact-v1":
         return render_compact_full_chart_basis(packet)
+    if basis_format == "compact-v2":
+        return render_compact_v2_full_chart_basis(packet)
     if basis_format != "legacy":
         raise ValueError(f"Unknown full-chart basis format: {basis_format}")
     display_name = packet["subject"].get("display_name") or packet["subject"]["subject_id"]
@@ -3227,12 +3487,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--full-chart-basis-format",
-        choices=("legacy", "compact-v1"),
+        choices=("legacy", "compact-v1", "compact-v2"),
         default="legacy",
         help=(
             "Whole-chart transport for authoring workspaces. 'legacy' preserves "
             "the current claim-plus-registry rendering; 'compact-v1' emits an "
-            "experimental traceable projected chart map and structured JSON."
+            "experimental traceable projected chart map and structured JSON; "
+            "'compact-v2' emits an author-only map without repeated claims."
         ),
     )
     parser.add_argument(
@@ -3363,9 +3624,14 @@ def main() -> None:
             })
             write_json(root / f"{subject}.selected-authoring-packet.json", packet)
             write_json(root / f"{subject}.selection-qa.json", qa)
-            if args.full_chart_basis_format == "compact-v1":
+            if args.full_chart_basis_format in {"compact-v1", "compact-v2"}:
+                filename = (
+                    f"{subject}.compact-full-chart-basis.json"
+                    if args.full_chart_basis_format == "compact-v1"
+                    else f"{subject}.compact-v2-full-chart-basis.audit.json"
+                )
                 write_json(
-                    root / f"{subject}.compact-full-chart-basis.json",
+                    root / filename,
                     build_compact_full_chart_basis(packet),
                 )
 

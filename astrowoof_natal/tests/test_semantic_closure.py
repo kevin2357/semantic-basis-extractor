@@ -379,6 +379,36 @@ class TestSemanticClosure(SemanticClosureFixture):
             index = command.index("--full-chart-basis-format")
             self.assertEqual("compact-v1", command[index + 1])
 
+    def test_run_sbe_threads_compact_v2_full_chart_basis_format(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            (output / "run-manifest.json").write_text(
+                json.dumps({"status": "pass", "subjects": []}),
+                encoding="utf-8",
+            )
+            with patch(
+                "subprocess.run",
+                return_value=SimpleNamespace(
+                    returncode=0,
+                    stdout="",
+                    stderr="",
+                ),
+            ) as invoked:
+                run_sbe(
+                    input_package=root / "input",
+                    subject="bre",
+                    sbe_script=root / "sbe.py",
+                    python_executable=Path(sys.executable),
+                    output_dir=output,
+                    bundle_dir=root / "bundle",
+                    full_chart_basis_format="compact-v2",
+                )
+            command = invoked.call_args.args[0]
+            index = command.index("--full-chart-basis-format")
+            self.assertEqual("compact-v2", command[index + 1])
+
     def test_summary_gold_and_thesis_plan_are_pass_specific_assignment_inputs(
         self,
     ) -> None:

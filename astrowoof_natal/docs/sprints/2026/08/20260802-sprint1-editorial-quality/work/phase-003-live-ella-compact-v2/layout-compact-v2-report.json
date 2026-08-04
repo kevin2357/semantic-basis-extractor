@@ -1,0 +1,1818 @@
+{
+  "schema_version": "astrowoof.prompt_layout_report.v1",
+  "created_at": "2026-08-04T07:50:18.152430+00:00",
+  "run_dir": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\layout-compact-v2",
+  "model": "gpt-5.6-terra",
+  "token_estimate_method": "utf8_bytes_divided_by_4",
+  "pass_count": 6,
+  "request_estimated_tokens": 290037,
+  "segments": {
+    "system_instructions": {
+      "distinct_sha256_count": 1,
+      "shared_by_all_passes": true,
+      "occurrences_by_sha256": {
+        "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d": 6
+      }
+    },
+    "static_prefix": {
+      "distinct_sha256_count": 1,
+      "shared_by_all_passes": true,
+      "occurrences_by_sha256": {
+        "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c": 6
+      }
+    },
+    "subject_prefix": {
+      "distinct_sha256_count": 1,
+      "shared_by_all_passes": true,
+      "occurrences_by_sha256": {
+        "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c": 6
+      }
+    },
+    "pass_assignment": {
+      "distinct_sha256_count": 6,
+      "shared_by_all_passes": false,
+      "occurrences_by_sha256": {
+        "a163dddc9e0798bda10f9a3254fc032cbe44f9fdeffe542c2dd47d979c375713": 1,
+        "c6630ca6cdf0b64b5c7712a69f55d2c76c43b8bf39bb2ef9372a2c3a24bfd71a": 1,
+        "503f920ba007d802f30f411ad52d343a828d4339d3baed462af1e299c3ef726e": 1,
+        "d88c5c34c109d35d1917b6c338585c539a202cf272055ac9eda64f71075dfb8c": 1,
+        "aca488617f70e34d66610c05ddcdb7ce9a641b30182383713f711a14fe194b34": 1,
+        "b6dd0050fc1f7546c5821fa17faebe6c5fe45eda58225663912f98bf95057af2": 1
+      }
+    },
+    "response_schema": {
+      "distinct_sha256_count": 6,
+      "shared_by_all_passes": false,
+      "occurrences_by_sha256": {
+        "a9856507cd2717fe59109ba1b079cfb5aecb30d1502ef8cbd40fa147044d5cf6": 1,
+        "f34fe037039ae01526d1cb3cd2473f56c0c8d0cd0758d902ffb1a6e6d0b5b184": 1,
+        "32860dbbac7ed5ad934fa3f35a8a6b581884a2053d23032e6ccf8707d2681bbc": 1,
+        "580a30d5adc9cb1f94da2d3282c2d0bdf5e17a10794c79d57fbd1bc3da299ba9": 1,
+        "87641635f656697a2c5d4f8207bbcdeccf8f394eab5c383db290eba83bbcf675": 1,
+        "0008529620202ef60583ed94ef706eeb1aba402699d20944a35e7df1e7978f09": 1
+      }
+    }
+  },
+  "passes": [
+    {
+      "pass_id": "ella_1",
+      "subject": "ella",
+      "pass_number": 1,
+      "source_sha256": "aef3f7a10a361a9eb1df8566db0e1df0719984f030f086716a07b129f7649e13",
+      "writable_field_count": 11,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 107974,
+          "utf8_bytes": 108064,
+          "estimated_tokens": 27016,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "a163dddc9e0798bda10f9a3254fc032cbe44f9fdeffe542c2dd47d979c375713"
+        },
+        "response_schema": {
+          "characters": 56508,
+          "utf8_bytes": 56508,
+          "estimated_tokens": 14127,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "a9856507cd2717fe59109ba1b079cfb5aecb30d1502ef8cbd40fa147044d5cf6"
+        }
+      },
+      "request_estimated_tokens": 50305,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    },
+    {
+      "pass_id": "ella_2",
+      "subject": "ella",
+      "pass_number": 2,
+      "source_sha256": "07c73b16f9b36505c173bf872af770a24612a135f95128c8aa4195d7cd2385d7",
+      "writable_field_count": 11,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 113860,
+          "utf8_bytes": 113949,
+          "estimated_tokens": 28488,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6630ca6cdf0b64b5c7712a69f55d2c76c43b8bf39bb2ef9372a2c3a24bfd71a"
+        },
+        "response_schema": {
+          "characters": 56502,
+          "utf8_bytes": 56502,
+          "estimated_tokens": 14126,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "f34fe037039ae01526d1cb3cd2473f56c0c8d0cd0758d902ffb1a6e6d0b5b184"
+        }
+      },
+      "request_estimated_tokens": 51776,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    },
+    {
+      "pass_id": "ella_3",
+      "subject": "ella",
+      "pass_number": 3,
+      "source_sha256": "e6e6e6deb48365422b7bbe909e9abc9367dfb98bbc34326a3bb528032f16a46e",
+      "writable_field_count": 11,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 115386,
+          "utf8_bytes": 115479,
+          "estimated_tokens": 28870,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "503f920ba007d802f30f411ad52d343a828d4339d3baed462af1e299c3ef726e"
+        },
+        "response_schema": {
+          "characters": 56526,
+          "utf8_bytes": 56526,
+          "estimated_tokens": 14132,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "32860dbbac7ed5ad934fa3f35a8a6b581884a2053d23032e6ccf8707d2681bbc"
+        }
+      },
+      "request_estimated_tokens": 52164,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    },
+    {
+      "pass_id": "ella_4",
+      "subject": "ella",
+      "pass_number": 4,
+      "source_sha256": "25e476c99012b974c9dd9ecf8c53dfa4228cc72029444a8017f53bec880fa3c6",
+      "writable_field_count": 11,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 104465,
+          "utf8_bytes": 104553,
+          "estimated_tokens": 26139,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "d88c5c34c109d35d1917b6c338585c539a202cf272055ac9eda64f71075dfb8c"
+        },
+        "response_schema": {
+          "characters": 56496,
+          "utf8_bytes": 56496,
+          "estimated_tokens": 14124,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "580a30d5adc9cb1f94da2d3282c2d0bdf5e17a10794c79d57fbd1bc3da299ba9"
+        }
+      },
+      "request_estimated_tokens": 49425,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    },
+    {
+      "pass_id": "ella_5",
+      "subject": "ella",
+      "pass_number": 5,
+      "source_sha256": "e4e34d4ba5987fa811ce52c17199785a3e18306b802baf83c011a598abf27769",
+      "writable_field_count": 11,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 102744,
+          "utf8_bytes": 102833,
+          "estimated_tokens": 25709,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "aca488617f70e34d66610c05ddcdb7ce9a641b30182383713f711a14fe194b34"
+        },
+        "response_schema": {
+          "characters": 56502,
+          "utf8_bytes": 56502,
+          "estimated_tokens": 14126,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "87641635f656697a2c5d4f8207bbcdeccf8f394eab5c383db290eba83bbcf675"
+        }
+      },
+      "request_estimated_tokens": 48997,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    },
+    {
+      "pass_id": "ella_6",
+      "subject": "ella",
+      "pass_number": 6,
+      "source_sha256": "be4ad705c81b37dddeb6e31a1375b4542c6803303489193a5aa63c042a68cac4",
+      "writable_field_count": 7,
+      "segments": {
+        "system_instructions": {
+          "characters": 462,
+          "utf8_bytes": 462,
+          "estimated_tokens": 116,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89411606011d161cdf65edffc5d6e35e89a13a69fb3ff9e1bd414595eef2f59d"
+        },
+        "static_prefix": {
+          "characters": 19574,
+          "utf8_bytes": 19608,
+          "estimated_tokens": 4902,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6876ba232486eec25ddf67e361c8a0723324cc806210d90164c0e39e35f367c"
+        },
+        "subject_prefix": {
+          "characters": 16489,
+          "utf8_bytes": 16575,
+          "estimated_tokens": 4144,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e7ebb86c2b23a22f219b6ae120d6ce767fcbc521d8ee4ab86d1e1a4faa4ccd3c"
+        },
+        "pass_assignment": {
+          "characters": 84015,
+          "utf8_bytes": 84132,
+          "estimated_tokens": 21033,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "b6dd0050fc1f7546c5821fa17faebe6c5fe45eda58225663912f98bf95057af2"
+        },
+        "response_schema": {
+          "characters": 28700,
+          "utf8_bytes": 28700,
+          "estimated_tokens": 7175,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0008529620202ef60583ed94ef706eeb1aba402699d20944a35e7df1e7978f09"
+        }
+      },
+      "request_estimated_tokens": 37370,
+      "note": "Token counts are dependency-free planning estimates, not Responses API billing measurements."
+    }
+  ],
+  "file_inventory": {
+    "passes": {
+      "ella_1": [
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "cards/Story 001 -- placement_2cd8d9c528a3b907/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 2601,
+          "utf8_bytes": 2601,
+          "estimated_tokens": 651,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "96adc9251a0eafd7c5e4b48d0c1c0799694d38cdbc7cfbea0ed7925dbe1ddfdc"
+        },
+        {
+          "path": "cards/Story 001 -- placement_2cd8d9c528a3b907/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7fd08ec6ea050a4e5a8ad8aec2f1a23c8b4b9f64ea493c20e8547bbf0088fdf3"
+        },
+        {
+          "path": "cards/Story 002 -- relationship_f9e1abc982cc18e7/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5404,
+          "utf8_bytes": 5405,
+          "estimated_tokens": 1352,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "f38c431ab1be1e774027ccf9f310424671f30c1190555cfa3610012deca53615"
+        },
+        {
+          "path": "cards/Story 002 -- relationship_f9e1abc982cc18e7/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "df1a38d81e68d73ebbaa9d69957c2136fea468a6a5825e7d98947ff6dc54914a"
+        },
+        {
+          "path": "cards/Story 003 -- relationship_b48b4f13a7246f6f/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5419,
+          "utf8_bytes": 5420,
+          "estimated_tokens": 1355,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "b550dc24f3294f7e65bd031ccdf3f7a9a5735214a033e214d79c16cab880fe00"
+        },
+        {
+          "path": "cards/Story 003 -- relationship_b48b4f13a7246f6f/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "3f99ef36e3b7e907cd85f719ef71c93580bf8e23bcdaaebbdb52a76e50f37eb6"
+        },
+        {
+          "path": "cards/Story 004 -- relationship_69721f3448127380/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5362,
+          "utf8_bytes": 5363,
+          "estimated_tokens": 1341,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "8e38372869f747dff63d48826f4dac932069a13234009e24db37fdc25b0278fb"
+        },
+        {
+          "path": "cards/Story 004 -- relationship_69721f3448127380/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "467ab1adbd491206296c9ac3054a380e9f9b3276243fabfec54e49f59e9fbb29"
+        },
+        {
+          "path": "cards/Story 005 -- placement_fff70f55ee2c4e03/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3287,
+          "utf8_bytes": 3287,
+          "estimated_tokens": 822,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ecfd0fc5ca14c919487835dae0ae65752d14812d71c6726569c260d3766db88a"
+        },
+        {
+          "path": "cards/Story 005 -- placement_fff70f55ee2c4e03/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "125360f31d63a3218118ab3d5b34a435bfb979e3cec372113f0d3a38759878c4"
+        },
+        {
+          "path": "cards/Story 006 -- placement_dc164328846fb8ac/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 2642,
+          "utf8_bytes": 2642,
+          "estimated_tokens": 661,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "773078354033fdff7a7c85a769587396e53da601d16a79a22c1c97261ebb4a6c"
+        },
+        {
+          "path": "cards/Story 006 -- placement_dc164328846fb8ac/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e18e5bb432232063ca0ce4ceb4e09ce4fe0c8b74f6658322d3a847b8ab4a945b"
+        },
+        {
+          "path": "cards/Story 007 -- synthesis_d97913987ccbf648/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5226,
+          "utf8_bytes": 5226,
+          "estimated_tokens": 1307,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "19de02c570b6d2c13c7ed2c7802c5f579c66c528a858543078e2564798eab6c2"
+        },
+        {
+          "path": "cards/Story 007 -- synthesis_d97913987ccbf648/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5b5c82a5838cdf966ecea1f9595417ca30074f3c18aca71522650475f3819795"
+        },
+        {
+          "path": "cards/Story 008 -- relationship_841480d5cfb20ed8/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 6278,
+          "utf8_bytes": 6279,
+          "estimated_tokens": 1570,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c763801c3fa3d90b0a24f8f5f4bb4a91e27a28df206ecea09753ed964048e69f"
+        },
+        {
+          "path": "cards/Story 008 -- relationship_841480d5cfb20ed8/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c382a3bc74af16ed1739bcaa3164f7332afb54082f629dabae5725d78e73ec7f"
+        },
+        {
+          "path": "cards/Story 009 -- placement_3140a08b036e3427/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3344,
+          "utf8_bytes": 3344,
+          "estimated_tokens": 836,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "54432cb3a1cb7d6366b0975d8e93b5c57a5099b031d49221c385ba37851f0fe6"
+        },
+        {
+          "path": "cards/Story 009 -- placement_3140a08b036e3427/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5578,
+          "utf8_bytes": 5586,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "113572de6b1ed671eb42f163db762ca9535b8640269178f6a2632b0ff506043d"
+        },
+        {
+          "path": "cards/Story 010 -- synthesis_2efcc3c374206c29/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5803,
+          "utf8_bytes": 5803,
+          "estimated_tokens": 1451,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "624f6577a8644667f0045090413d64dcd579047e4a288252c65b5e1569f7688a"
+        },
+        {
+          "path": "cards/Story 010 -- synthesis_2efcc3c374206c29/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "47141a33dae84773b53857e3d80a4f6996acfe348e488505909e064b37416bab"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2311,
+          "utf8_bytes": 2317,
+          "estimated_tokens": 580,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "4bafa84c29b9182d328a12fd961a39403a17c37f13e27077d43454ae3496ac1e"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 321,
+          "utf8_bytes": 321,
+          "estimated_tokens": 81,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "fe59a5a1b9fc10d6761c3795e501c23deb73c1802c282ec8bc27c6383cdacf24"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ],
+      "ella_2": [
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "cards/Story 011 -- synthesis_35efbb0070eb68fc/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4910,
+          "utf8_bytes": 4910,
+          "estimated_tokens": 1228,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9b3c0c85148158b7857ef9a386986f5555f42958abedc9ccf8a314515efcd1e0"
+        },
+        {
+          "path": "cards/Story 011 -- synthesis_35efbb0070eb68fc/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "1f1ce4db2eb8f78ad6edc20721bcf84df7ba714059c71ca2ed674f9f1661ff24"
+        },
+        {
+          "path": "cards/Story 012 -- synthesis_d351f00df22fcd2d/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5046,
+          "utf8_bytes": 5046,
+          "estimated_tokens": 1262,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "214770fc602c5a8b9fabbe391be20bdf92775a20bad8168ba6d55862f35f1f7b"
+        },
+        {
+          "path": "cards/Story 012 -- synthesis_d351f00df22fcd2d/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "be387e878a958a2c0f7ac63142d73590d02bcd513a351d3b1da152240df10f2d"
+        },
+        {
+          "path": "cards/Story 013 -- synthesis_bee80ae645394990/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4356,
+          "utf8_bytes": 4356,
+          "estimated_tokens": 1089,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "35e01e01145ad3a02265bb1d42f51007bfd5aa98dd646309772c110704aa9e82"
+        },
+        {
+          "path": "cards/Story 013 -- synthesis_bee80ae645394990/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e5155ea7a766e0b425ea37d89860ec32c32dcc899b9be0b7f2d9287dae7d63ad"
+        },
+        {
+          "path": "cards/Story 014 -- synthesis_873a695dbd1a70b5/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5804,
+          "utf8_bytes": 5804,
+          "estimated_tokens": 1451,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "59a8d627c2211daa7ad0253c9642dfd11057fb06387ac66c7324124ec7125dc2"
+        },
+        {
+          "path": "cards/Story 014 -- synthesis_873a695dbd1a70b5/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e5405f7f54a06e79d618d3306b7b56278523f72693291dc97b65ddc6b80d40ca"
+        },
+        {
+          "path": "cards/Story 015 -- synthesis_98484f9b7a0e6394/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4784,
+          "utf8_bytes": 4784,
+          "estimated_tokens": 1196,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c1fe120fb72352977f969c3399b7554ff192bfe84bcc43d546f36cbfb0a2e169"
+        },
+        {
+          "path": "cards/Story 015 -- synthesis_98484f9b7a0e6394/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "d3a62aaf968c6458375b20b4aee6c78a2d16ccf666527848f09b4d333c384a9a"
+        },
+        {
+          "path": "cards/Story 016 -- synthesis_c185b740c926794f/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5675,
+          "utf8_bytes": 5675,
+          "estimated_tokens": 1419,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ab0f53b5862c0c3fc1ee7249700251712e7111fc3c9a9162652d4a43c64daaee"
+        },
+        {
+          "path": "cards/Story 016 -- synthesis_c185b740c926794f/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "662376966db441b0fcc040e6cf869770aeb4cdd6a2e047b5b5e3ce348f86c3c3"
+        },
+        {
+          "path": "cards/Story 017 -- relationship_b3e70bbfe1f0a007/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5934,
+          "utf8_bytes": 5935,
+          "estimated_tokens": 1484,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "388725f526dff3543433c493a720f818f59fb8f78d9235c09165019b22de7439"
+        },
+        {
+          "path": "cards/Story 017 -- relationship_b3e70bbfe1f0a007/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "486501176461c579a877e8024bc960391c4828fabb6bbed5b880e297b4540c2a"
+        },
+        {
+          "path": "cards/Story 018 -- relationship_bca803fca9e65d9c/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5882,
+          "utf8_bytes": 5883,
+          "estimated_tokens": 1471,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "fd6d6ffeb20b317588e33425436747f46b62235ad196f6ff7c6e6ea7e2e9fe30"
+        },
+        {
+          "path": "cards/Story 018 -- relationship_bca803fca9e65d9c/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "722851d17b4950dbf6d16ab2effcbe262e130ad83385db3756a0eb02dd27262a"
+        },
+        {
+          "path": "cards/Story 019 -- relationship_8ee4327f0fe346a3/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5426,
+          "utf8_bytes": 5427,
+          "estimated_tokens": 1357,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "83a620220f7f643dcca970564f774a6731fdf4781277adce1a254bb4ada7a39d"
+        },
+        {
+          "path": "cards/Story 019 -- relationship_8ee4327f0fe346a3/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "63721bb75e9381972beb7f9635f16c6e6727eb4da1d612e8c53b27782a0f6b08"
+        },
+        {
+          "path": "cards/Story 020 -- placement_e1eea7e6ab19d40a/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3438,
+          "utf8_bytes": 3438,
+          "estimated_tokens": 860,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "d0eb2120afe5c1c52c8f03f2e76aadc44a3006a68ae5869e6aec3961b912b67c"
+        },
+        {
+          "path": "cards/Story 020 -- placement_e1eea7e6ab19d40a/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c37b9b4fa3450efe773aad52152cd980f0f7975d9babcbbb20629d6095db6b93"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2311,
+          "utf8_bytes": 2317,
+          "estimated_tokens": 580,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7473aebfdc6b2e0f839955d0fa76579ccc3cda6e7be705f63296a33734029586"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 321,
+          "utf8_bytes": 321,
+          "estimated_tokens": 81,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "693998147aab779047e64ca7c4486d3f3888f37a95ddbd8c49e82c6c8b15faf5"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ],
+      "ella_3": [
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "cards/Story 021 -- relationship_9ce8bb1ace8836da/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5386,
+          "utf8_bytes": 5387,
+          "estimated_tokens": 1347,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "73b6d10535a20fc1eb762901cfdf3a53fadc35b8369c3baa53837a469ac8c13e"
+        },
+        {
+          "path": "cards/Story 021 -- relationship_9ce8bb1ace8836da/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "b2c83fabdf24de5c97df4093a4e6a44bbb455db56cc614c1c8ea20c329824caf"
+        },
+        {
+          "path": "cards/Story 022 -- relationship_08b96edeb0fa98fe/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 6297,
+          "utf8_bytes": 6298,
+          "estimated_tokens": 1575,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "f92a6986c95bdfc45969cae03f13c0938c230217dd586f0a2fd06cda82991462"
+        },
+        {
+          "path": "cards/Story 022 -- relationship_08b96edeb0fa98fe/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ce1b7505e975cf2bac39213bfa9e7c09c4ca023a0a91cd1ef856d7a95facdc3f"
+        },
+        {
+          "path": "cards/Story 023 -- relationship_957188921f7e84ba/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5770,
+          "utf8_bytes": 5771,
+          "estimated_tokens": 1443,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "48e044f97def6791c0272df1c6c388926b27b38dabcd02bd49525706544ba832"
+        },
+        {
+          "path": "cards/Story 023 -- relationship_957188921f7e84ba/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9cef1ee8f9a16763ca1bacac5f2b6652ebaa714fdb258976b48d762cb0ec8414"
+        },
+        {
+          "path": "cards/Story 024 -- relationship_620cff15d4fd07e2/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5998,
+          "utf8_bytes": 5999,
+          "estimated_tokens": 1500,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "65edde20790bdea167980ab88adde5ab0e311290379e69647cdcfb4716dd54d8"
+        },
+        {
+          "path": "cards/Story 024 -- relationship_620cff15d4fd07e2/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "b6af4173a1590da5f80aab86d38a7c7c853e4550f2a1f1a809673dc4b7c6ab6c"
+        },
+        {
+          "path": "cards/Story 025 -- synthesis_6397e52027ae7f85/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4131,
+          "utf8_bytes": 4131,
+          "estimated_tokens": 1033,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "597f764ef9a75a66676c0426b8a449fa78c071197190ca9df20a4784733fff30"
+        },
+        {
+          "path": "cards/Story 025 -- synthesis_6397e52027ae7f85/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "538f438cb45bef5b861ba9e9ee5554d0002010276c47602ca7232a2451cfd760"
+        },
+        {
+          "path": "cards/Story 026 -- relationship_2cd64e1ae0d05763/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5710,
+          "utf8_bytes": 5711,
+          "estimated_tokens": 1428,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "dcaebe633b7a9aef8feece6ccf25dca165bf8be95f616cadcc57abf034a6f069"
+        },
+        {
+          "path": "cards/Story 026 -- relationship_2cd64e1ae0d05763/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "d1cc63a46fbbe6806761143e5d039371dad9adcf48d0aa7fab1616c7f5891e68"
+        },
+        {
+          "path": "cards/Story 027 -- synthesis_a0451dfb9d6b6143/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4069,
+          "utf8_bytes": 4069,
+          "estimated_tokens": 1018,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7a0fbd4b5c3e2920a70c8c93417ad1e38c920e8dd2cc6843a83a5680f28fe63c"
+        },
+        {
+          "path": "cards/Story 027 -- synthesis_a0451dfb9d6b6143/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "22e92d76ff56732af5c4f8e908a535f4c62fc9202daf9c1391550b78edafe125"
+        },
+        {
+          "path": "cards/Story 028 -- placement_9bb77a9481dcd811/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3331,
+          "utf8_bytes": 3331,
+          "estimated_tokens": 833,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "89de015c1a9620335dda0a6c91099114397a7e8b75b1d1ae2017084145449efe"
+        },
+        {
+          "path": "cards/Story 028 -- placement_9bb77a9481dcd811/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "a5542517152583d1ffea323446316b7c20cb393b01c13b6b5ade42158ac90477"
+        },
+        {
+          "path": "cards/Story 029 -- relationship_7d55305feb3af96a/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 6194,
+          "utf8_bytes": 6195,
+          "estimated_tokens": 1549,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "78757515619a4471af7c36ec5c3c08a664a2ceb8bf6baa62def580b2e772326b"
+        },
+        {
+          "path": "cards/Story 029 -- relationship_7d55305feb3af96a/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7ea3875c70a4d0a33cb0efe3f1b624024973a469651d52f1f5895abfa2113ca5"
+        },
+        {
+          "path": "cards/Story 030 -- relationship_c54fc6148c6bab37/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5847,
+          "utf8_bytes": 5848,
+          "estimated_tokens": 1462,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "2149bc7ef5ef36841a627e40594a9e41b419bb6864aef9fe04fb82c521dc9eb5"
+        },
+        {
+          "path": "cards/Story 030 -- relationship_c54fc6148c6bab37/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e22ff01ea68a6f6c507023e30ddefe026bf22fb9be5cb5db2d66b6b09add361f"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2311,
+          "utf8_bytes": 2317,
+          "estimated_tokens": 580,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9bd3ea46f548cf233a3bb62828e7347dbaac3cdcad3729283bb78ff3b0c0e81f"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 321,
+          "utf8_bytes": 321,
+          "estimated_tokens": 81,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "034412e71db713f1237a9b17cf265525e283fd4cb1db62026ee7b5e1edeee6f4"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ],
+      "ella_4": [
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "cards/Story 031 -- placement_a6fa68acce77e893/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3253,
+          "utf8_bytes": 3253,
+          "estimated_tokens": 814,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c3b662b735f7594cc81a23c848f1b4f6dce191715ca3c7cf116cadc7754048db"
+        },
+        {
+          "path": "cards/Story 031 -- placement_a6fa68acce77e893/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "3db93e566a626cab85648df4e9ad8f3f4b846db9231cfa38bc01f185a4e04183"
+        },
+        {
+          "path": "cards/Story 032 -- placement_c0e36c7de94fae94/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3399,
+          "utf8_bytes": 3399,
+          "estimated_tokens": 850,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c1266ac3bf79cc4bd64d5801d40a431b1596d99fc4f5a540c16ab035de29aff6"
+        },
+        {
+          "path": "cards/Story 032 -- placement_c0e36c7de94fae94/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c4963ecfefd81ae6f5006723dc9f45cdcb6b4876330708fec76488116d740b02"
+        },
+        {
+          "path": "cards/Story 033 -- placement_4e222a95196f3c94/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 2658,
+          "utf8_bytes": 2658,
+          "estimated_tokens": 665,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e714253d5af6c32560d1f5ad770149d7ffb5b7ef805b4b1a969d9b8de7f7ff1"
+        },
+        {
+          "path": "cards/Story 033 -- placement_4e222a95196f3c94/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6832fbcd22cf113ad4fc0beb4ff3537d12c2aebf4bc1935cc074937254dcaa34"
+        },
+        {
+          "path": "cards/Story 034 -- placement_b3a9d32a3aa0a321/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3412,
+          "utf8_bytes": 3412,
+          "estimated_tokens": 853,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "cb40e00d4f2904e57d5b5b1cc9514531a29569d285f53ed62c706171aa556c53"
+        },
+        {
+          "path": "cards/Story 034 -- placement_b3a9d32a3aa0a321/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "2f40de49fa38d17cb7241e27bae9bc820f4c73c3b4ee2ced5ba5d16b8bea76dd"
+        },
+        {
+          "path": "cards/Story 035 -- synthesis_8b5b7e9779b7cb5d/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4374,
+          "utf8_bytes": 4374,
+          "estimated_tokens": 1094,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ac910b8adb3c47e80f6c4544e64da5a24bbd3be80a1d4f8adc2194163700fe47"
+        },
+        {
+          "path": "cards/Story 035 -- synthesis_8b5b7e9779b7cb5d/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "4809178261daa3a40414fedafc209a4d13927e8f9225250166a3887d796e018d"
+        },
+        {
+          "path": "cards/Story 036 -- relationship_ba0d3a3bbc73115b/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5844,
+          "utf8_bytes": 5845,
+          "estimated_tokens": 1462,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "af111e1aa5b03cd8c1dcd6a40e55796a950356b4105fdf56a0d5e006b381b159"
+        },
+        {
+          "path": "cards/Story 036 -- relationship_ba0d3a3bbc73115b/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9da73d718f7fc2b5579b38fc95e965d529d47a4c1a3b479c0a9e3826e90a76af"
+        },
+        {
+          "path": "cards/Story 037 -- synthesis_8fee2a8a1b04da94/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4304,
+          "utf8_bytes": 4304,
+          "estimated_tokens": 1076,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7476ac6bc6402e62bd1e5b39d6958aff6b1c4bf81fd27fdae3962dfe0c014fa9"
+        },
+        {
+          "path": "cards/Story 037 -- synthesis_8fee2a8a1b04da94/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "8cc2c1da2f007ffb6f832174ab70ec330c0e5940c270ed19cd2ff79d2ad1665d"
+        },
+        {
+          "path": "cards/Story 038 -- synthesis_280e33897928aa55/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4426,
+          "utf8_bytes": 4426,
+          "estimated_tokens": 1107,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "563745800a6b5f413717731d56b9335c5b47d37b37777d7c19067ea779785de7"
+        },
+        {
+          "path": "cards/Story 038 -- synthesis_280e33897928aa55/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "66c09d96a86800d465cbb42a0f6c2fd291bf8ef9a13524b785a363f964d87064"
+        },
+        {
+          "path": "cards/Story 039 -- relationship_633bff8041349a14/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5859,
+          "utf8_bytes": 5860,
+          "estimated_tokens": 1465,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "917854c3273a574f189e6ad38494bf1df2448282eebdb6a9075dd7d630bde064"
+        },
+        {
+          "path": "cards/Story 039 -- relationship_633bff8041349a14/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "600afd448d7be5bdfdadd21f95b0b7cbc7172b45096d6084c228d57b53b020fc"
+        },
+        {
+          "path": "cards/Story 040 -- synthesis_0e2890c90bad8bd7/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 4343,
+          "utf8_bytes": 4343,
+          "estimated_tokens": 1086,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "29a85283121f6f6e542a61c989f708f471a4a767b8fa56be504779681f836837"
+        },
+        {
+          "path": "cards/Story 040 -- synthesis_0e2890c90bad8bd7/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5df1e376c225bd7d002c5f1e6422b3df6616958936ea08fcadfe7397aca1b7d9"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2311,
+          "utf8_bytes": 2317,
+          "estimated_tokens": 580,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7830f69c04bd407e4ba786afb2ad7c9216e661332aede7609500512cb2260008"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 321,
+          "utf8_bytes": 321,
+          "estimated_tokens": 81,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "a0cf3db5fbea25315ddc4b2e61272a60dac508d78c1ca542f9553a00a77e692a"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ],
+      "ella_5": [
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "cards/Story 041 -- relationship_cf1dd8f75cd33a77/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5853,
+          "utf8_bytes": 5854,
+          "estimated_tokens": 1464,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "4c101df0fbb392dcb0352b3034dc76c77a7100a191f769639fcbd92a315a9d5a"
+        },
+        {
+          "path": "cards/Story 041 -- relationship_cf1dd8f75cd33a77/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9ab3e7c97a4652191678e1cbe00d745725d894dd9066a487f31da5604141be4a"
+        },
+        {
+          "path": "cards/Story 042 -- placement_a7e3da63bfe6bc8a/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3229,
+          "utf8_bytes": 3229,
+          "estimated_tokens": 808,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "c6b04d080f78b29d6c6316bf291cece9c5af3a1513369fcdbb20843a5573d7fd"
+        },
+        {
+          "path": "cards/Story 042 -- placement_a7e3da63bfe6bc8a/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "10548c01f13f379a8fa9cb24cf6c7c36e921eb307677484b118cfa38b2d03adc"
+        },
+        {
+          "path": "cards/Story 043 -- placement_266252bd4c92f745/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3246,
+          "utf8_bytes": 3246,
+          "estimated_tokens": 812,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7ca0bac2b49616ebd27425d660997b977423df96a7abcaea30e2bb24aa793fdf"
+        },
+        {
+          "path": "cards/Story 043 -- placement_266252bd4c92f745/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "f0ffc6609bbab9abc24f8a8a42fab8b495ef1a5705b63b9a6554168576125035"
+        },
+        {
+          "path": "cards/Story 044 -- placement_4bf918541cde26c7/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 2737,
+          "utf8_bytes": 2737,
+          "estimated_tokens": 685,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "a70526ef860ce754f4f7d54767877160700975e08da4f6b2a7f1e5089b035c5a"
+        },
+        {
+          "path": "cards/Story 044 -- placement_4bf918541cde26c7/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "65d541e294939b0903a6a89f22c7d589e1e7152ed0d7c119ea8b48d122cb2ab5"
+        },
+        {
+          "path": "cards/Story 045 -- placement_c680024104669bad/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3434,
+          "utf8_bytes": 3434,
+          "estimated_tokens": 859,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e08bf4830a651712ad3c4672d75c563ed603209059605181c12352b3914f8d30"
+        },
+        {
+          "path": "cards/Story 045 -- placement_c680024104669bad/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e4f5dd2274959659be336e612b51a7602395c9d85efe61fae5493c67d00d19b3"
+        },
+        {
+          "path": "cards/Story 046 -- relationship_d02272528c2f3708/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 6013,
+          "utf8_bytes": 6014,
+          "estimated_tokens": 1504,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "7e41760b6f6cc627242daaa38bdd4f669d4fe843e8c27b1ffcad785b19aee63f"
+        },
+        {
+          "path": "cards/Story 046 -- relationship_d02272528c2f3708/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "548f8575e5bb113f519f1adeaa7e5d28bcd13faa2b6e50c8790c0ac6139f539f"
+        },
+        {
+          "path": "cards/Story 047 -- placement_5e782c78da816ec3/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3392,
+          "utf8_bytes": 3392,
+          "estimated_tokens": 848,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "97510eb0da3d0c320084782e92a353d52a8ac4236fea277d90ff98436111e25e"
+        },
+        {
+          "path": "cards/Story 047 -- placement_5e782c78da816ec3/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6c73b7f45cf848df3626a8b1d8b5b44db554c42285731463b492e02de503dafe"
+        },
+        {
+          "path": "cards/Story 048 -- relationship_3734a82f55646d37/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 5884,
+          "utf8_bytes": 5885,
+          "estimated_tokens": 1472,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "61378e51da0d024f134b799b95f0f0a761228c6555bd3fe729c3e0e997d7ef93"
+        },
+        {
+          "path": "cards/Story 048 -- relationship_3734a82f55646d37/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "276653577fb3420890556b9ee0dfae24f8529831b311fcfcc050d29ac7c03370"
+        },
+        {
+          "path": "cards/Story 049 -- placement_1c796fe1f0db3dcc/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3223,
+          "utf8_bytes": 3223,
+          "estimated_tokens": 806,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "3b5d0d95798c6bbe2e7f6d116ea3a063caf03e47ad74eb4da22aad4cb9f86195"
+        },
+        {
+          "path": "cards/Story 049 -- placement_1c796fe1f0db3dcc/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "2f926285157c85bf052db53535433388078e622f12e0b113bdfae9b74429ae68"
+        },
+        {
+          "path": "cards/Story 050 -- placement_b934bf06d6e2bca8/CLAIM AND EVIDENCE.md",
+          "tier": "assignment",
+          "characters": 3128,
+          "utf8_bytes": 3128,
+          "estimated_tokens": 782,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0158f262d6817d1812918145591d1f44ef8378fb5f8cbed192230594c91c25a3"
+        },
+        {
+          "path": "cards/Story 050 -- placement_b934bf06d6e2bca8/WRITE THIS CARD.md",
+          "tier": "assignment",
+          "characters": 5579,
+          "utf8_bytes": 5587,
+          "estimated_tokens": 1397,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "3120c2c587eb8909196524726cd1a8fb9e28113d93a926a5b91c841013b65ec5"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2311,
+          "utf8_bytes": 2317,
+          "estimated_tokens": 580,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "9811477d36dab1ce2b63715186fb938b966abbabfabc8a170b1bc9d9a82f3b8e"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 321,
+          "utf8_bytes": 321,
+          "estimated_tokens": 81,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "558b802137efeaa2278437502bd3f8c5117d96503d47be12f98187a36f2b000c"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ],
+      "ella_6": [
+        {
+          "path": "ASSIGN THEME GROUPS.md",
+          "tier": "assignment",
+          "characters": 25935,
+          "utf8_bytes": 25962,
+          "estimated_tokens": 6491,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "fa78320f648f6537c0a87e75de774a7a42978f2c363d5018b75be828208ddfe1"
+        },
+        {
+          "path": "AUTHORING BRIEF.md",
+          "tier": "static",
+          "characters": 6301,
+          "utf8_bytes": 6303,
+          "estimated_tokens": 1576,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380"
+        },
+        {
+          "path": "DOG DETAILS.md",
+          "tier": "subject",
+          "characters": 367,
+          "utf8_bytes": 367,
+          "estimated_tokens": 92,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04"
+        },
+        {
+          "path": "FULL CHART BASIS.md",
+          "tier": "subject",
+          "characters": 14043,
+          "utf8_bytes": 14129,
+          "estimated_tokens": 3533,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775"
+        },
+        {
+          "path": "GUIDING LIGHTS.md",
+          "tier": "static",
+          "characters": 12939,
+          "utf8_bytes": 12971,
+          "estimated_tokens": 3243,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7"
+        },
+        {
+          "path": "START HERE.md",
+          "tier": "assignment",
+          "characters": 2824,
+          "utf8_bytes": 2830,
+          "estimated_tokens": 708,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "2786d4dc346f2a131f3224ad2381d02b7bcbff3ab186e01af7a34d24a08882d7"
+        },
+        {
+          "path": "summaries/Summary 01 -- Who the Dog Is/SUMMARY BASIS.md",
+          "tier": "assignment",
+          "characters": 105,
+          "utf8_bytes": 105,
+          "estimated_tokens": 27,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ea1959581bf0b05ae1f0428afcfaff52d6205ef26fcca1d0d3f8a1220fe8b7af"
+        },
+        {
+          "path": "summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md",
+          "tier": "assignment",
+          "characters": 5205,
+          "utf8_bytes": 5209,
+          "estimated_tokens": 1303,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "96adcb1cce58895c9e4d1cb5b8a108f681090c913a584641a65d368f4ab2cc2b"
+        },
+        {
+          "path": "summaries/Summary 02 -- How the Dog Lives/SUMMARY BASIS.md",
+          "tier": "assignment",
+          "characters": 105,
+          "utf8_bytes": 105,
+          "estimated_tokens": 27,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ea1959581bf0b05ae1f0428afcfaff52d6205ef26fcca1d0d3f8a1220fe8b7af"
+        },
+        {
+          "path": "summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md",
+          "tier": "assignment",
+          "characters": 5205,
+          "utf8_bytes": 5209,
+          "estimated_tokens": 1303,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "96adcb1cce58895c9e4d1cb5b8a108f681090c913a584641a65d368f4ab2cc2b"
+        },
+        {
+          "path": "summaries/Summary 03 -- What the Dog Needs/SUMMARY BASIS.md",
+          "tier": "assignment",
+          "characters": 105,
+          "utf8_bytes": 105,
+          "estimated_tokens": 27,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ea1959581bf0b05ae1f0428afcfaff52d6205ef26fcca1d0d3f8a1220fe8b7af"
+        },
+        {
+          "path": "summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md",
+          "tier": "assignment",
+          "characters": 5205,
+          "utf8_bytes": 5209,
+          "estimated_tokens": 1303,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "96adcb1cce58895c9e4d1cb5b8a108f681090c913a584641a65d368f4ab2cc2b"
+        },
+        {
+          "path": "summaries/Summary 04 -- How the Dog Grows/SUMMARY BASIS.md",
+          "tier": "assignment",
+          "characters": 105,
+          "utf8_bytes": 105,
+          "estimated_tokens": 27,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "ea1959581bf0b05ae1f0428afcfaff52d6205ef26fcca1d0d3f8a1220fe8b7af"
+        },
+        {
+          "path": "summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md",
+          "tier": "assignment",
+          "characters": 5205,
+          "utf8_bytes": 5209,
+          "estimated_tokens": 1303,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "96adcb1cce58895c9e4d1cb5b8a108f681090c913a584641a65d368f4ab2cc2b"
+        },
+        {
+          "path": "SUMMARY GOLD REFERENCE.md",
+          "tier": "assignment",
+          "characters": 30049,
+          "utf8_bytes": 30109,
+          "estimated_tokens": 7528,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "94190172e40a258cb8f089daec3784bb109662808d1e559f8a4660cc4ac41c02"
+        },
+        {
+          "path": "WORKSPACE MANIFEST.md",
+          "tier": "assignment",
+          "characters": 381,
+          "utf8_bytes": 381,
+          "estimated_tokens": 96,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "3d59868831d4a9b6d65d3def2b0e2f91b9dd8e0d3fc006b79d972958c0c85039"
+        },
+        {
+          "path": "WRITE SUMMARY THESIS PLAN.md",
+          "tier": "assignment",
+          "characters": 1399,
+          "utf8_bytes": 1407,
+          "estimated_tokens": 352,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "721697a6ec6c1141e8509a1ef232d68c8a151bf4000da656ae6ca4cf4fd38b60"
+        },
+        {
+          "path": "WRITE WHOLE DOG PROFILE.md",
+          "tier": "subject",
+          "characters": 1593,
+          "utf8_bytes": 1593,
+          "estimated_tokens": 399,
+          "token_estimate_method": "utf8_bytes_divided_by_4",
+          "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326"
+        }
+      ]
+    },
+    "exact_duplicate_estimated_tokens": 48205,
+    "repeated_content": [
+      {
+        "sha256": "0e772bb47ab1652fbb330acbe43db8d83cd1642e0ca30b416ddcd13a365d0326",
+        "utf8_bytes": 1593,
+        "estimated_tokens": 399,
+        "locations": [
+          "ella_1/WRITE WHOLE DOG PROFILE.md",
+          "ella_2/WRITE WHOLE DOG PROFILE.md",
+          "ella_3/WRITE WHOLE DOG PROFILE.md",
+          "ella_4/WRITE WHOLE DOG PROFILE.md",
+          "ella_5/WRITE WHOLE DOG PROFILE.md",
+          "ella_6/WRITE WHOLE DOG PROFILE.md"
+        ]
+      },
+      {
+        "sha256": "485ac83a33898b6f95110bc0c84373c01313f1701ddceb9d9df404df36b7f2a7",
+        "utf8_bytes": 12971,
+        "estimated_tokens": 3243,
+        "locations": [
+          "ella_1/GUIDING LIGHTS.md",
+          "ella_2/GUIDING LIGHTS.md",
+          "ella_3/GUIDING LIGHTS.md",
+          "ella_4/GUIDING LIGHTS.md",
+          "ella_5/GUIDING LIGHTS.md",
+          "ella_6/GUIDING LIGHTS.md"
+        ]
+      },
+      {
+        "sha256": "5d5f38a03e731b32321a776ce4cc72e07bc09f493d6830737fd83842b4df5380",
+        "utf8_bytes": 6303,
+        "estimated_tokens": 1576,
+        "locations": [
+          "ella_1/AUTHORING BRIEF.md",
+          "ella_2/AUTHORING BRIEF.md",
+          "ella_3/AUTHORING BRIEF.md",
+          "ella_4/AUTHORING BRIEF.md",
+          "ella_5/AUTHORING BRIEF.md",
+          "ella_6/AUTHORING BRIEF.md"
+        ]
+      },
+      {
+        "sha256": "6e79dc6b91b532a329d0b4e16bc84f3b96304f5b4148268f573909649ff68b04",
+        "utf8_bytes": 367,
+        "estimated_tokens": 92,
+        "locations": [
+          "ella_1/DOG DETAILS.md",
+          "ella_2/DOG DETAILS.md",
+          "ella_3/DOG DETAILS.md",
+          "ella_4/DOG DETAILS.md",
+          "ella_5/DOG DETAILS.md",
+          "ella_6/DOG DETAILS.md"
+        ]
+      },
+      {
+        "sha256": "96adcb1cce58895c9e4d1cb5b8a108f681090c913a584641a65d368f4ab2cc2b",
+        "utf8_bytes": 5209,
+        "estimated_tokens": 1303,
+        "locations": [
+          "ella_6/summaries/Summary 01 -- Who the Dog Is/WRITE THIS SUMMARY.md",
+          "ella_6/summaries/Summary 02 -- How the Dog Lives/WRITE THIS SUMMARY.md",
+          "ella_6/summaries/Summary 03 -- What the Dog Needs/WRITE THIS SUMMARY.md",
+          "ella_6/summaries/Summary 04 -- How the Dog Grows/WRITE THIS SUMMARY.md"
+        ]
+      },
+      {
+        "sha256": "e0125fca4b946dac79ba90aa8e26d9cd4be44bbed21847c1caad378a2faf6775",
+        "utf8_bytes": 14129,
+        "estimated_tokens": 3533,
+        "locations": [
+          "ella_1/FULL CHART BASIS.md",
+          "ella_2/FULL CHART BASIS.md",
+          "ella_3/FULL CHART BASIS.md",
+          "ella_4/FULL CHART BASIS.md",
+          "ella_5/FULL CHART BASIS.md",
+          "ella_6/FULL CHART BASIS.md"
+        ]
+      },
+      {
+        "sha256": "ea1959581bf0b05ae1f0428afcfaff52d6205ef26fcca1d0d3f8a1220fe8b7af",
+        "utf8_bytes": 105,
+        "estimated_tokens": 27,
+        "locations": [
+          "ella_6/summaries/Summary 01 -- Who the Dog Is/SUMMARY BASIS.md",
+          "ella_6/summaries/Summary 02 -- How the Dog Lives/SUMMARY BASIS.md",
+          "ella_6/summaries/Summary 03 -- What the Dog Needs/SUMMARY BASIS.md",
+          "ella_6/summaries/Summary 04 -- How the Dog Grows/SUMMARY BASIS.md"
+        ]
+      }
+    ]
+  },
+  "note": "This report performs no API request. Estimates support relative prompt-layout comparisons; response usage remains authoritative."
+}

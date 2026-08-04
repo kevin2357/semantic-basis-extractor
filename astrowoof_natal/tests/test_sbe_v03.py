@@ -787,6 +787,36 @@ class TestBrePacket(unittest.TestCase):
                 (workspace / "FULL CHART BASIS.md").read_text(encoding="utf-8"),
             )
 
+    def test_compact_v2_is_an_author_only_chart_map(self) -> None:
+        compact_v1 = render_full_chart_basis(self.packet, "compact-v1")
+        compact_v2 = render_full_chart_basis(self.packet, "compact-v2")
+        self.assertIn("## How to Read This Map", compact_v2)
+        self.assertIn("## Placements and Angles", compact_v2)
+        self.assertIn("## Aspects and Interactions", compact_v2)
+        self.assertIn("## Chart Structure at a Glance", compact_v2)
+        self.assertIn("## Projected-Term Decoder", compact_v2)
+        self.assertNotIn("Selected Chart Material", compact_v2)
+        self.assertNotIn("Additional Chart Material", compact_v2)
+        self.assertNotIn("Reconstruction Limits", compact_v2)
+        self.assertNotIn(self.packet["cards"][0]["claim_id"], compact_v2)
+        self.assertLess(len(compact_v2), len(compact_v1))
+        self.assertIn("function(mode) @ domain", compact_v2)
+        self.assertIn("relationship(mode): source <> target", compact_v2)
+
+    def test_compact_v2_preserves_genuine_context_variants(self) -> None:
+        packet = deepcopy(self.packet)
+        evidence = next(
+            evidence
+            for card in packet["cards"]
+            for evidence in card.get("evidence", [])
+            if evidence.get("kind") == "projected_object"
+        )
+        contexts = evidence["context_records"]
+        contexts["handler"]["record"]["name"] = "handler_only_function"
+        compact_v2 = render_full_chart_basis(packet, "compact-v2")
+        self.assertIn("[handler] handler_only_function", compact_v2)
+        self.assertIn("[direct-to-dog, general, hybrid]", compact_v2)
+
     def test_split_story_workspaces_combine_into_one_complete_deck(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

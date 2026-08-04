@@ -77,6 +77,22 @@ the deterministic compact authoring map. The compact build contains:
 The JSON sidecar is excluded from authoring ZIPs and API prompts. It exists for
 deterministic audit and future consumers without adding authoring load.
 
+Use `--full-chart-basis-format compact-v2` for the smaller author-only map.
+It retains every reconstructed placement, angle, aspect, distinct projection
+context, structural concentration, and projected term used by the chart, but
+removes selected claims, unselected claims, dependencies, source references,
+and reconstruction-limit commentary from the LLM-facing Markdown. Those
+details remain in the local
+`<subject>.compact-v2-full-chart-basis.audit.json` sidecar. The author map uses
+a declared compact grammar, orders aspects by orb, collapses contexts only
+after deterministic equality comparison, and emits context-qualified variants
+when meanings genuinely differ.
+
+`compact-v2` treats the full-chart document as temporary cognitive context,
+not as a downstream semantic artifact. Individual card assignments still
+receive their complete claim and evidence. The whole-chart map exists only to
+help the author construct a coherent shared understanding of the dog.
+
 The compact representation is a downstream reconstruction from projected
 evidence, not a canonical natal export. It does not contact SPC or infer exact
 source degrees. The legacy mode remains the production default until matched

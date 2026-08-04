@@ -1,0 +1,107 @@
+{
+  "schema_version": "semantic_basis.batch_run.v0.1",
+  "input_package": "C:\\tmp\\ella-semantic-closure-input",
+  "subject_filter": "ella",
+  "subject_count": 1,
+  "status": "pass",
+  "split_assignment_policy": "contiguous",
+  "full_chart_basis_format": "compact-v2",
+  "subjects": [
+    {
+      "subject": "ella",
+      "status": "pass",
+      "input_files": {
+        "direct_to_dog": "C:\\tmp\\ella-semantic-closure-input\\natal.ella.woof.d2d.json",
+        "general": "C:\\tmp\\ella-semantic-closure-input\\natal.ella.woof.general.json",
+        "handler": "C:\\tmp\\ella-semantic-closure-input\\natal.ella.woof.handler.json",
+        "hybrid": "C:\\tmp\\ella-semantic-closure-input\\natal.ella.woof.hybrid.json"
+      },
+      "candidate_count": 106,
+      "selected_count": 50,
+      "unselected_count": 56,
+      "synthesized_selected": 14,
+      "registry_unique_term_count": 50,
+      "output": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\semantic-basis-output\\ella",
+      "bundle": [
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_1",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_2",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_3",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_4",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_5",
+        "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\llm-handoff-bundle\\ella_6"
+      ],
+      "split_assignment": {
+        "schema_version": "astrowoof.split_assignment.v0.1",
+        "policy": "contiguous",
+        "algorithm_version": "contiguous",
+        "subject": "ella",
+        "seed": "0bbecdc7cb193ce7",
+        "pass_count": 5,
+        "cards_per_pass": 10,
+        "passes": {
+          "1": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "2": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "3": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30
+          ],
+          "4": [
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "5": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ]
+        }
+      },
+      "split_assignment_file": "C:\\dev\\github\\semantic-basis-extractor\\astrowoof_natal\\docs\\sprints\\2026\\08\\20260802-sprint1-editorial-quality\\work\\phase-003-live-ella-compact-v2\\run\\sbe\\semantic-basis-output\\ella\\ella.split-assignment.json"
+    }
+  ]
+}

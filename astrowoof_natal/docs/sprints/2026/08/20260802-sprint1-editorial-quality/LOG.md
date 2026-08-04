@@ -526,3 +526,32 @@ Keep compact transport experimental pending one second-subject, current-code,
 fresh legacy-versus-compact pass-6 comparison. Detailed matched examples and
 cost interpretation are in
 `results/PHASE 3 - Ella Compact Full Chart Live AB.md`.
+
+## 2026-08-04 — Claim-free compact-v2 authoring map
+
+Implemented `compact-v2` as an author-only chart map. The LLM-facing document
+contains no selected claims, additional claims, dependency IDs, provenance, or
+reconstruction-limit prose. It retains all reconstructed placements, angles,
+aspects, context variants, deterministic structural concentrations, axis
+attachments, and a used-term semantic decoder. Complete traceability remains
+local in a machine-audit sidecar excluded from ZIPs and prompts.
+
+Ella's chart map fell from 75,215 characters in legacy and 45,865 in
+compact-v1 to 14,029 in compact-v2. Matched pass-1 request estimates fell from
+65,577 to 58,267 to 50,305 tokens respectively; the shared subject prefix fell
+from 19,416 to 12,106 to 4,144. Across six matched requests, the estimate fell
+from 381,669 legacy and 337,809 compact-v1 tokens to 290,037 compact-v2.
+
+The fresh Ella pass-1 live request passed opaque QA on attempt 1, assembled,
+validated, and reached `DELIVERY_COMPLETE_WITH_WARNINGS`. It used 42,414 input
+and 13,553 output tokens at an estimated $0.30933. The inherited whole-deck
+warning concerns priorities 29 and 41, not the newly authored pass.
+
+The claim-free map still produced a coherent 734-word private portrait and ten
+semantically distinct cards. It recovered the major chart concentrations,
+axes, tensions, and learning dynamics without receiving SBE's claim portfolio.
+Reader-facing pass-1 prose totaled 5,219 words versus 6,588 in the preserved
+baseline, a 20.8% reduction. The shorter dog and hybrid renderings remained
+substantive, but length compression is recorded as an editorial observation,
+not assumed to be an unconditional improvement. Full analysis is in
+`results/PHASE 3 - Ella Compact-v2 Pass-1 Live Test.md`.

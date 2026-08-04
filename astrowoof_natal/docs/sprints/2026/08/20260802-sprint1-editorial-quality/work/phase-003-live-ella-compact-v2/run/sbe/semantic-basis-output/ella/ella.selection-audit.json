@@ -1,0 +1,611 @@
+{
+  "schema_version": "semantic_basis.selection_audit.v0.2",
+  "budget": 50,
+  "mandatory_count": 16,
+  "optimizer_decisions": [
+    {
+      "decision": 1,
+      "winning_candidate_id": "relationship_b48b4f13a7246f6f",
+      "bundle_added": [
+        "relationship_b48b4f13a7246f6f"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.778024,
+      "selected_count_after": 17
+    },
+    {
+      "decision": 2,
+      "winning_candidate_id": "relationship_f9e1abc982cc18e7",
+      "bundle_added": [
+        "relationship_f9e1abc982cc18e7"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.776871,
+      "selected_count_after": 18
+    },
+    {
+      "decision": 3,
+      "winning_candidate_id": "relationship_69721f3448127380",
+      "bundle_added": [
+        "relationship_69721f3448127380"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.767958,
+      "selected_count_after": 19
+    },
+    {
+      "decision": 4,
+      "winning_candidate_id": "relationship_841480d5cfb20ed8",
+      "bundle_added": [
+        "relationship_841480d5cfb20ed8"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.71443,
+      "selected_count_after": 20
+    },
+    {
+      "decision": 5,
+      "winning_candidate_id": "relationship_b3e70bbfe1f0a007",
+      "bundle_added": [
+        "relationship_b3e70bbfe1f0a007"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.684518,
+      "selected_count_after": 21
+    },
+    {
+      "decision": 6,
+      "winning_candidate_id": "synthesis_d351f00df22fcd2d",
+      "bundle_added": [
+        "relationship_8ee4327f0fe346a3",
+        "relationship_9ce8bb1ace8836da",
+        "synthesis_d351f00df22fcd2d"
+      ],
+      "bundle_cost": 3,
+      "marginal_utility": 0.674626,
+      "selected_count_after": 24
+    },
+    {
+      "decision": 7,
+      "winning_candidate_id": "relationship_08b96edeb0fa98fe",
+      "bundle_added": [
+        "relationship_08b96edeb0fa98fe"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.671209,
+      "selected_count_after": 25
+    },
+    {
+      "decision": 8,
+      "winning_candidate_id": "relationship_bca803fca9e65d9c",
+      "bundle_added": [
+        "relationship_bca803fca9e65d9c"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.663127,
+      "selected_count_after": 26
+    },
+    {
+      "decision": 9,
+      "winning_candidate_id": "relationship_620cff15d4fd07e2",
+      "bundle_added": [
+        "relationship_620cff15d4fd07e2"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.653481,
+      "selected_count_after": 27
+    },
+    {
+      "decision": 10,
+      "winning_candidate_id": "synthesis_98484f9b7a0e6394",
+      "bundle_added": [
+        "relationship_2cd64e1ae0d05763",
+        "synthesis_98484f9b7a0e6394"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.650119,
+      "selected_count_after": 29
+    },
+    {
+      "decision": 11,
+      "winning_candidate_id": "synthesis_bee80ae645394990",
+      "bundle_added": [
+        "relationship_957188921f7e84ba",
+        "synthesis_bee80ae645394990"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.655568,
+      "selected_count_after": 31
+    },
+    {
+      "decision": 12,
+      "winning_candidate_id": "synthesis_c185b740c926794f",
+      "bundle_added": [
+        "relationship_c54fc6148c6bab37",
+        "synthesis_c185b740c926794f"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.646732,
+      "selected_count_after": 33
+    },
+    {
+      "decision": 13,
+      "winning_candidate_id": "synthesis_35efbb0070eb68fc",
+      "bundle_added": [
+        "relationship_633bff8041349a14",
+        "synthesis_35efbb0070eb68fc"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.645658,
+      "selected_count_after": 35
+    },
+    {
+      "decision": 14,
+      "winning_candidate_id": "synthesis_873a695dbd1a70b5",
+      "bundle_added": [
+        "synthesis_873a695dbd1a70b5"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.67891,
+      "selected_count_after": 36
+    },
+    {
+      "decision": 15,
+      "winning_candidate_id": "relationship_7d55305feb3af96a",
+      "bundle_added": [
+        "relationship_7d55305feb3af96a"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.630162,
+      "selected_count_after": 37
+    },
+    {
+      "decision": 16,
+      "winning_candidate_id": "synthesis_6397e52027ae7f85",
+      "bundle_added": [
+        "relationship_cf1dd8f75cd33a77",
+        "synthesis_6397e52027ae7f85"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.630015,
+      "selected_count_after": 39
+    },
+    {
+      "decision": 17,
+      "winning_candidate_id": "synthesis_d97913987ccbf648",
+      "bundle_added": [
+        "placement_1c796fe1f0db3dcc",
+        "relationship_3734a82f55646d37",
+        "synthesis_d97913987ccbf648"
+      ],
+      "bundle_cost": 3,
+      "marginal_utility": 0.629163,
+      "selected_count_after": 42
+    },
+    {
+      "decision": 18,
+      "winning_candidate_id": "synthesis_2efcc3c374206c29",
+      "bundle_added": [
+        "relationship_d02272528c2f3708",
+        "synthesis_2efcc3c374206c29"
+      ],
+      "bundle_cost": 2,
+      "marginal_utility": 0.635324,
+      "selected_count_after": 44
+    },
+    {
+      "decision": 19,
+      "winning_candidate_id": "synthesis_a0451dfb9d6b6143",
+      "bundle_added": [
+        "synthesis_a0451dfb9d6b6143"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.630472,
+      "selected_count_after": 45
+    },
+    {
+      "decision": 20,
+      "winning_candidate_id": "synthesis_8b5b7e9779b7cb5d",
+      "bundle_added": [
+        "synthesis_8b5b7e9779b7cb5d"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.622372,
+      "selected_count_after": 46
+    },
+    {
+      "decision": 21,
+      "winning_candidate_id": "relationship_ba0d3a3bbc73115b",
+      "bundle_added": [
+        "relationship_ba0d3a3bbc73115b"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.621988,
+      "selected_count_after": 47
+    },
+    {
+      "decision": 22,
+      "winning_candidate_id": "synthesis_8fee2a8a1b04da94",
+      "bundle_added": [
+        "synthesis_8fee2a8a1b04da94"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.618739,
+      "selected_count_after": 48
+    },
+    {
+      "decision": 23,
+      "winning_candidate_id": "synthesis_280e33897928aa55",
+      "bundle_added": [
+        "synthesis_280e33897928aa55"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.617987,
+      "selected_count_after": 49
+    },
+    {
+      "decision": 24,
+      "winning_candidate_id": "synthesis_0e2890c90bad8bd7",
+      "bundle_added": [
+        "synthesis_0e2890c90bad8bd7"
+      ],
+      "bundle_cost": 1,
+      "marginal_utility": 0.616753,
+      "selected_count_after": 50
+    }
+  ],
+  "selected_ids": [
+    "placement_2cd8d9c528a3b907",
+    "relationship_f9e1abc982cc18e7",
+    "relationship_b48b4f13a7246f6f",
+    "relationship_69721f3448127380",
+    "placement_fff70f55ee2c4e03",
+    "placement_dc164328846fb8ac",
+    "synthesis_d97913987ccbf648",
+    "relationship_841480d5cfb20ed8",
+    "placement_3140a08b036e3427",
+    "synthesis_2efcc3c374206c29",
+    "synthesis_35efbb0070eb68fc",
+    "synthesis_d351f00df22fcd2d",
+    "synthesis_bee80ae645394990",
+    "synthesis_873a695dbd1a70b5",
+    "synthesis_98484f9b7a0e6394",
+    "synthesis_c185b740c926794f",
+    "relationship_b3e70bbfe1f0a007",
+    "relationship_bca803fca9e65d9c",
+    "relationship_8ee4327f0fe346a3",
+    "placement_e1eea7e6ab19d40a",
+    "relationship_9ce8bb1ace8836da",
+    "relationship_08b96edeb0fa98fe",
+    "relationship_957188921f7e84ba",
+    "relationship_620cff15d4fd07e2",
+    "synthesis_6397e52027ae7f85",
+    "relationship_2cd64e1ae0d05763",
+    "synthesis_a0451dfb9d6b6143",
+    "placement_9bb77a9481dcd811",
+    "relationship_7d55305feb3af96a",
+    "relationship_c54fc6148c6bab37",
+    "placement_a6fa68acce77e893",
+    "placement_c0e36c7de94fae94",
+    "placement_4e222a95196f3c94",
+    "placement_b3a9d32a3aa0a321",
+    "synthesis_8b5b7e9779b7cb5d",
+    "relationship_ba0d3a3bbc73115b",
+    "synthesis_8fee2a8a1b04da94",
+    "synthesis_280e33897928aa55",
+    "relationship_633bff8041349a14",
+    "synthesis_0e2890c90bad8bd7",
+    "relationship_cf1dd8f75cd33a77",
+    "placement_a7e3da63bfe6bc8a",
+    "placement_266252bd4c92f745",
+    "placement_4bf918541cde26c7",
+    "placement_c680024104669bad",
+    "relationship_d02272528c2f3708",
+    "placement_5e782c78da816ec3",
+    "relationship_3734a82f55646d37",
+    "placement_1c796fe1f0db3dcc",
+    "placement_b934bf06d6e2bca8"
+  ],
+  "rejected": [
+    {
+      "candidate_id": "synthesis_variant_9e6fddabc77d28ec",
+      "score": 0.794572,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_d97913987ccbf648"
+    },
+    {
+      "candidate_id": "synthesis_variant_ca9ac276de32ff6b",
+      "score": 0.787532,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_98484f9b7a0e6394"
+    },
+    {
+      "candidate_id": "synthesis_variant_9e376c25cb4488fd",
+      "score": 0.773625,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_a0451dfb9d6b6143"
+    },
+    {
+      "candidate_id": "synthesis_variant_a033629ad8de69bf",
+      "score": 0.753476,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_c185b740c926794f"
+    },
+    {
+      "candidate_id": "synthesis_variant_b84474e1f59ac81d",
+      "score": 0.749921,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_ea9c7fb7ea8d6010"
+    },
+    {
+      "candidate_id": "synthesis_variant_0276ead3f4bc5de8",
+      "score": 0.747269,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_35efbb0070eb68fc"
+    },
+    {
+      "candidate_id": "synthesis_variant_6178a3867b347d7e",
+      "score": 0.746213,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_0e2890c90bad8bd7"
+    },
+    {
+      "candidate_id": "synthesis_variant_4ea3f866b628f72f",
+      "score": 0.740506,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_6397e52027ae7f85"
+    },
+    {
+      "candidate_id": "synthesis_variant_e6778b1711a89daa",
+      "score": 0.735236,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_8fee2a8a1b04da94"
+    },
+    {
+      "candidate_id": "synthesis_variant_b3e4cc6b5f75bff0",
+      "score": 0.734277,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_d351f00df22fcd2d"
+    },
+    {
+      "candidate_id": "synthesis_variant_e0cb3a7ee0976479",
+      "score": 0.724733,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_873a695dbd1a70b5"
+    },
+    {
+      "candidate_id": "synthesis_variant_feb2be7e804abb70",
+      "score": 0.722917,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_7cea055510bd2595"
+    },
+    {
+      "candidate_id": "synthesis_variant_d38acbcf8b207b01",
+      "score": 0.721797,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_1fefc00556465a17"
+    },
+    {
+      "candidate_id": "synthesis_variant_df90bf1239f76491",
+      "score": 0.702604,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_2efcc3c374206c29"
+    },
+    {
+      "candidate_id": "synthesis_variant_0bfe4e6bfcfac1bf",
+      "score": 0.696723,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_bee80ae645394990"
+    },
+    {
+      "candidate_id": "synthesis_variant_b4a736c5b30fe9e3",
+      "score": 0.683745,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_280e33897928aa55"
+    },
+    {
+      "candidate_id": "synthesis_variant_c409374651c94bde",
+      "score": 0.66362,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_8b5b7e9779b7cb5d"
+    },
+    {
+      "candidate_id": "synthesis_variant_ea380083e78db3e2",
+      "score": 0.662359,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_76c874a8541b1055"
+    },
+    {
+      "candidate_id": "synthesis_a75f91cf4d63b310",
+      "score": 0.659741,
+      "reason": "Not selected within budget; closure would additionally require 2 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_2c4a2e504585c9b3",
+      "score": 0.656749,
+      "reason": "Not selected within budget; closure would additionally require 2 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_variant_c3ce9e028eaff78f",
+      "score": 0.645854,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_97fcff14c56f3ba8"
+    },
+    {
+      "candidate_id": "synthesis_variant_e73532de254db736",
+      "score": 0.643879,
+      "reason": "Preserved maximal-support synthesis variant; not eligible for the closed 50-claim authoring portfolio.",
+      "variant_of": "synthesis_f321eeed364fc045"
+    },
+    {
+      "candidate_id": "synthesis_169202430e17e57a",
+      "score": 0.642227,
+      "reason": "Not selected within budget; closure would additionally require 3 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_ea9c7fb7ea8d6010",
+      "score": 0.612099,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_7cea055510bd2595",
+      "score": 0.611483,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_44aeaa87a6abfcd3",
+      "score": 0.606357,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_1fefc00556465a17",
+      "score": 0.603343,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_97fcff14c56f3ba8",
+      "score": 0.602505,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_def08524230171ca",
+      "score": 0.601623,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_033d0f3b66d119a4",
+      "score": 0.596237,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_75e537e9f6d5c6ed",
+      "score": 0.593697,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_2492f633bb757509",
+      "score": 0.592276,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_9805442616eac159",
+      "score": 0.590491,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_f3a2ba8a7fc2fd1c",
+      "score": 0.590264,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_6ca4d50d7304c46f",
+      "score": 0.588837,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_76c874a8541b1055",
+      "score": 0.586076,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_f321eeed364fc045",
+      "score": 0.586076,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_cefaa2a9f4bf5307",
+      "score": 0.585705,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_8a05528ab4f63732",
+      "score": 0.583,
+      "reason": "Not selected within budget; closure would additionally require 1 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_4f7959104a4077b7",
+      "score": 0.582795,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_db9b3b1a56539f94",
+      "score": 0.582492,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_b6a171551da1fbcf",
+      "score": 0.577335,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_fecc6031f1c58a7d",
+      "score": 0.569171,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_9b50c0fb8d251495",
+      "score": 0.563737,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_5a3b17624660c1d0",
+      "score": 0.5507,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_916f26dfd12db946",
+      "score": 0.545672,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_70cf8b6b5ac964b9",
+      "score": 0.54044,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_a4038894250ae339",
+      "score": 0.54044,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_04dfd80abcf8c846",
+      "score": 0.538534,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "synthesis_63a20eb67f49d273",
+      "score": 0.53742,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "synthesis_4cfff43f0d8a7cd1",
+      "score": 0.535227,
+      "reason": "Not selected within budget; closure would additionally require 0 unselected premise(s)."
+    },
+    {
+      "candidate_id": "relationship_c73cb9b51a97d440",
+      "score": 0.533088,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_df300bef3bdbded8",
+      "score": 0.528312,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_c8a67f144b81df19",
+      "score": 0.498799,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_a53919483a340e1c",
+      "score": 0.484732,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    },
+    {
+      "candidate_id": "relationship_d0da9b6718a217e2",
+      "score": 0.470062,
+      "reason": "Lower marginal portfolio utility at the 50-claim budget."
+    }
+  ]
+}
