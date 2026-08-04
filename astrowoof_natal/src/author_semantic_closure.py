@@ -3552,6 +3552,7 @@ def sparse_polish_output_schema(target_paths: list[str]) -> dict[str, Any]:
 
 QUALITATIVE_DIMENSIONS = (
     "summary_thesis_overlap",
+    "conceptual_card_overlap",
     "repeated_comic_mechanism",
     "repeated_rhetorical_posture",
     "exchangeable_headline",
@@ -4221,7 +4222,10 @@ def run_qualitative_review(
                 "Distinguish lexical difference from conceptual difference. "
                 "Exact paths must come from the supplied reader-facing field "
                 "map. Prefer a small number of concrete, comparative findings "
-                "over generic advice. Classify missing conception as "
+                "over generic advice. Report the root editorial cause rather "
+                "than separately counting its obvious headline, body, or joke "
+                "symptoms unless those symptoms require materially different "
+                "repair decisions. Classify missing conception as "
                 "upstream_reconception rather than pretending it is safely "
                 "editable."
             )

@@ -706,6 +706,11 @@ class TestSemanticClosure(SemanticClosureFixture):
             3,
             schema["properties"]["findings"]["maxItems"],
         )
+        self.assertIn(
+            "conceptual_card_overlap",
+            schema["properties"]["findings"]["items"]["properties"]
+            ["quality_dimension"]["enum"],
+        )
         transport = qualitative_critic_transport(self.packet)
         self.assertIn("reader_facing_fields", transport)
         self.assertIn("semantic_evidence", transport["card_descriptors"][0])

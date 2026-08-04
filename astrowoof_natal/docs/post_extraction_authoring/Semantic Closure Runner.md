@@ -338,6 +338,8 @@ and compact semantic evidence. It returns no replacement prose. Its strict
 findings identify exact target and comparison paths, quality dimension, scope,
 priority, confidence, repairability, diagnosis, rewrite objective, and required
 context. The runner rejects invented paths and duplicate targets after decoding.
+Critic guidance prefers a root editorial cause over separately counting its
+obvious headline, body, or joke symptoms unless their repair paths differ.
 
 The default cap is eight findings. Only high- or medium-priority findings with
 confidence of at least `0.70` and `local_repair` classification may proceed.

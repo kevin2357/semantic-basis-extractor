@@ -51,11 +51,12 @@ configured number of findings. Each finding contains:
 
 It contains no proposed prose. Empty findings are explicitly valid.
 
-The first dimensions are summary-thesis overlap, repeated comic mechanism,
-repeated rhetorical posture, exchangeable headline, over-explained body,
-incomplete compound semantics, insufficient audience distinction, insufficient
-astrology-density progression, and a narrow other-editorial-quality escape
-hatch.
+The first dimensions are summary-thesis overlap, conceptual card overlap,
+repeated comic mechanism, repeated rhetorical posture, exchangeable headline,
+over-explained body, incomplete compound semantics, insufficient audience
+distinction, insufficient astrology-density progression, and a narrow
+other-editorial-quality escape hatch. Critic guidance prefers root causes over
+separate symptom findings unless their repair decisions materially differ.
 
 ## Deterministic critic validation and selection
 

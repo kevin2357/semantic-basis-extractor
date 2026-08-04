@@ -725,3 +725,9 @@ smaller but defensible removal of generic synthesis explanation while retaining
 both conjunctions and the memorable practical loop. The call did not prove
 omission behavior, but neither edit was indiscriminate compression. Combined
 critic and editor cost was an estimated $0.113739.
+
+Applied the two narrow critic refinements exposed by the live review. The
+structured vocabulary now includes `conceptual_card_overlap`, and the critic is
+instructed to consolidate a root problem with its obvious headline, body, or
+joke symptoms unless those symptoms require materially different repair
+decisions. Selection caps and production mutation policy are unchanged.
