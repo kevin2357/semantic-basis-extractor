@@ -639,8 +639,10 @@ class TestBrePacket(unittest.TestCase):
                 story_template,
             )
             self.assertIn("plan.memorable_takeaway", story_template)
+            self.assertIn("plan.semantic_contributions", story_template)
             self.assertIn("plan.writing_form", story_template)
             self.assertIn("plan.comic_premise", story_template)
+            self.assertIn("plan.audience_postures", story_template)
             profile = workspace / "WRITE WHOLE DOG PROFILE.md"
             profile.write_text(
                 profile.read_text(encoding="utf-8").replace(

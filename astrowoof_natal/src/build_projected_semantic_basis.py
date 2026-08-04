@@ -1555,6 +1555,11 @@ def render_story_writing_template(
         _field_block("Center of Gravity", "plan.center_of_gravity"),
         "",
         _field_block(
+            "Semantic Contributions That Must Survive",
+            "plan.semantic_contributions",
+        ),
+        "",
+        _field_block(
             "Remembered Idea — What Should Remain an Hour Later?",
             "plan.memorable_takeaway",
         ),
@@ -1572,6 +1577,11 @@ def render_story_writing_template(
         _field_block(
             "Comic Premise — What Is Funny About This Trait?",
             "plan.comic_premise",
+        ),
+        "",
+        _field_block(
+            "Audience Postures — Handler, Dog, and Hybrid",
+            "plan.audience_postures",
         ),
         "",
         _field_block("Chosen Creative Approach", "plan.creative_approach"),

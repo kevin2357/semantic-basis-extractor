@@ -110,6 +110,21 @@ Do not draft until the answer is singular and memorable. Every sentence should
 support that remembered idea. If it could describe a neighboring card equally
 well, return to the plan and find the sharper thesis.
 
+## Preserve the full semantic mechanism
+
+Before drafting, list the contributions the finished story must retain. For a
+placement, this may include the function, projected mode, life domain, and the
+way those parts qualify one another. For an aspect or synthesis, include both
+sides, the relationship or operator joining them, and the behavioral result of
+their interaction.
+
+This is not a vocabulary checklist for reader-facing prose. It is a meaning
+checklist. The final story should sound natural, but it must not turn a
+compound mechanism into whichever single trait is easiest to describe. When a
+card is about two valid impulses competing, cooperating, amplifying, or
+learning coordination, preserve that relationship rather than writing two
+unconnected mini-definitions.
+
 ## Choose a writing form
 
 Different subjects invite different forms. A story might read like:
@@ -158,6 +173,13 @@ Hybrid is not always “the dog does X, the human does Y, together they do Z.”
 
 Audience determines the relationship to the reader. The claim determines the
 shape of the writing.
+
+Name a claim-specific posture for each audience before drafting. Handler might
+correct a likely misreading, offer a recognition tool, or coach a response.
+Direct-to-dog might reassure, dignify, encourage, celebrate, or gently
+challenge. Hybrid might reveal a ritual, negotiation, repair, feedback loop,
+or moment of mutual recognition. These are examples, not a rotation schedule.
+The three postures should illuminate different useful faces of one insight.
 
 ## Vary prose architecture deliberately
 
@@ -232,6 +254,29 @@ than from the claim.
 Pause. Return to the remembered idea and editorial plan. Ask what would
 genuinely surprise, delight, or clarify for the reader, then continue from
 that discovery.
+
+## Edit for useful density, not automatic shortness
+
+After drafting, ask what can disappear without weakening the remembered idea,
+observable behavior, practical value, emotional texture, or semantic
+mechanism. Remove sentences that perform work already completed. Keep the
+image, turn of thought, or extra sentence when it is still making the card more
+specific, memorable, or humane.
+
+Concision means that every sentence earns its place. It does not mean forcing
+every card toward the same length.
+
+## Repeat the dog, not the explanation
+
+The whole-dog profile should make the same dog recognizable across the deck.
+Recurring curiosity, reserve, devotion, intensity, silliness, or social style
+may naturally color many cards. That continuity is characterization.
+
+Repeatedly explaining the same lesson is different. If one card has already
+taught that the dog uses investigation to manage uncertainty, another card
+should not default to the same argument merely because investigation is part
+of the dog's character. Let the recurring trait shape a new, evidence-specific
+insight instead of becoming the deck's universal explanation.
 
 ## Audit repeated lessons, not only repeated words
 

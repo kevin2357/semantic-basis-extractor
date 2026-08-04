@@ -555,3 +555,30 @@ baseline, a 20.8% reduction. The shorter dog and hybrid renderings remained
 substantive, but length compression is recorded as an editorial observation,
 not assumed to be an unconditional improvement. Full analysis is in
 `results/PHASE 3 - Ella Compact-v2 Pass-1 Live Test.md`.
+
+## 2026-08-04 — Phase 3 upstream editorial-planning completion
+
+Audited the remaining Phase-3 candidate interventions against the current
+story workspace. Center of gravity, remembered idea, recognizable behavior,
+misunderstanding, grounded surprise, neighbor distinction, writing form,
+comic premise, and creative approach were already mandatory authoring-plan
+fields. The implementation therefore avoided duplicating those decisions or
+adding a broad new planning layer.
+
+Two material gaps became mandatory private fields. Every story now inventories
+the semantic contributions that must survive into prose, including both sides
+and the joining relationship for compound claims. It also chooses separate
+Handler, Direct-to-Dog, and Hybrid postures before drafting, so audience
+distinction begins as purpose rather than grammatical conversion.
+
+The brief and Guiding Lights now distinguish useful concision from automatic
+shortening and recurring characterization from recurring explanation. These
+remain post-draft editorial questions rather than additional form fields. This
+keeps author attention centered on conception while directly addressing the
+Phase-0 findings on flattened compound meaning, audience sameness, over-editing,
+and conceptual repetition.
+
+The focused 41-test SBE suite and complete 88-test suite pass. No reader-facing
+deck schema or assembly contract changed; the new plan values remain private
+authoring artifacts. The next scheduled stage is Phase 3.5 narrow
+production-polish hardening.

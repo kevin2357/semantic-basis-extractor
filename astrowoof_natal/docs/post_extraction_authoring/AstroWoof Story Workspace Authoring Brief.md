@@ -1,4 +1,4 @@
-# AstroWoof Story Workspace Authoring Brief v0.5.1
+# AstroWoof Story Workspace Authoring Brief v0.6.0
 
 ## The assignment
 
@@ -32,10 +32,14 @@ and narrative approach vary naturally.
 Before drafting a story, complete its Editorial Plan substantively:
 
 - identify the insight's center of gravity;
+- inventory every semantic contribution that must survive into prose, including
+  each participating function, mode, domain, relationship or operator, and the
+  interaction among them when the claim is compound;
 - picture behavior a handler could recognize;
 - locate the likely misunderstanding;
 - find a grounded surprise or useful reframing;
 - distinguish the insight from its named neighbors;
+- choose a distinct purpose or posture for Handler, Direct to Dog, and Hybrid;
 - choose the creative approach best suited to this particular material.
 
 Then write all nine renderings from that plan.
@@ -84,6 +88,11 @@ Hybrid reveals the reciprocal dog-human situation. Reciprocity may appear
 through a scene, ritual, misunderstanding, sequence, mutual adjustment, or
 relationship outcome.
 
+Choose each audience posture before drafting. A posture is the particular job
+that rendering will do for this claim—for example, helping a handler notice a
+misread signal, reassuring the dog, or revealing a shared repair ritual. It is
+not merely a grammatical conversion of the same paragraph.
+
 No astrology fully translates the insight into ordinary dog life.
 
 Light astrology names and interprets the one or two most useful actual
@@ -91,6 +100,17 @@ astrological sources.
 
 Full astrology explains relevant planets, angles, nodes, signs, Doghouses,
 aspects, geometry, and orb strength while remaining warm and readable.
+
+After drafting, ask what can be removed without losing the remembered idea,
+recognizable behavior, useful guidance, or any required semantic contribution.
+Cut duplicated labor, not texture that is still carrying meaning. A shorter
+card is not automatically a better card.
+
+Let the whole-dog profile recur as characterization, not as repeated
+explanation. The same dog may remain observant, theatrical, cautious, or
+socially inventive across the deck; neighboring cards should not repeatedly
+teach that trait in the same way when their own evidence supports a more
+specific lesson.
 
 ## Advice, humor, filters, and chapters
 
