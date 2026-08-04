@@ -146,6 +146,15 @@ the deck reaches assembly. As a defense for legacy workspaces, assembly removes
 only unregistered or duplicate labels, records every removal in the assembly
 report, and preserves all valid assignments in their original order.
 
+Context filters are constrained metadata rather than creative prose. The
+current implementation still retries the complete pass when this check fails.
+That behavior is safe but potentially wasteful: a live six-pass run sent four
+otherwise usable passes to the more expensive creative-retry route solely for
+invalid context-filter assignments. A future failure-aware recovery path should
+repair or narrowly regenerate only the affected metadata. Until that exists,
+cost reports must identify these retries separately from genuine prose-quality
+retries rather than treating their expense as inherent authoring cost.
+
 Before the opaque editorial checker runs, the runner verifies that every
 expected writable file and field is present and populated. Missing material is
 reported as `incomplete_delivery`, with the missing paths retained in the run
@@ -193,6 +202,11 @@ accounting reports attempts, tokens, and cost by model. A rejected inexpensive
 attempt therefore remains visible in expected-cost comparisons rather than
 being hidden by the successful escalation.
 
+Creative escalation should remain failure-aware. Malformed prose, incomplete
+semantic coverage, or editorial-independence failures may justify moving from
+Luna to Terra. Deterministically repairable metadata failures should not, once
+a bounded metadata-repair route exists.
+
 ## Optional Batch service level
 
 Use `--service-level batch` for asynchronous authoring that can tolerate the
@@ -224,6 +238,12 @@ same command with `--resume --batch-detach` to poll without holding a process
 open; omit `--batch-detach` on a later resume to wait through remaining rounds.
 `--batch-poll-interval-seconds` controls blocking-mode polling.
 
+Run-state checkpoints use atomic replacement. On Windows, replacement retries
+short-lived `PermissionError` locks caused by scanners or indexers; non-
+transient replacement failures still stop the run. Because uploaded input-file
+IDs and submitted Batch IDs are persisted between lifecycle transitions, resume
+can continue from the last durable state without resubmitting accepted work.
+
 Batch accounting applies the documented 50% service discount independently
 to each returned response. It records cached input only when OpenAI reports
 cached tokens; the runner does not assume that prompt-cache and Batch
@@ -239,6 +259,14 @@ isolated assembly directory, reconstructs `natal.<subject>.cards.json` from the
 locked SBE packet, runs structural validation, and runs the whole-deck
 editorial linter.
 
+Pass acceptance and delivery readiness are intentionally different contracts.
+Pass-local QA can verify completeness, vocabulary, and detectable reuse inside
+one assignment, but it cannot see rhetorical convergence created independently
+across six passes. Whole-deck QA is therefore mandatory for detecting repeated
+openings, repeated comic mechanisms, no-astro leakage, and other assembled-deck
+effects. A deck whose six passes are accepted may correctly stop at
+`FINAL_QA_REQUIRES_REVIEW`.
+
 Structural validation errors always stop direct delivery. When `--polish` is
 enabled, fixable editorial validation errors may enter the same bounded
 recovery loop as lint findings. Validator warnings remain advisory and are
@@ -251,6 +279,11 @@ reported but should not block packaging.
 The delivery ZIP contains the cards JSON, assembly report, structural
 validation report, and whole-deck lint report. Multi-subject runs assemble and
 validate each subject independently.
+
+For controlled development work, preserve the valid pre-polish deck as a
+first-class baseline. Derive mechanical and qualitative candidates from copies
+so upstream prevention, deterministic diagnosis, and downstream repair remain
+measurable rather than collapsing into one artifact.
 
 ## Optional whole-deck polish
 

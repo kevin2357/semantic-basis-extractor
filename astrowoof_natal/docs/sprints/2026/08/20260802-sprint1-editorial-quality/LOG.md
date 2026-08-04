@@ -745,3 +745,34 @@ full chart basis, and whole-dog profile remain. Other subjects continue to
 receive the Kevin reference in pass 6 only. A regression test covers the Kevin
 exclusion while the existing Bre split-workspace test preserves the
 cross-subject behavior.
+
+## 2026-08-04 — Phase 5 K6 upstream baseline
+
+Ran a fresh current-code Kevin baseline from SBE through six Batch authoring
+passes using `stratified-v1`, `compact-v2`, cost-optimized routing, the
+four-thesis summary plan, and no same-subject prose gold. Mechanical polish and
+qualitative review were intentionally disabled.
+
+The Luna round completed all six requests. Passes 1 and 6 passed immediately.
+Passes 2–5 were rejected solely for `invalid_context_filter`, affecting seven
+claims, and were routed into one Terra retry Batch. All four retries passed.
+The resulting deck passed structural validation and all six passes ended in
+`PASS_QA_ACCEPTED`.
+
+Whole-deck QA correctly stopped the run at `FINAL_QA_REQUIRES_REVIEW`:
+
+- `Kevin, you are` opens six no-astro direct-to-dog bodies;
+- `Kevin, you can` opens six no-astro direct-to-dog bodies;
+- the fine-print comic mechanism appears four times;
+- five validator advisories identify possible astrology language in no-astro
+  fields.
+
+The rounds used 425,608 input and 145,336 output tokens, 570,944 total, at an
+estimated Batch-discounted cost of $1.12486975. No cached input was reported.
+The four full Terra retries make this an upper-bound cost for the configuration,
+not a clean estimate of prose-generation cost.
+
+General conclusions and deferred work are recorded in
+`results/PHASE 5 - Kevin K6 Upstream Baseline.md` and the editorial-quality
+backlog. K6 remains immutable; K7 will derive bounded mechanical repairs from a
+copy, and K8 will add qualitative diagnosis/candidate work separately.
