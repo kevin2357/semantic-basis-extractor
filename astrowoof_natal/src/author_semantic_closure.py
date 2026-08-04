@@ -31,6 +31,7 @@ from typing import Any, Protocol
 
 from assemble_authoring_workspace import assemble
 from lint_astrowoof_editorial import reader_facing_items
+from lint_authoring_pass import CONTEXT_FILTER_VOCABULARY
 
 
 SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.6"
@@ -736,6 +737,51 @@ def apply_authored_fields(
                 f"{relative_path}: source markers changed during reconstruction"
             )
         target.write_text(rendered, encoding="utf-8")
+
+
+def repair_workspace_context_filters(workspace: Path) -> list[dict[str, Any]]:
+    """Remove unregistered card-filter labels without touching authored prose."""
+    repairs: list[dict[str, Any]] = []
+    cards_root = workspace / "cards"
+    if not cards_root.is_dir():
+        return repairs
+    for story_dir in sorted(path for path in cards_root.iterdir() if path.is_dir()):
+        target = story_dir / "WRITE THIS CARD.md"
+        if not target.is_file():
+            continue
+        text = target.read_text(encoding="utf-8")
+        claim_id = story_dir.name.split(" -- ", 1)[-1]
+
+        def replace(match: re.Match[str]) -> str:
+            field = match.group(2)
+            allowed = CONTEXT_FILTER_VOCABULARY.get(field)
+            if allowed is None:
+                return match.group(0)
+            retained: list[str] = []
+            removed: list[str] = []
+            for line in match.group(3).splitlines():
+                value = re.sub(r"^\s*[-*]\s+", "", line).strip()
+                if not value:
+                    continue
+                if value in allowed and value not in retained:
+                    retained.append(value)
+                else:
+                    removed.append(value)
+            if not removed:
+                return match.group(0)
+            repairs.append({
+                "claim_id": claim_id,
+                "field": field,
+                "removed": removed,
+                "retained": retained,
+            })
+            rendered = "\n".join(f"- {value}" for value in retained)
+            return f"{match.group(1)}{rendered}{match.group(4)}"
+
+        rendered = FIELD_PATTERN.sub(replace, text)
+        if rendered != text:
+            target.write_text(rendered, encoding="utf-8")
+    return repairs
 
 
 def require_complete_authored_workspace(
@@ -2288,6 +2334,10 @@ def author_one_pass(
                 record["state"] = "RESPONSE_RECEIVED"
                 save_state(run_json, state)
 
+            metadata_repairs = repair_workspace_context_filters(result.workspace)
+            with state_lock:
+                attempt["metadata_repairs"] = metadata_repairs
+                save_state(run_json, state)
             report_path = attempt_root / "authoring-pass-acceptance.json"
             accepted, qa = run_pass_acceptance(
                 result.workspace,
@@ -2735,6 +2785,9 @@ def author_pending_passes_batch(
                 )
                 require_complete_authored_workspace(
                     source_workspace, response_workspace
+                )
+                attempt["metadata_repairs"] = repair_workspace_context_filters(
+                    response_workspace
                 )
                 accepted, qa = run_pass_acceptance(
                     response_workspace,

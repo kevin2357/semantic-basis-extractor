@@ -140,20 +140,19 @@ It does not continue the rejected model conversation or expose private checker
 thresholds.
 
 Pass acceptance also verifies that authored high-level and detail-level
-context filters belong to the deck's fixed vocabulary. Invalid labels produce
-the opaque `invalid_context_filter` issue code and a fresh pass retry before
-the deck reaches assembly. As a defense for legacy workspaces, assembly removes
-only unregistered or duplicate labels, records every removal in the assembly
-report, and preserves all valid assignments in their original order.
+context filters belong to the deck's fixed vocabulary. Before the opaque gate
+runs, the orchestrator removes only unregistered or duplicate labels, records
+each repair in the attempt ledger under `metadata_repairs`, and preserves valid
+assignments in their original order. It then checks the repaired workspace
+without buying another creative response. The same recovery runs for ordinary
+Responses requests and Batch API results.
 
 Context filters are constrained metadata rather than creative prose. The
-current implementation still retries the complete pass when this check fails.
-That behavior is safe but potentially wasteful: a live six-pass run sent four
-otherwise usable passes to the more expensive creative-retry route solely for
-invalid context-filter assignments. A future failure-aware recovery path should
-repair or narrowly regenerate only the affected metadata. Until that exists,
-cost reports must identify these retries separately from genuine prose-quality
-retries rather than treating their expense as inherent authoring cost.
+bounded repair therefore never changes card prose, invents replacement labels,
+or hides a remaining acceptance failure. If a workspace still fails after the
+repair, the normal opaque issue and creative-retry route remain authoritative.
+As a second defense for legacy workspaces, assembly applies the same vocabulary
+sanitization and records any removals in the assembly report.
 
 Before the opaque editorial checker runs, the runner verifies that every
 expected writable file and field is present and populated. Missing material is

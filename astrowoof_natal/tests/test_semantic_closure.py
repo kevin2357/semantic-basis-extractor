@@ -52,6 +52,7 @@ from author_semantic_closure import (  # noqa: E402
     prompt_cache_manifest,
     qualitative_critic_output_schema,
     qualitative_critic_transport,
+    repair_workspace_context_filters,
     resume_run,
     run_qualitative_review,
     run_sbe,
@@ -485,6 +486,45 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertEqual(
                 card_path.parent.name.split(" -- ", 1)[1], invalid[0]
             )
+
+    def test_workspace_context_filter_repair_preserves_registered_labels(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre_1"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                1,
+                card_start=1,
+                pass_number=1,
+                pass_count=6,
+            )
+            fill_fake_workspace(workspace)
+            card_path = next(workspace.rglob("WRITE THIS CARD.md"))
+            original = card_path.read_text(encoding="utf-8")
+            changed = original.replace(
+                "<!-- BEGIN FIELD: context_filter_groups.high_level -->\nPersonality",
+                "<!-- BEGIN FIELD: context_filter_groups.high_level -->\n"
+                "- Emotions & Inner World\n- Trust\n- Trust\n- Personality",
+            )
+            card_path.write_text(changed, encoding="utf-8")
+
+            repairs = repair_workspace_context_filters(workspace)
+
+            self.assertEqual([], invalid_context_filter_claim_ids(workspace))
+            self.assertEqual(1, len(repairs))
+            self.assertEqual(
+                ["Emotions & Inner World", "Trust"], repairs[0]["removed"]
+            )
+            self.assertEqual(
+                ["Trust", "Personality"], repairs[0]["retained"]
+            )
+            repaired = card_path.read_text(encoding="utf-8")
+            self.assertIn("- Trust\n- Personality", repaired)
+            self.assertNotIn("Emotions & Inner World\n- Trust", repaired)
+            original_body = FIELD_PATTERN.search(original).group(3)
+            repaired_body = FIELD_PATTERN.search(repaired).group(3)
+            self.assertEqual(original_body, repaired_body)
 
     def test_context_filter_sanitizer_removes_only_invalid_labels(self) -> None:
         deck = deepcopy(self.packet)
