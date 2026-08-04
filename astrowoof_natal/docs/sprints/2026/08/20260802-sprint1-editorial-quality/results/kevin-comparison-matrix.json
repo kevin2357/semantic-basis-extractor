@@ -1,0 +1,346 @@
+{
+  "schema_version": "astrowoof.kevin_comparison_matrix.v0.1",
+  "variants": {
+    "K0": {
+      "label": "manual six-pass final",
+      "status": "available",
+      "confound": "manual pre-automation process",
+      "metrics": {
+        "path": "astrowoof_natal/qa/reference_decks/kevin/20260730-six-pass-final/natal.kevin.cards.json",
+        "sha256": "aa211a41ee2415b3992c1b03d3fd6845bdd202f44bf1ae44e3fac6d08bd236bc",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 61.82,
+          "median": 51.5,
+          "p10": 32.0,
+          "p90": 113.0,
+          "minimum": 21,
+          "maximum": 177
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 93.53,
+          "median": 88.0,
+          "p10": 61.0,
+          "p90": 138.5,
+          "minimum": 53,
+          "maximum": 156
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [
+          {
+            "field": "light_astro.body.hybrid",
+            "opening": "kevin and his",
+            "count": 7
+          },
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "you do not",
+            "count": 7
+          }
+        ],
+        "lint_warning_count": 5,
+        "lint_warning_codes": {
+          "repeated_opening": 2,
+          "failure_signature": 3
+        }
+      }
+    },
+    "K1": {
+      "label": "original automated pre-sprint baseline",
+      "status": "available",
+      "confound": "historical prompts, contiguous assignment, and earlier pipeline",
+      "metrics": {
+        "path": "astrowoof_natal/qa/reference_decks/kevin/20260801-automated-live-base/natal.kevin.cards.json",
+        "sha256": "b5385b397dd42eebf609bbc63231a5d6e75cb219b61a898fc79bdb5d0d488112",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 60.88,
+          "median": 56.0,
+          "p10": 47.0,
+          "p90": 82.0,
+          "minimum": 36,
+          "maximum": 124
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 73.69,
+          "median": 70.5,
+          "p10": 55.0,
+          "p90": 101.5,
+          "minimum": 53,
+          "maximum": 117
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you do",
+            "count": 9
+          },
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you are",
+            "count": 6
+          }
+        ],
+        "lint_warning_count": 2,
+        "lint_warning_codes": {
+          "repeated_opening": 2
+        }
+      }
+    },
+    "K2": {
+      "label": "Phase-0 context-naive targeted polish round 2",
+      "status": "available",
+      "confound": "research polish prompt, not production pipeline",
+      "metrics": {
+        "path": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/round-002/response/natal.kevin.cards.phase0-round002.json",
+        "sha256": "33d3cf4104c8f3be50d69650b75862bf2317ef199dd1bba20cc06bdbeeb82854",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 60.76,
+          "median": 57.0,
+          "p10": 47.0,
+          "p90": 81.1,
+          "minimum": 36,
+          "maximum": 124
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 73.69,
+          "median": 70.5,
+          "p10": 55.0,
+          "p90": 101.5,
+          "minimum": 53,
+          "maximum": 117
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [],
+        "lint_warning_count": 0,
+        "lint_warning_codes": {}
+      }
+    },
+    "K3": {
+      "label": "historical same-subject summary-gold isolation",
+      "status": "available_failure_evidence",
+      "confound": "known same-subject prose leakage; never a production candidate",
+      "metrics": {
+        "path": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/phase-001-live-kevin/natal.kevin.phase1-isolation.cards.json",
+        "sha256": "6348ae892a22933ae1d54c0f07c59847dae699dec5a9f281373d1cf4d0104cd2",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 60.88,
+          "median": 56.0,
+          "p10": 47.0,
+          "p90": 82.0,
+          "minimum": 36,
+          "maximum": 124
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 90.11,
+          "median": 85.5,
+          "p10": 72.0,
+          "p90": 122.0,
+          "minimum": 61,
+          "maximum": 138
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you do",
+            "count": 9
+          },
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you are",
+            "count": 6
+          }
+        ],
+        "lint_warning_count": 2,
+        "lint_warning_codes": {
+          "repeated_opening": 2
+        }
+      }
+    },
+    "K4": {
+      "label": "K3 mechanical derivative",
+      "status": "not_run",
+      "reason": "K3 was retired as contaminated evidence before this derivative was useful"
+    },
+    "K5": {
+      "label": "K3 qualitative derivative",
+      "status": "not_run",
+      "reason": "K3 was retired as contaminated evidence before this derivative was useful"
+    },
+    "K6": {
+      "label": "fresh current upstream baseline",
+      "status": "available",
+      "confound": null,
+      "metrics": {
+        "path": "astrowoof_natal/docs/sprints/2026/08/20260802-sprint1-editorial-quality/work/phase-005-controlled-kevin/k6-upstream/final/kevin/natal.kevin.cards.json",
+        "sha256": "faf95bbf72ef7ceda10bfc942d62e374532e8f61fc758cb6170f96b685b04a95",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 53.46,
+          "median": 51.0,
+          "p10": 41.0,
+          "p90": 69.1,
+          "minimum": 34,
+          "maximum": 103
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 130.64,
+          "median": 115.0,
+          "p10": 94.0,
+          "p90": 181.5,
+          "minimum": 88,
+          "maximum": 204
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you are",
+            "count": 6
+          },
+          {
+            "field": "no_astro.body.direct_to_dog",
+            "opening": "kevin you can",
+            "count": 6
+          }
+        ],
+        "lint_warning_count": 3,
+        "lint_warning_codes": {
+          "repeated_opening": 2,
+          "repeated_failure_signature": 1
+        }
+      }
+    },
+    "K7": {
+      "label": "K6 plus bounded mechanical polish",
+      "status": "available",
+      "confound": null,
+      "metrics": {
+        "path": "astrowoof_natal/qa/reference_decks/kevin/20260804-k7-mechanical/natal.kevin.cards.json",
+        "sha256": "6b90acb393459dcab37fcea6d8e7cf1366ea731c04aa8afb40d647a0540f8a77",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 53.46,
+          "median": 51.0,
+          "p10": 41.0,
+          "p90": 69.1,
+          "minimum": 34,
+          "maximum": 103
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 130.64,
+          "median": 115.0,
+          "p10": 94.0,
+          "p90": 181.5,
+          "minimum": 88,
+          "maximum": 204
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [],
+        "lint_warning_count": 0,
+        "lint_warning_codes": {}
+      }
+    },
+    "K8": {
+      "label": "K7 plus qualitative candidate edits",
+      "status": "available_candidate",
+      "confound": "human review required; not promoted over K7",
+      "metrics": {
+        "path": "astrowoof_natal/qa/reference_decks/kevin/20260804-k8-qualitative-candidate/natal.kevin.cards.json",
+        "sha256": "2e2abc024b086174cebdf35fc7f9cc8f4f39e06931b5471d4914047a3d9eb8cc",
+        "card_count": 50,
+        "summary_count": 4,
+        "reader_facing_field_count": 1458,
+        "card_body_words": {
+          "count": 450,
+          "mean": 53.35,
+          "median": 51.0,
+          "p10": 41.0,
+          "p90": 69.0,
+          "minimum": 34,
+          "maximum": 103
+        },
+        "summary_body_words": {
+          "count": 36,
+          "mean": 130.64,
+          "median": 115.0,
+          "p10": 94.0,
+          "p90": 181.5,
+          "minimum": 88,
+          "maximum": 204
+        },
+        "humor_field_count": 150,
+        "unique_humor_count": 150,
+        "dominant_openings": [],
+        "lint_warning_count": 0,
+        "lint_warning_codes": {}
+      }
+    }
+  },
+  "controlled_deltas": {
+    "K6_to_K7": {
+      "before": "K6",
+      "after": "K7",
+      "changed_reader_field_count": 4,
+      "changed_reader_fields": [
+        "card:placement_2de9d192f7bc9a4c:no_astro.headline.handler",
+        "card:relationship_0fb623f7bece88e2:no_astro.body.direct_to_dog",
+        "card:relationship_9c454989bd05aa64:no_astro.headline.handler",
+        "card:synthesis_5c82513dbc5fdfa7:no_astro.body.direct_to_dog"
+      ]
+    },
+    "K7_to_K8": {
+      "before": "K7",
+      "after": "K8",
+      "changed_reader_field_count": 7,
+      "changed_reader_fields": [
+        "card:placement_85df75689829f069:funny_dog_quotes[0]",
+        "card:relationship_6b3de5e16913e82a:funny_dog_quotes[0]",
+        "card:relationship_6b3de5e16913e82a:no_astro.body.handler",
+        "card:relationship_bd235e06b11e29af:funny_dog_quotes[0]",
+        "card:relationship_bd235e06b11e29af:no_astro.body.handler",
+        "card:synthesis_4883de73692b5b8c:no_astro.body.handler",
+        "card:synthesis_5c82513dbc5fdfa7:funny_dog_quotes[0]"
+      ]
+    }
+  },
+  "interpretation_notes": [
+    "Deterministic metrics do not establish literary quality.",
+    "K3 is failure evidence, not a candidate.",
+    "K7 is the current production comparison baseline; K8 remains a candidate."
+  ]
+}

@@ -819,3 +819,24 @@ human comparison.
 K8 is preserved under
 `qa/reference_decks/kevin/20260804-k8-qualitative-candidate`. Full analysis is
 in `results/PHASE 5 - Kevin K8 Qualitative Review.md`.
+
+## 2026-08-04 — Controlled Kevin matrix synthesis
+
+Generated deterministic K0–K8 metrics and completed the matched editorial
+review. All available variants use the same fifty claim IDs. K4/K5 remain
+intentionally absent because their K3 parent was disqualified by same-subject
+gold leakage.
+
+K7 is the strongest current production baseline. K8 provides valuable critic
+diagnosis and a useful research candidate but is not promoted over K7. K0
+retains the strongest summary architecture and creative peaks; K2 is the best
+concise summary set. Current K7/K8 summaries are materially longer and less
+thesis-separated than either reference.
+
+The matrix supports default stratified assignment, cross-subject-only summary
+gold, default bounded mechanical repair for blocking lint, sampled/nonblocking
+qualitative criticism, no automatic qualitative candidate promotion, and
+failure-aware metadata recovery as a priority.
+
+Full findings are in `results/kevin-comparison-report.md`; deterministic metrics
+are in `results/kevin-comparison-matrix.json`.
