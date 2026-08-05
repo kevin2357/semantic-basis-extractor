@@ -1,5 +1,10 @@
 # Editorial Quality Research and Improvement Backlog
 
+> **Authority:** This remains the SBE/Semantic Closure implementation research
+> backlog and detailed evidence source. Durable conclusions that guide the
+> wider product are summarized in
+> [`astrowoof-project` Authoring Quality Findings](https://github.com/kevin2357/astrowoof-project/blob/main/docs/research/Authoring%20Quality%20Findings.md).
+
 ## Purpose
 
 AstroWoof's deterministic authoring checks protect structure, evidence,

@@ -32,3 +32,13 @@ was made.
 Large generated decks, API responses, and temporary run directories should
 normally remain outside Git. Store small reports or artifact manifests in
 `results/` and link to external artifacts from the log.
+
+## Promotion to project authority
+
+Sprint documents are evidence and implementation history. When a sprint
+establishes a decision, product principle, shared contract, roadmap change, or
+operational policy affecting multiple AstroWoof repositories, promote that
+conclusion to
+[`astrowoof-project`](https://github.com/kevin2357/astrowoof-project).
+Keep the original sprint record intact and add an authority notice or link when
+readers might otherwise mistake it for the living cross-system source.

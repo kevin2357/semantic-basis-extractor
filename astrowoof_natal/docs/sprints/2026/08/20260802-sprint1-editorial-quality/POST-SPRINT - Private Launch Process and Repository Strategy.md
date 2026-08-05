@@ -1,5 +1,16 @@
 # Post-Sprint Private Launch Process and Repository Strategy
 
+> **Status: historical source and implementation snapshot (2026-08-02).**
+> This document preserves the SBE/authoring evidence that informed later
+> project decisions. Current cross-system release strategy, repository
+> ownership, runtime architecture, private-alpha direction, and operational
+> policy are maintained in
+> [`astrowoof-project`](https://github.com/kevin2357/astrowoof-project),
+> particularly its `docs/architecture/`, `docs/operations/`, `docs/roadmaps/`,
+> and `planning/` directories. SBE capability descriptions below remain useful
+> as a point-in-time record and should not be treated as the living product
+> roadmap.
+
 ## 1. Purpose
 
 The editorial-quality sprint ended with a live, complete Ella run and a

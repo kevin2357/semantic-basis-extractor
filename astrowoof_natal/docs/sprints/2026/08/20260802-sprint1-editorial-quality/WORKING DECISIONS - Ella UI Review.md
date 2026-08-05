@@ -1,16 +1,24 @@
 # Working Decisions — Ella UI Review
 
-**Status:** Living decision inventory  
+**Status:** Historical decision inventory; promoted project decisions now live in `astrowoof-project`
 **Started:** 2026-08-03  
 **Source:** Ella long-summary/short-summary UI comparison and follow-up design review  
 **Purpose:** Preserve every decision, principle, candidate direction, rejected
 assumption, and open question that may affect future editorial, data, pipeline,
 validation, or interface work.
 
-This document is intentionally broader than the current sprint plan. The sprint
-plan owns immediate implementation. This inventory owns the complete state of
-agreement so that no future decision depends on reconstructing conversation
-history.
+> This document remains the detailed evidence and decision-recovery record for
+> the Ella UI review. It is no longer the project-wide living authority.
+> Promoted product principles, UX findings, dynamic-chapter decisions, and open
+> questions are maintained in
+> [`astrowoof-project`](https://github.com/kevin2357/astrowoof-project).
+> SBE-specific implemented decisions remain authoritative in their dedicated
+> component contracts and tests.
+
+This document was intentionally broader than the sprint plan and captured the
+complete state of agreement at the time. It now serves as historical evidence
+so that the reasoning behind promoted decisions does not require reconstructing
+conversation history.
 
 ## Status vocabulary
 

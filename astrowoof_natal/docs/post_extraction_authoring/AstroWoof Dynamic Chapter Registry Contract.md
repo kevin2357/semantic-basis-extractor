@@ -1,5 +1,12 @@
 # AstroWoof Dynamic Chapter Registry Contract
 
+> **Authority:** This is the implementation-level producer contract for SBE and
+> Semantic Closure. The cross-system consumer summary is maintained in the
+> [`astrowoof-project` authored natal deck contract](https://github.com/kevin2357/astrowoof-project/blob/main/docs/contracts/Authored%20Natal%20Deck%20Contract.md).
+> Changes affecting API or frontend consumption must be reconciled with that
+> project contract; detailed generation and validation behavior remains owned
+> here.
+
 ## Scope
 
 This document defines the implemented dynamic chapter contract for AstroWoof
