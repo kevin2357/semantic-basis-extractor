@@ -1,0 +1,52 @@
+{
+  "schema_version": "astrowoof.natal_authoring.package_audit.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "import_package": "astrowoof_natal_authoring",
+  "release_version": "0.1.0",
+  "python": {
+    "proposed_requires_python": ">=3.11",
+    "currently_verified": ["3.12.13"],
+    "runtime_dependencies": []
+  },
+  "console_scripts": {
+    "astrowoof-semantic-closure": "astrowoof_natal_authoring.cli.closure:main",
+    "astrowoof-build-natal-basis": "astrowoof_natal_authoring.cli.extract:main"
+  },
+  "runtime_modules": [
+    "closure",
+    "extractor",
+    "assembly",
+    "validation",
+    "editorial_lint",
+    "pass_acceptance",
+    "registries"
+  ],
+  "resource_classes": {
+    "authoring_guidance": "explicit_allowlist",
+    "schemas": "explicit_allowlist",
+    "references": "bre_editorial_and_kevin_summary_sources_only",
+    "fixtures": "one_minimal_deterministic_projected_input",
+    "release_profile": "required"
+  },
+  "excluded_patterns": [
+    "docs/sprints/**",
+    "docs/**/orig/**",
+    "qa/reference_decks/** except copied release references",
+    "src/.tmp-*/**",
+    "src/**/semantic-basis-output/**",
+    "src/**/llm-handoff-bundle/**",
+    "**/.idea/**",
+    "**/__pycache__/**",
+    "**/*.log",
+    "OpenAI request and response evidence"
+  ],
+  "upstream_components": {
+    "agf": "not_bundled; provenance_harvested_from_inputs_when_available",
+    "spc": "not_bundled; four projected contexts are release inputs"
+  },
+  "compatibility": {
+    "legacy_source_scripts": "thin_wrappers_retained_in_v0.1",
+    "repository_default_examples": "not_part_of_installed_cli_contract",
+    "rigorous_and_compact_sbe_profiles": "preserved_in_v0.1"
+  }
+}
