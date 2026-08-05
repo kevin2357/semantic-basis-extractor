@@ -148,8 +148,9 @@ frame with only a projected term changed also counts as reuse.
   than twice as many claims as the smallest.
 - The two taxonomies are foundationally different and share no exact,
   reordered, synonymous, or cosmetically reworded chapter titles.
-- Every registry entry provides stable `id`, `title`, `short_title`, `emoji`,
-  and consecutive `order` values.
+- Every newly authored registry entry provides stable `id`, `title`,
+  `short_title`, `emoji`, one concise explanatory `subtitle`, and consecutive
+  `order` values.
 - Labels were discovered from this subject's claims rather than copied as a
   generic cross-subject taxonomy.
 - Balance did not override semantic coherence.

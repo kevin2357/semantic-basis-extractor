@@ -183,14 +183,18 @@ def theme_group_plan_issues(
                 "claim_ids": affected,
             })
             continue
-        required = {"id", "title", "short_title", "emoji", "order"}
+        required = {
+            "id", "title", "short_title", "emoji", "subtitle", "order"
+        }
         valid_registry = all(
             isinstance(item, dict)
             and set(item) == required
             and item.get("order") == index
             and all(
                 isinstance(item.get(field), str) and item[field].strip()
-                for field in ("id", "title", "short_title", "emoji")
+                for field in (
+                    "id", "title", "short_title", "emoji", "subtitle"
+                )
             )
             and re.fullmatch(r"[a-z][a-z0-9_]*", item["id"])
             for index, item in enumerate(registry, 1)

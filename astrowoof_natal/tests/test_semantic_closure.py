@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 import threading
@@ -1629,6 +1630,44 @@ class TestSemanticClosure(SemanticClosureFixture):
             affected, issue = invalid_theme_group_claim_ids(root)
             self.assertIsNone(issue)
             self.assertEqual([], affected)
+
+    def test_pass_six_rejects_missing_new_registry_subtitle(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build_story_workspace(
+                root,
+                self.packet,
+                ROOT,
+                0,
+                card_start=51,
+                include_summaries=True,
+                include_theme_plan=True,
+                pass_number=6,
+                pass_count=6,
+                assigned_cards=[],
+            )
+            fill_fake_workspace(root)
+            path = root / "ASSIGN THEME GROUPS.md"
+            text = path.read_text(encoding="utf-8")
+
+            def remove_subtitle(match: re.Match[str]) -> str:
+                registry = json.loads(match.group(2))
+                registry[0].pop("subtitle")
+                return match.group(1) + json.dumps(registry) + match.group(3)
+
+            text = re.sub(
+                r"(<!-- BEGIN FIELD: theme_group_registry\.interdogpendence -->\s*)"
+                r"(.*?)"
+                r"(\s*<!-- END FIELD: theme_group_registry\.interdogpendence -->)",
+                remove_subtitle,
+                text,
+                count=1,
+                flags=re.DOTALL,
+            )
+            path.write_text(text, encoding="utf-8")
+            affected, issue = invalid_theme_group_claim_ids(root)
+            self.assertEqual("theme_group_registry", issue)
+            self.assertTrue(affected)
 
     def test_completed_malformed_output_preserves_billable_metadata(
         self,

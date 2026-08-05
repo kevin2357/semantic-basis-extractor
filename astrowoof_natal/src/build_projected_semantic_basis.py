@@ -1696,8 +1696,11 @@ def render_theme_group_assignment(packet: dict[str, Any]) -> str:
         "Each registry is a JSON array. Every entry must contain exactly: `id` "
         "(stable lowercase snake_case within its section), `title` (full "
         "editorial title), `short_title` (best compact navigation label), "
-        "`emoji` (one relevant visual marker), and `order` (consecutive integer "
-        "starting at 1). Assign each story using one ID from its own registry.",
+        "`emoji` (one relevant visual marker), `subtitle` (one concise, warm "
+        "sentence explaining what this chapter helps the reader understand), "
+        "and `order` (consecutive integer starting at 1). The subtitle should "
+        "clarify the shared idea without repeating the title or naming the "
+        "underlying schema. Assign each story using one ID from its own registry.",
         "",
     ]
     for section, themed_cards in sections.items():

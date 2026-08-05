@@ -145,9 +145,11 @@ synonymous, or cosmetically reworded equivalents.
 
 Define each chapter once in its section's structured registry with a stable
 snake-case `id`, reader-facing `title`, concise `short_title`, relevant emoji,
-and display `order`. Assign cards by registry ID. The emoji is meaningful
-AstroWoof navigation language, not ornamental filler. Card passes without the
-assignment file leave chapter planning to the summary pass.
+one concise `subtitle`, and display `order`. The subtitle should warmly explain
+what the grouped cards help the reader understand without merely repeating the
+title. Assign cards by registry ID. The emoji is meaningful AstroWoof navigation
+language, not ornamental filler. Card passes without the assignment file leave
+chapter planning to the summary pass.
 
 ## Workspace care
 

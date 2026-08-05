@@ -236,16 +236,16 @@ def _fake_field_value(
         section = field.split(".")[1]
         titles = {
             "interdogpendence": [
-                ("bond_dynamics", "Bond Dynamics", "Bonds", "🔗"),
-                ("shared_rhythms", "Shared Rhythms", "Rhythms", "🐾"),
-                ("productive_tensions", "Productive Tensions", "Tensions", "⚡"),
-                ("mutual_adjustments", "Mutual Adjustments", "Adjustments", "🤝"),
+                ("bond_dynamics", "Bond Dynamics", "Bonds", "🔗", "How closeness, trust, and mutual attention shape the relationship."),
+                ("shared_rhythms", "Shared Rhythms", "Rhythms", "🐾", "How dog and handler find a workable pace together."),
+                ("productive_tensions", "Productive Tensions", "Tensions", "⚡", "Where friction can become useful information and growth."),
+                ("mutual_adjustments", "Mutual Adjustments", "Adjustments", "🤝", "How both sides adapt without losing what matters."),
             ],
             "takeaways": [
-                ("essential_character", "Essential Character", "Character", "✨"),
-                ("daily_wisdom", "Daily Wisdom", "Daily Life", "🏡"),
-                ("growth_lessons", "Growth Lessons", "Growth", "🌱"),
-                ("lasting_gifts", "Lasting Gifts", "Gifts", "🎁"),
+                ("essential_character", "Essential Character", "Character", "✨", "The qualities that make this dog unmistakably herself."),
+                ("daily_wisdom", "Daily Wisdom", "Daily Life", "🏡", "What everyday life reveals about her natural operating style."),
+                ("growth_lessons", "Growth Lessons", "Growth", "🌱", "Where practice and support can help potential unfold."),
+                ("lasting_gifts", "Lasting Gifts", "Gifts", "🎁", "The strengths she brings to the people and places she loves."),
             ],
         }
         return json.dumps([
@@ -254,6 +254,7 @@ def _fake_field_value(
                 "title": item[1],
                 "short_title": item[2],
                 "emoji": item[3],
+                "subtitle": item[4],
                 "order": index,
             }
             for index, item in enumerate(titles[section], start=1)
@@ -3094,7 +3095,11 @@ def editable_deck_fields(
     if include_theme_groups:
         for section, entries in deck.get("theme_group_registry", {}).items():
             for index, entry in enumerate(entries):
-                for name in ("id", "title", "short_title", "emoji"):
+                for name in (
+                    "id", "title", "short_title", "emoji", "subtitle"
+                ):
+                    if name not in entry:
+                        continue
                     fields[
                         f"theme_group_registry.{section}.{index}.{name}"
                     ] = entry[name]

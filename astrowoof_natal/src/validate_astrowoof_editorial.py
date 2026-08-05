@@ -67,6 +67,7 @@ def validate_theme_group_registry(
         )
         return ids_by_section, titles_by_section
     required = {"id", "title", "short_title", "emoji", "order"}
+    allowed = required | {"subtitle"}
     for section in ("interdogpendence", "takeaways"):
         entries = value.get(section)
         if not isinstance(entries, list) or not 3 <= len(entries) <= 5:
@@ -77,7 +78,11 @@ def validate_theme_group_registry(
         ids: list[str] = []
         titles: list[tuple[str, tuple[str, ...]]] = []
         for index, item in enumerate(entries, 1):
-            if not isinstance(item, dict) or set(item) != required:
+            if (
+                not isinstance(item, dict)
+                or not required <= set(item)
+                or not set(item) <= allowed
+            ):
                 errors.append(
                     f"{section} theme-group entry {index} has invalid fields."
                 )
@@ -91,6 +96,13 @@ def validate_theme_group_registry(
                     errors.append(
                         f"{section} theme-group entry {index} has invalid {field}."
                     )
+            if "subtitle" in item and not (
+                item["subtitle"] is None
+                or isinstance(item["subtitle"], str)
+            ):
+                errors.append(
+                    f"{section} theme-group entry {index} has invalid subtitle."
+                )
             if isinstance(item.get("id"), str):
                 if not re.fullmatch(r"[a-z][a-z0-9_]*", item["id"]):
                     errors.append(

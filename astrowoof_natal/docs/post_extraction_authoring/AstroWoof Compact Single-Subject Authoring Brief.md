@@ -134,8 +134,9 @@ and syntheses independently in their section-scoped registries. Each section
 requires three to five subject-specific chapters, at least two claims per
 chapter, and no more than a 2:1 largest-to-smallest size ratio. The two
 taxonomies must be foundationally different and may not reuse chapter titles.
-Do not add `theme_group_id` to
-placements.
+Each registry entry provides stable `id`, full `title`, compact `short_title`,
+relevant `emoji`, one concise explanatory `subtitle`, and consecutive `order`.
+Do not add `theme_group_id` to placements.
 
 ## Four Summary cards
 

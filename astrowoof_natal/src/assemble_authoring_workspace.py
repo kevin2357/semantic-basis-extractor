@@ -103,13 +103,18 @@ def parse_theme_registry(value: str, *, section: str, source: Path) -> list[dict
             f"{source}: {section} registry must contain three to five chapters"
         )
     required = {"id", "title", "short_title", "emoji", "order"}
+    allowed = required | {"subtitle"}
     ids: list[str] = []
     titles: list[str] = []
     for index, item in enumerate(registry, 1):
-        if not isinstance(item, dict) or set(item) != required:
+        if (
+            not isinstance(item, dict)
+            or not required <= set(item)
+            or not set(item) <= allowed
+        ):
             raise ValueError(
                 f"{source}: {section} registry entry {index} must contain "
-                f"exactly {sorted(required)}"
+                f"{sorted(required)} and may contain subtitle"
             )
         if item["order"] != index:
             raise ValueError(
@@ -121,6 +126,12 @@ def parse_theme_registry(value: str, *, section: str, source: Path) -> list[dict
                 raise ValueError(
                     f"{source}: {section} entry {index} has invalid {field}"
                 )
+        if "subtitle" in item and not (
+            item["subtitle"] is None or isinstance(item["subtitle"], str)
+        ):
+            raise ValueError(
+                f"{source}: {section} entry {index} has invalid subtitle"
+            )
         if not re.fullmatch(r"[a-z][a-z0-9_]*", item["id"]):
             raise ValueError(
                 f"{source}: {section} entry {index} has invalid snake_case id"

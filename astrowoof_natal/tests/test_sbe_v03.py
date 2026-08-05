@@ -111,16 +111,16 @@ def complete_packet(packet: dict) -> dict:
     edited["statistics"]["editorial_placeholders"] = 0
     registries = {
         "interdogpendence": [
-            {"id": "bond_dynamics", "title": "Bond Dynamics", "short_title": "Bonds", "emoji": "🔗", "order": 1},
-            {"id": "shared_rhythms", "title": "Shared Rhythms", "short_title": "Rhythms", "emoji": "🐾", "order": 2},
-            {"id": "productive_tensions", "title": "Productive Tensions", "short_title": "Tensions", "emoji": "⚡", "order": 3},
-            {"id": "mutual_adjustments", "title": "Mutual Adjustments", "short_title": "Adjustments", "emoji": "🤝", "order": 4},
+            {"id": "bond_dynamics", "title": "Bond Dynamics", "short_title": "Bonds", "emoji": "🔗", "subtitle": "How trust and closeness shape the relationship.", "order": 1},
+            {"id": "shared_rhythms", "title": "Shared Rhythms", "short_title": "Rhythms", "emoji": "🐾", "subtitle": "How dog and handler find a workable pace.", "order": 2},
+            {"id": "productive_tensions", "title": "Productive Tensions", "short_title": "Tensions", "emoji": "⚡", "subtitle": "Where friction can become useful information.", "order": 3},
+            {"id": "mutual_adjustments", "title": "Mutual Adjustments", "short_title": "Adjustments", "emoji": "🤝", "subtitle": "How both sides adapt while staying connected.", "order": 4},
         ],
         "takeaways": [
-            {"id": "essential_character", "title": "Essential Character", "short_title": "Character", "emoji": "✨", "order": 1},
-            {"id": "daily_wisdom", "title": "Daily Wisdom", "short_title": "Daily Life", "emoji": "🏡", "order": 2},
-            {"id": "growth_lessons", "title": "Growth Lessons", "short_title": "Growth", "emoji": "🌱", "order": 3},
-            {"id": "lasting_gifts", "title": "Lasting Gifts", "short_title": "Gifts", "emoji": "🎁", "order": 4},
+            {"id": "essential_character", "title": "Essential Character", "short_title": "Character", "emoji": "✨", "subtitle": "The qualities that make this dog unmistakable.", "order": 1},
+            {"id": "daily_wisdom", "title": "Daily Wisdom", "short_title": "Daily Life", "emoji": "🏡", "subtitle": "What everyday life reveals about her style.", "order": 2},
+            {"id": "growth_lessons", "title": "Growth Lessons", "short_title": "Growth", "emoji": "🌱", "subtitle": "Where support can help potential unfold.", "order": 3},
+            {"id": "lasting_gifts", "title": "Lasting Gifts", "short_title": "Gifts", "emoji": "🎁", "subtitle": "The strengths she brings to her relationships.", "order": 4},
         ],
     }
     edited["theme_group_registry"] = registries
@@ -357,6 +357,37 @@ class TestBrePacket(unittest.TestCase):
             self.packet, edited, "--phase", "authoring"
         )
         self.assertEqual("pass", report["status"], report["errors"])
+        self.assertTrue(all(
+            entry["subtitle"].strip()
+            for entries in edited["theme_group_registry"].values()
+            for entry in entries
+        ))
+
+    def test_editorial_validator_allows_optional_registry_subtitles(self) -> None:
+        edited = complete_packet(self.packet)
+        variants = ("missing", None, "", "   ")
+        for variant in variants:
+            candidate = deepcopy(edited)
+            entry = candidate["theme_group_registry"]["interdogpendence"][0]
+            if variant == "missing":
+                entry.pop("subtitle")
+            else:
+                entry["subtitle"] = variant
+            report = run_editorial_validator(
+                self.packet, candidate, "--phase", "authoring"
+            )
+            self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_editorial_validator_rejects_nonstring_registry_subtitle(self) -> None:
+        edited = complete_packet(self.packet)
+        edited["theme_group_registry"]["interdogpendence"][0]["subtitle"] = 42
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any(
+            "invalid subtitle" in error for error in report["errors"]
+        ))
 
     def test_editorial_validator_rejects_too_few_section_chapters(self) -> None:
         edited = complete_packet(self.packet)
@@ -911,6 +942,11 @@ class TestBrePacket(unittest.TestCase):
             self.assertTrue(report["authored_theme_group_priority_ids"])
             self.assertTrue(report["placeholder_free"])
             self.assertNotIn("__LLM_FILL__", json.dumps(deck))
+            self.assertTrue(all(
+                entry["subtitle"].strip()
+                for entries in deck["theme_group_registry"].values()
+                for entry in entries
+            ))
 
     def test_summary_workspace_excludes_same_subject_gold_reference(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

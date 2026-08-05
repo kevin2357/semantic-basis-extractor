@@ -175,8 +175,9 @@ claims, and the largest may contain no more than twice as many as the smallest.
 The two taxonomies must be foundationally different. Do not repeat, reorder,
 synonymize, or cosmetically reword one section's chapter titles for the other.
 For every chapter provide stable `id`, reader-facing `title`, concise
-`short_title`, relevant `emoji`, and consecutive `order`; cards reference the
-stable ID. Do not add `theme_group_id` to other claim types.
+`short_title`, relevant `emoji`, one concise explanatory `subtitle`, and
+consecutive `order`; cards reference the stable ID. Do not add
+`theme_group_id` to other claim types.
 
 ## Summary cards
 
