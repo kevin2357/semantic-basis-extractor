@@ -1,0 +1,35 @@
+{
+  "schema_version": "astrowoof.natal_authoring.release_smoke.v0.1",
+  "status": "pass",
+  "errors": [],
+  "runtime_module": "C:\\tmp\\astrowoof-release-slice5-venv\\Lib\\site-packages\\astrowoof_natal_authoring",
+  "working_directory_class": "outside_repository",
+  "require_installed": true,
+  "wheel": {
+    "filename": "astrowoof_natal_authoring-0.1.0-py3-none-any.whl",
+    "bytes": 612568,
+    "sha256": "11a1fa255720e9d73c1b1e42bafe937773ec1db544dd62aec786fe89a986e1b7",
+    "entry_count": 39,
+    "fixture_count": 4,
+    "bytecode_entry_count": 0
+  },
+  "checks": {
+    "initial_state": "AUTHORING",
+    "resume": "DELIVERY_COMPLETE",
+    "forced_retry_attempt_count": 2,
+    "accepted_pass_count": 6,
+    "card_count": 50,
+    "summary_count": 4,
+    "delivery_member_count": 5,
+    "delivery_integrity": "pass",
+    "manifest_hashes_match": true,
+    "resource_count": 19,
+    "resource_set_sha256": "67be96ba08fbd89ab379d1ebf247ef011d595bd4446c4534edd5072a503dcdf2",
+    "cleanup_target_count": 20,
+    "cleanup_reclaimed_bytes": 4627864,
+    "retained_operator_state": true,
+    "retained_public_state": true,
+    "retained_delivery": true,
+    "repository_test_count": 116
+  }
+}

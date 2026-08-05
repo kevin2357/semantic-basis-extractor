@@ -30,6 +30,7 @@ from astrowoof_natal_authoring.provenance import (  # noqa: E402
     refresh_execution_provenance,
     resource_set_provenance,
 )
+from astrowoof_natal_authoring.smoke import FIXTURE_FILES, materialize_fixture  # noqa: E402
 
 
 def write(path: Path, value: str = "{}\n") -> None:
@@ -193,6 +194,13 @@ class TestReleaseContracts(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertGreater(first["resource_count"], 10)
         self.assertEqual(64, len(first["aggregate_sha256"]))
+
+    def test_packaged_smoke_fixture_is_complete(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            materialize_fixture(target)
+            self.assertEqual(set(FIXTURE_FILES), {path.name for path in target.iterdir()})
+            self.assertTrue(all((target / name).stat().st_size > 300_000 for name in FIXTURE_FILES))
 
     def test_legacy_migration_marks_input_provenance_unavailable(self) -> None:
         provenance = migrated_run_provenance(

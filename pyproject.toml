@@ -15,6 +15,7 @@ dependencies = []
 [project.scripts]
 astrowoof-semantic-closure = "astrowoof_natal_authoring.cli.closure:main"
 astrowoof-build-natal-basis = "astrowoof_natal_authoring.cli.extract:main"
+astrowoof-release-smoke = "astrowoof_natal_authoring.smoke:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}
@@ -28,6 +29,7 @@ include = ["astrowoof_natal_authoring*"]
 astrowoof_natal_authoring = [
   "resources/authoring/*.md",
   "resources/contracts/*.json",
+  "resources/fixtures/**/*.json",
   "resources/references/*.json",
   "resources/schemas/*.json",
 ]

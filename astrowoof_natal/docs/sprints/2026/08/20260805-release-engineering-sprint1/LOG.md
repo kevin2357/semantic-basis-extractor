@@ -108,3 +108,28 @@
   AGF graph `1.3.0`, four 64-character input digests, 15 packaged resources,
   two final QA report records, a delivery digest, and exact agreement between
   all delivery-manifest hashes and files on disk.
+
+## 2026-08-05 — Slice 5 packaged-runtime QA
+
+- Added `astrowoof-release-smoke`, a self-contained deterministic smoke command
+  shipped by the wheel.
+- Added four packaged Bre projected-context fixtures. The fixture input is
+  materialized from installed resources, not read from the checkout.
+- The smoke test creates a run and stops at the pre-authoring `AUTHORING`
+  checkpoint, then starts a separate installed-module process with `--resume`.
+- Injected one deterministic rejection into pass 1 and verified rejection,
+  persisted feedback, retry, and acceptance before the remaining delivery flow.
+- Verified extraction, six-pass completion, assembly, 50 cards, four summaries,
+  final validation/lint, five-member delivery integrity, delivery-manifest
+  hashes, public polling state, input/resource/delivery provenance, cleanup dry
+  run, real cleanup, and retained final/operator artifacts.
+- Built a clean 612,568-byte candidate wheel with 39 entries, four fixture
+  resources, zero bytecode caches, and SHA-256
+  `11a1fa255720e9d73c1b1e42bafe937773ec1db544dd62aec786fe89a986e1b7`.
+- Installed the wheel in a fresh virtual environment and ran the smoke command
+  twice. The second run used `C:\tmp` as its working directory, proving no
+  checkout or source-tree import dependency.
+- Cleanup identified 20 reconstructable targets and reclaimed 4,627,864 bytes
+  while retaining run state, public state, accepted evidence, QA, and delivery.
+- Added one fixture-completeness unit test. The complete suite now contains 116
+  passing tests.
