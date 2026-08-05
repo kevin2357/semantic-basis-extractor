@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from .contracts import discover_projected_input, normalize_subject_params
 from .registries import merge as merge_projected_term_registries
 from .resource_access import (
     copy_module_source,
@@ -231,39 +232,11 @@ def discover_subject_packages(
     subdirectory per subject. Filenames are used for discovery; graph metadata
     is validated separately and remains authoritative for identity.
     """
-    if not input_package.is_dir():
-        raise NotADirectoryError(f"Input package is not a directory: {input_package}")
-
-    candidate_dirs = [input_package]
-    if not any(input_package.glob("natal.*.woof.*.json")):
-        candidate_dirs = sorted(path for path in input_package.iterdir() if path.is_dir())
-
-    discovered: dict[str, dict[str, Path]] = defaultdict(dict)
-    pattern = re.compile(
-        r"^natal\.(?P<subject>.+?)\.woof\.(?P<context>general|d2d|handler|hybrid)\.json$",
-        re.IGNORECASE,
+    discovered, _normalized_manifest = discover_projected_input(
+        input_package,
+        subject_filter,
     )
-    for directory in candidate_dirs:
-        for path in sorted(directory.glob("natal.*.woof.*.json")):
-            match = pattern.match(path.name)
-            if not match:
-                continue
-            subject = match.group("subject").lower()
-            context = CONTEXT_SUFFIXES[match.group("context").lower()]
-            if subject_filter and subject != subject_filter.lower():
-                continue
-            if context in discovered[subject]:
-                raise ValueError(
-                    f"Duplicate {context} files for subject {subject}: "
-                    f"{discovered[subject][context]} and {path}"
-                )
-            discovered[subject][context] = path
-
-    if not discovered:
-        suffix = f" for subject {subject_filter!r}" if subject_filter else ""
-        raise FileNotFoundError(f"No projected natal context files found{suffix}.")
-
-    return dict(sorted(discovered.items()))
+    return discovered
 
 
 def _canonical_json(value: Any) -> str:
@@ -290,66 +263,11 @@ def load_subject_params(
     params_path = next(iter(directories)) / "params.json"
     if not params_path.exists():
         return {}, None
-    value = json.loads(params_path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        raise ValueError(f"{params_path}: params.json must contain one object")
-    allowed = {
-        "subject_id",
-        "display_name",
-        "subject_type",
-        "gender",
-        "pronouns",
-        "breed",
-        "birth_date",
-        "birth_datetime",
-        "birth_latitude",
-        "birth_longitude",
-        "birth_location",
-        "birth_date_precision",
-    }
-    unknown = sorted(set(value) - allowed)
-    if unknown:
-        raise ValueError(f"{params_path}: unsupported fields: {unknown}")
-    if value.get("subject_id") not in (None, "", subject):
-        raise ValueError(
-            f"{params_path}: subject_id {value['subject_id']!r} must match {subject!r}"
-        )
-    string_fields = allowed - {
-        "pronouns",
-        "birth_latitude",
-        "birth_longitude",
-    }
-    for field_name in string_fields:
-        if field_name in value and not isinstance(value[field_name], str):
-            raise ValueError(f"{params_path}: {field_name} must be a string")
-    for field_name in ("birth_latitude", "birth_longitude"):
-        if field_name in value and not isinstance(value[field_name], (int, float)):
-            raise ValueError(f"{params_path}: {field_name} must be numeric")
-    if "birth_latitude" in value and not -90 <= value["birth_latitude"] <= 90:
-        raise ValueError(f"{params_path}: birth_latitude must be between -90 and 90")
-    if "birth_longitude" in value and not -180 <= value["birth_longitude"] <= 180:
-        raise ValueError(f"{params_path}: birth_longitude must be between -180 and 180")
-    pronoun_fields = {
-        "subject",
-        "object",
-        "possessive_adjective",
-        "possessive_pronoun",
-        "reflexive",
-    }
-    pronouns = value.get("pronouns")
-    if pronouns is not None:
-        if not isinstance(pronouns, dict):
-            raise ValueError(f"{params_path}: pronouns must be an object")
-        unknown_pronouns = sorted(set(pronouns) - pronoun_fields)
-        if unknown_pronouns:
-            raise ValueError(
-                f"{params_path}: unsupported pronoun fields: {unknown_pronouns}"
-            )
-        for field_name, field_value in pronouns.items():
-            if not isinstance(field_value, str):
-                raise ValueError(
-                    f"{params_path}: pronouns.{field_name} must be a string"
-                )
+    value = normalize_subject_params(
+        json.loads(params_path.read_text(encoding="utf-8")),
+        subject_id=subject,
+        source=str(params_path),
+    )
     return value, str(params_path.resolve())
 
 

@@ -32,11 +32,17 @@ from typing import Any, Protocol
 from . import editorial_lint as editorial_lint_module
 from . import validation as validation_module
 from .assembly import assemble
+from .contracts import (
+    DELIVERY_MANIFEST_SCHEMA,
+    authoring_profile,
+    discover_projected_input,
+    public_run_state,
+)
 from .editorial_lint import reader_facing_items
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.6"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.7"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -1851,6 +1857,8 @@ def initial_run_state(
     sbe_manifest: dict[str, Any],
     specs: list[PassSpec],
     service_level: str = "interactive",
+    input_contract: dict[str, Any] | None = None,
+    profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     now = utc_now()
     return {
@@ -1859,6 +1867,8 @@ def initial_run_state(
         "created_at": now,
         "updated_at": now,
         "input_package": normalized_path(input_package),
+        "input_contract": input_contract,
+        "authoring_profile": profile,
         "run_dir": normalized_path(run_dir),
         "provider": provider.name,
         "service_level": service_level,
@@ -2194,6 +2204,7 @@ def update_run_status(state: dict[str, Any]) -> None:
 def save_state(run_json: Path, state: dict[str, Any]) -> None:
     update_run_status(state)
     write_json_atomic(run_json, state)
+    write_json_atomic(run_json.with_name("public-run.json"), public_run_state(state))
 
 
 def save_state_locked(
@@ -3004,6 +3015,27 @@ def package_subject_delivery(
         Path(record["validation_report"]),
         Path(record["lint_report"]),
     ]
+    run_state_path = run_dir / "run.json"
+    run_state = load_json(run_state_path) if run_state_path.is_file() else {}
+    delivery_manifest = {
+        "schema_version": DELIVERY_MANIFEST_SCHEMA,
+        "subject_id": subject,
+        "status": record["state"],
+        "created_at": utc_now(),
+        "run_contract": run_state.get("schema_version", SCHEMA_VERSION),
+        "authoring_profile": run_state.get("authoring_profile"),
+        "artifacts": [
+            {"role": role, "filename": path.name}
+            for role, path in zip(
+                ("deck", "assembly_report", "validation_report", "lint_report"),
+                included,
+                strict=True,
+            )
+        ],
+    }
+    manifest_path = final_root / f"natal.{subject}.delivery-manifest.json"
+    write_json_atomic(manifest_path, delivery_manifest)
+    included.append(manifest_path)
     with zipfile.ZipFile(
         delivery,
         "w",
@@ -3016,6 +3048,7 @@ def package_subject_delivery(
         if bad_member:
             raise ValueError(f"Corrupt delivery archive member: {bad_member}")
     record["delivery"] = normalized_path(delivery)
+    record["delivery_manifest"] = normalized_path(manifest_path)
     return delivery
 
 
@@ -4572,12 +4605,14 @@ def create_run(
     service_level: str = "interactive",
     split_assignment_policy: str = "stratified-v1",
     full_chart_basis_format: str = "legacy",
+    profile: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], Path]:
     if run_dir.exists() and any(run_dir.iterdir()):
         raise FileExistsError(
             f"Run directory is not empty: {run_dir}. Use --resume to continue it."
         )
     run_dir.mkdir(parents=True, exist_ok=True)
+    _subjects, input_contract = discover_projected_input(input_package, subject)
     sbe_root = run_dir / "sbe"
     output_dir = sbe_root / "semantic-basis-output"
     bundle_dir = sbe_root / "llm-handoff-bundle"
@@ -4600,6 +4635,8 @@ def create_run(
         sbe_manifest=sbe_manifest,
         specs=specs,
         service_level=service_level,
+        input_contract=input_contract,
+        profile=profile,
     )
     state["prompt_cache"] = prompt_cache_manifest(specs)
     run_json = run_dir / "run.json"
@@ -4624,10 +4661,13 @@ def resume_run(
         "astrowoof.semantic_closure_run.v0.3",
         "astrowoof.semantic_closure_run.v0.4",
         "astrowoof.semantic_closure_run.v0.5",
+        "astrowoof.semantic_closure_run.v0.6",
     }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("service_level", "interactive")
         state.setdefault("subjects", {})
+        state.setdefault("input_contract", None)
+        state.setdefault("authoring_profile", None)
         configuration = state.setdefault("provider_configuration", {})
         if getattr(provider, "name", None) == "openai":
             configuration.setdefault(
@@ -4695,9 +4735,10 @@ def resume_run(
     return state, run_json
 
 
-def default_sbe_script() -> None:
-    """Use the installed extractor module unless a custom script is supplied."""
-    return None
+def default_sbe_script() -> Path | None:
+    """Use a source-tree shim when present, otherwise the installed module."""
+    candidate = Path(__file__).resolve().parent.parent / "build_projected_semantic_basis.py"
+    return candidate if candidate.is_file() else None
 
 
 def build_prompt_layout_report(
@@ -4859,7 +4900,7 @@ def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
             "Completed-run cleanup requires every subject delivery to be complete."
         )
 
-    retained: list[str] = ["run.json"]
+    retained: list[str] = ["run.json", "public-run.json"]
     for subject, record in subjects.items():
         for key in (
             "deck", "assembly_report", "validation_report", "lint_report",
@@ -4944,6 +4985,43 @@ def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
             shutil.rmtree(run_dir / Path(item["path"]))
         write_json_atomic(run_dir / "cleanup-report.json", report)
     return report
+
+
+def profile_from_args(args: argparse.Namespace) -> dict[str, Any]:
+    """Freeze behavior-affecting run options into a versioned profile."""
+    return authoring_profile(
+        extraction={
+            "handoff_profile": "authoring-workspace",
+            "workspace_layout": "split",
+            "workspace_card_limit": 50,
+            "pass_count": PASS_COUNT,
+            "split_assignment_policy": args.split_assignment_policy,
+            "full_chart_basis_format": args.full_chart_basis_format,
+        },
+        authoring={
+            "provider": args.provider,
+            "service_level": args.service_level,
+            "routing_policy": args.routing_policy,
+            "model": args.model,
+            "reasoning_effort": args.reasoning_effort,
+            "retry_model": args.retry_model,
+            "retry_reasoning_effort": args.retry_reasoning_effort,
+            "max_attempts": args.max_attempts,
+            "max_workers": args.max_workers,
+            "max_output_tokens": args.max_output_tokens,
+            "prompt_cache_mode": args.prompt_cache_mode,
+            "prompt_cache_ttl": args.prompt_cache_ttl,
+        },
+        qa={
+            "allow_lint_warnings": args.allow_lint_warnings,
+            "polish": args.polish,
+            "max_polish_attempts": args.max_polish_attempts,
+            "polish_model": args.polish_model,
+            "polish_reasoning_effort": args.polish_reasoning_effort,
+            "qualitative_critic": args.qualitative_critic,
+            "qualitative_candidate": args.qualitative_candidate,
+        },
+    )
 
 
 def main() -> None:
@@ -5331,6 +5409,7 @@ def main() -> None:
             service_level=args.service_level,
             split_assignment_policy=args.split_assignment_policy,
             full_chart_basis_format=args.full_chart_basis_format,
+            profile=profile_from_args(args),
         )
     if args.prompt_layout_report:
         if not isinstance(provider, OpenAIResponsesProvider):

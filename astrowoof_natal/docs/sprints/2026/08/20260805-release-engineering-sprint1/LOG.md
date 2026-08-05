@@ -58,3 +58,27 @@
   passed.
 - Latest Slice 2 candidate wheel SHA-256:
   `1b97caf2b24f52bf939b266e7d2880104f8240e1019add8e7306fcda20e6b2c5`.
+
+## 2026-08-05 — Slice 3 stable runtime contracts
+
+- Added a versioned projected-input contract and explicit
+  `astrowoof-input-manifest.json` format. Existing direct and
+  one-directory-per-subject layouts normalize to the same contract and remain
+  supported.
+- Added a versioned subject-parameters contract. Historical unversioned
+  `params.json` files normalize to v0.1; unsupported explicit versions and
+  fields are rejected.
+- Advanced durable operator state to
+  `astrowoof.semantic_closure_run.v0.7`; v0.2 through v0.6 remain resumable.
+- Added an authoring-profile snapshot that records behavior-affecting
+  extraction, routing, caching, QA, polish, and qualitative-review settings.
+- Added atomic `public-run.json` generation as a path-free API polling view.
+- Added a versioned delivery manifest to every subject delivery ZIP.
+- Preserved source-tree compatibility by selecting the historical extractor
+  shim when it exists and installed module invocation otherwise.
+- Added six focused contract tests covering legacy normalization, explicit
+  manifests, path containment, parameter normalization, public-state
+  redaction, and delivery contents.
+- Completed a token-free six-pass Bre run through the source compatibility
+  entry point. The run reached `DELIVERY_COMPLETE`, exposed all new contract
+  versions, and produced a five-file delivery ZIP containing its manifest.

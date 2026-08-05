@@ -1,0 +1,23 @@
+{
+  "schema_version": "astrowoof.contract_catalog.v0.1",
+  "contracts": {
+    "projected_input": "astrowoof.projected_natal_input.v0.1",
+    "subject_params": "astrowoof.subject_params.v0.1",
+    "operator_run": "astrowoof.semantic_closure_run.v0.7",
+    "public_run": "astrowoof.semantic_closure_public_run.v0.1",
+    "authoring_profile": "astrowoof.authoring_profile.v0.1",
+    "delivery_manifest": "astrowoof.natal_delivery_manifest.v0.1"
+  },
+  "compatibility": {
+    "legacy_projected_directory": "normalized_to_projected_input_v0.1",
+    "unversioned_params_json": "normalized_to_subject_params_v0.1",
+    "resumable_operator_runs": [
+      "astrowoof.semantic_closure_run.v0.2",
+      "astrowoof.semantic_closure_run.v0.3",
+      "astrowoof.semantic_closure_run.v0.4",
+      "astrowoof.semantic_closure_run.v0.5",
+      "astrowoof.semantic_closure_run.v0.6",
+      "astrowoof.semantic_closure_run.v0.7"
+    ]
+  }
+}

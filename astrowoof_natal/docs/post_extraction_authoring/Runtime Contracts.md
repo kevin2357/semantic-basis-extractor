@@ -1,0 +1,98 @@
+# AstroWoof Natal Authoring Runtime Contracts
+
+This document defines the stable v0.1 boundary presented by the installed
+`astrowoof-natal-authoring` runtime. Contract versions identify data shape and
+meaning; the Python distribution version identifies implementation behavior.
+
+## Projected input bundle
+
+Canonical schema: `astrowoof.projected_natal_input.v0.1`.
+
+The runtime accepts either the historical directory convention or an explicit
+`astrowoof-input-manifest.json`. Both normalize to the same internal manifest.
+An explicit manifest has this shape:
+
+```json
+{
+  "schema_version": "astrowoof.projected_natal_input.v0.1",
+  "subjects": [
+    {
+      "subject_id": "ella",
+      "contexts": {
+        "general": "ella/natal.ella.woof.general.json",
+        "direct_to_dog": "ella/natal.ella.woof.d2d.json",
+        "handler": "ella/natal.ella.woof.handler.json",
+        "hybrid": "ella/natal.ella.woof.hybrid.json"
+      }
+    }
+  ]
+}
+```
+
+Paths are relative to the package root, cannot escape it, and must identify
+files. A subject's four projected contexts must share one directory. Optional
+`params.json` remains beside those contexts.
+
+Legacy direct or one-directory-per-subject layouts remain supported. Their
+normalized manifest records `source_format: legacy-directory-v0`; explicit
+manifests record `source_format: manifest-v0.1`.
+
+## Subject parameters
+
+Canonical schema: `astrowoof.subject_params.v0.1`.
+
+Unversioned historical `params.json` files are accepted and normalized to this
+version. Supported fields are `subject_id`, `display_name`, `subject_type`,
+`gender`, `pronouns`, `breed`, `birth_date`, `birth_datetime`,
+`birth_latitude`, `birth_longitude`, `birth_location`, and
+`birth_date_precision`. Coordinates are range checked. Pronouns may contain
+`subject`, `object`, `possessive_adjective`, `possessive_pronoun`, and
+`reflexive`.
+
+## Authoring profile
+
+Canonical schema: `astrowoof.authoring_profile.v0.1`.
+
+Every new run freezes its behavior-affecting extraction, authoring, routing,
+cache, QA, polish, and qualitative-review options into `run.json`. The current
+profile ID is `astrowoof-natal-default-v0.1`. This makes a completed run
+interpretable without reconstructing its command line.
+
+## Operator run state
+
+Canonical schema: `astrowoof.semantic_closure_run.v0.7`.
+
+`run.json` is the durable operator record and resume source. It intentionally
+contains filesystem locations, pass attempts, provider configuration,
+acceptance evidence, usage, costs, final QA, and delivery records. Versions
+v0.2 through v0.6 remain resumable and are normalized in memory to v0.7.
+
+## Public run state
+
+Canonical schema: `astrowoof.semantic_closure_public_run.v0.1`.
+
+Every operator-state save also atomically writes `public-run.json`. This is the
+API polling view: status and timestamps, service level, accepted/total pass
+progress, per-subject state, and delivery readiness. It excludes paths,
+provider configuration, prompts, attempts, and internal evidence.
+
+## Delivery manifest
+
+Canonical schema: `astrowoof.natal_delivery_manifest.v0.1`.
+
+Each subject delivery ZIP contains its deck, assembly report, validation
+report, lint report, and delivery manifest. The manifest identifies the
+subject, final status, run contract, authoring profile, and artifact roles.
+Artifact hashing and complete engine provenance are added in the provenance
+slice; their absence in v0.1 of this contract must not be interpreted as an
+integrity claim.
+
+## Compatibility policy
+
+- Additive fields may appear within a contract version when old consumers can
+  safely ignore them.
+- Meaning changes, required-field changes, or renamed fields require a new
+  contract version.
+- Readers must reject unsupported explicit input versions rather than guessing.
+- Legacy inputs are accepted only through documented normalization paths.
+- The reader-facing deck remains independent of operator-state contracts.
