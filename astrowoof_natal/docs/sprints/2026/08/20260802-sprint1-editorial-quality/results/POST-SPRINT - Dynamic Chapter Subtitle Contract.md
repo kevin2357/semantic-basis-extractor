@@ -67,3 +67,29 @@ Coverage includes:
 
 This is a backward-compatible v0.4 contract extension and does not require a
 schema-version increment.
+
+## Live Ella observation and follow-up
+
+The first real pass-6 test produced useful, compact subtitles between 9 and 15
+words long. The Interdogpendence set described Ella's patterns directly and
+varied its sentence movement naturally. The Takeaways set was semantically
+sound but all four subtitles used the same meta-editorial architecture:
+
+- `These cards show ...`
+- `These cards gather ...`
+- `These cards illuminate ...`
+- `These cards trace ...`
+
+This is acceptable content, but it makes separately authored chapter
+descriptions feel more templated than necessary. In the next bounded authoring-
+guidance pass, prefer subtitles that speak directly about the dog's pattern,
+the practical territory, or the reader's organizing question. Vary sentence
+architecture across the registry and avoid using `These cards ...` as the
+default opening for every chapter. This should remain positive craft guidance,
+not a brittle prohibition against an otherwise natural phrase or a hard lexical
+rejection rule.
+
+The same live test confirmed that subtitle authoring did not destabilize the
+rest of pass 6. Opaque QA rejected an initial one-card chapter, the creative
+retry produced balanced independent registries, final validation passed, and
+whole-deck lint was clean. No mechanical-polish call was required.
