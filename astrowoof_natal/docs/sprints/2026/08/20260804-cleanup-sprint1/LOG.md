@@ -30,3 +30,26 @@ unchanged. The corpus now emits 56 advisories across seven decks, removing 50
 demonstrated false positives. Every remaining sampled field contains a genuine
 chart, aspect, planet, or Doghouse reference. Added regression examples for
 ordinary-home/geometric/seating-chart language and explicit astrological usage.
+
+## Slice 4 — Completed-run retention hygiene
+
+Added an explicit `--cleanup-completed-run` operation with token-free dry-run
+mode. Cleanup is allowed only after successful delivery and verifies final
+artifacts, delivery ZIPs, accepted prose, and source archives before deleting
+anything. It removes only expanded SBE copies, extracted attempt sources,
+reconstructable response workspaces, and duplicated final accepted-pass trees.
+Raw request/response, Batch, cost, retry, QA, accepted-workspace, and delivery
+evidence remains intact. Focused tests cover refusal, dry-run, execution,
+retention, and idempotence.
+
+The operation was then executed against the disposable completed Ella subtitle
+run. It removed nine previously reviewed targets and reclaimed 1,471,698 bytes.
+The immediate idempotence check reported zero remaining targets and all retained
+artifact preconditions continued to pass.
+
+## Sprint closure
+
+Full regression verification passed: 105 tests in 98.149 seconds. `git diff
+--check` reported no whitespace errors. The sprint made no live OpenAI request
+and left Quick/Complete products, critic deployment policy, frontend layout,
+and aggressive Batch-evidence archival outside its bounded scope.

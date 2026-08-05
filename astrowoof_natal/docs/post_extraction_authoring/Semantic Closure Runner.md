@@ -591,3 +591,43 @@ python src/author_semantic_closure.py `
 
 Use `--fake-reject kevin_2:1` or `--fake-error kevin_4:2` to exercise
 editorial-rejection and provider-error retry paths.
+
+## Completed-run retention cleanup
+
+After a run reaches `DELIVERY_COMPLETE` or
+`DELIVERY_COMPLETE_WITH_WARNINGS`, inspect conservative cleanup targets without
+changing the run:
+
+```powershell
+python src/author_semantic_closure.py `
+  --cleanup-completed-run C:\path\to\completed-run `
+  --cleanup-dry-run
+```
+
+Execute the same verified plan by omitting `--cleanup-dry-run`. The runner writes
+`cleanup-report.json` with every removed relative path, reason, measured byte
+count, retained artifact, and total reclaimed bytes.
+
+Cleanup refuses active, incomplete, failed, or mixed-subject runs. Before any
+deletion it verifies every subject's final deck and QA reports, every delivery
+ZIP, every accepted pass workspace, and every retained source pass ZIP.
+
+The operation removes only expanded copies that have a retained reconstruction
+source:
+
+- unpacked SBE pass directories whose sibling ZIP is retained;
+- per-pass extracted `source/` directories;
+- attempt `response/` workspaces reproducible from the retained source ZIP and
+  `openai-authored-fields.json`; and
+- final `accepted-passes/` copies duplicated from authoritative pass-level
+  accepted workspaces.
+
+It retains `run.json`, accounting, response IDs, OpenAI request/response files,
+authored-field payloads, acceptance reports, raw Batch artifacts, all accepted
+pass workspaces, source pass ZIPs, final deck and QA reports, qualitative and
+polish evidence, and delivery ZIPs. Running cleanup again is safe and reports
+zero remaining targets.
+
+This operation intentionally does not compress or discard raw Batch transport
+evidence. A more aggressive archival tier would require a separate operational
+contract and is outside this cleanup policy.

@@ -1,5 +1,7 @@
 # 2026-08-04 Cleanup Sprint 1
 
+**Status:** Complete
+
 ## Purpose
 
 Close small, already-decided follow-ups from the editorial-quality sprint
@@ -42,3 +44,10 @@ more precise, QA warnings more trustworthy, and completed-run storage safer.
 - No live OpenAI request is required unless a code result cannot be established
   deterministically.
 - The sprint log records decisions, evidence, and remaining exclusions.
+
+## Completion
+
+All four slices completed. The full repository suite passes 105 tests. No live
+OpenAI request was required. The only destructive verification operated on the
+explicitly disposable completed Ella subtitle run after a matching dry-run plan
+and reclaimed 1,471,698 bytes without removing retained evidence.

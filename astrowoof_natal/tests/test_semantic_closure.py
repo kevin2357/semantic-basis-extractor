@@ -36,6 +36,7 @@ from author_semantic_closure import (  # noqa: E402
     author_pending_passes_batch,
     batch_estimated_cost,
     build_prompt_layout_report,
+    cleanup_completed_run,
     compare_cost_runs,
     discover_passes,
     editable_deck_fields,
@@ -2411,6 +2412,100 @@ class TestSemanticClosure(SemanticClosureFixture):
                     for attempt in failed["attempts"]
                 )
             )
+
+    def test_completed_run_cleanup_is_dry_runnable_safe_and_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary) / "run"
+            bundle = run / "sbe" / "llm-handoff-bundle"
+            expanded = bundle / "bre_1"
+            accepted = run / "passes" / "bre_1" / "accepted"
+            source = run / "passes" / "bre_1" / "source"
+            response = run / "passes" / "bre_1" / "attempt-001" / "response"
+            duplicate = run / "final" / "bre" / "accepted-passes"
+            final = run / "final" / "bre"
+            for directory in (expanded, accepted, source, response, duplicate):
+                directory.mkdir(parents=True, exist_ok=True)
+                (directory / "artifact.txt").write_text(
+                    directory.name, encoding="utf-8"
+                )
+            bundle.mkdir(parents=True, exist_ok=True)
+            source_zip = bundle / "bre_1.zip"
+            with zipfile.ZipFile(source_zip, "w") as archive:
+                archive.writestr("bre_1/START HERE.md", "start")
+            final.mkdir(parents=True, exist_ok=True)
+            retained_paths = {}
+            for name in (
+                "natal.bre.cards.json",
+                "natal.bre.assembly-report.json",
+                "natal.bre.validation-report.json",
+                "natal.bre.lint-report.json",
+            ):
+                path = final / name
+                path.write_text("{}", encoding="utf-8")
+                retained_paths[name] = path
+            delivery = final / "astrowoof-bre-delivery.zip"
+            with zipfile.ZipFile(delivery, "w") as archive:
+                archive.writestr("natal.bre.cards.json", "{}")
+            request_log = response.parent / "openai-request.json"
+            request_log.write_text("{}", encoding="utf-8")
+            write_json_atomic(run / "run.json", {
+                "status": "DELIVERY_COMPLETE",
+                "passes": {
+                    "bre_1": {
+                        "accepted_workspace": str(accepted),
+                        "source_zip": str(source_zip),
+                    }
+                },
+                "subjects": {
+                    "bre": {
+                        "state": "DELIVERY_COMPLETE",
+                        "deck": str(retained_paths["natal.bre.cards.json"]),
+                        "assembly_report": str(
+                            retained_paths["natal.bre.assembly-report.json"]
+                        ),
+                        "validation_report": str(
+                            retained_paths["natal.bre.validation-report.json"]
+                        ),
+                        "lint_report": str(
+                            retained_paths["natal.bre.lint-report.json"]
+                        ),
+                        "delivery": str(delivery),
+                    }
+                },
+            })
+
+            dry = cleanup_completed_run(run, dry_run=True)
+            self.assertEqual("dry_run", dry["status"])
+            self.assertEqual(4, dry["target_count"])
+            self.assertGreater(dry["reclaimed_bytes"], 0)
+            self.assertTrue(expanded.exists())
+            self.assertFalse((run / "cleanup-report.json").exists())
+
+            complete = cleanup_completed_run(run, dry_run=False)
+            self.assertEqual("complete", complete["status"])
+            for removed in (expanded, source, response, duplicate):
+                self.assertFalse(removed.exists())
+            for retained in (
+                accepted, source_zip, delivery, request_log,
+                retained_paths["natal.bre.cards.json"], run / "run.json",
+                run / "cleanup-report.json",
+            ):
+                self.assertTrue(retained.exists(), retained)
+            again = cleanup_completed_run(run, dry_run=False)
+            self.assertEqual(0, again["target_count"])
+            self.assertEqual(0, again["reclaimed_bytes"])
+
+    def test_completed_run_cleanup_refuses_nonterminal_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary) / "run"
+            run.mkdir()
+            write_json_atomic(run / "run.json", {
+                "status": "AUTHORING",
+                "passes": {},
+                "subjects": {},
+            })
+            with self.assertRaisesRegex(ValueError, "nonterminal"):
+                cleanup_completed_run(run, dry_run=True)
 
     def test_atomic_state_write_survives_interrupted_replace(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

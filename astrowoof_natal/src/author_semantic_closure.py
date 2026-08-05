@@ -4833,6 +4833,127 @@ def compare_cost_runs(baseline_path: Path, candidate_path: Path) -> dict[str, An
     }
 
 
+def directory_size(path: Path) -> int:
+    return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
+
+
+def verified_zip(path: Path) -> None:
+    if not path.is_file():
+        raise FileNotFoundError(f"Required retained ZIP is missing: {path}")
+    with zipfile.ZipFile(path) as archive:
+        bad_member = archive.testzip()
+        if bad_member:
+            raise ValueError(f"Corrupt retained ZIP member in {path}: {bad_member}")
+
+
+def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
+    """Remove only reconstructable expanded copies from a completed run."""
+    run_dir = run_dir.resolve()
+    run_json = run_dir / "run.json"
+    if not run_json.is_file():
+        raise FileNotFoundError(f"Completed-run cleanup requires {run_json}")
+    state = load_json(run_json)
+    if state.get("status") not in FINAL_SUCCESS_STATES:
+        raise ValueError(
+            "Completed-run cleanup refuses nonterminal run state "
+            f"{state.get('status')!r}."
+        )
+    subjects = state.get("subjects") or {}
+    if not subjects or any(
+        record.get("state") not in FINAL_SUCCESS_STATES
+        for record in subjects.values()
+    ):
+        raise ValueError(
+            "Completed-run cleanup requires every subject delivery to be complete."
+        )
+
+    retained: list[str] = ["run.json"]
+    for subject, record in subjects.items():
+        for key in (
+            "deck", "assembly_report", "validation_report", "lint_report",
+        ):
+            path = Path(record.get(key, ""))
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"Completed {subject} is missing retained {key}: {path}"
+                )
+            retained.append(normalized_path(path))
+        delivery = Path(record.get("delivery", ""))
+        verified_zip(delivery)
+        retained.append(normalized_path(delivery))
+
+    for record in state.get("passes", {}).values():
+        accepted = Path(record.get("accepted_workspace", ""))
+        if not accepted.is_dir():
+            raise FileNotFoundError(
+                f"Completed pass is missing accepted workspace: {accepted}"
+            )
+        source_zip = Path(record.get("source_zip", ""))
+        verified_zip(source_zip)
+        retained.extend((normalized_path(accepted), normalized_path(source_zip)))
+
+    candidates: list[tuple[Path, str]] = []
+    bundle = run_dir / "sbe" / "llm-handoff-bundle"
+    if bundle.is_dir():
+        for expanded in sorted(path for path in bundle.iterdir() if path.is_dir()):
+            verified_zip(expanded.with_suffix(".zip"))
+            candidates.append((expanded, "expanded_sbe_pass_copy"))
+    passes_root = run_dir / "passes"
+    if passes_root.is_dir():
+        for pass_root in sorted(path for path in passes_root.iterdir() if path.is_dir()):
+            source = pass_root / "source"
+            if source.is_dir():
+                candidates.append((source, "expanded_attempt_source"))
+            for response in sorted(pass_root.glob("attempt-*/response")):
+                if response.is_dir():
+                    candidates.append((response, "reconstructable_response_workspace"))
+    final_root = run_dir / "final"
+    if final_root.is_dir():
+        for duplicate in sorted(final_root.glob("*/accepted-passes")):
+            if duplicate.is_dir():
+                candidates.append((duplicate, "duplicate_final_accepted_passes"))
+
+    targets: list[dict[str, Any]] = []
+    seen: set[Path] = set()
+    for path, reason in candidates:
+        resolved = path.resolve()
+        try:
+            relative = resolved.relative_to(run_dir)
+        except ValueError as exc:
+            raise ValueError(f"Cleanup target escapes run directory: {resolved}") from exc
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        targets.append({
+            "path": str(relative).replace("\\", "/"),
+            "reason": reason,
+            "bytes": directory_size(resolved),
+        })
+
+    report = {
+        "schema_version": "astrowoof.completed_run_cleanup.v1",
+        "status": "dry_run" if dry_run else "complete",
+        "run_dir": normalized_path(run_dir),
+        "run_status": state["status"],
+        "target_count": len(targets),
+        "reclaimed_bytes": sum(item["bytes"] for item in targets),
+        "targets": targets,
+        "retained": sorted(set(retained)),
+        "retention_policy": {
+            "accepted_pass_workspaces": "retained",
+            "source_pass_archives": "retained_and_integrity_checked",
+            "request_response_and_batch_evidence": "retained",
+            "final_delivery_and_qa": "retained_and_integrity_checked",
+            "expanded_reconstructable_copies": "removed",
+        },
+    }
+    if not dry_run:
+        for item in targets:
+            shutil.rmtree(run_dir / Path(item["path"]))
+        write_json_atomic(run_dir / "cleanup-report.json", report)
+    return report
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -4860,6 +4981,19 @@ def main() -> None:
         "--cost-report-output",
         type=Path,
         help="Also persist the --compare-cost-runs report as JSON.",
+    )
+    parser.add_argument(
+        "--cleanup-completed-run",
+        type=Path,
+        help=(
+            "Remove only reconstructable expanded directory copies from a "
+            "completed run, then write cleanup-report.json."
+        ),
+    )
+    parser.add_argument(
+        "--cleanup-dry-run",
+        action="store_true",
+        help="Report completed-run cleanup targets without deleting them.",
     )
     parser.add_argument(
         "--provider",
@@ -5058,6 +5192,15 @@ def main() -> None:
             write_json_atomic(args.cost_report_output, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return
+    if args.cleanup_completed_run:
+        report = cleanup_completed_run(
+            args.cleanup_completed_run,
+            dry_run=args.cleanup_dry_run,
+        )
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return
+    if args.cleanup_dry_run:
+        parser.error("--cleanup-dry-run requires --cleanup-completed-run")
     if args.run_dir is None:
         parser.error("--run-dir is required for authoring and prompt reports")
     if args.max_attempts < 1:
