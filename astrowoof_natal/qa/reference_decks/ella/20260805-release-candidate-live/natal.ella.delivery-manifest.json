@@ -1,0 +1,265 @@
+{
+  "schema_version": "astrowoof.natal_delivery_manifest.v0.1",
+  "subject_id": "ella",
+  "status": "DELIVERY_COMPLETE",
+  "created_at": "2026-08-05T10:56:55.907140+00:00",
+  "run_contract": "astrowoof.semantic_closure_run.v0.7",
+  "authoring_profile": {
+    "schema_version": "astrowoof.authoring_profile.v0.1",
+    "profile_id": "astrowoof-natal-default-v0.1",
+    "extraction": {
+      "handoff_profile": "authoring-workspace",
+      "workspace_layout": "split",
+      "workspace_card_limit": 50,
+      "pass_count": 6,
+      "split_assignment_policy": "stratified-v1",
+      "full_chart_basis_format": "compact-v2"
+    },
+    "authoring": {
+      "provider": "openai",
+      "service_level": "batch",
+      "routing_policy": "cost_optimized",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "medium",
+      "retry_model": "gpt-5.6-terra",
+      "retry_reasoning_effort": "medium",
+      "max_attempts": 3,
+      "max_workers": 6,
+      "max_output_tokens": 100000,
+      "prompt_cache_mode": "explicit",
+      "prompt_cache_ttl": "30m"
+    },
+    "qa": {
+      "allow_lint_warnings": false,
+      "polish": true,
+      "max_polish_attempts": 2,
+      "polish_model": "gpt-5.6-luna",
+      "polish_reasoning_effort": "low",
+      "qualitative_critic": false,
+      "qualitative_candidate": false
+    }
+  },
+  "provenance": {
+    "schema_version": "astrowoof.natal_authoring_provenance.v0.1",
+    "runtime": {
+      "distribution": "astrowoof-natal-authoring",
+      "version": "0.1.0",
+      "python": "3.12.13",
+      "python_implementation": "CPython",
+      "platform": "win32"
+    },
+    "resources": {
+      "schema_version": "astrowoof.natal_authoring_resource_set.v0.1",
+      "aggregate_sha256": "67be96ba08fbd89ab379d1ebf247ef011d595bd4446c4534edd5072a503dcdf2",
+      "resource_count": 19
+    },
+    "input_subject": {
+      "subject_id": "ella",
+      "contexts": [
+        {
+          "context": "direct_to_dog",
+          "artifact": {
+            "filename": "natal.ella.woof.d2d.json",
+            "bytes": 324435,
+            "sha256": "f2741ec48597cb2904d19d6b1d52cfe13a18dbf8709e7d0b4ab2c9acf24e5ccb"
+          },
+          "declared": {
+            "metadata": {
+              "package_type": "projected_semantic_graph",
+              "projection_id": "projection:ecd8d90f40a5f00e8caeea9e",
+              "engine_version": "0.10.0",
+              "profile_id": "woofmapped_astrology.v0",
+              "profile_version": "0.1.0",
+              "context_id": "woofmapped.dog_direct.v1",
+              "context_version": "1.0.0",
+              "projected_term_registry_id": "woofmapped_astrology.projected_terms",
+              "projected_term_registry_version": "0.1.0",
+              "materialization_mode": "standard"
+            },
+            "source_identity": {
+              "source_chart_id": "natal:ella",
+              "source_chart_ids": [
+                "natal:ella"
+              ],
+              "sensor_instance_id": "natal:ella"
+            },
+            "source_graph_ref": {
+              "graph_type": "canonical_astrology_graph",
+              "graph_version": "1.3.0",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44"
+            },
+            "target_ontology": "woofmapped_astrology.v0",
+            "audit": {
+              "request_hash": "ecd8d90f40a5f00e8caeea9e",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44",
+              "context_hash": "70a36e3e9b70595694e63000",
+              "mapping_execution_count": 84,
+              "unmapped_source_count": 4277,
+              "fallback_count": 0
+            }
+          }
+        },
+        {
+          "context": "general",
+          "artifact": {
+            "filename": "natal.ella.woof.general.json",
+            "bytes": 324632,
+            "sha256": "f504eae3124fca38d78f69e3a7d793ea08b0d697ebd1f57b8527ed92c2d8b418"
+          },
+          "declared": {
+            "metadata": {
+              "package_type": "projected_semantic_graph",
+              "projection_id": "projection:40f98410691a006a9620e674",
+              "engine_version": "0.10.0",
+              "profile_id": "woofmapped_astrology.v0",
+              "profile_version": "0.1.0",
+              "context_id": "woofmapped.doghouse.general.v0",
+              "context_version": "0.1.0",
+              "projected_term_registry_id": "woofmapped_astrology.projected_terms",
+              "projected_term_registry_version": "0.1.0",
+              "materialization_mode": "standard"
+            },
+            "source_identity": {
+              "source_chart_id": "natal:ella",
+              "source_chart_ids": [
+                "natal:ella"
+              ],
+              "sensor_instance_id": "natal:ella"
+            },
+            "source_graph_ref": {
+              "graph_type": "canonical_astrology_graph",
+              "graph_version": "1.3.0",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44"
+            },
+            "target_ontology": "woofmapped_astrology.v0",
+            "audit": {
+              "request_hash": "40f98410691a006a9620e674",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44",
+              "context_hash": "e0d61f6b369af6da1513c9e1",
+              "mapping_execution_count": 84,
+              "unmapped_source_count": 4277,
+              "fallback_count": 0
+            }
+          }
+        },
+        {
+          "context": "handler",
+          "artifact": {
+            "filename": "natal.ella.woof.handler.json",
+            "bytes": 324951,
+            "sha256": "b2b2c023d5ff20e514114108d61c2bd414e70d235517505dbfd43f67892caa90"
+          },
+          "declared": {
+            "metadata": {
+              "package_type": "projected_semantic_graph",
+              "projection_id": "projection:1e1f7d99dc4633f5590c4131",
+              "engine_version": "0.10.0",
+              "profile_id": "woofmapped_astrology.v0",
+              "profile_version": "0.1.0",
+              "context_id": "woofmapped.handler_guidance.v1",
+              "context_version": "1.0.0",
+              "projected_term_registry_id": "woofmapped_astrology.projected_terms",
+              "projected_term_registry_version": "0.1.0",
+              "materialization_mode": "standard"
+            },
+            "source_identity": {
+              "source_chart_id": "natal:ella",
+              "source_chart_ids": [
+                "natal:ella"
+              ],
+              "sensor_instance_id": "natal:ella"
+            },
+            "source_graph_ref": {
+              "graph_type": "canonical_astrology_graph",
+              "graph_version": "1.3.0",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44"
+            },
+            "target_ontology": "woofmapped_astrology.v0",
+            "audit": {
+              "request_hash": "1e1f7d99dc4633f5590c4131",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44",
+              "context_hash": "4d1b776768bb5aff81cb3d78",
+              "mapping_execution_count": 84,
+              "unmapped_source_count": 4277,
+              "fallback_count": 0
+            }
+          }
+        },
+        {
+          "context": "hybrid",
+          "artifact": {
+            "filename": "natal.ella.woof.hybrid.json",
+            "bytes": 324951,
+            "sha256": "bf0d8facc6fa7a9e2bb59eba1c6fef0fc772a951378dcdb45bc19d620725e2a0"
+          },
+          "declared": {
+            "metadata": {
+              "package_type": "projected_semantic_graph",
+              "projection_id": "projection:295534df8585e72e117a0844",
+              "engine_version": "0.10.0",
+              "profile_id": "woofmapped_astrology.v0",
+              "profile_version": "0.1.0",
+              "context_id": "woofmapped.hybrid_horoscope.v1",
+              "context_version": "1.0.0",
+              "projected_term_registry_id": "woofmapped_astrology.projected_terms",
+              "projected_term_registry_version": "0.1.0",
+              "materialization_mode": "standard"
+            },
+            "source_identity": {
+              "source_chart_id": "natal:ella",
+              "source_chart_ids": [
+                "natal:ella"
+              ],
+              "sensor_instance_id": "natal:ella"
+            },
+            "source_graph_ref": {
+              "graph_type": "canonical_astrology_graph",
+              "graph_version": "1.3.0",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44"
+            },
+            "target_ontology": "woofmapped_astrology.v0",
+            "audit": {
+              "request_hash": "295534df8585e72e117a0844",
+              "source_graph_hash": "2b6ad7d36f60a225e138aa44",
+              "context_hash": "e9c0cb2bc5e255c813cb9282",
+              "mapping_execution_count": 84,
+              "unmapped_source_count": 4277,
+              "fallback_count": 0
+            }
+          }
+        }
+      ],
+      "params_artifact": {
+        "filename": "params.json",
+        "bytes": 508,
+        "sha256": "a6e9256c54fe683f0557abc68ad9b801f8bc4a375ed3829a5b4e30efe8b88688"
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "filename": "natal.ella.cards.json",
+      "bytes": 1690385,
+      "sha256": "2e45e9d18d05526f348b1969be0e374f958f2aafc3bb20ab2a7ead1759836729",
+      "role": "deck"
+    },
+    {
+      "filename": "natal.ella.assembly-report.json",
+      "bytes": 1508,
+      "sha256": "3f2ee55071d04f83a92dd5e2cfda46500d00f6c2d350d00540dc636ce7a52439",
+      "role": "assembly_report"
+    },
+    {
+      "filename": "natal.ella.validation-report.json",
+      "bytes": 889,
+      "sha256": "62b51833f7c62281feca3f15c856482aeabd615da039a0cbcb1469e8736607a8",
+      "role": "validation_report"
+    },
+    {
+      "filename": "natal.ella.lint-report.json",
+      "bytes": 1059,
+      "sha256": "1160e60b386643e0938f416eaa892472cb3ab3ffbf4cca8461a41a10f0f661f2",
+      "role": "lint_report"
+    }
+  ]
+}

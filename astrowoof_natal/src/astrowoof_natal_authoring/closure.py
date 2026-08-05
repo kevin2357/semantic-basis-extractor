@@ -666,12 +666,33 @@ def retry_feedback_from_record(
     attempt = record["attempts"][-1]
     qa_report = (attempt.get("qa") or {}).get("report") or {}
     if qa_report.get("status") == "reject":
+        rejected_reports = []
+        issue_codes: list[str] = []
+        affected_claim_ids: list[str] = []
+        for prior_attempt in record["attempts"]:
+            prior_report = (prior_attempt.get("qa") or {}).get("report") or {}
+            if prior_report.get("status") != "reject":
+                continue
+            prior_codes = prior_report.get("editorial_issue_codes", [])
+            prior_claims = prior_report.get("affected_claim_ids", [])
+            rejected_reports.append(
+                {
+                    "attempt_number": prior_attempt.get("attempt_number"),
+                    "editorial_issue_codes": prior_codes,
+                    "affected_claim_ids": prior_claims,
+                }
+            )
+            for code in prior_codes:
+                if code not in issue_codes:
+                    issue_codes.append(code)
+            for claim_id in prior_claims:
+                if claim_id not in affected_claim_ids:
+                    affected_claim_ids.append(claim_id)
         return {
             "kind": "editorial_qa_rejection",
-            "editorial_issue_codes": qa_report.get(
-                "editorial_issue_codes", []
-            ),
-            "affected_claim_ids": qa_report.get("affected_claim_ids", []),
+            "editorial_issue_codes": issue_codes,
+            "affected_claim_ids": affected_claim_ids,
+            "prior_rejections": rejected_reports,
             "guidance": qa_report.get("guidance"),
         }
     error = attempt.get("error")

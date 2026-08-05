@@ -55,6 +55,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     qualitative_critic_output_schema,
     qualitative_critic_transport,
     repair_workspace_context_filters,
+    retry_feedback_from_record,
     resume_run,
     run_qualitative_review,
     run_sbe,
@@ -2286,6 +2287,47 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "cross_card_exact_duplicate",
                 provider.feedback[1]["editorial_issue_codes"],
             )
+
+    def test_retry_feedback_preserves_all_prior_qa_constraints(self) -> None:
+        record = {
+            "attempts": [
+                {
+                    "attempt_number": 1,
+                    "qa": {
+                        "report": {
+                            "status": "reject",
+                            "editorial_issue_codes": ["theme_group_balance"],
+                            "affected_claim_ids": ["10", "11"],
+                            "guidance": "Rewrite the grouping.",
+                        }
+                    },
+                },
+                {
+                    "attempt_number": 2,
+                    "qa": {
+                        "report": {
+                            "status": "reject",
+                            "editorial_issue_codes": [
+                                "theme_group_registry",
+                                "theme_group_registry",
+                            ],
+                            "affected_claim_ids": ["11", "12"],
+                            "guidance": "Repair the registry.",
+                        }
+                    },
+                },
+            ]
+        }
+
+        feedback = retry_feedback_from_record(record)
+
+        self.assertEqual(
+            ["theme_group_balance", "theme_group_registry"],
+            feedback["editorial_issue_codes"],
+        )
+        self.assertEqual(["10", "11", "12"], feedback["affected_claim_ids"])
+        self.assertEqual(2, len(feedback["prior_rejections"]))
+        self.assertEqual("Repair the registry.", feedback["guidance"])
 
     def test_passes_can_execute_concurrently_without_corrupting_ledger(
         self,

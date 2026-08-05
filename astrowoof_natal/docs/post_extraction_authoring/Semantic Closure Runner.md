@@ -139,8 +139,11 @@ There are two retry layers:
    authoring attempts per pass.
 
 An editorial retry receives only the original source workspace plus the public
-issue codes, affected claim IDs, and broad guidance from the rejected attempt.
-It does not continue the rejected model conversation or expose private checker
+issue codes, affected claim IDs, and broad guidance from rejected attempts. The
+feedback is cumulative within a pass: later attempts retain every distinct
+constraint surfaced by earlier rejections as well as the latest guidance. This
+prevents a repair from regressing an earlier requirement while still avoiding
+continuation of the rejected model conversation or exposure of private checker
 thresholds.
 
 Pass acceptance also verifies that authored high-level and detail-level

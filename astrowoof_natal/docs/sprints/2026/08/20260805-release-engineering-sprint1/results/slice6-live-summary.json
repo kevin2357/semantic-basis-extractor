@@ -1,0 +1,53 @@
+{
+  "schema_version": "astrowoof.release_live_qa.v0.1",
+  "subject": "ella",
+  "status": "pass",
+  "runtime": {
+    "distribution": "astrowoof-natal-authoring",
+    "version": "0.1.0",
+    "wheel_sha256": "8f1f2a700c1cee99b2f5cbd44fa2c89673168b210ec32c2444836b19bb497a97",
+    "resource_count": 19,
+    "resource_set_sha256": "67be96ba08fbd89ab379d1ebf247ef011d595bd4446c4534edd5072a503dcdf2"
+  },
+  "execution": {
+    "final_status": "DELIVERY_COMPLETE",
+    "elapsed_seconds": 577.624873,
+    "batch_rounds": 1,
+    "initial_attempts": 6,
+    "creative_retries": 0,
+    "accepted_passes": 6,
+    "polish_attempts": 1,
+    "polish_eligible_fields": 9,
+    "polish_edited_fields": 2,
+    "cards": 50,
+    "summaries": 4,
+    "final_validation": "pass",
+    "final_lint_warnings": 0
+  },
+  "accounting": {
+    "input_tokens": 266436,
+    "output_tokens": 88522,
+    "total_tokens": 354958,
+    "authoring_cost_usd": 0.42353573,
+    "polish_cost_usd": 0.014204,
+    "total_cost_usd": 0.43773973
+  },
+  "artifacts": {
+    "deck_sha256": "2e45e9d18d05526f348b1969be0e374f958f2aafc3bb20ab2a7ead1759836729",
+    "delivery_zip_sha256": "5217324951edd9d70ed1f144e80a81f4b879161559791d594b921b60f497d12a",
+    "delivery_member_count": 5,
+    "delivery_integrity": "pass"
+  },
+  "discovery_run": {
+    "status": "FAILED_REQUIRES_REVIEW",
+    "estimated_cost_usd": 0.65478326,
+    "accepted_passes": 5,
+    "failed_pass": "ella_6",
+    "issue_sequence": [
+      "theme_group_balance",
+      "theme_group_registry",
+      "theme_group_balance"
+    ],
+    "corrective_action": "Accumulate public QA constraints across creative retries."
+  }
+}

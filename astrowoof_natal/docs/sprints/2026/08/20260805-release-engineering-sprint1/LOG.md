@@ -133,3 +133,31 @@
   while retaining run state, public state, accepted evidence, QA, and delivery.
 - Added one fixture-completeness unit test. The complete suite now contains 116
   passing tests.
+
+## 2026-08-05 — Slice 6 controlled live release candidate
+
+- Started the installed-wheel Ella live run only after Slice 5 deterministic
+  packaged-runtime QA passed.
+- Found and corrected a historical input-fixture naming mismatch before the
+  first billable submission: embedded SPC context metadata, rather than legacy
+  filenames, established the authoritative general and handler identities.
+- The first live candidate safely stopped at `FAILED_REQUIRES_REVIEW`: pass 6
+  alternated between theme-group balance and registry failures while passes
+  1–5 remained accepted. The run spent an estimated `$0.65478326` and exposed
+  that creative retries received only the latest rejection constraint.
+- Changed retry feedback to accumulate all distinct issue codes and affected
+  claim IDs from earlier rejected attempts. Added focused regression coverage;
+  the complete deterministic suite now contains 117 passing tests.
+- Built replacement wheel SHA-256
+  `8f1f2a700c1cee99b2f5cbd44fa2c89673168b210ec32c2444836b19bb497a97`
+  and installed it into a second clean virtual environment.
+- The replacement installed-wheel Ella run reached `DELIVERY_COMPLETE` in
+  9m 37.6s. All six passes cleared attempt 1, one sparse polish edited two of
+  nine eligible fields, final validation passed, and final lint had zero
+  warnings.
+- Successful-run estimated cost was `$0.43773973`: `$0.42353573` authoring and
+  `$0.01420400` polish. The five-member delivery ZIP passed integrity testing
+  with SHA-256
+  `5217324951edd9d70ed1f144e80a81f4b879161559791d594b921b60f497d12a`.
+- Preserved the exact deck, selected packet, delivery manifest, and QA reports
+  as the 20260805 Ella release-candidate reference.
