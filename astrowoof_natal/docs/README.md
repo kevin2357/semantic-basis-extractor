@@ -34,3 +34,25 @@ as work to reconcile. Do not silently reinterpret either document as stale.
   implemented deck behavior.
 - `sprints/`: date-scoped plans, logs, results, and experimental evidence.
 
+## Current release
+
+The current immutable AstroWoof natal authoring runtime is version `0.1.0`,
+published under the annotated tag `astrowoof-natal-authoring-v0.1.0`.
+
+Start with:
+
+- [`../releases/0.1.0/API WORKER INTEGRATION.md`](../releases/0.1.0/API%20WORKER%20INTEGRATION.md)
+  for the pinned installation, invocation, polling, terminal-state, and service
+  ownership handoff;
+- [`../releases/0.1.0/COMPATIBILITY.md`](../releases/0.1.0/COMPATIBILITY.md)
+  for supported Python, input, run-state, delivery, and upstream boundaries;
+- [`post_extraction_authoring/Semantic Closure Runner.md`](post_extraction_authoring/Semantic%20Closure%20Runner.md)
+  for the detailed CLI and operational reference; and
+- [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0)
+  for the immutable wheel and checksum assets.
+
+The released wheel SHA-256 is
+`58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe`.
+Release-specific handoff files are authoritative for consuming that immutable
+version. Sprint records explain how it was qualified but are not the primary
+consumer documentation.
