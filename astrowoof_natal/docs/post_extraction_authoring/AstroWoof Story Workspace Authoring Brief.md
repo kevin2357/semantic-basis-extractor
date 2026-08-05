@@ -147,9 +147,13 @@ Define each chapter once in its section's structured registry with a stable
 snake-case `id`, reader-facing `title`, concise `short_title`, relevant emoji,
 one concise `subtitle`, and display `order`. The subtitle should warmly explain
 what the grouped cards help the reader understand without merely repeating the
-title. Assign cards by registry ID. The emoji is meaningful AstroWoof navigation
-language, not ornamental filler. Card passes without the assignment file leave
-chapter planning to the summary pass.
+title. Speak directly about the dog's pattern, practical territory, or organizing
+question, and vary sentence movement across the registry. Do not make every
+entry meta-commentary beginning with “These cards ...”; this is positive craft
+guidance rather than a hard ban on an otherwise natural phrase. Assign cards by
+registry ID. The emoji is meaningful AstroWoof navigation language, not
+ornamental filler. Card passes without the assignment file leave chapter
+planning to the summary pass.
 
 ## Workspace care
 

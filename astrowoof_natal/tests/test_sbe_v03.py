@@ -1093,6 +1093,39 @@ class TestBrePacket(unittest.TestCase):
                 [card["priority_id"] for card in deck["cards"]],
             )
 
+    def test_pass_six_theme_plan_contains_direct_varied_subtitle_guidance(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre_6"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                0,
+                card_start=51,
+                include_summaries=True,
+                include_theme_plan=True,
+                pass_number=6,
+                pass_count=6,
+                assigned_cards=[],
+            )
+            theme_plan = (workspace / "ASSIGN THEME GROUPS.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("Speak directly about the dog's pattern", theme_plan)
+            self.assertIn("Let sentence movement vary naturally", theme_plan)
+            self.assertIn("These cards ...", theme_plan)
+            first_pass = Path(temporary) / "bre_1"
+            build_story_workspace(
+                first_pass,
+                self.packet,
+                ROOT,
+                10,
+                card_start=1,
+                pass_number=1,
+                pass_count=6,
+            )
+            self.assertFalse((first_pass / "ASSIGN THEME GROUPS.md").exists())
+
     def test_story_workspace_archive_contains_named_root_directory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -179,6 +179,12 @@ For every chapter provide stable `id`, reader-facing `title`, concise
 consecutive `order`; cards reference the stable ID. Do not add
 `theme_group_id` to other claim types.
 
+For each registry subtitle, orient the reader directly to the dog's shared
+pattern, practical territory, or organizing question. Let the subtitles use
+natural, varied sentence movement rather than repeating one meta-editorial
+frame such as “These cards ...” across the section. Do not force superficial
+difference when the clearest sentence happens to share an ordinary word.
+
 ## Summary cards
 
 Populate `summary.card1` through `summary.card4`, including `dos`, `donts`,

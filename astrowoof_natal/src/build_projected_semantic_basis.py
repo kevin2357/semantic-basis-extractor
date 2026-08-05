@@ -1700,7 +1700,12 @@ def render_theme_group_assignment(packet: dict[str, Any]) -> str:
         "sentence explaining what this chapter helps the reader understand), "
         "and `order` (consecutive integer starting at 1). The subtitle should "
         "clarify the shared idea without repeating the title or naming the "
-        "underlying schema. Assign each story using one ID from its own registry.",
+        "underlying schema. Speak directly about the dog's pattern, the "
+        "practical territory, or the organizing question instead of making "
+        "every subtitle meta-commentary beginning with phrases such as `These "
+        "cards ...`. Let sentence movement vary naturally across the registry; "
+        "do not reuse one grammatical frame merely to make the entries look "
+        "uniform. Assign each story using one ID from its own registry.",
         "",
     ]
     for section, themed_cards in sections.items():

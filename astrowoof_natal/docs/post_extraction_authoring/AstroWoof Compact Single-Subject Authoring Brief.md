@@ -136,6 +136,11 @@ chapter, and no more than a 2:1 largest-to-smallest size ratio. The two
 taxonomies must be foundationally different and may not reuse chapter titles.
 Each registry entry provides stable `id`, full `title`, compact `short_title`,
 relevant `emoji`, one concise explanatory `subtitle`, and consecutive `order`.
+Write subtitles as direct reader orientation to the dog's pattern, practical
+territory, or organizing question. Vary sentence movement across the registry;
+do not make every entry a meta-description beginning with “These cards ...”.
+This is craft guidance, not a phrase ban: use the most natural sentence for each
+chapter rather than forcing either repetition or artificial difference.
 Do not add `theme_group_id` to placements.
 
 ## Four Summary cards
