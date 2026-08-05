@@ -1,0 +1,57 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.1.0",
+  "status": "ready_for_tag_approval",
+  "release_tag": "astrowoof-natal-authoring-v0.1.0",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.1.0-py3-none-any.whl",
+    "bytes": 612752,
+    "sha256": "58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe",
+    "wheel_entry_count": 39,
+    "python_tag": "py3",
+    "abi_tag": "none",
+    "platform_tag": "any"
+  },
+  "build": {
+    "source_commit": "38d21b69ea3273f3b6769df92f92e2129529d7ae",
+    "source_date_epoch": 1785928100,
+    "independent_build_count": 2,
+    "byte_reproducible": true,
+    "bytecode_or_cache_entries": 0
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.12.13"],
+    "verified_platforms": ["Windows win32"],
+    "runtime_dependencies": []
+  },
+  "entry_points": [
+    "astrowoof-semantic-closure",
+    "astrowoof-build-natal-basis",
+    "astrowoof-release-smoke"
+  ],
+  "contracts": {
+    "projected_input": "astrowoof.projected_natal_input.v0.1",
+    "subject_params": "astrowoof.subject_params.v0.1",
+    "operator_run": "astrowoof.semantic_closure_run.v0.7",
+    "public_run": "astrowoof.semantic_closure_public_run.v0.1",
+    "authoring_profile": "astrowoof.authoring_profile.v0.1",
+    "delivery_manifest": "astrowoof.natal_delivery_manifest.v0.1",
+    "provenance": "astrowoof.natal_authoring_provenance.v0.1",
+    "resource_set": "astrowoof.natal_authoring_resource_set.v0.1"
+  },
+  "resources": {
+    "count": 19,
+    "aggregate_sha256": "67be96ba08fbd89ab379d1ebf247ef011d595bd4446c4534edd5072a503dcdf2"
+  },
+  "qa": {
+    "repository_test_count": 118,
+    "repository_tests": "pass",
+    "installed_smoke": "pass",
+    "controlled_live_ella": "pass",
+    "controlled_live_cost_usd": 0.43773973,
+    "controlled_live_deck_sha256": "2e45e9d18d05526f348b1969be0e374f958f2aafc3bb20ab2a7ead1759836729"
+  }
+}

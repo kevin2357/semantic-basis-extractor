@@ -1,7 +1,7 @@
 # AstroWoof Natal Authoring v0.1 Release-Engineering Sprint
 
 ```yaml
-status: in_progress
+status: ready_for_tag_approval
 started: 2026-08-05
 owner: semantic-basis-extractor
 project_initiative: astrowoof-project/planning/now/Release Engineering - Semantic Closure v0.1.md
@@ -112,4 +112,3 @@ Existing source-tree scripts remain compatibility shims during v0.1.
 - a release manifest and compatibility declaration exist;
 - the API can pin the immutable wheel by version and SHA-256;
 - the annotated release tag is created only after approval.
-

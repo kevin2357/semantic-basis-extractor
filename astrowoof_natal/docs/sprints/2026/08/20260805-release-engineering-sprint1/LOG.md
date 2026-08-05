@@ -161,3 +161,24 @@
   `5217324951edd9d70ed1f144e80a81f4b879161559791d594b921b60f497d12a`.
 - Preserved the exact deck, selected packet, delivery manifest, and QA reports
   as the 20260805 Ella release-candidate reference.
+
+## 2026-08-05 — Slice 7 release and consumer handoff
+
+- Committed Slice 6 as `38d21b6` before constructing the final artifact.
+- Built the final wheel twice with `SOURCE_DATE_EPOCH=1785928100`; both builds
+  were byte-identical at 612,752 bytes with SHA-256
+  `58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe`.
+- Installed the final wheel in a fresh virtual environment outside the source
+  tree. Both production CLIs and the packaged smoke CLI resolved from the
+  installation.
+- Re-ran the complete installed deterministic smoke: forced rejection and
+  cumulative retry, resume, 50-card/four-summary assembly, final QA, five-file
+  delivery, manifest hashes, resource identity, and cleanup all passed.
+- Added the v0.1 release manifest, checksum, compatibility declaration, release
+  notes, and hash-pinned API-worker installation/invocation guide.
+- Preserved the final installed-smoke report and Slice 7 release report.
+- Left annotated tag `astrowoof-natal-authoring-v0.1.0` intentionally uncreated
+  pending explicit final approval.
+- Added a release-handoff consistency test tying together artifact filename,
+  digest, checksum file, hash-pinned worker requirement, installed smoke, and
+  packaged resource identity. The complete suite now contains 118 tests.

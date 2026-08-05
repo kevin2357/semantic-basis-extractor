@@ -232,6 +232,52 @@ class TestReleaseContracts(unittest.TestCase):
         self.assertEqual(["gpt-observed"], execution["observed_models"])
         self.assertEqual(["resp_123"], execution["response_ids"])
 
+    def test_v010_release_handoff_is_internally_consistent(self) -> None:
+        release = ROOT / "releases" / "0.1.0"
+        manifest = json.loads(
+            (release / "release-manifest.json").read_text(encoding="utf-8")
+        )
+        artifact = manifest["artifact"]
+        digest = artifact["sha256"]
+        filename = artifact["filename"]
+
+        self.assertEqual("0.1.0", manifest["version"])
+        self.assertEqual(
+            "astrowoof-natal-authoring-v0.1.0", manifest["release_tag"]
+        )
+        self.assertEqual(64, len(digest))
+        self.assertTrue(manifest["build"]["byte_reproducible"])
+
+        checksum = (release / "SHA256SUMS.txt").read_text(
+            encoding="utf-8"
+        ).strip()
+        self.assertEqual(f"{digest}  {filename}", checksum)
+
+        requirement = (release / "requirements-api-worker.txt").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(filename, requirement)
+        self.assertIn(f"--hash=sha256:{digest}", requirement)
+
+        smoke = json.loads(
+            (
+                ROOT
+                / "docs"
+                / "sprints"
+                / "2026"
+                / "08"
+                / "20260805-release-engineering-sprint1"
+                / "results"
+                / "slice7-final-installed-smoke.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual("pass", smoke["status"])
+        self.assertTrue(smoke["require_installed"])
+        self.assertEqual(
+            manifest["resources"]["aggregate_sha256"],
+            smoke["checks"]["resource_set_sha256"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
