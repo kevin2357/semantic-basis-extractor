@@ -6,7 +6,9 @@
     "operator_run": "astrowoof.semantic_closure_run.v0.7",
     "public_run": "astrowoof.semantic_closure_public_run.v0.1",
     "authoring_profile": "astrowoof.authoring_profile.v0.1",
-    "delivery_manifest": "astrowoof.natal_delivery_manifest.v0.1"
+    "delivery_manifest": "astrowoof.natal_delivery_manifest.v0.1",
+    "provenance": "astrowoof.natal_authoring_provenance.v0.1",
+    "resource_set": "astrowoof.natal_authoring_resource_set.v0.1"
   },
   "compatibility": {
     "legacy_projected_directory": "normalized_to_projected_input_v0.1",

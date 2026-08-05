@@ -82,10 +82,24 @@ Canonical schema: `astrowoof.natal_delivery_manifest.v0.1`.
 
 Each subject delivery ZIP contains its deck, assembly report, validation
 report, lint report, and delivery manifest. The manifest identifies the
-subject, final status, run contract, authoring profile, and artifact roles.
-Artifact hashing and complete engine provenance are added in the provenance
-slice; their absence in v0.1 of this contract must not be interpreted as an
-integrity claim.
+subject, final status, run contract, authoring profile, artifact roles, byte
+sizes, and SHA-256 digests. The ZIP digest is recorded in operator run state,
+avoiding the impossible requirement that a ZIP contain its own checksum.
+
+## Provenance
+
+Canonical schema: `astrowoof.natal_authoring_provenance.v0.1`.
+
+New runs record the installed runtime version and Python class, the exact
+packaged-resource set and aggregate digest, every normalized input artifact
+and SHA-256 digest, declared upstream AGF/SPC metadata found in each projected
+graph, the authoring profile, observed model names, attempt count, final QA
+report identities, and delivery ZIP digest.
+
+Declared upstream metadata is copied only when present. Missing engine,
+profile, graph, context, or source identifiers remain absent; the runtime never
+infers them. Runs migrated from older state explicitly mark input provenance as
+unavailable because creation-time hashes cannot be reconstructed reliably.
 
 ## Compatibility policy
 

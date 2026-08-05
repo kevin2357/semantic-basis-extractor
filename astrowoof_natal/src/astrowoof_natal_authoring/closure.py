@@ -40,6 +40,12 @@ from .contracts import (
 )
 from .editorial_lint import reader_facing_items
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
+from .provenance import (
+    artifact_descriptor,
+    initial_provenance,
+    migrated_run_provenance,
+    refresh_execution_provenance,
+)
 
 
 SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.7"
@@ -2203,6 +2209,7 @@ def update_run_status(state: dict[str, Any]) -> None:
 
 def save_state(run_json: Path, state: dict[str, Any]) -> None:
     update_run_status(state)
+    refresh_execution_provenance(state)
     write_json_atomic(run_json, state)
     write_json_atomic(run_json.with_name("public-run.json"), public_run_state(state))
 
@@ -3017,6 +3024,16 @@ def package_subject_delivery(
     ]
     run_state_path = run_dir / "run.json"
     run_state = load_json(run_state_path) if run_state_path.is_file() else {}
+    run_provenance = run_state.get("provenance") or {}
+    resource_provenance = run_provenance.get("resources") or {}
+    input_subject = next(
+        (
+            item
+            for item in (run_provenance.get("input") or {}).get("subjects", [])
+            if item.get("subject_id") == subject
+        ),
+        None,
+    )
     delivery_manifest = {
         "schema_version": DELIVERY_MANIFEST_SCHEMA,
         "subject_id": subject,
@@ -3024,8 +3041,18 @@ def package_subject_delivery(
         "created_at": utc_now(),
         "run_contract": run_state.get("schema_version", SCHEMA_VERSION),
         "authoring_profile": run_state.get("authoring_profile"),
+        "provenance": {
+            "schema_version": run_provenance.get("schema_version"),
+            "runtime": run_provenance.get("runtime"),
+            "resources": {
+                "schema_version": resource_provenance.get("schema_version"),
+                "aggregate_sha256": resource_provenance.get("aggregate_sha256"),
+                "resource_count": resource_provenance.get("resource_count"),
+            },
+            "input_subject": input_subject,
+        },
         "artifacts": [
-            {"role": role, "filename": path.name}
+            artifact_descriptor(path, role=role)
             for role, path in zip(
                 ("deck", "assembly_report", "validation_report", "lint_report"),
                 included,
@@ -3049,6 +3076,10 @@ def package_subject_delivery(
             raise ValueError(f"Corrupt delivery archive member: {bad_member}")
     record["delivery"] = normalized_path(delivery)
     record["delivery_manifest"] = normalized_path(manifest_path)
+    record["delivery_artifact"] = artifact_descriptor(
+        delivery,
+        role="delivery_zip",
+    )
     return delivery
 
 
@@ -4638,6 +4669,11 @@ def create_run(
         input_contract=input_contract,
         profile=profile,
     )
+    state["provenance"] = initial_provenance(
+        input_root=input_package.resolve(),
+        input_contract=input_contract,
+        authoring_profile=profile,
+    )
     state["prompt_cache"] = prompt_cache_manifest(specs)
     run_json = run_dir / "run.json"
     save_state(run_json, state)
@@ -4668,6 +4704,13 @@ def resume_run(
         state.setdefault("subjects", {})
         state.setdefault("input_contract", None)
         state.setdefault("authoring_profile", None)
+        state.setdefault(
+            "provenance",
+            migrated_run_provenance(
+                previous_schema=previous_schema,
+                authoring_profile=state.get("authoring_profile"),
+            ),
+        )
         configuration = state.setdefault("provider_configuration", {})
         if getattr(provider, "name", None) == "openai":
             configuration.setdefault(

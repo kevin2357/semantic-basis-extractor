@@ -23,6 +23,13 @@ from astrowoof_natal_authoring.contracts import (  # noqa: E402
     normalize_subject_params,
     public_run_state,
 )
+from astrowoof_natal_authoring.provenance import (  # noqa: E402
+    PROVENANCE_SCHEMA,
+    initial_provenance,
+    migrated_run_provenance,
+    refresh_execution_provenance,
+    resource_set_provenance,
+)
 
 
 def write(path: Path, value: str = "{}\n") -> None:
@@ -142,6 +149,80 @@ class TestReleaseContracts(unittest.TestCase):
                 manifest = json.loads(archive.read(name))
             self.assertEqual(DELIVERY_MANIFEST_SCHEMA, manifest["schema_version"])
             self.assertEqual(profile, manifest["authoring_profile"])
+            self.assertEqual(4, len(manifest["artifacts"]))
+            self.assertTrue(all(len(item["sha256"]) == 64 for item in manifest["artifacts"]))
+            self.assertEqual(64, len(record["delivery_artifact"]["sha256"]))
+
+    def test_provenance_captures_declared_upstream_fields_and_hashes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paths = self.projected_files(root)
+            graph = {
+                "metadata": {
+                    "engine_version": "0.10.0",
+                    "profile_id": "woofmapped_astrology.v0",
+                    "context_id": "woofmapped.handler_guidance.v1",
+                    "untrusted_extra": "not copied",
+                },
+                "source_identity": {"source_chart_id": "natal:ella"},
+                "source_graph_ref": {
+                    "graph_type": "canonical_astrology_graph",
+                    "graph_version": "1.3.0",
+                    "source_graph_hash": "abc123",
+                },
+                "target_ontology": "woofmapped_astrology.v0",
+                "audit": {"request_hash": "request123"},
+            }
+            for path in paths.values():
+                write(path, json.dumps(graph))
+            _discovered, contract = discover_projected_input(root)
+            provenance = initial_provenance(
+                input_root=root,
+                input_contract=contract,
+                authoring_profile=authoring_profile(extraction={}, authoring={}, qa={}),
+            )
+            self.assertEqual(PROVENANCE_SCHEMA, provenance["schema_version"])
+            context = provenance["input"]["subjects"][0]["contexts"][0]
+            self.assertEqual(64, len(context["artifact"]["sha256"]))
+            self.assertEqual("1.3.0", context["declared"]["source_graph_ref"]["graph_version"])
+            self.assertNotIn("untrusted_extra", context["declared"]["metadata"])
+
+    def test_resource_set_has_stable_aggregate_digest(self) -> None:
+        first = resource_set_provenance()
+        second = resource_set_provenance()
+        self.assertEqual(first, second)
+        self.assertGreater(first["resource_count"], 10)
+        self.assertEqual(64, len(first["aggregate_sha256"]))
+
+    def test_legacy_migration_marks_input_provenance_unavailable(self) -> None:
+        provenance = migrated_run_provenance(
+            previous_schema="astrowoof.semantic_closure_run.v0.6",
+            authoring_profile=None,
+        )
+        self.assertEqual("unavailable_from_legacy_run", provenance["input"]["status"])
+        self.assertEqual(
+            "astrowoof.semantic_closure_run.v0.6",
+            provenance["migration"]["from_run_schema"],
+        )
+
+    def test_execution_provenance_distinguishes_requested_and_actual_models(self) -> None:
+        state = {
+            "provider": "openai",
+            "service_level": "interactive",
+            "accounting": {"attempt_count": 1},
+            "provenance": {},
+            "passes": {"ella_1": {"attempts": [{"provider_metadata": {
+                "requested_model": "gpt-requested",
+                "model": "gpt-observed",
+                "response_id": "resp_123",
+            }}]}},
+            "subjects": {},
+        }
+        refresh_execution_provenance(state)
+        execution = state["provenance"]["execution"]
+        self.assertEqual(["gpt-requested"], execution["requested_models"])
+        self.assertEqual(["gpt-observed"], execution["observed_models"])
+        self.assertEqual(["resp_123"], execution["response_ids"])
 
 
 if __name__ == "__main__":
