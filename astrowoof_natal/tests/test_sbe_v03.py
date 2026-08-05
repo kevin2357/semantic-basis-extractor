@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
-from build_projected_semantic_basis import (  # noqa: E402
+from astrowoof_natal_authoring.extractor import (  # noqa: E402
     CONTEXT_FILTER_GROUPS,
     archive_story_workspace,
     authoring_projection_payload,
@@ -36,14 +36,14 @@ from build_projected_semantic_basis import (  # noqa: E402
     render_full_chart_basis,
     subject_record,
 )
-from assemble_authoring_workspace import assemble  # noqa: E402
-from merge_projected_term_registries import merge  # noqa: E402
-from lint_astrowoof_editorial import (  # noqa: E402
+from astrowoof_natal_authoring.assembly import assemble  # noqa: E402
+from astrowoof_natal_authoring.registries import merge  # noqa: E402
+from astrowoof_natal_authoring.editorial_lint import (  # noqa: E402
     authoring_pass_acceptance,
     lint_deck,
     reader_facing_items,
 )
-from validate_astrowoof_editorial import (  # noqa: E402
+from astrowoof_natal_authoring.validation import (  # noqa: E402
     ASTRO_TERMS,
     main as validate_editorial,
 )
@@ -1302,3 +1302,4 @@ class TestPackageDiscoveryAndRegistry(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+# End of test module.

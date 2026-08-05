@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
-from author_semantic_closure import (  # noqa: E402
+from astrowoof_natal_authoring.closure import (  # noqa: E402
     AuthoringProviderError,
     BackgroundResponsePending,
     FIELD_PATTERN,
@@ -73,7 +73,7 @@ from author_semantic_closure import (  # noqa: E402
     writable_fields,
     _fake_field_value,
 )
-from build_projected_semantic_basis import (  # noqa: E402
+from astrowoof_natal_authoring.extractor import (  # noqa: E402
     build_candidates,
     build_story_workspace,
     compile_packet,
@@ -81,8 +81,8 @@ from build_projected_semantic_basis import (  # noqa: E402
     load_and_validate_contexts,
     optimize,
 )
-from validate_astrowoof_editorial import BAD_SECOND_PERSON  # noqa: E402
-from lint_authoring_pass import (  # noqa: E402
+from astrowoof_natal_authoring.validation import BAD_SECOND_PERSON  # noqa: E402
+from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
     invalid_context_filter_claim_ids,
     invalid_theme_group_claim_ids,
 )
@@ -907,7 +907,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     }]}, {"provider": "fake"}
 
             def fake_qa(command, report_path, *, accepted_returncodes):
-                if "validate_astrowoof_editorial.py" in command[1]:
+                if Path(command[1]).name == "validation.py":
                     report = {"status": "pass", "errors": [], "warnings": []}
                 else:
                     report = {"status": "pass", "warning_count": 0}
@@ -921,7 +921,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 }
 
             with patch(
-                "author_semantic_closure.run_json_command",
+                "astrowoof_natal_authoring.closure.run_json_command",
                 side_effect=fake_qa,
             ):
                 run_qualitative_review(
@@ -1014,7 +1014,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     return {"edits": []}, {"provider": "fake"}
 
             with patch(
-                "author_semantic_closure.run_json_command"
+                "astrowoof_natal_authoring.closure.run_json_command"
             ) as qa:
                 polish_subject(
                     record=record,
@@ -1129,7 +1129,7 @@ class TestSemanticClosure(SemanticClosureFixture):
 
             def fake_qa(command, report_path, *, accepted_returncodes):
                 qa_commands.append(command)
-                if "validate_astrowoof_editorial.py" in command[1]:
+                if Path(command[1]).name == "validation.py":
                     report = {"status": "pass", "warnings": []}
                 else:
                     report = {"status": "pass", "warning_count": 0}
@@ -1143,7 +1143,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 }
 
             with patch(
-                "author_semantic_closure.run_json_command",
+                "astrowoof_natal_authoring.closure.run_json_command",
                 side_effect=fake_qa,
             ):
                 polish_subject(
@@ -1157,7 +1157,7 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertTrue(record["polish_attempts"][0]["accepted"])
             validation_command = next(
                 command for command in qa_commands
-                if "validate_astrowoof_editorial.py" in command[1]
+                if Path(command[1]).name == "validation.py"
             )
             self.assertIn("--allow-summary-edits", validation_command)
             self.assertEqual("astrowoof_sparse_polish", submitted[0]["schema_name"])
@@ -1218,7 +1218,7 @@ class TestSemanticClosure(SemanticClosureFixture):
 
             def fake_qa(command, report_path, *, accepted_returncodes):
                 nonlocal validation_calls
-                if "validate_astrowoof_editorial.py" in command[1]:
+                if Path(command[1]).name == "validation.py":
                     validation_calls += 1
                     report = (
                         {"status": "fail", "errors": [
@@ -1238,7 +1238,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 }
 
             with patch(
-                "author_semantic_closure.run_json_command", side_effect=fake_qa
+                "astrowoof_natal_authoring.closure.run_json_command", side_effect=fake_qa
             ):
                 polish_subject(
                     record=record, provider=Provider(), run_dir=root,
@@ -1305,7 +1305,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "polish_attempts": [],
             }
             with patch(
-                "author_semantic_closure.assemble_subject",
+                "astrowoof_natal_authoring.closure.assemble_subject",
                 return_value=clean,
             ):
                 finalize_subjects(
@@ -2546,3 +2546,4 @@ class TestSemanticClosure(SemanticClosureFixture):
 
 if __name__ == "__main__":
     unittest.main()
+# End of test module.

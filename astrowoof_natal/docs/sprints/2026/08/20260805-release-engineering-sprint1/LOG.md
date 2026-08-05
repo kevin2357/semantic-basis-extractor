@@ -33,3 +33,28 @@
 - Preserved full Kevin and Bre reference inputs for behavioral parity in v0.1;
   later releases may replace them with validated compact extractions.
 
+## 2026-08-05 — Slice 2 installable package boundary
+
+- Added PEP 517/setuptools packaging for distribution
+  `astrowoof-natal-authoring` version `0.1.0`, requiring Python 3.11 or newer
+  and no third-party runtime dependencies.
+- Moved the seven runtime modules beneath the import package
+  `astrowoof_natal_authoring`; retained every historical source entry point as
+  a thin compatibility wrapper.
+- Added the `astrowoof-semantic-closure` and
+  `astrowoof-build-natal-basis` console commands.
+- Replaced source-tree asset discovery with `importlib.resources` and copied
+  only the explicitly approved authoring guidance, schema, and reference
+  inputs into the wheel.
+- Changed the closure runner's default extractor subprocess to package-module
+  invocation, eliminating reliance on a repository script path.
+- Built and clean-installed the wheel outside the repository. Both console
+  commands loaded from `site-packages` and returned help successfully.
+- Ran a complete six-pass Bre workflow from the clean-installed wheel with the
+  fake provider and repository examples supplied only as external input. It
+  reached `DELIVERY_COMPLETE`, produced 50 cards, four summaries, both dynamic
+  theme registries, and an integrity-tested delivery ZIP.
+- Re-ran all 105 repository tests after the final invocation change; all
+  passed.
+- Latest Slice 2 candidate wheel SHA-256:
+  `1b97caf2b24f52bf939b266e7d2880104f8240e1019add8e7306fcda20e6b2c5`.

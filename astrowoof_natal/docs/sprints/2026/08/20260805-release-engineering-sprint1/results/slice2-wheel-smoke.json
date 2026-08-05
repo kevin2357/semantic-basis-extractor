@@ -1,0 +1,31 @@
+{
+  "schema_version": "astrowoof.natal_authoring.wheel_smoke.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.1.0",
+  "wheel": {
+    "filename": "astrowoof_natal_authoring-0.1.0-py3-none-any.whl",
+    "sha256": "1b97caf2b24f52bf939b266e7d2880104f8240e1019add8e7306fcda20e6b2c5"
+  },
+  "environment": {
+    "source_tree": false,
+    "module_location_class": "site-packages",
+    "provider": "fake"
+  },
+  "checks": {
+    "package_import": "pass",
+    "closure_cli_help": "pass",
+    "extractor_cli_help": "pass",
+    "resource_allowlist": "pass",
+    "generated_material_excluded": "pass",
+    "six_pass_workflow": "pass",
+    "delivery_status": "DELIVERY_COMPLETE",
+    "card_count": 50,
+    "summary_count": 4,
+    "theme_registry_sections": ["interdogpendence", "takeaways"],
+    "delivery_zip": "pass",
+    "repository_tests": {
+      "status": "pass",
+      "count": 105
+    }
+  }
+}

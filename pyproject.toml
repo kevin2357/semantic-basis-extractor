@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astrowoof-natal-authoring"
+version = "0.1.0"
+description = "AstroWoof semantic-basis extraction and resumable natal-deck authoring runtime"
+readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs for implementation documentation.", content-type = "text/plain"}
+requires-python = ">=3.11"
+license = {text = "Proprietary"}
+authors = [{name = "AstroWoof"}]
+dependencies = []
+
+[project.scripts]
+astrowoof-semantic-closure = "astrowoof_natal_authoring.cli.closure:main"
+astrowoof-build-natal-basis = "astrowoof_natal_authoring.cli.extract:main"
+
+[tool.setuptools]
+package-dir = {"" = "astrowoof_natal/src"}
+include-package-data = false
+
+[tool.setuptools.packages.find]
+where = ["astrowoof_natal/src"]
+include = ["astrowoof_natal_authoring*"]
+
+[tool.setuptools.package-data]
+astrowoof_natal_authoring = [
+  "resources/authoring/*.md",
+  "resources/references/*.json",
+  "resources/schemas/*.json",
+]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["**/__pycache__/*", "**/*.pyc"]
