@@ -33,5 +33,5 @@ semantic-basis extraction and LLM authoring pipeline.
 
 ## Deployment status
 
-The artifact and consumer handoff are ready. The annotated release tag and
-GitHub release attachment remain pending explicit final approval.
+The artifact and consumer handoff are published under annotated tag
+`astrowoof-natal-authoring-v0.1.0`.

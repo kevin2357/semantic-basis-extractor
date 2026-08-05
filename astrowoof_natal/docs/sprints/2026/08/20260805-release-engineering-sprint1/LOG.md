@@ -182,3 +182,18 @@
 - Added a release-handoff consistency test tying together artifact filename,
   digest, checksum file, hash-pinned worker requirement, installed smoke, and
   packaged resource identity. The complete suite now contains 118 tests.
+
+## 2026-08-05 — Publication
+
+- Created annotated tag `astrowoof-natal-authoring-v0.1.0` at release commit
+  `8fdad164b151c87f77dfc416f6efb754cf00fd7b` and pushed `main` plus the tag.
+- Published non-draft, non-prerelease GitHub release ID `365479789` at
+  `2026-08-05T11:33:40Z`.
+- Uploaded wheel asset ID `502545315` and checksum asset ID `502545321`.
+- Downloaded both assets back through the authenticated private-release API.
+  The wheel remained 612,752 bytes with SHA-256
+  `58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe`,
+  and the published checksum matched.
+- Documented that private API-worker builds must authenticate to GitHub using
+  an ephemeral build secret; no token belongs in the pinned requirement,
+  source tree, image layer, or runtime configuration.

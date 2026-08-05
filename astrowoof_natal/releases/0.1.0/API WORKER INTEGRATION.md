@@ -10,6 +10,19 @@ with hash enforcement:
 python -m pip install --no-deps --require-hashes -r requirements-api-worker.txt
 ```
 
+The repository and release are private. The requirement intentionally contains
+no credential. Before running pip, the image builder must authenticate HTTPS to
+`github.com` with a short-lived, least-privilege GitHub token supplied through
+the deployment platform's build-secret mechanism. An ephemeral `.netrc` or
+credential helper is acceptable when it is created, used, and removed within
+one secret-mounted build step. Never place the token in this requirements file,
+a Docker `ARG`, a persisted image layer, build logs, or runtime configuration.
+
+An equally valid private-build flow is to use the authenticated GitHub Releases
+API to download wheel asset ID `502545315` to a temporary file, verify its
+SHA-256, install that local wheel, and delete the token-bearing download
+context. The wheel itself contains no secret.
+
 For a pre-release private image, copy the local wheel from `dist/` into the
 image, verify SHA-256
 `58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe`,

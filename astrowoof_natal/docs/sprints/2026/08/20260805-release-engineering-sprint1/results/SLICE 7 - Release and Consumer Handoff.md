@@ -2,9 +2,10 @@
 
 ## Result
 
-Slice 7 is complete through the pre-tag boundary. The final wheel is
-reproducible, freshly installed, smoke-tested, checksummed, and documented for
-an API worker. The sprint is `ready_for_tag_approval`.
+Slice 7 and publication are complete. The final wheel is reproducible, freshly
+installed, smoke-tested, checksummed, documented for an API worker, tagged,
+published, and independently downloaded and verified from the private GitHub
+release.
 
 ## Final artifact
 
@@ -54,13 +55,21 @@ The API reads `public-run.json` for polling, holds an exclusive run lease before
 invoking initial/resume commands, and promotes only `DELIVERY_COMPLETE`
 artifacts.
 
-## Remaining release action
+## Publication
 
-After this Slice 7 change set is committed and explicitly approved:
+- Annotated tag: `astrowoof-natal-authoring-v0.1.0`
+- Tag commit: `8fdad164b151c87f77dfc416f6efb754cf00fd7b`
+- Release ID: `365479789`
+- Published: `2026-08-05T11:33:40Z`
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0`
+- Wheel asset ID: `502545315`
+- Checksum asset ID: `502545321`
+- Draft: no
+- Prerelease: no
 
-1. create annotated tag `astrowoof-natal-authoring-v0.1.0`;
-2. push the commit and tag when requested;
-3. create the GitHub release; and
-4. attach the exact wheel from `dist/` plus `SHA256SUMS.txt`.
-
-The tag is intentionally not created as part of this pre-approval slice.
+Both assets were downloaded after publication through the authenticated private
+release API. The downloaded wheel's size and digest matched the final manifest,
+and the downloaded checksum named the same digest. The annotated tag remains
+fixed at the reviewed release commit; this post-publication record lives on
+`main` and does not move the tag.
