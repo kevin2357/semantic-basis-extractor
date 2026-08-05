@@ -291,12 +291,21 @@ The expected direction is structurally equivalent to:
 The exact key names, schema version, and backward-compatible card-reference
 shape remain implementation details, not open questions about the architecture.
 
-## Remaining open data-model questions
+## Resolved data-model questions
 
-- **OPEN:** Determine migration and backward compatibility for existing decks.
-- **OPEN:** Finalize exact registry and card-reference key names.
-- **OPEN:** Decide whether legacy `theme_group` remains temporarily as a derived
-  compatibility field during migration.
+- **IMPLEMENTED:** Existing decks remain valid under the legacy card-level
+  `theme_group` contract. New v0.4 decks use a top-level
+  `theme_group_registry`; migration is not required merely for continued
+  rendering or validation.
+- **IMPLEMENTED:** Registry entries use `id`, `title`, `short_title`, `emoji`,
+  `order`, and optional `subtitle`. Participating aspect and synthesis cards use
+  `theme_group_id`.
+- **IMPLEMENTED:** New-registry cards do not retain a derived legacy
+  `theme_group`. Frontend legacy fallback remains a consumer compatibility path
+  and is never mixed with registry resolution inside one section.
+
+The durable implemented contract is documented in
+`docs/post_extraction_authoring/AstroWoof Dynamic Chapter Registry Contract.md`.
 
 ## Rejected or superseded assumptions
 
