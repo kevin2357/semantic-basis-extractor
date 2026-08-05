@@ -23,8 +23,14 @@ LOCKED_CARD_FIELDS = [
 ]
 ASTRO_TERMS = re.compile(
     r"\b(?:sun|moon|mercury|venus|mars|jupiter|saturn|uranus|neptune|pluto|"
-    r"node|ascendant|descendant|midheaven|astrolog|zodiac|house|doghouse|"
-    r"conjunction|opposition|square|trine|sextile|quincunx|chart)\b",
+    r"node|ascendant|descendant|midheaven|astrolog|zodiac|doghouse|"
+    r"conjunction|opposition|trine|sextile|quincunx)\b|"
+    r"\bhouse\s+(?:[1-9]|1[0-2])\b|"
+    r"\b(?:[1-9]|1[0-2])(?:st|nd|rd|th)?\s+house\b|"
+    r"\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|"
+    r"tenth|eleventh|twelfth)\s+house\b|"
+    r"\b(?:your|her|his|their|the|\w+['’]s)\s+chart\b|"
+    r"\b(?:the|this|that)\s+square(?:['’]s)?\b|\bsquare\s+aspect\b",
     re.IGNORECASE,
 )
 BAD_SECOND_PERSON = re.compile(

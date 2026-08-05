@@ -43,7 +43,10 @@ from lint_astrowoof_editorial import (  # noqa: E402
     lint_deck,
     reader_facing_items,
 )
-from validate_astrowoof_editorial import main as validate_editorial  # noqa: E402
+from validate_astrowoof_editorial import (  # noqa: E402
+    ASTRO_TERMS,
+    main as validate_editorial,
+)
 
 
 EXAMPLES = ROOT / "examples"
@@ -388,6 +391,25 @@ class TestBrePacket(unittest.TestCase):
         self.assertTrue(any(
             "invalid subtitle" in error for error in report["errors"]
         ))
+
+    def test_no_astro_advisory_distinguishes_ordinary_and_astrological_usage(self) -> None:
+        ordinary = [
+            "The house becomes quiet after dinner.",
+            "She rests in her favorite square of sunlight.",
+            "The sofa has a seating chart.",
+        ]
+        astrological = [
+            "Mars occupies House 7.",
+            "This belongs to the seventh house.",
+            "Her Doghouse 4 pattern concerns safety.",
+            "Several parts of her chart repeat the theme.",
+            "The square's friction needs a practiced channel.",
+            "A Jupiter-Saturn checkpoint slows the launch.",
+        ]
+        for text in ordinary:
+            self.assertIsNone(ASTRO_TERMS.search(text), text)
+        for text in astrological:
+            self.assertIsNotNone(ASTRO_TERMS.search(text), text)
 
     def test_editorial_validator_rejects_too_few_section_chapters(self) -> None:
         edited = complete_packet(self.packet)
