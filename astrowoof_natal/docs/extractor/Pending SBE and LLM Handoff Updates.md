@@ -1,6 +1,25 @@
 # Pending SBE and LLM Handoff Updates
 
-This document records schema and workflow changes introduced during the AstroWoof card-artifact restructuring. It is an implementation checklist for the next update passes.
+> **Status: historical/superseded checklist.** The extractor work below was
+> completed in the v0.3 update. Later authoring work replaced the shared
+> free-text `theme_group` design with the v0.4 section-scoped
+> `theme_group_registry` and card `theme_group_id` contract. Do not use this
+> file as current implementation guidance.
+>
+> Current authorities are:
+>
+> - [`Semantic Basis Extractor Pipeline and Scoring Metrics.md`](Semantic%20Basis%20Extractor%20Pipeline%20and%20Scoring%20Metrics.md)
+>   for extraction, selection, and packet construction;
+> - [`../post_extraction_authoring/AstroWoof Dynamic Chapter Registry Contract.md`](../post_extraction_authoring/AstroWoof%20Dynamic%20Chapter%20Registry%20Contract.md)
+>   for aspect/synthesis chapter organization;
+> - [`../post_extraction_authoring/Runtime Contracts.md`](../post_extraction_authoring/Runtime%20Contracts.md)
+>   for the released input, state, provenance, and delivery boundary; and
+> - [`../post_extraction_authoring/Semantic Closure Runner.md`](../post_extraction_authoring/Semantic%20Closure%20Runner.md)
+>   for current authoring orchestration and QA behavior.
+
+This document records the schema and workflow changes requested during the
+earlier AstroWoof card-artifact restructuring. It is retained as implementation
+history and as evidence for the acceptance criteria that led to v0.3.
 
 ## Semantic Basis Extractor update pass
 

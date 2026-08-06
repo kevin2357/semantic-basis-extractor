@@ -47,8 +47,14 @@ required-field, naming, or meaning change requires a new contract version.
 
 - AGF and SPC are not bundled or executed by this wheel.
 - The worker must provide four completed projected contexts and subject params.
+- The v0.1 input subject key must correspond to projected canonical source
+  identity `natal:<subject_id>`. AGF 0.6 caller-owned opaque chart IDs require a
+  future authoring-input contract that separates package subject identity from
+  canonical source-chart identity; they are not silently normalized by v0.1.
 - The OpenAI key is supplied through `OPENAI_API_KEY`; credentials are never
   part of inputs, run state, public state, or delivery artifacts.
 - Distributed leases, queues, object storage, authentication, quotas, and HTTP
-  endpoints belong to the future AstroWoof API service.
+  endpoints belong to the AstroWoof API service. Its control-plane foundation
+  exists, but its real AGF/SPC/SBE domain adapter remains an integration boundary
+  rather than functionality supplied by this wheel.
 - Only one worker may mutate a run directory at a time.

@@ -48,6 +48,9 @@ Start with:
   for supported Python, input, run-state, delivery, and upstream boundaries;
 - [`post_extraction_authoring/Semantic Closure Runner.md`](post_extraction_authoring/Semantic%20Closure%20Runner.md)
   for the detailed CLI and operational reference; and
+- [`post_extraction_authoring/Maintainer Release Playbook.md`](post_extraction_authoring/Maintainer%20Release%20Playbook.md)
+  for qualification, compatibility, and publication work on later releases;
+  and
 - [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0)
   for the immutable wheel and checksum assets.
 

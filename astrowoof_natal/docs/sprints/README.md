@@ -11,7 +11,7 @@ day.
 docs/sprints/
   YYYY/
     MM/
-      YYYYMMDD-sprintN-short-name/
+      YYYYMMDD-short-name-sprintN/
         PLAN.md
         LOG.md
         results/
@@ -20,9 +20,17 @@ docs/sprints/
 
 - `sprintN` resets to `sprint1` at the beginning of each date.
 - `short-name` states the sprint's subject without trying to encode its entire scope.
+- Historical directories may place `sprintN` before the short name. Preserve
+  those paths; new sprints use the convention above.
 - `PLAN.md` is the current approved scope, phases, controls, and exit criteria.
 - `LOG.md` is the chronological execution and decision record.
 - `results/` holds durable comparative findings, compact reports, and links to large or temporary artifacts.
+
+Each planned slice should name its independently reviewable outcome and gate.
+At a gate, run proportionate tests, inspect the diff, run `git diff --check`,
+update the log, write a slice result, and pause for approval before committing.
+Sprint completion means the explicit exit criteria are satisfied, not merely
+that every planned activity was attempted.
 
 Plans may be revised during a sprint when an explicitly scheduled learning
 checkpoint changes the evidence. Record both the observation and resulting

@@ -197,3 +197,20 @@
 - Documented that private API-worker builds must authenticate to GitHub using
   an ephemeral build secret; no token belongs in the pinned requirement,
   source tree, image layer, or runtime configuration.
+
+## 2026-08-05 — Post-sprint documentation and decision audit
+
+- Reconciled the editorial-quality, cleanup, and release-engineering logs with
+  durable component and project documentation.
+- Added a maintainer release playbook and promoted installed-runtime,
+  reproducibility, retry, metadata-authority, resource-identity, publication,
+  and cleanup lessons out of the sprint log.
+- Confirmed that project ADR-0002, ADR-0003, and ADR-0005 already cover the
+  architectural decisions implicated by this work; remaining surprises are
+  component invariants or operational policy rather than missing ADRs.
+- Identified and documented a new compatibility boundary: authoring v0.1
+  requires `source_chart_id == natal:<subject_id>`, while AGF 0.6 supports an
+  arbitrary caller-owned opaque chart ID. No runtime behavior was changed; a
+  future versioned authoring-input contract must resolve the distinction before
+  that exact production compatibility set is claimed.
+- Full regression verification passed: 118 tests.

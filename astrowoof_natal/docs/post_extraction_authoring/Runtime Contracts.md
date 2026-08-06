@@ -37,6 +37,27 @@ Legacy direct or one-directory-per-subject layouts remain supported. Their
 normalized manifest records `source_format: legacy-directory-v0`; explicit
 manifests record `source_format: manifest-v0.1`.
 
+Manifest context keys are the caller's explicit routing declaration. Legacy
+filenames are used only to discover candidate files. In both forms, extraction
+validates the embedded SPC projection-context metadata and rejects a file whose
+declared context does not match its assigned route. Renaming or routing a file
+does not rewrite its semantic context.
+
+### v0.1 subject and canonical-source identity boundary
+
+The v0.1 extractor validates each projected graph's canonical source identity
+against `natal:<subject_id>`, where `subject_id` is the normalized input-package
+subject key. This is the behavior qualified by the Bre and Ella release
+fixtures. It means a v0.1 input package cannot yet use an arbitrary opaque AGF
+`source_chart_id` independently from its package subject key.
+
+AGF 0.6 introduces caller-owned opaque chart identity. Supporting that boundary
+requires an explicit authoring-input contract evolution that separates package
+subject identity, display identity, and canonical source-chart identity. Do not
+work around the mismatch by renaming projected metadata or inferring identity
+from display name. Until that evolution is implemented and qualified, v0.1
+consumers must retain the documented `natal:<subject_id>` relationship.
+
 ## Subject parameters
 
 Canonical schema: `astrowoof.subject_params.v0.1`.
@@ -100,6 +121,11 @@ Declared upstream metadata is copied only when present. Missing engine,
 profile, graph, context, or source identifiers remain absent; the runtime never
 infers them. Runs migrated from older state explicitly mark input provenance as
 unavailable because creation-time hashes cannot be reconstructed reliably.
+
+The aggregate packaged-resource digest is release identity for the complete
+authoring policy bundle, not just Python source. A change to bundled schemas,
+authoring guidance, validators, or approved references requires a new qualified
+runtime artifact even when the public Python entry point is unchanged.
 
 ## Compatibility policy
 
