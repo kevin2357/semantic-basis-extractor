@@ -43,20 +43,20 @@ validates the embedded SPC projection-context metadata and rejects a file whose
 declared context does not match its assigned route. Renaming or routing a file
 does not rewrite its semantic context.
 
-### v0.1 subject and canonical-source identity boundary
+### Subject routing and canonical-source identity
 
-The v0.1 extractor validates each projected graph's canonical source identity
-against `natal:<subject_id>`, where `subject_id` is the normalized input-package
-subject key. This is the behavior qualified by the Bre and Ella release
-fixtures. It means a v0.1 input package cannot yet use an arbitrary opaque AGF
-`source_chart_id` independently from its package subject key.
+The input-package `subject_id` is a routing key. It identifies the subject's
+four context files and joins optional `params.json`; it does not determine or
+constrain the canonical source identity embedded in those projected graphs.
 
-AGF 0.6 introduces caller-owned opaque chart identity. Supporting that boundary
-requires an explicit authoring-input contract evolution that separates package
-subject identity, display identity, and canonical source-chart identity. Do not
-work around the mismatch by renaming projected metadata or inferring identity
-from display name. Until that evolution is implemented and qualified, v0.1
-consumers must retain the documented `natal:<subject_id>` relationship.
+Every context must declare the same non-empty `source_identity` object. Its
+identifiers are opaque and are preserved unchanged, so an AGF UUID
+`source_chart_id` is valid and need not resemble `natal:<subject_id>`. SBE
+rejects mixed canonical identities across contexts but does not infer identity
+from the routing key, display name, filenames, or subject metadata.
+
+Historical `natal:<subject_id>` identities remain valid opaque identifiers for
+legacy packages.
 
 ## Subject parameters
 

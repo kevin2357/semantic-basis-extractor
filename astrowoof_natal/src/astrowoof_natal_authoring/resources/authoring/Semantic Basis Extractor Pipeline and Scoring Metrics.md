@@ -110,6 +110,13 @@ validated before analysis. The four projected-term registries are merged
 deterministically; identical definitions are deduplicated and conflicts fail
 the subject run.
 
+The package subject key is used only for routing and subject metadata. The
+canonical `source_identity` embedded by the upstream graph and projection
+systems is opaque: all four contexts must carry the same non-empty identity,
+but it need not equal or contain `natal:<subject>`. UUID source identities are
+preserved unchanged through audits, evidence, authoring packets, run state,
+and delivery provenance.
+
 ## 4. Normalization
 
 ### 4.1 Object identity

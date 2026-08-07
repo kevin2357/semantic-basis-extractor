@@ -321,19 +321,19 @@ def load_and_validate_contexts(
     expected_relationships = _source_ref_set(
         general.get("relationships", []), "source_relationship_refs"
     )
-    expected_chart_id = f"natal:{subject}"
+    if not isinstance(expected_identity, dict) or not expected_identity:
+        raise ValueError(
+            f"Subject {subject} general context must declare a non-empty "
+            "source_identity object"
+        )
 
     errors: list[str] = []
     for context, graph in sorted(contexts.items()):
         identity = graph.get("source_identity")
-        chart_ids = set((identity or {}).get("source_chart_ids", []))
-        chart_id = (identity or {}).get("source_chart_id")
-        if (
-            _canonical_json(identity) != _canonical_json(expected_identity)
-            or (chart_id and chart_id != expected_chart_id)
-            or (chart_ids and expected_chart_id not in chart_ids)
-        ):
-            errors.append(f"{context}: subject identity does not match {expected_chart_id}")
+        if _canonical_json(identity) != _canonical_json(expected_identity):
+            errors.append(
+                f"{context}: canonical source identity differs from general"
+            )
         if _canonical_json(graph.get("source_graph_ref")) != _canonical_json(expected_graph):
             errors.append(f"{context}: source_graph_ref differs from general")
         if graph.get("target_ontology") != expected_ontology:

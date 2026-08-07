@@ -52,13 +52,19 @@ from astrowoof_natal_authoring.validation import (  # noqa: E402
 EXAMPLES = ROOT / "examples"
 
 
-def minimal_graph(subject: str, context: str, term_description: str = "same") -> dict:
+def minimal_graph(
+    subject: str,
+    context: str,
+    term_description: str = "same",
+    source_id: str | None = None,
+) -> dict:
     context_ids = {
         "general": "woofmapped.doghouse.general.v0",
         "direct_to_dog": "woofmapped.dog_direct.v1",
         "handler": "woofmapped.handler_guidance.v1",
         "hybrid": "woofmapped.hybrid_horoscope.v1",
     }
+    source_id = source_id or f"natal:{subject}"
     return {
         "source_graph_ref": {
             "graph_type": "canonical_astrology_graph",
@@ -66,9 +72,9 @@ def minimal_graph(subject: str, context: str, term_description: str = "same") ->
             "source_graph_hash": f"hash-{subject}",
         },
         "source_identity": {
-            "source_chart_id": f"natal:{subject}",
-            "source_chart_ids": [f"natal:{subject}"],
-            "sensor_instance_id": f"natal:{subject}",
+            "source_chart_id": source_id,
+            "source_chart_ids": [source_id],
+            "sensor_instance_id": source_id,
         },
         "target_ontology": "woofmapped_astrology.v0",
         "metadata": {"context_id": context_ids[context]},
@@ -1273,6 +1279,58 @@ class TestPackageDiscoveryAndRegistry(unittest.TestCase):
             write_subject(root, "bre")
             packages = discover_subject_packages(root)
             self.assertEqual(["bre"], list(packages))
+
+    def test_accepts_opaque_canonical_source_identity(self) -> None:
+        source_id = "9e0de4ce-58b2-4d0d-8d56-d58ec767b798"
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            suffixes = {
+                "general": "general",
+                "direct_to_dog": "d2d",
+                "handler": "handler",
+                "hybrid": "hybrid",
+            }
+            for context, suffix in suffixes.items():
+                path = root / f"natal.bre.woof.{suffix}.json"
+                path.write_text(
+                    json.dumps(minimal_graph("bre", context, source_id=source_id)),
+                    encoding="utf-8",
+                )
+            paths = discover_subject_packages(root)["bre"]
+            contexts, _registry, audit = load_and_validate_contexts("bre", paths)
+            self.assertEqual(source_id, contexts["general"]["source_identity"]["source_chart_id"])
+            self.assertEqual(source_id, audit["source_identity"]["source_chart_id"])
+
+    def test_rejects_mixed_opaque_canonical_source_identities(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_subject(root, "bre")
+            handler = root / "natal.bre.woof.handler.json"
+            graph = json.loads(handler.read_text(encoding="utf-8"))
+            source_id = "9e0de4ce-58b2-4d0d-8d56-d58ec767b798"
+            graph["source_identity"] = {
+                "source_chart_id": source_id,
+                "source_chart_ids": [source_id],
+                "sensor_instance_id": source_id,
+            }
+            handler.write_text(json.dumps(graph), encoding="utf-8")
+            paths = discover_subject_packages(root)["bre"]
+            with self.assertRaisesRegex(
+                ValueError, "canonical source identity differs from general"
+            ):
+                load_and_validate_contexts("bre", paths)
+
+    def test_rejects_missing_canonical_source_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_subject(root, "bre")
+            for path in root.glob("natal.bre.woof.*.json"):
+                graph = json.loads(path.read_text(encoding="utf-8"))
+                graph["source_identity"] = {}
+                path.write_text(json.dumps(graph), encoding="utf-8")
+            paths = discover_subject_packages(root)["bre"]
+            with self.assertRaisesRegex(ValueError, "non-empty source_identity"):
+                load_and_validate_contexts("bre", paths)
 
     def test_missing_context_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
