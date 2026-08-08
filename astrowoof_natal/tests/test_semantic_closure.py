@@ -86,6 +86,7 @@ from astrowoof_natal_authoring.extractor import (  # noqa: E402
     discover_subject_packages,
     load_and_validate_contexts,
     optimize,
+    render_compact_v2_full_chart_basis,
 )
 from astrowoof_natal_authoring.validation import BAD_SECOND_PERSON  # noqa: E402
 from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
@@ -792,11 +793,13 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.packet, ["cards.0.card.no_astro.body.handler"]
         )
         critic = qualitative_critic_transport(self.packet)
+        full_chart = render_compact_v2_full_chart_basis(self.packet)
         self.assertEqual(visible, basis["subject"])
         self.assertEqual(visible, critic["subject"])
         for field, value in protected.items():
-            self.assertNotIn(field, json.dumps([basis, critic]))
-            self.assertNotIn(str(value), json.dumps([basis, critic]))
+            provider_payloads = json.dumps([basis, critic, full_chart])
+            self.assertNotIn(field, provider_payloads)
+            self.assertNotIn(str(value), provider_payloads)
 
     def test_dog_details_prompt_view_removes_protected_fields(self) -> None:
         source = """# Dog Details\n- **Display name:** Bre\n- **Birth date:** 2020-10-07\n- **Birth datetime:** secret-datetime\n- **Birth location:** secret-place\n- **Birth latitude:** 39.7\n- **Birth longitude:** -105.0\n- **Birth-date precision:** exact\n- **Breed:** Mix\n"""

@@ -177,3 +177,30 @@ provider authorization and a real approved spend policy.
 Next action: approve the corrective change. The candidate must return through
 reproducible build and installed deterministic qualification before a fresh
 live run may begin.
+
+## 2026-08-07 — Corrected candidate and live disclosure blocker
+
+- User approved the Batch digest fix and full requalification. Committed it as
+  `816b108`.
+- Built the corrected wheel twice with `SOURCE_DATE_EPOCH=1786159294`; both
+  were byte-identical at 623,605 bytes with SHA-256
+  `24af039d3ae0fff1ae89ecc90008af0f8dc4c9fd011225ac08fc0e7c29c9d851`.
+- Clean-installed that wheel outside the checkout and reran the complete
+  deterministic smoke successfully.
+- Started a fresh Ella run. Batch detach/resume worked: round 1 settled at
+  $0.416913; five passes accepted. A separately authorized Terra retry settled
+  at $0.122159 and pass 6 accepted.
+- Two sparse polish actions settled at $0.025285 and $0.008062, producing a
+  clean validation/lint result and delivery. The critic action settled at
+  $0.105686 but its invented path list was rejected; qualitative candidate did
+  not run. Ledger-reported total was $0.678105.
+- Post-run disclosure inspection found datetime/date/location values in the
+  initial and retry Batch JSONL. The compact-v2 full-chart map had independently
+  embedded them in its subject line; coordinates were absent. This invalidates
+  the live candidate despite successful production delivery.
+- Removed datetime/location from compact-v2 generation and expanded the
+  provider-view regression to cover the full chart map. Focused tests passed
+  (3), full repository tests passed (142), and `git diff --check` passed.
+
+Next action: commit and requalify the disclosure correction, then perform a
+fresh bounded live run because the provider prompt changed.

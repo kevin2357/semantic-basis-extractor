@@ -2525,8 +2525,6 @@ def render_compact_v2_full_chart_basis(
                 pronouns.get("subject"), pronouns.get("object"),
             ) if value
         ),
-        subject.get("birth_datetime") or subject.get("birth_local"),
-        subject.get("birth_location_label") or subject.get("birth_location"),
     ]
     lines = [
         f"# Authoring Chart Map: {display_name}",
