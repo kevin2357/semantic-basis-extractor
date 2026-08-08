@@ -1,7 +1,7 @@
 # Sprint Results
 
-Status: Slice 5 controlled live gate stopped safely at the approved retry
-ceiling; corrective-change approval pending.
+Status: Slice 6 final artifact and consumer handoff complete; gate approval
+pending.
 
 - `SLICE 0 - Baseline and Release Coordinate Audit.md`: source baseline,
   version/tag recommendation, exact upstream tuple, gap analysis, and gate.
@@ -20,6 +20,9 @@ ceiling; corrective-change approval pending.
 - `SLICE 5 - Controlled Live Release Candidate.md`: installed-wheel Batch
   execution, disclosure audits, accounting, and hard-exhaustion result.
 - `slice5-controlled-live.json`: compact machine-readable live-gate evidence.
+- `SLICE 6 - Final Artifact and Consumer Handoff.md`: final wheel identity,
+  installed qualification, API ownership boundary, and publication hold.
+- `slice6-final-artifact.json`: compact final artifact and smoke evidence.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot

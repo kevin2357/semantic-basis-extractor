@@ -1,0 +1,25 @@
+{
+  "schema_version": "astrowoof.release_slice6_evidence.v0.1",
+  "status": "pass",
+  "version": "0.2.0",
+  "proposed_tag": "astrowoof-natal-authoring-v0.2.0",
+  "source_commit": "0f22676410f2c8de83587b55a8b477c0295cc24b",
+  "source_date_epoch": 1786164056,
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.2.0-py3-none-any.whl",
+    "bytes": 623777,
+    "sha256": "cbc8e82da546c1dd4a13a60544f31c5627365167c8c7c48f3114b5fd1f4c03e4",
+    "entry_count": 40,
+    "cache_entry_count": 0,
+    "independent_build_count": 2,
+    "byte_reproducible": true
+  },
+  "verification": {
+    "repository_tests": 144,
+    "installed_smoke": "pass",
+    "runtime_source": "site-packages",
+    "resource_count": 19,
+    "resource_sha256": "439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404"
+  },
+  "publication": "not_authorized"
+}

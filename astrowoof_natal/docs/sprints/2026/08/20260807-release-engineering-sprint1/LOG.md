@@ -255,3 +255,23 @@ one fresh exact-artifact live qualification.
 
 Next action: review and approve the correction and choose whether the bounded
 hard-exhaustion result satisfies Slice 5 or a new retry ceiling is authorized.
+
+## 2026-08-07 - Slice 5 approved; Slice 6 final handoff
+
+- User accepted bounded hard exhaustion as satisfying Slice 5. Committed the
+  approved implementation and evidence as `0f22676`.
+- Built the final wheel twice from commit
+  `0f22676410f2c8de83587b55a8b477c0295cc24b` with its commit epoch
+  `SOURCE_DATE_EPOCH=1786164056`.
+- Both wheels are byte-identical at 623,777 bytes with 40 entries, no cache or
+  bytecode entries, and SHA-256
+  `cbc8e82da546c1dd4a13a60544f31c5627365167c8c7c48f3114b5fd1f4c03e4`.
+- Clean-installed the exact wheel without dependencies. Installed smoke passed
+  with resource aggregate
+  `439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404`
+  and the exact AGF 0.6/SPC 0.10 UUID fixture derivation.
+- Prepared the 0.2.0 release manifest, checksum, hash-pinned requirement,
+  compatibility declaration, release notes, API worker guide, and Slice 6
+  human/machine evidence. Publication remains unset and unauthorized.
+
+Next action: Slice 6 gate review. Do not commit/tag/publish until approved.
