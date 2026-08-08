@@ -54,6 +54,8 @@ Start with:
   for the v0.8 per-run paid-action ledger and provider atomicity boundary;
 - [`post_extraction_authoring/Spend Authorization Consumer Handoff.md`](post_extraction_authoring/Spend%20Authorization%20Consumer%20Handoff.md)
   for the API prepare/authorize/execute integration contract; and
+- [`post_extraction_authoring/Provider Disclosure and Durable Workspace Contract.md`](post_extraction_authoring/Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
+  for minimized provider fields and complete stable-path snapshots; and
 - [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0)
   for the immutable wheel and checksum assets.
 

@@ -1,5 +1,18 @@
 # Semantic Closure Runner
 
+## Provider disclosure and workspace resume
+
+Run schema v0.9 minimizes subject identity at the final OpenAI boundary. Birth
+date/time, coordinates, location, and date precision remain available to local
+input/provenance processing but are excluded from interactive, Batch, retry,
+polish, critic, and candidate payloads. See `Provider Disclosure and Durable
+Workspace Contract.md` for the field inventory.
+
+V0.9 workspaces are not relocatable. Preserve the entire run directory and
+restore it at the absolute logical path recorded in `run.json`. Resume checks
+the SHA-256 inventory in `workspace-snapshot.json` and fails closed on an
+incomplete, changed, additional, or relocated snapshot.
+
 ## Provider spend authorization
 
 New OpenAI runs require `--spend-policy POLICY.json`. The policy is frozen in

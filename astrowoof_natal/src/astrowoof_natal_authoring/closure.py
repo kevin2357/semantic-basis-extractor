@@ -70,7 +70,9 @@ from .spend import (
 )
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.8"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.9"
+SNAPSHOT_SCHEMA = "astrowoof.semantic_closure_snapshot.v0.1"
+SNAPSHOT_NAME = "workspace-snapshot.json"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -96,12 +98,29 @@ SUBJECT_AUTHORING_FILES = {
     "FULL CHART BASIS.md",
     "WRITE WHOLE DOG PROFILE.md",
 }
+PROVIDER_VISIBLE_SUBJECT_FIELDS = (
+    "subject_id",
+    "display_name",
+    "subject_type",
+    "gender",
+    "pronouns",
+    "breed",
+)
+PROTECTED_SUBJECT_FIELDS = (
+    "birth_date",
+    "birth_datetime",
+    "birth_latitude",
+    "birth_longitude",
+    "birth_location",
+    "birth_date_precision",
+)
 FIELD_PATTERN = re.compile(
     r"(<!-- BEGIN FIELD: ([a-zA-Z0-9_.]+) -->\s*\n)"
     r"(.*?)"
     r"(\n<!-- END FIELD: \2 -->)",
     re.DOTALL,
 )
+_SNAPSHOT_HASH_CACHE: dict[str, tuple[int, int, str]] = {}
 
 
 def utc_now() -> str:
@@ -149,6 +168,36 @@ def sha256_file(path: Path) -> str:
 
 def normalized_path(path: Path) -> str:
     return str(path.resolve())
+
+
+def provider_visible_subject(subject: Any) -> dict[str, Any]:
+    """Return the explicit editorial identity view permitted to providers."""
+    if not isinstance(subject, dict):
+        return {}
+    return {
+        field: deepcopy(subject[field])
+        for field in PROVIDER_VISIBLE_SUBJECT_FIELDS
+        if field in subject
+    }
+
+
+def provider_visible_markdown(relative: str, text: str) -> str:
+    """Remove protected DOG DETAILS lines at the final prompt boundary."""
+    if relative != "DOG DETAILS.md":
+        return text
+    protected_labels = {
+        "Birth date",
+        "Birth datetime",
+        "Birth latitude",
+        "Birth longitude",
+        "Birth location",
+        "Birth-date precision",
+    }
+    return "\n".join(
+        line
+        for line in text.splitlines()
+        if not any(line.startswith(f"- **{label}:**") for label in protected_labels)
+    ) + ("\n" if text.endswith("\n") else "")
 
 
 def estimated_text_tokens(value: str) -> int:
@@ -610,9 +659,12 @@ def render_workspace_files(workspace: Path, paths: list[Path]) -> str:
     sections = []
     for path in paths:
         relative = path.relative_to(workspace).as_posix()
+        visible_text = provider_visible_markdown(
+            relative, path.read_text(encoding="utf-8")
+        )
         sections.append(
             f"\n===== BEGIN FILE: {relative} =====\n"
-            f"{path.read_text(encoding='utf-8')}"
+            f"{visible_text}"
             f"\n===== END FILE: {relative} =====\n"
         )
     if not sections:
@@ -1933,6 +1985,17 @@ def initial_run_state(
         "input_contract": input_contract,
         "authoring_profile": profile,
         "run_dir": normalized_path(run_dir),
+        "workspace_contract": {
+            "mode": "stable_logical_absolute_path",
+            "logical_root": normalized_path(run_dir),
+            "snapshot_schema": SNAPSHOT_SCHEMA,
+            "snapshot_manifest": SNAPSHOT_NAME,
+        },
+        "provider_disclosure": {
+            "schema_version": "astrowoof.provider_disclosure.v0.1",
+            "subject_fields_allowed": list(PROVIDER_VISIBLE_SUBJECT_FIELDS),
+            "subject_fields_protected": list(PROTECTED_SUBJECT_FIELDS),
+        },
         "provider": provider.name,
         "service_level": service_level,
         "provider_configuration": provider_configuration(provider),
@@ -2304,6 +2367,84 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
             ],
         },
     )
+    write_workspace_snapshot(run_json.parent)
+
+
+def snapshot_inventory(
+    run_dir: Path, *, use_process_cache: bool = True
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for path in sorted(item for item in run_dir.rglob("*") if item.is_file()):
+        relative = path.relative_to(run_dir).as_posix()
+        if (
+            relative == SNAPSHOT_NAME
+            or relative.endswith(".lock")
+            or path.name.startswith(".") and path.name.endswith(".tmp")
+        ):
+            continue
+        stat = path.stat()
+        cache_key = normalized_path(path)
+        cached = _SNAPSHOT_HASH_CACHE.get(cache_key)
+        if (
+            use_process_cache
+            and cached
+            and cached[0] == stat.st_size
+            and cached[1] == stat.st_mtime_ns
+        ):
+            checksum = cached[2]
+        else:
+            checksum = sha256_file(path)
+            _SNAPSHOT_HASH_CACHE[cache_key] = (
+                stat.st_size,
+                stat.st_mtime_ns,
+                checksum,
+            )
+        records.append({
+            "path": relative,
+            "bytes": stat.st_size,
+            "sha256": checksum,
+        })
+    return records
+
+
+def write_workspace_snapshot(run_dir: Path) -> None:
+    write_json_atomic(
+        run_dir / SNAPSHOT_NAME,
+        {
+            "schema_version": SNAPSHOT_SCHEMA,
+            "logical_root": normalized_path(run_dir),
+            "members": snapshot_inventory(run_dir),
+        },
+    )
+
+
+def validate_workspace_snapshot(run_dir: Path, state: dict[str, Any]) -> None:
+    contract = state.get("workspace_contract") or {}
+    expected_root = contract.get("logical_root")
+    actual_root = normalized_path(run_dir)
+    if contract.get("mode") != "stable_logical_absolute_path" or not expected_root:
+        raise ValueError("Run lacks the durable stable-path workspace contract")
+    if expected_root != actual_root:
+        raise ValueError(
+            "Run workspace must be restored at its original logical absolute "
+            f"path: expected {expected_root!r}, got {actual_root!r}"
+        )
+    manifest_path = run_dir / SNAPSHOT_NAME
+    if not manifest_path.is_file():
+        raise ValueError(f"Run snapshot is incomplete: missing {manifest_path}")
+    manifest = load_json(manifest_path)
+    if (
+        manifest.get("schema_version") != SNAPSHOT_SCHEMA
+        or manifest.get("logical_root") != expected_root
+    ):
+        raise ValueError("Run snapshot manifest does not match its workspace contract")
+    expected = manifest.get("members")
+    actual = snapshot_inventory(run_dir, use_process_cache=False)
+    if expected != actual:
+        raise ValueError(
+            "Run snapshot is incomplete or changed; restore the complete exact "
+            "snapshot before resuming"
+        )
 
 
 def save_state_locked(
@@ -3528,6 +3669,29 @@ def package_subject_delivery(
         ),
         None,
     )
+    delivery_deck = load_json(Path(record["deck"]))
+    evidence_scopes = {
+        "selected_cards": {
+            "scope": "claim_local_selected_evidence",
+            "claim_ids": [
+                card.get("claim_id")
+                for card in delivery_deck.get("cards", [])
+                if card.get("claim_id")
+            ],
+        },
+        "summary_and_whole_dog": {
+            "scope": "broader_synthesis_evidence",
+            "sources": [
+                "selected_cards",
+                "unselected_claims",
+                "whole_graph_analysis",
+                "projected_term_registry",
+            ],
+            "unselected_claim_count": len(
+                delivery_deck.get("unselected_claims", [])
+            ),
+        },
+    }
     delivery_manifest = {
         "schema_version": DELIVERY_MANIFEST_SCHEMA,
         "subject_id": subject,
@@ -3544,6 +3708,7 @@ def package_subject_delivery(
                 "resource_count": resource_provenance.get("resource_count"),
             },
             "input_subject": input_subject,
+            "evidence_scopes": evidence_scopes,
         },
         "artifacts": [
             artifact_descriptor(path, role=role)
@@ -4063,7 +4228,7 @@ def sparse_polish_basis(
         if path.startswith("cards.")
     })
     return {
-        "subject": deck.get("subject", {}),
+        "subject": provider_visible_subject(deck.get("subject")),
         "cards": [
             {
                 "index": index,
@@ -4320,7 +4485,7 @@ def qualitative_critic_transport(deck: dict[str, Any]) -> dict[str, Any]:
         for index, card in enumerate(deck.get("cards", []))
     ]
     return {
-        "subject": deck.get("subject", {}),
+        "subject": provider_visible_subject(deck.get("subject")),
         "card_descriptors": cards,
         "reader_facing_fields": fields,
     }
@@ -5252,13 +5417,16 @@ def resume_run(
         raise FileNotFoundError(f"Cannot resume without {run_json}")
     state = load_json(run_json)
     previous_schema = state.get("schema_version")
+    if previous_schema == SCHEMA_VERSION:
+        validate_workspace_snapshot(run_dir, state)
     if (
         previous_schema != SCHEMA_VERSION
         and getattr(provider, "name", None) == "openai"
     ):
         raise ValueError(
-            "Legacy OpenAI runs cannot resume paid work without a v0.8 spend "
-            "ledger; reconcile or migrate them explicitly before execution"
+            "Legacy OpenAI runs cannot resume paid work without a v0.9 spend "
+            "ledger and complete workspace snapshot; reconcile or migrate them "
+            "explicitly before execution"
         )
     if previous_schema in {
         "astrowoof.semantic_closure_run.v0.2",
@@ -5267,6 +5435,7 @@ def resume_run(
         "astrowoof.semantic_closure_run.v0.5",
         "astrowoof.semantic_closure_run.v0.6",
         "astrowoof.semantic_closure_run.v0.7",
+        "astrowoof.semantic_closure_run.v0.8",
     }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("service_level", "interactive")
@@ -5596,6 +5765,7 @@ def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
         for item in targets:
             shutil.rmtree(run_dir / Path(item["path"]))
         write_json_atomic(run_dir / "cleanup-report.json", report)
+        write_workspace_snapshot(run_dir)
     return report
 
 

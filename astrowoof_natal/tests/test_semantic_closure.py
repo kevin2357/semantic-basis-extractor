@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import sys
 import tempfile
 import threading
@@ -51,6 +52,8 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     polish_subject,
     polish_target_paths,
     provider_configuration,
+    provider_visible_markdown,
+    provider_visible_subject,
     prompt_cache_manifest,
     qualitative_critic_output_schema,
     qualitative_critic_transport,
@@ -68,6 +71,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     sparse_polish_output_schema,
     sparse_polish_transport_metrics,
     update_run_status,
+    validate_workspace_snapshot,
     validate_qualitative_critic_response,
     workspace_file_inventory,
     write_json_atomic,
@@ -766,6 +770,35 @@ class TestSemanticClosure(SemanticClosureFixture):
         )
         self.assertIn("relationship_type", projected)
         self.assertIn("attributes", projected)
+
+    def test_every_editorial_transport_uses_minimized_subject_view(self) -> None:
+        protected = {
+            "birth_date": "2020-10-07",
+            "birth_datetime": "2020-10-07T14:32:00-06:00",
+            "birth_latitude": 39.7392,
+            "birth_longitude": -104.9903,
+            "birth_location": "Denver, Colorado",
+            "birth_date_precision": "exact",
+        }
+        self.packet["subject"].update(protected)
+        visible = provider_visible_subject(self.packet["subject"])
+        basis = sparse_polish_basis(
+            self.packet, ["cards.0.card.no_astro.body.handler"]
+        )
+        critic = qualitative_critic_transport(self.packet)
+        self.assertEqual(visible, basis["subject"])
+        self.assertEqual(visible, critic["subject"])
+        for field, value in protected.items():
+            self.assertNotIn(field, json.dumps([basis, critic]))
+            self.assertNotIn(str(value), json.dumps([basis, critic]))
+
+    def test_dog_details_prompt_view_removes_protected_fields(self) -> None:
+        source = """# Dog Details\n- **Display name:** Bre\n- **Birth date:** 2020-10-07\n- **Birth datetime:** secret-datetime\n- **Birth location:** secret-place\n- **Birth latitude:** 39.7\n- **Birth longitude:** -105.0\n- **Birth-date precision:** exact\n- **Breed:** Mix\n"""
+        visible = provider_visible_markdown("DOG DETAILS.md", source)
+        self.assertIn("Display name", visible)
+        self.assertIn("Breed", visible)
+        self.assertNotIn("Birth", visible)
+        self.assertNotIn("secret", visible)
 
     def test_qualitative_critic_is_strict_read_only_and_path_validated(
         self,
@@ -2418,6 +2451,31 @@ class TestSemanticClosure(SemanticClosureFixture):
                 persisted["passes"]["bre_1"]["accepted_workspace"],
             )
             self.assertEqual(1, len(persisted["passes"]["bre_1"]["attempts"]))
+
+    def test_resume_rejects_incomplete_snapshot(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            _state, _run_json = self.make_state(root, provider)
+            (root / "run" / "untracked-after-snapshot.txt").write_text(
+                "partial copy", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
+                resume_run(
+                    run_dir=root / "run",
+                    provider=provider,
+                    max_attempts=3,
+                )
+
+    def test_snapshot_requires_original_logical_absolute_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            state, _run_json = self.make_state(root, provider)
+            relocated = root / "relocated"
+            shutil.copytree(root / "run", relocated)
+            with self.assertRaisesRegex(ValueError, "original logical absolute"):
+                validate_workspace_snapshot(relocated, state)
 
     def test_resume_restores_accepted_state_from_durable_acceptance_evidence(
         self,

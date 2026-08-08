@@ -151,6 +151,15 @@ class TestReleaseContracts(unittest.TestCase):
             self.assertEqual(DELIVERY_MANIFEST_SCHEMA, manifest["schema_version"])
             self.assertEqual(profile, manifest["authoring_profile"])
             self.assertEqual(4, len(manifest["artifacts"]))
+            scopes = manifest["provenance"]["evidence_scopes"]
+            self.assertEqual(
+                "claim_local_selected_evidence",
+                scopes["selected_cards"]["scope"],
+            )
+            self.assertEqual(
+                "broader_synthesis_evidence",
+                scopes["summary_and_whole_dog"]["scope"],
+            )
             self.assertTrue(all(len(item["sha256"]) == 64 for item in manifest["artifacts"]))
             self.assertEqual(64, len(record["delivery_artifact"]["sha256"]))
 

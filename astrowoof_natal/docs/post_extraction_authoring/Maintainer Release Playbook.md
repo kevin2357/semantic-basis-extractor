@@ -126,6 +126,17 @@ requires:
 - the consumer handoff assigns cross-run reservation and billing authority to
   the API.
 
+For v0.9 or later, also verify the provider-disclosure allowlist across
+initial authoring, creative retry and Batch construction, polish, critic, and
+candidate requests. Exercise exact-path snapshot restore and rejection of a
+missing, additional, truncated, changed, or relocated member. Retain release
+assertions for selected-card versus broader whole-dog evidence provenance,
+projected-term registry merge and closure, monotonic accepted evidence, all
+machine-distinguishable run outcomes, and exact AGF 0.6 / SPC 0.10 identity
+propagation through claims, synthesis, authoring state, delivery provenance,
+and the installed-wheel smoke. Unknown-time suppression, variable basis size,
+Quick/Complete, hierarchy redesign, and critic product policy remain deferred.
+
 A release is complete only when:
 
 1. the full relevant suite passes;

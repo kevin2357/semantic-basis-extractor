@@ -3,7 +3,9 @@
   "contracts": {
     "projected_input": "astrowoof.projected_natal_input.v0.1",
     "subject_params": "astrowoof.subject_params.v0.1",
-    "operator_run": "astrowoof.semantic_closure_run.v0.8",
+    "operator_run": "astrowoof.semantic_closure_run.v0.9",
+    "provider_disclosure": "astrowoof.provider_disclosure.v0.1",
+    "workspace_snapshot": "astrowoof.semantic_closure_snapshot.v0.1",
     "provider_spend_ledger": "astrowoof.provider_spend_ledger.v0.1",
     "provider_spend_authorization": "astrowoof.provider_spend_authorization.v0.1",
     "provider_spend_reconciliation": "astrowoof.provider_spend_reconciliation.v0.1",
@@ -23,7 +25,8 @@
       "astrowoof.semantic_closure_run.v0.5",
       "astrowoof.semantic_closure_run.v0.6",
       "astrowoof.semantic_closure_run.v0.7",
-      "astrowoof.semantic_closure_run.v0.8"
+      "astrowoof.semantic_closure_run.v0.8",
+      "astrowoof.semantic_closure_run.v0.9"
     ]
   }
 }
