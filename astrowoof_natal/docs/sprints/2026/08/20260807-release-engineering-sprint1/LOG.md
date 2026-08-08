@@ -275,3 +275,22 @@ hard-exhaustion result satisfies Slice 5 or a new retry ceiling is authorized.
   human/machine evidence. Publication remains unset and unauthorized.
 
 Next action: Slice 6 gate review. Do not commit/tag/publish until approved.
+
+## 2026-08-07 - Slice 7 tag, publication, and verification
+
+- User approved Slice 6 and continuation. Committed the final handoff as
+  `9c3ec9e`, confirmed the working tree was clean, and confirmed the proposed
+  tag and release did not exist.
+- Created annotated tag `astrowoof-natal-authoring-v0.2.0` at
+  `9c3ec9e59da7ad5ec87e0dc43cb9582913d6b7ac`; tag object is
+  `8e441796d2aa33c5189f718e9e9fc199a7d9b396`. Pushed main and the tag.
+- Published non-draft, non-prerelease GitHub release 367111936 with wheel asset
+  506048024 and checksum asset 506048023.
+- Authenticated-download verification in a fresh directory confirmed wheel
+  size 623,777, SHA-256
+  `cbc8e82da546c1dd4a13a60544f31c5627365167c8c7c48f3114b5fd1f4c03e4`,
+  checksum agreement, published asset digest, and remote peeled tag target.
+- Updated the release manifest and wrote Slice 7 human/machine publication
+  evidence. This post-publication record does not move the immutable tag.
+
+Next action: commit and push the post-publication evidence; sprint complete.

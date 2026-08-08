@@ -1,7 +1,6 @@
 # Sprint Results
 
-Status: Slice 6 final artifact and consumer handoff complete; gate approval
-pending.
+Status: release sprint complete; v0.2.0 published and independently verified.
 
 - `SLICE 0 - Baseline and Release Coordinate Audit.md`: source baseline,
   version/tag recommendation, exact upstream tuple, gap analysis, and gate.
@@ -23,6 +22,9 @@ pending.
 - `SLICE 6 - Final Artifact and Consumer Handoff.md`: final wheel identity,
   installed qualification, API ownership boundary, and publication hold.
 - `slice6-final-artifact.json`: compact final artifact and smoke evidence.
+- `SLICE 7 - Tag and Publication.md`: immutable tag, GitHub release, assets,
+  and authenticated consumer-path verification.
+- `slice7-publication-verification.json`: machine-readable publication proof.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot
