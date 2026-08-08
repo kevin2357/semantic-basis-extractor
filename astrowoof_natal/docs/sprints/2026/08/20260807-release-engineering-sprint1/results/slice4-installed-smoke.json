@@ -1,0 +1,39 @@
+{
+  "schema_version": "astrowoof.natal_authoring.release_smoke.v0.1",
+  "status": "pass",
+  "artifact": {
+    "version": "0.2.0",
+    "filename": "astrowoof_natal_authoring-0.2.0-py3-none-any.whl",
+    "sha256": "799307597fb33e5717112e0c772983bca2dd78bd193b999a5286e4476f2b4ea4"
+  },
+  "require_installed": true,
+  "runtime_module": "C:\\tmp\\sbe-slice4-venv\\Lib\\site-packages\\astrowoof_natal_authoring",
+  "working_directory_outside_checkout": true,
+  "checks": {
+    "initial_state": "AUTHORING",
+    "resume": "DELIVERY_COMPLETE",
+    "forced_retry_attempt_count": 2,
+    "card_count": 50,
+    "summary_count": 4,
+    "delivery_member_count": 5,
+    "manifest_hashes_match": true,
+    "resource_count": 19,
+    "resource_set_sha256": "439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404",
+    "cleanup_target_count": 20,
+    "cleanup_reclaimed_bytes": 4627864,
+    "opaque_source_identity": "550e8400-e29b-41d4-a716-446655440000",
+    "agf_0_6_wheel_sha256": "d1b357b1ec0e40faf7070b29e5c25d18e54c9507406518f26587aac46300aa95",
+    "spc_0_10_wheel_sha256": "60bd0f18d3b183d2f4c6375447f90881ab6c22c6138b8f9b8ffe69a246015150"
+  },
+  "spend_contract": {
+    "prepared_public_status": "AWAITING_SPEND_AUTHORIZATION",
+    "pending_action_visible": true,
+    "exact_authorization_state": "AUTHORIZED",
+    "authorization_persisted": true,
+    "provider_submission_performed": false,
+    "legacy_without_ledger_fails_closed": true
+  },
+  "repository_tests": 141,
+  "diff_check": "pass",
+  "live_provider_calls": 0
+}

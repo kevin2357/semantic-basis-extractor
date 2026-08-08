@@ -129,3 +129,25 @@ Next action: Slice 2 gate review and approval before commit or Slice 3.
   passed (13) after the audit regression. `git diff --check` passed.
 
 Next action: Slice 3 gate review and approval before commit or Slice 4.
+
+## 2026-08-07 — Slice 3 approved; Slice 4 installed smoke
+
+- Committed approved Slice 3 as `a8fbf05` and began Slice 4.
+- Created a fresh CPython 3.12 virtual environment under `C:\tmp`, installed
+  only candidate wheel SHA-256
+  `799307597fb33e5717112e0c772983bca2dd78bd193b999a5286e4476f2b4ea4`,
+  and confirmed version 0.2.0 resolves from site-packages outside the checkout.
+- Ran `astrowoof-release-smoke --require-installed` from outside the repository.
+  It reached `DELIVERY_COMPLETE` with 50 cards, four summaries, the forced
+  two-attempt retry, matching delivery hashes, and successful cleanup.
+- The installed smoke retained the Slice 1 opaque UUID, approved AGF/SPC wheel
+  hashes, and Slice 3 resource-set identity.
+- Exercised installed prepare/authorize state without provider submission:
+  pending authorization was durable and public, exact authorization persisted,
+  and legacy state without a ledger failed closed.
+- Complete repository tests passed (141); `git diff --check` passed. No live
+  provider call, tag, or publication occurred.
+- Wrote the Slice 4 human and machine-readable reports.
+
+Next action: Slice 4 gate review. Slice 5 cannot begin without explicit live
+provider authorization and a real approved spend policy.

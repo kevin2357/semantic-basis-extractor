@@ -13,6 +13,9 @@ Status: Slice 0 audit complete; gate approval pending.
 - `SLICE 3 - Reproducible Candidate Artifact.md`: reproducible build and
   complete wheel-boundary audit.
 - `slice3-candidate-artifact.json`: machine-readable candidate identity.
+- `SLICE 4 - Clean Installed Deterministic Smoke.md`: exact installed-wheel
+  extraction, resume, delivery, cleanup, and spend-seam qualification.
+- `slice4-installed-smoke.json`: machine-readable installed qualification.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot
