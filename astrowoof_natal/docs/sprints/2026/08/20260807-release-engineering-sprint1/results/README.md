@@ -1,6 +1,9 @@
 # Sprint Results
 
-Status: no results; sprint not started.
+Status: Slice 0 audit complete; gate approval pending.
+
+- `SLICE 0 - Baseline and Release Coordinate Audit.md`: source baseline,
+  version/tag recommendation, exact upstream tuple, gap analysis, and gate.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot
