@@ -2367,7 +2367,13 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
             ],
         },
     )
-    write_workspace_snapshot(run_json.parent)
+    # Concurrent author workers can be creating workspace files outside the
+    # state lock. Their run/public state remains atomic, but only the
+    # coordinator can attest a quiescent complete-directory snapshot. A crash
+    # before that coordinator save deliberately leaves the prior manifest
+    # mismatched and therefore fail-closed on resume.
+    if threading.current_thread() is threading.main_thread():
+        write_workspace_snapshot(run_json.parent)
 
 
 def snapshot_inventory(

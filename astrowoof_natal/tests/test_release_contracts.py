@@ -30,7 +30,11 @@ from astrowoof_natal_authoring.provenance import (  # noqa: E402
     refresh_execution_provenance,
     resource_set_provenance,
 )
-from astrowoof_natal_authoring.smoke import FIXTURE_FILES, materialize_fixture  # noqa: E402
+from astrowoof_natal_authoring.smoke import (  # noqa: E402
+    FIXTURE_FILES,
+    SMOKE_SOURCE_ID,
+    materialize_fixture,
+)
 
 
 def write(path: Path, value: str = "{}\n") -> None:
@@ -210,6 +214,12 @@ class TestReleaseContracts(unittest.TestCase):
             materialize_fixture(target)
             self.assertEqual(set(FIXTURE_FILES), {path.name for path in target.iterdir()})
             self.assertTrue(all((target / name).stat().st_size > 300_000 for name in FIXTURE_FILES))
+            identities = {
+                json.loads((target / name).read_text(encoding="utf-8"))
+                ["source_identity"]["source_chart_id"]
+                for name in FIXTURE_FILES
+            }
+            self.assertEqual({SMOKE_SOURCE_ID}, identities)
 
     def test_legacy_migration_marks_input_provenance_unavailable(self) -> None:
         provenance = migrated_run_provenance(

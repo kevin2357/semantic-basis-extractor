@@ -57,6 +57,13 @@ is absent, its root differs, or the actual inventory differs. A crash between
 an artifact write and the next state save is deliberately treated as an
 incomplete snapshot requiring operator recovery.
 
+Concurrent interactive author workers atomically persist operator/public state
+from their worker threads, but they cannot attest the whole directory while
+peer workers are still creating files. The coordinator writes the complete
+snapshot after all workers quiesce. Until then, the earlier manifest will not
+match the newer state/artifacts, so a process crash fails closed instead of
+resuming from a directory that was observed mid-write.
+
 ## Pre-pin qualification scope
 
 Release qualification must continue to prove:

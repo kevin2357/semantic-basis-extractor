@@ -1334,6 +1334,30 @@ class TestSemanticClosure(SemanticClosureFixture):
         update_run_status(state)
         self.assertEqual("DELIVERY_COMPLETE", state["status"])
 
+    def test_run_outcome_classes_remain_machine_distinguishable(self) -> None:
+        base = {
+            "passes": {"bre_1": {"state": "GENERATED", "attempts": []}},
+            "subjects": {},
+        }
+        cases = [
+            ({"passes": {"bre_1": {"state": "WAITING_FOR_RESPONSE", "attempts": []}}}, "WAITING_FOR_RESPONSE"),
+            ({"spend_ledger": {"actions": [{"state": "PREPARED"}]}}, "AWAITING_SPEND_AUTHORIZATION"),
+            ({"spend_ledger": {"actions": [{"state": "BUDGET_EXHAUSTED"}]}}, "BUDGET_EXHAUSTED"),
+            ({"spend_ledger": {"actions": [{"state": "AMBIGUOUS_PROVIDER_SUBMISSION"}]}}, "AMBIGUOUS_PROVIDER_SUBMISSION"),
+            ({"subjects": {"bre": {"state": "FINAL_QA_WARN", "polish_attempts": []}}}, "FINAL_QA_REQUIRES_REVIEW"),
+            ({"subjects": {"bre": {"state": "FINAL_QA_FAILED", "polish_attempts": []}}}, "FINAL_QA_FAILED"),
+            ({"subjects": {"bre": {"state": "DELIVERY_COMPLETE_WITH_WARNINGS", "polish_attempts": []}}}, "DELIVERY_COMPLETE_WITH_WARNINGS"),
+            ({"subjects": {"bre": {"state": "DELIVERY_COMPLETE", "polish_attempts": []}}}, "DELIVERY_COMPLETE"),
+        ]
+        observed = set()
+        for overlay, expected in cases:
+            state = deepcopy(base)
+            state.update(deepcopy(overlay))
+            update_run_status(state)
+            self.assertEqual(expected, state["status"])
+            observed.add(state["status"])
+        self.assertEqual(len(cases), len(observed))
+
     def test_finalize_packages_clean_subject_and_preserves_warning_review(
         self,
     ) -> None:

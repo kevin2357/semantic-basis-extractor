@@ -63,3 +63,28 @@ Next action: obtain explicit approval for the Slice 0 gate recommendations.
 - Updated only the sprint coordinates. Package metadata remains unchanged
   until Slice 3 as planned.
 - Slice 0 is approved for commit; Slice 1 may begin after that commit.
+
+## 2026-08-07 — Slice 1 contract and integration qualification
+
+- Committed approved Slice 0 as `9ac90de` and began Slice 1 without changing
+  package metadata.
+- Downloaded the published AGF 0.6.0 and SPC 0.10.0 wheels. Their SHA-256
+  values exactly matched the approved release records.
+- Confirmed the local CPython 3.12 Windows environment cannot install the
+  qualified Swiss-Ephemeris dependency without native compilation. Preserved
+  that limitation rather than claiming a fresh AGF live calculation.
+- Added deterministic UUID identity derivation to the packaged smoke input and
+  recorded the pinned upstream artifact hashes and changed identity carriers.
+- Extended smoke checks through the authoring packet, selected claims,
+  syntheses, delivered deck, operator provenance, and delivery provenance.
+- Added a machine-outcome matrix covering eight distinct run result classes.
+- The first full suite exposed a concurrent snapshot-attestation race. Changed
+  worker saves to persist state atomically while reserving whole-directory
+  snapshot attestation for the quiescent coordinator; crash behavior remains
+  fail closed. Added the boundary to durable documentation.
+- Focused release-contract tests passed (12), UUID source smoke reached
+  `DELIVERY_COMPLETE`, and the full repository suite passed (136).
+- Wrote the Slice 1 human and machine reports. No OpenAI call, version change,
+  wheel build, tag, or publication occurred.
+
+Next action: Slice 1 gate review and approval before commit or Slice 2.
