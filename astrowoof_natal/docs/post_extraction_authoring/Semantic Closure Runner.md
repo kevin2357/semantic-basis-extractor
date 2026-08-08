@@ -1,5 +1,47 @@
 # Semantic Closure Runner
 
+## Provider spend authorization
+
+New OpenAI runs require `--spend-policy POLICY.json`. The policy is frozen in
+the generation profile and must explicitly set the run ceiling, all five stage
+ceilings, the price-book version, and optional-stage skip/exhaust behavior.
+There are no built-in dollar allocations.
+
+Before every paid submission the runner persists an exact action in
+`spend-authorization-requests.json` and pauses as
+`AWAITING_SPEND_AUTHORIZATION`. Resume with one or more
+`--spend-authorization AUTHORIZATION.json` files. Each authorization is bound
+to the exact request digest, run/profile/state revision, route, maximum output,
+commitment, and price book. Polling already identified provider work does not
+require authorization.
+
+Required-stage ceiling failure produces `BUDGET_EXHAUSTED`. A provider-creation
+window without a durably recorded provider ID produces
+`AMBIGUOUS_PROVIDER_SUBMISSION` and is never automatically retried. Optional
+budget behavior is frozen in the generation profile. See
+`Provider Spend Enforcement.md` and `Spend Authorization Consumer Handoff.md`.
+
+## Provider spend authorization
+
+New OpenAI runs require `--spend-policy POLICY.json`. The policy is frozen in
+the generation profile and must explicitly set the run ceiling, all five stage
+ceilings, the price-book version, and optional-stage skip/exhaust behavior.
+There are no built-in dollar allocations.
+
+Before every paid submission the runner persists an exact action in
+`spend-authorization-requests.json` and pauses as
+`AWAITING_SPEND_AUTHORIZATION`. Resume with one or more
+`--spend-authorization AUTHORIZATION.json` files. Each authorization is bound
+to the exact request digest, run/profile/state revision, route, maximum output,
+commitment, and price book. Polling already identified provider work does not
+require authorization.
+
+Required-stage ceiling failure produces `BUDGET_EXHAUSTED`. A provider-creation
+window without a durably recorded provider ID produces
+`AMBIGUOUS_PROVIDER_SUBMISSION` and is never automatically retried. Optional
+budget behavior is frozen in the generation profile. See
+`Provider Spend Enforcement.md` and `Spend Authorization Consumer Handoff.md`.
+
 `src/author_semantic_closure.py` orchestrates the AstroWoof authoring stage
 between projected-chart inputs and final deck assembly.
 

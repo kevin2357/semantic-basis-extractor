@@ -108,6 +108,24 @@ requirements, image layers, logs, run artifacts, public state, or delivery.
 
 ## Release exit criteria
 
+For any release containing Semantic Closure v0.8 or later, promotion also
+requires:
+
+- no OpenAI path can submit without a prepared and consumed paid action;
+- initial authoring, creative retry, polish, critic, and qualitative candidate
+  appear as separate ledger stages;
+- prepare/authorize/execute and polling-only resume pass from an installed
+  artifact;
+- failure injection proves the PREPARED, SUBMITTING, provider-ID, and reported
+  usage persistence boundaries;
+- legacy OpenAI state fails closed;
+- hard exhaustion, optional profile-driven skipping, and ambiguous submission
+  remain distinct machine states;
+- the pinned price book and all generation-specific ceilings are explicit;
+- provider idempotency claims match published provider guarantees; and
+- the consumer handoff assigns cross-run reservation and billing authority to
+  the API.
+
 A release is complete only when:
 
 1. the full relevant suite passes;

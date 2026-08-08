@@ -50,7 +50,10 @@ Start with:
   for the detailed CLI and operational reference; and
 - [`post_extraction_authoring/Maintainer Release Playbook.md`](post_extraction_authoring/Maintainer%20Release%20Playbook.md)
   for qualification, compatibility, and publication work on later releases;
-  and
+- [`post_extraction_authoring/Provider Spend Enforcement.md`](post_extraction_authoring/Provider%20Spend%20Enforcement.md)
+  for the v0.8 per-run paid-action ledger and provider atomicity boundary;
+- [`post_extraction_authoring/Spend Authorization Consumer Handoff.md`](post_extraction_authoring/Spend%20Authorization%20Consumer%20Handoff.md)
+  for the API prepare/authorize/execute integration contract; and
 - [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0)
   for the immutable wheel and checksum assets.
 

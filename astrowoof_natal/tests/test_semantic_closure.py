@@ -87,6 +87,27 @@ from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
     invalid_context_filter_claim_ids,
     invalid_theme_group_claim_ids,
 )
+from astrowoof_natal_authoring.spend import PRICE_BOOK_VERSION  # noqa: E402
+
+
+def test_spend_policy() -> dict:
+    return {
+        "currency": "USD",
+        "price_book_version": PRICE_BOOK_VERSION,
+        "run_ceiling_micro_usd": 100_000_000,
+        "stage_ceilings_micro_usd": {
+            "authoring_initial": 100_000_000,
+            "creative_retry": 100_000_000,
+            "polish": 100_000_000,
+            "qualitative_critic": 100_000_000,
+            "qualitative_candidate": 100_000_000,
+        },
+        "optional_stage_budget_behavior": {
+            "polish": "skip",
+            "qualitative_critic": "skip",
+            "qualitative_candidate": "skip",
+        },
+    }
 
 
 EXAMPLES = ROOT / "examples"
@@ -353,6 +374,11 @@ class SemanticClosureFixture(unittest.TestCase):
             max_attempts=max_attempts,
             sbe_manifest=manifest,
             specs=specs,
+            profile=(
+                {"spend_policy": test_spend_policy()}
+                if getattr(provider, "name", None) == "openai"
+                else None
+            ),
         )
         run_json = run_dir / "run.json"
         save_state(run_json, state)

@@ -211,6 +211,8 @@ def normalize_subject_params(
 def public_run_state(state: dict[str, Any]) -> dict[str, Any]:
     passes = list(state.get("passes", {}).values())
     accepted = sum(item.get("state") == "PASS_QA_ACCEPTED" for item in passes)
+    ledger = state.get("spend_ledger") or {}
+    actions = ledger.get("actions") or []
     return {
         "schema_version": PUBLIC_RUN_SCHEMA,
         "status": state.get("status"),
@@ -218,6 +220,21 @@ def public_run_state(state: dict[str, Any]) -> dict[str, Any]:
         "updated_at": state.get("updated_at"),
         "service_level": state.get("service_level"),
         "progress": {"passes_total": len(passes), "passes_accepted": accepted},
+        "spend_control": {
+            "currency": (ledger.get("policy") or {}).get("currency"),
+            "pending_action_ids": [
+                item.get("action_id") for item in actions
+                if item.get("state") == "PREPARED"
+            ],
+            "budget_exhausted_action_ids": [
+                item.get("action_id") for item in actions
+                if item.get("state") == "BUDGET_EXHAUSTED"
+            ],
+            "ambiguous_action_ids": [
+                item.get("action_id") for item in actions
+                if item.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
+            ],
+        },
         "subjects": {
             subject: {
                 "status": record.get("state"),

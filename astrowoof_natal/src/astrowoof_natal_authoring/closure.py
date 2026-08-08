@@ -23,9 +23,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -46,9 +48,29 @@ from .provenance import (
     migrated_run_provenance,
     refresh_execution_provenance,
 )
+from .spend import (
+    AmbiguousProviderSubmission,
+    AwaitingSpendAuthorization,
+    BudgetExhausted,
+    PRICE_BOOK_VERSION,
+    PRICE_BOOK_USD_PER_MILLION,
+    action_binding,
+    append_reconciliation_reference,
+    authorize_action,
+    begin_submission,
+    conservative_commitment_micros,
+    digest as spend_digest,
+    mark_ambiguous,
+    new_ledger,
+    prepare_action,
+    profile_digest as spend_profile_digest,
+    record_provider_id,
+    record_reported_cost,
+    validate_policy,
+)
 
 
-SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.7"
+SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.8"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
@@ -61,26 +83,8 @@ WRITABLE_FILE_NAMES = {
 }
 RETRYABLE_HTTP_STATUSES = {408, 409, 429, 500, 502, 503, 504}
 MODEL_PRICING_USD_PER_MILLION = {
-    "gpt-5.6": {
-        "input": 5.00,
-        "cached_input": 0.50,
-        "output": 30.00,
-    },
-    "gpt-5.6-sol": {
-        "input": 5.00,
-        "cached_input": 0.50,
-        "output": 30.00,
-    },
-    "gpt-5.6-terra": {
-        "input": 2.50,
-        "cached_input": 0.25,
-        "output": 15.00,
-    },
-    "gpt-5.6-luna": {
-        "input": 1.00,
-        "cached_input": 0.10,
-        "output": 6.00,
-    },
+    model: {name: float(value) for name, value in rates.items()}
+    for model, rates in PRICE_BOOK_USD_PER_MILLION.items()
 }
 TOKEN_ESTIMATE_METHOD = "utf8_bytes_divided_by_4"
 STATIC_AUTHORING_FILES = {
@@ -220,6 +224,8 @@ class AuthoringProvider(Protocol):
         spec: PassSpec,
         attempt_number: int,
         feedback: dict[str, Any] | None = None,
+        before_submit: Any = None,
+        provider_created: Any = None,
     ) -> ProviderResult:
         """Author one fresh pass workspace."""
 
@@ -355,6 +361,8 @@ class FakeAuthoringProvider:
         spec: PassSpec,
         attempt_number: int,
         feedback: dict[str, Any] | None = None,
+        before_submit: Any = None,
+        provider_created: Any = None,
     ) -> ProviderResult:
         if attempt_number <= self.error_attempts.get(spec.pass_id, 0):
             raise RuntimeError(
@@ -997,6 +1005,7 @@ class OpenAIResponsesProvider:
         prompt_cache_ttl: str = "30m",
         transport: JsonHttpTransport | None = None,
         sleep: Any = time.sleep,
+        require_spend_authorization: bool = False,
     ) -> None:
         if not api_key:
             raise ValueError("OpenAI API key is required")
@@ -1018,6 +1027,7 @@ class OpenAIResponsesProvider:
         self.prompt_cache_ttl = prompt_cache_ttl
         self.transport = transport or UrllibJsonTransport()
         self.sleep = sleep
+        self.require_spend_authorization = require_spend_authorization
 
     def _request_with_retry(
         self,
@@ -1049,6 +1059,8 @@ class OpenAIResponsesProvider:
                     and exc.status_code in {400, 404}
                 ):
                     exc.fatal = True
+                if method == "POST" and self.require_spend_authorization:
+                    raise
                 if (
                     not exc.retryable
                     or transport_attempt > self.max_transport_retries
@@ -1177,6 +1189,8 @@ class OpenAIResponsesProvider:
         spec: PassSpec,
         attempt_number: int,
         feedback: dict[str, Any] | None = None,
+        before_submit: Any = None,
+        provider_created: Any = None,
     ) -> ProviderResult:
         expected_fields = writable_fields(source_workspace)
         system, prompt_segments = self._prompt(
@@ -1285,12 +1299,18 @@ class OpenAIResponsesProvider:
             create_transport_attempts = 0
             retrieve_transport_attempts = retrieval_attempts
         else:
+            if self.require_spend_authorization and before_submit is None:
+                raise ValueError("Paid Responses creation requires spend authorization")
+            if before_submit is not None:
+                before_submit(request_payload)
             response, create_transport_attempts = self._request_with_retry(
                 method="POST",
                 url=f"{self.base_url}/responses",
                 payload=request_payload,
                 idempotency_key=idempotency_key,
             )
+            if provider_created is not None:
+                provider_created(response.get("id"), "response")
             write_json_atomic(
                 background_path,
                 {
@@ -1427,6 +1447,8 @@ class OpenAIResponsesProvider:
         schema_name: str,
         attempt_root: Path,
         idempotency_material: str,
+        before_submit: Any = None,
+        provider_created: Any = None,
     ) -> tuple[Any, dict[str, Any]]:
         """Run one resumable structured-output response for final polish."""
         payload: dict[str, Any] = {
@@ -1464,12 +1486,18 @@ class OpenAIResponsesProvider:
             )
             create_attempts = 0
         else:
+            if self.require_spend_authorization and before_submit is None:
+                raise ValueError("Paid Responses creation requires spend authorization")
+            if before_submit is not None:
+                before_submit(payload)
             response, create_attempts = self._request_with_retry(
                 method="POST",
                 url=f"{self.base_url}/responses",
                 payload=payload,
                 idempotency_key=key,
             )
+            if provider_created is not None:
+                provider_created(response.get("id"), "response")
             write_json_atomic(
                 background_path,
                 {"id": response.get("id"), "status": response.get("status")},
@@ -1554,6 +1582,8 @@ class RoutedOpenAIProvider:
         spec: PassSpec,
         attempt_number: int,
         feedback: dict[str, Any] | None = None,
+        before_submit: Any = None,
+        provider_created: Any = None,
     ) -> ProviderResult:
         route = "initial" if attempt_number == 1 else "creative_retry"
         provider = self.initial if attempt_number == 1 else self.retry
@@ -1564,6 +1594,8 @@ class RoutedOpenAIProvider:
                 spec,
                 attempt_number,
                 feedback,
+                before_submit,
+                provider_created,
             )
         except AuthoringProviderError as exc:
             exc.metadata["routing"] = {
@@ -1888,8 +1920,12 @@ def initial_run_state(
     profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     now = utc_now()
-    return {
+    state = {
         "schema_version": SCHEMA_VERSION,
+        "state_revision": 0,
+        "run_id": hashlib.sha256(
+            f"{normalized_path(run_dir)}:{now}".encode("utf-8")
+        ).hexdigest(),
         "status": "AUTHORING",
         "created_at": now,
         "updated_at": now,
@@ -1924,6 +1960,10 @@ def initial_run_state(
         },
         "subjects": {},
     }
+    if provider.name == "openai":
+        spend_policy = (profile or {}).get("spend_policy")
+        state["spend_ledger"] = new_ledger(validate_policy(spend_policy))
+    return state
 
 
 def prompt_cache_manifest(specs: list[PassSpec]) -> dict[str, Any]:
@@ -1984,6 +2024,9 @@ def provider_configuration(
             "max_output_tokens": getattr(provider, "max_output_tokens", None),
             "prompt_cache_mode": getattr(provider, "prompt_cache_mode", None),
             "prompt_cache_ttl": getattr(provider, "prompt_cache_ttl", None),
+            "require_spend_authorization": getattr(
+                provider, "require_spend_authorization", None
+            ),
         }.items()
         if value is not None
     }
@@ -2007,10 +2050,20 @@ def specs_from_state(state: dict[str, Any]) -> list[PassSpec]:
 
 def update_run_status(state: dict[str, Any]) -> None:
     states = {record["state"] for record in state["passes"].values()}
+    spend_states = {
+        action.get("state")
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+    }
     final_states = {
         record["state"] for record in state.get("subjects", {}).values()
     }
-    if final_states and final_states <= FINAL_SUCCESS_STATES:
+    if "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
+        state["status"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+    elif "BUDGET_EXHAUSTED" in spend_states:
+        state["status"] = "BUDGET_EXHAUSTED"
+    elif "PREPARED" in spend_states:
+        state["status"] = "AWAITING_SPEND_AUTHORIZATION"
+    elif final_states and final_states <= FINAL_SUCCESS_STATES:
         state["status"] = (
             "DELIVERY_COMPLETE_WITH_WARNINGS"
             if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
@@ -2229,10 +2282,28 @@ def update_run_status(state: dict[str, Any]) -> None:
 
 
 def save_state(run_json: Path, state: dict[str, Any]) -> None:
+    state["state_revision"] = int(state.get("state_revision") or 0) + 1
     update_run_status(state)
     refresh_execution_provenance(state)
     write_json_atomic(run_json, state)
     write_json_atomic(run_json.with_name("public-run.json"), public_run_state(state))
+    ledger = state.get("spend_ledger") or {}
+    write_json_atomic(
+        run_json.with_name("spend-authorization-requests.json"),
+        {
+            "schema_version": "astrowoof.provider_spend_authorization_requests.v0.1",
+            "run_id": state.get("run_id"),
+            "state_revision": state.get("state_revision"),
+            "actions": [
+                {
+                    "action_id": action["action_id"],
+                    "binding": action["binding"],
+                }
+                for action in ledger.get("actions", [])
+                if action.get("state") == "PREPARED"
+            ],
+        },
+    )
 
 
 def save_state_locked(
@@ -2242,6 +2313,243 @@ def save_state_locked(
 ) -> None:
     with state_lock:
         save_state(run_json, state)
+
+
+class SpendController:
+    """Prepare and consume exact paid actions under one durable run ledger."""
+
+    def __init__(
+        self,
+        *,
+        state: dict[str, Any],
+        run_json: Path,
+        state_lock: threading.Lock,
+        consumer_id: str,
+    ) -> None:
+        self.state = state
+        self.run_json = run_json
+        self.state_lock = state_lock
+        self.consumer_id = consumer_id
+        self.local = threading.local()
+
+    @property
+    def ledger(self) -> dict[str, Any]:
+        ledger = self.state.get("spend_ledger")
+        if not isinstance(ledger, dict):
+            raise ValueError("OpenAI run has no durable spend ledger")
+        return ledger
+
+    @contextmanager
+    def _consumption_lock(self):
+        """Serialize authorization consumption across local worker processes."""
+        path = self.run_json.with_name("spend-consumption.lock")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a+b") as handle:
+            handle.seek(0)
+            if handle.tell() == 0 and path.stat().st_size == 0:
+                handle.write(b"0")
+                handle.flush()
+            handle.seek(0)
+            if os.name == "nt":
+                import msvcrt
+                msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                handle.seek(0)
+                if os.name == "nt":
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+    def callbacks(
+        self,
+        *,
+        stage: str,
+        route: str,
+        model: str,
+        service_level: str,
+        maximum_output_tokens: int,
+    ) -> tuple[Any, Any]:
+        resumed = next(
+            (
+                item for item in self.ledger["actions"]
+                if item["binding"]["stage"] == stage
+                and item["binding"]["route"] == route
+                and item["binding"]["model"] == model
+                and item.get("provider")
+            ),
+            None,
+        )
+        if resumed is not None:
+            self.local.active_action = resumed["action_id"]
+
+        def before_submit(payload: dict[str, Any]) -> None:
+            request_sha256 = spend_digest(payload)
+            with self._consumption_lock(), self.state_lock:
+                existing = next(
+                    (
+                        item for item in self.ledger["actions"]
+                        if item["binding"]["stage"] == stage
+                        and item["binding"]["route"] == route
+                        and item["binding"]["request_sha256"] == request_sha256
+                        and item["binding"]["model"] == model
+                        and item["binding"]["service_level"] == service_level
+                        and item["binding"]["maximum_output_tokens"]
+                        == maximum_output_tokens
+                    ),
+                    None,
+                )
+                if existing is None:
+                    input_tokens = estimated_text_tokens(
+                        json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+                    )
+                    commitment = conservative_commitment_micros(
+                        model=model,
+                        input_tokens=input_tokens,
+                        maximum_output_tokens=maximum_output_tokens,
+                        service_level=service_level,
+                    )
+                    binding = action_binding(
+                        run_id=self.state["run_id"],
+                        profile_sha256=spend_profile_digest(
+                            self.state.get("authoring_profile")
+                        ),
+                        prepared_state_revision=int(
+                            self.state.get("state_revision") or 0
+                        ),
+                        stage=stage,
+                        route=route,
+                        request_sha256=request_sha256,
+                        model=model,
+                        service_level=service_level,
+                        maximum_output_tokens=maximum_output_tokens,
+                        commitment_micro_usd=commitment,
+                        price_book_version=PRICE_BOOK_VERSION,
+                    )
+                    existing = prepare_action(self.ledger, binding)
+                    save_state(self.run_json, self.state)
+                if existing["state"] == "PREPARED":
+                    raise AwaitingSpendAuthorization(
+                        "Paid action requires external authorization",
+                        action=existing,
+                    )
+                if existing["state"] == "BUDGET_EXHAUSTED":
+                    raise BudgetExhausted(
+                        "Paid action exhausted its frozen budget", action=existing
+                    )
+                if existing["state"] == "SKIPPED_BUDGET_EXHAUSTED":
+                    raise BudgetExhausted(
+                        "Optional paid stage skipped under frozen generation profile",
+                        action=existing,
+                    )
+                if existing["state"] in {
+                    "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
+                    "PROVIDER_ID_RECORDED", "WAITING",
+                }:
+                    if not existing.get("provider"):
+                        mark_ambiguous(
+                            existing,
+                            reason=(
+                                "execution resumed after SUBMITTING without a "
+                                "durable provider operation ID"
+                            ),
+                        )
+                        save_state(self.run_json, self.state)
+                    raise AmbiguousProviderSubmission(
+                        "Provider submission outcome requires reconciliation",
+                        action=existing,
+                    )
+                persisted_revision = int(
+                    load_json(self.run_json).get("state_revision") or 0
+                )
+                memory_revision = int(self.state.get("state_revision") or 0)
+                if persisted_revision != memory_revision:
+                    raise RuntimeError(
+                        "Paid-action authorization consumption lost the "
+                        "single-writer state-revision compare"
+                    )
+                begin_submission(
+                    existing,
+                    consumer_id=self.consumer_id,
+                    state_revision=int(self.state.get("state_revision") or 0),
+                )
+                self.local.active_action = existing["action_id"]
+                save_state(self.run_json, self.state)
+
+        def provider_created(provider_id: str | None, kind: str) -> None:
+            with self.state_lock:
+                action = self.active_action()
+                record_provider_id(
+                    action,
+                    provider_id=str(provider_id or ""),
+                    kind=kind,
+                )
+                try:
+                    save_state(self.run_json, self.state)
+                except Exception as exc:
+                    mark_ambiguous(
+                        action,
+                        reason=(
+                            "provider returned an operation ID but durable "
+                            f"state persistence failed: {exc}"
+                        ),
+                    )
+                    raise AmbiguousProviderSubmission(
+                        "Provider ID could not be durably persisted",
+                        action=action,
+                    ) from exc
+
+        return before_submit, provider_created
+
+    def active_action(self) -> dict[str, Any]:
+        action_id = getattr(self.local, "active_action", None)
+        if not action_id:
+            raise ValueError("No paid action is active in this worker")
+        return next(
+            item for item in self.ledger["actions"]
+            if item["action_id"] == action_id
+        )
+
+    def mark_active_ambiguous(self, reason: str) -> None:
+        action_id = getattr(self.local, "active_action", None)
+        if not action_id:
+            return
+        with self.state_lock:
+            action = self.active_action()
+            if action["state"] == "SUBMITTING":
+                mark_ambiguous(action, reason=reason)
+                save_state(self.run_json, self.state)
+
+    def mark_active_waiting(self) -> None:
+        action_id = getattr(self.local, "active_action", None)
+        if not action_id:
+            return
+        with self.state_lock:
+            action = self.active_action()
+            if action["state"] == "PROVIDER_ID_RECORDED":
+                action["state"] = "WAITING"
+                save_state(self.run_json, self.state)
+
+    def settle_active(self, metadata: dict[str, Any]) -> None:
+        action_id = getattr(self.local, "active_action", None)
+        if not action_id:
+            return
+        estimate = (metadata.get("estimated_cost") or {}).get("estimated_amount")
+        estimated_micro_usd = int(
+            (Decimal(str(estimate or 0)) * Decimal(1_000_000)).to_integral_value()
+        )
+        with self.state_lock:
+            action = self.active_action()
+            record_reported_cost(
+                action,
+                usage=metadata.get("usage") or {},
+                estimated_micro_usd=estimated_micro_usd,
+            )
+            save_state(self.run_json, self.state)
 
 
 def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
@@ -2304,6 +2612,7 @@ def author_one_pass(
     run_json: Path,
     state: dict[str, Any],
     state_lock: threading.Lock,
+    spend_controller: SpendController | None = None,
 ) -> None:
     if record["state"] == "PASS_QA_ACCEPTED":
         accepted = Path(record["accepted_workspace"])
@@ -2326,7 +2635,10 @@ def author_one_pass(
         record["attempts"][-1]
         if record["attempts"]
         and record["attempts"][-1]["state"]
-        in {"SUBMITTED", "RESPONSE_RECEIVED", "WAITING_FOR_RESPONSE"}
+        in {
+            "SUBMITTED", "RESPONSE_RECEIVED", "WAITING_FOR_RESPONSE",
+            "AWAITING_SPEND_AUTHORIZATION",
+        }
         and record["attempts"][-1].get("finished_at") is None
         else None
     )
@@ -2366,13 +2678,41 @@ def author_one_pass(
                 record["attempts"].append(attempt)
                 save_state(run_json, state)
         try:
-            result = provider.author(
-                source_workspace,
-                response_workspace,
-                spec,
-                attempt_number,
-                feedback,
-            )
+            before_submit = None
+            provider_created = None
+            if spend_controller is not None:
+                routed = openai_provider_for_attempt(provider, attempt_number)
+                stage = (
+                    "authoring_initial" if attempt_number == 1
+                    else "creative_retry"
+                )
+                before_submit, provider_created = spend_controller.callbacks(
+                    stage=stage,
+                    route=f"{spec.pass_id}:attempt-{attempt_number:03d}",
+                    model=routed.model,
+                    service_level="interactive",
+                    maximum_output_tokens=routed.max_output_tokens,
+                )
+            if spend_controller is None:
+                result = provider.author(
+                    source_workspace,
+                    response_workspace,
+                    spec,
+                    attempt_number,
+                    feedback,
+                )
+            else:
+                result = provider.author(
+                    source_workspace,
+                    response_workspace,
+                    spec,
+                    attempt_number,
+                    feedback,
+                    before_submit,
+                    provider_created,
+                )
+            if spend_controller is not None:
+                spend_controller.settle_active(result.metadata)
             with state_lock:
                 attempt["state"] = "RESPONSE_RECEIVED"
                 attempt["provider_metadata"] = result.metadata
@@ -2412,6 +2752,8 @@ def author_one_pass(
                 record["state"] = "PASS_QA_REJECTED"
                 save_state(run_json, state)
         except BackgroundResponsePending as exc:
+            if spend_controller is not None:
+                spend_controller.mark_active_waiting()
             with state_lock:
                 attempt["state"] = "WAITING_FOR_RESPONSE"
                 attempt["provider_metadata"] = exc.metadata
@@ -2419,7 +2761,28 @@ def author_one_pass(
                 record["state"] = "WAITING_FOR_RESPONSE"
                 save_state(run_json, state)
             return
+        except (AwaitingSpendAuthorization, BudgetExhausted) as exc:
+            with state_lock:
+                attempt["state"] = exc.state
+                attempt["paid_action_id"] = (
+                    exc.action or {}
+                ).get("action_id")
+                attempt["error"] = None
+                record["state"] = exc.state
+                save_state(run_json, state)
+            return
+        except AmbiguousProviderSubmission as exc:
+            with state_lock:
+                attempt["state"] = exc.state
+                attempt["paid_action_id"] = (
+                    exc.action or {}
+                ).get("action_id")
+                record["state"] = exc.state
+                save_state(run_json, state)
+            return
         except Exception as exc:
+            if spend_controller is not None:
+                spend_controller.mark_active_ambiguous(str(exc))
             with state_lock:
                 attempt["state"] = "ATTEMPT_ERROR"
                 attempt["finished_at"] = utc_now()
@@ -2454,6 +2817,7 @@ def author_pending_passes(
     run_json: Path,
     stop_after_attempts: int | None = None,
     max_workers: int = 1,
+    spend_controller: SpendController | None = None,
 ) -> None:
     if max_workers < 1:
         raise ValueError("max_workers must be at least 1")
@@ -2462,6 +2826,8 @@ def author_pending_passes(
             "stop_after_attempts is only supported with max_workers=1"
         )
     state_lock = threading.Lock()
+    if spend_controller is not None:
+        spend_controller.state_lock = state_lock
     attempts_before = sum(
         len(record["attempts"]) for record in state["passes"].values()
     )
@@ -2483,6 +2849,7 @@ def author_pending_passes(
             run_json=run_json,
             state=state,
             state_lock=state_lock,
+            spend_controller=spend_controller,
         )
 
     cache_warmer: PassSpec | None = None
@@ -2565,6 +2932,7 @@ def author_pending_passes_batch(
     poll_interval_seconds: float = 30.0,
     detach: bool = False,
     sleep: Any = time.sleep,
+    spend_controller: SpendController | None = None,
 ) -> bool:
     """Author pending passes in model-homogeneous, resumable Batch rounds."""
     service = state.setdefault(
@@ -2608,6 +2976,7 @@ def author_pending_passes_batch(
                 item for item in candidates
                 if openai_provider_for_attempt(provider, item[2]).model
                 == first_provider.model
+                and (item[2] == 1) == (candidates[0][2] == 1)
             ]
             round_number = len(service["rounds"]) + 1
             round_root = run_dir / "batches" / f"round-{round_number:03d}"
@@ -2679,7 +3048,7 @@ def author_pending_passes_batch(
             resumable["input_file_id"] = uploaded["id"]
             resumable["state"] = "UPLOADED"
             save_state(run_json, state)
-            batch = transport.create_batch({
+            batch_payload = {
                 "input_file_id": uploaded["id"],
                 "endpoint": "/v1/responses",
                 "completion_window": "24h",
@@ -2687,13 +3056,59 @@ def author_pending_passes_batch(
                     "workflow": "astrowoof_semantic_closure",
                     "round": str(round_number),
                 },
-            })
+            }
+            batch_before = batch_created = None
+            if spend_controller is not None:
+                batch_before, batch_created = spend_controller.callbacks(
+                    stage=(
+                        "authoring_initial"
+                        if candidates[0][2] == 1
+                        else "creative_retry"
+                    ),
+                    route=f"batch-round-{round_number:03d}",
+                    model=first_provider.model,
+                    service_level="batch",
+                    maximum_output_tokens=(
+                        first_provider.max_output_tokens * len(requests)
+                    ),
+                )
+                batch_before({
+                    "batch": batch_payload,
+                    "input_sha256": hashlib.sha256(
+                        input_text.encode("utf-8")
+                    ).hexdigest(),
+                })
+            batch = transport.create_batch(batch_payload)
+            if batch_created is not None:
+                batch_created(batch.get("id"), "batch")
             resumable["batch_id"] = batch["id"]
             resumable["batch_status"] = batch.get("status")
             resumable["state"] = "SUBMITTED"
             save_state(run_json, state)
         else:
             input_path = Path(resumable["input_path"])
+            resume_attempts = [
+                int(request["attempt_number"])
+                for request in resumable["requests"]
+            ]
+            resume_provider = openai_provider_for_attempt(
+                provider, resume_attempts[0]
+            )
+            if spend_controller is not None:
+                spend_controller.callbacks(
+                    stage=(
+                        "authoring_initial"
+                        if resume_attempts[0] == 1
+                        else "creative_retry"
+                    ),
+                    route=f"batch-round-{resumable['round_number']:03d}",
+                    model=resumable["model"],
+                    service_level="batch",
+                    maximum_output_tokens=(
+                        resume_provider.max_output_tokens
+                        * len(resumable["requests"])
+                    ),
+                )
             if resumable["state"] == "PREPARED":
                 uploaded = transport.upload_jsonl(
                     input_path.read_bytes(), input_path.name
@@ -2702,7 +3117,7 @@ def author_pending_passes_batch(
                 resumable["state"] = "UPLOADED"
                 save_state(run_json, state)
             if resumable["state"] == "UPLOADED":
-                batch = transport.create_batch({
+                batch_payload = {
                     "input_file_id": resumable["input_file_id"],
                     "endpoint": "/v1/responses",
                     "completion_window": "24h",
@@ -2710,7 +3125,32 @@ def author_pending_passes_batch(
                         "workflow": "astrowoof_semantic_closure",
                         "round": str(resumable["round_number"]),
                     },
-                })
+                }
+                batch_before = batch_created = None
+                if spend_controller is not None:
+                    batch_before, batch_created = spend_controller.callbacks(
+                        stage=(
+                            "authoring_initial"
+                            if resume_attempts[0] == 1
+                            else "creative_retry"
+                        ),
+                        route=f"batch-round-{resumable['round_number']:03d}",
+                        model=resumable["model"],
+                        service_level="batch",
+                        maximum_output_tokens=(
+                            resume_provider.max_output_tokens
+                            * len(resumable["requests"])
+                        ),
+                    )
+                    batch_before({
+                        "batch": batch_payload,
+                        "input_sha256": hashlib.sha256(
+                            input_path.read_bytes()
+                        ).hexdigest(),
+                    })
+                batch = transport.create_batch(batch_payload)
+                if batch_created is not None:
+                    batch_created(batch.get("id"), "batch")
                 resumable["batch_id"] = batch["id"]
                 resumable["batch_status"] = batch.get("status")
                 resumable["state"] = "SUBMITTED"
@@ -2865,6 +3305,39 @@ def author_pending_passes_batch(
                 record["state"] = "ATTEMPT_ERROR"
         resumable["state"] = "INGESTED"
         resumable["finished_at"] = utc_now()
+        if spend_controller is not None:
+            aggregate_usage = {
+                key: sum(
+                    int(
+                        (
+                            state["passes"][request["pass_id"]]["attempts"]
+                            [request["attempt_number"] - 1]
+                            .get("provider_metadata") or {}
+                        ).get("usage", {}).get(key) or 0
+                    )
+                    for request in resumable["requests"]
+                )
+                for key in (
+                    "input_tokens", "cached_input_tokens", "cache_write_tokens",
+                    "output_tokens", "reasoning_tokens", "total_tokens",
+                )
+            }
+            aggregate_cost = sum(
+                float(
+                    (
+                        (
+                            state["passes"][request["pass_id"]]["attempts"]
+                            [request["attempt_number"] - 1]
+                            .get("provider_metadata") or {}
+                        ).get("estimated_cost") or {}
+                    ).get("estimated_amount") or 0
+                )
+                for request in resumable["requests"]
+            )
+            spend_controller.settle_active({
+                "usage": aggregate_usage,
+                "estimated_cost": {"estimated_amount": aggregate_cost},
+            })
         save_state(run_json, state)
 
 
@@ -3988,6 +4461,7 @@ def polish_subject(
     run_dir: Path,
     python_executable: Path,
     max_attempts: int,
+    spend_controller: SpendController | None = None,
 ) -> None:
     """Try bounded whole-deck polish; retain baseline unless QA improves."""
     subject = record["subject"]
@@ -4105,6 +4579,15 @@ def polish_subject(
         }
         record["polish_attempts"].append(attempt)
         try:
+            before_submit = provider_created = None
+            if spend_controller is not None:
+                before_submit, provider_created = spend_controller.callbacks(
+                    stage="polish",
+                    route=f"{subject}:polish:{attempt_number:03d}",
+                    model=provider.model,
+                    service_level="interactive",
+                    maximum_output_tokens=provider.max_output_tokens,
+                )
             authored, metadata = provider.complete_json(
                 system=system,
                 user=user,
@@ -4115,7 +4598,11 @@ def polish_subject(
                     f"{sha256_file(best_path)}:{subject}:polish:"
                     f"{attempt_number}:{provider.model}"
                 ),
+                before_submit=before_submit,
+                provider_created=provider_created,
             )
+            if spend_controller is not None:
+                spend_controller.settle_active(metadata)
             metadata["routing"] = {
                 "route": "polish",
                 "model": provider.model,
@@ -4265,6 +4752,19 @@ def polish_subject(
                 if best_validation_passed and warning_count == 0:
                     break
         except Exception as exc:
+            if isinstance(exc, AwaitingSpendAuthorization):
+                raise
+            if isinstance(exc, (BudgetExhausted, AmbiguousProviderSubmission)):
+                action_state = (exc.action or {}).get("state")
+                if action_state != "SKIPPED_BUDGET_EXHAUSTED":
+                    raise
+                attempt.update({
+                    "state": "POLISH_SKIPPED_BUDGET_EXHAUSTED",
+                    "finished_at": utc_now(),
+                    "paid_action_id": (exc.action or {}).get("action_id"),
+                    "error": None,
+                })
+                break
             attempt.update(
                 {
                     "state": "POLISH_ERROR",
@@ -4321,6 +4821,7 @@ def run_qualitative_review(
     max_findings: int,
     max_target_fields: int,
     max_target_cards: int,
+    spend_controller: SpendController | None = None,
 ) -> None:
     """Diagnose a complete deck and optionally preserve a sparse candidate."""
     existing = record.get("qualitative_review") or {}
@@ -4392,6 +4893,15 @@ def run_qualitative_review(
                 "READ-ONLY DECK:\n"
                 f"{json.dumps(transport, ensure_ascii=False)}"
             )
+            before_submit = provider_created = None
+            if spend_controller is not None:
+                before_submit, provider_created = spend_controller.callbacks(
+                    stage="qualitative_critic",
+                    route=f"{subject}:qualitative-critic",
+                    model=critic_provider.model,
+                    service_level="interactive",
+                    maximum_output_tokens=critic_provider.max_output_tokens,
+                )
             response, metadata = critic_provider.complete_json(
                 system=system,
                 user=user,
@@ -4403,7 +4913,11 @@ def run_qualitative_review(
                     f"qualitative-critic:{max_findings}:"
                     f"{critic_provider.model}"
                 ),
+                before_submit=before_submit,
+                provider_created=provider_created,
             )
+            if spend_controller is not None:
+                spend_controller.settle_active(metadata)
             metadata["routing"] = {
                 "route": "qualitative_critic",
                 "model": critic_provider.model,
@@ -4483,6 +4997,15 @@ def run_qualitative_review(
             "\n\nOPTIONAL WHOLE-DECK BEHAVIORAL CONTEXT:\n"
             f"{json.dumps(whole_deck, ensure_ascii=False)}"
         )
+        before_submit = provider_created = None
+        if spend_controller is not None:
+            before_submit, provider_created = spend_controller.callbacks(
+                stage="qualitative_candidate",
+                route=f"{subject}:qualitative-candidate",
+                model=editor_provider.model,
+                service_level="interactive",
+                maximum_output_tokens=editor_provider.max_output_tokens,
+            )
         authored, editor_metadata = editor_provider.complete_json(
             system=editor_system,
             user=editor_user,
@@ -4494,7 +5017,11 @@ def run_qualitative_review(
                 f"{sha256_file(critic_root / 'critic-findings.json')}:"
                 f"{editor_provider.model}"
             ),
+            before_submit=before_submit,
+            provider_created=provider_created,
         )
+        if spend_controller is not None:
+            spend_controller.settle_active(editor_metadata)
         editor_metadata["routing"] = {
             "route": "qualitative_candidate",
             "model": editor_provider.model,
@@ -4579,6 +5106,16 @@ def run_qualitative_review(
         )
         review["finished_at"] = utc_now()
     except Exception as exc:
+        if isinstance(exc, AwaitingSpendAuthorization):
+            raise
+        if isinstance(exc, (BudgetExhausted, AmbiguousProviderSubmission)):
+            action_state = (exc.action or {}).get("state")
+            if action_state == "SKIPPED_BUDGET_EXHAUSTED":
+                review["state"] = "QUALITATIVE_SKIPPED_BUDGET_EXHAUSTED"
+                review["finished_at"] = utc_now()
+                review["paid_action_id"] = (exc.action or {}).get("action_id")
+                return
+            raise
         review["state"] = "QUALITATIVE_REVIEW_ERROR"
         review["finished_at"] = utc_now()
         review["error"] = {
@@ -4599,6 +5136,7 @@ def finalize_subjects(
     polish: bool = False,
     polish_provider: OpenAIResponsesProvider | None = None,
     max_polish_attempts: int = 2,
+    spend_controller: SpendController | None = None,
 ) -> None:
     """Assemble and validate every subject after authoring completes."""
     if any(
@@ -4635,6 +5173,7 @@ def finalize_subjects(
                 run_dir=run_dir,
                 python_executable=python_executable,
                 max_attempts=max_polish_attempts,
+                spend_controller=spend_controller,
             )
             if record["state"] == "FINAL_QA_WARN" and allow_lint_warnings:
                 record["state"] = "DELIVERY_COMPLETE_WITH_WARNINGS"
@@ -4713,12 +5252,21 @@ def resume_run(
         raise FileNotFoundError(f"Cannot resume without {run_json}")
     state = load_json(run_json)
     previous_schema = state.get("schema_version")
+    if (
+        previous_schema != SCHEMA_VERSION
+        and getattr(provider, "name", None) == "openai"
+    ):
+        raise ValueError(
+            "Legacy OpenAI runs cannot resume paid work without a v0.8 spend "
+            "ledger; reconcile or migrate them explicitly before execution"
+        )
     if previous_schema in {
         "astrowoof.semantic_closure_run.v0.2",
         "astrowoof.semantic_closure_run.v0.3",
         "astrowoof.semantic_closure_run.v0.4",
         "astrowoof.semantic_closure_run.v0.5",
         "astrowoof.semantic_closure_run.v0.6",
+        "astrowoof.semantic_closure_run.v0.7",
     }:
         state["schema_version"] = SCHEMA_VERSION
         state.setdefault("service_level", "interactive")
@@ -5085,7 +5633,46 @@ def profile_from_args(args: argparse.Namespace) -> dict[str, Any]:
             "qualitative_critic": args.qualitative_critic,
             "qualitative_candidate": args.qualitative_candidate,
         },
+        spend_policy=(
+            validate_policy(getattr(args, "spend_policy_value", None))
+            if args.provider == "openai"
+            else None
+        ),
     )
+
+
+def apply_spend_authorizations(
+    state: dict[str, Any], documents: list[dict[str, Any]]
+) -> list[str]:
+    ledger = state.get("spend_ledger")
+    if not isinstance(ledger, dict):
+        raise ValueError("Run has no spend ledger to authorize")
+    applied = []
+    for document in documents:
+        action = authorize_action(ledger, document)
+        applied.append(action["action_id"])
+    return applied
+
+
+def apply_spend_reconciliations(
+    state: dict[str, Any], documents: list[dict[str, Any]]
+) -> list[str]:
+    ledger = state.get("spend_ledger")
+    if not isinstance(ledger, dict):
+        raise ValueError("Run has no spend ledger to reconcile")
+    applied = []
+    for document in documents:
+        if document.get("schema_version") != "astrowoof.provider_spend_reconciliation.v0.1":
+            raise ValueError("Unsupported spend reconciliation schema")
+        record = append_reconciliation_reference(
+            ledger,
+            action_id=document["action_id"],
+            reference_id=document["reference_id"],
+            authority=document["authority"],
+            amount_micro_usd=document.get("amount_micro_usd"),
+        )
+        applied.append(record["reference_id"])
+    return applied
 
 
 def main() -> None:
@@ -5099,6 +5686,31 @@ def main() -> None:
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--spend-policy",
+        type=Path,
+        help=(
+            "Required for new OpenAI runs. JSON policy with explicit run and "
+            "per-stage micro-USD ceilings, price book, and optional-stage behavior."
+        ),
+    )
+    parser.add_argument(
+        "--spend-authorization",
+        action="append",
+        type=Path,
+        default=[],
+        help=(
+            "Apply an external authorization envelope for one exact prepared "
+            "paid action. May be repeated."
+        ),
+    )
+    parser.add_argument(
+        "--spend-reconciliation",
+        action="append",
+        type=Path,
+        default=[],
+        help="Append an API-owned billing/reconciliation reference; may repeat.",
+    )
     parser.add_argument(
         "--prompt-layout-report",
         type=Path,
@@ -5315,6 +5927,9 @@ def main() -> None:
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
     args = parser.parse_args()
+    args.spend_policy_value = (
+        load_json(args.spend_policy) if args.spend_policy else None
+    )
     args.model = args.model or (
         "gpt-5.6-luna"
         if args.routing_policy == "cost_optimized"
@@ -5367,6 +5982,10 @@ def main() -> None:
         parser.error("--batch-poll-interval-seconds must be positive")
     if not args.resume and args.input_package is None:
         parser.error("--input-package is required unless --resume is used")
+    if args.provider == "openai" and not args.resume and not args.spend_policy:
+        parser.error("new OpenAI runs require --spend-policy")
+    if args.resume and args.spend_policy:
+        parser.error("--spend-policy is frozen at creation and cannot change on resume")
 
     try:
         reject_attempts = parse_attempt_map(args.fake_reject)
@@ -5394,6 +6013,7 @@ def main() -> None:
             safety_identifier=args.safety_identifier,
             prompt_cache_mode=args.prompt_cache_mode,
             prompt_cache_ttl=args.prompt_cache_ttl,
+            require_spend_authorization=True,
         )
 
     polish_provider: OpenAIResponsesProvider | None = None
@@ -5475,6 +6095,26 @@ def main() -> None:
             full_chart_basis_format=args.full_chart_basis_format,
             profile=profile_from_args(args),
         )
+    if args.spend_authorization:
+        documents = [load_json(path) for path in args.spend_authorization]
+        try:
+            apply_spend_authorizations(state, documents)
+        finally:
+            save_state(run_json, state)
+    if args.spend_reconciliation:
+        documents = [load_json(path) for path in args.spend_reconciliation]
+        apply_spend_reconciliations(state, documents)
+        save_state(run_json, state)
+    spend_controller = (
+        SpendController(
+            state=state,
+            run_json=run_json,
+            state_lock=threading.Lock(),
+            consumer_id=f"pid:{os.getpid()}",
+        )
+        if args.provider == "openai"
+        else None
+    )
     if args.prompt_layout_report:
         if not isinstance(provider, OpenAIResponsesProvider):
             raise AssertionError("prompt report requires OpenAI request layout")
@@ -5503,6 +6143,7 @@ def main() -> None:
             run_json=run_json,
             poll_interval_seconds=args.batch_poll_interval_seconds,
             detach=args.batch_detach,
+            spend_controller=spend_controller,
         )
     else:
         author_pending_passes(
@@ -5513,6 +6154,7 @@ def main() -> None:
             python_executable=args.python_executable,
             run_json=run_json,
             max_workers=args.max_workers,
+            spend_controller=spend_controller,
         )
     if not authoring_complete:
         update_run_status(state)
@@ -5527,6 +6169,7 @@ def main() -> None:
         polish=args.polish,
         polish_provider=polish_provider,
         max_polish_attempts=args.max_polish_attempts,
+        spend_controller=spend_controller,
     )
     if args.qualitative_critic and critic_provider is not None:
         for record in state.get("subjects", {}).values():
@@ -5540,6 +6183,7 @@ def main() -> None:
                     max_findings=args.max_critic_findings,
                     max_target_fields=args.max_qualitative_target_fields,
                     max_target_cards=args.max_qualitative_target_cards,
+                    spend_controller=spend_controller,
                 )
     update_run_status(state)
     save_state(run_json, state)

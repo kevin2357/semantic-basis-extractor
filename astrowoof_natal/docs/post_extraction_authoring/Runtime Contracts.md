@@ -81,12 +81,17 @@ interpretable without reconstructing its command line.
 
 ## Operator run state
 
-Canonical schema: `astrowoof.semantic_closure_run.v0.7`.
+Canonical schema: `astrowoof.semantic_closure_run.v0.8`.
 
 `run.json` is the durable operator record and resume source. It intentionally
 contains filesystem locations, pass attempts, provider configuration,
-acceptance evidence, usage, costs, final QA, and delivery records. Versions
-v0.2 through v0.6 remain resumable and are normalized in memory to v0.7.
+acceptance evidence, usage, costs, final QA, and delivery records. V0.8 adds a
+state revision, stable run ID, and durable provider-spend ledger.
+
+Legacy fake-provider states remain test-migratable. OpenAI states older than
+v0.8 fail closed because creation-time commitments and authorization evidence
+cannot be reconstructed safely. See `Provider Spend Enforcement.md` and
+`Spend Authorization Consumer Handoff.md`.
 
 ## Public run state
 
