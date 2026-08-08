@@ -226,3 +226,32 @@ fresh bounded live run because the provider prompt changed.
 
 Next action: commit and requalify the candidate-transport correction, then run
 one fresh exact-artifact live qualification.
+
+## 2026-08-07 - Slice 5 controlled live gate and budget-boundary correction
+
+- User approved Ella in Batch mode, all optional stages enabled, USD 5 run
+  ceiling, USD 1 for each paid stage, and optional-stage skip on exhaustion.
+- Requalified the disclosure fixes in an exact installed wheel and started a
+  fresh v4 run. Protected values and field names were absent from the audited
+  initial provider payload.
+- Initial Batch detach/resume used one provider ID and one USD 0.540033
+  commitment. Reported estimated spend was USD 0.263381; one pass accepted and
+  five required creative retry.
+- The retry commitment was USD 1.125082, above the approved USD 1 ceiling. It
+  was not authorized or submitted.
+- Live failure injection exposed two boundary defects: preparation initially
+  reported awaiting authorization instead of exhaustion, and the corrected
+  in-memory classification was not persisted before the exception escaped.
+- Corrected preparation and resumed prepared actions to classify fail-closed,
+  refresh the public status, and persist before raising. Added unit and
+  controller-level persistence regressions. Full suite passes 144 tests.
+- Built twice at `SOURCE_DATE_EPOCH=1786164000`; wheels are byte-identical at
+  623,777 bytes, SHA-256
+  `312bdf1dba73c80111aeaa95280c4e64f7078dcf17ca0fea91d0105e3f8a7030`.
+  The exact clean-installed wheel passed deterministic smoke.
+- Resuming v4 with that wheel made no network submission and durably produced
+  revision 60, top-level `BUDGET_EXHAUSTED`, retry action
+  `BUDGET_EXHAUSTED`, two ledger actions, and one provider operation.
+
+Next action: review and approve the correction and choose whether the bounded
+hard-exhaustion result satisfies Slice 5 or a new retry ceiling is authorized.

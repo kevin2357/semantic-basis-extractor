@@ -58,6 +58,7 @@ from .spend import (
     append_reconciliation_reference,
     authorize_action,
     begin_submission,
+    classify_prepared_budget,
     conservative_commitment_micros,
     digest as spend_digest,
     mark_ambiguous,
@@ -2578,6 +2579,11 @@ class SpendController:
                         price_book_version=PRICE_BOOK_VERSION,
                     )
                     existing = prepare_action(self.ledger, binding)
+                    save_state(self.run_json, self.state)
+                prior_state = existing["state"]
+                classify_prepared_budget(self.ledger, existing)
+                if existing["state"] != prior_state:
+                    update_run_status(self.state)
                     save_state(self.run_json, self.state)
                 if existing["state"] == "PREPARED":
                     raise AwaitingSpendAuthorization(

@@ -20,6 +20,7 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     append_reconciliation_reference,
     authorize_action,
     begin_submission,
+    classify_prepared_budget,
     conservative_commitment_micros,
     mark_ambiguous,
     new_ledger,
@@ -108,6 +109,7 @@ class SpendLedgerTests(unittest.TestCase):
     def test_hard_exhaustion_and_optional_skip_are_distinct(self):
         hard_ledger = new_ledger(policy(run=100, initial=100))
         hard = prepare_action(hard_ledger, binding(commitment=101))
+        self.assertEqual("BUDGET_EXHAUSTED", hard["state"])
         with self.assertRaises(BudgetExhausted):
             authorize_action(hard_ledger, authorization(hard))
         self.assertEqual("BUDGET_EXHAUSTED", hard["state"])
@@ -116,8 +118,17 @@ class SpendLedgerTests(unittest.TestCase):
         skipped = prepare_action(
             skip_ledger, binding(stage="qualitative_critic", commitment=101)
         )
+        self.assertEqual("SKIPPED_BUDGET_EXHAUSTED", skipped["state"])
         authorize_action(skip_ledger, authorization(skipped))
         self.assertEqual("SKIPPED_BUDGET_EXHAUSTED", skipped["state"])
+
+    def test_resumed_prepared_action_is_reclassified_fail_closed(self):
+        ledger = new_ledger(policy(run=1_000, initial=1_000))
+        action = prepare_action(ledger, binding(commitment=101))
+        self.assertEqual("PREPARED", action["state"])
+        ledger["policy"]["stage_ceilings_micro_usd"]["authoring_initial"] = 100
+        classify_prepared_budget(ledger, action)
+        self.assertEqual("BUDGET_EXHAUSTED", action["state"])
 
     def test_authorization_is_consumed_once(self):
         ledger = new_ledger(policy())
@@ -210,6 +221,39 @@ class SpendLedgerTests(unittest.TestCase):
             persisted = load_json(run_json)["spend_ledger"]["actions"][0]
             self.assertEqual("PROVIDER_ID_RECORDED", persisted["state"])
             self.assertEqual("resp_123", persisted["provider"]["id"])
+
+    def test_resumed_over_ceiling_preparation_persists_hard_exhaustion(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_json = Path(temporary) / "run.json"
+            state = self._controller_state()
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-1",
+            )
+            before, _created = controller.callbacks(
+                stage="authoring_initial",
+                route="batch-round-002",
+                model="gpt-5.6-luna",
+                service_level="batch",
+                maximum_output_tokens=1000,
+            )
+            request = {"batch": "exact request"}
+            with self.assertRaisesRegex(Exception, "authorization"):
+                before(request)
+            state["spend_ledger"]["policy"]["stage_ceilings_micro_usd"][
+                "authoring_initial"
+            ] = 0
+            with self.assertRaises(BudgetExhausted):
+                before(request)
+            persisted = load_json(run_json)
+            self.assertEqual("BUDGET_EXHAUSTED", persisted["status"])
+            self.assertEqual(
+                "BUDGET_EXHAUSTED",
+                persisted["spend_ledger"]["actions"][0]["state"],
+            )
 
     def test_restart_after_submitting_without_provider_id_fails_ambiguous(self):
         ledger = new_ledger(policy())

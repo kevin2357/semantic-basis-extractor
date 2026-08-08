@@ -155,6 +155,7 @@ def prepare_action(ledger: dict[str, Any], binding: dict[str, Any]) -> dict[str,
     if existing:
         if existing["binding"] != binding:
             raise ValueError(f"Paid action identity collision: {action_id}")
+        classify_prepared_budget(ledger, existing)
         return existing
     action = {
         "action_id": action_id,
@@ -166,6 +167,7 @@ def prepare_action(ledger: dict[str, Any], binding: dict[str, Any]) -> dict[str,
         "reconciliation_reference_ids": [],
     }
     ledger["actions"].append(action)
+    classify_prepared_budget(ledger, action)
     return action
 
 
@@ -175,6 +177,36 @@ def _counted_amount(action: dict[str, Any]) -> int:
     if action.get("state") in OPEN_COMMITMENT_STATES or action.get("authorization"):
         return int(action["binding"]["commitment_micro_usd"])
     return 0
+
+
+def classify_prepared_budget(
+    ledger: dict[str, Any], action: dict[str, Any],
+) -> dict[str, Any]:
+    """Fail closed when a prepared action already exceeds its frozen ceiling."""
+    if action.get("state") != "PREPARED":
+        return action
+    binding = action["binding"]
+    commitment = int(binding["commitment_micro_usd"])
+    policy = ledger["policy"]
+    stage = binding["stage"]
+    other = [item for item in ledger["actions"] if item is not action]
+    run_total = sum(_counted_amount(item) for item in other) + commitment
+    stage_total = sum(
+        _counted_amount(item) for item in other
+        if item["binding"]["stage"] == stage
+    ) + commitment
+    if (
+        run_total > policy["run_ceiling_micro_usd"]
+        or stage_total > policy["stage_ceilings_micro_usd"][stage]
+    ):
+        optional_skip = (
+            stage in OPTIONAL_STAGES
+            and policy["optional_stage_budget_behavior"][stage] == "skip"
+        )
+        action["state"] = (
+            "SKIPPED_BUDGET_EXHAUSTED" if optional_skip else "BUDGET_EXHAUSTED"
+        )
+    return action
 
 
 def authorize_action(

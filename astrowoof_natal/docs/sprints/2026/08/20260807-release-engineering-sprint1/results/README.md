@@ -1,6 +1,7 @@
 # Sprint Results
 
-Status: Slice 0 audit complete; gate approval pending.
+Status: Slice 5 controlled live gate stopped safely at the approved retry
+ceiling; corrective-change approval pending.
 
 - `SLICE 0 - Baseline and Release Coordinate Audit.md`: source baseline,
   version/tag recommendation, exact upstream tuple, gap analysis, and gate.
@@ -16,6 +17,9 @@ Status: Slice 0 audit complete; gate approval pending.
 - `SLICE 4 - Clean Installed Deterministic Smoke.md`: exact installed-wheel
   extraction, resume, delivery, cleanup, and spend-seam qualification.
 - `slice4-installed-smoke.json`: machine-readable installed qualification.
+- `SLICE 5 - Controlled Live Release Candidate.md`: installed-wheel Batch
+  execution, disclosure audits, accounting, and hard-exhaustion result.
+- `slice5-controlled-live.json`: compact machine-readable live-gate evidence.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot

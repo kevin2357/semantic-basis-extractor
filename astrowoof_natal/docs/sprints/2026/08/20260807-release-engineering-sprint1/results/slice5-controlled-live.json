@@ -1,0 +1,37 @@
+{
+  "schema_version": "astrowoof.release_slice5_evidence.v0.1",
+  "status": "BUDGET_EXHAUSTED",
+  "subject": "ella",
+  "source_identity": "e11a0000-0000-4000-8000-000000000001",
+  "service_level": "batch",
+  "approved_policy_micro_usd": {
+    "run": 5000000,
+    "authoring_initial": 1000000,
+    "creative_retry": 1000000,
+    "polish": 1000000,
+    "qualitative_critic": 1000000,
+    "qualitative_candidate": 1000000
+  },
+  "initial_action": {
+    "commitment_micro_usd": 540033,
+    "reported_micro_usd": 263381,
+    "provider_operation_count": 1
+  },
+  "creative_retry": {
+    "commitment_micro_usd": 1125082,
+    "state": "BUDGET_EXHAUSTED",
+    "authorized": false,
+    "submitted": false
+  },
+  "accepted_passes": 1,
+  "passes_requiring_retry": 5,
+  "provider_disclosure_scan": "pass",
+  "test_count": 144,
+  "wheel": {
+    "version": "0.2.0",
+    "bytes": 623777,
+    "sha256": "312bdf1dba73c80111aeaa95280c4e64f7078dcf17ca0fea91d0105e3f8a7030",
+    "reproducible_builds": 2,
+    "installed_smoke": "pass"
+  }
+}
