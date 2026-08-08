@@ -1,0 +1,35 @@
+{
+  "schema_version": "astrowoof.candidate_artifact_audit.v0.1",
+  "slice": 3,
+  "status": "pass",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.2.0",
+  "filename": "astrowoof_natal_authoring-0.2.0-py3-none-any.whl",
+  "bytes": 623605,
+  "sha256": "799307597fb33e5717112e0c772983bca2dd78bd193b999a5286e4476f2b4ea4",
+  "builds": 2,
+  "byte_identical": true,
+  "source_date_epoch": 1786156755,
+  "python": "3.12.13",
+  "setuptools": "83.0.0",
+  "wheel": "0.47.0",
+  "pip": "26.0.1",
+  "member_count": 40,
+  "member_classes": {
+    "python_sources": 16,
+    "package_resources": 19,
+    "distribution_metadata": 5
+  },
+  "unsafe_paths": 0,
+  "unexpected_members": 0,
+  "secret_hits": 0,
+  "protected_subject_value_hits": 0,
+  "resource_set": {
+    "count": 19,
+    "aggregate_sha256": "439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404"
+  },
+  "repository_tests": 140,
+  "release_contract_tests_after_audit_fix": 13,
+  "diff_check": "pass",
+  "live_provider_calls": 0
+}

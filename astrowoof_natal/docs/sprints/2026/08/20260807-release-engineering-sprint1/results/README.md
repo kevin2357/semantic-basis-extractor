@@ -10,6 +10,9 @@ Status: Slice 0 audit complete; gate approval pending.
 - `SLICE 2 - Spend Disclosure and Snapshot Safety Qualification.md`: paid-route,
   disclosure, provider-atomicity, and durable-snapshot qualification.
 - `slice2-safety-matrix.json`: machine-readable Slice 2 safety matrix.
+- `SLICE 3 - Reproducible Candidate Artifact.md`: reproducible build and
+  complete wheel-boundary audit.
+- `slice3-candidate-artifact.json`: machine-readable candidate identity.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot

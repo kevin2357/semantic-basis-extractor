@@ -35,6 +35,7 @@ from astrowoof_natal_authoring.smoke import (  # noqa: E402
     SMOKE_SOURCE_ID,
     materialize_fixture,
 )
+from astrowoof_natal_authoring.resource_access import read_resource_text  # noqa: E402
 
 
 def write(path: Path, value: str = "{}\n") -> None:
@@ -43,6 +44,18 @@ def write(path: Path, value: str = "{}\n") -> None:
 
 
 class TestReleaseContracts(unittest.TestCase):
+    def test_packaged_gold_reference_omits_protected_birth_values(self) -> None:
+        reference = json.loads(
+            read_resource_text("references/natal.kevin.summary-gold-source.cards.json")
+        )
+        subject = reference["subject"]
+        self.assertEqual("", subject["birth_date"])
+        self.assertEqual("", subject["birth_datetime"])
+        self.assertIsNone(subject["birth_latitude"])
+        self.assertIsNone(subject["birth_longitude"])
+        self.assertEqual("", subject["birth_location"])
+        self.assertEqual("", subject["birth_date_precision"])
+
     def projected_files(self, root: Path, subject: str = "ella") -> dict[str, Path]:
         suffixes = {
             "general": "general",

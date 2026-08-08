@@ -19,12 +19,12 @@
       "reflexive": "himself"
     },
     "breed": "Golden Retriever",
-    "birth_date": "2020-10-07",
-    "birth_datetime": "2020-10-07T14:32:00-06:00",
-    "birth_latitude": 39.7392,
-    "birth_longitude": -104.9903,
-    "birth_location": "Denver, Colorado",
-    "birth_date_precision": "exact"
+    "birth_date": "",
+    "birth_datetime": "",
+    "birth_latitude": null,
+    "birth_longitude": null,
+    "birth_location": "",
+    "birth_date_precision": ""
   },
   "source": {
     "source_graph_ref": {

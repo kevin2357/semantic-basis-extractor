@@ -107,3 +107,25 @@ Next action: Slice 1 gate review and approval before commit or Slice 2.
 - Wrote the Slice 2 human report and machine-readable safety matrix.
 
 Next action: Slice 2 gate review and approval before commit or Slice 3.
+
+## 2026-08-07 — Slice 2 approved; Slice 3 candidate artifact
+
+- Committed approved Slice 2 as `f60b95c` and began Slice 3.
+- Updated the approved distribution version from 0.1.0 to 0.2.0.
+- Fixed `SOURCE_DATE_EPOCH=1786156755` and built twice with CPython 3.12.13,
+  setuptools 83.0.0, wheel 0.47.0, and pip 26.0.1.
+- The first pair was reproducible but rejected during content inspection: the
+  runtime-required Kevin editorial reference retained protected birth and
+  location values.
+- Cleared only those six protected reference fields, added a regression, and
+  rebuilt twice. Replacement wheels were byte-identical at 623,605 bytes with
+  SHA-256 `799307597fb33e5717112e0c772983bca2dd78bd193b999a5286e4476f2b4ea4`.
+- Audited all 40 wheel members: 16 source, 19 resource, and five distribution
+  metadata members. No unsafe path, unexpected member, secret, protected
+  subject value, cache, run artifact, or provider artifact remained.
+- Recorded resource-set SHA-256
+  `439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404`.
+- Complete repository tests passed (140), then focused release-contract tests
+  passed (13) after the audit regression. `git diff --check` passed.
+
+Next action: Slice 3 gate review and approval before commit or Slice 4.
