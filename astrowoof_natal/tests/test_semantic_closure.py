@@ -2501,6 +2501,26 @@ class TestSemanticClosure(SemanticClosureFixture):
             with self.assertRaisesRegex(ValueError, "original logical absolute"):
                 validate_workspace_snapshot(relocated, state)
 
+    def test_snapshot_rejects_missing_changed_added_and_truncated_members(self) -> None:
+        mutations = {
+            "missing": lambda run: (run / "run.json").unlink(),
+            "changed": lambda run: (run / "spend-authorization-requests.json").write_text(
+                "{}", encoding="utf-8"
+            ),
+            "added": lambda run: (run / "unexpected.txt").write_text(
+                "unexpected", encoding="utf-8"
+            ),
+            "truncated": lambda run: (run / "run.json").write_bytes(b"{"),
+        }
+        for label, mutate in mutations.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                provider = FakeAuthoringProvider()
+                state, _run_json = self.make_state(root, provider)
+                mutate(root / "run")
+                with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
+                    validate_workspace_snapshot(root / "run", state)
+
     def test_resume_restores_accepted_state_from_durable_acceptance_evidence(
         self,
     ) -> None:

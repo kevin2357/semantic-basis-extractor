@@ -5,6 +5,7 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +33,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     load_json,
     save_state,
 )
+import astrowoof_natal_authoring.closure as closure_module  # noqa: E402
 
 
 def policy(*, run=10_000_000, initial=10_000_000, optional="skip"):
@@ -80,6 +82,20 @@ def authorization(action):
 
 
 class SpendLedgerTests(unittest.TestCase):
+    def _controller_state(self):
+        frozen_policy = policy()
+        return {
+            "schema_version": "astrowoof.semantic_closure_run.v0.9",
+            "state_revision": 0,
+            "run_id": "run-1",
+            "status": "AUTHORING",
+            "created_at": "2026-08-07T00:00:00Z",
+            "passes": {},
+            "subjects": {},
+            "authoring_profile": {"spend_policy": frozen_policy},
+            "spend_ledger": new_ledger(frozen_policy),
+        }
+
     def test_authorization_is_bound_to_exact_request_and_revision(self):
         ledger = new_ledger(policy())
         action = prepare_action(ledger, binding())
@@ -255,6 +271,93 @@ class SpendLedgerTests(unittest.TestCase):
                     before_submit=lambda payload: None,
                 )
         self.assertEqual(1, transport.calls)
+
+    def test_every_paid_route_prepares_an_exact_stage_binding(self):
+        routes = (
+            ("authoring_initial", "bre_1:attempt-001", "interactive"),
+            ("authoring_initial", "batch-round-001", "batch"),
+            ("creative_retry", "bre_1:attempt-002", "interactive"),
+            ("polish", "bre:polish-001", "interactive"),
+            ("qualitative_critic", "bre:critic-001", "interactive"),
+            ("qualitative_candidate", "bre:candidate-001", "interactive"),
+        )
+        for stage, route, service_level in routes:
+            with self.subTest(stage=stage, route=route):
+                with tempfile.TemporaryDirectory() as temporary:
+                    run_json = Path(temporary) / "run.json"
+                    state = self._controller_state()
+                    save_state(run_json, state)
+                    controller = SpendController(
+                        state=state,
+                        run_json=run_json,
+                        state_lock=threading.Lock(),
+                        consumer_id="matrix-worker",
+                    )
+                    before, _created = controller.callbacks(
+                        stage=stage,
+                        route=route,
+                        model="gpt-5.6-luna",
+                        service_level=service_level,
+                        maximum_output_tokens=321,
+                    )
+                    with self.assertRaisesRegex(Exception, "authorization"):
+                        before({"route": route, "secret": "request-bound"})
+                    action = load_json(run_json)["spend_ledger"]["actions"][0]
+                    self.assertEqual(stage, action["binding"]["stage"])
+                    self.assertEqual(route, action["binding"]["route"])
+                    self.assertEqual(service_level, action["binding"]["service_level"])
+                    self.assertEqual(321, action["binding"]["maximum_output_tokens"])
+                    self.assertEqual(PRICE_BOOK_VERSION, action["binding"]["price_book_version"])
+
+    def test_provider_id_persistence_failure_is_machine_ambiguous(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_json = Path(temporary) / "run.json"
+            state = self._controller_state()
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-1",
+            )
+            before, created = controller.callbacks(
+                stage="authoring_initial",
+                route="bre_1:attempt-001",
+                model="gpt-5.6-luna",
+                service_level="interactive",
+                maximum_output_tokens=1000,
+            )
+            request = {"model": "gpt-5.6-luna", "input": "exact request"}
+            with self.assertRaisesRegex(Exception, "authorization"):
+                before(request)
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], authorization(action))
+            save_state(run_json, state)
+            before(request)
+            with patch.object(
+                closure_module, "save_state", side_effect=OSError("injected fsync failure")
+            ):
+                with self.assertRaises(AmbiguousProviderSubmission):
+                    created("resp_returned_but_not_persisted", "response")
+            self.assertEqual("AMBIGUOUS_PROVIDER_SUBMISSION", action["state"])
+            self.assertIn("persistence failed", action["ambiguity"]["reason"])
+
+    def test_polling_recorded_provider_work_does_not_add_commitment(self):
+        ledger = new_ledger(policy())
+        action = prepare_action(ledger, binding())
+        authorize_action(ledger, authorization(action))
+        begin_submission(action, consumer_id="worker-1", state_revision=8)
+        record_provider_id(action, provider_id="resp_existing", kind="response")
+        before_count = len(ledger["actions"])
+        before_commitment = sum(
+            item["binding"]["commitment_micro_usd"] for item in ledger["actions"]
+        )
+        action["state"] = "WAITING"  # retrieval/polling mutates no authorization
+        self.assertEqual(before_count, len(ledger["actions"]))
+        self.assertEqual(
+            before_commitment,
+            sum(item["binding"]["commitment_micro_usd"] for item in ledger["actions"]),
+        )
 
 
 if __name__ == "__main__":

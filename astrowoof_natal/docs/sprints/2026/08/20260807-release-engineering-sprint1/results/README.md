@@ -7,6 +7,9 @@ Status: Slice 0 audit complete; gate approval pending.
 - `SLICE 1 - Contract and Integration Qualification.md`: UUID identity,
   registry/evidence/state contracts, snapshot concurrency, and verification.
 - `slice1-identity-smoke.json`: compact machine-readable Slice 1 evidence.
+- `SLICE 2 - Spend Disclosure and Snapshot Safety Qualification.md`: paid-route,
+  disclosure, provider-atomicity, and durable-snapshot qualification.
+- `slice2-safety-matrix.json`: machine-readable Slice 2 safety matrix.
 
 This directory will hold compact, durable evidence for approved sprint slices.
 Expected records include contract qualification, spend/disclosure/snapshot

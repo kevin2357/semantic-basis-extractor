@@ -88,3 +88,22 @@ Next action: obtain explicit approval for the Slice 0 gate recommendations.
   wheel build, tag, or publication occurred.
 
 Next action: Slice 1 gate review and approval before commit or Slice 2.
+
+## 2026-08-07 — Slice 1 approved; Slice 2 safety qualification
+
+- Committed approved Slice 1 as `44adeb5` and began Slice 2.
+- Added a binding matrix for interactive initial, Batch initial, creative
+  retry, polish, qualitative critic, and qualitative candidate actions.
+- Added failure injection after provider creation but before provider-ID state
+  persistence; the action becomes machine-distinguishable ambiguity and is not
+  replayed.
+- Confirmed polling known provider work creates no new action or commitment.
+- Expanded snapshot negatives to missing, changed, additional, and truncated
+  members; relocation and successful exact-path cases remain covered.
+- Reconfirmed minimized disclosure for every provider route while protected
+  local provenance remains separate.
+- Focused regressions passed (14), the repository suite passed (140), and
+  `git diff --check` passed. No live provider call occurred.
+- Wrote the Slice 2 human report and machine-readable safety matrix.
+
+Next action: Slice 2 gate review and approval before commit or Slice 3.

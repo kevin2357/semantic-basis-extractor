@@ -1,0 +1,51 @@
+{
+  "schema_version": "astrowoof.release_safety_matrix.v0.1",
+  "slice": 2,
+  "status": "pass",
+  "live_provider_calls": 0,
+  "paid_routes": {
+    "interactive_initial": "pass",
+    "batch_initial": "pass",
+    "creative_retry": "pass",
+    "polish": "pass",
+    "qualitative_critic": "pass",
+    "qualitative_candidate": "pass"
+  },
+  "spend_boundaries": {
+    "exact_binding": "pass",
+    "authorization_persistence": "pass",
+    "single_writer_consumption": "pass",
+    "provider_submission_ambiguity": "pass",
+    "provider_id_persistence_ambiguity": "pass",
+    "reported_estimate_settlement": "pass",
+    "append_only_reconciliation": "pass",
+    "polling_adds_no_commitment": "pass"
+  },
+  "provider_disclosure": {
+    "interactive_and_batch_authoring": "pass",
+    "creative_retry": "pass",
+    "polish": "pass",
+    "qualitative_critic": "pass",
+    "qualitative_candidate": "pass",
+    "protected_local_provenance_retained": "pass"
+  },
+  "snapshot_fail_closed": {
+    "exact_path_restore": "pass",
+    "missing_member": "pass",
+    "changed_member": "pass",
+    "additional_member": "pass",
+    "truncated_member": "pass",
+    "relocated_workspace": "pass"
+  },
+  "provider_atomicity": {
+    "exactly_once_claimed": false,
+    "deterministic_key_treated_as_proof": false,
+    "ambiguous_creation_auto_retried": false
+  },
+  "tests": {
+    "focused": 14,
+    "repository": 140,
+    "repository_result": "pass",
+    "diff_check": "pass"
+  }
+}
