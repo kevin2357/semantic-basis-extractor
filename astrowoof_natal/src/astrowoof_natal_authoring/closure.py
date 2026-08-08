@@ -3222,7 +3222,7 @@ def author_pending_passes_batch(
                 batch_before({
                     "batch": batch_payload,
                     "input_sha256": hashlib.sha256(
-                        input_text.encode("utf-8")
+                        input_path.read_bytes()
                     ).hexdigest(),
                 })
             batch = transport.create_batch(batch_payload)

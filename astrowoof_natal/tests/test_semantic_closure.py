@@ -29,6 +29,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     PassSpec,
     ProviderResult,
     RoutedOpenAIProvider,
+    SpendController,
     apply_deck_fields,
     apply_sparse_polish,
     apply_authored_fields,
@@ -91,7 +92,12 @@ from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
     invalid_context_filter_claim_ids,
     invalid_theme_group_claim_ids,
 )
-from astrowoof_natal_authoring.spend import PRICE_BOOK_VERSION  # noqa: E402
+from astrowoof_natal_authoring.spend import (  # noqa: E402
+    AUTHORIZATION_SCHEMA,
+    PRICE_BOOK_VERSION,
+    AwaitingSpendAuthorization,
+    authorize_action,
+)
 
 
 def test_spend_policy() -> dict:
@@ -2321,6 +2327,56 @@ class TestSemanticClosure(SemanticClosureFixture):
             resumed = load_json(run_json)
             self.assertEqual(1, len(resumed["batch_service"]["rounds"]))
             self.assertEqual(1, len(resumed["passes"]["bre_1"]["attempts"]))
+
+    def test_batch_authorization_digest_survives_persisted_resume(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                max_output_tokens=30_000, prompt_cache_mode="disabled",
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            state["service_level"] = "batch"
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state, run_json=run_json,
+                state_lock=threading.Lock(), consumer_id="batch-worker",
+            )
+            transport = ScriptedBatchTransport(initially_complete=False)
+            with self.assertRaises(AwaitingSpendAuthorization):
+                author_pending_passes_batch(
+                    state=state, provider=provider, transport=transport,
+                    run_dir=root / "run", max_attempts=3,
+                    python_executable=Path(sys.executable), run_json=run_json,
+                    detach=True, sleep=lambda _: None,
+                    spend_controller=controller,
+                )
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], {
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": action["action_id"],
+                "binding": action["binding"],
+                "authorization_reference": "test-reservation",
+            })
+            save_state(run_json, state)
+            self.assertFalse(author_pending_passes_batch(
+                state=state, provider=provider, transport=transport,
+                run_dir=root / "run", max_attempts=3,
+                python_executable=Path(sys.executable), run_json=run_json,
+                detach=True, sleep=lambda _: None,
+                spend_controller=controller,
+            ))
+            persisted = load_json(run_json)
+            self.assertEqual(1, len(persisted["spend_ledger"]["actions"]))
+            self.assertEqual(
+                "PROVIDER_ID_RECORDED",
+                persisted["spend_ledger"]["actions"][0]["state"],
+            )
+            self.assertEqual(
+                "batch_test",
+                persisted["spend_ledger"]["actions"][0]["provider"]["id"],
+            )
 
     def test_batch_cost_is_half_of_interactive_estimate(self) -> None:
         usage = {

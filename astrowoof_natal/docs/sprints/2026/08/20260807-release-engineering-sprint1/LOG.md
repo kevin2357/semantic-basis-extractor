@@ -151,3 +151,29 @@ Next action: Slice 3 gate review and approval before commit or Slice 4.
 
 Next action: Slice 4 gate review. Slice 5 cannot begin without explicit live
 provider authorization and a real approved spend policy.
+
+## 2026-08-07 — Slice 4 approved; Slice 5 pre-submission defect
+
+- Committed approved Slice 4 as `04d4767`.
+- User authorized one Ella Batch live run with all optional stages enabled,
+  optional budget exhaustion set to skip, a $5 run ceiling, and $1 ceilings
+  for each of the five paid stages.
+- Froze the versioned policy in micro-USD and selected the prior successful
+  cost-optimized Ella route with a 30,000-token per-pass maximum. The first
+  initial-authoring commitment was $0.540033.
+- Prepared the exact initial Batch action and obtained explicit authorization.
+  No Batch was submitted: resume produced a second request digest because
+  initial preparation hashed in-memory JSONL while resume hashed the persisted
+  Windows-newline bytes. The exact authorization correctly failed closed.
+- Corrected initial preparation to hash the persisted Batch input bytes, the
+  same boundary used by resume. Added a detach/prepare/authorize/resume test
+  proving one action and one provider ID.
+- Focused regressions passed (15) and the complete repository suite passed
+  (142); `git diff --check` passed.
+- One provider input file was uploaded, but no paid Batch or Response operation
+  was created. The abandoned run retains its authorized action without a
+  provider ID and will not be resumed.
+
+Next action: approve the corrective change. The candidate must return through
+reproducible build and installed deterministic qualification before a fresh
+live run may begin.
