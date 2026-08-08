@@ -204,3 +204,25 @@ live run may begin.
 
 Next action: commit and requalify the disclosure correction, then perform a
 fresh bounded live run because the provider prompt changed.
+
+## 2026-08-07 — Candidate-stage disclosure blocker
+
+- Committed compact-v2 disclosure correction as `3f0ea94`.
+- Rebuilt twice; corrected wheels were byte-identical at 623,575 bytes with
+  SHA-256 `80c6f9976fcac63fc201b348e0db2614add7d26d061a829d0ffd1b5a7e4cda25`.
+  Clean-installed deterministic smoke passed.
+- Started fresh Ella v3. Audited both initial and retry Batch JSONL before
+  authorization: all protected field names and exact values were absent.
+- Initial authoring settled at $0.410477; one separately classified retry was
+  authorized and passed. One clean sparse-polish request passed.
+- Critic returned a valid bounded selection, causing candidate preparation.
+  Pre-authorization audit found the candidate request copied the full deck
+  subject, including all protected birth/location values. Candidate was never
+  authorized or submitted.
+- Changed the candidate whole-deck context to use the explicit minimized
+  provider-visible subject and extended the all-route disclosure regression.
+  Focused tests passed (2), full suite passed (142), and `git diff --check`
+  passed.
+
+Next action: commit and requalify the candidate-transport correction, then run
+one fresh exact-artifact live qualification.

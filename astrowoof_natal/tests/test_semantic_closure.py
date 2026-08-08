@@ -58,6 +58,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     prompt_cache_manifest,
     qualitative_critic_output_schema,
     qualitative_critic_transport,
+    qualitative_whole_deck_context,
     repair_workspace_context_filters,
     retry_feedback_from_record,
     resume_run,
@@ -793,11 +794,15 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.packet, ["cards.0.card.no_astro.body.handler"]
         )
         critic = qualitative_critic_transport(self.packet)
+        candidate = qualitative_whole_deck_context(self.packet)
         full_chart = render_compact_v2_full_chart_basis(self.packet)
         self.assertEqual(visible, basis["subject"])
         self.assertEqual(visible, critic["subject"])
+        self.assertEqual(visible, candidate["subject"])
         for field, value in protected.items():
-            provider_payloads = json.dumps([basis, critic, full_chart])
+            provider_payloads = json.dumps(
+                [basis, critic, candidate, full_chart]
+            )
             self.assertNotIn(field, provider_payloads)
             self.assertNotIn(str(value), provider_payloads)
 

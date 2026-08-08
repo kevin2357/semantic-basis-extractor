@@ -4977,7 +4977,7 @@ def qualitative_whole_deck_context(deck: dict[str, Any]) -> dict[str, Any]:
         )
     }
     return {
-        "subject": deck.get("subject", {}),
+        "subject": provider_visible_subject(deck.get("subject")),
         "behavioral_handler_view": selected,
     }
 
