@@ -15,7 +15,7 @@
     "platform_tag": "any"
   },
   "build": {
-    "source_commit": null,
+    "source_commit": "985ac533dae862cf6cf2da99dc52c5c85be718df",
     "source_date_epoch": 1786240889,
     "independent_build_count": 2,
     "byte_reproducible": true,
@@ -59,6 +59,6 @@
     "new_provider_spend_usd": 0
   },
   "publication": {
-    "status": "pending_explicit_authorization"
+    "status": "authorized_pending_publication"
   }
 }

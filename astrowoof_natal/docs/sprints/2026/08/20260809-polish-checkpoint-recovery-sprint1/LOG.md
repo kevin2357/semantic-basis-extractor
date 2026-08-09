@@ -176,3 +176,12 @@ Next action: Slice 4 gate review before commit or Slice 5 artifact work.
 
 Next action: Slice 5 gate review. Candidate commit, immutable tag, push, and
 publication remain separately controlled.
+
+## 2026-08-09 - 0.2.2 publication authorized
+
+- User approved Slice 5 and explicitly authorized commit, tag, push, and
+  publication of 0.2.2.
+- Committed the qualified source, contracts, artifact coordinates, and handoff
+  as `985ac53`.
+- Recorded that commit as the qualified build source and moved publication
+  state to authorized pending publication.

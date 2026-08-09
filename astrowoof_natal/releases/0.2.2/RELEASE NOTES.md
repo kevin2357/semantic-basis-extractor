@@ -36,4 +36,4 @@ provider transport calls.
 - exact-wheel Linux repair dry run against the retained backup: eligible;
 - new provider operations and spend: zero.
 
-Tagging and publication remain pending separate authorization.
+Tagging and publication were explicitly authorized after candidate review.

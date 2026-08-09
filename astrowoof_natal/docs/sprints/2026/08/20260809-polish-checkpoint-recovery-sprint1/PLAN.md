@@ -9,7 +9,7 @@ proposed_patch_release: 0.2.2
 execution_authorized: true
 live_run_mutation_authorized: false
 paid_provider_work_authorized: false
-publication_authorized: false
+publication_authorized: true
 ```
 
 ## Outcome
