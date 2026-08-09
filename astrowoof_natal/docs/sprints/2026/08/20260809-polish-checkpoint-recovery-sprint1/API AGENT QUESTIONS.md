@@ -1,6 +1,6 @@
 # API Agent Questions
 
-Status: open; answers required in the final sprint handoff.
+Status: answered in `API AGENT RESPONSES.md`; release-candidate gate pending.
 
 This document preserves the integration questions that triggered the sprint.
 They must not be treated as answered merely because an implementation slice

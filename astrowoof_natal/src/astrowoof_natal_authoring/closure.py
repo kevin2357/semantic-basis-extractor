@@ -4427,6 +4427,23 @@ QUALITATIVE_DIMENSIONS = (
     "insufficient_astrology_density_progression",
     "other_editorial_quality",
 )
+CRITIC_FINDINGS_SCHEMA = "astrowoof.qualitative_critic_findings.v0.1"
+CRITIC_SCOPES = ("summary", "card", "deck")
+CRITIC_PRIORITIES = ("high", "medium", "low")
+CRITIC_REPAIRABILITIES = (
+    "local_repair", "upstream_reconception", "advisory_only",
+)
+CRITIC_REQUIRED_CONTEXT = (
+    "nearby_prose", "claim_evidence", "whole_chart", "none",
+)
+CRITIC_SELECTION_REASONS = (
+    "eligible",
+    "not_locally_repairable",
+    "low_priority",
+    "confidence_below_0.70",
+    "field_cap",
+    "card_cap",
+)
 
 
 def qualitative_critic_output_schema(max_findings: int) -> dict[str, Any]:
@@ -4466,11 +4483,11 @@ def qualitative_critic_output_schema(max_findings: int) -> dict[str, Any]:
                         },
                         "scope": {
                             "type": "string",
-                            "enum": ["summary", "card", "deck"],
+                            "enum": list(CRITIC_SCOPES),
                         },
                         "priority": {
                             "type": "string",
-                            "enum": ["high", "medium", "low"],
+                            "enum": list(CRITIC_PRIORITIES),
                         },
                         "confidence": {
                             "type": "number",
@@ -4479,11 +4496,7 @@ def qualitative_critic_output_schema(max_findings: int) -> dict[str, Any]:
                         },
                         "repairability": {
                             "type": "string",
-                            "enum": [
-                                "local_repair",
-                                "upstream_reconception",
-                                "advisory_only",
-                            ],
+                            "enum": list(CRITIC_REPAIRABILITIES),
                         },
                         "target_paths": {
                             "type": "array",
@@ -4503,12 +4516,7 @@ def qualitative_critic_output_schema(max_findings: int) -> dict[str, Any]:
                             "maxItems": 4,
                             "items": {
                                 "type": "string",
-                                "enum": [
-                                    "nearby_prose",
-                                    "claim_evidence",
-                                    "whole_chart",
-                                    "none",
-                                ],
+                                "enum": list(CRITIC_REQUIRED_CONTEXT),
                             },
                         },
                     },
@@ -4562,6 +4570,103 @@ def qualitative_critic_transport(deck: dict[str, Any]) -> dict[str, Any]:
         "card_descriptors": cards,
         "reader_facing_fields": fields,
     }
+
+
+def critic_findings_artifact(
+    selection: dict[str, Any],
+    *,
+    run_dir: Path,
+    deck_path: Path,
+    response_path: Path,
+    metadata: dict[str, Any],
+    run_state: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Bind normalized critic findings to exact private run evidence."""
+    state = run_state or {}
+    provenance = state.get("provenance") or {}
+    profile = state.get("authoring_profile") or {}
+    result = deepcopy(selection)
+    result["schema_version"] = CRITIC_FINDINGS_SCHEMA
+    result["artifact_kind"] = "normalized_qualitative_critic_findings"
+    result["provenance"] = {
+        "criticized_deck": {
+            "path": deck_path.relative_to(run_dir).as_posix(),
+            **artifact_descriptor(deck_path, role="criticized_final_deck"),
+        },
+        "raw_provider_response": {
+            "path": response_path.relative_to(run_dir).as_posix(),
+            **artifact_descriptor(response_path, role="raw_critic_provider_response"),
+        },
+        "provider": {
+            "kind": "response",
+            "response_id": metadata.get("response_id"),
+            "model": metadata.get("requested_model") or metadata.get("model"),
+            "reasoning_effort": (
+                (metadata.get("routing") or {}).get("reasoning_effort")
+                or metadata.get("reasoning_effort")
+            ),
+            "service_level": metadata.get("service_level") or "interactive",
+        },
+        "run": {
+            "run_id": state.get("run_id"),
+            "operator_schema_version": state.get("schema_version"),
+            "state_revision": state.get("state_revision"),
+            "authoring_profile": {
+                "schema_version": profile.get("schema_version"),
+                "profile_id": profile.get("profile_id"),
+                "sha256": spend_profile_digest(profile),
+            },
+            "runtime": provenance.get("runtime"),
+            "resources": provenance.get("resources"),
+        },
+    }
+    return result
+
+
+def validate_critic_findings_artifact(value: dict[str, Any]) -> dict[str, Any]:
+    """Fail closed on unsupported normalized critic consumer artifacts."""
+    if value.get("schema_version") != CRITIC_FINDINGS_SCHEMA:
+        raise ValueError("Unsupported critic-findings schema_version")
+    findings = ((value.get("critic") or {}).get("findings"))
+    if not isinstance(findings, list):
+        raise ValueError("critic-findings artifact has no normalized findings")
+    required = {
+        "finding_id", "quality_dimension", "scope", "priority", "confidence",
+        "repairability", "target_paths", "comparison_paths", "diagnosis",
+        "rewrite_objective", "required_context", "selected_for_candidate",
+        "selection_reason",
+    }
+    for finding in findings:
+        if not isinstance(finding, dict) or not required <= set(finding):
+            raise ValueError("critic-findings artifact has incomplete finding")
+        if finding["quality_dimension"] not in QUALITATIVE_DIMENSIONS:
+            raise ValueError("critic-findings artifact has unknown quality_dimension")
+        if finding["scope"] not in CRITIC_SCOPES:
+            raise ValueError("critic-findings artifact has unknown scope")
+        if finding["priority"] not in CRITIC_PRIORITIES:
+            raise ValueError("critic-findings artifact has unknown priority")
+        if finding["repairability"] not in CRITIC_REPAIRABILITIES:
+            raise ValueError("critic-findings artifact has unknown repairability")
+        if any(item not in CRITIC_REQUIRED_CONTEXT for item in finding["required_context"]):
+            raise ValueError("critic-findings artifact has unknown required_context")
+        reason = finding["selection_reason"]
+        if reason is not None and reason not in CRITIC_SELECTION_REASONS:
+            raise ValueError("critic-findings artifact has unknown selection_reason")
+    provenance = value.get("provenance") or {}
+    if not (provenance.get("criticized_deck") or {}).get("sha256"):
+        raise ValueError("critic-findings artifact lacks criticized-deck identity")
+    if not (provenance.get("raw_provider_response") or {}).get("sha256"):
+        raise ValueError("critic-findings artifact lacks provider-response identity")
+    if not (provenance.get("provider") or {}).get("response_id"):
+        raise ValueError("critic-findings artifact lacks provider Response ID")
+    run = provenance.get("run") or {}
+    if not run.get("run_id") or not run.get("operator_schema_version"):
+        raise ValueError("critic-findings artifact lacks run identity")
+    if not (run.get("authoring_profile") or {}).get("sha256"):
+        raise ValueError("critic-findings artifact lacks authoring-profile identity")
+    if not run.get("runtime") or not run.get("resources"):
+        raise ValueError("critic-findings artifact lacks runtime/resource identity")
+    return value
 
 
 def validate_qualitative_critic_response(
@@ -5082,6 +5187,7 @@ def run_qualitative_review(
     max_target_fields: int,
     max_target_cards: int,
     spend_controller: SpendController | None = None,
+    run_state: dict[str, Any] | None = None,
 ) -> None:
     """Diagnose a complete deck and optionally preserve a sparse candidate."""
     existing = record.get("qualitative_review") or {}
@@ -5119,7 +5225,9 @@ def run_qualitative_review(
     record["qualitative_review"] = review
     try:
         if resume_diagnosis:
-            selection = load_json(Path(review["critic"]["artifact"]))
+            selection = validate_critic_findings_artifact(
+                load_json(Path(review["critic"]["artifact"]))
+            )
             review["state"] = "CANDIDATE_SUBMITTED"
             review["finished_at"] = None
             review["error"] = None
@@ -5190,6 +5298,19 @@ def run_qualitative_review(
                 max_target_fields=max_target_fields,
                 max_target_cards=max_target_cards,
             )
+            response_path = critic_root / "openai-response.json"
+            if not response_path.is_file():
+                response_path = critic_root / "critic-provider-response.json"
+                write_json_atomic(response_path, response)
+            selection = critic_findings_artifact(
+                selection,
+                run_dir=run_dir,
+                deck_path=baseline_path,
+                response_path=response_path,
+                metadata=metadata,
+                run_state=run_state,
+            )
+            validate_critic_findings_artifact(selection)
             write_json_atomic(critic_root / "critic-findings.json", selection)
             review["critic"] = {
                 "provider_metadata": metadata,
@@ -6452,6 +6573,7 @@ def main() -> None:
                         max_target_fields=args.max_qualitative_target_fields,
                         max_target_cards=args.max_qualitative_target_cards,
                         spend_controller=spend_controller,
+                        run_state=state,
                     )
     update_run_status(state)
     save_state(run_json, state)

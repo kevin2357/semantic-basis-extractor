@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.qualitative_critic_findings.v0.1",
+  "title": "AstroWoof normalized qualitative critic findings",
+  "type": "object",
+  "required": [
+    "schema_version", "artifact_kind", "critic", "eligible_findings",
+    "selected_target_paths", "selected_location_count", "limits", "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.qualitative_critic_findings.v0.1"},
+    "artifact_kind": {"const": "normalized_qualitative_critic_findings"},
+    "critic": {
+      "type": "object",
+      "required": ["deck_assessment", "findings"],
+      "properties": {
+        "deck_assessment": {
+          "type": "object",
+          "required": ["strengths", "primary_risks"],
+          "properties": {
+            "strengths": {"type": "array", "items": {"type": "string"}},
+            "primary_risks": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        },
+        "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}}
+      },
+      "additionalProperties": false
+    },
+    "eligible_findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "selected_target_paths": {"type": "array", "items": {"type": "string"}},
+    "selected_location_count": {"type": "integer", "minimum": 0},
+    "limits": {"type": "object"},
+    "provenance": {
+      "type": "object",
+      "required": ["criticized_deck", "raw_provider_response", "provider", "run"],
+      "properties": {
+        "criticized_deck": {"$ref": "#/$defs/artifact"},
+        "raw_provider_response": {"$ref": "#/$defs/artifact"},
+        "provider": {
+          "type": "object",
+          "required": ["kind", "response_id", "model", "reasoning_effort", "service_level"]
+        },
+        "run": {
+          "type": "object",
+          "required": [
+            "run_id", "operator_schema_version", "state_revision",
+            "authoring_profile", "runtime", "resources"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["path", "filename", "bytes", "sha256", "role"]
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "finding_id", "quality_dimension", "scope", "priority", "confidence",
+        "repairability", "target_paths", "comparison_paths", "diagnosis",
+        "rewrite_objective", "required_context", "selected_for_candidate",
+        "selection_reason"
+      ],
+      "properties": {
+        "finding_id": {"type": "string", "minLength": 1},
+        "quality_dimension": {
+          "enum": [
+            "summary_thesis_overlap", "conceptual_card_overlap",
+            "repeated_comic_mechanism", "repeated_rhetorical_posture",
+            "exchangeable_headline", "over_explained_body",
+            "incomplete_compound_semantics", "insufficient_audience_distinction",
+            "insufficient_astrology_density_progression", "other_editorial_quality"
+          ]
+        },
+        "scope": {"enum": ["summary", "card", "deck"]},
+        "priority": {"enum": ["high", "medium", "low"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "repairability": {
+          "enum": ["local_repair", "upstream_reconception", "advisory_only"]
+        },
+        "target_paths": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "comparison_paths": {"type": "array", "items": {"type": "string"}},
+        "diagnosis": {"type": "string"},
+        "rewrite_objective": {"type": "string"},
+        "required_context": {
+          "type": "array",
+          "items": {"enum": ["nearby_prose", "claim_evidence", "whole_chart", "none"]}
+        },
+        "selected_for_candidate": {"type": "boolean"},
+        "selection_reason": {
+          "type": ["string", "null"],
+          "enum": [
+            "eligible", "not_locally_repairable", "low_priority",
+            "confidence_below_0.70", "field_cap", "card_cap", null
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

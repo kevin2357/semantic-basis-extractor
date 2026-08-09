@@ -13,7 +13,8 @@
     "authoring_profile": "astrowoof.authoring_profile.v0.1",
     "delivery_manifest": "astrowoof.natal_delivery_manifest.v0.1",
     "provenance": "astrowoof.natal_authoring_provenance.v0.1",
-    "resource_set": "astrowoof.natal_authoring_resource_set.v0.1"
+    "resource_set": "astrowoof.natal_authoring_resource_set.v0.1",
+    "qualitative_critic_findings": "astrowoof.qualitative_critic_findings.v0.1"
   },
   "compatibility": {
     "legacy_projected_directory": "normalized_to_projected_input_v0.1",

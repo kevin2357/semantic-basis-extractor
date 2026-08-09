@@ -1,6 +1,7 @@
 # Sprint Results
 
-Status: Slice 4 acceptance-copy validation complete; gate approval pending.
+Status: Slice 5 release candidate and consumer handoff complete; gate approval
+pending. Tagging and publication remain separately unauthorized.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in
@@ -24,6 +25,10 @@ an evidence-backed answer and explicit confidence level for every question in
 - `SLICE 4 - Acceptance Copy Repair Validation.md`: offline dry-run, repaired
   checkpoint, interruption recovery, monotonicity, and resume-boundary result.
 - `slice4-acceptance-copy-validation.json`: compact redacted Slice 4 evidence.
+- `SLICE 5 - Patch Artifact and Consumer Handoff.md`: candidate coordinates,
+  installed qualification, critic contract, and publication boundary.
+- `slice5-release-candidate.json`: compact release-candidate evidence.
+- `../API AGENT RESPONSES.md`: complete answers to all preserved API questions.
 
 This directory will contain compact, redacted evidence for:
 

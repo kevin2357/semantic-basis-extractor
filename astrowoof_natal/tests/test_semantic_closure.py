@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import shutil
 import sys
@@ -77,6 +78,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     update_run_status,
     validate_workspace_snapshot,
     validate_qualitative_critic_response,
+    validate_critic_findings_artifact,
     workspace_file_inventory,
     write_workspace_snapshot,
     write_json_atomic,
@@ -401,6 +403,24 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_packaged_critic_contract_and_fixture_are_versioned(self) -> None:
+        resources = SRC / "astrowoof_natal_authoring" / "resources"
+        catalog = load_json(resources / "contracts" / "contract-catalog.json")
+        self.assertEqual(
+            "astrowoof.qualitative_critic_findings.v0.1",
+            catalog["contracts"]["qualitative_critic_findings"],
+        )
+        schema = load_json(
+            resources / "contracts" / "qualitative-critic-findings.schema.json"
+        )
+        self.assertEqual(
+            "astrowoof.qualitative_critic_findings.v0.1", schema["$id"]
+        )
+        fixture = load_json(
+            resources / "fixtures" / "critic" / "critic-findings.v0.1.json"
+        )
+        self.assertIs(validate_critic_findings_artifact(fixture), fixture)
+
     def test_run_sbe_threads_compact_full_chart_basis_format(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -948,6 +968,19 @@ class TestSemanticClosure(SemanticClosureFixture):
             }
             target = "cards.0.card.no_astro.headline.handler"
             schema_names: list[str] = []
+            critic_run_state = {
+                "run_id": "critic-contract-test",
+                "schema_version": "astrowoof.semantic_closure_run.v0.9",
+                "state_revision": 12,
+                "authoring_profile": {
+                    "schema_version": "astrowoof.authoring_profile.v0.1",
+                    "profile_id": "critic-test-profile",
+                },
+                "provenance": {
+                    "runtime": {"version": "test"},
+                    "resources": {"aggregate_sha256": "resource-test"},
+                },
+            }
 
             class Provider:
                 model = "fake-qualitative"
@@ -976,7 +1009,13 @@ class TestSemanticClosure(SemanticClosureFixture):
                                 "rewrite_objective": "Make the behavior specific.",
                                 "required_context": ["claim_evidence"],
                             }],
-                        }, {"provider": "fake"}
+                        }, {
+                            "provider": "fake",
+                            "response_id": "resp-critic-test",
+                            "model": "fake-qualitative",
+                            "reasoning_effort": "low",
+                            "service_level": "interactive",
+                        }
                     return {"edits": [{
                         "field_path": target,
                         "replacement": "A Distinctly Grounded Headline",
@@ -1010,6 +1049,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     max_findings=4,
                     max_target_fields=4,
                     max_target_cards=2,
+                    run_state=critic_run_state,
                 )
                 self.assertEqual(
                     "DIAGNOSIS_COMPLETE",
@@ -1024,11 +1064,37 @@ class TestSemanticClosure(SemanticClosureFixture):
                     max_findings=4,
                     max_target_fields=4,
                     max_target_cards=2,
+                    run_state=critic_run_state,
                 )
             self.assertEqual(original, deck_path.read_text(encoding="utf-8"))
             review = record["qualitative_review"]
             self.assertEqual("CANDIDATE_READY_FOR_REVIEW", review["state"])
             self.assertFalse(review["candidate"]["production_deck_replaced"])
+            findings = load_json(Path(review["critic"]["artifact"]))
+            self.assertEqual(
+                "astrowoof.qualitative_critic_findings.v0.1",
+                findings["schema_version"],
+            )
+            self.assertEqual(
+                "resp-critic-test",
+                findings["provenance"]["provider"]["response_id"],
+            )
+            self.assertEqual(
+                "critic-contract-test",
+                findings["provenance"]["run"]["run_id"],
+            )
+            self.assertEqual(
+                hashlib.sha256(deck_path.read_bytes()).hexdigest(),
+                findings["provenance"]["criticized_deck"]["sha256"],
+            )
+            self.assertIn(
+                "selected_for_candidate",
+                findings["critic"]["findings"][0],
+            )
+            unsupported = deepcopy(findings)
+            unsupported["schema_version"] = "astrowoof.qualitative_critic_findings.v9"
+            with self.assertRaisesRegex(ValueError, "Unsupported critic-findings"):
+                validate_critic_findings_artifact(unsupported)
             candidate = load_json(Path(review["candidate"]["artifact"]))
             self.assertEqual(
                 "A Distinctly Grounded Headline",

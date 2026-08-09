@@ -596,6 +596,11 @@ final/
     astrowoof-<subject>-delivery.zip
 ```
 
+`critic-findings.json` is a versioned private consumer artifact. See
+`Qualitative Critic Findings Consumer Contract.md` for its closed vocabularies,
+required fields, direct provenance chain, storage guidance, and canonical
+fixture. Unsupported versions fail closed before candidate resume.
+
 `run.json` is written atomically and records pass states, subject delivery
 states, authoring and polish attempts, response IDs, model settings, token
 usage, estimated cost, QA reports, and delivery paths. The estimate uses a

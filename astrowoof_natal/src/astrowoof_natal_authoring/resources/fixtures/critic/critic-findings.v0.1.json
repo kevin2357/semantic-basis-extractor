@@ -1,0 +1,89 @@
+{
+  "schema_version": "astrowoof.qualitative_critic_findings.v0.1",
+  "artifact_kind": "normalized_qualitative_critic_findings",
+  "critic": {
+    "deck_assessment": {
+      "strengths": ["The deck uses distinct behavioral examples."],
+      "primary_risks": ["One headline is insufficiently specific."]
+    },
+    "findings": [
+      {
+        "finding_id": "fixture-finding-001",
+        "quality_dimension": "exchangeable_headline",
+        "scope": "card",
+        "priority": "high",
+        "confidence": 0.92,
+        "repairability": "local_repair",
+        "target_paths": ["cards.0.card.no_astro.headline.handler"],
+        "comparison_paths": ["cards.1.card.no_astro.headline.handler"],
+        "diagnosis": "The first headline does not identify its distinct behavior.",
+        "rewrite_objective": "Name the specific behavior without changing meaning.",
+        "required_context": ["claim_evidence"],
+        "selected_for_candidate": true,
+        "selection_reason": "eligible"
+      }
+    ]
+  },
+  "eligible_findings": [
+    {
+      "finding_id": "fixture-finding-001",
+      "quality_dimension": "exchangeable_headline",
+      "scope": "card",
+      "priority": "high",
+      "confidence": 0.92,
+      "repairability": "local_repair",
+      "target_paths": ["cards.0.card.no_astro.headline.handler"],
+      "comparison_paths": ["cards.1.card.no_astro.headline.handler"],
+      "diagnosis": "The first headline does not identify its distinct behavior.",
+      "rewrite_objective": "Name the specific behavior without changing meaning.",
+      "required_context": ["claim_evidence"],
+      "selected_for_candidate": true,
+      "selection_reason": "eligible"
+    }
+  ],
+  "selected_target_paths": ["cards.0.card.no_astro.headline.handler"],
+  "selected_location_count": 1,
+  "limits": {
+    "max_findings": 8,
+    "max_target_fields": 4,
+    "max_target_cards": 2,
+    "minimum_confidence": 0.7,
+    "eligible_priorities": ["high", "medium"],
+    "eligible_repairability": "local_repair"
+  },
+  "provenance": {
+    "criticized_deck": {
+      "path": "final/fixture/natal.fixture.cards.json",
+      "filename": "natal.fixture.cards.json",
+      "bytes": 1,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "role": "criticized_final_deck"
+    },
+    "raw_provider_response": {
+      "path": "final/fixture/qualitative/critic/openai-response.json",
+      "filename": "openai-response.json",
+      "bytes": 1,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "role": "raw_critic_provider_response"
+    },
+    "provider": {
+      "kind": "response",
+      "response_id": "resp_fixture_not_provider_data",
+      "model": "fixture-model",
+      "reasoning_effort": "fixture",
+      "service_level": "interactive"
+    },
+    "run": {
+      "run_id": "fixture-run",
+      "operator_schema_version": "astrowoof.semantic_closure_run.v0.9",
+      "state_revision": 1,
+      "authoring_profile": {
+        "schema_version": "astrowoof.authoring_profile.v0.1",
+        "profile_id": "fixture-profile",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "runtime": {"distribution": "astrowoof-natal-authoring", "version": "fixture"},
+      "resources": {"aggregate_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}
+    }
+  }
+}

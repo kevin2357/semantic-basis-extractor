@@ -148,3 +148,31 @@ Next action: Slice 3 gate review before commit or any acceptance-copy use.
   run mutation, or tag/release change occurred.
 
 Next action: Slice 4 gate review before commit or Slice 5 artifact work.
+
+## 2026-08-09 - Slice 5 patch artifact and consumer handoff
+
+- User approved Slice 4. Committed its resume correction and acceptance-copy
+  evidence as `e94ca54`, then began Slice 5.
+- Promoted `critic-findings.json` to the normative
+  `astrowoof.qualitative_critic_findings.v0.1` private artifact with direct
+  provenance, closed vocabularies, required fields, packaged JSON Schema,
+  catalog registration, validation, and a sanitized canonical fixture.
+- Classified old Kevin/Ella files as unversioned historical evidence rather
+  than canonical v0.1 fixtures, and documented the API private-artifact/index
+  split.
+- Set candidate version 0.2.2 and built two byte-identical wheels with SHA-256
+  `98e8ab142bc4c1dc97fdc53019fb6d2e16d23736f12ca9085119b79fdc842b7e`.
+- The exact wheel clean-installed and passed `pip check` plus installed smoke
+  on Windows and offline Linux. Both reported the same 21-resource aggregate
+  digest.
+- The exact installed wheel's repair command accepted the read-only retained
+  backup with the frozen forensic hashes and unused action 2.
+- Added 0.2.2 release notes, compatibility, recovery advisory, API-worker
+  integration, checksum, hash-lock, and candidate manifest.
+- Added `API AGENT RESPONSES.md` answering all twelve question groups with the
+  required confidence and consumer-contract detail.
+- No provider request, authorization consumption, incremental spend, canonical
+  run mutation, tag, push, asset upload, or publication occurred.
+
+Next action: Slice 5 gate review. Candidate commit, immutable tag, push, and
+publication remain separately controlled.

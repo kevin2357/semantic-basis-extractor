@@ -1,0 +1,33 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice5.v1",
+  "status": "candidate_pass",
+  "version": "0.2.2",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.2.2-py3-none-any.whl",
+    "bytes": 633073,
+    "sha256": "98e8ab142bc4c1dc97fdc53019fb6d2e16d23736f12ca9085119b79fdc842b7e",
+    "entry_count": 44,
+    "reproducible_builds": 2,
+    "byte_reproducible": true
+  },
+  "tests": {
+    "complete_repository": {"status": "pass", "count": 166},
+    "windows_installed_smoke": "pass",
+    "linux_installed_smoke": "pass",
+    "windows_pip_check": "pass",
+    "linux_pip_check": "pass",
+    "exact_wheel_repair_dry_run": "pass"
+  },
+  "resources": {
+    "count": 21,
+    "aggregate_sha256": "eb08dcde591479a943ab4461bba08d68361631d748634830ba36888e459b7a7f"
+  },
+  "critic_contract": "astrowoof.qualitative_critic_findings.v0.1",
+  "api_agent_question_groups_answered": 12,
+  "provider_requests": 0,
+  "authorization_consumed": false,
+  "incremental_provider_spend_usd": 0,
+  "tag_created": false,
+  "published": false,
+  "diff_check": "pass"
+}
