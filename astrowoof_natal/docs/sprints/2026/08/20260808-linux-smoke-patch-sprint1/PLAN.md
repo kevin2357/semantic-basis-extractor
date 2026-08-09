@@ -1,14 +1,14 @@
 # AstroWoof Natal Authoring Linux Smoke Patch Sprint
 
 ```yaml
-status: planned
-planned: 2026-08-08
+status: in_progress
+started: 2026-08-08
 owner: semantic-basis-extractor
 target_distribution: astrowoof-natal-authoring
 proposed_target_version: 0.2.1
 proposed_target_tag: astrowoof-natal-authoring-v0.2.1
 predecessor_release: astrowoof-natal-authoring-v0.2.0
-execution_authorized: false
+execution_authorized: true
 paid_provider_work_authorized: false
 publication_authorized: false
 ```

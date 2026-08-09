@@ -1,0 +1,29 @@
+{
+  "schema_version": "astrowoof.linux_smoke_patch_slice0.v0.1",
+  "status": "pass",
+  "baseline_commit": "06b99773b05f0027d682bc106c1d84babac2c868",
+  "release": {
+    "version": "0.2.0",
+    "tag_object": "8e441796d2aa33c5189f718e9e9fc199a7d9b396",
+    "tag_commit": "9c3ec9e59da7ad5ec87e0dc43cb9582913d6b7ac",
+    "wheel_sha256": "cbc8e82da546c1dd4a13a60544f31c5627365167c8c7c48f3114b5fd1f4c03e4"
+  },
+  "linux_run": {
+    "provider": "fake",
+    "service_level": "interactive",
+    "spend_action_count": 0,
+    "state": "FINAL_QA_REQUIRES_REVIEW",
+    "repeated_ngram_group_count": 1,
+    "claim_count": 3,
+    "normalized_passage": "insight a d e reveals one memorable behavior through an independent cadence",
+    "source_tokens": ["a15d982e5900", "a50063702d8e", "a835d46e7773"]
+  },
+  "platform_ordering": {
+    "markdown_file_count": 27,
+    "windows_posix_orders_equal": false,
+    "first_difference_index": 1
+  },
+  "cleanup_masking_reproduced": true,
+  "paid_provider_calls": 0,
+  "proposed_patch_version": "0.2.1"
+}
