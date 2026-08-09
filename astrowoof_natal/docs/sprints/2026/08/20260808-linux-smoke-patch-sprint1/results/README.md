@@ -1,6 +1,6 @@
 # Sprint Results
 
-Status: Slice 2 exact artifact qualification complete; gate approval pending.
+Status: Slice 3 release preparation complete; publication gate pending.
 
 - `SLICE 0 - Reproduction and Patch Boundary.md`: immutable baseline,
   normalized collision, platform ordering proof, cleanup masking, and exact
@@ -14,6 +14,8 @@ Status: Slice 2 exact artifact qualification complete; gate approval pending.
   exact installed-wheel Windows/Linux results, and retained upstream identity.
 - `slice2-artifact-qualification.json`: compact machine-readable artifact and
   cross-platform qualification evidence.
+- `SLICE 3 - Patch Handoff and Publication Preparation.md`: reviewed release
+  bundle coordinates, consumer delta, and explicit publication boundary.
 
 This directory will contain compact, independently reviewable evidence for the
 Linux reproduction, narrow fake/smoke correction, exact 0.2.1 Windows/Linux

@@ -1,0 +1,1 @@
+astrowoof-natal-authoring @ https://github.com/kevin2357/semantic-basis-extractor/releases/download/astrowoof-natal-authoring-v0.2.1/astrowoof_natal_authoring-0.2.1-py3-none-any.whl --hash=sha256:0d273c2d0e98d54abadd28ff1a36f670bd4bbd7e7441bac263f6dbafe75bfc08

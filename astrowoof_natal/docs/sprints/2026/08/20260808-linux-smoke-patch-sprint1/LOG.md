@@ -79,3 +79,17 @@ Next action: Slice 1 gate review before commit or exact patch artifact work.
 
 Next action: Slice 2 gate review. No commit, release handoff, tag, push, or
 publication until explicit approval.
+
+## 2026-08-08 - Slice 3 patch handoff and publication preparation
+
+- User approved Slice 2. Committed its version and evidence as `465cf41`.
+- Prepared the 0.2.1 candidate manifest, release notes, compatibility delta,
+  SHA-256 file, hash-pinned worker requirement, and API-worker handoff.
+- All records identify the qualified 624,157-byte wheel with SHA-256
+  `0d273c2d0e98d54abadd28ff1a36f670bd4bbd7e7441bac263f6dbafe75bfc08`.
+- Documented unchanged 0.2.0 production contracts/ownership and direct links
+  to spend authorization, spend enforcement, and the packaged catalog.
+- No tag, push, GitHub release, asset upload, or provider request occurred.
+
+Next action: Slice 3 publication gate review. Commit the prepared records and
+publish only after explicit authorization.
