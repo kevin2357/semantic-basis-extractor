@@ -1,7 +1,6 @@
 # Sprint Results
 
-Status: Slice 5 release candidate and consumer handoff complete; gate approval
-pending. Tagging and publication remain separately unauthorized.
+Status: complete; 0.2.2 published and authenticated download verified.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in

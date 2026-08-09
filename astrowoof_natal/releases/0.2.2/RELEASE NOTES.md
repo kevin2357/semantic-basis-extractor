@@ -36,4 +36,6 @@ provider transport calls.
 - exact-wheel Linux repair dry run against the retained backup: eligible;
 - new provider operations and spend: zero.
 
-Tagging and publication were explicitly authorized after candidate review.
+Publication is complete. The immutable annotated tag targets commit
+`36bbc1b4a142f4f8405e66946f3dcdff5cd0f0c0`; authenticated download verification
+matched the qualified wheel SHA-256 above.

@@ -185,3 +185,14 @@ publication remain separately controlled.
   as `985ac53`.
 - Recorded that commit as the qualified build source and moved publication
   state to authorized pending publication.
+
+## 2026-08-09 - 0.2.2 published
+
+- Committed publication authorization as `36bbc1b` and created annotated tag
+  `astrowoof-natal-authoring-v0.2.2` at that immutable commit.
+- Pushed main and the tag, then published GitHub release 367613271 with the
+  exact qualified wheel and checksum assets.
+- Authenticated download verification reproduced wheel SHA-256
+  `98e8ab142bc4c1dc97fdc53019fb6d2e16d23736f12ca9085119b79fdc842b7e`.
+- Release is neither draft nor prerelease. No provider operation or additional
+  spend occurred during publication.

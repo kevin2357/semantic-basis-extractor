@@ -1,6 +1,6 @@
 # Slice 5 - Patch Artifact and Consumer Handoff
 
-Status: release candidate complete; gate approval pending.
+Status: complete; published and authenticated download verified.
 
 ## Candidate
 
@@ -13,8 +13,9 @@ Status: release candidate complete; gate approval pending.
 - entries: 44; bytecode/cache entries: 0;
 - two independent builds: byte-identical.
 
-The candidate remains local under `C:\tmp\sbe-0.2.2-build-a`. No tag, release,
-asset upload, or publication occurred.
+The exact candidate was published under the immutable annotated tag
+`astrowoof-natal-authoring-v0.2.2`. Authenticated download verification matched
+the qualified SHA-256.
 
 ## Qualification
 
@@ -53,6 +54,6 @@ artifact hash/reference.
   pending and source commit intentionally unset until the approved candidate
   commit exists.
 
-Next action: approve the Slice 5 candidate and documentation. Commit, tag,
-push, and publication are separate actions; publication requires explicit
-authorization.
+Publication evidence is recorded in the release manifest. The sprint is
+complete; canonical-run repair and provider-connected continuation remain
+separately controlled API operations.

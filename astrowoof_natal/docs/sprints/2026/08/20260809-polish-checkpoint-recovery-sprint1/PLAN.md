@@ -1,7 +1,7 @@
 # Polish Checkpoint and Recovery Sprint
 
 ```yaml
-status: slice_5_candidate_complete
+status: complete
 created: 2026-08-09
 owner: semantic-basis-extractor
 affected_release: astrowoof-natal-authoring 0.2.1
