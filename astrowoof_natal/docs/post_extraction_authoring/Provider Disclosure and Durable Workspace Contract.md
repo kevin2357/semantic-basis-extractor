@@ -106,8 +106,10 @@ no authorization, consumption, provider identity, or reported usage. Any
 additional, missing, truncated, or conflicting evidence is refused. There is
 no force, allowlist, relocation, or generic rehash mode.
 
-Apply reconstructs the missing subject and partial-improvement attempt record,
-preserves every existing ledger action and accepted pass, atomically republishes
+Apply reconstructs the missing subject, partial attempt-1 result, and pending
+attempt-2 record. A resumed `SUBMITTED` polish attempt is reused rather than
+skipped or appended again. Repair preserves every existing ledger action and
+accepted pass, atomically republishes
 operator/public/authorization state, writes a complete snapshot, and validates
 it before success. The output report must live outside the workspace so it
 cannot create a self-referential snapshot member.

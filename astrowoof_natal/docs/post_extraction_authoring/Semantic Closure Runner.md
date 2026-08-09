@@ -539,8 +539,10 @@ An SBE 0.2.1 run with only the documented three-file polish mismatch must not
 be resumed or manually re-snapshotted. The installed
 `astrowoof-repair-polish-checkpoint` command provides dry-run inspection and an
 explicit, backup-gated repair for that exact shape. It reconstructs the missing
-subject-owned partial polish record from retained native outputs, preserves the
-unused prepared action, republishes a complete checkpoint, and validates it.
+subject-owned partial result and pending attempt from retained native outputs.
+Resume reuses that `SUBMITTED` attempt at the same route; it does not append or
+skip it. The tool preserves the unused prepared action, republishes a complete
+checkpoint, and validates it.
 It refuses unrelated mutations and never contacts the provider. See
 `Provider Disclosure and Durable Workspace Contract.md` for the full command
 and refusal contract.

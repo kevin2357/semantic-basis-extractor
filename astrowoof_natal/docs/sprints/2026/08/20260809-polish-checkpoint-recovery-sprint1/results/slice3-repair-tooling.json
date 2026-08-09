@@ -14,6 +14,7 @@
   "authorization_installed_or_consumed": false,
   "prepared_action_preserved": true,
   "reconstructed_attempt_state": "POLISH_IMPROVED_PARTIAL",
+  "reconstructed_pending_attempt_state": "SUBMITTED",
   "tests": {
     "repair_qualification": {"status": "pass", "count": 8},
     "focused_repair_spend_closure": {"status": "pass", "count": 97},

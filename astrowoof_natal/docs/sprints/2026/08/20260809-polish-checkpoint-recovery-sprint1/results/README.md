@@ -1,6 +1,6 @@
 # Sprint Results
 
-Status: Slice 3 constrained repair tooling complete; gate approval pending.
+Status: Slice 4 acceptance-copy validation complete; gate approval pending.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in
@@ -21,6 +21,9 @@ an evidence-backed answer and explicit confidence level for every question in
 - `SLICE 3 - Constrained Repair Tooling.md`: exact eligibility, reconstruction,
   refusal, backup, locking, and preservation contract.
 - `slice3-repair-tooling.json`: compact machine-readable Slice 3 qualification.
+- `SLICE 4 - Acceptance Copy Repair Validation.md`: offline dry-run, repaired
+  checkpoint, interruption recovery, monotonicity, and resume-boundary result.
+- `slice4-acceptance-copy-validation.json`: compact redacted Slice 4 evidence.
 
 This directory will contain compact, redacted evidence for:
 

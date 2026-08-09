@@ -184,13 +184,17 @@ class CheckpointRepairTests(unittest.TestCase):
             self.assertEqual("AWAITING_SPEND_AUTHORIZATION", state["status"])
             self.assertEqual("PREPARED", state["spend_ledger"]["actions"][1]["state"])
             self.assertIsNone(state["spend_ledger"]["actions"][1]["authorization"])
-            self.assertEqual(1, len(state["subjects"]["juniper"]["polish_attempts"]))
+            self.assertEqual(2, len(state["subjects"]["juniper"]["polish_attempts"]))
             self.assertEqual(
                 "POLISH_IMPROVED_PARTIAL",
                 state["subjects"]["juniper"]["polish_attempts"][0]["state"],
             )
             self.assertFalse(
                 state["subjects"]["juniper"]["polish_attempts"][0]["accepted"]
+            )
+            self.assertEqual(
+                "SUBMITTED",
+                state["subjects"]["juniper"]["polish_attempts"][1]["state"],
             )
             validate_workspace_snapshot(run, state)
 

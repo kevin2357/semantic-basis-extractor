@@ -124,3 +124,27 @@ Next action: Slice 2 gate review before commit or Slice 3 repair tooling.
   consumption, incremental spend, or retained-run mutation occurred.
 
 Next action: Slice 3 gate review before commit or any acceptance-copy use.
+
+## 2026-08-09 - Slice 4 acceptance-copy repair validation
+
+- User approved Slice 3. Committed its repair tooling as `38238f8` and created
+  separate working and backup copies outside Git; the canonical run remained
+  read-only.
+- Ran the repair dry run offline in the acceptance Linux image at the recorded
+  logical path. It matched every frozen Slice 0 identity and hash.
+- Before apply, found and corrected a pending-attempt resume issue: a persisted
+  `SUBMITTED` polish attempt must be reused rather than skipped. Added focused
+  repair and polish regressions.
+- User explicitly approved repair of the working copy only. The command timed
+  out at the harness after publishing revision 61 and its snapshot but before
+  writing the external report; it was not blindly retried.
+- Independent read-only validation proved the new snapshot valid, accepted
+  passes and spend ledger unchanged, attempt 2 still prepared and unused, and
+  attempt states reconstructed as partial attempt 1 plus pending attempt 2.
+- Offline resume through the real polish/spend seam returned to the exact
+  action-2 authorization boundary with two attempts, zero transport calls, and
+  a still-valid snapshot.
+- No OpenAI request, authorization consumption, incremental spend, canonical-
+  run mutation, or tag/release change occurred.
+
+Next action: Slice 4 gate review before commit or Slice 5 artifact work.

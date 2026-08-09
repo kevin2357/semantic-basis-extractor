@@ -1456,6 +1456,21 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertIs(record, state["subjects"]["bre"])
             self.assertEqual(2, len(state["subjects"]["bre"]["polish_attempts"]))
 
+            with patch(
+                "astrowoof_natal_authoring.closure.run_json_command",
+                side_effect=fake_qa,
+            ):
+                polish_subject(
+                    record=record,
+                    provider=Provider(),
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_attempts=2,
+                )
+            self.assertEqual(3, calls)
+            self.assertEqual(2, len(record["polish_attempts"]))
+            self.assertEqual("POLISH_REJECTED", record["polish_attempts"][1]["state"])
+
     def test_polish_final_copy_failure_does_not_prepare_another_paid_attempt(
         self,
     ) -> None:

@@ -1,0 +1,47 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice4.v1",
+  "status": "pass",
+  "isolation": {
+    "canonical_run_mutated": false,
+    "working_copy": "external_temp_copy",
+    "backup_copy": "external_temp_read_only_copy",
+    "container_network": "none"
+  },
+  "dry_run": {
+    "eligible": true,
+    "before_state_revision": 60,
+    "changed_member_count": 3,
+    "retained_attempt_hashes_match": true,
+    "authorization_binding_verified": true,
+    "prepared_action_unused": true
+  },
+  "apply": {
+    "explicit_copy_only_authorization": true,
+    "command_harness_timed_out": true,
+    "external_report_written": false,
+    "after_state_revision": 61,
+    "snapshot_valid_after_interruption": true,
+    "snapshot_sha256": "16d115e2b7573212df54cc2bcbcd825b20afd6521da0169f92dea7652d22048a",
+    "accepted_passes_monotonic": true,
+    "spend_ledger_monotonic": true,
+    "attempt_states": ["POLISH_IMPROVED_PARTIAL", "SUBMITTED"]
+  },
+  "offline_resume": {
+    "awaiting_action_id": "paid_0d941d208206a4d8b0349f91",
+    "attempt_count_before": 2,
+    "attempt_count_after": 2,
+    "provider_transport_calls": 0,
+    "action_state": "PREPARED",
+    "authorization_present": false,
+    "consumption_present": false,
+    "provider_id_present": false,
+    "snapshot_valid": true
+  },
+  "tests": {
+    "complete_repository": {"status": "pass", "count": 165},
+    "diff_check": "pass"
+  },
+  "provider_requests": 0,
+  "authorization_consumed": false,
+  "incremental_provider_spend_usd": 0
+}

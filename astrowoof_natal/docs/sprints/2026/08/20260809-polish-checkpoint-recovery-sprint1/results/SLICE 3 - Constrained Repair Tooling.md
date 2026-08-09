@@ -29,9 +29,10 @@ API-owned exclusive-lease reference, then acquires SBE's spend-consumption
 lock. SBE records the lease reference for audit; the API remains responsible
 for preventing other worker mutation under its authoritative lease.
 
-The repair reconstructs the missing state-owned subject and attempt-1 record as
-`POLISH_IMPROVED_PARTIAL`, preserving that it was not accepted and that attempt
-2 remains necessary. It preserves the existing passes and spend ledger,
+The repair reconstructs the missing state-owned subject, attempt 1 as
+`POLISH_IMPROVED_PARTIAL`, and attempt 2 as pending `SUBMITTED`. This preserves
+that attempt 1 was not accepted and makes the exact prepared attempt reusable
+after resume. It preserves the existing passes and spend ledger,
 persists operator/public/authorization state, publishes a complete snapshot,
 and validates the result before returning success. The external authorization
 is evidence only: it is neither installed nor consumed.

@@ -4716,10 +4716,25 @@ def polish_subject(
     final_root = run_dir / "final" / subject
     validator_path = Path(validation_module.__file__).resolve()
     linter_path = Path(editorial_lint_module.__file__).resolve()
+    polish_attempts = record.setdefault("polish_attempts", [])
+    pending_attempt = (
+        polish_attempts[-1]
+        if polish_attempts and polish_attempts[-1].get("state") == "SUBMITTED"
+        else None
+    )
+    first_attempt_number = (
+        int(pending_attempt["attempt_number"])
+        if pending_attempt is not None
+        else len(polish_attempts) + 1
+    )
     for attempt_number in range(
-        len(record.get("polish_attempts", [])) + 1,
+        first_attempt_number,
         max_attempts + 1,
     ):
+        resuming_attempt = (
+            pending_attempt is not None
+            and attempt_number == int(pending_attempt["attempt_number"])
+        )
         attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
         lint_report = load_json(Path(record["lint_report"]))
         validation_report = load_json(Path(record["validation_report"]))
@@ -4727,7 +4742,9 @@ def polish_subject(
             "theme group" in str(error).lower()
             for error in validation_report.get("errors", [])
         )
-        prior_attempts = record.get("polish_attempts", [])
+        prior_attempts = (
+            polish_attempts[:-1] if resuming_attempt else polish_attempts
+        )
         expand_related = (
             bool(prior_attempts)
             and not bool(prior_attempts[-1].get("improved"))
@@ -4795,27 +4812,30 @@ def polish_subject(
             "READ-ONLY NEARBY PROSE:\n"
             f"{json.dumps(reference_context, ensure_ascii=False)}"
         )
-        attempt = {
-            "attempt_number": attempt_number,
-            "state": "SUBMITTED",
-            "started_at": utc_now(),
-            "finished_at": None,
-            "provider_metadata": None,
-            "validation_report": None,
-            "lint_report": None,
-            "warning_count": None,
-            "accepted": False,
-            "transport": {
-                **sparse_polish_transport_metrics(
-                    current_deck,
-                    target_paths=target_paths,
-                    include_theme_groups=allow_theme_group_edits,
-                ),
-                "editable_target_paths": target_paths,
-            },
-            "error": None,
-        }
-        record["polish_attempts"].append(attempt)
+        if resuming_attempt:
+            attempt = pending_attempt
+        else:
+            attempt = {
+                "attempt_number": attempt_number,
+                "state": "SUBMITTED",
+                "started_at": utc_now(),
+                "finished_at": None,
+                "provider_metadata": None,
+                "validation_report": None,
+                "lint_report": None,
+                "warning_count": None,
+                "accepted": False,
+                "transport": {
+                    **sparse_polish_transport_metrics(
+                        current_deck,
+                        target_paths=target_paths,
+                        include_theme_groups=allow_theme_group_edits,
+                    ),
+                    "editable_target_paths": target_paths,
+                },
+                "error": None,
+            }
+            polish_attempts.append(attempt)
         try:
             before_submit = provider_created = None
             if spend_controller is not None:

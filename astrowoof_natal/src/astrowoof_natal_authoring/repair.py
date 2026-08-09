@@ -194,6 +194,20 @@ def inspect_polish_checkpoint(
                 "accepted": False,
                 "improved": True,
                 "error": None,
+            }, {
+                "attempt_number": 2,
+                "state": "SUBMITTED",
+                "started_at": None,
+                "finished_at": None,
+                "provider_metadata": None,
+                "validation_report": None,
+                "lint_report": None,
+                "warning_count": None,
+                "accepted": False,
+                "transport": {
+                    "recovered_prepared_request": normalized_path(request_2_path),
+                },
+                "error": None,
             }],
             "delivery": None,
             "checkpoint_repair": {
@@ -228,7 +242,10 @@ def inspect_polish_checkpoint(
         "prepared_action_id": action_2["action_id"],
         "prepared_action_remains_unused": True,
         "authorization_binding_verified": True,
-        "changes": ["restore subject/attempt state", "publish complete workspace snapshot"],
+        "changes": [
+            "restore subject and attempts 1-2 state",
+            "publish complete workspace snapshot",
+        ],
     }
     return plan, repaired
 
