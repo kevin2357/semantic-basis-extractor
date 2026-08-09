@@ -76,6 +76,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     validate_workspace_snapshot,
     validate_qualitative_critic_response,
     workspace_file_inventory,
+    write_workspace_snapshot,
     write_json_atomic,
     writable_fields,
     _fake_field_value,
@@ -1327,6 +1328,130 @@ class TestSemanticClosure(SemanticClosureFixture):
                 record["polish_attempts"][1]["transport"]["editable_target_count"],
                 100,
             )
+
+    def test_polish_authorization_pause_discards_unpublished_subject_record(
+        self,
+    ) -> None:
+        """Reproduce the 0.2.1 polish-attempt-2 state publication defect."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            deck_path.write_text(json.dumps(self.packet), encoding="utf-8")
+            original_deck = deck_path.read_bytes()
+            assembly_path = final_root / "assembly.json"
+            assembly_path.write_text("{}", encoding="utf-8")
+            validation_path = final_root / "validation.json"
+            validation_path.write_text(json.dumps({
+                "status": "pass", "errors": [], "warnings": [],
+            }), encoding="utf-8")
+            lint_path = final_root / "lint.json"
+            lint_path.write_text(json.dumps({
+                "status": "warn",
+                "warning_count": 2,
+                "decks": [{"warnings": [{
+                    "code": "failure_signature",
+                    "details": {
+                        "location": "card:" + self.packet["cards"][0]["claim_id"],
+                        "field": "no_astro.headline.handler",
+                    },
+                }]}],
+            }), encoding="utf-8")
+            record = {
+                "subject": "bre",
+                "state": "FINAL_QA_WARN",
+                "deck": str(deck_path),
+                "assembly_report": str(assembly_path),
+                "validation_report": str(validation_path),
+                "lint_report": str(lint_path),
+                "baseline_warning_count": 2,
+                "polish_attempts": [],
+                "delivery": None,
+            }
+            state = {
+                "passes": {"bre_1": {"state": "PASS_QA_ACCEPTED"}},
+                "subjects": {},
+            }
+            calls = 0
+
+            class Provider:
+                model = "fake-polish"
+                reasoning_effort = "low"
+
+                def complete_json(inner_self, **kwargs):
+                    nonlocal calls
+                    calls += 1
+                    if calls == 2:
+                        raise AwaitingSpendAuthorization(
+                            "second polish action requires authorization",
+                            action={"action_id": "paid-polish-002"},
+                        )
+                    target = kwargs["schema"]["properties"]["edits"]["items"][
+                        "properties"
+                    ]["field_path"]["enum"][0]
+                    return {"edits": [{
+                        "field_path": target,
+                        "replacement": "A specifically improved polish headline",
+                        "reason_codes": ["failure_signature"],
+                    }]}, {"provider": "fake", "response_id": "resp-polish-001"}
+
+            def fake_qa(command, report_path, *, accepted_returncodes):
+                if Path(command[1]).name == "validation.py":
+                    report = {"status": "pass", "errors": [], "warnings": []}
+                else:
+                    report = {
+                        "status": "warn",
+                        "warning_count": 1,
+                        "decks": [{"warnings": [{
+                            "code": "failure_signature",
+                            "details": {
+                                "location": (
+                                    "card:" + self.packet["cards"][0]["claim_id"]
+                                ),
+                                "field": "no_astro.headline.handler",
+                            },
+                        }]}],
+                    }
+                report_path.write_text(json.dumps(report), encoding="utf-8")
+                return {
+                    "accepted": True,
+                    "returncode": 0,
+                    "stdout": "",
+                    "stderr": "",
+                    "report": report,
+                }
+
+            with (
+                patch(
+                    "astrowoof_natal_authoring.closure.subject_records",
+                    return_value={"bre": []},
+                ),
+                patch(
+                    "astrowoof_natal_authoring.closure.assemble_subject",
+                    return_value=record,
+                ),
+                patch(
+                    "astrowoof_natal_authoring.closure.run_json_command",
+                    side_effect=fake_qa,
+                ),
+                self.assertRaises(AwaitingSpendAuthorization),
+            ):
+                finalize_subjects(
+                    state=state,
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    allow_lint_warnings=False,
+                    polish=True,
+                    polish_provider=Provider(),
+                    max_polish_attempts=2,
+                )
+
+            self.assertEqual(2, calls)
+            self.assertNotEqual(original_deck, deck_path.read_bytes())
+            self.assertEqual("POLISH_ACCEPTED", record["polish_attempts"][0]["state"])
+            self.assertEqual("SUBMITTED", record["polish_attempts"][1]["state"])
+            self.assertEqual({}, state["subjects"])
 
     def test_final_status_requires_every_subject_delivery(self) -> None:
         state = {
@@ -2584,6 +2709,47 @@ class TestSemanticClosure(SemanticClosureFixture):
                 mutate(root / "run")
                 with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
                     validate_workspace_snapshot(root / "run", state)
+
+    def test_concurrent_snapshot_can_mix_pre_and_post_polish_members(self) -> None:
+        """Reproduce an unlocked inventory spanning two workspace generations."""
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            final_root = run_dir / "final" / "bre"
+            attempt_root = final_root / "polish" / "attempt-001"
+            attempt_root.mkdir(parents=True)
+            names = ("natal.bre.cards.json", "natal.bre.lint.json", "natal.bre.validation.json")
+            for name in names:
+                (final_root / name).write_text(f"old:{name}", encoding="utf-8")
+                (attempt_root / name).write_text(f"new:{name}", encoding="utf-8")
+            state = {
+                "workspace_contract": {
+                    "mode": "stable_logical_absolute_path",
+                    "logical_root": str(run_dir.resolve()),
+                }
+            }
+            import astrowoof_natal_authoring.closure as closure_module
+
+            original_sha256_file = closure_module.sha256_file
+            mutation_done = False
+
+            def mutate_during_inventory(path):
+                nonlocal mutation_done
+                digest = original_sha256_file(path)
+                if path == final_root / names[-1] and not mutation_done:
+                    mutation_done = True
+                    for name in names:
+                        shutil.copyfile(attempt_root / name, final_root / name)
+                return digest
+
+            with patch(
+                "astrowoof_natal_authoring.closure.sha256_file",
+                side_effect=mutate_during_inventory,
+            ):
+                write_workspace_snapshot(run_dir)
+
+            self.assertTrue(mutation_done)
+            with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
+                validate_workspace_snapshot(run_dir, state)
 
     def test_resume_restores_accepted_state_from_durable_acceptance_evidence(
         self,

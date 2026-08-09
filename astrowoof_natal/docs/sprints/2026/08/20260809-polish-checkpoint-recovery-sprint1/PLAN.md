@@ -20,6 +20,21 @@ Provide a narrowly constrained, provenance-preserving inspection and repair
 procedure for the affected 0.2.1 acceptance run without resubmitting provider
 work or treating arbitrary changed bytes as trusted.
 
+Preserve the API agent's integration questions in `API AGENT QUESTIONS.md` and
+deliver a separate evidence-backed response document at sprint completion.
+That response must answer every question and subquestion, state `high`,
+`medium`, or `low` confidence for each answer, explain residual uncertainty,
+and identify the concrete API-worker consequence.
+
+The register also includes AstroWoof API Slice 5 questions about the stability,
+schema version, closed vocabularies, guaranteed fields, provenance chain,
+private-artifact/database-index split, and canonical fixtures for
+`critic-findings.json`. The final response must distinguish normative contract
+from current behavior and future proposal. If answering those questions safely
+requires implementation outside the current checkpoint boundary, stop at the
+relevant gate and propose an explicit plan revision rather than silently
+expanding scope.
+
 This sprint directory is planning only. It does not authorize source changes,
 test execution that mutates the acceptance run, repair execution, authorization
 consumption, OpenAI access, version changes, tagging, pushing, or publication.
@@ -229,6 +244,15 @@ subsequent provider-connected resume.
   regression.
 - Prepare API-worker pin, recovery advisory, compatibility delta, checksums,
   and release manifest.
+- Produce `API AGENT RESPONSES.md` answering every item preserved in
+  `API AGENT QUESTIONS.md`, with per-answer confidence, evidence, residual
+  uncertainty, and consumer consequences.
+- Include an explicit 6-12 critic-artifact contract section stating schema and
+  vocabulary authority, required versus convenience fields, provenance joins,
+  private/index storage guidance, fixture status, and whether API Slice 5 may
+  consume the result immediately.
+- Include that response document alongside the important sprint result,
+  recovery, release, and consumer-handoff artifacts delivered at sprint end.
 - Tag, push, and publish only after a separate explicit publication approval.
 
 Gate: independently verify any published artifact without moving its tag.
@@ -285,7 +309,11 @@ No live OpenAI request is required to implement or qualify the correction.
   authorized after repair;
 - focused and complete deterministic tests pass; and
 - consumer documentation clearly defines checkpoint, restore, repair, and API
-  ownership responsibilities.
+  ownership responsibilities; and
+- `API AGENT RESPONSES.md` answers every preserved API-agent question and
+  corrective-deliverable subquestion with a confidence level, supporting
+  evidence, residual uncertainty, and API consumer consequence, and is listed
+  in the final sprint artifact index.
 
 ## Planned result records
 
@@ -293,3 +321,9 @@ Each completed slice will add `results/SLICE N - <name>.md` and compact redacted
 JSON where useful. `LOG.md` will record approvals, commits, test commands,
 failure-injection outcomes, repair hashes, and any plan revision. Large or
 sensitive acceptance artifacts remain outside Git.
+
+At sprint completion, the important-artifact handoff must include the final
+API-agent response document, the repair/inspection guidance, applicable
+machine-readable evidence, consumer documentation, and any qualified release
+coordinates. The sprint is not complete while any preserved question lacks an
+answer or confidence assessment.

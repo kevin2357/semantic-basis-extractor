@@ -1,6 +1,15 @@
 # Sprint Results
 
-Status: planning; no slice has started.
+Status: Slice 0 reproduction complete; gate approval pending.
+
+The final artifact index must include `../API AGENT RESPONSES.md`, containing
+an evidence-backed answer and explicit confidence level for every question in
+`../API AGENT QUESTIONS.md`.
+
+- `SLICE 0 - Forensic Model and Reproduction.md`: retained-run invariants,
+  deterministic two-defect reproduction, and frozen implementation boundary.
+- `slice0-forensic-model.json`: compact redacted run, action, mismatch, and
+  regression evidence.
 
 This directory will contain compact, redacted evidence for:
 

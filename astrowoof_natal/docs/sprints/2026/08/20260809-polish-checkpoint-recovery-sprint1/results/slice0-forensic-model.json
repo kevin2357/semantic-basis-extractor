@@ -1,0 +1,57 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice0.v1",
+  "status": "reproduced",
+  "affected_release": "0.2.1",
+  "run": {
+    "run_id": "5ad1153d835177111d61fa1da80375e97b69015404d060b374c89997f93de5e2",
+    "schema_version": "astrowoof.semantic_closure_run.v0.9",
+    "state_revision": 60,
+    "status": "AWAITING_SPEND_AUTHORIZATION",
+    "snapshot_member_count": 876,
+    "missing_member_count": 0,
+    "additional_member_count": 0,
+    "changed_member_count": 3,
+    "persisted_subject_count": 0
+  },
+  "polish_action_1": {
+    "action_id": "paid_678555e3cb3ac4576cb36fc9",
+    "state": "REPORTED",
+    "response_id": "resp_0ab43a322b5839de006a785f8e04848194a5e41e056e9bcfc0",
+    "reported_micro_usd": 16644
+  },
+  "polish_action_2": {
+    "action_id": "paid_0d941d208206a4d8b0349f91",
+    "state": "PREPARED",
+    "provider_id_present": false,
+    "consumption_present": false,
+    "reported_usage_present": false,
+    "external_authorization_exact_binding_match": true
+  },
+  "changed_members": [
+    {
+      "path": "final/juniper-sprint6/natal.juniper-sprint6.cards.json",
+      "snapshot_sha256": "eaac6d124c239c36adfd1c21407db8fd4e9f1b4d79a9080b3657ba4d3ad023eb",
+      "actual_sha256": "7c33e2d6d8c46a9598a392bfe75918e02192c943250b4e9d215e87ea7500640b",
+      "equals_retained_attempt_1": true
+    },
+    {
+      "path": "final/juniper-sprint6/natal.juniper-sprint6.validation-report.json",
+      "snapshot_sha256": "a7763386ef267469dbefdbbd5c565ce907fa99b3fb614a850c47a77247d5c0c3",
+      "actual_sha256": "16ec7d43b6b0f94e6dfbf1ace3f8787512115b90f8f2f29d632b4a603181ebdc",
+      "equals_retained_attempt_1": true
+    },
+    {
+      "path": "final/juniper-sprint6/natal.juniper-sprint6.lint-report.json",
+      "snapshot_sha256": "7aa47da5ea55640bb5cfd8fde4c71dab7463d0174c0600a965b85c6c9f560b12",
+      "actual_sha256": "5af20220e811d18a46a0dcea056044b99c77f20b19034ca708f9ff9c742f81e8",
+      "equals_retained_attempt_1": true
+    }
+  ],
+  "synthetic_regressions": {
+    "authorization_pause_discards_subject_record": "reproduced",
+    "unlocked_inventory_mixes_workspace_generations": "reproduced"
+  },
+  "acceptance_run_mutated": false,
+  "provider_requests": 0,
+  "incremental_provider_spend_usd": 0
+}
