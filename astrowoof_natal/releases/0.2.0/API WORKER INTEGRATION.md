@@ -32,10 +32,23 @@ submission must stop for provider/operator reconciliation; deterministic keys
 are not proof of OpenAI idempotency. Persist API billing correlation through
 SBE's append-only reconciliation references.
 
-Status endpoints read `public-run.json`; they never execute the runner. Resume
-requires the complete workspace snapshot restored at the recorded stable
-logical absolute path. One API lease and SBE's local consumption lock together
-enforce the single-writer contract.
+Worker reconciliation reads and validates `public-run.json`, then persists the
+mapped API status. HTTP status endpoints read persisted API-owned state and
+never execute SBE or depend on a live workspace. Resume requires the complete
+workspace snapshot restored at the recorded stable logical absolute path. One
+API lease and SBE's local consumption lock together enforce the single-writer
+contract.
+
+## Detailed contracts
+
+- [Spend Authorization Consumer Handoff](../../docs/post_extraction_authoring/Spend%20Authorization%20Consumer%20Handoff.md)
+  defines the stepwise reservation, authorization, resume, and promotion flow.
+- [Provider Spend Enforcement](../../docs/post_extraction_authoring/Provider%20Spend%20Enforcement.md)
+  defines SBE guarantees, API-owned guarantees, accounting, and the irreducible
+  provider atomicity boundary.
+- [Packaged contract catalog](../../src/astrowoof_natal_authoring/resources/contracts/contract-catalog.json)
+  is the authoritative inventory of versioned JSON contracts shipped in the
+  wheel.
 
 ## Ownership
 

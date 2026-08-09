@@ -33,4 +33,7 @@ spend was USD 0.263381 and the unsubmitted retry commitment exceeded its
 approved USD 1.00 stage ceiling. This bounded exhaustion was explicitly
 accepted as satisfying the live gate.
 
-Tagging and publication remain pending explicit Slice 7 authorization.
+Publication is complete. See the
+[Slice 7 post-publication evidence](../../docs/sprints/2026/08/20260807-release-engineering-sprint1/results/SLICE%207%20-%20Tag%20and%20Publication.md)
+for the immutable tag target, published asset identities, and authenticated
+download verification.
