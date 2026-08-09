@@ -1,0 +1,36 @@
+{
+  "schema_version": "astrowoof.linux_smoke_patch.slice3.v1",
+  "status": "pass",
+  "release": {
+    "id": 367357028,
+    "tag": "astrowoof-natal-authoring-v0.2.1",
+    "published_at": "2026-08-09T02:17:11Z",
+    "url": "https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.2.1",
+    "draft": false,
+    "prerelease": false
+  },
+  "git": {
+    "release_commit": "9e9db5f7378d459db1e5418f1607edc7f4c060bf",
+    "annotated_tag_object": "7998c299824b13240215b9a501a1a3aeb309464f",
+    "local_remote_peel_match": true
+  },
+  "assets": {
+    "wheel": {
+      "id": 506995740,
+      "filename": "astrowoof_natal_authoring-0.2.1-py3-none-any.whl",
+      "bytes": 624157,
+      "sha256": "0d273c2d0e98d54abadd28ff1a36f670bd4bbd7e7441bac263f6dbafe75bfc08"
+    },
+    "checksum": {
+      "id": 506995739,
+      "filename": "SHA256SUMS.txt",
+      "bytes": 115,
+      "sha256": "e46fa25e4e187b3fa39172c01010b4100ccdf661c0fc6b6cdecaf7b642700c7a"
+    }
+  },
+  "authenticated_download": {
+    "fresh_directory": true,
+    "wheel_matches_candidate": true,
+    "checksum_validates_wheel": true
+  }
+}

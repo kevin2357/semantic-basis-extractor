@@ -93,3 +93,19 @@ publication until explicit approval.
 
 Next action: Slice 3 publication gate review. Commit the prepared records and
 publish only after explicit authorization.
+
+## 2026-08-08 - 0.2.1 publication and verification
+
+- User approved the publication gate. Committed the reviewed release bundle as
+  `9e9db5f`, created the annotated release tag, and pushed main plus the tag.
+- Published GitHub release 367357028 with the qualified wheel and checksum.
+- Verified annotated tag object `7998c299824b13240215b9a501a1a3aeb309464f`
+  peels locally and remotely to release commit
+  `9e9db5f7378d459db1e5418f1607edc7f4c060bf`.
+- Authenticated-download retrieved both assets into a fresh directory. The
+  wheel was 624,157 bytes with the qualified SHA-256, and the downloaded
+  checksum validated it independently.
+- Updated release records with immutable post-publication IDs and evidence.
+  The release tag was not moved.
+
+Sprint complete. The API worker may pin 0.2.1 and resume Linux image promotion.

@@ -29,5 +29,7 @@ shape. Both platforms reach `DELIVERY_COMPLETE` and produce the same 19-resource
 aggregate digest:
 `439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404`.
 
-Tagging and publication remain pending explicit authorization. After
-publication, this paragraph will point to the post-publication evidence.
+Publication is complete. See the
+[Slice 3 post-publication evidence](../../docs/sprints/2026/08/20260808-linux-smoke-patch-sprint1/results/SLICE%203%20-%20Patch%20Handoff%20and%20Publication%20Preparation.md)
+for the immutable tag target, published asset identities, and authenticated
+download verification.
