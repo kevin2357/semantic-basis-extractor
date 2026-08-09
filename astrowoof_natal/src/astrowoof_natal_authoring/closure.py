@@ -1357,6 +1357,8 @@ class OpenAIResponsesProvider:
                     f"Invalid persisted background response: {background_path}",
                     fatal=True,
                 )
+            if provider_created is not None:
+                provider_created(response_id, "response")
             response, retrieval_attempts = self._request_with_retry(
                 method="GET",
                 url=f"{self.base_url}/responses/{response_id}",
@@ -1375,16 +1377,19 @@ class OpenAIResponsesProvider:
                 payload=request_payload,
                 idempotency_key=idempotency_key,
             )
-            if provider_created is not None:
-                provider_created(response.get("id"), "response")
+            response_id = response.get("id")
+            if not isinstance(response_id, str) or not response_id:
+                raise OpenAIServiceError("OpenAI response has no response ID")
             write_json_atomic(
                 background_path,
                 {
-                    "id": response.get("id"),
+                    "id": response_id,
                     "status": response.get("status"),
                     "created_at": utc_now(),
                 },
             )
+            if provider_created is not None:
+                provider_created(response_id, "response")
             retrieve_transport_attempts = 0
         response_id = response.get("id")
         if not isinstance(response_id, str) or not response_id:
@@ -1545,6 +1550,13 @@ class OpenAIResponsesProvider:
         started = time.monotonic()
         if background_path.is_file():
             response_id = load_json(background_path).get("id")
+            if not isinstance(response_id, str) or not response_id:
+                raise OpenAIServiceError(
+                    f"Invalid persisted background response: {background_path}",
+                    fatal=True,
+                )
+            if provider_created is not None:
+                provider_created(response_id, "response")
             response, retrieve_attempts = self._request_with_retry(
                 method="GET",
                 url=f"{self.base_url}/responses/{response_id}",
@@ -1562,12 +1574,15 @@ class OpenAIResponsesProvider:
                 payload=payload,
                 idempotency_key=key,
             )
-            if provider_created is not None:
-                provider_created(response.get("id"), "response")
+            response_id = response.get("id")
+            if not isinstance(response_id, str) or not response_id:
+                raise OpenAIServiceError("OpenAI response has no response ID")
             write_json_atomic(
                 background_path,
-                {"id": response.get("id"), "status": response.get("status")},
+                {"id": response_id, "status": response.get("status")},
             )
+            if provider_created is not None:
+                provider_created(response_id, "response")
             retrieve_attempts = 0
         response_id = response.get("id")
         polls = 0
@@ -2554,7 +2569,10 @@ class SpendController:
                 if item["binding"]["stage"] == stage
                 and item["binding"]["route"] == route
                 and item["binding"]["model"] == model
-                and item.get("provider")
+                and (
+                    item.get("provider")
+                    or item.get("state") == "SUBMITTING"
+                )
             ),
             None,
         )
@@ -2662,6 +2680,22 @@ class SpendController:
         def provider_created(provider_id: str | None, kind: str) -> None:
             with self.state_lock:
                 action = self.active_action()
+                recorded = action.get("provider") or {}
+                if recorded:
+                    if (
+                        recorded.get("id") == str(provider_id or "")
+                        and recorded.get("kind") == kind
+                    ):
+                        return
+                    mark_ambiguous(
+                        action,
+                        reason="persisted provider identity conflicts with local marker",
+                    )
+                    persist_state(self.run_json, self.state)
+                    raise AmbiguousProviderSubmission(
+                        "Provider identity conflict requires reconciliation",
+                        action=action,
+                    )
                 record_provider_id(
                     action,
                     provider_id=str(provider_id or ""),
@@ -4977,6 +5011,8 @@ def polish_subject(
                     "error": {"type": type(exc).__name__, "message": str(exc)},
                 }
             )
+            if isinstance(exc, (OSError, RuntimeError)):
+                raise
             if getattr(exc, "fatal", False):
                 break
     record["final_warning_count"] = best_warning_count

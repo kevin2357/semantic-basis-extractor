@@ -504,9 +504,11 @@ a creative attempt. The pass and run enter `WAITING_FOR_RESPONSE`, preserving
 the response ID and unfinished attempt for a later resume. Use `--foreground`
 only for controlled testing.
 
-The response ID is persisted as soon as OpenAI creates a background job. If
-the runner process stops before the response completes, rerun the command with
-the same provider configuration and `--resume`:
+After a successful creation response, SBE validates the Response ID and first
+writes it to the attempt-local `openai-background-response.json` marker, then
+records the same identity in the spend ledger. If the runner process stops
+before the response completes, rerun the command with the same provider
+configuration and `--resume`:
 
 ```powershell
 python src/author_semantic_closure.py `
@@ -519,8 +521,14 @@ python src/author_semantic_closure.py `
   --resume
 ```
 
-An interrupted attempt resumes polling its existing response ID. It does not
-issue a second response-creation request. Accepted passes are also skipped.
+An interrupted attempt with a durable matching response marker resumes polling
+its existing response ID. A persisted `SUBMITTING` action may attach that exact
+marker identity before retrieval; a conflict with an already recorded ledger
+identity becomes `AMBIGUOUS_PROVIDER_SUBMISSION`. Neither case silently issues
+a second response-creation request. If no durable provider identity exists,
+SBE cannot close the provider/local-state atomicity gap and blocks automatic
+retry as ambiguous. Deterministic idempotency keys are correlation evidence,
+not an exactly-once guarantee. Accepted passes are also skipped.
 Durable acceptance evidence (`accepted_attempt`, its successful QA report, and
 the accepted workspace) is normalized back to `PASS_QA_ACCEPTED` if stale run
 state ever disagrees, so resume cannot demote an already accepted pass.

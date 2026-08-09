@@ -1,6 +1,6 @@
 # Sprint Results
 
-Status: Slice 1 checkpoint architecture complete; gate approval pending.
+Status: Slice 2 failure-injection matrix complete; gate approval pending.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in
@@ -14,6 +14,10 @@ an evidence-backed answer and explicit confidence level for every question in
   separation, state-owned polish records, contract consequence, and tests.
 - `slice1-checkpoint-architecture.json`: compact machine-readable Slice 1
   implementation and verification evidence.
+- `SLICE 2 - Provider Interruption and Failure Injection.md`: provider marker
+  ordering, GET-only reconciliation, ambiguity, and checkpoint failure results.
+- `slice2-failure-injection.json`: compact machine-readable Slice 2 matrix and
+  deterministic test evidence.
 
 This directory will contain compact, redacted evidence for:
 

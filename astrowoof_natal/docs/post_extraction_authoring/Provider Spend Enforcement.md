@@ -63,10 +63,23 @@ after `SUBMITTING` and before durable provider-ID persistence produces
 same conservative boundary. This provider/local-state atomicity gap is
 irreducible without a documented provider creation contract.
 
+For background Responses, SBE validates the returned Response ID and writes the
+attempt-local `openai-background-response.json` marker before recording that ID
+in the spend ledger. A restored `SUBMITTING` action with that validated native
+marker may attach the same ID and continue with retrieval requests only; it
+does not issue another creation request or reserve more spend. Repeating the
+same recorded identity is idempotent. A marker that conflicts with an existing
+ledger provider identity produces `AMBIGUOUS_PROVIDER_SUBMISSION` and requires
+reconciliation.
+
+The marker narrows one local persistence failure, but it does not eliminate the
+atomicity gap: process or transport failure can still occur after provider
+acceptance and before SBE receives and durably writes the ID. Deterministic
+request keys remain correlation evidence, not proof that a POST may be retried.
+
 ## Reconciliation
 
 Reported usage and SBE price-book estimates are operational evidence, not
 authoritative billing. The API may append immutable references to account
 billing or reservation records. SBE retains provider IDs, request digests,
 commitments, usage, estimates, and reconciliation reference IDs for audit.
-

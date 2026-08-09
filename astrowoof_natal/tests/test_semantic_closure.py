@@ -1456,6 +1456,100 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertIs(record, state["subjects"]["bre"])
             self.assertEqual(2, len(state["subjects"]["bre"]["polish_attempts"]))
 
+    def test_polish_final_copy_failure_does_not_prepare_another_paid_attempt(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            final_root = root / "final" / "bre"
+            final_root.mkdir(parents=True)
+            deck_path = final_root / "natal.bre.cards.json"
+            deck_path.write_text(json.dumps(self.packet), encoding="utf-8")
+            validation_path = final_root / "validation.json"
+            validation_path.write_text(json.dumps({
+                "status": "pass", "errors": [], "warnings": [],
+            }), encoding="utf-8")
+            lint_path = final_root / "lint.json"
+            lint_path.write_text(json.dumps({
+                "status": "warn",
+                "warning_count": 2,
+                "decks": [{"warnings": [{
+                    "code": "failure_signature",
+                    "details": {
+                        "location": "card:" + self.packet["cards"][0]["claim_id"],
+                        "field": "no_astro.headline.handler",
+                    },
+                }]}],
+            }), encoding="utf-8")
+            assembly_path = final_root / "assembly.json"
+            assembly_path.write_text("{}", encoding="utf-8")
+            record = {
+                "subject": "bre",
+                "state": "FINAL_QA_WARN",
+                "deck": str(deck_path),
+                "assembly_report": str(assembly_path),
+                "validation_report": str(validation_path),
+                "lint_report": str(lint_path),
+                "baseline_warning_count": 2,
+                "polish_attempts": [],
+                "delivery": None,
+            }
+            calls = 0
+
+            class Provider:
+                model = "fake-polish"
+                reasoning_effort = "low"
+
+                def complete_json(inner_self, **kwargs):
+                    nonlocal calls
+                    calls += 1
+                    target = kwargs["schema"]["properties"]["edits"]["items"][
+                        "properties"
+                    ]["field_path"]["enum"][0]
+                    return {"edits": [{
+                        "field_path": target,
+                        "replacement": "A locally improved headline",
+                        "reason_codes": ["failure_signature"],
+                    }]}, {"provider": "fake", "response_id": "resp-polish-001"}
+
+            def fake_qa(command, report_path, *, accepted_returncodes):
+                report = (
+                    {"status": "pass", "errors": [], "warnings": []}
+                    if Path(command[1]).name == "validation.py"
+                    else {"status": "warn", "warning_count": 1, "decks": []}
+                )
+                report_path.write_text(json.dumps(report), encoding="utf-8")
+                return {
+                    "accepted": True,
+                    "returncode": 0,
+                    "stdout": "",
+                    "stderr": "",
+                    "report": report,
+                }
+
+            with (
+                patch(
+                    "astrowoof_natal_authoring.closure.run_json_command",
+                    side_effect=fake_qa,
+                ),
+                patch(
+                    "astrowoof_natal_authoring.closure.shutil.copy2",
+                    side_effect=OSError("injected final-copy failure"),
+                ),
+                self.assertRaisesRegex(OSError, "final-copy failure"),
+            ):
+                polish_subject(
+                    record=record,
+                    provider=Provider(),
+                    run_dir=root,
+                    python_executable=Path(sys.executable),
+                    max_attempts=2,
+                )
+
+            self.assertEqual(1, calls)
+            self.assertEqual(1, len(record["polish_attempts"]))
+            self.assertEqual("POLISH_ERROR", record["polish_attempts"][0]["state"])
+
     def test_final_status_requires_every_subject_delivery(self) -> None:
         state = {
             "status": "AUTHORING_COMPLETE",
@@ -2810,6 +2904,33 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertEqual(
                 "PREPARED", state["spend_ledger"]["actions"][-1]["state"]
             )
+            validate_workspace_snapshot(root / "run", state)
+
+    def test_interrupted_checkpoint_fails_closed_until_republished(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            state, run_json = self.make_state(root, provider)
+            previous_revision = state["state_revision"]
+            (root / "run" / "settled-result.json").write_text(
+                '{"status":"settled"}', encoding="utf-8"
+            )
+
+            with (
+                patch(
+                    "astrowoof_natal_authoring.closure.write_workspace_snapshot",
+                    side_effect=OSError("injected snapshot publication failure"),
+                ),
+                self.assertRaisesRegex(OSError, "snapshot publication failure"),
+            ):
+                save_state(run_json, state)
+
+            persisted = load_json(run_json)
+            self.assertGreater(persisted["state_revision"], previous_revision)
+            with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
+                validate_workspace_snapshot(root / "run", persisted)
+
+            save_state(run_json, state)
             validate_workspace_snapshot(root / "run", state)
 
     def test_resume_restores_accepted_state_from_durable_acceptance_evidence(

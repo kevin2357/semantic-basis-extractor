@@ -80,3 +80,25 @@ production checkpoint orchestration.
   schema-version change, or release-coordinate change.
 
 Next action: Slice 1 gate review before commit or Slice 2 failure injection.
+
+## 2026-08-09 - Slice 2 provider interruption and failure injection
+
+- User approved Slice 1. Committed its checkpoint architecture and consumer
+  documentation as `e11d59d`, then began Slice 2.
+- Changed Responses handling so the validated attempt-local response marker is
+  written before ledger provider-ID persistence.
+- Added GET-only recovery for a restored `SUBMITTING` action with a matching
+  native marker, with no new action, authorization, commitment, or POST.
+- Made repeated matching provider identity recording idempotent and conflicting
+  marker/ledger identities durably ambiguous.
+- Made local polish final-copy or QA installation failure stop before another
+  paid attempt can be prepared or submitted.
+- Proved an interrupted snapshot publication fails closed until a coordinator
+  republishes a complete checkpoint.
+- Updated provider-spend and runner documentation without claiming that a
+  deterministic idempotency key closes the provider atomicity gap.
+- Focused suites passed (91); the complete deterministic repository suite
+  passed (157). Fake transports only; no OpenAI call, authorization
+  consumption, acceptance-run mutation, or incremental spend occurred.
+
+Next action: Slice 2 gate review before commit or Slice 3 repair tooling.

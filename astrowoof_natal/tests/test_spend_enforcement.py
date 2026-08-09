@@ -388,6 +388,246 @@ class SpendLedgerTests(unittest.TestCase):
             self.assertEqual("AMBIGUOUS_PROVIDER_SUBMISSION", action["state"])
             self.assertIn("persistence failed", action["ambiguity"]["reason"])
 
+    def test_provider_marker_precedes_ledger_id_persistence(self):
+        class CompletedTransport:
+            def __init__(self):
+                self.calls = []
+
+            def request_json(self, **kwargs):
+                self.calls.append(kwargs)
+                return {
+                    "id": "resp_durable_marker",
+                    "status": "completed",
+                    "model": "gpt-5.6-luna",
+                    "output": [{
+                        "type": "message",
+                        "content": [{"type": "output_text", "text": "{}"}],
+                    }],
+                    "usage": {
+                        "input_tokens": 10,
+                        "output_tokens": 1,
+                        "total_tokens": 11,
+                    },
+                }
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            run_json = root / "run.json"
+            state = self._controller_state()
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-1",
+            )
+            before, created = controller.callbacks(
+                stage="polish",
+                route="bre:polish:001",
+                model="gpt-5.6-luna",
+                service_level="interactive",
+                maximum_output_tokens=1000,
+            )
+            payload = {
+                "model": "gpt-5.6-luna",
+                "input": [
+                    {"role": "system", "content": "system"},
+                    {"role": "user", "content": "user"},
+                ],
+                "background": True,
+                "reasoning": {"effort": "medium"},
+                "text": {
+                    "verbosity": "high",
+                    "format": {
+                        "type": "json_schema",
+                        "name": "test",
+                        "strict": True,
+                        "schema": {"type": "object", "additionalProperties": False},
+                    },
+                },
+                "max_output_tokens": 1000,
+            }
+            with self.assertRaisesRegex(Exception, "authorization"):
+                before(payload)
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], authorization(action))
+            save_state(run_json, state)
+            transport = CompletedTransport()
+            provider = OpenAIResponsesProvider(
+                api_key="test",
+                model="gpt-5.6-luna",
+                transport=transport,
+                max_output_tokens=1000,
+                require_spend_authorization=True,
+            )
+            real_persist = closure_module.persist_state
+
+            def fail_provider_id_persistence(path, current_state):
+                current = current_state["spend_ledger"]["actions"][0]
+                if current["state"] == "PROVIDER_ID_RECORDED":
+                    raise OSError("injected provider-ID persistence failure")
+                return real_persist(path, current_state)
+
+            with patch.object(
+                closure_module,
+                "persist_state",
+                side_effect=fail_provider_id_persistence,
+            ):
+                with self.assertRaises(AmbiguousProviderSubmission):
+                    provider.complete_json(
+                        system="system",
+                        user="user",
+                        schema={"type": "object", "additionalProperties": False},
+                        schema_name="test",
+                        attempt_root=root / "polish" / "attempt-001",
+                        idempotency_material="stable-polish-request",
+                        before_submit=before,
+                        provider_created=created,
+                    )
+
+            marker = load_json(
+                root
+                / "polish"
+                / "attempt-001"
+                / "openai-background-response.json"
+            )
+            self.assertEqual("resp_durable_marker", marker["id"])
+            self.assertEqual("AMBIGUOUS_PROVIDER_SUBMISSION", action["state"])
+            self.assertEqual(["POST"], [call["method"] for call in transport.calls])
+
+    def test_submitting_action_reconciles_durable_marker_without_new_post(self):
+        class RetrievalTransport:
+            def __init__(self):
+                self.calls = []
+
+            def request_json(self, **kwargs):
+                self.calls.append(kwargs)
+                return {
+                    "id": "resp_interrupted",
+                    "status": "completed",
+                    "model": "gpt-5.6-luna",
+                    "output": [{
+                        "type": "message",
+                        "content": [{"type": "output_text", "text": "{}"}],
+                    }],
+                    "usage": {
+                        "input_tokens": 20,
+                        "output_tokens": 2,
+                        "total_tokens": 22,
+                    },
+                }
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            run_json = root / "run.json"
+            state = self._controller_state()
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-before-crash",
+            )
+            before, _created = controller.callbacks(
+                stage="polish",
+                route="bre:polish:001",
+                model="gpt-5.6-luna",
+                service_level="interactive",
+                maximum_output_tokens=1000,
+            )
+            request = {"model": "gpt-5.6-luna", "input": "exact request"}
+            with self.assertRaisesRegex(Exception, "authorization"):
+                before(request)
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], authorization(action))
+            save_state(run_json, state)
+            before(request)
+            self.assertEqual("SUBMITTING", action["state"])
+
+            attempt_root = root / "polish" / "attempt-001"
+            attempt_root.mkdir(parents=True)
+            (attempt_root / "openai-background-response.json").write_text(
+                '{"id":"resp_interrupted","status":"in_progress"}',
+                encoding="utf-8",
+            )
+
+            resumed_state = load_json(run_json)
+            resumed = SpendController(
+                state=resumed_state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-after-crash",
+            )
+            _before, created = resumed.callbacks(
+                stage="polish",
+                route="bre:polish:001",
+                model="gpt-5.6-luna",
+                service_level="interactive",
+                maximum_output_tokens=1000,
+            )
+            transport = RetrievalTransport()
+            provider = OpenAIResponsesProvider(
+                api_key="test",
+                model="gpt-5.6-luna",
+                transport=transport,
+                max_output_tokens=1000,
+                require_spend_authorization=True,
+            )
+            _result, metadata = provider.complete_json(
+                system="system",
+                user="user",
+                schema={"type": "object", "additionalProperties": False},
+                schema_name="test",
+                attempt_root=attempt_root,
+                idempotency_material="same-request",
+                before_submit=_before,
+                provider_created=created,
+            )
+            resumed.settle_active(metadata)
+
+            persisted = load_json(run_json)["spend_ledger"]["actions"][0]
+            self.assertEqual("REPORTED", persisted["state"])
+            self.assertEqual("resp_interrupted", persisted["provider"]["id"])
+            self.assertEqual(["GET"], [call["method"] for call in transport.calls])
+
+    def test_conflicting_provider_marker_is_machine_ambiguous(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_json = Path(temporary) / "run.json"
+            state = self._controller_state()
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="worker-1",
+            )
+            before, created = controller.callbacks(
+                stage="polish",
+                route="bre:polish:001",
+                model="gpt-5.6-luna",
+                service_level="interactive",
+                maximum_output_tokens=1000,
+            )
+            request = {"model": "gpt-5.6-luna", "input": "exact request"}
+            with self.assertRaisesRegex(Exception, "authorization"):
+                before(request)
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], authorization(action))
+            save_state(run_json, state)
+            before(request)
+            created("resp_ledger", "response")
+
+            with self.assertRaisesRegex(
+                AmbiguousProviderSubmission,
+                "identity conflict",
+            ):
+                created("resp_marker", "response")
+
+            persisted = load_json(run_json)["spend_ledger"]["actions"][0]
+            self.assertEqual("AMBIGUOUS_PROVIDER_SUBMISSION", persisted["state"])
+            self.assertEqual("resp_ledger", persisted["provider"]["id"])
+            self.assertIn("conflicts", persisted["ambiguity"]["reason"])
+
     def test_polling_recorded_provider_work_does_not_add_commitment(self):
         ledger = new_ledger(policy())
         action = prepare_action(ledger, binding())

@@ -1,0 +1,27 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice2.v1",
+  "status": "pass",
+  "provider_reconciliation": {
+    "marker_precedes_ledger_identity": true,
+    "submitting_with_matching_marker_uses_get_only": true,
+    "matching_identity_is_idempotent": true,
+    "conflicting_identity_state": "AMBIGUOUS_PROVIDER_SUBMISSION",
+    "deterministic_key_claims_exactly_once": false,
+    "irreducible_atomicity_gap_documented": true
+  },
+  "boundary_failures": {
+    "provider_id_persistence": "ambiguous_with_native_marker",
+    "final_copy_or_qa_install": "stop_before_next_paid_attempt",
+    "snapshot_publication": "fail_closed_until_republished",
+    "poll_existing_provider_work_adds_commitment": false
+  },
+  "tests": {
+    "focused": {"status": "pass", "count": 91},
+    "complete_repository": {"status": "pass", "count": 157},
+    "diff_check": "pass"
+  },
+  "retained_acceptance_run_mutated": false,
+  "authorization_consumed": false,
+  "provider_requests": 0,
+  "incremental_provider_spend_usd": 0
+}
