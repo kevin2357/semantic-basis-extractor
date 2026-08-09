@@ -285,14 +285,21 @@ def _fake_field_value(
     pass_id: str,
     relative_file: str,
     field: str,
-    ordinal: int,
+    occurrence: int,
 ) -> str:
+    stable_identity = "\n".join(
+        (pass_id, relative_file.replace("\\", "/"), field, str(occurrence))
+    )
     identity = re.sub(
         r"[^a-z0-9]+",
         " ",
-        f"{pass_id} {relative_file} {field} {ordinal}".lower(),
+        f"{pass_id} {relative_file} {field} {occurrence}".lower(),
     ).strip()
-    identity_token = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12]
+    identity_digest = hashlib.sha256(stable_identity.encode("utf-8")).hexdigest()
+    identity_token = "".join(
+        chr(ord("a") + int(nibble, 16))
+        for nibble in identity_digest[:16]
+    )
     if field in {
         "context_filter_groups.high_level",
         "context_filter_groups.detail_level",
@@ -330,9 +337,9 @@ def _fake_field_value(
             for index, item in enumerate(titles[section], start=1)
         ], ensure_ascii=False)
     if field.startswith("theme_group.interdogpendence."):
-        return ["bond_dynamics", "shared_rhythms", "productive_tensions", "mutual_adjustments"][(ordinal - 1) % 4]
+        return ["bond_dynamics", "shared_rhythms", "productive_tensions", "mutual_adjustments"][(occurrence - 1) % 4]
     if field.startswith("theme_group.takeaways."):
-        return ["essential_character", "daily_wisdom", "growth_lessons", "lasting_gifts"][(ordinal - 1) % 4]
+        return ["essential_character", "daily_wisdom", "growth_lessons", "lasting_gifts"][(occurrence - 1) % 4]
     if field.startswith("plan."):
         return (
             f"Editorial plan {identity} follows a singular behavioral doorway "
@@ -357,22 +364,28 @@ def _fake_field_value(
 
 
 def fill_fake_workspace(workspace: Path) -> None:
-    ordinal = 0
     pass_id = workspace.name
     for path in sorted(workspace.rglob("*.md")):
         text = path.read_text(encoding="utf-8")
         if "__WRITE__" not in text:
             continue
         relative_file = path.relative_to(workspace).as_posix()
+        field_occurrences: dict[str, int] = {}
 
         def replace(match: re.Match[str]) -> str:
-            nonlocal ordinal
-            ordinal += 1
+            field = match.group(2)
+            occurrence_key = (
+                field.rsplit(".", 1)[0]
+                if field.startswith("theme_group.")
+                else field
+            )
+            occurrence = field_occurrences.get(occurrence_key, 0) + 1
+            field_occurrences[occurrence_key] = occurrence
             value = _fake_field_value(
                 pass_id=pass_id,
                 relative_file=relative_file,
-                field=match.group(2),
-                ordinal=ordinal,
+                field=field,
+                occurrence=occurrence,
             )
             return f"{match.group(1)}{value}{match.group(4)}"
 

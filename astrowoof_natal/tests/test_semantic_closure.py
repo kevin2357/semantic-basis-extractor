@@ -231,7 +231,7 @@ class ScriptedBatchTransport:
                         pass_id=line["custom_id"],
                         relative_file=relative_path,
                         field=field,
-                        ordinal=ordinal,
+                        occurrence=ordinal,
                     )
             output.append(json.dumps({
                 "custom_id": line["custom_id"],

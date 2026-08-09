@@ -157,7 +157,8 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
     resumed = subprocess.run(command, capture_output=True, text=True, check=False)
     _check(resumed.returncode == 0, f"resume command failed: {resumed.stderr}", errors)
     state = load_json(run_json)
-    _check(state.get("status") == "DELIVERY_COMPLETE", "run did not complete delivery", errors)
+    delivery_complete = state.get("status") == "DELIVERY_COMPLETE"
+    _check(delivery_complete, "run did not complete delivery", errors)
     first_pass = state.get("passes", {}).get("bre_1", {})
     _check(len(first_pass.get("attempts", [])) == 2, "forced rejection did not produce two attempts", errors)
     if first_pass.get("attempts"):
@@ -170,7 +171,8 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
     deck_path = Path(record.get("deck", ""))
     delivery_path = Path(record.get("delivery") or "")
     _check(deck_path.is_file(), "final deck is missing", errors)
-    _check(delivery_path.is_file(), "delivery ZIP is missing", errors)
+    if delivery_complete:
+        _check(delivery_path.is_file(), "delivery ZIP is missing", errors)
     if deck_path.is_file():
         deck = load_json(deck_path)
         _check(len(deck.get("cards", [])) == 50, "deck does not contain 50 cards", errors)
@@ -185,7 +187,7 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
 
     delivery_members: list[str] = []
     manifest_hashes_match = False
-    if delivery_path.is_file():
+    if delivery_complete and delivery_path.is_file():
         with zipfile.ZipFile(delivery_path) as archive:
             _check(archive.testzip() is None, "delivery ZIP failed integrity test", errors)
             delivery_members = sorted(archive.namelist())
@@ -215,15 +217,32 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
     _check(len(resources["aggregate_sha256"]) == 64, "resource digest is invalid", errors)
     provenance = state.get("provenance", {})
     _check(len((provenance.get("input", {}).get("subjects") or [{}])[0].get("contexts", [])) == 4, "input provenance is incomplete", errors)
-    _check(len((provenance.get("execution", {}).get("subjects", {}).get("bre", {}).get("delivery") or {}).get("sha256", "")) == 64, "delivery provenance is incomplete", errors)
+    if delivery_complete:
+        _check(len((provenance.get("execution", {}).get("subjects", {}).get("bre", {}).get("delivery") or {}).get("sha256", "")) == 64, "delivery provenance is incomplete", errors)
 
-    dry_cleanup = cleanup_completed_run(run_dir, dry_run=True)
-    _check(dry_cleanup.get("target_count", 0) > 0, "cleanup dry run found no targets", errors)
-    cleanup = cleanup_completed_run(run_dir, dry_run=False)
-    _check(cleanup.get("status") == "complete", "cleanup did not complete", errors)
-    _check(run_json.is_file(), "cleanup removed operator state", errors)
-    _check((run_dir / "public-run.json").is_file(), "cleanup removed public state", errors)
-    _check(delivery_path.is_file(), "cleanup removed final delivery", errors)
+    validation_report = (record.get("validation") or {}).get("report") or {}
+    lint_report = (record.get("lint") or {}).get("report") or {}
+    lint_decks = lint_report.get("decks") or []
+    authoring_acceptance = (
+        lint_decks[0].get("authoring_pass_acceptance") or {}
+        if lint_decks
+        else {}
+    )
+
+    cleanup: dict[str, Any] = {
+        "status": "skipped",
+        "reason": "run_did_not_complete_delivery",
+        "target_count": 0,
+        "reclaimed_bytes": 0,
+    }
+    if delivery_complete:
+        dry_cleanup = cleanup_completed_run(run_dir, dry_run=True)
+        _check(dry_cleanup.get("target_count", 0) > 0, "cleanup dry run found no targets", errors)
+        cleanup = cleanup_completed_run(run_dir, dry_run=False)
+        _check(cleanup.get("status") == "complete", "cleanup did not complete", errors)
+        _check(run_json.is_file(), "cleanup removed operator state", errors)
+        _check((run_dir / "public-run.json").is_file(), "cleanup removed public state", errors)
+        _check(delivery_path.is_file(), "cleanup removed final delivery", errors)
 
     return {
         "schema_version": SMOKE_SCHEMA,
@@ -247,10 +266,23 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
             "summary_count": len(load_json(deck_path).get("summary", {})) if deck_path.is_file() else 0,
             "delivery_members": delivery_members,
             "manifest_hashes_match": manifest_hashes_match,
+            "final_qa": {
+                "subject_state": record.get("state"),
+                "validation_status": validation_report.get("status"),
+                "lint_status": lint_report.get("status"),
+                "authoring_acceptance_status": authoring_acceptance.get(
+                    "status"
+                ),
+                "rejection_reasons": authoring_acceptance.get(
+                    "rejection_reasons", []
+                ),
+            },
             "resource_count": resources["resource_count"],
             "resource_set_sha256": resources["aggregate_sha256"],
             "cleanup_target_count": cleanup.get("target_count"),
             "cleanup_reclaimed_bytes": cleanup.get("reclaimed_bytes"),
+            "cleanup_status": cleanup.get("status"),
+            "cleanup_skip_reason": cleanup.get("reason"),
         },
     }
 

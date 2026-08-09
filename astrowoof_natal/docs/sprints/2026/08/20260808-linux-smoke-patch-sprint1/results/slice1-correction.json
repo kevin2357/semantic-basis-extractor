@@ -1,0 +1,32 @@
+{
+  "schema_version": "astrowoof.linux_smoke_patch_slice1.v0.1",
+  "status": "pass",
+  "changed_runtime_surfaces": [
+    "fake_field_generation",
+    "release_smoke_reporting_and_cleanup_gating"
+  ],
+  "production_provider_changes": false,
+  "production_linter_changes": false,
+  "paid_provider_calls": 0,
+  "fake_identity": {
+    "tree_global_ordinal_removed": true,
+    "relative_separator_normalized": true,
+    "file_local_occurrence": true,
+    "alphabetic_digest_token_length": 16,
+    "normalized_unique_bodies_tested": 500,
+    "theme_assignment_balance_preserved": true
+  },
+  "smoke_failure": {
+    "structured_report": true,
+    "cleanup_skipped_without_delivery": true,
+    "original_state_and_qa_evidence_retained": true,
+    "uncaught_cleanup_exception": false
+  },
+  "tests": {
+    "focused_smoke_fake": 4,
+    "semantic_closure": 67,
+    "complete_suite": 148,
+    "complete_suite_seconds": 68.404,
+    "diff_check": "pass"
+  }
+}

@@ -32,3 +32,27 @@ Next action: plan review and explicit approval before Slice 0 begins.
 
 Next action: Slice 0 gate review. Approve the exact fake-provider/smoke patch
 surface and proposed v0.2.1 coordinates before implementation.
+
+## 2026-08-08 - Slice 1 deterministic fake and smoke correction
+
+- User approved Slice 0. Committed its evidence as `9c4a5d8` and implemented
+  only the frozen fake-provider, smoke, and test surfaces.
+- Replaced the tree-global ordinal with stable pass ID, POSIX-relative path,
+  field path, and file-local occurrence identity. Theme-plan assignments use
+  section-local occurrence order so coverage remains exactly balanced.
+- Replaced hexadecimal body tokens with a 16-letter `a`-through-`p` encoding
+  of digest nibbles. The production tokenizer preserves each token as one word.
+- Added a 500-body normalization regression, separator/call-order invariance,
+  complete smoke/cleanup coverage, and injected review-state structured
+  failure coverage.
+- Gated delivery artifacts, delivery provenance, and cleanup on actual
+  `DELIVERY_COMPLETE`. Failed smoke reports now preserve run status, subject
+  state, validation/lint/authoring-acceptance status, and rejection reasons;
+  cleanup is explicitly reported as skipped.
+- Focused release-smoke tests passed (4); the existing semantic-closure suite
+  passed (67); the complete deterministic suite passed (148) in 68.404 seconds;
+  `git diff --check` passed.
+- No version, package metadata, production provider path, linter, release tag,
+  or published artifact changed. No provider request was made.
+
+Next action: Slice 1 gate review before commit or exact patch artifact work.
