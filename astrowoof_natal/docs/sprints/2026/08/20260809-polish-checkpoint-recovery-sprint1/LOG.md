@@ -61,3 +61,22 @@ production checkpoint orchestration.
   distinguish normative/current/proposed status, cite authority, state
   compatibility behavior, and tell the API whether it can consume the answer
   immediately. No critic contract decision was made by recording the questions.
+
+## 2026-08-09 - Slice 1 quiescent checkpoint architecture
+
+- User approved Slice 0. Committed and pushed its regressions, evidence, plan
+  refinement, and API-agent question register as `2df3e33`.
+- Split persistence-only state writes from coordinator-owned complete workspace
+  checkpoints. Spend callbacks no longer publish snapshots during mutations.
+- Added a spend-boundary unwind that checkpoints after known authorization,
+  budget, or ambiguity pauses reach the coordinator.
+- Installed subject records into operator state before resumable polish begins,
+  preserving attempt-1 evidence when attempt 2 pauses.
+- Updated durable workspace, runner, and spend-consumer documentation to define
+  ledger durability versus a restorable quiescent checkpoint.
+- Focused boundary regressions passed. The semantic-closure suite passed (71),
+  and spend-enforcement plus installed-smoke modules passed (19).
+- Made no acceptance-run change, provider request, authorization consumption,
+  schema-version change, or release-coordinate change.
+
+Next action: Slice 1 gate review before commit or Slice 2 failure injection.

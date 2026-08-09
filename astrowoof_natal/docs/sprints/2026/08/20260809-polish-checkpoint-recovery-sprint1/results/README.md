@@ -1,6 +1,6 @@
 # Sprint Results
 
-Status: Slice 0 reproduction complete; gate approval pending.
+Status: Slice 1 checkpoint architecture complete; gate approval pending.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in
@@ -10,6 +10,10 @@ an evidence-backed answer and explicit confidence level for every question in
   deterministic two-defect reproduction, and frozen implementation boundary.
 - `slice0-forensic-model.json`: compact redacted run, action, mismatch, and
   regression evidence.
+- `SLICE 1 - Quiescent Checkpoint Architecture.md`: persistence/checkpoint
+  separation, state-owned polish records, contract consequence, and tests.
+- `slice1-checkpoint-architecture.json`: compact machine-readable Slice 1
+  implementation and verification evidence.
 
 This directory will contain compact, redacted evidence for:
 

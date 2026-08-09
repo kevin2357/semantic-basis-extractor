@@ -1,0 +1,23 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice1.v1",
+  "status": "pass",
+  "architecture": {
+    "internal_state_persistence": "persist_state",
+    "coordinator_checkpoint": "save_state",
+    "spend_pause_unwind": "checkpoint_spend_boundary",
+    "spend_callbacks_publish_snapshot": false,
+    "subject_record_owned_before_polish": true,
+    "snapshot_schema_changed": false,
+    "run_schema_changed": false
+  },
+  "tests": {
+    "focused_boundary_tests": "pass",
+    "semantic_closure": {"status": "pass", "count": 71},
+    "spend_and_installed_smoke": {"status": "pass", "count": 19},
+    "diff_check": "pass"
+  },
+  "retained_acceptance_run_mutated": false,
+  "authorization_consumed": false,
+  "provider_requests": 0,
+  "incremental_provider_spend_usd": 0
+}

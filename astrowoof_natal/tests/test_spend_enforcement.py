@@ -379,7 +379,9 @@ class SpendLedgerTests(unittest.TestCase):
             save_state(run_json, state)
             before(request)
             with patch.object(
-                closure_module, "save_state", side_effect=OSError("injected fsync failure")
+                closure_module,
+                "persist_state",
+                side_effect=OSError("injected fsync failure"),
             ):
                 with self.assertRaises(AmbiguousProviderSubmission):
                     created("resp_returned_but_not_persisted", "response")

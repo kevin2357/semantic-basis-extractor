@@ -2358,7 +2358,8 @@ def update_run_status(state: dict[str, Any]) -> None:
     state["updated_at"] = utc_now()
 
 
-def save_state(run_json: Path, state: dict[str, Any]) -> None:
+def persist_state(run_json: Path, state: dict[str, Any]) -> None:
+    """Persist operator/public/authorization state without attesting workspace."""
     state["state_revision"] = int(state.get("state_revision") or 0) + 1
     update_run_status(state)
     refresh_execution_provenance(state)
@@ -2381,13 +2382,25 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
             ],
         },
     )
-    # Concurrent author workers can be creating workspace files outside the
-    # state lock. Their run/public state remains atomic, but only the
-    # coordinator can attest a quiescent complete-directory snapshot. A crash
-    # before that coordinator save deliberately leaves the prior manifest
-    # mismatched and therefore fail-closed on resume.
-    if threading.current_thread() is threading.main_thread():
-        write_workspace_snapshot(run_json.parent)
+
+
+def save_state(run_json: Path, state: dict[str, Any]) -> None:
+    """Persist state and publish a coordinator-owned quiescent checkpoint."""
+    if threading.current_thread() is not threading.main_thread():
+        persist_state(run_json, state)
+        return
+    persist_state(run_json, state)
+    write_workspace_snapshot(run_json.parent)
+
+
+@contextmanager
+def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
+    """Publish one complete checkpoint after a paid-stage pause unwinds."""
+    try:
+        yield
+    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
+        save_state(run_json, state)
+        raise
 
 
 def snapshot_inventory(
@@ -2473,7 +2486,7 @@ def save_state_locked(
     state_lock: threading.Lock,
 ) -> None:
     with state_lock:
-        save_state(run_json, state)
+        persist_state(run_json, state)
 
 
 class SpendController:
@@ -2592,12 +2605,12 @@ class SpendController:
                         price_book_version=PRICE_BOOK_VERSION,
                     )
                     existing = prepare_action(self.ledger, binding)
-                    save_state(self.run_json, self.state)
+                    persist_state(self.run_json, self.state)
                 prior_state = existing["state"]
                 classify_prepared_budget(self.ledger, existing)
                 if existing["state"] != prior_state:
                     update_run_status(self.state)
-                    save_state(self.run_json, self.state)
+                    persist_state(self.run_json, self.state)
                 if existing["state"] == "PREPARED":
                     raise AwaitingSpendAuthorization(
                         "Paid action requires external authorization",
@@ -2624,7 +2637,7 @@ class SpendController:
                                 "durable provider operation ID"
                             ),
                         )
-                        save_state(self.run_json, self.state)
+                        persist_state(self.run_json, self.state)
                     raise AmbiguousProviderSubmission(
                         "Provider submission outcome requires reconciliation",
                         action=existing,
@@ -2644,7 +2657,7 @@ class SpendController:
                     state_revision=int(self.state.get("state_revision") or 0),
                 )
                 self.local.active_action = existing["action_id"]
-                save_state(self.run_json, self.state)
+                persist_state(self.run_json, self.state)
 
         def provider_created(provider_id: str | None, kind: str) -> None:
             with self.state_lock:
@@ -2655,7 +2668,7 @@ class SpendController:
                     kind=kind,
                 )
                 try:
-                    save_state(self.run_json, self.state)
+                    persist_state(self.run_json, self.state)
                 except Exception as exc:
                     mark_ambiguous(
                         action,
@@ -2688,7 +2701,7 @@ class SpendController:
             action = self.active_action()
             if action["state"] == "SUBMITTING":
                 mark_ambiguous(action, reason=reason)
-                save_state(self.run_json, self.state)
+                persist_state(self.run_json, self.state)
 
     def mark_active_waiting(self) -> None:
         action_id = getattr(self.local, "active_action", None)
@@ -2698,7 +2711,7 @@ class SpendController:
             action = self.active_action()
             if action["state"] == "PROVIDER_ID_RECORDED":
                 action["state"] = "WAITING"
-                save_state(self.run_json, self.state)
+                persist_state(self.run_json, self.state)
 
     def settle_active(self, metadata: dict[str, Any]) -> None:
         action_id = getattr(self.local, "active_action", None)
@@ -2715,7 +2728,7 @@ class SpendController:
                 usage=metadata.get("usage") or {},
                 estimated_micro_usd=estimated_micro_usd,
             )
-            save_state(self.run_json, self.state)
+            persist_state(self.run_json, self.state)
 
 
 def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
@@ -3043,6 +3056,7 @@ def author_pending_passes(
         warming["finished_at"] = utc_now()
         save_state_locked(run_json, state, state_lock)
         if warming["state"] == "WAITING_FOR_RESPONSE":
+            save_state(run_json, state)
             return
         specs = [spec for spec in specs if spec != cache_warmer]
 
@@ -3068,7 +3082,7 @@ def author_pending_passes(
             }
             for future in concurrent.futures.as_completed(futures):
                 future.result()
-    save_state_locked(run_json, state, state_lock)
+    save_state(run_json, state)
 
 
 def _batch_jsonl_records(text: str) -> dict[str, dict[str, Any]]:
@@ -5349,6 +5363,7 @@ def finalize_subjects(
                 run_dir=run_dir,
                 python_executable=python_executable,
             )
+            finals[subject] = record
         if record["state"] == "FINAL_QA_PASSED":
             record["state"] = "DELIVERY_COMPLETE"
             package_subject_delivery(record, run_dir=run_dir)
@@ -6322,64 +6337,66 @@ def main() -> None:
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return
     authoring_complete = True
-    if args.service_level == "batch":
-        batch_base_provider = openai_provider_for_attempt(provider, 1)
-        authoring_complete = author_pending_passes_batch(
-            state=state,
-            provider=provider,
-            transport=UrllibOpenAIBatchTransport(
-                api_key=batch_base_provider.api_key,
-                base_url=batch_base_provider.base_url,
-                timeout_seconds=batch_base_provider.http_timeout_seconds,
-            ),
-            run_dir=args.run_dir,
-            max_attempts=args.max_attempts,
-            python_executable=args.python_executable,
-            run_json=run_json,
-            poll_interval_seconds=args.batch_poll_interval_seconds,
-            detach=args.batch_detach,
-            spend_controller=spend_controller,
-        )
-    else:
-        author_pending_passes(
-            state=state,
-            provider=provider,
-            run_dir=args.run_dir,
-            max_attempts=args.max_attempts,
-            python_executable=args.python_executable,
-            run_json=run_json,
-            max_workers=args.max_workers,
-            spend_controller=spend_controller,
-        )
+    with checkpoint_spend_boundary(run_json, state):
+        if args.service_level == "batch":
+            batch_base_provider = openai_provider_for_attempt(provider, 1)
+            authoring_complete = author_pending_passes_batch(
+                state=state,
+                provider=provider,
+                transport=UrllibOpenAIBatchTransport(
+                    api_key=batch_base_provider.api_key,
+                    base_url=batch_base_provider.base_url,
+                    timeout_seconds=batch_base_provider.http_timeout_seconds,
+                ),
+                run_dir=args.run_dir,
+                max_attempts=args.max_attempts,
+                python_executable=args.python_executable,
+                run_json=run_json,
+                poll_interval_seconds=args.batch_poll_interval_seconds,
+                detach=args.batch_detach,
+                spend_controller=spend_controller,
+            )
+        else:
+            author_pending_passes(
+                state=state,
+                provider=provider,
+                run_dir=args.run_dir,
+                max_attempts=args.max_attempts,
+                python_executable=args.python_executable,
+                run_json=run_json,
+                max_workers=args.max_workers,
+                spend_controller=spend_controller,
+            )
     if not authoring_complete:
         update_run_status(state)
         save_state(run_json, state)
         print(json.dumps(state, ensure_ascii=False, indent=2))
         return
-    finalize_subjects(
-        state=state,
-        run_dir=args.run_dir,
-        python_executable=args.python_executable,
-        allow_lint_warnings=args.allow_lint_warnings,
-        polish=args.polish,
-        polish_provider=polish_provider,
-        max_polish_attempts=args.max_polish_attempts,
-        spend_controller=spend_controller,
-    )
-    if args.qualitative_critic and critic_provider is not None:
-        for record in state.get("subjects", {}).values():
-            if record.get("state") in FINAL_SUCCESS_STATES:
-                run_qualitative_review(
-                    record=record,
-                    critic_provider=critic_provider,
-                    editor_provider=qualitative_editor_provider,
-                    run_dir=args.run_dir,
-                    python_executable=args.python_executable,
-                    max_findings=args.max_critic_findings,
-                    max_target_fields=args.max_qualitative_target_fields,
-                    max_target_cards=args.max_qualitative_target_cards,
-                    spend_controller=spend_controller,
-                )
+    with checkpoint_spend_boundary(run_json, state):
+        finalize_subjects(
+            state=state,
+            run_dir=args.run_dir,
+            python_executable=args.python_executable,
+            allow_lint_warnings=args.allow_lint_warnings,
+            polish=args.polish,
+            polish_provider=polish_provider,
+            max_polish_attempts=args.max_polish_attempts,
+            spend_controller=spend_controller,
+        )
+        if args.qualitative_critic and critic_provider is not None:
+            for record in state.get("subjects", {}).values():
+                if record.get("state") in FINAL_SUCCESS_STATES:
+                    run_qualitative_review(
+                        record=record,
+                        critic_provider=critic_provider,
+                        editor_provider=qualitative_editor_provider,
+                        run_dir=args.run_dir,
+                        python_executable=args.python_executable,
+                        max_findings=args.max_critic_findings,
+                        max_target_fields=args.max_qualitative_target_fields,
+                        max_target_cards=args.max_qualitative_target_cards,
+                        spend_controller=spend_controller,
+                    )
     update_run_status(state)
     save_state(run_json, state)
     print(json.dumps(state, ensure_ascii=False, indent=2))

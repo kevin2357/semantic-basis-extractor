@@ -13,6 +13,12 @@ restore it at the absolute logical path recorded in `run.json`. Resume checks
 the SHA-256 inventory in `workspace-snapshot.json` and fails closed on an
 incomplete, changed, additional, or relocated snapshot.
 
+Provider and spend callbacks may persist ledger/public state while an attempt
+is still in flight, but they do not publish a complete workspace snapshot.
+Snapshots are coordinator-owned quiescent checkpoints. A spend pause unwinds
+before the coordinator records the complete state-owned attempt/subject result
+and publishes the restorable snapshot.
+
 ## Provider spend authorization
 
 New OpenAI runs require `--spend-policy POLICY.json`. The policy is frozen in

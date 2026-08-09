@@ -46,6 +46,13 @@ SBE validates and consumes them, executes only matching requests, and then
 completes local work, polls existing work, or prepares the next action. Polling
 a known provider ID needs no new reservation.
 
+Treat an authorization pause as checkpoint-ready only after the SBE invocation
+has exited and its coordinator-written `workspace-snapshot.json` validates
+against the complete directory. Internal ledger persistence may precede that
+checkpoint while provider or QA work is still settling; it is durable spend
+evidence, not permission to snapshot worker scratch mid-invocation. The API
+must copy the complete quiescent run directory under its exclusive lease.
+
 ## API responsibilities
 
 The API must serialize run mutation under its lease, reserve transactionally,
@@ -63,4 +70,3 @@ A pinnable consumer must test exact prepare/authorize/execute round trips,
 worker replacement while polling, required-stage exhaustion, profile-driven
 optional skipping, ambiguous creation, stale authorization/state revision,
 single-writer consumption, and API reservation/billing-reference correlation.
-

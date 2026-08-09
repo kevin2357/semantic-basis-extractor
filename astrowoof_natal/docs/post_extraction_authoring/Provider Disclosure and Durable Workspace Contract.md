@@ -51,11 +51,15 @@ candidate, delivery, and provenance artifacts.
 
 Ephemeral lock files, atomic-write temporary files, and the snapshot manifest
 itself are excluded. `workspace-snapshot.json` records the logical root plus
-the relative path, byte count, and SHA-256 of every included member. It is
-rewritten after each durable state save. Resume fails closed if the manifest
-is absent, its root differs, or the actual inventory differs. A crash between
-an artifact write and the next state save is deliberately treated as an
-incomplete snapshot requiring operator recovery.
+the relative path, byte count, and SHA-256 of every included member. Internal
+provider/spend callbacks durably persist operator state, public state, and
+authorization requests without publishing a complete-workspace attestation.
+Only the coordinator publishes `workspace-snapshot.json`, after the current
+transition has unwound and workspace mutations are quiescent. Resume fails
+closed if the manifest is absent, its root differs, or the actual inventory
+differs. A crash between an artifact write and the next coordinator checkpoint
+is deliberately treated as an incomplete transition requiring native
+inspection or recovery.
 
 Concurrent interactive author workers atomically persist operator/public state
 from their worker threads, but they cannot attest the whole directory while
@@ -63,6 +67,15 @@ peer workers are still creating files. The coordinator writes the complete
 snapshot after all workers quiesce. Until then, the earlier manifest will not
 match the newer state/artifacts, so a process crash fails closed instead of
 resuming from a directory that was observed mid-write.
+
+The same rule applies to optional paid stages. A polish, critic, or qualitative
+candidate action may persist commitment, provider identity, waiting state, or
+reported usage before all local result artifacts exist. That early ledger
+durability is not a resumable workspace checkpoint. When a stage pauses for
+external authorization, the exception first unwinds to the coordinator; the
+coordinator then publishes the state-owned subject/attempt record, final and QA
+artifacts, prepared request, ledger/public state, authorization request, and
+snapshot as one restorable boundary.
 
 ## Pre-pin qualification scope
 

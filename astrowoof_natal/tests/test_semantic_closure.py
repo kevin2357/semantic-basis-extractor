@@ -38,6 +38,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     author_pending_passes_batch,
     batch_estimated_cost,
     build_prompt_layout_report,
+    checkpoint_spend_boundary,
     cleanup_completed_run,
     compare_cost_runs,
     discover_passes,
@@ -52,6 +53,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     normalized_usage,
     polish_subject,
     polish_target_paths,
+    persist_state,
     provider_configuration,
     provider_visible_markdown,
     provider_visible_subject,
@@ -1329,10 +1331,10 @@ class TestSemanticClosure(SemanticClosureFixture):
                 100,
             )
 
-    def test_polish_authorization_pause_discards_unpublished_subject_record(
+    def test_polish_authorization_pause_preserves_state_owned_subject_record(
         self,
     ) -> None:
-        """Reproduce the 0.2.1 polish-attempt-2 state publication defect."""
+        """Keep attempt-1 evidence durable when attempt 2 needs authorization."""
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             final_root = root / "final" / "bre"
@@ -1451,7 +1453,8 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertNotEqual(original_deck, deck_path.read_bytes())
             self.assertEqual("POLISH_ACCEPTED", record["polish_attempts"][0]["state"])
             self.assertEqual("SUBMITTED", record["polish_attempts"][1]["state"])
-            self.assertEqual({}, state["subjects"])
+            self.assertIs(record, state["subjects"]["bre"])
+            self.assertEqual(2, len(state["subjects"]["bre"]["polish_attempts"]))
 
     def test_final_status_requires_every_subject_delivery(self) -> None:
         state = {
@@ -2750,6 +2753,64 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertTrue(mutation_done)
             with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
                 validate_workspace_snapshot(run_dir, state)
+
+    def test_internal_persistence_does_not_publish_workspace_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = FakeAuthoringProvider()
+            state, run_json = self.make_state(root, provider)
+            snapshot_path = root / "run" / "workspace-snapshot.json"
+            original_snapshot = snapshot_path.read_bytes()
+            (root / "run" / "in-flight-artifact.json").write_text(
+                "{}", encoding="utf-8"
+            )
+
+            persist_state(run_json, state)
+
+            self.assertEqual(original_snapshot, snapshot_path.read_bytes())
+            with self.assertRaisesRegex(ValueError, "snapshot is incomplete"):
+                validate_workspace_snapshot(root / "run", state)
+
+            save_state(run_json, state)
+            validate_workspace_snapshot(root / "run", state)
+
+    def test_spend_pause_unwinds_before_quiescent_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="not-used",
+                model="gpt-5.6-luna",
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            controller = SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="test-worker",
+            )
+            before_submit, _provider_created = controller.callbacks(
+                stage="polish",
+                route="bre:polish:002",
+                model=provider.model,
+                service_level="interactive",
+                maximum_output_tokens=provider.max_output_tokens,
+            )
+            request_artifact = root / "run" / "final" / "bre" / "polish" / (
+                "attempt-002"
+            ) / "openai-request.json"
+            request_artifact.parent.mkdir(parents=True)
+            request_artifact.write_text("{}", encoding="utf-8")
+
+            with self.assertRaises(AwaitingSpendAuthorization):
+                with checkpoint_spend_boundary(run_json, state):
+                    before_submit({"model": provider.model, "input": []})
+
+            self.assertEqual("AWAITING_SPEND_AUTHORIZATION", state["status"])
+            self.assertEqual(
+                "PREPARED", state["spend_ledger"]["actions"][-1]["state"]
+            )
+            validate_workspace_snapshot(root / "run", state)
 
     def test_resume_restores_accepted_state_from_durable_acceptance_evidence(
         self,
