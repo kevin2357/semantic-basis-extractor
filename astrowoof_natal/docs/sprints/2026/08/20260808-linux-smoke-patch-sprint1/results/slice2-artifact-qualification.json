@@ -1,0 +1,43 @@
+{
+  "schema_version": "astrowoof.linux_smoke_patch.slice2.v1",
+  "status": "pass",
+  "version": "0.2.1",
+  "source_commit": "7379ea4ba6e56dab261ca8e7be520916e5d63565",
+  "source_date_epoch": 1786240889,
+  "wheel": {
+    "filename": "astrowoof_natal_authoring-0.2.1-py3-none-any.whl",
+    "build_count": 2,
+    "byte_identical": true,
+    "size": 624157,
+    "sha256": "0d273c2d0e98d54abadd28ff1a36f670bd4bbd7e7441bac263f6dbafe75bfc08",
+    "member_count": 40,
+    "audit_failure_count": 0
+  },
+  "windows_installed_smoke": {
+    "status": "pass",
+    "import_origin": "site-packages",
+    "final_state": "DELIVERY_COMPLETE",
+    "resource_count": 19,
+    "resource_set_sha256": "439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404",
+    "cleanup_status": "complete"
+  },
+  "linux_installed_smoke": {
+    "status": "pass",
+    "platform": "linux/amd64",
+    "import_origin": "/usr/local/lib/python3.11/site-packages/astrowoof_natal_authoring",
+    "final_state": "DELIVERY_COMPLETE",
+    "resource_count": 19,
+    "resource_set_sha256": "439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404",
+    "cleanup_status": "complete",
+    "pip_check": "pass",
+    "image_digest": "sha256:b3420fe8c4ff3183e5ebbdced1a678a2e0c278f3791189586488e7792a264dc0"
+  },
+  "installed_versions": {
+    "astrology_graph_foundry": "0.6.0",
+    "semantic_projection_core": "0.10.0",
+    "astrowoof_natal_authoring": "0.2.1",
+    "pyswisseph": "2.10.3.2"
+  },
+  "provider_requests": 0,
+  "provider_spend_usd": 0
+}

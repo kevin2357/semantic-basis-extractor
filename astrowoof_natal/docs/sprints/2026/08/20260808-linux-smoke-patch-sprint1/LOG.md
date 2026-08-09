@@ -56,3 +56,26 @@ surface and proposed v0.2.1 coordinates before implementation.
   or published artifact changed. No provider request was made.
 
 Next action: Slice 1 gate review before commit or exact patch artifact work.
+
+## 2026-08-08 - Slice 2 exact patch artifact qualification
+
+- User approved Slice 1. Committed the correction as `7379ea4` and changed
+  only the project version coordinate from 0.2.0 to 0.2.1 for qualification.
+- Built the wheel twice with `SOURCE_DATE_EPOCH=1786240889`. Both 624,157-byte
+  files are byte-identical with SHA-256
+  `0d273c2d0e98d54abadd28ff1a36f670bd4bbd7e7441bac263f6dbafe75bfc08`.
+- Audited all 40 wheel members; no disallowed package content was found.
+- Clean-installed the exact wheel outside the checkout on Windows. Installed
+  smoke passed through delivery and completed cleanup.
+- Copied, rather than edited, the API agent's retained acceptance context.
+  Replaced only the copied SBE wheel/hash and built offline with Docker.
+- The Linux/amd64 installed smoke passed as the non-root worker user. Windows
+  and Linux produced the same 19-resource aggregate digest
+  `439c8771fe7944ddb1b5b83465b7d2f76f252340624f1b85c85f9278fba55404`.
+- Linux `pip check`, AGF 0.6.0 doctors, and SPC 0.10.0 installed smoke passed.
+  Candidate image digest is
+  `sha256:b3420fe8c4ff3183e5ebbdced1a678a2e0c278f3791189586488e7792a264dc0`.
+- No provider request or networked build operation occurred; spend was USD 0.
+
+Next action: Slice 2 gate review. No commit, release handoff, tag, push, or
+publication until explicit approval.
