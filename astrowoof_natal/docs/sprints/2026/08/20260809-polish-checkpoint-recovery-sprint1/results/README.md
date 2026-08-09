@@ -1,6 +1,6 @@
 # Sprint Results
 
-Status: Slice 2 failure-injection matrix complete; gate approval pending.
+Status: Slice 3 constrained repair tooling complete; gate approval pending.
 
 The final artifact index must include `../API AGENT RESPONSES.md`, containing
 an evidence-backed answer and explicit confidence level for every question in
@@ -18,6 +18,9 @@ an evidence-backed answer and explicit confidence level for every question in
   ordering, GET-only reconciliation, ambiguity, and checkpoint failure results.
 - `slice2-failure-injection.json`: compact machine-readable Slice 2 matrix and
   deterministic test evidence.
+- `SLICE 3 - Constrained Repair Tooling.md`: exact eligibility, reconstruction,
+  refusal, backup, locking, and preservation contract.
+- `slice3-repair-tooling.json`: compact machine-readable Slice 3 qualification.
 
 This directory will contain compact, redacted evidence for:
 

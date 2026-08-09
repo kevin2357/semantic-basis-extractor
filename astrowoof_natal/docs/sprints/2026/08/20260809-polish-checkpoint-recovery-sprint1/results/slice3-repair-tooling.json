@@ -1,0 +1,26 @@
+{
+  "schema_version": "astrowoof.polish_checkpoint_recovery.slice3.v1",
+  "status": "pass",
+  "command": "astrowoof-repair-polish-checkpoint",
+  "default_mode": "dry_run",
+  "apply_requirements": {
+    "separate_byte_identical_backup": true,
+    "api_exclusive_owner_reference": true,
+    "local_spend_consumption_lock": true,
+    "external_authorization_exact_binding": true
+  },
+  "supported_changed_member_count": 3,
+  "generic_force_or_rehash": false,
+  "authorization_installed_or_consumed": false,
+  "prepared_action_preserved": true,
+  "reconstructed_attempt_state": "POLISH_IMPROVED_PARTIAL",
+  "tests": {
+    "repair_qualification": {"status": "pass", "count": 8},
+    "focused_repair_spend_closure": {"status": "pass", "count": 97},
+    "complete_repository": {"status": "pass", "count": 165},
+    "diff_check": "pass"
+  },
+  "retained_acceptance_run_mutated": false,
+  "provider_requests": 0,
+  "incremental_provider_spend_usd": 0
+}

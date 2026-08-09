@@ -102,3 +102,25 @@ Next action: Slice 1 gate review before commit or Slice 2 failure injection.
   consumption, acceptance-run mutation, or incremental spend occurred.
 
 Next action: Slice 2 gate review before commit or Slice 3 repair tooling.
+
+## 2026-08-09 - Slice 3 constrained repair tooling
+
+- User approved Slice 2. Committed its provider-interruption hardening and
+  regression evidence as `2748b44`, then began Slice 3.
+- Added the installed `astrowoof-repair-polish-checkpoint` dry-run/apply seam
+  for only the proven SBE 0.2.1 three-file polish checkpoint shape.
+- Required retained attempt byte equality, provider identity and reported-cost
+  consistency, exact attempt-2 request and authorization binding, and an
+  entirely unused prepared next action.
+- Apply requires a separate byte-identical complete backup, an API exclusive-
+  lease reference, and SBE's local spend-consumption lock. It records before
+  and after hashes and validates the completed checkpoint.
+- Reconstructed the missing attempt as `POLISH_IMPROVED_PARTIAL`, not accepted,
+  while preserving all passes, ledger evidence, and the prepared action.
+- Added eight synthetic positive/refusal tests and updated durable workspace,
+  spend, authorization-consumer, and runner documentation.
+- Focused repair/spend/closure suites passed (97); the complete deterministic
+  repository suite passed (165). No provider request, authorization
+  consumption, incremental spend, or retained-run mutation occurred.
+
+Next action: Slice 3 gate review before commit or any acceptance-copy use.

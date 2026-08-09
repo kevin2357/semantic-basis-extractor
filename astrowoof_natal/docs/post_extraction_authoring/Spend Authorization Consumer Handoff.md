@@ -70,3 +70,10 @@ A pinnable consumer must test exact prepare/authorize/execute round trips,
 worker replacement while polling, required-stage exhaustion, profile-driven
 optional skipping, ambiguous creation, stale authorization/state revision,
 single-writer consumption, and API reservation/billing-reference correlation.
+For an affected 0.2.1 polish checkpoint, use
+`astrowoof-repair-polish-checkpoint` in inspection mode first. Apply requires a
+separate byte-identical backup and exclusive ownership. The authorization file
+is verified but not installed or consumed; after repair the worker must still
+return the same prepared action to API authority. Store the repair report in
+API-owned durable state or another path outside the SBE workspace. Never use
+repair as authorization to resume provider-connected work.

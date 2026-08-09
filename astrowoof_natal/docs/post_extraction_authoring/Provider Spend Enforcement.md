@@ -83,3 +83,10 @@ Reported usage and SBE price-book estimates are operational evidence, not
 authoritative billing. The API may append immutable references to account
 billing or reservation records. SBE retains provider IDs, request digests,
 commitments, usage, estimates, and reconciliation reference IDs for audit.
+
+The constrained 0.2.1 polish-checkpoint repair never authorizes or consumes the
+prepared next action. It requires the API-issued authorization only as exact
+binding evidence, leaves the ledger action `PREPARED`, and performs no provider
+operation. The consumer must pass that authorization through the normal
+single-writer prepare/authorize/execute seam only after repaired-workspace
+validation and separate operational approval.

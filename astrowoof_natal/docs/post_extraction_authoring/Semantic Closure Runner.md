@@ -535,6 +535,16 @@ state ever disagrees, so resume cannot demote an already accepted pass.
 Provider, model, reasoning, background, base-URL, output-token, and attempt
 settings must match the original run.
 
+An SBE 0.2.1 run with only the documented three-file polish mismatch must not
+be resumed or manually re-snapshotted. The installed
+`astrowoof-repair-polish-checkpoint` command provides dry-run inspection and an
+explicit, backup-gated repair for that exact shape. It reconstructs the missing
+subject-owned partial polish record from retained native outputs, preserves the
+unused prepared action, republishes a complete checkpoint, and validates it.
+It refuses unrelated mutations and never contacts the provider. See
+`Provider Disclosure and Durable Workspace Contract.md` for the full command
+and refusal contract.
+
 ## Run artifacts
 
 The run directory contains:

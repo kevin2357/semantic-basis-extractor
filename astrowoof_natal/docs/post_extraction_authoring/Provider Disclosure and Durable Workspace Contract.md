@@ -77,6 +77,41 @@ coordinator then publishes the state-owned subject/attempt record, final and QA
 artifacts, prepared request, ledger/public state, authorization request, and
 snapshot as one restorable boundary.
 
+### Constrained 0.2.1 polish-checkpoint recovery
+
+The installed `astrowoof-repair-polish-checkpoint` command recognizes only the
+proven SBE 0.2.1 boundary defect. Inspection is the default and does not mutate
+the run. Apply mode requires an exact external authorization document and a
+separate, byte-identical complete backup of the pre-repair workspace:
+
+```text
+astrowoof-repair-polish-checkpoint --run-dir <stable-path> \
+  --authorization <attempt-2-authorization.json>
+astrowoof-repair-polish-checkpoint --run-dir <stable-path> \
+  --authorization <attempt-2-authorization.json> \
+  --apply --backup-path <complete-backup> \
+  --exclusive-owner-reference <api-lease-id> \
+  --report <outside-run-report.json>
+```
+
+Apply requires an API-owned exclusive-lease reference and also acquires the
+run's spend-consumption lock. The reference is an audit declaration, not an
+SBE account-wide lease service; the API remains responsible for preventing any
+other worker from mutating the run. The command accepts exactly three changed
+final members—deck, validation report,
+and lint report—and only when each byte sequence equals its retained attempt-1
+counterpart. It also proves the reported attempt-1 Response identity, the
+prepared attempt-2 request digest and external binding, and that attempt 2 has
+no authorization, consumption, provider identity, or reported usage. Any
+additional, missing, truncated, or conflicting evidence is refused. There is
+no force, allowlist, relocation, or generic rehash mode.
+
+Apply reconstructs the missing subject and partial-improvement attempt record,
+preserves every existing ledger action and accepted pass, atomically republishes
+operator/public/authorization state, writes a complete snapshot, and validates
+it before success. The output report must live outside the workspace so it
+cannot create a self-referential snapshot member.
+
 ## Pre-pin qualification scope
 
 Release qualification must continue to prove:
