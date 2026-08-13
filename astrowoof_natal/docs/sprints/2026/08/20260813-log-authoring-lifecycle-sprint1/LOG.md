@@ -32,3 +32,11 @@
   focused lifecycle tests and all 184 repository tests passed.
 - Added a sprint requirement to link the complete plan, log, and evidence documents
   at every completed-slice handoff.
+- Completed Slice 3's native provider-less denial operation under the existing
+  cross-process spend lock. It durably handles exact prepared and authorized/
+  unconsumed actions, preserves prior authorization history, emits typed refusals,
+  prioritizes provider-race evidence, and replays idempotently without another write.
+- Ten focused Slice 3 tests passed. Documented the honest multi-file filesystem
+  atomicity boundary and retained exhaustive crash/restart injection for Slice 4.
+- The full post-Slice-3 suite passed 194 distinct tests. Removed an imported
+  `TestCase` that had temporarily caused seven Slice 2 tests to be counted twice.

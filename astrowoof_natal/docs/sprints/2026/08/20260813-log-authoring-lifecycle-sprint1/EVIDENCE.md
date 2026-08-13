@@ -97,3 +97,44 @@ python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
 Ran 184 tests in 126.930s
 OK
 ```
+
+## Slice 3: negative authorization and provider-less disposition
+
+Status: complete.
+
+Artifacts:
+
+- `deny_providerless_action()` in `astrowoof_natal_authoring/lifecycle.py`
+- `tests/test_negative_authorization.py`
+- `SLICE 3 NEGATIVE AUTHORIZATION.md`
+
+Focused mutation qualification:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_negative_authorization.TestNegativeAuthorization -v
+
+Ran 10 tests in 0.686s
+OK
+```
+
+Coverage includes provider-free prepared denial, authorized/unconsumed denial with
+preserved authorization history, byte-stable idempotent replay, stale observation,
+provider identity and consumption races, ambiguous identity-less submission,
+immutable-binding mismatch, closed denial-reason rejection, single-writer lock
+refusal, and exact multi-action targeting. Refusal comparisons exclude only the
+non-authoritative `spend-consumption.lock`; every snapshot-authoritative byte is
+unchanged.
+
+Full repository regression suite after Slice 3:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 194 tests in 128.956s
+OK
+```
+
+An initial discovery run reported 201 passes because the Slice 3 module imported a
+Slice 2 `TestCase`, causing seven tests to execute twice. The fixture dependency was
+removed and the clean distinct-test count is 194.

@@ -56,6 +56,7 @@ class TestLifecycleInspection(unittest.TestCase):
                 "provider": None,
                 "reported": None,
             }]},
+            "passes": {},
             "subjects": {},
         }
 
