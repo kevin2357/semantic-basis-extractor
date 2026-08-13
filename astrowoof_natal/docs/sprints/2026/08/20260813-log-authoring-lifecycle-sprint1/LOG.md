@@ -75,3 +75,10 @@
   `c3ac7a8`, built two byte-identical wheels, and qualified the exact artifact on
   Windows 3.12 and offline Linux 3.11 with both lifecycle and full release smokes.
   Final source suite passed 214 tests; provider operations and spend remained zero.
+- Committed authorized release coordinates as `d96e2e4`, created and pushed annotated
+  tag `astrowoof-natal-authoring-v0.3.0`, and published GitHub release `370224017`
+  with the exact wheel and checksum assets.
+- Authenticated download verification matched wheel SHA-256
+  `377c48ed37d337e42dc9392cc7b5e07a81c3b12c2e0638a50bf33ad1b18cd3b0`.
+  Recorded publication evidence in a post-tag documentation commit without moving
+  the immutable tag.

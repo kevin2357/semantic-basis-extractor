@@ -39,5 +39,7 @@ provider races remain machine-readable domain results rather than exception pros
 - wheel entries/cache entries: 58 / 0; and
 - new provider operations and spend: zero / `$0`.
 
-Release tagging and publication are authorized by the user. Publication evidence is
-recorded after the immutable tag and GitHub assets are verified.
+Publication is complete. The immutable annotated tag targets release commit
+`d96e2e4e0809f14d574d3241fa2909aa3cdb137c`; authenticated download verification
+matched the qualified wheel SHA-256 above. Detailed post-publication coordinates are
+recorded in `release-manifest.json`.

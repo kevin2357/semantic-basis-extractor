@@ -324,3 +324,22 @@ User subsequently authorized preparation, tagging, and publication of 0.3.0.
 
 Tag, publication, and authenticated download evidence follow after the release
 coordinates commit.
+
+Publication evidence:
+
+- release commit: `d96e2e4e0809f14d574d3241fa2909aa3cdb137c`
+- annotated tag: `astrowoof-natal-authoring-v0.3.0`
+- tag object: `0c0bd952fcecbfd60288948aa3738c92cfdb2b84`
+- GitHub release ID: `370224017`
+- published at: `2026-08-13T21:27:05Z`
+- wheel asset ID: `513531241`
+- checksum asset ID: `513531242`
+- draft/prerelease: false / false
+- authenticated downloaded wheel SHA-256:
+  `377c48ed37d337e42dc9392cc7b5e07a81c3b12c2e0638a50bf33ad1b18cd3b0`
+- downloaded `SHA256SUMS.txt`: exact expected line
+- release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.3.0`
+
+The immutable tag contains the authorized release coordinates. This subsequent
+documentation commit records external publication evidence without moving the tag.
