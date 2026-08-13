@@ -1,0 +1,48 @@
+{
+  "schema_version": "astrowoof.authoring_lifecycle_inspection.v0.1",
+  "run_id": "run_fixture_001",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-13T18:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "terminal": {
+    "outcome": "nonterminal",
+    "terminal": false,
+    "terminal_reason": null,
+    "deck_bytes_exist": true,
+    "native_qa_passed": true,
+    "assembly_lint_validation_accepted": true,
+    "delivery_package_complete": false,
+    "delivery_publishable": false,
+    "provider_continuation_remains": true,
+    "local_continuation_remains": true
+  },
+  "local_dependencies": [{
+    "kind": "polish",
+    "blocking": true,
+    "reason_code": "prepared_polish_retry"
+  }],
+  "action_inventory": {
+    "schema_version": "astrowoof.provider_action_inventory.v0.1",
+    "run_id": "run_fixture_001",
+    "observation": {
+      "operator_state_revision": 12,
+      "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "logical_workspace_root": "/work/run",
+      "snapshot_complete": true,
+      "inventory_valid": true,
+      "observed_at": "2026-08-13T18:00:00Z",
+      "native_exclusive_access": "declared",
+      "writer_race_possible": false
+    },
+    "ordering_semantics": "deterministic_presentation_only_not_execution_order",
+    "actions": []
+  },
+  "review_reasons": []
+}

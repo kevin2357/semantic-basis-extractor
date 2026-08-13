@@ -1,0 +1,235 @@
+from __future__ import annotations
+
+import copy
+import json
+import re
+import sys
+import unittest
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
+    ACTION_STATE_PRESENTATION_ORDER,
+    AMBIGUITY_REVIEW_REASONS,
+    DENIAL_REASONS,
+    EVENT_NAMES,
+    LOCAL_DEPENDENCY_KINDS,
+    PROVIDERLESS_ELIGIBILITY_REASONS,
+    PROVIDER_ACTION_STATES,
+    action_presentation_key,
+    canonical_contract_json,
+    prohibited_event_paths,
+)
+from astrowoof_natal_authoring.resource_access import (  # noqa: E402
+    read_resource_text,
+)
+
+
+FIXTURE_NAMES = (
+    "negative-authorization-request.v0.1.json",
+    "negative-authorization-result.v0.1.json",
+    "action-inventory.v0.1.json",
+    "inspection.v0.1.json",
+    "closeout-result.v0.1.json",
+    "execution-event.v1.json",
+)
+
+
+def _resolve(schema_root: dict[str, Any], reference: str) -> dict[str, Any]:
+    if not reference.startswith("#/"):
+        raise AssertionError(f"Test validator only accepts local refs: {reference}")
+    value: Any = schema_root
+    for component in reference[2:].split("/"):
+        value = value[component.replace("~1", "/").replace("~0", "~")]
+    return value
+
+
+def _type_matches(value: Any, expected: str) -> bool:
+    return {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+        "number": isinstance(value, (int, float)) and not isinstance(value, bool),
+        "boolean": isinstance(value, bool),
+        "null": value is None,
+    }[expected]
+
+
+def validate(value: Any, schema: dict[str, Any], root: dict[str, Any], path: str = "$") -> None:
+    if "$ref" in schema:
+        validate(value, _resolve(root, schema["$ref"]), root, path)
+        return
+    if "oneOf" in schema:
+        matches = 0
+        for candidate in schema["oneOf"]:
+            try:
+                validate(value, candidate, root, path)
+                matches += 1
+            except AssertionError:
+                pass
+        if matches != 1:
+            raise AssertionError(f"{path}: expected exactly one schema match, got {matches}")
+        return
+    if "anyOf" in schema:
+        for candidate in schema["anyOf"]:
+            try:
+                validate(value, candidate, root, path)
+                return
+            except AssertionError:
+                pass
+        raise AssertionError(f"{path}: expected at least one schema match")
+    if "const" in schema and value != schema["const"]:
+        raise AssertionError(f"{path}: expected constant {schema['const']!r}")
+    if "enum" in schema and value not in schema["enum"]:
+        raise AssertionError(f"{path}: value {value!r} is outside closed vocabulary")
+    expected = schema.get("type")
+    if expected is not None:
+        choices = [expected] if isinstance(expected, str) else expected
+        if not any(_type_matches(value, item) for item in choices):
+            raise AssertionError(f"{path}: wrong type")
+    if isinstance(value, str):
+        if len(value) < schema.get("minLength", 0):
+            raise AssertionError(f"{path}: string too short")
+        if len(value) > schema.get("maxLength", len(value)):
+            raise AssertionError(f"{path}: string too long")
+        if "pattern" in schema and not re.search(schema["pattern"], value):
+            raise AssertionError(f"{path}: string does not match pattern")
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        if value < schema.get("minimum", value):
+            raise AssertionError(f"{path}: number below minimum")
+    if isinstance(value, list):
+        if len(value) < schema.get("minItems", 0):
+            raise AssertionError(f"{path}: too few items")
+        if schema.get("uniqueItems") and len({json.dumps(item, sort_keys=True) for item in value}) != len(value):
+            raise AssertionError(f"{path}: duplicate items")
+        if "items" in schema:
+            for index, item in enumerate(value):
+                validate(item, schema["items"], root, f"{path}[{index}]")
+    if isinstance(value, dict):
+        missing = set(schema.get("required", ())) - set(value)
+        if missing:
+            raise AssertionError(f"{path}: missing {sorted(missing)}")
+        if len(value) > schema.get("maxProperties", len(value)):
+            raise AssertionError(f"{path}: too many properties")
+        properties = schema.get("properties", {})
+        if schema.get("additionalProperties") is False:
+            unknown = set(value) - set(properties)
+            if unknown:
+                raise AssertionError(f"{path}: unknown {sorted(unknown)}")
+        elif isinstance(schema.get("additionalProperties"), dict):
+            for key in set(value) - set(properties):
+                validate(
+                    value[key], schema["additionalProperties"], root,
+                    f"{path}.{key}",
+                )
+        property_names = schema.get("propertyNames")
+        if property_names:
+            for key in value:
+                validate(key, property_names, root, f"{path}.<key>")
+        for key, child_schema in properties.items():
+            if key in value:
+                validate(value[key], child_schema, root, f"{path}.{key}")
+
+
+class TestLifecycleContracts(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.schema = json.loads(read_resource_text(
+            "contracts/authoring-lifecycle-contracts.schema.json"
+        ))
+        cls.fixtures = {
+            name: json.loads(read_resource_text(f"fixtures/lifecycle/{name}"))
+            for name in FIXTURE_NAMES
+        }
+
+    def test_all_sanitized_fixtures_validate(self) -> None:
+        for name, fixture in self.fixtures.items():
+            with self.subTest(name=name):
+                validate(fixture, self.schema, self.schema)
+
+    def test_unknown_schema_and_unknown_required_shape_are_rejected(self) -> None:
+        fixture = copy.deepcopy(self.fixtures["inspection.v0.1.json"])
+        fixture["schema_version"] = "astrowoof.authoring_lifecycle_inspection.v9"
+        with self.assertRaises(AssertionError):
+            validate(fixture, self.schema, self.schema)
+        fixture = copy.deepcopy(self.fixtures["inspection.v0.1.json"])
+        fixture["terminal"]["generic_success"] = True
+        with self.assertRaises(AssertionError):
+            validate(fixture, self.schema, self.schema)
+
+    def test_closed_vocabularies_are_unique_and_match_schema(self) -> None:
+        vocabularies = (
+            PROVIDER_ACTION_STATES,
+            DENIAL_REASONS,
+            AMBIGUITY_REVIEW_REASONS,
+            LOCAL_DEPENDENCY_KINDS,
+            PROVIDERLESS_ELIGIBILITY_REASONS,
+            EVENT_NAMES,
+        )
+        self.assertTrue(all(len(items) == len(set(items)) for items in vocabularies))
+        defs = self.schema["$defs"]
+        self.assertEqual(list(PROVIDER_ACTION_STATES), defs["actionState"]["enum"])
+        self.assertEqual(list(DENIAL_REASONS), defs["denialReason"]["enum"])
+        self.assertEqual(list(EVENT_NAMES), defs["executionEvent"]["properties"]["event_name"]["enum"])
+
+    def test_negative_decision_separates_basis_and_result_checkpoint(self) -> None:
+        result = self.fixtures["negative-authorization-result.v0.1.json"]
+        self.assertLess(
+            result["decision_basis"]["operator_state_revision"],
+            result["result_checkpoint"]["operator_state_revision"],
+        )
+        self.assertNotEqual(
+            result["decision_basis"]["snapshot_sha256"],
+            result["result_checkpoint"]["snapshot_sha256"],
+        )
+
+    def test_presentation_order_is_stable_and_not_execution_semantics(self) -> None:
+        inventory = self.fixtures["action-inventory.v0.1.json"]
+        self.assertEqual(
+            "deterministic_presentation_only_not_execution_order",
+            inventory["ordering_semantics"],
+        )
+        actions = [
+            {"action_id": "paid_b", "state": "WAITING", "attempt": 1, "binding": {"route": "b"}},
+            {"action_id": "paid_a", "state": "PREPARED", "attempt": 2, "binding": {"route": "a"}},
+            {"action_id": "paid_c", "state": "AUTHORIZED", "attempt": 1, "binding": {"route": "a"}},
+        ]
+        ordered = sorted(actions, key=action_presentation_key)
+        self.assertEqual(["paid_c", "paid_a", "paid_b"], [item["action_id"] for item in ordered])
+        self.assertEqual(set(PROVIDER_ACTION_STATES), set(ACTION_STATE_PRESENTATION_ORDER))
+
+    def test_contract_serialization_is_byte_stable(self) -> None:
+        fixture = self.fixtures["closeout-result.v0.1.json"]
+        self.assertEqual(
+            canonical_contract_json(fixture),
+            canonical_contract_json(json.loads(json.dumps(fixture))),
+        )
+
+    def test_event_payload_prohibited_fields_are_detected_recursively(self) -> None:
+        fixture = self.fixtures["execution-event.v1.json"]
+        self.assertEqual([], prohibited_event_paths(fixture))
+        fixture["data"]["nested"] = {"birth_datetime": "protected"}
+        self.assertEqual(["$.data.nested.birth_datetime"], prohibited_event_paths(fixture))
+
+    def test_event_unknown_name_and_raw_lease_field_are_rejected(self) -> None:
+        fixture = copy.deepcopy(self.fixtures["execution-event.v1.json"])
+        fixture["event_name"] = "future.unknown"
+        with self.assertRaises(AssertionError):
+            validate(fixture, self.schema, self.schema)
+        fixture = copy.deepcopy(self.fixtures["execution-event.v1.json"])
+        fixture["data"]["lease_token"] = "secret"
+        with self.assertRaises(AssertionError):
+            validate(fixture, self.schema, self.schema)
+        fixture = copy.deepcopy(self.fixtures["execution-event.v1.json"])
+        fixture["data"]["nested"] = {"birth_datetime": "protected"}
+        with self.assertRaises(AssertionError):
+            validate(fixture, self.schema, self.schema)
+
+
+if __name__ == "__main__":
+    unittest.main()

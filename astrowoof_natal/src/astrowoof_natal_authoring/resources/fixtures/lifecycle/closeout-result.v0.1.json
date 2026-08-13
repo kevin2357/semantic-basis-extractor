@@ -1,0 +1,39 @@
+{
+  "schema_version": "astrowoof.authoring_closeout_result.v0.1",
+  "run_id": "run_fixture_002",
+  "disposition": "closed",
+  "decision_basis": {
+    "operator_state_revision": 20,
+    "snapshot_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-13T18:10:00Z",
+    "native_exclusive_access": "established",
+    "writer_race_possible": false
+  },
+  "terminal": {
+    "outcome": "delivery_complete",
+    "terminal": true,
+    "terminal_reason": "delivery_complete",
+    "deck_bytes_exist": true,
+    "native_qa_passed": true,
+    "assembly_lint_validation_accepted": true,
+    "delivery_package_complete": true,
+    "delivery_publishable": true,
+    "provider_continuation_remains": false,
+    "local_continuation_remains": false
+  },
+  "local_dependencies": [],
+  "unresolved_action_ids": [],
+  "result_checkpoint": {
+    "operator_state_revision": 21,
+    "snapshot_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "result_artifact": {
+      "logical_path": "lifecycle/closeout-result.json",
+      "bytes": 1204,
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888"
+    }
+  },
+  "semantic_result_sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+}

@@ -1,7 +1,7 @@
 # Authoring Lifecycle and Structured Logging Sprint 1 Plan
 
 ```yaml
-status: proposed
+status: in_progress
 date: 2026-08-13
 owner: semantic-basis-extractor
 consumer: astrowoof-api
@@ -78,6 +78,39 @@ focused implementation boundary.
   responses, dog birth data, or other sensitive payloads.
 - Exact-time behavior remains backward compatible unless a versioned contract
   explicitly says otherwise.
+- Mutating lifecycle operations bind their decision to an exact pre-mutation
+  operator revision and validated snapshot, then return the distinct durable
+  result artifact, new operator revision, and post-mutation validated snapshot.
+- API reservation release and lease validity remain API authority. SBE reports
+  native disposition, eligibility, and an uninterpreted bounded external authority
+  reference; it never accepts a raw lease token or claims to release API funds.
+
+## Approved contract refinements
+
+- Provider-less denial covers exact `PREPARED` and `AUTHORIZED` actions only when
+  no submission, consumption, provider identity, or provider evidence exists.
+  `SUBMITTING` without durable identity and every later/ambiguous state fail closed.
+- Negative decisions use `DENIED_PROVIDERLESS`, preserve whether authorization had
+  previously been recorded, and bind the complete immutable action identity,
+  request version, run/action IDs, observed revision/snapshot, closed denial reason,
+  and opaque external authority/fencing reference.
+- Action inventory separates deterministic presentation order from execution
+  dependency and reports necessity, independence/supersession/blocking, eligibility,
+  and exact ineligibility reason. Provider ledger state is not editorial acceptance.
+- Quiescence is a point-in-time observation bound to revision, snapshot SHA-256,
+  logical root, inventory validity, timestamp, and native exclusivity/race facts.
+- Local continuation is a typed, versioned dependency inventory rather than only a
+  Boolean. Terminal output separately reports deck existence, native QA, assembly/
+  lint/validation acceptance, delivery completeness, publishability, policy/review/
+  failure terminality, and remaining provider or local continuation.
+- Closeout persists a durable native result artifact and complete checkpoint;
+  repeat closeout preserves the same semantic disposition and accepted delivery.
+- JSONL event files live outside the authoritative workspace. An opt-in stdout
+  adapter emits only typed envelopes (including the final result); human diagnostics
+  use stderr. Python callers receive normal typed results and may inject a sink.
+- Event names and lifecycle reasons are closed, versioned vocabularies. Unknown
+  consumer events cannot affect execution. Sink failure cannot affect native state;
+  serialization/schema failures surface only as bounded safe warnings/counters.
 
 ## Slice 1: Contract vocabulary and schemas
 
@@ -107,6 +140,10 @@ Define the public lifecycle and event vocabulary before changing execution.
 
 Consumer review confirms every API closeout question has a typed answer and no
 event is needed to authorize a state transition.
+
+Before closing this slice, remind Kevin to loop in the AstroWoof API agent for a
+review of the schemas, vocabularies, sanitized fixtures, and read-only inspection
+shape. Record the review outcome in `LOG.md` and `EVIDENCE.md`.
 
 ## Slice 2: Read-only lifecycle inspection
 

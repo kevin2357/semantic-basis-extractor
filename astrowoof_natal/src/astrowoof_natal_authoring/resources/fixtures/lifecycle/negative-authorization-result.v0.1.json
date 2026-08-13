@@ -1,0 +1,29 @@
+{
+  "schema_version": "astrowoof.provider_negative_authorization_result.v0.1",
+  "run_id": "run_fixture_001",
+  "action_id": "paid_0123456789abcdef01234567",
+  "disposition": "DENIED_PROVIDERLESS",
+  "denial_reason": "reservation_unavailable",
+  "authorization_previously_recorded": true,
+  "release_eligible": true,
+  "external_authority_reference": "api-fence:fixture-001",
+  "decision_basis": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-13T18:00:00Z",
+    "native_exclusive_access": "established",
+    "writer_race_possible": false
+  },
+  "result_checkpoint": {
+    "operator_state_revision": 13,
+    "snapshot_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "result_artifact": {
+      "logical_path": "lifecycle/negative-authorizations/paid_0123456789abcdef01234567.json",
+      "bytes": 942,
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  }
+}

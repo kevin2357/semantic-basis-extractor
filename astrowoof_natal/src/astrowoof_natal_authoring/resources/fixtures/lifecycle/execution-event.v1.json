@@ -1,0 +1,23 @@
+{
+  "schema_version": "sbe.execution_event.v1",
+  "envelope_type": "execution_event",
+  "event_id": "evt_fixture_001",
+  "event_time": "2026-08-13T18:15:00Z",
+  "event_name": "authorization.denied_providerless",
+  "severity": "info",
+  "component": "astrowoof-natal-authoring",
+  "release": "0.2.2",
+  "correlation": {
+    "api_run_id": "api-run-fixture",
+    "api_job_id": "api-job-fixture",
+    "api_attempt_id": "api-attempt-fixture",
+    "external_authority_reference": "api-fence:fixture-001",
+    "native_run_id": "run_fixture_001",
+    "action_id": "paid_0123456789abcdef01234567"
+  },
+  "data": {
+    "disposition": "DENIED_PROVIDERLESS",
+    "denial_reason": "reservation_unavailable",
+    "operator_state_revision": 13
+  }
+}

@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.authoring_lifecycle_contracts.v0.1",
+  "title": "AstroWoof authoring lifecycle public contracts",
+  "oneOf": [
+    {"$ref": "#/$defs/negativeAuthorizationRequest"},
+    {"$ref": "#/$defs/negativeAuthorizationResult"},
+    {"$ref": "#/$defs/actionInventory"},
+    {"$ref": "#/$defs/lifecycleInspection"},
+    {"$ref": "#/$defs/closeoutResult"},
+    {"$ref": "#/$defs/executionEvent"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "boundedOpaqueReference": {
+      "type": "string", "minLength": 1, "maxLength": 512,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "actionState": {
+      "enum": [
+        "PREPARED", "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED",
+        "WAITING", "REPORTED", "DENIED_PROVIDERLESS", "BUDGET_EXHAUSTED",
+        "SKIPPED_BUDGET_EXHAUSTED", "AMBIGUOUS_PROVIDER_SUBMISSION"
+      ]
+    },
+    "denialReason": {
+      "enum": [
+        "external_authority_denied", "reservation_unavailable",
+        "product_policy_denied", "run_cancelled_before_submission"
+      ]
+    },
+    "eligibilityReason": {
+      "enum": [
+        "eligible_prepared", "eligible_authorized_unconsumed",
+        "already_denied_providerless", "state_not_providerless",
+        "submission_ambiguous", "consumption_evidence_present",
+        "provider_identity_present", "provider_evidence_present",
+        "binding_mismatch", "revision_mismatch", "snapshot_mismatch",
+        "action_superseded", "action_no_longer_necessary",
+        "native_state_inconsistent"
+      ]
+    },
+    "ambiguityReviewReason": {
+      "enum": [
+        "submitting_without_provider_identity", "provider_identity_present",
+        "provider_consumption_present", "provider_evidence_present",
+        "immutable_binding_mismatch", "operator_revision_mismatch",
+        "snapshot_identity_mismatch", "snapshot_incomplete_or_invalid",
+        "native_state_inconsistent", "writer_race_possible"
+      ]
+    },
+    "binding": {
+      "type": "object",
+      "required": [
+        "run_id", "profile_sha256", "prepared_state_revision", "stage",
+        "route", "request_sha256", "model", "service_level",
+        "maximum_output_tokens", "commitment_micro_usd", "price_book_version"
+      ],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "profile_sha256": {"$ref": "#/$defs/sha256"},
+        "prepared_state_revision": {"type": "integer", "minimum": 0},
+        "stage": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]},
+        "route": {"type": "string", "minLength": 1},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "model": {"type": "string", "minLength": 1},
+        "service_level": {"enum": ["interactive", "batch"]},
+        "maximum_output_tokens": {"type": "integer", "minimum": 1},
+        "commitment_micro_usd": {"type": "integer", "minimum": 0},
+        "price_book_version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "snapshotObservation": {
+      "type": "object",
+      "required": [
+        "operator_state_revision", "snapshot_sha256", "logical_workspace_root",
+        "snapshot_complete", "inventory_valid", "observed_at",
+        "native_exclusive_access", "writer_race_possible"
+      ],
+      "properties": {
+        "operator_state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "snapshot_complete": {"type": "boolean"},
+        "inventory_valid": {"type": "boolean"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "native_exclusive_access": {"enum": ["established", "declared", "not_established", "unknown"]},
+        "writer_race_possible": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "checkpointResult": {
+      "type": "object",
+      "required": ["operator_state_revision", "snapshot_sha256", "result_artifact"],
+      "properties": {
+        "operator_state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "result_artifact": {
+          "type": "object",
+          "required": ["logical_path", "bytes", "sha256"],
+          "properties": {
+            "logical_path": {"type": "string", "minLength": 1},
+            "bytes": {"type": "integer", "minimum": 1},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "required": [
+        "action_id", "route", "pass_id", "attempt", "state", "binding",
+        "necessary", "relationship", "providerless_denial_eligible",
+        "eligibility_reason", "authorization_previously_recorded"
+      ],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "route": {"type": "string", "minLength": 1},
+        "pass_id": {"type": ["string", "null"]},
+        "attempt": {"type": "integer", "minimum": 1},
+        "state": {"$ref": "#/$defs/actionState"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "necessary": {"type": "boolean"},
+        "relationship": {"enum": ["independent", "superseded", "blocking"]},
+        "providerless_denial_eligible": {"type": "boolean"},
+        "eligibility_reason": {"$ref": "#/$defs/eligibilityReason"},
+        "authorization_previously_recorded": {"type": "boolean"},
+        "blocking_action_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "ambiguity_review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "actionInventory": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "observation", "ordering_semantics", "actions"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_action_inventory.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/snapshotObservation"},
+        "ordering_semantics": {"const": "deterministic_presentation_only_not_execution_order"},
+        "actions": {"type": "array", "items": {"$ref": "#/$defs/action"}}
+      },
+      "additionalProperties": false
+    },
+    "localDependency": {
+      "type": "object",
+      "required": ["kind", "blocking", "reason_code"],
+      "properties": {
+        "kind": {"enum": [
+          "deterministic_qa", "local_assembly", "provider_submission_ambiguity",
+          "provider_result_reconciliation", "retry_preparation", "polish",
+          "critic_execution", "delivery_construction", "native_state_repair_review",
+          "other_versioned_native_continuation"
+        ]},
+        "blocking": {"type": "boolean"},
+        "reason_code": {"type": "string", "minLength": 1, "maxLength": 128}
+      },
+      "additionalProperties": false
+    },
+    "terminalSummary": {
+      "type": "object",
+      "required": [
+        "outcome", "terminal", "terminal_reason", "deck_bytes_exist",
+        "native_qa_passed", "assembly_lint_validation_accepted",
+        "delivery_package_complete", "delivery_publishable",
+        "provider_continuation_remains", "local_continuation_remains"
+      ],
+      "properties": {
+        "outcome": {"enum": ["nonterminal", "delivery_complete", "policy_stopped", "review_required", "budget_exhausted", "ambiguous", "failed"]},
+        "terminal": {"type": "boolean"},
+        "terminal_reason": {"type": ["string", "null"], "enum": [null, "delivery_complete", "native_policy_stop", "native_qa_failure", "budget_exhausted", "providerless_denial", "review_required", "ambiguous_provider_submission", "native_failure"]},
+        "deck_bytes_exist": {"type": "boolean"},
+        "native_qa_passed": {"type": "boolean"},
+        "assembly_lint_validation_accepted": {"type": "boolean"},
+        "delivery_package_complete": {"type": "boolean"},
+        "delivery_publishable": {"type": "boolean"},
+        "provider_continuation_remains": {"type": "boolean"},
+        "local_continuation_remains": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "lifecycleInspection": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "observation", "terminal", "local_dependencies", "action_inventory"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/snapshotObservation"},
+        "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
+        "action_inventory": {"$ref": "#/$defs/actionInventory"},
+        "review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "negativeAuthorizationRequest": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "action_id", "binding", "observed", "denial_reason", "external_authority_reference"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_request.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "observed": {"$ref": "#/$defs/snapshotObservation"},
+        "denial_reason": {"$ref": "#/$defs/denialReason"},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"}
+      },
+      "additionalProperties": false
+    },
+    "negativeAuthorizationResult": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "action_id", "disposition", "denial_reason", "authorization_previously_recorded", "release_eligible", "external_authority_reference", "decision_basis", "result_checkpoint"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_result.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "disposition": {"const": "DENIED_PROVIDERLESS"},
+        "denial_reason": {"$ref": "#/$defs/denialReason"},
+        "authorization_previously_recorded": {"type": "boolean"},
+        "release_eligible": {"type": "boolean"},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
+      },
+      "additionalProperties": false
+    },
+    "closeoutResult": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "disposition", "decision_basis", "terminal", "local_dependencies", "unresolved_action_ids", "result_checkpoint", "semantic_result_sha256"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.authoring_closeout_result.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "disposition": {"enum": ["closed", "continuation_required", "review_required", "ambiguous"]},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
+        "unresolved_action_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"},
+        "semantic_result_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "executionEvent": {
+      "type": "object",
+      "required": ["schema_version", "envelope_type", "event_id", "event_time", "event_name", "severity", "component", "release", "correlation", "data"],
+      "properties": {
+        "schema_version": {"const": "sbe.execution_event.v1"},
+        "envelope_type": {"const": "execution_event"},
+        "event_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "event_time": {"type": "string", "format": "date-time"},
+        "event_name": {"enum": [
+          "run.started", "run.resumed", "run.detached", "pass.prepared",
+          "authorization.awaiting", "authorization.granted",
+          "authorization.denied_providerless", "provider.submission_started",
+          "provider.identity_recorded", "provider.waiting", "provider.completed",
+          "qa.started", "qa.completed", "retry.decided", "polish.decided",
+          "critic.decided", "checkpoint.committed", "terminal.transitioned",
+          "closeout.completed", "execution.failed", "event_sink.warning"
+        ]},
+        "severity": {"enum": ["debug", "info", "warning", "error"]},
+        "component": {"const": "astrowoof-natal-authoring"},
+        "release": {"type": "string", "minLength": 1},
+        "correlation": {
+          "type": "object",
+          "properties": {
+            "api_run_id": {"type": "string", "maxLength": 128},
+            "api_job_id": {"type": "string", "maxLength": 128},
+            "api_attempt_id": {"type": "string", "maxLength": 128},
+            "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+            "native_run_id": {"type": "string", "maxLength": 128},
+            "action_id": {"type": "string", "maxLength": 128},
+            "pass_id": {"type": "string", "maxLength": 128}
+          },
+          "additionalProperties": false
+        },
+        "data": {"$ref": "#/$defs/eventData"}
+      },
+      "additionalProperties": false
+    },
+    "eventData": {
+      "type": "object",
+      "maxProperties": 24,
+      "propertyNames": {"pattern": "^(?!prompt$|request_body$|response_body$|provider_response$|birth_date$|birth_datetime$|birth_latitude$|birth_longitude$|birth_location$|lease_token$|api_key$|authorization_token$).+"},
+      "additionalProperties": {"$ref": "#/$defs/eventValue"}
+    },
+    "eventValue": {
+      "anyOf": [
+        {"type": "string", "maxLength": 1024},
+        {"type": "integer"},
+        {"type": "number"},
+        {"type": "boolean"},
+        {"type": "null"},
+        {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/eventValue"}},
+        {"$ref": "#/$defs/eventData"}
+      ]
+    }
+  }
+}

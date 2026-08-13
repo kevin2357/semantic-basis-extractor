@@ -1,0 +1,42 @@
+{
+  "schema_version": "astrowoof.provider_action_inventory.v0.1",
+  "run_id": "run_fixture_001",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-13T18:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "ordering_semantics": "deterministic_presentation_only_not_execution_order",
+  "actions": [{
+    "action_id": "paid_0123456789abcdef01234567",
+    "route": "ella:polish:002",
+    "pass_id": null,
+    "attempt": 2,
+    "state": "AUTHORIZED",
+    "binding": {
+      "run_id": "run_fixture_001",
+      "profile_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "prepared_state_revision": 12,
+      "stage": "polish",
+      "route": "ella:polish:002",
+      "request_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "model": "gpt-5.6",
+      "service_level": "batch",
+      "maximum_output_tokens": 8000,
+      "commitment_micro_usd": 125000,
+      "price_book_version": "openai-public-2026-08-07.v1"
+    },
+    "necessary": true,
+    "relationship": "blocking",
+    "providerless_denial_eligible": true,
+    "eligibility_reason": "eligible_authorized_unconsumed",
+    "authorization_previously_recorded": true,
+    "blocking_action_ids": [],
+    "ambiguity_review_reasons": []
+  }]
+}
