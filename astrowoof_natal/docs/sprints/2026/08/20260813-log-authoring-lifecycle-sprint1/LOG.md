@@ -61,3 +61,13 @@
 - Focused event and lifecycle tests passed (27), plus an exact provider lifecycle
   correlation test. Event loss and sink failure leave native execution truth intact.
 - The full post-Slice-5 repository suite passed all 212 tests.
+- Committed and pushed Slice 5 as `d585bda`.
+- Implemented Slice 6's dedicated lifecycle CLI, installed provider-free smoke,
+  packaged catalog additions, source consumer tests, and API worker handoff.
+- Built a temporary 0.2.2 qualification wheel, installed it in a fresh venv outside
+  the source tree, and passed `--require-installed` lifecycle smoke. Recorded its
+  SHA-256 as non-promoted qualification evidence only.
+- Invoked both installed console entry points successfully. The full post-Slice-6
+  repository suite passed all 214 tests.
+- Marked the six-slice sprint complete. No paid provider work, tag, release artifact
+  promotion, publication, or API pinning occurred.

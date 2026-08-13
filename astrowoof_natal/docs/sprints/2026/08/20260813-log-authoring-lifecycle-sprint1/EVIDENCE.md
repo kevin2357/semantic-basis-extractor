@@ -227,3 +227,77 @@ python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
 Ran 212 tests in 130.515s
 OK
 ```
+
+## Slice 6: consumer surface and installed-runtime qualification
+
+Status: complete.
+
+Artifacts:
+
+- `astrowoof-authoring-lifecycle` console entry point
+- `astrowoof-lifecycle-smoke` console entry point
+- `astrowoof_natal_authoring/cli/lifecycle.py`
+- `astrowoof_natal_authoring/lifecycle_smoke.py`
+- `tests/test_lifecycle_consumer.py`
+- `docs/post_extraction_authoring/Authoring Lifecycle Consumer Handoff.md`
+- `SLICE 6 CONSUMER.md`
+
+Focused source consumer tests:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_consumer -v
+
+Ran 2 tests in 0.949s
+OK
+```
+
+Fresh installed-wheel qualification:
+
+```text
+pip wheel --no-deps --no-build-isolation --wheel-dir <temp>/dist .
+python -m venv <temp>/venv
+<temp>/venv/python -m pip install --no-index --no-deps <wheel>
+<temp>/venv/python -m astrowoof_natal_authoring.lifecycle_smoke \
+  --require-installed --work-dir <temp>/smoke-work
+
+status=pass
+runtime_module=<temp>/venv/Lib/site-packages/astrowoof_natal_authoring
+```
+
+Qualification wheel:
+
+- filename: `astrowoof_natal_authoring-0.2.2-py3-none-any.whl`
+- SHA-256: `29914a16f4c64075575cd5754796bc5bedef7c9573eea4f03db2c4dbd2dcc7fe`
+- status: temporary qualification only; not promoted, tagged, published, or accepted
+  as the next pinnable artifact
+
+Installed checks passed for packaged resources, prepared eligibility, applied native
+denial, post-denial classification, closeout disposition/replay, representative
+events, and complete final snapshot.
+
+Both installed console scripts were invoked from the fresh venv outside the source
+tree:
+
+- `astrowoof-lifecycle-smoke --require-installed`: pass
+- `astrowoof-authoring-lifecycle --run-dir <installed-smoke-run> inspect`: pass,
+  returned `astrowoof.authoring_lifecycle_inspection.v0.1` with a valid snapshot
+
+Full repository regression suite after Slice 6:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 214 tests in 146.637s
+OK
+```
+
+## Sprint acceptance
+
+All six slice gates pass. The sprint provides versioned lifecycle contracts,
+read-only inspection, native provider-less denial, idempotent recoverable closeout,
+typed structured events, dedicated installed consumer commands, packaged schemas and
+fixtures, installed smoke, and API handoff. No provider operation was submitted and
+qualification cost was `$0`.
+
+Release tagging, artifact promotion, publication, and API pinning are outside this
+sprint checkpoint and remain unperformed.

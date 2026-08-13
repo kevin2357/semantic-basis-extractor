@@ -17,6 +17,8 @@ astrowoof-semantic-closure = "astrowoof_natal_authoring.cli.closure:main"
 astrowoof-build-natal-basis = "astrowoof_natal_authoring.cli.extract:main"
 astrowoof-release-smoke = "astrowoof_natal_authoring.smoke:main"
 astrowoof-repair-polish-checkpoint = "astrowoof_natal_authoring.cli.repair:main"
+astrowoof-authoring-lifecycle = "astrowoof_natal_authoring.cli.lifecycle:main"
+astrowoof-lifecycle-smoke = "astrowoof_natal_authoring.lifecycle_smoke:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}
