@@ -20,3 +20,15 @@
   also requested explicit quiescence and required empty action arrays. All were
   incorporated; event-name-specific payload contracts were retained as a required
   Slice 5 refinement.
+- Slice 1 review revisions passed 11 focused tests and the full 177-test repository
+  suite. Committed and pushed as `c6bc862`; the Slice 1 consumer gate passed.
+- Began Slice 2 read-only lifecycle inspection. The initial implementation validates
+  exact snapshots without mutation, returns fail-closed typed inspection for invalid
+  snapshots, exposes provider identity/evidence/consumption, derives typed local
+  dependencies and quiescence, and produces schema-valid deterministic inventory.
+  Fourteen focused lifecycle tests currently pass.
+- Completed Slice 2 with broader state coverage and corrected reported actions so
+  durable reported evidence does not imply outstanding provider work. Eighteen
+  focused lifecycle tests and all 184 repository tests passed.
+- Added a sprint requirement to link the complete plan, log, and evidence documents
+  at every completed-slice handoff.

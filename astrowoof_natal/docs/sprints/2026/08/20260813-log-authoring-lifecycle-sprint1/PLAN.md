@@ -330,3 +330,6 @@ No bounded-birth-time functionality is required for this sprint to pass.
 `EVIDENCE.md` will record commands, counts, fixture identities, release artifacts,
 hashes, and acceptance outcomes as slices complete. `LOG.md` will record chronology,
 decisions, deviations, and blockers. Both start empty intentionally.
+
+Every completed-slice handoff will link the full sprint `PLAN.md`, `LOG.md`, and
+`EVIDENCE.md` so the complete current record is directly reviewable.

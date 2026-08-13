@@ -62,3 +62,38 @@ Consumer gate:
 - API-agent review completed and approved the boundary subject to four required
   revisions and two small improvements. All requested revisions were implemented;
   event-name-specific payload contracts are recorded as a required Slice 5 gate.
+
+## Slice 2: read-only lifecycle inspection
+
+Status: complete.
+
+Artifacts:
+
+- `astrowoof_natal_authoring/lifecycle.py`
+- `tests/test_lifecycle_inspection.py`
+- `SLICE 2 INSPECTION.md`
+
+Focused lifecycle qualification:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_contracts \
+  astrowoof_natal.tests.test_lifecycle_inspection -v
+
+Ran 18 tests in 0.340s
+OK
+```
+
+Coverage includes schema-valid prepared inspection, exact byte-level non-mutation,
+snapshot mismatch fail-closed behavior, provider identity/evidence/consumption,
+reported-action completion, terminal publishable delivery, review/budget/ambiguity
+distinctions, typed local dependencies and quiescence, and deterministic output with
+only the documented observation time varied.
+
+Full repository regression suite after Slice 2:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 184 tests in 126.930s
+OK
+```
