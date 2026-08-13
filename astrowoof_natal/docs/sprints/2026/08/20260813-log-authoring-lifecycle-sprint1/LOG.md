@@ -71,3 +71,7 @@
   repository suite passed all 214 tests.
 - Marked the six-slice sprint complete. No paid provider work, tag, release artifact
   promotion, publication, or API pinning occurred.
+- User authorized a new pinnable 0.3.0 release. Committed the versioned source as
+  `c3ac7a8`, built two byte-identical wheels, and qualified the exact artifact on
+  Windows 3.12 and offline Linux 3.11 with both lifecycle and full release smokes.
+  Final source suite passed 214 tests; provider operations and spend remained zero.

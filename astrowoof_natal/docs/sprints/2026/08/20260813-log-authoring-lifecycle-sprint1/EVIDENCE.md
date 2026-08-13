@@ -301,3 +301,26 @@ qualification cost was `$0`.
 
 Release tagging, artifact promotion, publication, and API pinning are outside this
 sprint checkpoint and remain unperformed.
+
+## 0.3.0 release qualification
+
+User subsequently authorized preparation, tagging, and publication of 0.3.0.
+
+- versioned source commit: `c3ac7a818f1af1eed151a3efb7d926243fbfbd67`
+- `SOURCE_DATE_EPOCH`: `1786656002`
+- two independent builds: byte-identical
+- wheel: `astrowoof_natal_authoring-0.3.0-py3-none-any.whl`
+- bytes: `660596`
+- SHA-256: `377c48ed37d337e42dc9392cc7b5e07a81c3b12c2e0638a50bf33ad1b18cd3b0`
+- wheel entries/cache entries: `58` / `0`
+- final source suite: 214 passed in 154.607s
+- Windows CPython 3.12.13 exact-wheel clean install, `pip check`, lifecycle smoke,
+  and complete release smoke: pass
+- offline Linux amd64 CPython 3.11.15 exact-wheel clean install, `pip check`,
+  lifecycle smoke, and complete release smoke: pass
+- resource count/digest on both platforms: 30 /
+  `d989f84404c9ef79fe310f938a8d1588b4714c7e971e85af0b0e7c098f931582`
+- provider operations/spend: 0 / `$0`
+
+Tag, publication, and authenticated download evidence follow after the release
+coordinates commit.
