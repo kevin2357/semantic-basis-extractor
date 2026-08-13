@@ -18,6 +18,7 @@ from .closure import (
     normalized_path,
     persist_state,
     sha256_file,
+    snapshot_inventory,
     validate_workspace_snapshot,
     write_json_atomic,
     write_workspace_snapshot,
@@ -590,10 +591,65 @@ def _semantic_closeout_content(inspection: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _closeout_artifact(state: dict[str, Any]) -> dict[str, Any]:
+    existing = state["lifecycle_closeout"]
+    return {
+        "schema_version": "astrowoof.authoring_closeout_record.v0.1",
+        "run_id": state["run_id"],
+        "decision_basis": deepcopy(existing["decision_basis"]),
+        "semantic": deepcopy(existing["semantic"]),
+        "semantic_result_sha256": existing["semantic_result_sha256"],
+    }
+
+
+def _recover_interrupted_closeout(run_dir: Path, state: dict[str, Any]) -> bool:
+    """Finish only the exact, cryptographically verified closeout write set."""
+    existing = state.get("lifecycle_closeout")
+    if not isinstance(existing, dict):
+        return False
+    if existing.get("result_state_revision") != state.get("state_revision"):
+        return False
+    artifact_path = run_dir / existing["result_artifact"]
+    staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+    expected_artifact = _closeout_artifact(state)
+    candidate = artifact_path if artifact_path.is_file() else staged_path
+    if not candidate.is_file() or load_json(candidate) != expected_artifact:
+        return False
+    manifest_path = run_dir / SNAPSHOT_NAME
+    if not manifest_path.is_file():
+        return False
+    manifest = load_json(manifest_path)
+    expected_members = {
+        item["path"]: item for item in manifest.get("members", [])
+    }
+    actual_members = {
+        item["path"]: item
+        for item in snapshot_inventory(run_dir, use_process_cache=False)
+    }
+    allowed_changed = {
+        "run.json", "public-run.json", "spend-authorization-requests.json",
+        existing["result_artifact"],
+    }
+    all_paths = set(expected_members) | set(actual_members)
+    changed = {
+        path for path in all_paths
+        if expected_members.get(path) != actual_members.get(path)
+    }
+    if not changed or not changed <= allowed_changed or "run.json" not in changed:
+        return False
+    if candidate == staged_path:
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.replace(artifact_path)
+    write_workspace_snapshot(run_dir)
+    validate_workspace_snapshot(run_dir, state)
+    return True
+
+
 def closeout_run(
     run_dir: Path,
     *,
     observed_at: str | None = None,
+    _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Persist and return one idempotent native lifecycle closeout result."""
     run_dir = run_dir.resolve()
@@ -604,7 +660,12 @@ def closeout_run(
         raise RuntimeError("Closeout could not establish native exclusive access")
     try:
         state = load_json(run_dir / "run.json")
-        validate_workspace_snapshot(run_dir, state)
+        try:
+            validate_workspace_snapshot(run_dir, state)
+        except ValueError:
+            if not _recover_interrupted_closeout(run_dir, state):
+                raise
+            state = load_json(run_dir / "run.json")
         existing = state.get("lifecycle_closeout")
         if (
             isinstance(existing, dict)
@@ -644,13 +705,6 @@ def closeout_run(
         ).hexdigest()
         artifact_relative = Path("lifecycle") / "closeout-result.json"
         artifact_path = run_dir / artifact_relative
-        artifact = {
-            "schema_version": "astrowoof.authoring_closeout_record.v0.1",
-            "run_id": state["run_id"],
-            "decision_basis": deepcopy(inspection["observation"]),
-            "semantic": semantic,
-            "semantic_result_sha256": semantic_sha256,
-        }
         anticipated_revision = int(state.get("state_revision") or 0) + 1
         state["lifecycle_closeout"] = {
             "result_state_revision": anticipated_revision,
@@ -659,11 +713,22 @@ def closeout_run(
             "semantic": deepcopy(semantic),
             "semantic_result_sha256": semantic_sha256,
         }
-        write_json_atomic(artifact_path, artifact)
+        staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+        write_json_atomic(staged_path, _closeout_artifact(state))
+        if _failure_injector:
+            _failure_injector("after_artifact_staged")
         persist_state(run_dir / "run.json", state)
         if state["state_revision"] != anticipated_revision:
             raise RuntimeError("Unexpected closeout state revision advance")
+        if _failure_injector:
+            _failure_injector("after_state_persisted")
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.replace(artifact_path)
+        if _failure_injector:
+            _failure_injector("after_artifact_promoted")
         write_workspace_snapshot(run_dir)
+        if _failure_injector:
+            _failure_injector("after_snapshot_published")
         validate_workspace_snapshot(run_dir, state)
         return {
             "schema_version": CLOSEOUT_RESULT_SCHEMA,

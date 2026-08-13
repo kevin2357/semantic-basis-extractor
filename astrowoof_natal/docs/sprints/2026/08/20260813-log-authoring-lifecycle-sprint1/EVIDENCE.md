@@ -138,3 +138,52 @@ OK
 An initial discovery run reported 201 passes because the Slice 3 module imported a
 Slice 2 `TestCase`, causing seven tests to execute twice. The fixture dependency was
 removed and the clean distinct-test count is 194.
+
+## Slice 4: idempotent terminal closeout
+
+Status: complete.
+
+Artifacts:
+
+- `closeout_run()` and constrained interrupted-commit recovery in
+  `astrowoof_natal_authoring/lifecycle.py`
+- `tests/test_lifecycle_closeout.py`
+- `SLICE 4 CLOSEOUT.md`
+
+Focused qualification:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_closeout -v
+
+Ran 9 tests in 1.568s
+OK
+```
+
+Coverage includes continuation closeout, completed publishable delivery with exact
+accepted-byte preservation, ambiguous unresolved provider work, byte-stable replay,
+active known provider identity, reported/reconciled evidence without false provider
+continuation, inspect-to-closeout decision-basis correlation, injected restart at all
+four durable-write boundaries, and fail-closed recovery for unrelated, missing, or
+altered bytes.
+
+Full repository regression suite after Slice 4:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 202 tests in 130.352s
+OK
+```
+
+API-agent review required removal of exception-only refusal behavior. Combined
+denial was removed from closeout; consumers use the typed stepwise denial result,
+fresh inspection, then closeout. The review also requested and received the known-
+provider and decision-basis correlation coverage described above. A new full-suite
+run follows these revisions.
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 203 tests in 140.635s
+OK
+```

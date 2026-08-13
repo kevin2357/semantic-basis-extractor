@@ -40,3 +40,18 @@
   atomicity boundary and retained exhaustive crash/restart injection for Slice 4.
 - The full post-Slice-3 suite passed 194 distinct tests. Removed an imported
   `TestCase` that had temporarily caused seven Slice 2 tests to be counted twice.
+- Committed and pushed the initial Slice 4 closeout foundation as `fc3f281`, clearly
+  retaining in-progress status while crash/restart qualification remained.
+- Completed Slice 4 with exact optional denial, durable semantic closeout artifacts,
+  idempotent replay, and constrained recovery at every staged/state/promoted/snapshot
+  boundary. Recovery verifies the exact intent and known write set; arbitrary changes
+  fail closed. Eight focused tests passed.
+- The full post-Slice-4 repository suite passed all 202 tests.
+- API-agent review approved the recovery/idempotency model and identified one gate
+  issue: combined denial converted a typed refusal into exception text. Chose the
+  explicitly offered stepwise public design and removed denial input from closeout.
+  Consumers now call typed denial, obtain a fresh inspection, then close out.
+- Added exact active-provider, reported/reconciled, and inspect-to-closeout decision-
+  basis correlation tests. Nine focused Slice 4 tests passed after review revisions.
+- The revised post-review repository suite passed all 203 tests. Slice 4's API gate
+  is complete.
