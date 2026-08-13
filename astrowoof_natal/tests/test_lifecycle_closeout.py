@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from astrowoof_natal_authoring.closure import normalized_path, write_workspace_snapshot  # noqa: E402
 from astrowoof_natal_authoring.lifecycle import closeout_run, inspect_lifecycle  # noqa: E402
 from astrowoof_natal_authoring.resource_access import read_resource_text  # noqa: E402
+from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
 from astrowoof_natal.tests.test_lifecycle_contracts import validate  # noqa: E402
 
 
@@ -279,6 +280,23 @@ class TestLifecycleCloseout(unittest.TestCase):
             self.assertEqual("declared", observed["native_exclusive_access"])
             self.assertEqual("established", basis["native_exclusive_access"])
             self.assertEqual("run_closeout_001", result["run_id"])
+
+    def test_closeout_event_loss_does_not_change_native_result(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root, self.state(root, status="AUTHORING_COMPLETE"))
+
+            def failing_sink(_event):
+                raise RuntimeError("offline")
+
+            emitter = ExecutionEventEmitter(release="test", sink=failing_sink)
+            result = closeout_run(root, event_emitter=emitter)
+            self.assertEqual("continuation_required", result["disposition"])
+            self.assertEqual(1, emitter.stats.sink_warnings)
+            replay = closeout_run(root)
+            self.assertEqual(
+                result["semantic_result_sha256"], replay["semantic_result_sha256"]
+            )
 
 
 if __name__ == "__main__":

@@ -33,6 +33,7 @@ from .lifecycle_contracts import (
     action_presentation_key,
     observation_transition_errors,
 )
+from .execution_events import ExecutionEventEmitter
 
 
 def _utc_now() -> str:
@@ -342,6 +343,7 @@ def deny_providerless_action(
     request: dict[str, Any],
     *,
     decision_at: str | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
 ) -> dict[str, Any]:
     """Durably deny one exact provider-less action or return typed refusal.
 
@@ -415,7 +417,7 @@ def deny_providerless_action(
                     actual_observation=observation,
                 )
             artifact_path = run_dir / existing["result_artifact"]
-            return {
+            result = {
                 "schema_version": NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
                 "run_id": state["run_id"],
                 "action_id": action["action_id"],
@@ -435,6 +437,13 @@ def deny_providerless_action(
                     "result_artifact": _artifact_descriptor(artifact_path, run_dir),
                 },
             }
+            if event_emitter is not None:
+                event_emitter.emit("authorization.denied_providerless", data={
+                    "action_id": action["action_id"],
+                    "denial_reason": existing["denial_reason"],
+                    "outcome": "idempotent_replay",
+                }, correlation={"action_id": action["action_id"]})
+            return result
         # Provider-bound evidence takes precedence over a generic stale-observation
         # refusal so a race across submission is machine-distinguishable.
         if action.get("consumption"):
@@ -539,7 +548,7 @@ def deny_providerless_action(
         write_json_atomic(artifact_path, native_record)
         write_workspace_snapshot(run_dir)
         validate_workspace_snapshot(run_dir, state)
-        return {
+        result = {
             "schema_version": NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
             "run_id": state["run_id"],
             "action_id": action["action_id"],
@@ -559,6 +568,13 @@ def deny_providerless_action(
                 "result_artifact": _artifact_descriptor(artifact_path, run_dir),
             },
         }
+        if event_emitter is not None:
+            event_emitter.emit("authorization.denied_providerless", data={
+                "action_id": action["action_id"],
+                "denial_reason": request["denial_reason"],
+                "outcome": "applied",
+            }, correlation={"action_id": action["action_id"]})
+        return result
     finally:
         lock.__exit__(None, None, None)
 
@@ -649,6 +665,7 @@ def closeout_run(
     run_dir: Path,
     *,
     observed_at: str | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
     _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Persist and return one idempotent native lifecycle closeout result."""
@@ -674,7 +691,7 @@ def closeout_run(
             artifact_path = run_dir / existing["result_artifact"]
             if not artifact_path.is_file():
                 raise ValueError("Durable closeout result artifact is missing")
-            return {
+            result = {
                 "schema_version": CLOSEOUT_RESULT_SCHEMA,
                 "run_id": state["run_id"],
                 "disposition": existing["semantic"]["disposition"],
@@ -690,6 +707,12 @@ def closeout_run(
                 },
                 "semantic_result_sha256": existing["semantic_result_sha256"],
             }
+            if event_emitter is not None:
+                event_emitter.emit("closeout.completed", data={
+                    "disposition": result["disposition"],
+                    "semantic_result_sha256": result["semantic_result_sha256"],
+                })
+            return result
         inspection = inspect_lifecycle(
             run_dir,
             native_exclusive_access="established",
@@ -730,7 +753,7 @@ def closeout_run(
         if _failure_injector:
             _failure_injector("after_snapshot_published")
         validate_workspace_snapshot(run_dir, state)
-        return {
+        result = {
             "schema_version": CLOSEOUT_RESULT_SCHEMA,
             "run_id": state["run_id"],
             "disposition": semantic["disposition"],
@@ -746,5 +769,11 @@ def closeout_run(
             },
             "semantic_result_sha256": semantic_sha256,
         }
+        if event_emitter is not None:
+            event_emitter.emit("closeout.completed", data={
+                "disposition": result["disposition"],
+                "semantic_result_sha256": result["semantic_result_sha256"],
+            })
+        return result
     finally:
         lock.__exit__(None, None, None)

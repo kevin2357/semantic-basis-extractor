@@ -187,3 +187,43 @@ python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
 Ran 203 tests in 140.635s
 OK
 ```
+
+## Slice 5: structured execution events
+
+Status: complete.
+
+Artifacts:
+
+- `astrowoof_natal_authoring/execution_events.py`
+- `resources/contracts/execution-event-payload-catalog.v1.json`
+- event wiring in provider spend control, CLI lifecycle, provider-less denial, and
+  closeout
+- `tests/test_execution_events.py`
+- `SLICE 5 EVENTS.md`
+
+Focused event/lifecycle qualification:
+
+```text
+python -m unittest astrowoof_natal.tests.test_execution_events \
+  astrowoof_natal.tests.test_negative_authorization \
+  astrowoof_natal.tests.test_lifecycle_closeout -v
+
+Ran 27 tests in 2.102s
+OK
+```
+
+An additional focused provider sequence test passed, proving exact action correlation
+across authorization, submission start, provider identity, waiting, and completion.
+Coverage also includes packaged catalog agreement, typed payload enforcement,
+recursive redaction, deterministic envelopes, JSONL file framing, stdout result
+framing, sink failure isolation, denial observation, and closeout truth preserved
+when events are lost.
+
+Full repository regression suite after Slice 5:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p 'test_*.py'
+
+Ran 212 tests in 130.515s
+OK
+```

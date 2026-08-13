@@ -1,0 +1,26 @@
+{
+  "schema_version": "sbe.execution_event_payload_catalog.v1",
+  "events": {
+    "run.started": {"required_fields": ["state_revision"]},
+    "run.resumed": {"required_fields": ["state_revision"]},
+    "run.detached": {"required_fields": ["state_revision", "reason_code"]},
+    "pass.prepared": {"required_fields": ["route", "attempt"]},
+    "authorization.awaiting": {"required_fields": ["action_id", "stage", "commitment_micro_usd"]},
+    "authorization.granted": {"required_fields": ["action_id", "stage", "commitment_micro_usd"]},
+    "authorization.denied_providerless": {"required_fields": ["action_id", "denial_reason", "outcome"]},
+    "provider.submission_started": {"required_fields": ["action_id", "stage", "attempt"]},
+    "provider.identity_recorded": {"required_fields": ["action_id", "provider_operation_id"]},
+    "provider.waiting": {"required_fields": ["action_id", "provider_operation_id"]},
+    "provider.completed": {"required_fields": ["action_id", "provider_operation_id", "duration_ms"]},
+    "qa.started": {"required_fields": ["scope", "attempt"]},
+    "qa.completed": {"required_fields": ["scope", "attempt", "outcome"]},
+    "retry.decided": {"required_fields": ["route", "attempt", "decision", "reason_code"]},
+    "polish.decided": {"required_fields": ["attempt", "decision", "reason_code"]},
+    "critic.decided": {"required_fields": ["decision", "reason_code"]},
+    "checkpoint.committed": {"required_fields": ["state_revision", "snapshot_sha256"]},
+    "terminal.transitioned": {"required_fields": ["outcome", "terminal_reason"]},
+    "closeout.completed": {"required_fields": ["disposition", "semantic_result_sha256"]},
+    "execution.failed": {"required_fields": ["reason_code", "failure_class"]},
+    "event_sink.warning": {"required_fields": ["warning_code", "dropped_event_count"]}
+  }
+}

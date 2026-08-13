@@ -26,6 +26,7 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
 )
 from astrowoof_natal_authoring.resource_access import read_resource_text  # noqa: E402
+from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
 from astrowoof_natal.tests.test_lifecycle_contracts import validate  # noqa: E402
 
 
@@ -320,6 +321,20 @@ class TestNegativeAuthorization(unittest.TestCase):
             actions = load_json(root / "run.json")["spend_ledger"]["actions"]
             self.assertEqual("DENIED_PROVIDERLESS", actions[0]["state"])
             self.assertEqual("PREPARED", actions[1]["state"])
+
+    def test_applied_denial_emits_bounded_non_authoritative_event(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request = self.materialize(root)
+            delivered = []
+            emitter = ExecutionEventEmitter(release="test", sink=delivered.append)
+            result = deny_providerless_action(root, request, event_emitter=emitter)
+            self.assertTrue(result["applied"])
+            self.assertEqual(1, len(delivered))
+            self.assertEqual(
+                "authorization.denied_providerless", delivered[0]["event_name"]
+            )
+            self.assertNotIn("binding", delivered[0]["data"])
 
 
 if __name__ == "__main__":

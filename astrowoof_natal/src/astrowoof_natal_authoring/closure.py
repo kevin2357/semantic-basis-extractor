@@ -31,6 +31,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Protocol
 
+from . import __version__
 from . import editorial_lint as editorial_lint_module
 from . import validation as validation_module
 from .assembly import assemble
@@ -41,6 +42,12 @@ from .contracts import (
     public_run_state,
 )
 from .editorial_lint import reader_facing_items
+from .execution_events import (
+    ExecutionEventEmitter,
+    JsonlEventSink,
+    StdoutJsonlSink,
+    command_result_envelope,
+)
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 from .provenance import (
     artifact_descriptor,
@@ -2514,11 +2521,13 @@ class SpendController:
         run_json: Path,
         state_lock: threading.Lock,
         consumer_id: str,
+        event_emitter: ExecutionEventEmitter | None = None,
     ) -> None:
         self.state = state
         self.run_json = run_json
         self.state_lock = state_lock
         self.consumer_id = consumer_id
+        self.event_emitter = event_emitter
         self.local = threading.local()
 
     @property
@@ -2579,6 +2588,14 @@ class SpendController:
         if resumed is not None:
             self.local.active_action = resumed["action_id"]
 
+        def emit(name: str, data: dict[str, Any]) -> None:
+            if self.event_emitter is not None:
+                action_id = data.get("action_id")
+                self.event_emitter.emit(
+                    name, data=data,
+                    correlation={"action_id": str(action_id)} if action_id else None,
+                )
+
         def before_submit(payload: dict[str, Any]) -> None:
             request_sha256 = spend_digest(payload)
             with self._consumption_lock(), self.state_lock:
@@ -2630,6 +2647,10 @@ class SpendController:
                     update_run_status(self.state)
                     persist_state(self.run_json, self.state)
                 if existing["state"] == "PREPARED":
+                    emit("authorization.awaiting", {
+                        "action_id": existing["action_id"], "stage": stage,
+                        "commitment_micro_usd": existing["binding"]["commitment_micro_usd"],
+                    })
                     raise AwaitingSpendAuthorization(
                         "Paid action requires external authorization",
                         action=existing,
@@ -2676,6 +2697,14 @@ class SpendController:
                 )
                 self.local.active_action = existing["action_id"]
                 persist_state(self.run_json, self.state)
+                emit("authorization.granted", {
+                    "action_id": existing["action_id"], "stage": stage,
+                    "commitment_micro_usd": existing["binding"]["commitment_micro_usd"],
+                })
+                emit("provider.submission_started", {
+                    "action_id": existing["action_id"], "stage": stage,
+                    "attempt": int(route.split(":")[-1]) if route.split(":")[-1].isdigit() else 1,
+                })
 
         def provider_created(provider_id: str | None, kind: str) -> None:
             with self.state_lock:
@@ -2715,6 +2744,10 @@ class SpendController:
                         "Provider ID could not be durably persisted",
                         action=action,
                     ) from exc
+                emit("provider.identity_recorded", {
+                    "action_id": action["action_id"],
+                    "provider_operation_id": str(provider_id),
+                })
 
         return before_submit, provider_created
 
@@ -2746,6 +2779,11 @@ class SpendController:
             if action["state"] == "PROVIDER_ID_RECORDED":
                 action["state"] = "WAITING"
                 persist_state(self.run_json, self.state)
+                if self.event_emitter is not None:
+                    self.event_emitter.emit("provider.waiting", data={
+                        "action_id": action["action_id"],
+                        "provider_operation_id": action["provider"]["id"],
+                    }, correlation={"action_id": action["action_id"]})
 
     def settle_active(self, metadata: dict[str, Any]) -> None:
         action_id = getattr(self.local, "active_action", None)
@@ -2763,6 +2801,13 @@ class SpendController:
                 estimated_micro_usd=estimated_micro_usd,
             )
             persist_state(self.run_json, self.state)
+            if self.event_emitter is not None:
+                provider = action.get("provider") or {}
+                self.event_emitter.emit("provider.completed", data={
+                    "action_id": action["action_id"],
+                    "provider_operation_id": str(provider.get("id") or ""),
+                    "duration_ms": int(metadata.get("duration_ms") or 0),
+                }, correlation={"action_id": action["action_id"]})
 
 
 def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
@@ -6074,6 +6119,22 @@ def main() -> None:
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument(
+        "--events-jsonl",
+        type=Path,
+        help=(
+            "Append typed non-authoritative execution events to a JSONL file "
+            "outside the authoritative run workspace."
+        ),
+    )
+    parser.add_argument(
+        "--events-stdout-jsonl",
+        action="store_true",
+        help=(
+            "Emit typed event envelopes and one final typed result envelope as "
+            "JSONL on stdout; human diagnostics remain on stderr."
+        ),
+    )
+    parser.add_argument(
         "--spend-policy",
         type=Path,
         help=(
@@ -6314,6 +6375,16 @@ def main() -> None:
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
     args = parser.parse_args()
+    if args.events_jsonl is not None and args.events_stdout_jsonl:
+        parser.error("choose only one of --events-jsonl and --events-stdout-jsonl")
+    if args.events_stdout_jsonl and (args.compare_cost_runs or args.cleanup_completed_run):
+        parser.error("--events-stdout-jsonl is supported for authoring commands")
+
+    def output_result(value: dict[str, Any]) -> None:
+        if args.events_stdout_jsonl:
+            StdoutJsonlSink()(command_result_envelope(value))
+        else:
+            print(json.dumps(value, ensure_ascii=False, indent=2))
     args.spend_policy_value = (
         load_json(args.spend_policy) if args.spend_policy else None
     )
@@ -6326,19 +6397,27 @@ def main() -> None:
         report = compare_cost_runs(*args.compare_cost_runs)
         if args.cost_report_output:
             write_json_atomic(args.cost_report_output, report)
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        output_result(report)
         return
     if args.cleanup_completed_run:
         report = cleanup_completed_run(
             args.cleanup_completed_run,
             dry_run=args.cleanup_dry_run,
         )
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        output_result(report)
         return
     if args.cleanup_dry_run:
         parser.error("--cleanup-dry-run requires --cleanup-completed-run")
     if args.run_dir is None:
         parser.error("--run-dir is required for authoring and prompt reports")
+    if args.events_jsonl is not None:
+        event_path = args.events_jsonl.resolve()
+        try:
+            event_path.relative_to(args.run_dir.resolve())
+        except ValueError:
+            pass
+        else:
+            parser.error("--events-jsonl must be outside the authoritative run workspace")
     if args.max_attempts < 1:
         parser.error("--max-attempts must be at least 1")
     if args.max_workers < 1:
@@ -6482,6 +6561,24 @@ def main() -> None:
             full_chart_basis_format=args.full_chart_basis_format,
             profile=profile_from_args(args),
         )
+    event_emitter = (
+        ExecutionEventEmitter(
+            release=__version__,
+            sink=(
+                StdoutJsonlSink()
+                if args.events_stdout_jsonl
+                else JsonlEventSink(args.events_jsonl)
+            ),
+            base_correlation={"native_run_id": str(state.get("run_id") or "")},
+        )
+        if args.events_jsonl is not None or args.events_stdout_jsonl
+        else None
+    )
+    if event_emitter is not None:
+        event_emitter.emit(
+            "run.resumed" if args.resume else "run.started",
+            data={"state_revision": int(state.get("state_revision") or 0)},
+        )
     if args.spend_authorization:
         documents = [load_json(path) for path in args.spend_authorization]
         try:
@@ -6498,6 +6595,7 @@ def main() -> None:
             run_json=run_json,
             state_lock=threading.Lock(),
             consumer_id=f"pid:{os.getpid()}",
+            event_emitter=event_emitter,
         )
         if args.provider == "openai"
         else None
@@ -6511,7 +6609,7 @@ def main() -> None:
             provider=provider,
         )
         write_json_atomic(args.prompt_layout_report, report)
-        print(json.dumps(report, ensure_ascii=False, indent=2))
+        output_result(report)
         return
     authoring_complete = True
     with checkpoint_spend_boundary(run_json, state):
@@ -6547,7 +6645,16 @@ def main() -> None:
     if not authoring_complete:
         update_run_status(state)
         save_state(run_json, state)
-        print(json.dumps(state, ensure_ascii=False, indent=2))
+        if event_emitter is not None:
+            event_emitter.emit("run.detached", data={
+                "state_revision": int(state.get("state_revision") or 0),
+                "reason_code": "batch_detach_or_provider_wait",
+            })
+            event_emitter.emit("checkpoint.committed", data={
+                "state_revision": int(state.get("state_revision") or 0),
+                "snapshot_sha256": sha256_file(args.run_dir / SNAPSHOT_NAME),
+            })
+        output_result(state)
         return
     with checkpoint_spend_boundary(run_json, state):
         finalize_subjects(
@@ -6577,7 +6684,25 @@ def main() -> None:
                     )
     update_run_status(state)
     save_state(run_json, state)
-    print(json.dumps(state, ensure_ascii=False, indent=2))
+    if event_emitter is not None:
+        event_emitter.emit("checkpoint.committed", data={
+            "state_revision": int(state.get("state_revision") or 0),
+            "snapshot_sha256": sha256_file(args.run_dir / SNAPSHOT_NAME),
+        })
+        terminal_reason = {
+            "DELIVERY_COMPLETE": "delivery_complete",
+            "DELIVERY_COMPLETE_WITH_WARNINGS": "delivery_complete",
+            "FINAL_QA_FAILED": "native_qa_failure",
+            "FINAL_QA_REQUIRES_REVIEW": "review_required",
+            "FAILED_REQUIRES_REVIEW": "review_required",
+            "BUDGET_EXHAUSTED": "budget_exhausted",
+            "AMBIGUOUS_PROVIDER_SUBMISSION": "ambiguous_provider_submission",
+        }.get(state["status"])
+        if terminal_reason is not None:
+            event_emitter.emit("terminal.transitioned", data={
+                "outcome": state["status"], "terminal_reason": terminal_reason,
+            })
+    output_result(state)
     if state["status"] in {
         "FAILED_REQUIRES_REVIEW",
         "FINAL_QA_FAILED",

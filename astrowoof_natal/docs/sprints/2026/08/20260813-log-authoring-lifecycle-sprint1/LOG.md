@@ -55,3 +55,9 @@
   basis correlation tests. Nine focused Slice 4 tests passed after review revisions.
 - The revised post-review repository suite passed all 203 tests. Slice 4's API gate
   is complete.
+- Implemented Slice 5's packaged event-name payload catalog, failure-isolated Python
+  emitter, external-workspace JSONL sink, typed stdout JSONL/result framing, and
+  lifecycle/provider/denial/closeout wiring.
+- Focused event and lifecycle tests passed (27), plus an exact provider lifecycle
+  correlation test. Event loss and sink failure leave native execution truth intact.
+- The full post-Slice-5 repository suite passed all 212 tests.
