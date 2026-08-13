@@ -23,6 +23,7 @@ from .closure import (
     write_workspace_snapshot,
 )
 from .lifecycle_contracts import (
+    CLOSEOUT_RESULT_SCHEMA,
     DENIAL_REASONS,
     LIFECYCLE_INSPECTION_SCHEMA,
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
@@ -556,6 +557,129 @@ def deny_providerless_action(
                 "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
                 "result_artifact": _artifact_descriptor(artifact_path, run_dir),
             },
+        }
+    finally:
+        lock.__exit__(None, None, None)
+
+
+def _semantic_closeout_content(inspection: dict[str, Any]) -> dict[str, Any]:
+    terminal = inspection["terminal"]
+    if terminal["outcome"] == "ambiguous":
+        disposition = "ambiguous"
+    elif terminal["outcome"] in {"review_required", "failed"}:
+        disposition = "review_required"
+    elif (
+        terminal["provider_continuation_remains"]
+        or terminal["local_continuation_remains"]
+    ):
+        disposition = "continuation_required"
+    elif inspection["quiescence"]["state"] == "quiescent":
+        disposition = "closed"
+    else:
+        disposition = "review_required"
+    unresolved = [
+        item["action_id"] for item in inspection["action_inventory"]["actions"]
+        if item["necessary"]
+    ]
+    return {
+        "disposition": disposition,
+        "terminal": deepcopy(terminal),
+        "quiescence": deepcopy(inspection["quiescence"]),
+        "local_dependencies": deepcopy(inspection["local_dependencies"]),
+        "unresolved_action_ids": unresolved,
+    }
+
+
+def closeout_run(
+    run_dir: Path,
+    *,
+    observed_at: str | None = None,
+) -> dict[str, Any]:
+    """Persist and return one idempotent native lifecycle closeout result."""
+    run_dir = run_dir.resolve()
+    try:
+        lock = _exclusive_lifecycle_lock(run_dir)
+        lock.__enter__()
+    except (OSError, BlockingIOError):
+        raise RuntimeError("Closeout could not establish native exclusive access")
+    try:
+        state = load_json(run_dir / "run.json")
+        validate_workspace_snapshot(run_dir, state)
+        existing = state.get("lifecycle_closeout")
+        if (
+            isinstance(existing, dict)
+            and existing.get("result_state_revision") == state.get("state_revision")
+        ):
+            artifact_path = run_dir / existing["result_artifact"]
+            if not artifact_path.is_file():
+                raise ValueError("Durable closeout result artifact is missing")
+            return {
+                "schema_version": CLOSEOUT_RESULT_SCHEMA,
+                "run_id": state["run_id"],
+                "disposition": existing["semantic"]["disposition"],
+                "decision_basis": deepcopy(existing["decision_basis"]),
+                "terminal": deepcopy(existing["semantic"]["terminal"]),
+                "quiescence": deepcopy(existing["semantic"]["quiescence"]),
+                "local_dependencies": deepcopy(existing["semantic"]["local_dependencies"]),
+                "unresolved_action_ids": list(existing["semantic"]["unresolved_action_ids"]),
+                "result_checkpoint": {
+                    "operator_state_revision": state["state_revision"],
+                    "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+                    "result_artifact": _artifact_descriptor(artifact_path, run_dir),
+                },
+                "semantic_result_sha256": existing["semantic_result_sha256"],
+            }
+        inspection = inspect_lifecycle(
+            run_dir,
+            native_exclusive_access="established",
+            observed_at=observed_at or _utc_now(),
+        )
+        if not inspection["observation"]["inventory_valid"]:
+            raise ValueError("Closeout requires one complete validated workspace snapshot")
+        semantic = _semantic_closeout_content(inspection)
+        semantic_sha256 = hashlib.sha256(
+            json.dumps(
+                semantic, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
+        artifact_relative = Path("lifecycle") / "closeout-result.json"
+        artifact_path = run_dir / artifact_relative
+        artifact = {
+            "schema_version": "astrowoof.authoring_closeout_record.v0.1",
+            "run_id": state["run_id"],
+            "decision_basis": deepcopy(inspection["observation"]),
+            "semantic": semantic,
+            "semantic_result_sha256": semantic_sha256,
+        }
+        anticipated_revision = int(state.get("state_revision") or 0) + 1
+        state["lifecycle_closeout"] = {
+            "result_state_revision": anticipated_revision,
+            "result_artifact": artifact_relative.as_posix(),
+            "decision_basis": deepcopy(inspection["observation"]),
+            "semantic": deepcopy(semantic),
+            "semantic_result_sha256": semantic_sha256,
+        }
+        write_json_atomic(artifact_path, artifact)
+        persist_state(run_dir / "run.json", state)
+        if state["state_revision"] != anticipated_revision:
+            raise RuntimeError("Unexpected closeout state revision advance")
+        write_workspace_snapshot(run_dir)
+        validate_workspace_snapshot(run_dir, state)
+        return {
+            "schema_version": CLOSEOUT_RESULT_SCHEMA,
+            "run_id": state["run_id"],
+            "disposition": semantic["disposition"],
+            "decision_basis": inspection["observation"],
+            "terminal": semantic["terminal"],
+            "quiescence": semantic["quiescence"],
+            "local_dependencies": semantic["local_dependencies"],
+            "unresolved_action_ids": semantic["unresolved_action_ids"],
+            "result_checkpoint": {
+                "operator_state_revision": state["state_revision"],
+                "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+                "result_artifact": _artifact_descriptor(artifact_path, run_dir),
+            },
+            "semantic_result_sha256": semantic_sha256,
         }
     finally:
         lock.__exit__(None, None, None)
