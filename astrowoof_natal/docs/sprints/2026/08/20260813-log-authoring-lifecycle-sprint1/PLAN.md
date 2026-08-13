@@ -111,6 +111,15 @@ focused implementation boundary.
 - Event names and lifecycle reasons are closed, versioned vocabularies. Unknown
   consumer events cannot affect execution. Sink failure cannot affect native state;
   serialization/schema failures surface only as bounded safe warnings/counters.
+- Action inventory exposes bounded durable provider identity and explicit native
+  identity/evidence/consumption facts. Required empty arrays remove missing-versus-
+  empty ambiguity for dependency and review collections.
+- Negative-authorization results echo the immutable action binding and represent
+  both applied/idempotent outcomes and typed non-mutation refusals. Request
+  observation may only be strengthened to native exclusive access; native revision,
+  snapshot, logical root, validation facts, and binding cannot change.
+- Lifecycle inspection and closeout expose an explicit typed quiescence result with
+  closed reasons.
 
 ## Slice 1: Contract vocabulary and schemas
 
@@ -250,6 +259,8 @@ diagnostics, metrics, and correlation.
   bounded reason codes.
 - Define duplicate tolerance, event ordering expectations, and behavior when the
   event sink is unavailable.
+- Define stable event-name-specific payload schemas or an equivalent versioned
+  payload catalog; free-form outcome or metric dimensions do not pass the slice.
 - Keep events on an observational side channel; execution cannot depend on
   successful delivery.
 

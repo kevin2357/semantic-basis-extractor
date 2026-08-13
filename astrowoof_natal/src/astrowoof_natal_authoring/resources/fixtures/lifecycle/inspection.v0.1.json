@@ -23,6 +23,10 @@
     "provider_continuation_remains": true,
     "local_continuation_remains": true
   },
+  "quiescence": {
+    "state": "not_quiescent",
+    "reasons": ["provider_continuation_remains", "local_continuation_remains"]
+  },
   "local_dependencies": [{
     "kind": "polish",
     "blocking": true,

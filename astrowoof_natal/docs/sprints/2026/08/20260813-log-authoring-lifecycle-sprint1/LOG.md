@@ -14,3 +14,9 @@
   code/schema/fixture members. No artifact was promoted or published.
 - Requested the planned API-agent review. The Slice 1 implementation is ready, but
   its consumer-review gate remains pending that response.
+- API-agent review approved the overall boundary and requested four gate revisions:
+  explicit provider evidence/identity, immutable binding in denial results, typed
+  non-mutation refusal results, and formal request-observation strengthening. It
+  also requested explicit quiescence and required empty action arrays. All were
+  incorporated; event-name-specific payload contracts were retained as a required
+  Slice 5 refinement.

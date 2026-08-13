@@ -18,16 +18,24 @@ schema for six public documents:
 | Execution event | `sbe.execution_event.v1` | Non-authoritative operational observation |
 
 The catalog exposes each document name and version. Sanitized package fixtures live
-under `fixtures/lifecycle/`.
+under `fixtures/lifecycle/`, including both an applied denial and a typed
+non-mutation refusal.
 
 ## Mutation boundary
 
-Every mutation request identifies its `decision_basis`: the pre-mutation operator
+Every mutation request identifies its external `request_observation`: the operator
 revision, validated snapshot SHA-256, logical root, inventory validation status,
-observation time, and native exclusivity/race conditions. A successful mutation
-returns a separate `result_checkpoint` with its new revision, snapshot SHA-256, and
-durable result-artifact identity. Consumers must never treat the result checkpoint
-as the observation on which the decision was authorized.
+observation time, and native exclusivity/race conditions that the API authorized
+against. Under native exclusive access, SBE records the authoritative pre-mutation
+`decision_basis`. Revision, snapshot SHA-256, logical root, snapshot completeness,
+and inventory validity must match exactly. SBE may record a later `observed_at` and
+may strengthen exclusivity from `declared` to `established`; it may not weaken it or
+proceed when a writer race is possible. Any invariant mismatch returns a typed
+non-mutation result.
+
+A successful mutation returns a separate `result_checkpoint` with its new revision,
+snapshot SHA-256, and durable result-artifact identity. Consumers must never treat
+the result checkpoint as the observation on which the decision was authorized.
 
 The external authority reference is an opaque correlation and fencing reference.
 It is bounded and returned unchanged. It must not contain a lease token. SBE does
@@ -42,15 +50,26 @@ Eligibility is always explicit. `SUBMITTING` without a durable provider identity
 any provider identity/evidence, consumption, an immutable-binding mismatch, an
 observation mismatch, or inconsistent native state fails closed.
 
-The result records whether external authorization had previously been recorded.
+The result echoes the complete immutable action binding and records whether external
+authorization had previously been recorded.
 `release_eligible` is SBE evidence for an API decision; it is not a release action.
+
+Negative-authorization results cover applied denial, idempotent replay, stale
+observation, binding mismatch, provider identity/evidence/consumption appearing,
+ambiguous submission, native inconsistency, failed exclusivity, writer race, and
+explicit review-required outcomes. Refused requests set `applied` and
+`release_eligible` false and have no result checkpoint. Applied and idempotently
+recovered outcomes identify the durable result checkpoint/artifact.
 
 ## Inventory and lifecycle semantics
 
 Action array order is deterministic presentation only. It never grants permission
 or communicates executable sequence. Each action separately declares necessity,
 its independent/superseded/blocking relationship, blocking action identities,
-provider-less eligibility, and an exact eligibility or review reason.
+provider-less eligibility, durable provider operation identity, explicit provider
+identity/evidence/consumption presence, and exact eligibility or review reasons.
+Blocking-action and ambiguity/review collections are always present, including
+when empty.
 
 Provider ledger state is distinct from pass, QA, deck, and delivery acceptance.
 The terminal summary consequently reports each of these facts independently:
@@ -63,7 +82,9 @@ The terminal summary consequently reports each of these facts independently:
 - provider continuation remains; and
 - typed local continuation remains.
 
-Quiescence is never asserted as an eternal property. Inspection records the exact
+Quiescence is a typed `quiescent`, `not_quiescent`, or
+`unknown_review_required` result with closed reasons; consumers need not derive it
+from several flags. It is never asserted as an eternal property. Inspection records the exact
 revision and snapshot observed and whether exclusive access was established,
 declared, absent, or unknown, including whether a writer race was possible. API
 lease and cleanup authority remain outside SBE.
@@ -94,6 +115,11 @@ transport is selected, every stdout line—including the final command result—
 be a typed envelope, and human diagnostics will use stderr. Sink delivery failure
 cannot affect native execution.
 
+Before Slice 5 closes, each allow-listed event name must receive a stable typed
+payload contract (or equivalent versioned payload catalog). The generic bounded
+`data` shape is sufficient for the observational transport boundary in Slices 1–4,
+but is not the final stable metrics contract.
+
 ## Consumer-review questions
 
 The AstroWoof API agent is asked to confirm:
@@ -104,4 +130,3 @@ The AstroWoof API agent is asked to confirm:
 4. Inventory necessity/dependency fields are sufficient without implying execution order.
 5. Terminal facts and typed local dependencies answer cleanup evaluation inputs.
 6. The event envelope is useful while remaining non-authoritative and payload-safe.
-

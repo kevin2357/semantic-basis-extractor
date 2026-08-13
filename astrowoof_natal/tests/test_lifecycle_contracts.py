@@ -22,6 +22,7 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     PROVIDER_ACTION_STATES,
     action_presentation_key,
     canonical_contract_json,
+    observation_transition_errors,
     prohibited_event_paths,
 )
 from astrowoof_natal_authoring.resource_access import (  # noqa: E402
@@ -32,6 +33,7 @@ from astrowoof_natal_authoring.resource_access import (  # noqa: E402
 FIXTURE_NAMES = (
     "negative-authorization-request.v0.1.json",
     "negative-authorization-result.v0.1.json",
+    "negative-authorization-refused.v0.1.json",
     "action-inventory.v0.1.json",
     "inspection.v0.1.json",
     "closeout-result.v0.1.json",
@@ -179,6 +181,10 @@ class TestLifecycleContracts(unittest.TestCase):
 
     def test_negative_decision_separates_basis_and_result_checkpoint(self) -> None:
         result = self.fixtures["negative-authorization-result.v0.1.json"]
+        request = self.fixtures["negative-authorization-request.v0.1.json"]
+        self.assertEqual(request["binding"], result["binding"])
+        self.assertEqual(request["observed"], result["request_observation"])
+        self.assertTrue(result["applied"])
         self.assertLess(
             result["decision_basis"]["operator_state_revision"],
             result["result_checkpoint"]["operator_state_revision"],
@@ -187,6 +193,50 @@ class TestLifecycleContracts(unittest.TestCase):
             result["decision_basis"]["snapshot_sha256"],
             result["result_checkpoint"]["snapshot_sha256"],
         )
+
+    def test_observation_may_strengthen_exclusivity_only(self) -> None:
+        result = self.fixtures["negative-authorization-result.v0.1.json"]
+        self.assertEqual([], observation_transition_errors(
+            result["request_observation"], result["decision_basis"]
+        ))
+        for field in (
+            "operator_state_revision", "snapshot_sha256",
+            "logical_workspace_root", "inventory_valid",
+        ):
+            with self.subTest(field=field):
+                changed = copy.deepcopy(result["decision_basis"])
+                changed[field] = (
+                    not changed[field] if isinstance(changed[field], bool)
+                    else f"changed-{changed[field]}"
+                )
+                self.assertIn(field, observation_transition_errors(
+                    result["request_observation"], changed
+                ))
+        raced = copy.deepcopy(result["decision_basis"])
+        raced["writer_race_possible"] = True
+        self.assertIn("writer_race_possible", observation_transition_errors(
+            result["request_observation"], raced
+        ))
+
+    def test_refusal_is_typed_and_has_no_mutation_checkpoint(self) -> None:
+        refusal = self.fixtures["negative-authorization-refused.v0.1.json"]
+        self.assertFalse(refusal["applied"])
+        self.assertEqual("provider_identity_appeared", refusal["outcome"])
+        self.assertFalse(refusal["release_eligible"])
+        self.assertNotIn("result_checkpoint", refusal)
+        self.assertNotIn("decision_basis", refusal)
+
+    def test_action_evidence_and_quiescence_are_explicit(self) -> None:
+        inventory = self.fixtures["action-inventory.v0.1.json"]
+        action = inventory["actions"][0]
+        self.assertIsNone(action["provider_operation_id"])
+        self.assertFalse(action["provider_identity_present"])
+        self.assertFalse(action["provider_evidence_present"])
+        self.assertFalse(action["consumption_evidence_present"])
+        self.assertEqual([], action["blocking_action_ids"])
+        self.assertEqual([], action["ambiguity_review_reasons"])
+        inspection = self.fixtures["inspection.v0.1.json"]
+        self.assertEqual("not_quiescent", inspection["quiescence"]["state"])
 
     def test_presentation_order_is_stable_and_not_execution_semantics(self) -> None:
         inventory = self.fixtures["action-inventory.v0.1.json"]

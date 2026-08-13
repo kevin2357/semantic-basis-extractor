@@ -97,6 +97,56 @@ PROVIDERLESS_ELIGIBILITY_REASONS = (
     "native_state_inconsistent",
 )
 
+NEGATIVE_AUTHORIZATION_OUTCOMES = (
+    "applied",
+    "idempotent_replay",
+    "stale_observation",
+    "immutable_binding_mismatch",
+    "provider_identity_appeared",
+    "provider_evidence_appeared",
+    "consumption_evidence_appeared",
+    "ambiguous_submission_boundary",
+    "native_state_inconsistent",
+    "exclusivity_not_established",
+    "writer_race_possible",
+    "review_required",
+)
+
+QUIESCENCE_STATES = ("quiescent", "not_quiescent", "unknown_review_required")
+QUIESCENCE_REASONS = (
+    "no_provider_or_local_continuation",
+    "provider_continuation_remains",
+    "local_continuation_remains",
+    "snapshot_invalid",
+    "writer_race_possible",
+    "native_state_inconsistent",
+)
+
+NEGATIVE_AUTHORIZATION_OUTCOMES = (
+    "applied",
+    "idempotent_replay",
+    "stale_observation",
+    "immutable_binding_mismatch",
+    "provider_identity_appeared",
+    "provider_evidence_appeared",
+    "consumption_evidence_appeared",
+    "ambiguous_submission_boundary",
+    "native_state_inconsistent",
+    "exclusivity_not_established",
+    "writer_race_possible",
+    "review_required",
+)
+
+QUIESCENCE_STATES = ("quiescent", "not_quiescent", "unknown_review_required")
+QUIESCENCE_REASONS = (
+    "no_provider_or_local_continuation",
+    "provider_continuation_remains",
+    "local_continuation_remains",
+    "snapshot_invalid",
+    "writer_race_possible",
+    "native_state_inconsistent",
+)
+
 ACTION_RELATIONSHIPS = ("independent", "superseded", "blocking")
 TERMINAL_OUTCOMES = (
     "nonterminal",
@@ -178,6 +228,76 @@ def canonical_contract_json(value: Any) -> str:
     return json.dumps(
         value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     )
+
+
+def observation_transition_errors(
+    requested: dict[str, Any], decision_basis: dict[str, Any]
+) -> list[str]:
+    """Validate permitted strengthening from API observation to SBE decision basis.
+
+    Revision, snapshot, logical root, and validation facts cannot change. The
+    decision may have a later timestamp and may strengthen declared exclusivity to
+    established exclusivity. It may never weaken exclusivity or introduce a race.
+    """
+    errors: list[str] = []
+    invariant_fields = (
+        "operator_state_revision",
+        "snapshot_sha256",
+        "logical_workspace_root",
+        "snapshot_complete",
+        "inventory_valid",
+    )
+    for field in invariant_fields:
+        if requested.get(field) != decision_basis.get(field):
+            errors.append(field)
+    requested_access = requested.get("native_exclusive_access")
+    decision_access = decision_basis.get("native_exclusive_access")
+    permitted_access = {
+        "established": {"established"},
+        "declared": {"declared", "established"},
+        "not_established": {"not_established", "established"},
+        "unknown": {"unknown", "declared", "established"},
+    }
+    if decision_access not in permitted_access.get(requested_access, set()):
+        errors.append("native_exclusive_access")
+    if decision_basis.get("writer_race_possible"):
+        errors.append("writer_race_possible")
+    return errors
+
+
+def observation_transition_errors(
+    requested: dict[str, Any], decision_basis: dict[str, Any]
+) -> list[str]:
+    """Validate permitted strengthening from API observation to SBE decision basis.
+
+    Revision, snapshot, logical root, and validation facts cannot change. The
+    decision may have a later timestamp and may strengthen declared exclusivity to
+    established exclusivity. It may never weaken exclusivity or introduce a race.
+    """
+    errors: list[str] = []
+    invariant_fields = (
+        "operator_state_revision",
+        "snapshot_sha256",
+        "logical_workspace_root",
+        "snapshot_complete",
+        "inventory_valid",
+    )
+    for field in invariant_fields:
+        if requested.get(field) != decision_basis.get(field):
+            errors.append(field)
+    requested_access = requested.get("native_exclusive_access")
+    decision_access = decision_basis.get("native_exclusive_access")
+    permitted_access = {
+        "established": {"established"},
+        "declared": {"declared", "established"},
+        "not_established": {"not_established", "established"},
+        "unknown": {"unknown", "declared", "established"},
+    }
+    if decision_access not in permitted_access.get(requested_access, set()):
+        errors.append("native_exclusive_access")
+    if decision_basis.get("writer_race_possible"):
+        errors.append("writer_race_possible")
+    return errors
 
 
 def prohibited_event_paths(value: Any, prefix: str = "$") -> list[str]:

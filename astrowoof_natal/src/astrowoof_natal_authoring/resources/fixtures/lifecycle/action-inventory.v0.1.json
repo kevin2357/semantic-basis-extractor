@@ -36,6 +36,10 @@
     "providerless_denial_eligible": true,
     "eligibility_reason": "eligible_authorized_unconsumed",
     "authorization_previously_recorded": true,
+    "provider_operation_id": null,
+    "provider_identity_present": false,
+    "provider_evidence_present": false,
+    "consumption_evidence_present": false,
     "blocking_action_ids": [],
     "ambiguity_review_reasons": []
   }]

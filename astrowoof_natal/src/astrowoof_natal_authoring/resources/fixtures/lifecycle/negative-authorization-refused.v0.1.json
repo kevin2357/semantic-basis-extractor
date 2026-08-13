@@ -15,12 +15,9 @@
     "commitment_micro_usd": 125000,
     "price_book_version": "openai-public-2026-08-07.v1"
   },
-  "applied": true,
-  "outcome": "applied",
-  "disposition": "DENIED_PROVIDERLESS",
-  "denial_reason": "reservation_unavailable",
-  "authorization_previously_recorded": true,
-  "release_eligible": true,
+  "applied": false,
+  "outcome": "provider_identity_appeared",
+  "release_eligible": false,
   "external_authority_reference": "api-fence:fixture-001",
   "request_observation": {
     "operator_state_revision": 12,
@@ -32,23 +29,15 @@
     "native_exclusive_access": "declared",
     "writer_race_possible": false
   },
-  "decision_basis": {
-    "operator_state_revision": 12,
-    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "actual_observation": {
+    "operator_state_revision": 13,
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "logical_workspace_root": "/work/run",
     "snapshot_complete": true,
     "inventory_valid": true,
-    "observed_at": "2026-08-13T18:00:00Z",
+    "observed_at": "2026-08-13T18:00:01Z",
     "native_exclusive_access": "established",
     "writer_race_possible": false
   },
-  "result_checkpoint": {
-    "operator_state_revision": 13,
-    "snapshot_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
-    "result_artifact": {
-      "logical_path": "lifecycle/negative-authorizations/paid_0123456789abcdef01234567.json",
-      "bytes": 942,
-      "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
-    }
-  }
+  "review_reasons": ["provider_identity_present"]
 }

@@ -8,7 +8,7 @@ Artifacts:
 
 - `astrowoof_natal_authoring/lifecycle_contracts.py`
 - `resources/contracts/authoring-lifecycle-contracts.schema.json`
-- six sanitized fixtures under `resources/fixtures/lifecycle/`
+- seven sanitized fixtures under `resources/fixtures/lifecycle/`
 - `tests/test_lifecycle_contracts.py`
 - `SLICE 1 CONTRACT.md`
 
@@ -22,11 +22,17 @@ Ran 21 tests in 0.307s
 OK
 ```
 
-The eight new focused tests cover all fixture shapes, rejection of unsupported
+The original eight focused tests cover all initial fixture shapes, rejection of unsupported
 versions and unknown required fields, schema/Python vocabulary agreement,
 precondition/result checkpoint separation, stable non-executable presentation
 ordering, canonical serialization, recursive protected-field detection, and
 rejection of unknown event names and raw lease/protected fields.
+
+API review revisions added three focused tests (11 total) covering explicit action
+provider/evidence facts and quiescence, permitted request-observation exclusivity
+strengthening with invariant mismatch rejection, and typed refusal without a
+mutation checkpoint. The applied result now echoes the immutable action binding;
+the seventh fixture demonstrates a raced/provider-identity refusal.
 
 Full repository regression suite:
 
@@ -53,5 +59,6 @@ it was not promoted or published.
 
 Consumer gate:
 
-- Pending AstroWoof API-agent review of the schema, vocabularies, fixtures, and
-  read-only inspection shape.
+- API-agent review completed and approved the boundary subject to four required
+  revisions and two small improvements. All requested revisions were implemented;
+  event-name-specific payload contracts are recorded as a required Slice 5 gate.

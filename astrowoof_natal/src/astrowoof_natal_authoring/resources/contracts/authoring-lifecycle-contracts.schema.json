@@ -16,6 +16,10 @@
       "type": "string", "minLength": 1, "maxLength": 512,
       "pattern": "^[^\\r\\n]+$"
     },
+    "providerOperationId": {
+      "type": ["string", "null"], "minLength": 1, "maxLength": 512,
+      "pattern": "^[^\\r\\n]+$"
+    },
     "actionState": {
       "enum": [
         "PREPARED", "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED",
@@ -38,6 +42,15 @@
         "binding_mismatch", "revision_mismatch", "snapshot_mismatch",
         "action_superseded", "action_no_longer_necessary",
         "native_state_inconsistent"
+      ]
+    },
+    "negativeAuthorizationOutcome": {
+      "enum": [
+        "applied", "idempotent_replay", "stale_observation",
+        "immutable_binding_mismatch", "provider_identity_appeared",
+        "provider_evidence_appeared", "consumption_evidence_appeared",
+        "ambiguous_submission_boundary", "native_state_inconsistent",
+        "exclusivity_not_established", "writer_race_possible", "review_required"
       ]
     },
     "ambiguityReviewReason": {
@@ -114,7 +127,10 @@
       "required": [
         "action_id", "route", "pass_id", "attempt", "state", "binding",
         "necessary", "relationship", "providerless_denial_eligible",
-        "eligibility_reason", "authorization_previously_recorded"
+        "eligibility_reason", "authorization_previously_recorded",
+        "provider_operation_id", "provider_identity_present",
+        "provider_evidence_present", "consumption_evidence_present",
+        "blocking_action_ids", "ambiguity_review_reasons"
       ],
       "properties": {
         "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
@@ -128,6 +144,10 @@
         "providerless_denial_eligible": {"type": "boolean"},
         "eligibility_reason": {"$ref": "#/$defs/eligibilityReason"},
         "authorization_previously_recorded": {"type": "boolean"},
+        "provider_operation_id": {"$ref": "#/$defs/providerOperationId"},
+        "provider_identity_present": {"type": "boolean"},
+        "provider_evidence_present": {"type": "boolean"},
+        "consumption_evidence_present": {"type": "boolean"},
         "blocking_action_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "ambiguity_review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true}
       },
@@ -182,14 +202,31 @@
       },
       "additionalProperties": false
     },
+    "quiescence": {
+      "type": "object",
+      "required": ["state", "reasons"],
+      "properties": {
+        "state": {"enum": ["quiescent", "not_quiescent", "unknown_review_required"]},
+        "reasons": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": [
+            "no_provider_or_local_continuation", "provider_continuation_remains",
+            "local_continuation_remains", "snapshot_invalid",
+            "writer_race_possible", "native_state_inconsistent"
+          ]}
+        }
+      },
+      "additionalProperties": false
+    },
     "lifecycleInspection": {
       "type": "object",
-      "required": ["schema_version", "run_id", "observation", "terminal", "local_dependencies", "action_inventory"],
+      "required": ["schema_version", "run_id", "observation", "terminal", "quiescence", "local_dependencies", "action_inventory"],
       "properties": {
         "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.1"},
         "run_id": {"type": "string", "minLength": 1},
         "observation": {"$ref": "#/$defs/snapshotObservation"},
         "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "quiescence": {"$ref": "#/$defs/quiescence"},
         "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
         "action_inventory": {"$ref": "#/$defs/actionInventory"},
         "review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true}
@@ -211,31 +248,68 @@
       "additionalProperties": false
     },
     "negativeAuthorizationResult": {
+      "oneOf": [
+        {"$ref": "#/$defs/negativeAuthorizationAppliedResult"},
+        {"$ref": "#/$defs/negativeAuthorizationRefusedResult"}
+      ]
+    },
+    "negativeAuthorizationAppliedResult": {
       "type": "object",
-      "required": ["schema_version", "run_id", "action_id", "disposition", "denial_reason", "authorization_previously_recorded", "release_eligible", "external_authority_reference", "decision_basis", "result_checkpoint"],
+      "required": ["schema_version", "run_id", "action_id", "binding", "applied", "outcome", "disposition", "denial_reason", "authorization_previously_recorded", "release_eligible", "external_authority_reference", "request_observation", "decision_basis", "result_checkpoint"],
       "properties": {
         "schema_version": {"const": "astrowoof.provider_negative_authorization_result.v0.1"},
         "run_id": {"type": "string", "minLength": 1},
         "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "applied": {"type": "boolean"},
+        "outcome": {"enum": ["applied", "idempotent_replay"]},
         "disposition": {"const": "DENIED_PROVIDERLESS"},
         "denial_reason": {"$ref": "#/$defs/denialReason"},
         "authorization_previously_recorded": {"type": "boolean"},
         "release_eligible": {"type": "boolean"},
         "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
         "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
         "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
       },
       "additionalProperties": false
     },
+    "negativeAuthorizationRefusedResult": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "action_id", "binding", "applied", "outcome", "release_eligible", "external_authority_reference", "request_observation", "review_reasons"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_result.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "applied": {"const": false},
+        "outcome": {
+          "enum": [
+            "stale_observation", "immutable_binding_mismatch",
+            "provider_identity_appeared", "provider_evidence_appeared",
+            "consumption_evidence_appeared", "ambiguous_submission_boundary",
+            "native_state_inconsistent", "exclusivity_not_established",
+            "writer_race_possible", "review_required"
+          ]
+        },
+        "release_eligible": {"const": false},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "actual_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "review_reasons": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/ambiguityReviewReason"}}
+      },
+      "additionalProperties": false
+    },
     "closeoutResult": {
       "type": "object",
-      "required": ["schema_version", "run_id", "disposition", "decision_basis", "terminal", "local_dependencies", "unresolved_action_ids", "result_checkpoint", "semantic_result_sha256"],
+      "required": ["schema_version", "run_id", "disposition", "decision_basis", "terminal", "quiescence", "local_dependencies", "unresolved_action_ids", "result_checkpoint", "semantic_result_sha256"],
       "properties": {
         "schema_version": {"const": "astrowoof.authoring_closeout_result.v0.1"},
         "run_id": {"type": "string", "minLength": 1},
         "disposition": {"enum": ["closed", "continuation_required", "review_required", "ambiguous"]},
         "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
         "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "quiescence": {"$ref": "#/$defs/quiescence"},
         "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
         "unresolved_action_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "result_checkpoint": {"$ref": "#/$defs/checkpointResult"},

@@ -24,6 +24,10 @@
     "provider_continuation_remains": false,
     "local_continuation_remains": false
   },
+  "quiescence": {
+    "state": "quiescent",
+    "reasons": ["no_provider_or_local_continuation"]
+  },
   "local_dependencies": [],
   "unresolved_action_ids": [],
   "result_checkpoint": {
