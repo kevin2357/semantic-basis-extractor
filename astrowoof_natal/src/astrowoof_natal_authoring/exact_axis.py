@@ -107,4 +107,3 @@ def axis_configuration_specs(
             }
         )
     return specs
-

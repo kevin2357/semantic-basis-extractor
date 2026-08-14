@@ -164,6 +164,11 @@ competition, and represents complete planet/point-to-axis pairs as traceable
 configuration candidates. It emits a separate `*.policy-comparison.json`; it does
 not change the default.
 
+Bounded projected graphs never enter this exact pipeline. They first pass the
+separate `astrowoof.bounded_natal.input_admission.v1` boundary, backed by SPC 0.11's
+official schema and parallel-context validators. The exact loader rejects the
+bounded contract explicitly.
+
 ## 5. Whole-graph analysis
 
 Selection must not begin from an already truncated list. Before choosing candidates, SBE examines the entire projected graph and records:

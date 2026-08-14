@@ -10,7 +10,7 @@ readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs fo
 requires-python = ">=3.11"
 license = {text = "Proprietary"}
 authors = [{name = "AstroWoof"}]
-dependencies = []
+dependencies = ["semantic-projection-core==0.11.0"]
 
 [project.scripts]
 astrowoof-semantic-closure = "astrowoof_natal_authoring.cli.closure:main"
@@ -19,6 +19,7 @@ astrowoof-release-smoke = "astrowoof_natal_authoring.smoke:main"
 astrowoof-repair-polish-checkpoint = "astrowoof_natal_authoring.cli.repair:main"
 astrowoof-authoring-lifecycle = "astrowoof_natal_authoring.cli.lifecycle:main"
 astrowoof-lifecycle-smoke = "astrowoof_natal_authoring.lifecycle_smoke:main"
+astrowoof-admit-bounded-natal = "astrowoof_natal_authoring.cli.bounded_admit:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}

@@ -6,6 +6,8 @@ Slice 0 is approved. Slice 1 implementation is awaiting Gate 1 review.
 - `slice0-baseline-contracts.json`
 - `SLICE 1 - Shared Engine Seam and Exact Legacy Policy.md`
 - `SLICE 2 - Experimental Exact Axis-Aware Policy.md`
+- `SLICE 3 - Strict Bounded Packet Admission.md`
+- `SLICE 3 - Strict Bounded Packet Admission.md`
 
 Add one durable result document for each completed gate using the convention:
 

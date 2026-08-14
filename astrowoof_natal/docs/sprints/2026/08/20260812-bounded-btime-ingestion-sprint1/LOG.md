@@ -112,3 +112,41 @@ decisions and evidence but do not represent completed implementation slices.
   authoring profile, and emitted the expected six-configuration comparison.
 - `git diff --check` passed with only expected Windows line-ending notices.
 - Gate 2 is ready for review. Slice 3 has not begun.
+
+## 2026-08-14: Slice 3 - strict bounded packet admission
+
+- Gate 2 was approved, committed, and pushed as `21022d0`.
+- Pinned `semantic-projection-core==0.11.0` and added the separate installed
+  `astrowoof-admit-bounded-natal` command.
+- Required official per-artifact schema validation plus SPC's specialized
+  four-context certainty/structure validator and exact supported release, profile,
+  context, upstream-contract, runtime-resource, capability, limitation, registry,
+  evidence, and correspondence boundaries.
+- Added machine-classified invalid, unsupported, and mixed failures and a minimized
+  provider-free admission event with protected identity and birth fields excluded.
+- Hardened the legacy exact loader to reject bounded artifacts explicitly.
+- Passed sanitized and full-scale official families and rejected injected source,
+  registry, runtime-resource, correspondence, capability, and evidence drift.
+- Passed 234 repository tests, installed default release smoke, and the packaged
+  bounded CLI inside the qualified Linux SPC 0.11 image.
+- Corrected the trailing blank line reported when Slice 2 was committed.
+- Gate 3 is ready for review. Slice 4 has not begun.
+
+## 2026-08-14: Slice 3 - strict bounded packet admission
+
+- Gate 2 was approved, committed, and pushed as `21022d0`.
+- Pinned `semantic-projection-core==0.11.0` and added the separate installed
+  `astrowoof-admit-bounded-natal` command.
+- Required official per-artifact schema validation plus SPC's specialized
+  four-context certainty/structure validator and exact supported release, profile,
+  context, upstream-contract, runtime-resource, capability, limitation, registry,
+  evidence, and correspondence boundaries.
+- Added machine-classified invalid, unsupported, and mixed failures and a minimized
+  provider-free admission event with protected identity and birth fields excluded.
+- Hardened the legacy exact loader to reject bounded artifacts explicitly.
+- Passed sanitized and full-scale official families and rejected injected source,
+  registry, runtime-resource, correspondence, capability, and evidence drift.
+- Passed 234 repository tests, installed default release smoke, and the packaged
+  bounded CLI inside the qualified Linux SPC 0.11 image.
+- Corrected the trailing blank line reported when Slice 2 was committed.
+- Gate 3 is ready for review. Slice 4 has not begun.

@@ -296,6 +296,18 @@ def load_and_validate_contexts(
         for context, path in sorted(paths.items())
     }
     general = contexts["general"]
+    bounded_contexts = [
+        context
+        for context, graph in contexts.items()
+        if (graph.get("metadata") or {}).get("output_contract")
+        == "projected_bounded_semantic_graph.v1"
+        or "source_artifact_ref" in graph
+    ]
+    if bounded_contexts:
+        raise ValueError(
+            "Bounded projected artifacts require the separate bounded-Natal "
+            f"pipeline; exact loader rejected contexts {sorted(bounded_contexts)}"
+        )
     expected_identity = general.get("source_identity")
     expected_graph = general.get("source_graph_ref")
     expected_ontology = general.get("target_ontology")
@@ -307,6 +319,11 @@ def load_and_validate_contexts(
         raise ValueError(
             f"Subject {subject} general context must declare a non-empty "
             "source_identity object"
+        )
+    if not isinstance(expected_graph, dict) or not expected_graph:
+        raise ValueError(
+            f"Subject {subject} general context must declare a non-empty "
+            "source_graph_ref object"
         )
 
     errors: list[str] = []
