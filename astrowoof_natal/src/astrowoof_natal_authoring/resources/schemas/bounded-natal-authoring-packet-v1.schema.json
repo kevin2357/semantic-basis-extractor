@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-authoring-packet-v1.json",
+  "title": "AstroWoof Bounded Natal Provider-Minimized Authoring Packet v1",
+  "type": "object",
+  "required": ["schema_version", "editorial_status", "subject", "authority_notice", "provider_disclosure", "claims", "summaries", "projected_term_registry"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.authoring_packet.v1"},
+    "editorial_status": {"const": "awaiting_authoring"},
+    "subject": {"type": "object"},
+    "authority_notice": {"type": "object"},
+    "provider_disclosure": {
+      "type": "object",
+      "required": ["schema_version", "subject_fields_allowed", "subject_fields_protected", "object_attribute_fields_allowed", "relationship_attribute_fields_allowed", "evidence_disclosure", "registry_disclosure", "disposition_report_disclosed", "source_graph_disclosed"]
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "summaries": {
+      "type": "object",
+      "required": ["summary_1", "summary_2", "summary_3", "summary_4"],
+      "additionalProperties": false
+    },
+    "projected_term_registry": {"type": "object"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["claim_id", "priority_id", "claim_kind", "editorial_tier", "editorial_utility", "invariant_authority", "semantic_seed", "context_semantics", "projected_term_refs", "editorial_fields"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "priority_id": {"type": "integer", "minimum": 1, "maximum": 50},
+        "claim_kind": {"enum": ["foundational_object", "individualized_relationship", "derived_family", "invariant_configuration"]},
+        "editorial_tier": {"enum": ["foundational", "primary", "supporting", "supplemental"]},
+        "editorial_utility": {"type": "number", "minimum": 0, "maximum": 1},
+        "invariant_authority": {"type": "object"},
+        "semantic_seed": {"type": "string", "minLength": 1},
+        "context_semantics": {
+          "type": "object",
+          "minProperties": 4,
+          "maxProperties": 4
+        },
+        "projected_term_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "editorial_fields": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

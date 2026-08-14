@@ -202,3 +202,25 @@ decisions and evidence but do not represent completed implementation slices.
   seconds, full-scale reorder replay, all three policies under Linux SPC 0.11.0,
   and a fresh non-editable wheel import.
 - No provider operation occurred. Gate 5 is ready for review; Slice 6 has not begun.
+
+## 2026-08-14: Slice 6 - bounded claim deck, authoring, and final cards
+
+- Gate 5 was approved, committed, and pushed as `f55a3e3`.
+- Added separate bounded claim-deck, provider authoring-packet, disposition, final
+  cards, provider-disclosure, and delivery-provenance contract identities.
+- Packaged four JSON Schemas, added the contracts to the catalog, and shipped a
+  bounded-specific authoring brief and field-level provider disclosure inventory.
+- Locked invariant authority, dependencies, private evidence digests, source and
+  family lineage, selected projected terms, and separate card/summary evidence
+  scopes through claim compilation and final QA.
+- Built the provider packet from an allow-list. Protected birth/interval/location
+  fields, full graphs, raw evidence, strength/range data, private references,
+  unselected material, and disposition/selection internals do not enter it.
+- Added deterministic provider-free bounded authoring and final QA, including
+  locked-field, registry, evidence-scope, placeholder, editorial-shape, and
+  normalized-duplication validation.
+- The full Linux path passed with 50 cards, four summaries, 41 selected terms, and
+  seeded protected values absent. No provider operation occurred.
+- Passed 29 combined bounded tests, all 254 repository tests in 171.428 seconds,
+  JSON/schema/catalog parsing, and fresh non-editable wheel resource/import smoke.
+- Gate 6 is ready for review. Slice 7 has not begun.

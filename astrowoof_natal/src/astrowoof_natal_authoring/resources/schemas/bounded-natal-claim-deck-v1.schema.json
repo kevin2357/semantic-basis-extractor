@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-claim-deck-v1.json",
+  "title": "AstroWoof Bounded Natal Claim Deck v1",
+  "type": "object",
+  "required": ["schema_version", "status", "source", "authority", "selection", "claims", "projected_term_registry", "provenance"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.claim_deck.v1"},
+    "status": {"const": "awaiting_authoring"},
+    "source": {"type": "object"},
+    "authority": {
+      "type": "object",
+      "required": ["classification", "proof_domain", "limitations"],
+      "properties": {"classification": {"const": "invariant"}}
+    },
+    "selection": {
+      "type": "object",
+      "required": ["candidate_policy", "utility_profile", "foundational_policy", "selected_count", "selected_sha256"],
+      "properties": {"selected_count": {"const": 50}}
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "projected_term_registry": {"type": "object"},
+    "provenance": {"type": "object"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["claim_id", "priority_id", "editorial_tier", "bounded_editorial_utility", "authority", "context_records", "evidence_lineage", "selection_audit"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "priority_id": {"type": "integer", "minimum": 1, "maximum": 50},
+        "editorial_tier": {"enum": ["foundational", "primary", "supporting", "supplemental"]},
+        "bounded_editorial_utility": {"type": "number", "minimum": 0, "maximum": 1},
+        "authority": {
+          "type": "object",
+          "required": ["epistemic_classification", "claim_kind", "proof_scopes", "dependency_claim_ids", "source_refs", "correspondence_ids", "root_owner_refs", "projected_term_refs", "evidence_sha256"],
+          "properties": {"epistemic_classification": {"const": "invariant"}}
+        },
+        "context_records": {"type": "object"},
+        "evidence_lineage": {"type": "object"},
+        "selection_audit": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

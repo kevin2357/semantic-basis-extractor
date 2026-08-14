@@ -1,0 +1,40 @@
+{
+  "schema_version": "sbe.bounded_natal.slice6_evidence.v1",
+  "input": {
+    "admission_id": "bounded_admission:0b5b8543b8048ff070934290",
+    "agf_release": "0.8.1",
+    "spc_release": "0.11.0",
+    "selected_claim_count": 50,
+    "selected_term_count": 41
+  },
+  "contracts": {
+    "claim_deck": "astrowoof.bounded_natal.claim_deck.v1",
+    "authoring_packet": "astrowoof.bounded_natal.authoring_packet.v1",
+    "disposition_report": "astrowoof.bounded_natal.disposition_report.v1",
+    "final_cards": "astrowoof.bounded_natal.cards.v1",
+    "provider_disclosure": "astrowoof.bounded_natal.provider_disclosure.v1",
+    "delivery_provenance": "astrowoof.bounded_natal.delivery_provenance.v1"
+  },
+  "full_scale_artifacts": {
+    "claim_deck_sha256": "3f652f207f9bb28aab39cb42cd3c3fe365721ac4ce42c6429b805edd0736fc58",
+    "claim_deck_json_bytes": 923243,
+    "authoring_packet_sha256": "89583702bbe20880d8694e86796c54121792ded23a2e5e6d1f9e0bbe20e322d6",
+    "authoring_packet_json_bytes": 356533,
+    "fake_final_cards_sha256": "0945a713d2b3425ac13bfcca898e651ea19401ee4a97ccd1072c2baae0aed678",
+    "fake_final_cards_json_bytes": 186297
+  },
+  "final_qa": {
+    "status": "pass",
+    "claim_count": 50,
+    "summary_count": 4,
+    "selected_card_evidence_scope": "claim_local_selected_evidence",
+    "summary_evidence_scope": "summary_whole_dog_selected_basis"
+  },
+  "qualification": {
+    "linux": "passed",
+    "protected_seed_absence": "passed",
+    "full_suite_test_count": 254,
+    "provider_operation_count": 0,
+    "fresh_wheel_sha256": "379a50f44a6cddb93c5096fae1c0f0ff3646d34a3110386d033a5773ce375849"
+  }
+}

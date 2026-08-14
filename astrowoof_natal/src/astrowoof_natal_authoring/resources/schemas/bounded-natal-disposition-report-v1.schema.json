@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-disposition-report-v1.json",
+  "title": "AstroWoof Bounded Natal Disposition Report v1",
+  "type": "object",
+  "required": ["schema_version", "admission_id", "foundational_policy", "projected_rows", "source_evidence", "outside_scope", "source_feature_dispositions", "counts", "selection"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.disposition_report.v1"},
+    "admission_id": {"type": "string", "minLength": 1},
+    "foundational_policy": {"enum": ["strong_preference", "mandatory_when_available", "portfolio_neutral"]},
+    "projected_rows": {"type": "array", "items": {"type": "object"}},
+    "source_evidence": {"type": "array", "items": {"type": "object"}},
+    "outside_scope": {"type": "array", "items": {"type": "object"}},
+    "source_feature_dispositions": {"type": "object"},
+    "counts": {"type": "object"},
+    "selection": {"type": "object"},
+    "claim_deck_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "authoring_packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
