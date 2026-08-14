@@ -14,6 +14,7 @@ passes, API consumer review accepts the contract, and release is recommended.
 - `SLICE 7 - Shared Lifecycle Events Snapshots and Failure Recovery.md`
 - `SLICE 8 - Deterministic Scale Privacy and Product QA.md`
 - `SLICE 9 - Installed Cross-Repository Acceptance and Handoff.md`
+- `POST-RELEASE - 0.4.0 Publication Evidence.md`
 - `slice5-bounded-selection-summary.json`
 - `slice6-bounded-authoring-summary.json`
 - `slice7-bounded-lifecycle-summary.json`

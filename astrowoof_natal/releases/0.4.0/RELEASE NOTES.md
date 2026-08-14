@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.0
 
-Status: approved for immutable release under annotated tag
+Status: published under immutable annotated tag
 `astrowoof-natal-authoring-v0.4.0`.
 
 This release adds the first invariant-only bounded-birth-time Natal pipeline while
@@ -47,3 +47,7 @@ AstroWoof API consumer review accepted the contract and recommended release. The
 wheel is bound to artifact source commit `946f6fd`; the immutable annotated tag
 identifies the release-record lock. Product-owner tagging and publication
 authorization was received on 2026-08-14.
+
+Publication is complete. Authenticated download verification matched wheel SHA-256
+`4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`.
+Post-publication evidence is recorded without moving the immutable tag.

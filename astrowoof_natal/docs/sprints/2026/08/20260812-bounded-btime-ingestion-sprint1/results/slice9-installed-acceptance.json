@@ -42,6 +42,13 @@
     "api_agent_review": "accepted",
     "recommendation": "release",
     "tag": "astrowoof-natal-authoring-v0.4.0",
-    "published": false
+    "published": true,
+    "release_id": 370875919,
+    "published_at": "2026-08-14T23:55:40Z",
+    "tag_commit": "ca8d47f684faf3a34c1597461dd9ff269d842205",
+    "annotated_tag_object": "02ec69ea40c60a87b72d04acd8ced23539347457",
+    "wheel_asset_id": 515082622,
+    "checksum_asset_id": 515082623,
+    "authenticated_download_verification": "pass"
   }
 }

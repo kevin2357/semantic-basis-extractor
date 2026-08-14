@@ -356,3 +356,16 @@ decisions and evidence but do not represent completed implementation slices.
   artifact source commit `946f6fd`, and the standard GitHub release asset names.
 - External tag push, GitHub publication, authenticated download verification, and
   post-publication evidence follow this coordinate-lock commit.
+
+## 2026-08-14: 0.4.0 immutable publication
+
+- Committed release coordinates as `ca8d47f`, created annotated tag
+  `astrowoof-natal-authoring-v0.4.0`, and pushed the immutable tag.
+- Published GitHub release `370875919` at `2026-08-14T23:55:40Z`, non-draft and
+  non-prerelease, with exact wheel asset `515082622` and checksum asset `515082623`.
+- Authenticated re-download matched wheel SHA-256
+  `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`;
+  downloaded `SHA256SUMS.txt` contained the exact expected line.
+- Annotated tag object is `02ec69ea40c60a87b72d04acd8ced23539347457`
+  and targets `ca8d47f684faf3a34c1597461dd9ff269d842205`.
+- This post-publication evidence update does not move the immutable tag.
