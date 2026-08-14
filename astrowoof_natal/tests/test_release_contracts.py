@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from importlib.resources import files
 from pathlib import Path
 
 
@@ -44,6 +45,10 @@ def write(path: Path, value: str = "{}\n") -> None:
 
 
 class TestReleaseContracts(unittest.TestCase):
+    def test_package_declares_inline_type_information(self) -> None:
+        marker = files("astrowoof_natal_authoring").joinpath("py.typed")
+        self.assertTrue(marker.is_file())
+
     def test_packaged_gold_reference_omits_protected_birth_values(self) -> None:
         reference = json.loads(
             read_resource_text("references/natal.kevin.summary-gold-source.cards.json")

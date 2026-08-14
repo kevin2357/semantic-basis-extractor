@@ -30,6 +30,7 @@ include = ["astrowoof_natal_authoring*"]
 
 [tool.setuptools.package-data]
 astrowoof_natal_authoring = [
+  "py.typed",
   "resources/authoring/*.md",
   "resources/contracts/*.json",
   "resources/fixtures/**/*.json",
