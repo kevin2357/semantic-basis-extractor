@@ -38,10 +38,10 @@
   "release": {
     "artifact_source_commit": "946f6fd",
     "release_evidence_base_commit": "e83ed53",
-    "release_record_identity": "resolved_by_immutable_tag_target",
+    "release_record_identity": "tag:astrowoof-natal-authoring-v0.4.0",
     "api_agent_review": "accepted",
     "recommendation": "release",
-    "tag": null,
+    "tag": "astrowoof-natal-authoring-v0.4.0",
     "published": false
   }
 }

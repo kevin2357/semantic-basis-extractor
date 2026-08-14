@@ -1,7 +1,7 @@
 # API and Frontend Integration - 0.4.0 Candidate
 
-Do not pin this candidate until a release is explicitly approved, tagged, and
-published. The current review wheel SHA-256 is
+After GitHub publication is verified, pin the annotated release tag and exact wheel
+SHA-256 together. The release wheel SHA-256 is
 `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`.
 
 ## Worker sequence

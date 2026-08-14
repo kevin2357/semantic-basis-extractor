@@ -345,3 +345,14 @@ decisions and evidence but do not represent completed implementation slices.
   retained in release and sprint evidence; removed it from the repository boundary.
 - No implementation or consumer-contract correction was requested. No tag or
   publication was created; those remain explicitly product-owner authorized.
+
+## 2026-08-14: 0.4.0 release authorization and coordinate lock
+
+- Product-owner authorization was received to tag and publish SBE 0.4.0.
+- Rebuilt the wheel from the clean release record with frozen epoch `1786665600`;
+  its 711,052 bytes exactly reproduced qualified SHA-256
+  `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`.
+- Locked annotated tag `astrowoof-natal-authoring-v0.4.0`, repository coordinates,
+  artifact source commit `946f6fd`, and the standard GitHub release asset names.
+- External tag push, GitHub publication, authenticated download verification, and
+  post-publication evidence follow this coordinate-lock commit.

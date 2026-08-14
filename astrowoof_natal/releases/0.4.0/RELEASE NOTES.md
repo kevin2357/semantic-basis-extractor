@@ -1,8 +1,9 @@
-# AstroWoof Natal Authoring 0.4.0 Candidate
+# AstroWoof Natal Authoring 0.4.0
 
-Status: review candidate only. No tag or publication exists.
+Status: approved for immutable release under annotated tag
+`astrowoof-natal-authoring-v0.4.0`.
 
-This candidate adds the first invariant-only bounded-birth-time Natal pipeline while
+This release adds the first invariant-only bounded-birth-time Natal pipeline while
 preserving the exact-Natal default and SBE 0.3.0 lifecycle contracts.
 
 ## Added
@@ -42,7 +43,7 @@ The experimental `axis_aware.v1` exact-Natal policy is opt-in. The default remai
 - `py.typed` present; and
 - real provider operations and spend: zero / `$0`.
 
-AstroWoof API consumer review accepted the contract and recommends release. The
-candidate wheel is bound to artifact source commit `946f6fd`; the immutable tag
-target will identify the later release-record lock. Tagging and publication still
-require explicit product-owner authorization.
+AstroWoof API consumer review accepted the contract and recommended release. The
+wheel is bound to artifact source commit `946f6fd`; the immutable annotated tag
+identifies the release-record lock. Product-owner tagging and publication
+authorization was received on 2026-08-14.

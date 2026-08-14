@@ -1,4 +1,4 @@
-# AstroWoof Natal Authoring 0.4.0 Candidate Compatibility
+# AstroWoof Natal Authoring 0.4.0 Compatibility
 
 ## Runtime pins
 
@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Astrology Graph Foundry | 0.8.1 | `860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed` |
 | Semantic Projection Core | 0.11.0 | `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d` |
-| SBE candidate | 0.4.0 | `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84` |
+| SBE release | 0.4.0 | `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84` |
 
 SBE requires Python 3.11 or newer and directly pins
 `semantic-projection-core==0.11.0`. SPC requires `jsonschema>=4,<5`. AGF 0.8.1 is
