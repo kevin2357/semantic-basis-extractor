@@ -42,5 +42,7 @@ The experimental `axis_aware.v1` exact-Natal policy is opt-in. The default remai
 - `py.typed` present; and
 - real provider operations and spend: zero / `$0`.
 
-API-agent review remains required before release recommendation. Tagging and
-publication require a later explicit authorization.
+AstroWoof API consumer review accepted the contract and recommends release. The
+candidate wheel is bound to artifact source commit `946f6fd`; the immutable tag
+target will identify the later release-record lock. Tagging and publication still
+require explicit product-owner authorization.

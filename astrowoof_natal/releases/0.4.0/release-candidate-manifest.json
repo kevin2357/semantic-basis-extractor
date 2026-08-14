@@ -2,7 +2,7 @@
   "schema_version": "astrowoof.natal_authoring_release.v0.1",
   "distribution": "astrowoof-natal-authoring",
   "version": "0.4.0",
-  "status": "candidate_awaiting_api_review",
+  "status": "candidate_api_accepted_release_recommended",
   "release_tag": null,
   "artifact": {
     "filename": "astrowoof_natal_authoring-0.4.0-py3-none-any.whl",
@@ -14,7 +14,9 @@
     "py_typed": true
   },
   "build": {
-    "source_commit": "pending_gate9_commit",
+    "artifact_source_commit": "946f6fd",
+    "release_evidence_base_commit": "e83ed53",
+    "release_record_identity": "resolved_by_immutable_tag_target",
     "source_date_epoch": 1786665600,
     "independent_build_count": 2,
     "byte_reproducible": true
@@ -44,8 +46,8 @@
     "provider_spend_usd": 0
   },
   "review": {
-    "api_agent": "required",
-    "release_recommendation": "withheld_pending_review",
+    "api_agent": "accepted",
+    "release_recommendation": "recommended",
     "tag_created": false,
     "publication_created": false
   }

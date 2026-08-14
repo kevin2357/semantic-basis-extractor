@@ -68,5 +68,5 @@ choose to hide low-priority claims, but SBE does not suppress them in this relea
 - `Bounded Natal Provider Disclosure Inventory.md`
 - the packaged contract and execution-event catalogs
 
-API-agent review of this handoff and the attached sprint review packet is required
-before SBE recommends release.
+AstroWoof API consumer review accepted this handoff and all nine requested contract
+points. No additional event or consumer-contract change is required before release.

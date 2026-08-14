@@ -331,3 +331,17 @@ decisions and evidence but do not represent completed implementation slices.
 - No provider operation occurred and spend remained `$0`. API-agent consumer
   review remains the sole release-recommendation checkpoint; Windows bounded E2E
   remains a documented non-blocking qualification limitation.
+
+## 2026-08-14: API consumer acceptance and release hygiene
+
+- AstroWoof API consumer review accepted all nine bounded-Natal integration points
+  and recommended immutable 0.4.0 tagging/publication after three record-hygiene
+  corrections.
+- Bound the candidate wheel bytes to artifact source commit `946f6fd`, distinguished
+  that source from evidence base `e83ed53` and the eventual immutable tag target,
+  and reconciled all pending-review status fields to accepted/recommended.
+- Confirmed the repository-local `.tmp` tree contains only expanded build,
+  environment, and qualification material whose compact hashes/results are already
+  retained in release and sprint evidence; removed it from the repository boundary.
+- No implementation or consumer-contract correction was requested. No tag or
+  publication was created; those remain explicitly product-owner authorized.

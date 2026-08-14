@@ -1,7 +1,7 @@
 {
   "schema_version": "astrowoof.sbe_sprint_evidence.v1",
   "slice": 9,
-  "status": "awaiting_api_review",
+  "status": "api_accepted_release_recommended",
   "source_tests": {"count": 274, "status": "pass", "seconds": 149.848},
   "candidate": {
     "version": "0.4.0",
@@ -35,5 +35,13 @@
     "final_candidate_windows": "pending_dependency_installation_authorization_unavailable"
   },
   "provider": {"operations": 0, "spend_usd": 0},
-  "release": {"api_agent_review": "required", "tag": null, "published": false}
+  "release": {
+    "artifact_source_commit": "946f6fd",
+    "release_evidence_base_commit": "e83ed53",
+    "release_record_identity": "resolved_by_immutable_tag_target",
+    "api_agent_review": "accepted",
+    "recommendation": "release",
+    "tag": null,
+    "published": false
+  }
 }

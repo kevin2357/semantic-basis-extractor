@@ -1,7 +1,7 @@
 # API Agent Review Packet - Bounded Natal Candidate
 
-Status: ready for AstroWoof API review. This review is required before SBE release
-recommendation. The candidate is not tagged or published.
+Status: accepted by AstroWoof API consumer review. The API recommends release after
+the recorded release-hygiene corrections. The candidate is not tagged or published.
 
 ## Candidate identity
 
@@ -47,6 +47,14 @@ byte-identical, all 274 source tests pass, and the exact final wheel passed Linu
 complete snapshot inventory, quiescence inspection, and closeout with exact AGF
 0.8.1/SPC 0.11.0.
 
-Please return blocking corrections, non-blocking follow-ups, and an explicit
-consumer-contract acceptance/rejection. SBE will reconcile the response before
-requesting product-owner Gate 9 approval.
+## Review disposition
+
+The API accepted all nine integration points. It confirmed that public/native state
+rather than exit code alone distinguishes waiting outcomes, API authority remains
+unchanged, native workspace/quiescence/closeout evidence is sufficient, the
+contract/provenance split is consumable, no additional release-blocking event is
+needed, and the editorial-only provider boundary is correct.
+
+Its required hygiene corrections are now incorporated: the artifact source commit
+is explicit, the release/evidence record is distinguished from artifact source,
+the repository-local qualification tree is removed, and review status is accepted.

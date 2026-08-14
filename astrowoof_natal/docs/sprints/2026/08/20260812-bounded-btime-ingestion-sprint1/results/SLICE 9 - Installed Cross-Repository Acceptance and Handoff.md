@@ -1,7 +1,7 @@
 # Slice 9 - Installed Cross-Repository Acceptance and Handoff
 
-Status: implementation and installed Linux acceptance complete; API-agent consumer
-review remains pending.
+Status: complete, installed Linux acceptance passed, and API consumer review
+accepted. Release is recommended but remains separately authorized.
 
 ## Outcome
 
@@ -45,6 +45,7 @@ rejects missing, duplicate, and unknown identities before final validation.
 
 ## Review boundary
 
-The API-agent review packet is the authoritative consumer-review request. Gate 9
-must not receive a release recommendation until the API agent has reviewed the
-lifecycle/handoff surface.
+The API agent accepted all nine consumer-contract points and recommended release
+after hygiene reconciliation. Artifact source is commit `946f6fd`; later release
+records do not change the wheel bytes, and the immutable tag target will identify
+the final evidence lock. No tag or publication occurred during this sprint gate.
