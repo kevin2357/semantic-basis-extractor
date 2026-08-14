@@ -1,0 +1,48 @@
+{
+  "schema_version": "sbe.bounded_natal.slice5_evidence.v1",
+  "input": {
+    "admission_id": "bounded_admission:0b5b8543b8048ff070934290",
+    "agf_release": "0.8.1",
+    "spc_release": "0.11.0",
+    "candidate_count": 586
+  },
+  "strong_preference": {
+    "selected_count": 50,
+    "candidate_kind_counts": {
+      "foundational_object": 12,
+      "individualized_relationship": 28,
+      "derived_family": 9,
+      "invariant_configuration": 1
+    },
+    "coverage": {
+      "root_owner_count": 12,
+      "projected_term_count": 41,
+      "evidence_family_count": 48,
+      "configuration_count": 1
+    },
+    "tier_counts": {
+      "foundational": 12,
+      "primary": 12,
+      "supporting": 18,
+      "supplemental": 8
+    },
+    "rejection_reason_counts": {
+      "capacity_displaced": 481,
+      "redundant_covered_territory": 19
+    },
+    "selected_sha256": "ba553b874f789f1389acb9ec43c1dbb0020952240d19d07a8f742eefe9de9b0c",
+    "rejected_sha256": "bd87aca2baf0a86b42ed543d0600bb369fe389d0f15a9c82319729b7dfb0d6a0",
+    "disposition_sha256": "4d1cec53ca0b62bffa8cd5a57aa9e4e7c24ad0238de99d675a2134bca89f025c"
+  },
+  "alternative_policy_selected_sha256": {
+    "mandatory_when_available": "ef94c4846dea3febf72a7a5921580183eece6e6674032348726eecac9bb8a7fb",
+    "portfolio_neutral": "993279a102d012087be98a9c4da2a416d4f3ea6e050d3d7f87a9c3e375d8c57a"
+  },
+  "qualification": {
+    "linux": "passed",
+    "full_scale_reorder_equal": true,
+    "full_suite_test_count": 246,
+    "provider_operation_count": 0,
+    "fresh_wheel_sha256": "b542e04c8b3f4be5aa39142f502c7f24bef822cdcb225636d94498ca7a4ce491"
+  }
+}

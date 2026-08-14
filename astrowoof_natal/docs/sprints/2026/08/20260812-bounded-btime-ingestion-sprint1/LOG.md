@@ -177,3 +177,28 @@ decisions and evidence but do not represent completed implementation slices.
   projected rows, 1,544 evidence records, and two outside-scope objects. Local
   construction took 1.650 seconds with 35.64 MiB peak traced allocation.
 - Gate 4 is ready for review. Slice 5 has not begun.
+
+## 2026-08-14: Slice 5 - bounded editorial utility and exactly-fifty portfolio
+
+- Gate 4 was approved, committed, and pushed as `3a821aa`.
+- Added the versioned bounded editorial-utility profile and deterministic
+  exactly-fifty optimizer without changing exact-Natal selection.
+- Kept epistemic invariance as a binary authority boundary and labeled every
+  numeric component and tier as editorial rather than confidence or strength.
+- Conserved SPC target relevance at the evidence-family allocation unit, added
+  root-owner derived-family diminishing returns, and charged configurations for
+  their complete dependency closure so raw or bundled multiplicity cannot create
+  advantage.
+- Implemented all three foundational policies, exact dependency closure, fixed
+  editorial tiers, complete decision audits, and selection-aware disposition
+  updates.
+- Added machine-readable failures for insufficient invariant basis, unsupported
+  size, non-invariant candidates, duplicate IDs, missing/cyclic dependencies, and
+  unsafe relevance accounting.
+- The full default portfolio selected 12 foundations, 28 individualized
+  relationships, 9 derived-family candidates, and one configuration, covering all
+  12 root owners, 41 terms, and 48 evidence families.
+- Passed 21 focused/combined bounded tests, all 246 repository tests in 174.817
+  seconds, full-scale reorder replay, all three policies under Linux SPC 0.11.0,
+  and a fresh non-editable wheel import.
+- No provider operation occurred. Gate 5 is ready for review; Slice 6 has not begun.
