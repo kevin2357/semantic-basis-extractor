@@ -35,3 +35,31 @@ decisions and evidence but do not represent completed implementation slices.
   provider-free integration qualification remain.
 - Wrote the proposed sprint plan. No implementation, test fixture, package
   dependency, schema, version, tag, or release was changed during planning.
+
+## 2026-08-14: Slice 0 - baseline, contract freeze, and fixture strategy
+
+- Committed and pushed the approved sprint plan together with the previously
+  accepted `py.typed` packaging follow-up as `8ba9613`.
+- Named the released exact-Natal behavior `legacy_atomic.v1` and froze a fresh Bre
+  replay at 103 candidates, 50 selected claims, 53 rejected claims, passing QA,
+  and stable candidate, selection, packet, and QA hashes.
+- Passed the source release smoke through `DELIVERY_COMPLETE` with 50 cards, four
+  summaries, matching delivery hashes, and the frozen resource-set identity.
+- Adopted SPC 0.11.0's 7.6 KB sanitized bounded source fixture and generated all
+  four official projected contexts through SPC's public CLI. Official schema and
+  parallel-family validation passed with two object and one relationship
+  correspondences.
+- Retained only the supplied full-scale archive's hash, compact metrics, and
+  semantic validation identities; its expanded protected artifacts remain outside
+  Git and release packaging.
+- Reserved distinct v1 names for bounded admission, candidate policy, editorial
+  utility, claim deck, disposition report, authoring packet, and final cards.
+- Recorded that the AGF 0.8.1 archive passes SPC 0.11.0 runtime validation while
+  SPC's prose compatibility table still names AGF 0.8.0, a documentation
+  qualification that must remain explicit.
+- Added a regression test that dynamically replays and verifies the exact Bre
+  semantic baseline plus bounded inventory/contract-name checks.
+- Passed three focused baseline tests, all 218 repository tests, source release
+  smoke, and an isolated offline-installed wheel smoke with `--require-installed`.
+  `git diff --check` also passed apart from expected Windows line-ending notices.
+- Gate 0 is awaiting review. No production refactor has begun.

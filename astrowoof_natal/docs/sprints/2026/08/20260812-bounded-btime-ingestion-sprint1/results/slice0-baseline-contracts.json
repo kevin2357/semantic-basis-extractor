@@ -1,0 +1,68 @@
+{
+  "schema_version": "sbe.bounded_natal.sprint_baseline.v1",
+  "baseline": {
+    "git_commit": "8ba961368c345c0a947d95db6491d0f090bfc045",
+    "sbe_release": "0.3.0",
+    "exact_policy": "legacy_atomic.v1"
+  },
+  "exact_bre_replay": {
+    "candidate_count": 103,
+    "candidate_sha256": "6d9242c7597d6e06f77e276a95672108667e923b3cd8d863aa1d76900a30ebdc",
+    "selected_count": 50,
+    "selected_sha256": "513aa11d43ef852c419f1c24bb288320183285fcdc69b78c77e8208b2af8bfd4",
+    "rejected_count": 53,
+    "packet_sha256": "d13a7d456ddc6dfd1b6f959d6b36108fe44699f30c95274843a8fa6e46ca54a4",
+    "qa_sha256": "b0bdb5e8cafb1575c4da512f789e7c797c81e1057b317a5a6be06be728151139",
+    "qa_status": "pass"
+  },
+  "release_smoke": {
+    "schema_version": "astrowoof.natal_authoring.release_smoke.v0.1",
+    "status": "pass",
+    "card_count": 50,
+    "summary_count": 4,
+    "resource_count": 30,
+    "resource_set_sha256": "d989f84404c9ef79fe310f938a8d1588b4714c7e971e85af0b0e7c098f931582"
+  },
+  "sanitized_bounded_fixture": {
+    "custodian": "semantic-projection-core 0.11.0",
+    "source_path": "tests/fixtures/agf/bounded_natal_v1_tiny.json",
+    "source_file_sha256": "097266ac8ae463822a75ad71dbc873cf445c05d5aeeef2e19a02182ee705fa6b",
+    "output_contract": "projected_bounded_semantic_graph.v1",
+    "contract_version": "1.0.0",
+    "profile": "woofmapped_bounded_astrology.v0@0.1.0",
+    "object_correspondence_count": 2,
+    "relationship_correspondence_count": 1,
+    "epistemic_sha256": "50f10a88a660e76ec73f7ba09327ceb35cdffccb1453905927bb128dac40b9c1",
+    "structural_semantic_sha256": "c8b78a607d9fe0131ef6ceb031aaaf6e1d624419c5a8a648de09d0b06ee85713",
+    "parallel_validation": "passed",
+    "projected_file_sha256": {
+      "woofmapped.dog_direct.v1@1.0.0": "6b534929df050627cc05b5d9968b2637d6347231ea2b06d153fead05b0bc8db0",
+      "woofmapped.doghouse.general.v0@0.1.0": "0cf03a2b66404f58ba1da1faa04eba6ca560d919c9209bbb904143301996ebfd",
+      "woofmapped.handler_guidance.v1@1.0.0": "90db0d6562dd8c8f475d6ecc39eb624060c5379180eb3ce5c69c0f628c921b9d",
+      "woofmapped.hybrid_horoscope.v1@1.0.0": "eecf6e5340a57c8f065bbe74eb5aac58e62bac2303f9b044cc37492fb8ad611a"
+    }
+  },
+  "full_scale_bounded_fixture": {
+    "archive_name": "astrowoof-bounded-1981-10-10-denver-1300-1700-agf-0.8.1-spc-0.11.0.zip",
+    "archive_sha256": "13086c88814b1edeea886e52e08aae6ea92ff8889a3ae5a890e7a9a71a48ef5a",
+    "custody": "external; protected source details and expanded artifacts are not committed",
+    "agf_release": "0.8.1",
+    "spc_release": "0.11.0",
+    "object_correspondence_count": 106,
+    "relationship_correspondence_count": 1520,
+    "projected_term_count": 43,
+    "evidence_record_count": 1544,
+    "epistemic_sha256": "bcaa357f9c4418b070505344c6d9d49daf63ae3a8f9e24278fe6c4f189ee8166",
+    "structural_semantic_sha256": "a466bd43a83435a055d09b127a9c0e4f6a4f2bb377a09975df7b6604777d1008",
+    "parallel_validation": "passed"
+  },
+  "reserved_contract_names": {
+    "input_admission": "astrowoof.bounded_natal.input_admission.v1",
+    "candidate_policy": "astrowoof.bounded_natal.candidate_policy.v1",
+    "editorial_utility_profile": "astrowoof.bounded_natal.editorial_utility.v1",
+    "claim_deck": "astrowoof.bounded_natal.claim_deck.v1",
+    "disposition_report": "astrowoof.bounded_natal.disposition_report.v1",
+    "authoring_packet": "astrowoof.bounded_natal.authoring_packet.v1",
+    "final_cards": "astrowoof.bounded_natal.cards.v1"
+  }
+}

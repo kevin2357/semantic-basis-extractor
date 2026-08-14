@@ -1,6 +1,10 @@
 # Sprint Results
 
-No implementation slice has been executed.
+Slice 0 has completed its baseline and contract-freeze work and is awaiting Gate 0
+review.
+
+- `SLICE 0 - Baseline Contract and Fixture Strategy.md`
+- `slice0-baseline-contracts.json`
 
 Add one durable result document for each completed gate using the convention:
 
