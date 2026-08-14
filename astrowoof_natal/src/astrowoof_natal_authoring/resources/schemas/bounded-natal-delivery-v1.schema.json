@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-delivery-v1.json",
+  "title": "AstroWoof Bounded Natal Delivery v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "route", "run_id", "subject_id", "cards",
+    "claim_deck", "authoring_packet", "disposition_report", "input_contract",
+    "completed_stages", "skipped_stages"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.delivery.v1"},
+    "route": {"const": "bounded_natal.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "subject_id": {"type": "string", "minLength": 1},
+    "cards": {"$ref": "#/$defs/artifact"},
+    "claim_deck": {"$ref": "#/$defs/artifact"},
+    "authoring_packet": {"$ref": "#/$defs/artifact"},
+    "disposition_report": {"$ref": "#/$defs/artifact"},
+    "input_contract": {
+      "type": "object",
+      "required": ["kind", "schema_version", "sha256"],
+      "properties": {
+        "kind": {"const": "bounded_natal"},
+        "schema_version": {"const": "astrowoof.bounded_natal.claim_deck.v1"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "completed_stages": {"type": "array", "items": {"type": "string"}},
+    "skipped_stages": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

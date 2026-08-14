@@ -258,6 +258,8 @@ class TestBoundedAuthoring(unittest.TestCase):
             "schemas/bounded-natal-authoring-packet-v1.schema.json": AUTHORING_PACKET_CONTRACT,
             "schemas/bounded-natal-disposition-report-v1.schema.json": "astrowoof.bounded_natal.disposition_report.v1",
             "schemas/bounded-natal-cards-v1.schema.json": FINAL_CARDS_CONTRACT,
+            "schemas/bounded-natal-delivery-v1.schema.json": "astrowoof.bounded_natal.delivery.v1",
+            "schemas/bounded-natal-critic-v1.schema.json": "astrowoof.bounded_natal.critic.v1",
         }
         for resource, contract in schemas.items():
             schema = json.loads(read_resource_text(resource))
@@ -267,6 +269,14 @@ class TestBoundedAuthoring(unittest.TestCase):
         self.assertEqual(
             "astrowoof.bounded_natal.delivery_provenance.v1",
             catalog["contracts"]["bounded_natal_delivery_provenance"],
+        )
+        self.assertEqual(
+            "astrowoof.bounded_natal.authoring_run.v1",
+            catalog["contracts"]["bounded_natal_authoring_run"],
+        )
+        self.assertEqual(
+            "astrowoof.bounded_natal.delivery.v1",
+            catalog["contracts"]["bounded_natal_delivery"],
         )
         self.assertIn("representative time", read_resource_text("authoring/Bounded Natal Authoring Brief.md"))
         inventory = read_resource_text("authoring/Bounded Natal Provider Disclosure Inventory.md")

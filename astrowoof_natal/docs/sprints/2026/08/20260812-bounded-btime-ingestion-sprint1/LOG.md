@@ -287,3 +287,30 @@ decisions and evidence but do not represent completed implementation slices.
 - Passed all 270 repository tests in 196.432 seconds, including both exact angle
   policies and all released exact lifecycle/spend/snapshot/authoring regressions.
 - Gate 8 is ready for review. Slice 9 has not begun.
+
+## 2026-08-14: Slice 9 - installed cross-repository acceptance and handoff
+
+- Gate 8 was approved, committed, and pushed as `fcdedce`.
+- Added the installed `astrowoof-run-bounded-natal` create/resume command and a
+  bounded OpenAI Responses adapter over SBE's released spend and resumable-provider
+  implementation. Real bounded Batch submission is explicitly rejected rather
+  than mislabeled for Batch pricing.
+- Restricted provider structured output to editorial fields and correlation IDs.
+  SBE deterministically reattaches invariant authority, evidence scopes, subject,
+  selected terms, and registry bytes, rejecting missing, duplicate, or unknown
+  claim/summary identities.
+- Added packaged bounded delivery and critic schemas/catalog entries, 0.4.0 release
+  candidate documentation, compatibility/limitations guidance, API/frontend
+  handoff, sanitized delivery example, and exact upstream pin/hash instructions.
+- Passed all 274 repository tests in 149.848 seconds. The final 0.4.0 wheel built
+  twice byte-identically at 711,052 bytes with SHA-256
+  `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`;
+  it contains 78 entries, 38 resources, `py.typed`, and no cache entries.
+- The predecessor candidate passed the complete installed Linux gate in the exact
+  AGF 0.8.1/SPC 0.11.0 image. The final candidate's rerun could not execute because
+  the desktop approval service reported its usage limit; this remains a required
+  unexecuted gate, not a test failure. Windows final-candidate E2E is also pending
+  due unavailable dependency-install authorization.
+- No provider operation occurred and spend remained `$0`. API-agent review and the
+  final Linux installed rerun are required before Gate 9 approval or release
+  recommendation. No tag or publication was created.

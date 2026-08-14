@@ -1,0 +1,53 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.0",
+  "status": "candidate_awaiting_api_review",
+  "release_tag": null,
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.0-py3-none-any.whl",
+    "bytes": 711052,
+    "sha256": "4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84",
+    "wheel_entry_count": 78,
+    "resource_count": 38,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "source_commit": "pending_gate9_commit",
+    "source_date_epoch": 1786665600,
+    "independent_build_count": 2,
+    "byte_reproducible": true
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.11 Linux"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "upstream": {
+    "agf": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d",
+    "bounded_output_contract": "projected_bounded_semantic_graph.v1"
+  },
+  "resources": {
+    "installed_resource_count": 38,
+    "installed_resource_set_sha256": "8cd48a8d6950ac054bcff9939d1d2b3dafdf5a2004b11f1235f90bda8bc498f0"
+  },
+  "qa": {
+    "repository_test_count": 274,
+    "repository_tests": "pass",
+    "predecessor_candidate_linux_installed_acceptance": "pass",
+    "final_candidate_linux_installed_acceptance": "pending_local_docker_execution_authorization_unavailable",
+    "final_candidate_windows_installed_acceptance": "pending_dependency_installation_authorization_unavailable",
+    "real_provider_operation_count": 0,
+    "provider_spend_usd": 0
+  },
+  "review": {
+    "api_agent": "required",
+    "release_recommendation": "withheld_pending_review",
+    "tag_created": false,
+    "publication_created": false
+  }
+}

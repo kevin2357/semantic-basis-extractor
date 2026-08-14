@@ -1,6 +1,7 @@
 # Sprint Results
 
-Slices 0 through 7 are approved. Slice 8 implementation is awaiting Gate 8 review.
+Slices 0 through 8 are approved. Slice 9 is awaiting API-agent review and the
+final-candidate installed Linux rerun before Gate 9 review.
 
 - `SLICE 0 - Baseline Contract and Fixture Strategy.md`
 - `slice0-baseline-contracts.json`
@@ -12,10 +13,12 @@ Slices 0 through 7 are approved. Slice 8 implementation is awaiting Gate 8 revie
 - `SLICE 6 - Bounded Claim Deck Authoring and Final Cards.md`
 - `SLICE 7 - Shared Lifecycle Events Snapshots and Failure Recovery.md`
 - `SLICE 8 - Deterministic Scale Privacy and Product QA.md`
+- `SLICE 9 - Installed Cross-Repository Acceptance and Handoff.md`
 - `slice5-bounded-selection-summary.json`
 - `slice6-bounded-authoring-summary.json`
 - `slice7-bounded-lifecycle-summary.json`
 - `slice8-bounded-product-qa.json`
+- `slice9-installed-acceptance.json`
 
 Add one durable result document for each completed gate using the convention:
 

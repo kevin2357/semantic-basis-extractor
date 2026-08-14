@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-critic-v1.json",
+  "title": "AstroWoof Bounded Natal Critic v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "outcome", "findings"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.critic.v1"},
+    "outcome": {"enum": ["accept", "review"]},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "priority", "diagnosis"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "priority": {"enum": ["high", "medium", "low"]},
+          "diagnosis": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

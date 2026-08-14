@@ -248,3 +248,21 @@ ingestion. The bounded implementation must reuse SBE 0.3.0's released lifecycle 
 event contracts, add bounded admission/selection semantics and events, and qualify
 the shared operations with one provider-free installed fixture. Everything else is
 already satisfied, optional, deferred, or API-owned.
+
+## Slice 9 delivery reconciliation
+
+The candidate delivers the required separate bounded contracts, strict admission,
+invariant-only exact-fifty selection, anti-inflation, private disposition evidence,
+provider-minimized authoring, shared lifecycle/spend/snapshot behavior, bounded
+events, installed CLI, schemas, provenance, consumer handoff, and exact pins.
+
+The advisory event list was implemented at bounded route/admission/basis/selection/
+compilation boundaries and supplemented by the shared lifecycle/provider/spend
+events. More granular diagnostic events remain optional because native state and
+artifacts—not event delivery—are authoritative.
+
+API-owned queue/lease/fencing, cross-run reservation, quota, circuit-breaker,
+PostgreSQL, billing, entitlement, worker-scratch, publication, and frontend-policy
+responsibilities remain unchanged. The API-agent review packet requests explicit
+confirmation of those seams. Release recommendation is withheld until that review
+and the final-candidate installed Linux rerun are complete.

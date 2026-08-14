@@ -1,0 +1,35 @@
+{
+  "schema_version": "astrowoof.bounded_natal.delivery.v1",
+  "route": "bounded_natal.v1",
+  "run_id": "d0312966470989f29b4169a8e99c4826d90ca7c14e87ffbdcc536341a7e018d6",
+  "subject_id": "bounded-subject",
+  "cards": {
+    "path": "bounded/final/cards.json",
+    "bytes": 232906,
+    "sha256": "759805f19fb3ad0c746a9e2c7d207c93902157886dcfcbdb04c51c9aad4b7663"
+  },
+  "claim_deck": {
+    "path": "bounded/inputs/claim-deck.json",
+    "bytes": 1244792,
+    "sha256": "49707f3117ebe1fe36b7e5e90c9edf700c56f6ffe25728e34599ec548db6f521"
+  },
+  "authoring_packet": {
+    "path": "bounded/inputs/authoring-packet.json",
+    "bytes": 515906,
+    "sha256": "5403e60f7cebfdc406f61bdd3cd7be3f0f80a9b1be52a4d6109d32b6785bc43a"
+  },
+  "disposition_report": {
+    "path": "bounded/inputs/disposition-report.json",
+    "bytes": 940034,
+    "sha256": "5912f12423c5cd739c15052d6a1a01191b0fbf38c78df24c24a8360800259c08"
+  },
+  "input_contract": {
+    "kind": "bounded_natal",
+    "schema_version": "astrowoof.bounded_natal.claim_deck.v1",
+    "sha256": "49707f3117ebe1fe36b7e5e90c9edf700c56f6ffe25728e34599ec548db6f521"
+  },
+  "completed_stages": [
+    "authoring_initial", "polish", "qualitative_critic", "qualitative_candidate"
+  ],
+  "skipped_stages": []
+}
