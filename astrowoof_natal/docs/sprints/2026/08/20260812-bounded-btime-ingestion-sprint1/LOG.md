@@ -224,3 +224,35 @@ decisions and evidence but do not represent completed implementation slices.
 - Passed 29 combined bounded tests, all 254 repository tests in 171.428 seconds,
   JSON/schema/catalog parsing, and fresh non-editable wheel resource/import smoke.
 - Gate 6 is ready for review. Slice 7 has not begun.
+
+## 2026-08-14: Slice 7 - shared lifecycle, spend, snapshots, and recovery
+
+- Gate 6 was approved, committed, and pushed as `d0dc880`.
+- Added a bounded route sequencer over the released common run-state, spend-ledger,
+  single-writer authorization, workspace snapshot, lifecycle inspection, closeout,
+  and non-authoritative event implementations; no second integrity or spend system
+  was introduced.
+- Materialized claim deck, provider packet, disposition, durable provider results,
+  final cards/reports, critic result, and delivery record inside the authoritative
+  snapshot boundary under distinct bounded contracts.
+- Added deterministic provider-free execution for initial authoring, separate
+  creative retry, polish, critic, qualitative candidate, and delivery. Optional
+  stages are enabled or disabled by the frozen generation profile and can skip
+  under their frozen spend ceilings.
+- Reused exact request-bound prepare/authorize/execute, conservative commitment,
+  single-writer consumption, provider-ID persistence, reported-cost accounting,
+  and machine-distinct authorization/budget/ambiguity states.
+- Persisted provider results before settling paid actions. A restart with a durable
+  provider ID polls that operation; it never creates another paid request. A
+  submission interrupted before durable identity remains ambiguous and fail-closed.
+- Added five minimized bounded lifecycle events and updated the packaged event
+  schema and payload catalog. Event loss and sink failure remain observational and
+  cannot affect execution.
+- Passed the focused bounded lifecycle suite, persistence-boundary fault matrix,
+  paid authorization/identity/reconciliation and providerless-denial cases,
+  optional-budget skip, snapshot mutation/stable-path rejection, shared
+  inspection/closeout/replay, and event sink-loss tests.
+- Passed all 263 repository tests in 169.368 seconds and verified the bounded
+  lifecycle module, updated event contracts, and `py.typed` in a fresh offline
+  wheel (`f694f7558b483dec1d5f13d6970a3f6bba0cd3e3d2f56fd31b0fd7f61fb063b5`).
+- Gate 7 is ready for review. Slice 8 has not begun.

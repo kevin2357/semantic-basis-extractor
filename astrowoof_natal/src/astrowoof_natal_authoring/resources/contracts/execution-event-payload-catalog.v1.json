@@ -21,6 +21,11 @@
     "terminal.transitioned": {"required_fields": ["outcome", "terminal_reason"]},
     "closeout.completed": {"required_fields": ["disposition", "semantic_result_sha256"]},
     "execution.failed": {"required_fields": ["reason_code", "failure_class"]},
-    "event_sink.warning": {"required_fields": ["warning_code", "dropped_event_count"]}
+    "event_sink.warning": {"required_fields": ["warning_code", "dropped_event_count"]},
+    "bounded.admission.completed": {"required_fields": ["admission_id", "input_contract"]},
+    "bounded.family.validated": {"required_fields": ["context_count", "certainty_class"]},
+    "bounded.selection.completed": {"required_fields": ["claim_count", "selection_contract"]},
+    "bounded.disposition.completed": {"required_fields": ["selected_count", "suppressed_count"]},
+    "bounded.artifact.committed": {"required_fields": ["artifact_kind", "schema_version", "sha256"]}
   }
 }

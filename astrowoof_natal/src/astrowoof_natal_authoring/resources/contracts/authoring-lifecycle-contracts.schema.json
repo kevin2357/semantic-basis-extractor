@@ -332,7 +332,10 @@
           "provider.identity_recorded", "provider.waiting", "provider.completed",
           "qa.started", "qa.completed", "retry.decided", "polish.decided",
           "critic.decided", "checkpoint.committed", "terminal.transitioned",
-          "closeout.completed", "execution.failed", "event_sink.warning"
+          "closeout.completed", "execution.failed", "event_sink.warning",
+          "bounded.admission.completed", "bounded.family.validated",
+          "bounded.selection.completed", "bounded.disposition.completed",
+          "bounded.artifact.committed"
         ]},
         "severity": {"enum": ["debug", "info", "warning", "error"]},
         "component": {"const": "astrowoof-natal-authoring"},

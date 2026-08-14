@@ -1,0 +1,34 @@
+{
+  "schema_version": "sbe.bounded_natal.slice7_evidence.v1",
+  "route_contract": "astrowoof.bounded_natal.authoring_run.v1",
+  "route": "bounded_natal.v1",
+  "delivery_contract": "astrowoof.bounded_natal.delivery.v1",
+  "common_authorities_reused": [
+    "astrowoof.semantic_closure_run.v0.9",
+    "astrowoof.provider_spend_ledger.v0.1",
+    "astrowoof.semantic_closure_snapshot.v0.1",
+    "astrowoof.authoring_lifecycle_inspection.v0.1",
+    "astrowoof.authoring_closeout_result.v0.1",
+    "sbe.execution_event.v1"
+  ],
+  "provider_stages": [
+    "authoring_initial",
+    "creative_retry",
+    "polish",
+    "qualitative_critic",
+    "qualitative_candidate"
+  ],
+  "bounded_events_added": 5,
+  "failure_injection_boundaries": 9,
+  "focused_tests": 9,
+  "repository_tests": 263,
+  "repository_test_seconds": 169.368,
+  "qualification_wheel_sha256": "f694f7558b483dec1d5f13d6970a3f6bba0cd3e3d2f56fd31b0fd7f61fb063b5",
+  "paid_provider_submission_count_in_recovery_test": 1,
+  "paid_provider_reconciliation_poll_count": 1,
+  "duplicate_provider_submissions": 0,
+  "real_provider_operations": 0,
+  "network_access": false,
+  "workspace_contract": "stable_logical_absolute_path",
+  "gate": "ready_for_review"
+}

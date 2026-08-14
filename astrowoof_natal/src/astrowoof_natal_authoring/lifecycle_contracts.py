@@ -186,6 +186,11 @@ EVENT_NAMES = (
     "closeout.completed",
     "execution.failed",
     "event_sink.warning",
+    "bounded.admission.completed",
+    "bounded.family.validated",
+    "bounded.selection.completed",
+    "bounded.disposition.completed",
+    "bounded.artifact.committed",
 )
 
 EVENT_SEVERITIES = ("debug", "info", "warning", "error")

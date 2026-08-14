@@ -46,6 +46,11 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "closeout.completed": ("disposition", "semantic_result_sha256"),
     "execution.failed": ("reason_code", "failure_class"),
     "event_sink.warning": ("warning_code", "dropped_event_count"),
+    "bounded.admission.completed": ("admission_id", "input_contract"),
+    "bounded.family.validated": ("context_count", "certainty_class"),
+    "bounded.selection.completed": ("claim_count", "selection_contract"),
+    "bounded.disposition.completed": ("selected_count", "suppressed_count"),
+    "bounded.artifact.committed": ("artifact_kind", "schema_version", "sha256"),
 }
 
 
