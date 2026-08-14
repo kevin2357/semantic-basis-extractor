@@ -31,6 +31,7 @@ from .basis_policies import (
     resolve_exact_natal_policy,
 )
 from .contracts import discover_projected_input, normalize_subject_params
+from .exact_axis import axis_configuration_specs, structural_angle_reason
 from .registries import merge as merge_projected_term_registries
 from .resource_access import (
     copy_module_source,
@@ -456,6 +457,7 @@ def build_candidates(
 
     candidates: list[Candidate] = []
     object_candidate_by_projected_id: dict[str, str] = {}
+    object_candidate_by_name: dict[str, str] = {}
 
     for source_ref, records in sorted(objects.items()):
         record = records.get("general") or next(iter(records.values()))
@@ -463,6 +465,7 @@ def build_candidates(
         name = object_name(record)
         cid = stable_id("placement", source_ref)
         object_candidate_by_projected_id[record["id"]] = cid
+        object_candidate_by_name[name] = cid
         label = OBJECT_LABELS.get(name, humanize(record.get("name")).title())
         mode = humanize(attrs.get("projected_mode"))
         domain = humanize(attrs.get("projected_domain"))
@@ -505,6 +508,7 @@ def build_candidates(
         candidates.append(candidate)
 
     relationship_candidate_by_source_ref: dict[str, str] = {}
+    relationship_rows: list[dict[str, Any]] = []
     for relationship_signature, records in sorted(relationships.items()):
         record = records.get("general") or next(iter(records.values()))
         attrs = record.get("attributes", {})
@@ -581,8 +585,114 @@ def build_candidates(
             },
             semantic_role=["bridge", "structural"],
         )
+        structural_reason = structural_angle_reason(
+            source_name,
+            target_name,
+            attrs.get("canonical_aspect"),
+        )
+        if policy.axis_strategy == "configuration" and structural_reason:
+            candidate.eligible_for_selection = False
+            candidate.rejection_reason = structural_reason
+            candidate.provenance["policy_disposition"] = structural_reason
         candidate.finish_score(policy.score_weights)
         candidates.append(candidate)
+        relationship_rows.append(
+            {
+                "candidate": candidate,
+                "source_name": source_name,
+                "target_name": target_name,
+                "canonical_aspect": attrs.get("canonical_aspect"),
+                "orb": attrs.get("orb"),
+            }
+        )
+
+    if policy.axis_strategy == "configuration":
+        for spec in axis_configuration_specs(
+            relationship_rows, object_candidate_by_name
+        ):
+            component_ids = spec["component_candidate_ids"]
+            for row in relationship_rows:
+                component = row["candidate"]
+                if component.candidate_id in component_ids:
+                    component.eligible_for_selection = False
+                    component.rejection_reason = "represented_by_axis_configuration"
+                    component.provenance["policy_disposition"] = (
+                        "represented_by_axis_configuration"
+                    )
+            endpoint_phrases = [
+                f"{member['canonical_aspect']} {member['angle']}"
+                for member in spec["members"]
+            ]
+            external_label = OBJECT_LABELS.get(
+                spec["external_name"], spec["external_name"]
+            )
+            axis_label = "–".join(spec["axis_endpoints"])
+            candidate = Candidate(
+                candidate_id=stable_id(
+                    "axis",
+                    policy.policy_id,
+                    spec["external_name"],
+                    spec["axis_name"],
+                    *component_ids,
+                ),
+                candidate_type="axis_configuration",
+                claim_type="system_interaction",
+                categories=["system_interactions"],
+                canonical_claim=(
+                    f"{external_label} operates through the {axis_label} axis "
+                    f"({'; '.join(endpoint_phrases)})."
+                ),
+                dependencies=spec["dependencies"],
+                source_refs=spec["source_refs"],
+                evidence=[
+                    {
+                        "kind": "axis_configuration",
+                        "role": "compressed_relationship_evidence",
+                        "axis_name": spec["axis_name"],
+                        "axis_endpoints": spec["axis_endpoints"],
+                        "external_object": spec["external_name"],
+                        "component_relationships": spec["members"],
+                    }
+                ],
+                behavioral_domains=sorted(
+                    {
+                        domain
+                        for row in relationship_rows
+                        if row["candidate"].candidate_id in component_ids
+                        for domain in row["candidate"].behavioral_domains
+                    }
+                ),
+                tags=sorted(
+                    {
+                        "axis_configuration",
+                        spec["axis_name"],
+                        spec["external_name"],
+                        *[
+                            tag
+                            for row in relationship_rows
+                            if row["candidate"].candidate_id in component_ids
+                            for tag in row["candidate"].tags
+                        ],
+                    }
+                ),
+                score_components=policy.score_axis_configuration(
+                    component_scores=spec["component_scores"],
+                    dependency_count=len(spec["dependencies"]),
+                ),
+                provenance={
+                    "generation_rule": "exact_natal.axis_configuration.v1",
+                    "deterministic": True,
+                    "policy_id": policy.policy_id,
+                    "axis_name": spec["axis_name"],
+                    "axis_endpoints": spec["axis_endpoints"],
+                    "external_object": spec["external_name"],
+                    "component_candidate_ids": component_ids,
+                    "transformation": "axis_compression",
+                },
+                semantic_role=["compressor", "structural", "axis_configuration"],
+            )
+            candidate.finish_score(policy.score_weights)
+            candidates.append(candidate)
 
     # Rule-based syntheses from repeated object modes/domains and relationship modes/tags.
     general_object_candidates = {
@@ -686,6 +796,21 @@ def build_candidates(
 
     relation_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for record in general["relationships"]:
+        source_relationship_refs = record.get("source_relationship_refs", [])
+        if source_relationship_refs:
+            component_id = relationship_candidate_by_source_ref.get(
+                source_relationship_refs[0]
+            )
+            component = next(
+                (
+                    candidate
+                    for candidate in candidates
+                    if candidate.candidate_id == component_id
+                ),
+                None,
+            )
+            if component is not None and not component.eligible_for_selection:
+                continue
         interaction = record.get("attributes", {}).get("interaction_mode")
         if interaction:
             relation_groups[("interaction", interaction)].append(record)
@@ -870,6 +995,25 @@ def optimize(
     policy = resolve_exact_natal_policy(policy)
     budget = policy.selection_budget if budget is None else budget
     by_id = {x.candidate_id: x for x in candidates}
+    invalid_dependencies = {
+        candidate.candidate_id: sorted(
+            dependency
+            for dependency in candidate.dependencies
+            if dependency in by_id and not by_id[dependency].eligible_for_selection
+        )
+        for candidate in candidates
+        if candidate.eligible_for_selection
+    }
+    invalid_dependencies = {
+        candidate_id: dependencies
+        for candidate_id, dependencies in invalid_dependencies.items()
+        if dependencies
+    }
+    if invalid_dependencies:
+        raise AssertionError(
+            "Eligible candidates depend on policy-excluded candidates: "
+            f"{invalid_dependencies}"
+        )
     selected_ids = {x.candidate_id for x in candidates if x.mandatory}
     if len(selected_ids) != policy.mandatory_count:
         mandatory_names = sorted(
@@ -947,7 +1091,7 @@ def optimize(
     )
     for candidate in rejected:
         if not candidate.eligible_for_selection:
-            candidate.rejection_reason = (
+            candidate.rejection_reason = candidate.rejection_reason or (
                 "Preserved maximal-support synthesis variant; not eligible for "
                 "the closed 50-claim authoring portfolio."
             )
@@ -963,6 +1107,105 @@ def optimize(
         else:
             candidate.rejection_reason = "Lower marginal portfolio utility at the 50-claim budget."
     return selected, rejected, audit
+
+
+def compare_exact_policy_portfolios(
+    baseline_selected: list[Candidate],
+    candidate_selected: list[Candidate],
+    candidate_rejected: list[Candidate],
+    *,
+    baseline_policy_id: str = LEGACY_ATOMIC_POLICY_ID,
+    candidate_policy_id: str,
+) -> dict[str, Any]:
+    """Build a deterministic semantic comparison for an exact policy experiment."""
+
+    baseline_ids = {candidate.candidate_id for candidate in baseline_selected}
+    candidate_ids = {candidate.candidate_id for candidate in candidate_selected}
+
+    def type_counts(candidates: list[Candidate]) -> dict[str, int]:
+        return dict(sorted(Counter(x.candidate_type for x in candidates).items()))
+
+    def source_refs(candidates: list[Candidate]) -> set[str]:
+        return {
+            source_ref
+            for candidate in candidates
+            for source_ref in candidate.source_refs
+        }
+
+    def angle_topology(candidates: list[Candidate]) -> dict[str, int]:
+        by_id = {candidate.candidate_id: candidate for candidate in candidates}
+        pure_frame = 0
+        individualized = 0
+        for candidate in candidates:
+            if candidate.candidate_type != "projected_relationship":
+                continue
+            endpoint_names = {
+                by_id[dependency].provenance.get("canonical_object_name")
+                for dependency in candidate.dependencies
+                if dependency in by_id
+            }
+            angle_count = len(endpoint_names & {"ASC", "DSC", "MC", "IC"})
+            pure_frame += angle_count == 2
+            individualized += angle_count == 1
+        return {
+            "pure_angle_frame_relationships": pure_frame,
+            "individualized_angle_relationships": individualized,
+            "axis_configurations": sum(
+                candidate.candidate_type == "axis_configuration"
+                for candidate in candidates
+            ),
+        }
+
+    baseline_refs = source_refs(baseline_selected)
+    candidate_refs = source_refs(candidate_selected)
+    disposition_counts = Counter(
+        candidate.rejection_reason
+        for candidate in candidate_rejected
+        if candidate.rejection_reason
+        in {"structurally_inevitable", "represented_by_axis_configuration"}
+    )
+    retained_count = len(baseline_ids & candidate_ids)
+    union_count = len(baseline_ids | candidate_ids)
+    return {
+        "schema_version": "semantic_basis.exact_policy_comparison.v1",
+        "baseline_policy_id": baseline_policy_id,
+        "candidate_policy_id": candidate_policy_id,
+        "budget": len(candidate_selected),
+        "portfolio": {
+            "retained_ids": sorted(baseline_ids & candidate_ids),
+            "added_ids": sorted(candidate_ids - baseline_ids),
+            "displaced_ids": sorted(baseline_ids - candidate_ids),
+            "retained_count": retained_count,
+            "jaccard": round(retained_count / max(1, union_count), 6),
+            "baseline_type_counts": type_counts(baseline_selected),
+            "candidate_type_counts": type_counts(candidate_selected),
+        },
+        "topology": {
+            "baseline": angle_topology(baseline_selected),
+            "candidate": angle_topology(candidate_selected),
+            "candidate_dispositions": dict(sorted(disposition_counts.items())),
+        },
+        "coverage": {
+            "baseline_selected_source_ref_count": len(baseline_refs),
+            "candidate_selected_source_ref_count": len(candidate_refs),
+            "retained_source_ref_count": len(baseline_refs & candidate_refs),
+            "added_source_refs": sorted(candidate_refs - baseline_refs),
+            "lost_source_refs": sorted(baseline_refs - candidate_refs),
+        },
+        "closure": {
+            "baseline_dependency_count": sum(
+                len(candidate.dependencies) for candidate in baseline_selected
+            ),
+            "candidate_dependency_count": sum(
+                len(candidate.dependencies) for candidate in candidate_selected
+            ),
+            "candidate_axis_component_count": sum(
+                len(candidate.provenance.get("component_candidate_ids", []))
+                for candidate in candidate_selected
+                if candidate.candidate_type == "axis_configuration"
+            ),
+        },
+    }
 
 
 def blank_voice_map() -> dict[str, str]:
@@ -1085,7 +1328,9 @@ def compile_packet(
             **({
                 "theme_group_id": "__LLM_FILL__",
             } if (
-                candidate.candidate_type == "projected_relationship"
+                candidate.candidate_type in {
+                    "projected_relationship", "axis_configuration"
+                }
                 or candidate.claim_type == "synthesized_theme"
             ) else {}),
             "context_filter_groups": {
@@ -1245,7 +1490,9 @@ def qa_report(
         if "category" in card:
             errors.append(f"Card {index} retains obsolete category field.")
         needs_theme = (
-            candidate.candidate_type == "projected_relationship"
+            candidate.candidate_type in {
+                "projected_relationship", "axis_configuration"
+            }
             or candidate.claim_type == "synthesized_theme"
         )
         if needs_theme and card.get("theme_group_id") != "__LLM_FILL__":
@@ -3567,6 +3814,18 @@ def main() -> None:
             qa = qa_report(candidates, selected, rejected, packet, policy)
             if qa["status"] != "pass":
                 raise AssertionError(json.dumps(qa, indent=2))
+            policy_comparison = None
+            if policy.axis_strategy == "configuration":
+                baseline_candidates, _baseline_analysis = build_candidates(contexts)
+                baseline_selected, _baseline_rejected, _baseline_audit = optimize(
+                    baseline_candidates
+                )
+                policy_comparison = compare_exact_policy_portfolios(
+                    baseline_selected,
+                    selected,
+                    rejected,
+                    candidate_policy_id=policy.policy_id,
+                )
 
             root = args.output_dir / subject
             write_json(root / f"{subject}.input-audit.json", input_audit)
@@ -3600,6 +3859,11 @@ def main() -> None:
             })
             write_json(root / f"{subject}.selected-authoring-packet.json", packet)
             write_json(root / f"{subject}.selection-qa.json", qa)
+            if policy_comparison is not None:
+                write_json(
+                    root / f"{subject}.policy-comparison.json",
+                    policy_comparison,
+                )
             if args.full_chart_basis_format in {"compact-v1", "compact-v2"}:
                 filename = (
                     f"{subject}.compact-full-chart-basis.json"

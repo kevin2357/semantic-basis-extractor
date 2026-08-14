@@ -1,5 +1,57 @@
 # Treatment of Angles (Expanded Design Notes)
 
+## Implemented experiment
+
+The proposal below is implemented as the opt-in exact-Natal policy
+`axis_aware.v1`. The released/default behavior remains `legacy_atomic.v1`.
+
+The experiment recognizes ASC–DSC and MC–IC endpoint pairs for a planet or point,
+emits one deterministic `axis_configuration` candidate, and preserves both
+component relationships and their complete context evidence. The compressed
+candidate depends on the external object and both axis endpoint objects; it does
+not require the two atomic relationship candidates to consume authoring slots.
+
+Under `axis_aware.v1`:
+
+- the six inevitable angle-frame relationships are retained in the candidate pool
+  with `structurally_inevitable` disposition;
+- individualized component relationships represented by a complete axis candidate
+  are retained with `represented_by_axis_configuration` disposition;
+- incomplete endpoint pairs do not synthesize and their surviving atomic
+  relationship stays eligible; and
+- the CLI emits a deterministic policy-comparison report covering portfolio drift,
+  topology, source coverage, closure cost, and disposition counts.
+
+Select the experiment with
+`--exact-natal-policy axis_aware.v1`. It is not enabled by default or implied by
+ordinary exact-Natal extraction.
+
+## Implemented experiment
+
+The proposal below is implemented as the opt-in exact-Natal policy
+`axis_aware.v1`. The released/default behavior remains `legacy_atomic.v1`.
+
+The experiment recognizes ASC–DSC and MC–IC endpoint pairs for a planet or point,
+emits one deterministic `axis_configuration` candidate, and preserves both
+component relationships and their complete context evidence. The compressed
+candidate depends on the external object and both axis endpoint objects; it does
+not require the two atomic relationship candidates to consume authoring slots.
+
+Under `axis_aware.v1`:
+
+- the six inevitable angle-frame relationships are retained in the candidate pool
+  with `structurally_inevitable` disposition;
+- individualized component relationships represented by a complete axis candidate
+  are retained with `represented_by_axis_configuration` disposition;
+- incomplete endpoint pairs do not synthesize and their surviving atomic
+  relationship stays eligible; and
+- the CLI emits a deterministic policy-comparison report covering portfolio drift,
+  topology, source coverage, closure cost, and disposition counts.
+
+Select the experiment with
+`--exact-natal-policy axis_aware.v1`. It is not enabled by default or implied by
+ordinary exact-Natal extraction.
+
 ## Purpose
 
 This document proposes refinements to the Semantic Basis Extractor (SBE)

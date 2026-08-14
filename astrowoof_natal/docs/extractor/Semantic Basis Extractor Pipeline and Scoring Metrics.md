@@ -158,6 +158,12 @@ to describe an implementation refactor.
 Use `--exact-natal-policy legacy_atomic.v1` to select it explicitly. The policy
 option is exact-route-specific; bounded input uses a separate pipeline and contract.
 
+The opt-in `axis_aware.v1` exact policy is an experimental alternative. It retains
+all upstream angle edges, excludes inevitable frame geometry from authored claim
+competition, and represents complete planet/point-to-axis pairs as traceable
+configuration candidates. It emits a separate `*.policy-comparison.json`; it does
+not change the default.
+
 ## 5. Whole-graph analysis
 
 Selection must not begin from an already truncated list. Before choosing candidates, SBE examines the entire projected graph and records:

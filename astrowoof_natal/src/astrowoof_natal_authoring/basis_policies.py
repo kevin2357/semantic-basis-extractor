@@ -7,6 +7,7 @@ from typing import Any, Protocol
 
 
 LEGACY_ATOMIC_POLICY_ID = "legacy_atomic.v1"
+AXIS_AWARE_POLICY_ID = "axis_aware.v1"
 
 LEGACY_EXACT_MANDATORY_OBJECTS = frozenset(
     {
@@ -72,6 +73,7 @@ class BasisPolicy(Protocol):
     authoring_packet_schema_version: str
     candidate_generator_id: str
     optimizer_id: str
+    axis_strategy: str
 
     def object_semantics(self, canonical_name: str) -> dict[str, Any]: ...
 
@@ -114,6 +116,13 @@ class BasisPolicy(Protocol):
         evidence_strength: float,
     ) -> dict[str, float]: ...
 
+    def score_axis_configuration(
+        self,
+        *,
+        component_scores: list[dict[str, float]],
+        dependency_count: int,
+    ) -> dict[str, float]: ...
+
 
 @dataclass(frozen=True)
 class ExactNatalPolicy:
@@ -131,6 +140,7 @@ class ExactNatalPolicy:
     )
     candidate_generator_id: str = "projected-candidates.v0.2"
     optimizer_id: str = "closed-marginal-portfolio.v0.1"
+    axis_strategy: str = "atomic"
 
     def object_semantics(self, canonical_name: str) -> dict[str, Any]:
         mandatory = canonical_name in LEGACY_EXACT_MANDATORY_OBJECTS
@@ -244,12 +254,61 @@ class ExactNatalPolicy:
             "dependency_cost": _clamp(dependency_count / 8),
         }
 
+    def score_axis_configuration(
+        self,
+        *,
+        component_scores: list[dict[str, float]],
+        dependency_count: int,
+    ) -> dict[str, float]:
+        raise ValueError(f"{self.policy_id} does not generate axis configurations")
+
+
+@dataclass(frozen=True)
+class AxisAwareExactNatalPolicy(ExactNatalPolicy):
+    """Experimental exact policy that represents angular axes as configurations."""
+
+    policy_id: str = AXIS_AWARE_POLICY_ID
+    axis_strategy: str = "configuration"
+    candidate_generator_id: str = "projected-candidates.axis-aware.v1"
+
+    def score_axis_configuration(
+        self,
+        *,
+        component_scores: list[dict[str, float]],
+        dependency_count: int,
+    ) -> dict[str, float]:
+        if len(component_scores) < 2:
+            raise ValueError("Axis configuration requires at least two components")
+
+        def mean(name: str) -> float:
+            return sum(score.get(name, 0.0) for score in component_scores) / len(
+                component_scores
+            )
+
+        return {
+            "core_salience": _clamp(mean("core_salience")),
+            "structural": _clamp(mean("structural")),
+            "projected_relevance": _clamp(mean("projected_relevance")),
+            "evidence": _clamp(max(mean("evidence"), 0.75)),
+            "centrality": _clamp(mean("centrality")),
+            "coverage": _clamp(max(mean("coverage"), 0.75)),
+            "distinctiveness": _clamp(max(mean("distinctiveness"), 0.8)),
+            "compression": 0.75,
+            "narrative_yield": _clamp(max(mean("narrative_yield"), 0.8)),
+            "voice_yield": _clamp(mean("voice_yield")),
+            "humor_affordance": _clamp(mean("humor_affordance")),
+            "redundancy_penalty": 0.0,
+            "dependency_cost": _clamp(dependency_count / 8),
+        }
+
 
 def resolve_exact_natal_policy(policy: str | BasisPolicy | None = None) -> BasisPolicy:
     """Resolve an exact-Natal policy, rejecting unknown identities fail-closed."""
 
     if policy is None or policy == LEGACY_ATOMIC_POLICY_ID:
         return ExactNatalPolicy()
+    if policy == AXIS_AWARE_POLICY_ID:
+        return AxisAwareExactNatalPolicy()
     if isinstance(policy, str):
         raise ValueError(f"Unsupported exact-Natal policy: {policy}")
     if policy.route != "exact_natal":

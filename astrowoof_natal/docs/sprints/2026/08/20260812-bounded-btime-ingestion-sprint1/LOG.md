@@ -86,3 +86,29 @@ decisions and evidence but do not represent completed implementation slices.
   resource-set identities.
 - `git diff --check` passed with only expected Windows line-ending notices.
 - Gate 1 is ready for review. Slice 2 has not begun.
+
+## 2026-08-14: Slice 2 - experimental exact axis-aware policy
+
+- Gate 1 was approved, committed, and pushed as `4fafab8`.
+- Added opt-in `axis_aware.v1` while retaining `legacy_atomic.v1` as every public
+  and installed default.
+- Generated complete ASC–DSC and MC–IC planet/point configurations with both
+  component edges, source references, context evidence, and transformation lineage
+  preserved.
+- Classified six Bre frame edges as `structurally_inevitable` and twelve component
+  edges as `represented_by_axis_configuration`; all remain inspectable and none can
+  re-enter selection through dependency closure.
+- Verified incomplete axes do not synthesize or suppress the surviving atomic edge.
+- Added a deterministic comparison artifact covering selected-ID drift, topology,
+  source coverage, closure cost, and policy dispositions.
+- Wired the policy through the extraction CLI and closure generation profile; the
+  API can opt in without forking orchestration.
+- Passed 13 focused policy/baseline tests, Python compilation, and all 228
+  repository tests in 127.692 seconds.
+- Built and offline-installed a fresh wheel. Installed lifecycle and complete
+  default release smokes passed.
+- Ran the installed closure end to end with the fake provider and explicit
+  `axis_aware.v1`; it reached `DELIVERY_COMPLETE`, preserved the policy in the
+  authoring profile, and emitted the expected six-configuration comparison.
+- `git diff --check` passed with only expected Windows line-ending notices.
+- Gate 2 is ready for review. Slice 3 has not begun.
