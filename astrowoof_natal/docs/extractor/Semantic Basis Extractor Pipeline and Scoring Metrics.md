@@ -137,6 +137,27 @@ context coverage continues to contribute to evidence and voice-yield scoring.
 
 The projected graphs are read-only inputs. SBE does not rewrite projected records. Exact input records are embedded in evidence blocks so selection and later prose can be audited without reconstructing graph joins.
 
+### 4.5 Versioned extraction policy
+
+Exact-Natal extraction resolves an explicit policy before candidate generation.
+The released default is `legacy_atomic.v1`; omitting the option and explicitly
+selecting that identity are regression-equivalent. Unknown names or versions fail
+closed.
+
+The policy owns route-specific decisions: mandatory objects, object claim types and
+categories, score formulas and weights, expected mandatory and total counts, and
+the authoring-packet/generator contract identities. The engine owns graph indexing,
+canonical relationship collapse, candidate materialization, dependency closure,
+portfolio mechanics, provenance assembly, and artifact writing.
+
+The resolved identity is recorded in the candidate pool, selection audit, subject
+run record, and batch run manifest. It is not injected into the legacy selected
+authoring packet because doing so would change the released packet contract merely
+to describe an implementation refactor.
+
+Use `--exact-natal-policy legacy_atomic.v1` to select it explicitly. The policy
+option is exact-route-specific; bounded input uses a separate pipeline and contract.
+
 ## 5. Whole-graph analysis
 
 Selection must not begin from an already truncated list. Before choosing candidates, SBE examines the entire projected graph and records:

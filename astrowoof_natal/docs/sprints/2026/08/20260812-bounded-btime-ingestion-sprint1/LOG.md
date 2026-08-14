@@ -63,3 +63,26 @@ decisions and evidence but do not represent completed implementation slices.
   smoke, and an isolated offline-installed wheel smoke with `--require-installed`.
   `git diff --check` also passed apart from expected Windows line-ending notices.
 - Gate 0 is awaiting review. No production refactor has begun.
+
+## 2026-08-14: Slice 1 - shared engine seam and exact legacy policy
+
+- Gate 0 was approved, committed, and pushed as `f4270dc`.
+- Added a named `ExactNatalPolicy` seam and made `legacy_atomic.v1` the explicit
+  default for exact candidate semantics, scoring, weights, budget expectations,
+  and packet compilation identities.
+- Kept graph indexing, dependency closure, portfolio mechanics, evidence and
+  provenance assembly, and artifact orchestration in the shared engine.
+- Added `--exact-natal-policy`; unknown versions and policies for another route fail
+  closed before input processing.
+- Recorded the resolved identity in candidate-pool, selection-audit, subject-run,
+  and batch-run audit surfaces without changing the legacy selected packet.
+- Proved omitted versus explicit `legacy_atomic.v1` replay equality and retained
+  every Slice 0 Bre semantic hash.
+- Passed eight focused policy/baseline tests, Python compilation, and all 223
+  repository tests in 114.923 seconds.
+- Built and offline-installed a fresh wheel in an isolated environment. Its public
+  lifecycle smoke and complete release smoke both passed from site-packages; the
+  latter reached `DELIVERY_COMPLETE` with the unchanged 50-card/four-summary and
+  resource-set identities.
+- `git diff --check` passed with only expected Windows line-ending notices.
+- Gate 1 is ready for review. Slice 2 has not begun.

@@ -24,6 +24,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from .basis_policies import (
+    BasisPolicy,
+    LEGACY_ATOMIC_POLICY_ID,
+    LEGACY_EXACT_WEIGHTS,
+    resolve_exact_natal_policy,
+)
 from .contracts import discover_projected_input, normalize_subject_params
 from .registries import merge as merge_projected_term_registries
 from .resource_access import (
@@ -41,27 +47,7 @@ CONTEXT_FILES = {
     "hybrid": "natal.{subject}.woof.hybrid.json",
 }
 
-MANDATORY_OBJECTS = {
-    "Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn",
-    "Uranus", "Neptune", "Pluto", "ASC", "DSC", "MC", "IC",
-    "North Node", "Part of Fortune",
-}
-
-WEIGHTS = {
-    "core_salience": 0.14,
-    "structural": 0.12,
-    "projected_relevance": 0.12,
-    "evidence": 0.09,
-    "centrality": 0.10,
-    "coverage": 0.10,
-    "distinctiveness": 0.08,
-    "compression": 0.07,
-    "narrative_yield": 0.09,
-    "voice_yield": 0.05,
-    "humor_affordance": 0.04,
-    "redundancy_penalty": -0.08,
-    "dependency_cost": -0.07,
-}
+WEIGHTS = dict(LEGACY_EXACT_WEIGHTS)
 
 OBJECT_LABELS = {
     "Sun": "Pack Identity",
@@ -82,12 +68,6 @@ OBJECT_LABELS = {
     "Part of Fortune": "Easy Reward Channel",
     "South Node": "Familiar Instinctive Fallback",
     "Vertex": "Unexpected Encounter Trigger",
-}
-
-CATEGORY_BY_OBJECT = {
-    "Sun": "big3_core_traits", "Moon": "big3_core_traits", "ASC": "angles",
-    "DSC": "angles", "MC": "angles", "IC": "angles",
-    "North Node": "development", "Part of Fortune": "development",
 }
 
 CONTEXT_FILTER_GROUPS = [
@@ -192,10 +172,11 @@ class Candidate:
     total_score: float = 0.0
     rejection_reason: str | None = None
 
-    def finish_score(self) -> None:
+    def finish_score(self, weights: dict[str, float] | None = None) -> None:
+        weights = WEIGHTS if weights is None else weights
         self.total_score = round(sum(
-            WEIGHTS[name] * self.score_components.get(name, 0.0)
-            for name in WEIGHTS
+            weights[name] * self.score_components.get(name, 0.0)
+            for name in weights
         ), 6)
 
     def as_dict(self) -> dict[str, Any]:
@@ -426,7 +407,11 @@ def context_evidence(kind: str, records: dict[str, dict[str, Any]]) -> dict[str,
     }
 
 
-def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidate], dict[str, Any]]:
+def build_candidates(
+    contexts: dict[str, dict[str, Any]],
+    policy: str | BasisPolicy | None = None,
+) -> tuple[list[Candidate], dict[str, Any]]:
+    policy = resolve_exact_natal_policy(policy)
     objects, relationships = index_contexts(contexts)
     general = contexts["general"]
     object_by_id = {x["id"]: x for x in general["objects"]}
@@ -482,35 +467,25 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         mode = humanize(attrs.get("projected_mode"))
         domain = humanize(attrs.get("projected_domain"))
         claim = f"{label} operates in {mode} through {domain}."
-        mandatory = name in MANDATORY_OBJECTS
+        semantics = policy.object_semantics(name)
+        mandatory = semantics["mandatory"]
         centrality = degrees[record["id"]] / max_degree
         rarity = 1 / max(1, mode_counts[attrs.get("projected_mode")])
-        components = {
-            "core_salience": 1.0 if mandatory else 0.45,
-            "structural": clamp(record.get("structural_strength_score", 0) / 0.55),
-            "projected_relevance": clamp(record.get("projection_relevance_score", 0) / 0.55),
-            "evidence": clamp(len(records) / 4),
-            "centrality": clamp(centrality),
-            "coverage": clamp(0.55 + 0.45 * rarity),
-            "distinctiveness": clamp(rarity),
-            "compression": 0.0,
-            "narrative_yield": clamp(0.55 + 0.04 * len(record.get("operators", []))),
-            "voice_yield": clamp(len(records) / 4),
-            "humor_affordance": clamp(0.35 + 0.04 * len(semantic_terms(record))),
-            "redundancy_penalty": clamp(1 - rarity),
-            "dependency_cost": 0.0,
-        }
+        components = policy.score_object(
+            mandatory=mandatory,
+            structural_strength=record.get("structural_strength_score", 0),
+            projected_relevance=record.get("projection_relevance_score", 0),
+            context_count=len(records),
+            centrality=centrality,
+            rarity=rarity,
+            operator_count=len(record.get("operators", [])),
+            semantic_term_count=len(semantic_terms(record)),
+        )
         candidate = Candidate(
             candidate_id=cid,
-            candidate_type="mandatory_basis" if mandatory else "projected_object",
-            claim_type=("angle" if name in {"ASC", "DSC", "MC", "IC"}
-                        else "orientation" if name in {"North Node", "South Node"}
-                        else "placement"),
-            categories=(
-                ["angles", "big3_core_traits"]
-                if name == "ASC"
-                else [CATEGORY_BY_OBJECT.get(name, "core_traits")]
-            ),
+            candidate_type=semantics["candidate_type"],
+            claim_type=semantics["claim_type"],
+            categories=semantics["categories"],
             canonical_claim=claim,
             dependencies=[],
             source_refs=[source_ref],
@@ -524,9 +499,9 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             score_components=components,
             provenance={"generation_rule": "projected_object.v1", "canonical_object_name": name},
             mandatory=mandatory,
-            semantic_role=["anchor", "primitive"] if mandatory else ["primitive"],
+            semantic_role=semantics["semantic_role"],
         )
-        candidate.finish_score()
+        candidate.finish_score(policy.score_weights)
         candidates.append(candidate)
 
     relationship_candidate_by_source_ref: dict[str, str] = {}
@@ -554,32 +529,30 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         ) / (2 * max_degree)
         exactness = 1 / (1 + max(0, float(attrs.get("orb") or 0)) / 3)
         rarity = 1 / max(1, interaction_counts[attrs.get("interaction_mode")])
-        components = {
-            "core_salience": clamp(
-                0.3 + 0.25 * (source_name in MANDATORY_OBJECTS)
-                + 0.25 * (target_name in MANDATORY_OBJECTS)
+        components = policy.score_relationship(
+            source_mandatory=policy.object_semantics(source_name)["mandatory"],
+            target_mandatory=policy.object_semantics(target_name)["mandatory"],
+            structural_strength=attrs.get("projection_relevance_components", {}).get(
+                "structural_strength", 0
             ),
-            "structural": clamp(
-                attrs.get("projection_relevance_components", {}).get("structural_strength", 0) / 0.55
+            projected_relevance=record.get("projection_relevance_score", 0),
+            context_count=len(records),
+            centrality=centrality,
+            exactness=exactness,
+            rarity=rarity,
+            operator_count=len(record.get("operators", [])),
+            theme_tag_count=len(record.get("theme_tags", [])),
+            semantic_term_count=len(semantic_terms(record)),
+            nonmandatory_dependency_count=sum(
+                1
+                for dep in dependencies
+                if not next(
+                    candidate
+                    for candidate in candidates
+                    if candidate.candidate_id == dep
+                ).mandatory
             ),
-            "projected_relevance": clamp(record.get("projection_relevance_score", 0) / 0.55),
-            "evidence": clamp(0.6 * len(records) / 4 + 0.4 * exactness),
-            "centrality": clamp(centrality),
-            "coverage": clamp(0.5 + 0.5 * rarity),
-            "distinctiveness": clamp(0.45 * rarity + 0.55 * exactness),
-            "compression": 0.0,
-            "narrative_yield": clamp(
-                0.45 + 0.04 * len(record.get("operators", []))
-                + 0.05 * len(record.get("theme_tags", []))
-            ),
-            "voice_yield": clamp(len(records) / 4),
-            "humor_affordance": clamp(0.3 + 0.025 * len(semantic_terms(record))),
-            "redundancy_penalty": clamp(1 - rarity),
-            "dependency_cost": clamp(sum(
-                1 for dep in dependencies
-                if not next(x for x in candidates if x.candidate_id == dep).mandatory
-            ) / 2),
-        }
+        )
         candidate = Candidate(
             candidate_id=cid,
             candidate_type="projected_relationship",
@@ -608,7 +581,7 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             },
             semantic_role=["bridge", "structural"],
         )
-        candidate.finish_score()
+        candidate.finish_score(policy.score_weights)
         candidates.append(candidate)
 
     # Rule-based syntheses from repeated object modes/domains and relationship modes/tags.
@@ -638,21 +611,12 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
         id_prefix = "synthesis_variant" if variant_of else "synthesis"
         cid = stable_id(id_prefix, rule, key, *dependencies)
         dep_count = len(dependencies)
-        components = {
-            "core_salience": clamp(0.35 + 0.06 * dep_count),
-            "structural": clamp(0.35 + 0.08 * dep_count),
-            "projected_relevance": clamp(evidence_strength),
-            "evidence": clamp(0.45 + 0.1 * dep_count),
-            "centrality": clamp(0.35 + 0.08 * dep_count),
-            "coverage": clamp(0.45 + 0.09 * len(set(domains))),
-            "distinctiveness": clamp(0.65 + 0.04 * dep_count),
-            "compression": clamp((dep_count - 1) / dep_count),
-            "narrative_yield": clamp(0.65 + 0.06 * dep_count),
-            "voice_yield": 0.85,
-            "humor_affordance": clamp(0.55 + 0.04 * len(set(tags))),
-            "redundancy_penalty": clamp(0.12 * max(0, dep_count - 3)),
-            "dependency_cost": clamp(dep_count / 8),
-        }
+        components = policy.score_synthesis(
+            dependency_count=dep_count,
+            domain_count=len(set(domains)),
+            tag_count=len(set(tags)),
+            evidence_strength=evidence_strength,
+        )
         candidate = Candidate(
             candidate_id=cid,
             candidate_type=candidate_type,
@@ -681,7 +645,7 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
             variant_of=variant_of,
             variant_kind=variant_kind,
         )
-        candidate.finish_score()
+        candidate.finish_score(policy.score_weights)
         candidates.append(candidate)
         return candidate
 
@@ -898,15 +862,24 @@ def build_candidates(contexts: dict[str, dict[str, Any]]) -> tuple[list[Candidat
     return candidates, analysis
 
 
-def optimize(candidates: list[Candidate], budget: int = 50) -> tuple[list[Candidate], list[Candidate], list[dict]]:
+def optimize(
+    candidates: list[Candidate],
+    budget: int | None = None,
+    policy: str | BasisPolicy | None = None,
+) -> tuple[list[Candidate], list[Candidate], list[dict]]:
+    policy = resolve_exact_natal_policy(policy)
+    budget = policy.selection_budget if budget is None else budget
     by_id = {x.candidate_id: x for x in candidates}
     selected_ids = {x.candidate_id for x in candidates if x.mandatory}
-    if len(selected_ids) != 16:
+    if len(selected_ids) != policy.mandatory_count:
         mandatory_names = sorted(
             x.provenance.get("canonical_object_name")
             for x in candidates if x.mandatory
         )
-        raise AssertionError(f"Expected 16 mandatory candidates, got {mandatory_names}")
+        raise AssertionError(
+            f"Expected {policy.mandatory_count} mandatory candidates for "
+            f"{policy.policy_id}, got {mandatory_names}"
+        )
 
     audit: list[dict[str, Any]] = []
 
@@ -1081,7 +1054,9 @@ def compile_packet(
     projected_term_registry: dict[str, Any],
     input_audit: dict[str, Any],
     params: dict[str, Any] | None = None,
+    policy: str | BasisPolicy | None = None,
 ) -> dict[str, Any]:
+    policy = resolve_exact_natal_policy(policy)
     general = contexts["general"]
     ordered_ids = {candidate.candidate_id: i + 1 for i, candidate in enumerate(selected)}
     max_score = max(x.total_score for x in selected)
@@ -1160,11 +1135,11 @@ def compile_packet(
         for index in range(1, 5)
     }
     return {
-        "schema_version": "astrowoof.projected_natal_cards.authoring_packet.v0.4",
+        "schema_version": policy.authoring_packet_schema_version,
         "generator": {
             "semantic_basis_extractor": "projected-sbe.v0.2",
-            "candidate_generator": "projected-candidates.v0.2",
-            "optimizer": "closed-marginal-portfolio.v0.1",
+            "candidate_generator": policy.candidate_generator_id,
+            "optimizer": policy.optimizer_id,
             "editorial_status": "awaiting_llm",
         },
         "subject": subject_record(subject, params),
@@ -1233,13 +1208,19 @@ def qa_report(
     selected: list[Candidate],
     rejected: list[Candidate],
     packet: dict[str, Any],
+    policy: str | BasisPolicy | None = None,
 ) -> dict[str, Any]:
+    policy = resolve_exact_natal_policy(policy)
     selected_ids = {x.candidate_id for x in selected}
     errors = []
-    if len(selected) != 50:
-        errors.append(f"Expected 50 selected claims; found {len(selected)}")
-    if sum(x.mandatory for x in selected) != 16:
-        errors.append("Mandatory basis is not exactly 16 claims")
+    if len(selected) != policy.selection_budget:
+        errors.append(
+            f"Expected {policy.selection_budget} selected claims; found {len(selected)}"
+        )
+    if sum(x.mandatory for x in selected) != policy.mandatory_count:
+        errors.append(
+            f"Mandatory basis is not exactly {policy.mandatory_count} claims"
+        )
     for candidate in selected:
         missing = set(candidate.dependencies) - selected_ids
         if missing:
@@ -3421,6 +3402,14 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("semantic-basis-output"))
     parser.add_argument("--bundle-dir", type=Path, default=Path("llm-handoff-bundle"))
     parser.add_argument(
+        "--exact-natal-policy",
+        default=LEGACY_ATOMIC_POLICY_ID,
+        help=(
+            "Versioned exact-Natal extraction policy. The default "
+            "legacy_atomic.v1 preserves released behavior."
+        ),
+    )
+    parser.add_argument(
         "--handoff-profile",
         choices=("rigorous", "compact", "authoring-workspace"),
         default="rigorous",
@@ -3487,6 +3476,10 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
+    try:
+        policy = resolve_exact_natal_policy(args.exact_natal_policy)
+    except ValueError as exc:
+        parser.error(str(exc))
     if not 1 <= args.workspace_card_limit <= 50:
         parser.error("--workspace-card-limit must be between 1 and 50")
     if (
@@ -3558,8 +3551,8 @@ def main() -> None:
             )
             params, params_file = load_subject_params(subject, paths)
             input_audit["params_file"] = params_file
-            candidates, analysis = build_candidates(contexts)
-            selected, rejected, audit = optimize(candidates)
+            candidates, analysis = build_candidates(contexts, policy)
+            selected, rejected, audit = optimize(candidates, policy=policy)
             packet = compile_packet(
                 subject,
                 contexts,
@@ -3569,8 +3562,9 @@ def main() -> None:
                 merged_registry,
                 input_audit,
                 params,
+                policy,
             )
-            qa = qa_report(candidates, selected, rejected, packet)
+            qa = qa_report(candidates, selected, rejected, packet, policy)
             if qa["status"] != "pass":
                 raise AssertionError(json.dumps(qa, indent=2))
 
@@ -3579,15 +3573,17 @@ def main() -> None:
             write_json(root / f"{subject}.whole-graph-analysis.json", analysis)
             write_json(root / f"{subject}.candidate-pool.json", {
                 "schema_version": "semantic_basis.candidate_pool.v0.2",
-                "weights": WEIGHTS,
+                "policy": {"route": policy.route, "policy_id": policy.policy_id},
+                "weights": policy.score_weights,
                 "candidates": [x.as_dict() for x in sorted(
                     candidates, key=lambda c: (-c.total_score, c.candidate_id)
                 )],
             })
             write_json(root / f"{subject}.selection-audit.json", {
                 "schema_version": "semantic_basis.selection_audit.v0.2",
-                "budget": 50,
-                "mandatory_count": 16,
+                "policy": {"route": policy.route, "policy_id": policy.policy_id},
+                "budget": policy.selection_budget,
+                "mandatory_count": policy.mandatory_count,
                 "optimizer_decisions": audit,
                 "selected_ids": [x.candidate_id for x in selected],
                 "rejected": [
@@ -3791,6 +3787,7 @@ def main() -> None:
             run_records.append({
                 "subject": subject,
                 "status": "pass",
+                "policy": {"route": policy.route, "policy_id": policy.policy_id},
                 "input_files": input_audit["input_files"],
                 "candidate_count": len(candidates),
                 "selected_count": len(selected),
@@ -3835,6 +3832,7 @@ def main() -> None:
         "subject_filter": args.subject,
         "subject_count": len(packages),
         "status": "fail" if failed else "pass",
+        "policy": {"route": policy.route, "policy_id": policy.policy_id},
         "split_assignment_policy": args.split_assignment_policy,
         "full_chart_basis_format": args.full_chart_basis_format,
         "subjects": run_records,

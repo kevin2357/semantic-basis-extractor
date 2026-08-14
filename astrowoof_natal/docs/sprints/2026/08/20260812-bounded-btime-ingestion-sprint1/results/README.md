@@ -1,10 +1,10 @@
 # Sprint Results
 
-Slice 0 has completed its baseline and contract-freeze work and is awaiting Gate 0
-review.
+Slice 0 is approved. Slice 1 implementation is awaiting Gate 1 review.
 
 - `SLICE 0 - Baseline Contract and Fixture Strategy.md`
 - `slice0-baseline-contracts.json`
+- `SLICE 1 - Shared Engine Seam and Exact Legacy Policy.md`
 
 Add one durable result document for each completed gate using the convention:
 
