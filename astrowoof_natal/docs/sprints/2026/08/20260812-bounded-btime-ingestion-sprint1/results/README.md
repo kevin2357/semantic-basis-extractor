@@ -1,7 +1,7 @@
 # Sprint Results
 
-Slices 0 through 8 are approved. Slice 9 is awaiting API-agent review and the
-final-candidate installed Linux rerun before Gate 9 review.
+Slices 0 through 9 are product-owner approved. Slice 9 installed Linux acceptance
+passes; API-agent consumer review remains required before release recommendation.
 
 - `SLICE 0 - Baseline Contract and Fixture Strategy.md`
 - `slice0-baseline-contracts.json`

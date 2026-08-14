@@ -314,3 +314,20 @@ decisions and evidence but do not represent completed implementation slices.
 - No provider operation occurred and spend remained `$0`. API-agent review and the
   final Linux installed rerun are required before Gate 9 approval or release
   recommendation. No tag or publication was created.
+
+## 2026-08-14: Gate 9 approval and final installed Linux acceptance
+
+- Product-owner Gate 9 approval was received and Slice 9 was committed and pushed
+  as `946f6fd`.
+- Reinstalled the exact final wheel
+  (`4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`)
+  without source-tree imports in the qualified Linux image with AGF 0.8.1 and SPC
+  0.11.0.
+- `pip check`, installed lifecycle smoke, and installed release smoke passed. The
+  full four-context bounded CLI run reached `DELIVERY_COMPLETE`.
+- Native inspection found a complete, valid snapshot inventory, terminal accepted
+  delivery, quiescence, no provider/local continuation, and no unresolved actions.
+  Closeout returned `closed` and persisted its result checkpoint.
+- No provider operation occurred and spend remained `$0`. API-agent consumer
+  review remains the sole release-recommendation checkpoint; Windows bounded E2E
+  remains a documented non-blocking qualification limitation.

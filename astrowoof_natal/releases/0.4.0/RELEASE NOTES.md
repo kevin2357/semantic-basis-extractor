@@ -30,12 +30,9 @@ The experimental `axis_aware.v1` exact-Natal policy is opt-in. The default remai
 - two independent candidate builds are byte-identical;
 - candidate wheel SHA-256:
   `4fb7a114ae4866475778d36b677d170499a5558e0f1a854aeb88616b9c6c8c84`;
-- the immediately preceding candidate passed Linux CPython 3.11 `pip check`,
-  installed lifecycle/release smoke, full-scale bounded CLI delivery, snapshot
-  inspection, and closeout with exact AGF 0.8.1/SPC 0.11.0;
-- the final candidate's installed Linux rerun is pending because local Docker
-  execution authorization became unavailable after the final editorial-only
-  provider-schema hardening; this pass is required before release recommendation;
+- the final candidate passed Linux CPython 3.11 `pip check`, installed
+  lifecycle/release smoke, full-scale bounded CLI delivery, snapshot inventory and
+  quiescence inspection, and closeout with exact AGF 0.8.1/SPC 0.11.0;
 - the final candidate's Windows installed rerun is also pending; the prior
   temporary environment lacked SPC's `jsonschema` dependency and dependency
   installation authorization was unavailable;

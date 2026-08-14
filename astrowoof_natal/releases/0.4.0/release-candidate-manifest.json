@@ -38,8 +38,7 @@
   "qa": {
     "repository_test_count": 274,
     "repository_tests": "pass",
-    "predecessor_candidate_linux_installed_acceptance": "pass",
-    "final_candidate_linux_installed_acceptance": "pending_local_docker_execution_authorization_unavailable",
+    "final_candidate_linux_installed_acceptance": "pass",
     "final_candidate_windows_installed_acceptance": "pending_dependency_installation_authorization_unavailable",
     "real_provider_operation_count": 0,
     "provider_spend_usd": 0

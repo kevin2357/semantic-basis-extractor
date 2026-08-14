@@ -1,7 +1,7 @@
 # Slice 9 - Installed Cross-Repository Acceptance and Handoff
 
-Status: implementation complete; Gate 9 is withheld pending API-agent review and
-one final-candidate installed Linux rerun.
+Status: implementation and installed Linux acceptance complete; API-agent consumer
+review remains pending.
 
 ## Outcome
 
@@ -33,12 +33,11 @@ rejects missing, duplicate, and unknown identities before final validation.
   (`860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed`)
   and SPC 0.11.0
   (`82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d`).
-- The predecessor candidate passed installed Linux `pip check`, lifecycle/release
-  smoke, full four-context fake delivery, workspace inspection, and closeout in
-  the qualified AGF/SPC image.
-- The final candidate's Docker rerun is pending: the local execution request was
-  denied when the desktop approval service reported its usage limit. This is an
-  unexecuted gate, not a test failure, and must pass before release recommendation.
+- The final candidate passed installed Linux `pip check`, lifecycle/release smoke,
+  full four-context fake delivery, complete and valid workspace inventory,
+  quiescence inspection, and closed closeout in the qualified AGF/SPC image.
+- The installed bounded run reached `DELIVERY_COMPLETE` with no provider or local
+  continuation and no unresolved provider actions.
 - Windows final-candidate bounded E2E is likewise pending because the temporary
   SPC environment lacked `jsonschema` and dependency-install authorization was
   unavailable.
@@ -47,6 +46,5 @@ rejects missing, duplicate, and unknown identities before final validation.
 ## Review boundary
 
 The API-agent review packet is the authoritative consumer-review request. Gate 9
-must not be approved and no release should be recommended until the API agent has
-reviewed the lifecycle/handoff surface and the final candidate has passed the
-installed Linux rerun.
+must not receive a release recommendation until the API agent has reviewed the
+lifecycle/handoff surface.

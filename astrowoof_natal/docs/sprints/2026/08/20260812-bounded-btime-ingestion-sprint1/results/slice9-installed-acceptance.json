@@ -1,7 +1,7 @@
 {
   "schema_version": "astrowoof.sbe_sprint_evidence.v1",
   "slice": 9,
-  "status": "awaiting_api_review_and_final_installed_rerun",
+  "status": "awaiting_api_review",
   "source_tests": {"count": 274, "status": "pass", "seconds": 149.848},
   "candidate": {
     "version": "0.4.0",
@@ -23,8 +23,15 @@
     "spc_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
   },
   "installed_acceptance": {
-    "predecessor_candidate_linux": "pass",
-    "final_candidate_linux": "pending_local_docker_execution_authorization_unavailable",
+    "final_candidate_linux": "pass",
+    "linux_pip_check": "pass",
+    "linux_lifecycle_smoke_require_installed": "pass",
+    "linux_release_smoke_require_installed": "pass",
+    "linux_full_scale_bounded_cli": "delivery_complete",
+    "linux_snapshot_complete": true,
+    "linux_snapshot_inventory_valid": true,
+    "linux_quiescence": "quiescent",
+    "linux_closeout": "closed",
     "final_candidate_windows": "pending_dependency_installation_authorization_unavailable"
   },
   "provider": {"operations": 0, "spend_usd": 0},

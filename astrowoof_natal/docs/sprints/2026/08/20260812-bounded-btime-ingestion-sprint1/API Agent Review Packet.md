@@ -39,14 +39,13 @@ Please review and respond on these integration points:
    rejects identity-set drift.
 9. Exact pin/hash instructions and the proposed 0.4.0 compatibility boundary.
 
-## Known pending gate
+## Installed qualification
 
 The final candidate was rebuilt after provider-schema hardening. Two builds are
-byte-identical and all 274 source tests pass, but local Docker execution was denied
-when the desktop approval service reported its usage limit. Therefore the final
-candidate's installed Linux rerun remains required. The predecessor candidate
-passed the same installed gate; that result is not being misrepresented as the
-final wheel's result.
+byte-identical, all 274 source tests pass, and the exact final wheel passed Linux
+`pip check`, installed lifecycle/release smoke, full-scale bounded delivery,
+complete snapshot inventory, quiescence inspection, and closeout with exact AGF
+0.8.1/SPC 0.11.0.
 
 Please return blocking corrections, non-blocking follow-ups, and an explicit
 consumer-contract acceptance/rejection. SBE will reconcile the response before

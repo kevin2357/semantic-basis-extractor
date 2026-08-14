@@ -264,5 +264,5 @@ artifacts—not event delivery—are authoritative.
 API-owned queue/lease/fencing, cross-run reservation, quota, circuit-breaker,
 PostgreSQL, billing, entitlement, worker-scratch, publication, and frontend-policy
 responsibilities remain unchanged. The API-agent review packet requests explicit
-confirmation of those seams. Release recommendation is withheld until that review
-and the final-candidate installed Linux rerun are complete.
+confirmation of those seams. The final-candidate installed Linux rerun now passes;
+release recommendation is withheld only until that consumer review is complete.
