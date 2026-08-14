@@ -150,3 +150,30 @@ decisions and evidence but do not represent completed implementation slices.
   bounded CLI inside the qualified Linux SPC 0.11 image.
 - Corrected the trailing blank line reported when Slice 2 was committed.
 - Gate 3 is ready for review. Slice 4 has not begun.
+
+## 2026-08-14: Slice 4 - bounded normalization, candidates, and family topology
+
+- Gate 3 was approved, committed, and pushed as `5328def`.
+- Added a distinct invariant-only bounded candidate builder and private disposition
+  report under the reserved v1 contract identities.
+- Normalized all projected rows by correspondence identity while preserving all
+  four context records, source and projected-term references, proof scope, direct
+  and opaque prerequisite lineage, root owners, evidence families, independence
+  groups, and record-independence groups.
+- Collapsed derived sibling rows into family candidates, retained transform
+  ownership as dependency-only topology, and built initial configurations from
+  independent relationship-family units between canonical root owners.
+- Added explicit family accounting that prevents raw multiplicity from becoming
+  support or weight and implemented the three approved foundational policies with
+  `strong_preference` as default.
+- Added a complete disposition report for projected rows, source evidence,
+  outside-scope material, and upstream feature dispositions.
+- Excluded ranges, orbs, structural strength, confidence, and representative state
+  from candidate authority. No score or selection policy was introduced.
+- Passed 15 focused bounded tests, all 240 repository tests in 160.311 seconds,
+  fresh-wheel import, and official SPC admission plus candidate construction over
+  both sanitized and full-scale families in Linux.
+- The full family produced 586 candidates and disposition coverage for 1,626
+  projected rows, 1,544 evidence records, and two outside-scope objects. Local
+  construction took 1.650 seconds with 35.64 MiB peak traced allocation.
+- Gate 4 is ready for review. Slice 5 has not begun.
