@@ -1,0 +1,80 @@
+{
+  "schema_version": "sbe.bounded_natal.slice8_product_qa.v1",
+  "status": "passed",
+  "authority": "invariant_only",
+  "numeric_interpretation": "editorial_utility_not_confidence_or_strength",
+  "interval_evidence": {
+    "authority": "spc_0.11.0_route_equivalence_context_not_sbe_semantic_authority",
+    "cases": [
+      {"hours": 1, "evaluation_count": 61, "status": "passed"},
+      {"hours": 24, "evaluation_count": 1441, "status": "passed"},
+      {"hours": 48, "evaluation_count": 2881, "status": "passed"}
+    ],
+    "full_four_context_archives_in_sprint_custody": ["four_hour_denver"],
+    "qualification_limit": "no additional 1h_24h_48h full projected archives supplied"
+  },
+  "official_four_hour_product": {
+    "archive_sha256": "13086c88814b1edeea886e52e08aae6ea92ff8889a3ae5a890e7a9a71a48ef5a",
+    "admission_id": "bounded_admission:0b5b8543b8048ff070934290",
+    "candidate_count": 586,
+    "selected_count": 50,
+    "candidate_kinds": {
+      "foundational_object": 12,
+      "individualized_relationship": 28,
+      "derived_family": 9,
+      "invariant_configuration": 1
+    },
+    "editorial_tiers": {
+      "foundational": 12,
+      "primary": 12,
+      "supporting": 18,
+      "supplemental": 8
+    },
+    "selected_root_owner_count": 12,
+    "selected_evidence_family_count": 54,
+    "selected_projected_term_count": 41,
+    "selected_sha256": "ba553b874f789f1389acb9ec43c1dbb0020952240d19d07a8f742eefe9de9b0c",
+    "claim_deck_sha256": "3f652f207f9bb28aab39cb42cd3c3fe365721ac4ce42c6429b805edd0736fc58",
+    "provider_packet_sha256": "15c0da8575d16d6c9a0dd06142d9abfeeb8bef480d46a6e65ff7bc97d72423fa",
+    "final_cards_sha256": "2eac3aa64b1e8ab02e4da498badb1645e6307a145de19eb3dac2a1c953e5eb0e",
+    "final_qa": "passed",
+    "provider_operation_count": 0,
+    "observed_elapsed_seconds_first_profiled_run": 5.944175,
+    "observed_peak_traced_bytes_first_profiled_run": 46601661,
+    "performance_guarantee": false
+  },
+  "determinism": {
+    "reversed_contexts_rows_and_registry": "identical_semantic_product",
+    "repeat": "identical_semantic_product"
+  },
+  "scale_case": {
+    "raw_family_members": 300,
+    "independent_support_units": 1,
+    "selection_count": 50,
+    "elapsed_regression_ceiling_seconds": 10.0,
+    "peak_traced_regression_ceiling_bytes": 268435456,
+    "performance_guarantee": false
+  },
+  "capability_reduction": {
+    "terrestrial_frame": "inconclusive_not_claimed",
+    "optional_external_objects": "unavailable_not_claimed"
+  },
+  "privacy": {
+    "provider_stages_checked": [
+      "authoring_initial",
+      "creative_retry",
+      "polish",
+      "qualitative_critic",
+      "qualitative_candidate"
+    ],
+    "event_payloads_checked": true,
+    "protected_seed_disclosures": 0,
+    "dog_display_name": "explicitly_allow_listed_editorial_field"
+  },
+  "focused_tests": 7,
+  "repository_tests": 270,
+  "repository_test_seconds": 196.432,
+  "real_provider_operations": 0,
+  "network_access": false,
+  "gate": "ready_for_review"
+}

@@ -256,3 +256,34 @@ decisions and evidence but do not represent completed implementation slices.
   lifecycle module, updated event contracts, and `py.typed` in a fresh offline
   wheel (`f694f7558b483dec1d5f13d6970a3f6bba0cd3e3d2f56fd31b0fd7f61fb063b5`).
 - Gate 7 is ready for review. Slice 8 has not begun.
+
+## 2026-08-14: Slice 8 - deterministic, scale, privacy, and product QA
+
+- Gate 7 was approved, committed, and pushed as `dcaadf5`.
+- Added a compact bounded product-qualification contract and provider-free harness
+  covering selection, claim compilation, provider minimization, fake authoring,
+  final QA, semantic hashes, topology counts, and observed time/memory evidence.
+- Qualified SPC's released 1-hour/61-evaluation, 24-hour/1,441-evaluation, and
+  48-hour/2,881-evaluation route-equivalence evidence without turning interval
+  width or evaluation count into SBE semantic authority, confidence, or strength.
+- Recorded the fixture boundary honestly: the sprint has one official full-scale
+  four-context archive for a four-hour interval. The 1/24/48-hour upstream cases
+  prove SPC route behavior; SBE proves the same admitted invariant graph yields the
+  same exact-fifty product independent of non-authoritative interval labels.
+- Exercised terrestrial-frame inconclusive and optional-object unavailable
+  dispositions; neither creates a claim or enters the provider packet.
+- Exercised a 300-member single-family stress case. It remains one support unit,
+  cannot inflate selection, and passes loose observed regression guards of ten
+  seconds and 256 MiB without claiming a product SLA.
+- Seeded handler identity, dates and interval endpoints, timezone, coordinates,
+  location evidence, raw evidence text, filesystem path, API key, and authorization
+  header values. None entered initial authoring, polish, critic, candidate, or
+  event payloads. The explicitly allow-listed dog display name remains editorially
+  visible as documented.
+- The official four-hour Linux artifact passed with 586 candidates, exactly 50
+  invariant claims/cards, four summaries, 54 evidence families, 41 selected terms,
+  12 root owners, and zero provider operations. Reversed contexts, rows, and term
+  serialization produced identical semantic product hashes.
+- Passed all 270 repository tests in 196.432 seconds, including both exact angle
+  policies and all released exact lifecycle/spend/snapshot/authoring regressions.
+- Gate 8 is ready for review. Slice 9 has not begun.
