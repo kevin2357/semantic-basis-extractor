@@ -1,1 +1,1 @@
-Pending exact preparation-commit build.
+cb63b4ff8a014a1e5848071a52c280bd14c2b69293388b1c2576a5e9940f7366  astrowoof_natal_authoring-0.4.2-py3-none-any.whl
