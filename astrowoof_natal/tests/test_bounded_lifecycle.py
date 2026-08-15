@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -25,6 +26,7 @@ from astrowoof_natal_authoring.bounded_lifecycle import (  # noqa: E402
 from astrowoof_natal_authoring.closure import (  # noqa: E402
     load_json,
     validate_workspace_snapshot,
+    write_workspace_snapshot,
 )
 from astrowoof_natal_authoring.execution_events import (  # noqa: E402
     ExecutionEventEmitter,
@@ -33,6 +35,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     closeout_run,
     deny_providerless_action,
     inspect_lifecycle,
+    reconcile_required_providerless_denial,
 )
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
@@ -308,6 +311,81 @@ class TestBoundedLifecycle(unittest.TestCase):
             resumed = resume_bounded_run(run_dir, provider=provider)
             self.assertEqual("BUDGET_EXHAUSTED", resumed["status"])
             self.assertEqual(0, provider.submissions)
+
+    def test_bounded_resume_reconciles_retained_required_denial_without_submission(self) -> None:
+        provider = PaidScriptedProvider()
+        profile = {
+            "optional_stages": {stage: False for stage in (
+                "polish", "qualitative_critic", "qualitative_candidate"
+            )},
+            "spend_policy": spend_policy(),
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile=profile,
+            )
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(run_dir, provider=provider)
+            state = load_json(run_dir / "run.json")
+            action = state["spend_ledger"]["actions"][0]
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared",
+                observed_at="2026-08-15T23:00:00Z",
+            )
+            request = {
+                "schema_version": NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
+                "run_id": state["run_id"], "action_id": action["action_id"],
+                "binding": action["binding"], "observed": inspection["observation"],
+                "denial_reason": "reservation_unavailable",
+                "external_authority_reference": "api-fence:retained-bounded",
+            }
+            deny_providerless_action(
+                run_dir, request, decision_at="2026-08-15T23:00:01Z"
+            )
+            state = load_json(run_dir / "run.json")
+            state.pop("terminal_transition", None)
+            state["status"] = "AWAITING_SPEND_AUTHORIZATION"
+            action = state["spend_ledger"]["actions"][0]
+            denial = action["negative_authorization"]
+            denial.pop("run_transition", None)
+            artifact = {
+                "schema_version": "astrowoof.provider_negative_authorization_record.v0.1",
+                "run_id": state["run_id"], "action_id": action["action_id"],
+                "binding": deepcopy(action["binding"]),
+                "disposition": "DENIED_PROVIDERLESS",
+                "denial_reason": denial["denial_reason"],
+                "authorization_previously_recorded": denial[
+                    "authorization_previously_recorded"
+                ],
+                "external_authority_reference": denial[
+                    "external_authority_reference"
+                ],
+                "request_observation": deepcopy(denial["request_observation"]),
+                "decision_basis": deepcopy(denial["decision_basis"]),
+            }
+            (run_dir / denial["result_artifact"]).write_text(
+                json.dumps(artifact, indent=2) + "\n", encoding="utf-8"
+            )
+            (run_dir / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(run_dir)
+
+            def interrupt(point: str) -> None:
+                if point == "after_reconciliation_state_persisted":
+                    raise RuntimeError(point)
+
+            with self.assertRaisesRegex(RuntimeError, "state_persisted"):
+                reconcile_required_providerless_denial(
+                    run_dir, reconciled_at="2026-08-15T23:00:02Z",
+                    _failure_injector=interrupt,
+                )
+            resumed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("BUDGET_EXHAUSTED", resumed["status"])
+            self.assertEqual(0, provider.submissions)
+            self.assertIn("required_denial_reconciliation", resumed)
 
     def test_optional_providerless_denial_skips_and_delivers_without_resubmit(self) -> None:
         provider = PaidScriptedProvider()

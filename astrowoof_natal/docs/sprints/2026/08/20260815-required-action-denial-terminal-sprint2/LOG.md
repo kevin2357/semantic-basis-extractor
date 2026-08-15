@@ -96,3 +96,24 @@
 - Slice 2 is complete and paused for review. Retained 0.4.1 reconciliation and
   exhaustive new-transition failure injection remain explicitly assigned to
   Slice 3. No provider operation, paid work, build, release, or tag occurred.
+- Kevin approved Slice 2. Committed and pushed atomic terminalization as
+  `16465fe`; Slice 3 began.
+- Added a narrow native reconciler for retained 0.4.1 single and batch denial
+  evidence. It validates the complete snapshot, exact legacy denial artifact and
+  binding, provider absence, native requiredness, and competing terminal/review
+  conditions before committing one terminal transition and one reconciliation
+  evidence artifact.
+- Wired reconciliation into normal exact resume before provider-capable work,
+  bounded resume, and closeout. Exact replay is nonmutating; accepted delivery is
+  preserved; optional-only or contradictory legacy evidence fails closed.
+- Added failure injection at artifact staging, state persistence, artifact
+  promotion, and snapshot publication. Recovery permits only the declared native
+  write set and refuses an unrelated workspace member.
+- Retained single and batch fixtures, provider-evidence refusal, closeout
+  auto-reconciliation, and interrupted bounded-resume recovery all pass with zero
+  provider submissions.
+- Focused recovery tests passed all 49 tests. After the pre-provider resume-order
+  adjustment, the final complete repository suite passed all 309 tests in 133.040
+  seconds.
+- Slice 3 is complete and paused for Kevin's gate
+  review. No paid operation, API key, build, release, or tag was used.

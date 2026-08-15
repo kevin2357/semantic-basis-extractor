@@ -22,6 +22,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     closeout_run,
     deny_providerless_action,
     inspect_lifecycle,
+    reconcile_required_providerless_denial,
 )
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
@@ -102,6 +103,168 @@ class TestNegativeAuthorization(unittest.TestCase):
             "denial_reason": "reservation_unavailable",
             "external_authority_reference": "api-fence:negative-fixture",
         }
+
+    def downgrade_to_legacy_denial(self, root: Path) -> dict:
+        """Rewrite a current denial to the exact retained 0.4.1 evidence shape."""
+        state = load_json(root / "run.json")
+        action = state["spend_ledger"]["actions"][0]
+        denial = action["negative_authorization"]
+        denial.pop("run_transition", None)
+        state.pop("terminal_transition", None)
+        state["status"] = "AUTHORING"
+        artifact = {
+            "schema_version": "astrowoof.provider_negative_authorization_record.v0.1",
+            "run_id": state["run_id"],
+            "action_id": action["action_id"],
+            "binding": copy.deepcopy(action["binding"]),
+            "disposition": "DENIED_PROVIDERLESS",
+            "denial_reason": denial["denial_reason"],
+            "authorization_previously_recorded": denial[
+                "authorization_previously_recorded"
+            ],
+            "external_authority_reference": denial[
+                "external_authority_reference"
+            ],
+            "request_observation": copy.deepcopy(denial["request_observation"]),
+            "decision_basis": copy.deepcopy(denial["decision_basis"]),
+        }
+        artifact_path = root / denial["result_artifact"]
+        artifact_path.write_text(
+            json.dumps(artifact, indent=2) + "\n", encoding="utf-8"
+        )
+        self.materialize_state(root, state)
+        return state
+
+    def materialize_legacy_denial(self, root: Path) -> dict:
+        request = self.materialize(root)
+        deny_providerless_action(
+            root, request, decision_at="2026-08-13T21:00:01Z"
+        )
+        return self.downgrade_to_legacy_denial(root)
+
+    def test_retained_required_denial_reconciles_and_closeout_is_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            legacy = self.materialize_legacy_denial(root)
+            result = reconcile_required_providerless_denial(
+                root, reconciled_at="2026-08-15T12:00:00Z"
+            )
+            self.assertEqual(legacy["state_revision"] + 1, result["state_revision"])
+            self.assertEqual("BUDGET_EXHAUSTED", result["status"])
+            self.assertEqual(
+                "external_spend_reservation_unavailable",
+                result["terminal_transition"]["terminal_reason"],
+            )
+            self.assertEqual(
+                ["paid_0123456789abcdef01234567"],
+                result["terminal_transition"]["required_action_ids"],
+            )
+            artifact = root / result["required_denial_reconciliation"]["result_artifact"]
+            self.assertTrue(artifact.is_file())
+            before = tree_hashes(root)
+            replay = reconcile_required_providerless_denial(
+                root, reconciled_at="2026-08-15T12:01:00Z"
+            )
+            self.assertEqual(result, replay)
+            self.assertEqual(before, tree_hashes(root))
+            closed = closeout_run(
+                root, observed_at="2026-08-15T12:02:00Z",
+            )
+            self.assertEqual("closed", closed["disposition"])
+            self.assertTrue(closed["terminal"]["terminal"])
+            self.assertEqual([], closed["local_dependencies"])
+
+    def test_closeout_automatically_reconciles_retained_denial(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize_legacy_denial(root)
+            closed = closeout_run(
+                root, observed_at="2026-08-15T12:10:00Z",
+            )
+            self.assertEqual("closed", closed["disposition"])
+            state = load_json(root / "run.json")
+            self.assertEqual("BUDGET_EXHAUSTED", state["status"])
+            self.assertIn("required_denial_reconciliation", state)
+
+    def test_reconciliation_recovers_each_interrupted_write_boundary(self) -> None:
+        points = (
+            "after_reconciliation_artifact_staged",
+            "after_reconciliation_state_persisted",
+            "after_reconciliation_artifact_promoted",
+            "after_reconciliation_snapshot_published",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            parent = Path(temporary).resolve()
+            for index, point in enumerate(points):
+                root = parent / str(index)
+                root.mkdir()
+                self.materialize_legacy_denial(root)
+
+                def fail(observed: str, expected: str = point) -> None:
+                    if observed == expected:
+                        raise RuntimeError(expected)
+
+                with self.assertRaisesRegex(RuntimeError, point):
+                    reconcile_required_providerless_denial(
+                        root, reconciled_at="2026-08-15T12:20:00Z",
+                        _failure_injector=fail,
+                    )
+                recovered = reconcile_required_providerless_denial(
+                    root, reconciled_at="2026-08-15T12:20:00Z"
+                )
+                self.assertEqual("BUDGET_EXHAUSTED", recovered["status"])
+                inspect_lifecycle(
+                    root, native_exclusive_access="declared",
+                    observed_at="2026-08-15T12:21:00Z",
+                )
+
+    def test_reconciliation_fails_closed_on_changed_native_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            state = self.materialize_legacy_denial(root)
+            action = state["spend_ledger"]["actions"][0]
+            artifact_path = root / action["negative_authorization"]["result_artifact"]
+            artifact = load_json(artifact_path)
+            artifact["external_authority_reference"] = "tampered"
+            artifact_path.write_text(
+                json.dumps(artifact, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            before = tree_hashes(root)
+            with self.assertRaisesRegex(ValueError, "evidence is inconsistent"):
+                reconcile_required_providerless_denial(root)
+            self.assertEqual(before, tree_hashes(root))
+
+    def test_reconciliation_fails_closed_if_provider_evidence_appeared(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            state = self.materialize_legacy_denial(root)
+            state["spend_ledger"]["actions"][0]["provider"] = {
+                "provider": "openai", "response_id": "resp_late_evidence"
+            }
+            self.materialize_state(root, state)
+            before = tree_hashes(root)
+            with self.assertRaisesRegex(ValueError, "provider evidence"):
+                reconcile_required_providerless_denial(root)
+            self.assertEqual(before, tree_hashes(root))
+
+    def test_interrupted_reconciliation_rejects_unrelated_workspace_change(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize_legacy_denial(root)
+
+            def fail(point: str) -> None:
+                if point == "after_reconciliation_state_persisted":
+                    raise RuntimeError(point)
+
+            with self.assertRaisesRegex(RuntimeError, "state_persisted"):
+                reconcile_required_providerless_denial(
+                    root, reconciled_at="2026-08-15T12:30:00Z",
+                    _failure_injector=fail,
+                )
+            (root / "unrelated.txt").write_text("unexpected\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "incomplete or changed"):
+                reconcile_required_providerless_denial(root)
 
     def test_prepared_denial_is_durable_schema_valid_and_provider_free(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

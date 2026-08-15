@@ -280,6 +280,222 @@ def _apply_run_transition(
         state["status"] = transition["resulting_status"]
 
 
+def _terminal_reconciliation_artifact(record: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "astrowoof.required_providerless_denial_reconciliation.v0.1",
+        "run_id": record["run_id"],
+        "decision_basis": deepcopy(record["decision_basis"]),
+        "result_state_revision": record["result_state_revision"],
+        "committed_at": record["committed_at"],
+        "action_evidence": deepcopy(record["action_evidence"]),
+        "run_transition": deepcopy(record["run_transition"]),
+    }
+
+
+def _verified_legacy_denials(
+    run_dir: Path, state: dict[str, Any],
+) -> list[dict[str, Any]]:
+    candidates = [
+        item for item in (state.get("spend_ledger") or {}).get("actions", [])
+        if item.get("state") == "DENIED_PROVIDERLESS"
+        and isinstance(item.get("negative_authorization"), dict)
+        and (item["negative_authorization"]).get("run_transition") is None
+    ]
+    if not candidates:
+        return []
+    status = str(state.get("status") or "")
+    if _accepted_delivery(state):
+        return []
+    if status in {
+        "AMBIGUOUS_PROVIDER_SUBMISSION", "FINAL_QA_REQUIRES_REVIEW",
+        "FINAL_QA_FAILED", "FAILED_REQUIRES_REVIEW", "POLICY_STOPPED",
+    }:
+        raise ValueError("Legacy providerless denial conflicts with review/terminal state")
+    batches = state.get("providerless_denial_batches") or {}
+    verified: list[dict[str, Any]] = []
+    for action in candidates:
+        if action.get("provider") or action.get("consumption") or action.get("reported"):
+            raise ValueError("Legacy providerless denial has provider evidence")
+        denial = action["negative_authorization"]
+        if denial.get("denial_reason") not in DENIAL_REASONS:
+            raise ValueError("Legacy providerless denial reason is unsupported")
+        artifact_relative = denial.get("result_artifact")
+        if not isinstance(artifact_relative, str) or not artifact_relative:
+            raise ValueError("Legacy providerless denial artifact reference is missing")
+        artifact_path = run_dir / artifact_relative
+        if not artifact_path.is_file():
+            raise ValueError("Legacy providerless denial artifact is missing")
+        batch_digest = denial.get("batch_request_sha256")
+        if batch_digest:
+            record = batches.get(batch_digest)
+            if (
+                not isinstance(record, dict)
+                or record.get("result_artifact") != artifact_relative
+                or record.get("run_transition") is not None
+                or load_json(artifact_path) != _batch_denial_artifact_content(record)
+            ):
+                raise ValueError("Legacy batch providerless denial evidence is inconsistent")
+        else:
+            artifact = load_json(artifact_path)
+            expected = {
+                "schema_version": "astrowoof.provider_negative_authorization_record.v0.1",
+                "run_id": state["run_id"],
+                "action_id": action["action_id"],
+                "binding": deepcopy(action["binding"]),
+                "disposition": "DENIED_PROVIDERLESS",
+                "denial_reason": denial["denial_reason"],
+                "authorization_previously_recorded": denial[
+                    "authorization_previously_recorded"
+                ],
+                "external_authority_reference": denial[
+                    "external_authority_reference"
+                ],
+                "request_observation": deepcopy(denial["request_observation"]),
+                "decision_basis": deepcopy(denial["decision_basis"]),
+            }
+            if artifact != expected:
+                raise ValueError("Legacy single providerless denial evidence is inconsistent")
+        verified.append(action)
+    return verified
+
+
+def _recover_interrupted_terminal_reconciliation(
+    run_dir: Path, state: dict[str, Any],
+) -> bool:
+    record = state.get("required_denial_reconciliation")
+    if not isinstance(record, dict):
+        return False
+    if record.get("result_state_revision") != state.get("state_revision"):
+        return False
+    artifact_path = run_dir / record["result_artifact"]
+    staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+    expected = _terminal_reconciliation_artifact(record)
+    candidate = artifact_path if artifact_path.is_file() else staged_path
+    if not candidate.is_file() or load_json(candidate) != expected:
+        return False
+    manifest_path = run_dir / SNAPSHOT_NAME
+    if not manifest_path.is_file():
+        return False
+    expected_members = {
+        item["path"]: item for item in load_json(manifest_path).get("members", [])
+    }
+    actual_members = {
+        item["path"]: item
+        for item in snapshot_inventory(run_dir, use_process_cache=False)
+    }
+    allowed_changed = {
+        "run.json", "public-run.json", "spend-authorization-requests.json",
+        record["result_artifact"],
+    }
+    changed = {
+        path for path in set(expected_members) | set(actual_members)
+        if expected_members.get(path) != actual_members.get(path)
+    }
+    if not changed or not changed <= allowed_changed or "run.json" not in changed:
+        return False
+    if candidate == staged_path:
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.replace(artifact_path)
+    write_workspace_snapshot(run_dir)
+    validate_workspace_snapshot(run_dir, state)
+    return True
+
+
+def _reconcile_required_providerless_denial_under_lock(
+    run_dir: Path,
+    state: dict[str, Any],
+    *,
+    reconciled_at: str,
+    _failure_injector: Any | None = None,
+) -> bool:
+    if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        return False
+    legacy = _verified_legacy_denials(run_dir, state)
+    if not legacy:
+        return False
+    denial_reasons = {
+        item["action_id"]: item["negative_authorization"]["denial_reason"]
+        for item in legacy
+    }
+    transition = _run_transition_for_denial(state, legacy, denial_reasons)
+    if transition["outcome"] != "terminalized":
+        raise ValueError(
+            "Legacy providerless denial is not a deterministic required-action stop"
+        )
+    observation, review = _observation(
+        run_dir, state, native_exclusive_access="established",
+        observed_at=reconciled_at,
+    )
+    if review or not observation["inventory_valid"]:
+        raise ValueError("Legacy providerless denial requires a valid exact snapshot")
+    evidence_by_path: dict[str, dict[str, Any]] = {}
+    for action in legacy:
+        relative = action["negative_authorization"]["result_artifact"]
+        evidence_by_path.setdefault(relative, _artifact_descriptor(run_dir / relative, run_dir))
+    artifact_relative = Path("lifecycle") / "required-denial-terminal-reconciliation.json"
+    artifact_path = run_dir / artifact_relative
+    anticipated_revision = int(state.get("state_revision") or 0) + 1
+    record = {
+        "run_id": state["run_id"],
+        "decision_basis": observation,
+        "result_state_revision": anticipated_revision,
+        "result_artifact": artifact_relative.as_posix(),
+        "committed_at": reconciled_at,
+        "action_evidence": [evidence_by_path[key] for key in sorted(evidence_by_path)],
+        "run_transition": deepcopy(transition),
+    }
+    staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+    write_json_atomic(staged_path, _terminal_reconciliation_artifact(record))
+    if _failure_injector:
+        _failure_injector("after_reconciliation_artifact_staged")
+    _apply_run_transition(state, transition, committed_at=reconciled_at)
+    state["required_denial_reconciliation"] = record
+    persist_state(run_dir / "run.json", state)
+    if state["state_revision"] != anticipated_revision:
+        raise RuntimeError("Unexpected terminal reconciliation state revision advance")
+    if _failure_injector:
+        _failure_injector("after_reconciliation_state_persisted")
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+    staged_path.replace(artifact_path)
+    if _failure_injector:
+        _failure_injector("after_reconciliation_artifact_promoted")
+    write_workspace_snapshot(run_dir)
+    if _failure_injector:
+        _failure_injector("after_reconciliation_snapshot_published")
+    validate_workspace_snapshot(run_dir, state)
+    return True
+
+
+def reconcile_required_providerless_denial(
+    run_dir: Path,
+    *,
+    reconciled_at: str | None = None,
+    _failure_injector: Any | None = None,
+) -> dict[str, Any]:
+    """Narrowly terminalize a verified legacy required providerless denial."""
+    run_dir = run_dir.resolve()
+    try:
+        lock = _exclusive_lifecycle_lock(run_dir)
+        lock.__enter__()
+    except (OSError, BlockingIOError):
+        raise RuntimeError("Terminal reconciliation could not establish exclusive access")
+    try:
+        state = load_json(run_dir / "run.json")
+        try:
+            validate_workspace_snapshot(run_dir, state)
+        except ValueError:
+            if not _recover_interrupted_terminal_reconciliation(run_dir, state):
+                raise
+            state = load_json(run_dir / "run.json")
+        _reconcile_required_providerless_denial_under_lock(
+            run_dir, state, reconciled_at=reconciled_at or _utc_now(),
+            _failure_injector=_failure_injector,
+        )
+        return load_json(run_dir / "run.json")
+    finally:
+        lock.__exit__(None, None, None)
+
+
 def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         return []
@@ -1429,8 +1645,14 @@ def closeout_run(
         try:
             validate_workspace_snapshot(run_dir, state)
         except ValueError:
-            if not _recover_interrupted_closeout(run_dir, state):
+            if _recover_interrupted_terminal_reconciliation(run_dir, state):
+                state = load_json(run_dir / "run.json")
+            elif not _recover_interrupted_closeout(run_dir, state):
                 raise
+            state = load_json(run_dir / "run.json")
+        if _reconcile_required_providerless_denial_under_lock(
+            run_dir, state, reconciled_at=observed_at or _utc_now()
+        ):
             state = load_json(run_dir / "run.json")
         existing = state.get("lifecycle_closeout")
         if (

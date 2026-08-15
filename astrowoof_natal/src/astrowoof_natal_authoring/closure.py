@@ -6575,6 +6575,27 @@ def main() -> None:
                 reasoning_effort=args.qualitative_editor_reasoning_effort,
             )
     if args.resume:
+        preliminary_state = load_json(args.run_dir / "run.json")
+        legacy_denial_present = any(
+            isinstance(action, dict)
+            and action.get("state") == "DENIED_PROVIDERLESS"
+            and isinstance(action.get("negative_authorization"), dict)
+            and not isinstance(
+                action["negative_authorization"].get("run_transition"), dict
+            )
+            for action in (preliminary_state.get("spend_ledger") or {}).get(
+                "actions", []
+            )
+        )
+        if legacy_denial_present or isinstance(
+            preliminary_state.get("required_denial_reconciliation"), dict
+        ):
+            # This runs before the ordinary resume snapshot check so an
+            # interrupted, tightly bounded reconciliation can repair its own
+            # declared write set. It cannot bless unrelated workspace changes.
+            from .lifecycle import reconcile_required_providerless_denial
+
+            reconcile_required_providerless_denial(args.run_dir)
         state, run_json = resume_run(
             run_dir=args.run_dir,
             provider=provider,

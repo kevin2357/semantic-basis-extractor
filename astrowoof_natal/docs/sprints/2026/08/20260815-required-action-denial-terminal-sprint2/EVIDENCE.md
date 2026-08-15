@@ -81,6 +81,54 @@ which leaves both runner and lifecycle projections treating work as resumable.
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
 
+## Slice 3: retained-workspace reconciliation
+
+Committed Slice 2 implementation:
+
+```text
+16465fe feat: terminalize required providerless denials
+```
+
+The supported recognizer accepts exact retained v0.4.1 single and atomic-batch
+denial artifacts only when their complete snapshot, binding, denial reason,
+provider absence, native requiredness, and competing-state checks all agree. It
+persists one reconciliation artifact, one state revision, and one snapshot.
+
+Failure-injection points exercised:
+
+```text
+after_reconciliation_artifact_staged
+after_reconciliation_state_persisted
+after_reconciliation_artifact_promoted
+after_reconciliation_snapshot_published
+```
+
+Recovery succeeded at all four boundaries. A changed denial artifact, late
+provider identity, and an unrelated workspace member each failed closed without a
+second mutation. A bounded normal resume recovered an interruption after state
+persistence and returned `BUDGET_EXHAUSTED` with provider submissions still zero.
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_negative_authorization \
+  astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_bounded_lifecycle -q
+Ran 49 tests in 22.401s
+OK
+```
+
+Final full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 309 tests in 133.040s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
+
 ## Slice 2: atomic new-denial terminalization
 
 Committed Slice 1 contract baseline:

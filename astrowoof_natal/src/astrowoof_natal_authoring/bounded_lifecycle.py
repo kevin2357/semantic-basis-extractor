@@ -348,7 +348,18 @@ def resume_bounded_run(
     state = load_json(run_json)
     if state.get("route_contract") != BOUNDED_RUN_CONTRACT:
         raise ValueError("Run is not a supported bounded-Natal lifecycle")
-    validate_workspace_snapshot(run_dir, state)
+    legacy_denial_present = any(
+        item.get("state") == "DENIED_PROVIDERLESS"
+        and not (item.get("negative_authorization") or {}).get("run_transition")
+        for item in (state.get("spend_ledger") or {}).get("actions", [])
+    )
+    if legacy_denial_present or isinstance(
+        state.get("required_denial_reconciliation"), dict
+    ):
+        from .lifecycle import reconcile_required_providerless_denial
+        state = reconcile_required_providerless_denial(run_dir)
+    else:
+        validate_workspace_snapshot(run_dir, state)
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         return state
     if state.get("provider") != provider.name:

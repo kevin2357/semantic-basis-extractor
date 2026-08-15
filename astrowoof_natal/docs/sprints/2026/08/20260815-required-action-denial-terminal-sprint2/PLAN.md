@@ -356,6 +356,6 @@ Implementation began after plan approval. Later slices retain explicit review
 gates. Release/tag/publication requires a separate authorization after sprint
 closeout.
 
-Slice 0 is now complete and paused at its review gate. No terminal contract or
-production lifecycle behavior has been implemented; approval is required before
-Slice 0 is committed and Slice 1 begins.
+Slices 0 through 2 are committed. Slice 3 is implementation-complete and paused
+at its review gate; CLI/event/installed-interface and consumer-handoff work remains
+assigned to Slice 4. Release, tag, and publication remain unauthorized.

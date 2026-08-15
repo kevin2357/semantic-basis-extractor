@@ -26,6 +26,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     deny_providerless_actions,
     deny_providerless_action,
     inspect_lifecycle,
+    reconcile_required_providerless_denial,
 )
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
@@ -204,6 +205,63 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
             self.assertFalse(after["terminal"]["local_continuation_remains"])
             self.assertEqual("closed", closeout["disposition"])
             self.assertEqual([], closeout["unresolved_action_ids"])
+
+    def test_retained_legacy_batch_denial_reconciles_as_one_causal_set(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            state = load_json(root / "run.json")
+            state["status"] = "AUTHORING"
+            state["subjects"] = {}
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            request["observed"] = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T22:15:00Z",
+            )["observation"]
+            deny_providerless_actions(
+                root, request, decision_at="2026-08-15T22:15:01Z"
+            )
+
+            # Downgrade only the terminal interpretation to its exact 0.4.1
+            # representation; retain the original batch request and evidence.
+            state = load_json(root / "run.json")
+            state.pop("terminal_transition", None)
+            state["status"] = "AUTHORING"
+            record = next(iter(state["providerless_denial_batches"].values()))
+            record.pop("run_transition", None)
+            for action in state["spend_ledger"]["actions"]:
+                action["negative_authorization"].pop("run_transition", None)
+            artifact_path = root / record["result_artifact"]
+            artifact = load_json(artifact_path)
+            artifact.pop("run_transition", None)
+            artifact_path.write_text(
+                json.dumps(artifact, indent=2) + "\n", encoding="utf-8"
+            )
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+
+            reconciled = reconcile_required_providerless_denial(
+                root, reconciled_at="2026-08-15T22:15:02Z"
+            )
+            action_ids = [item["action_id"] for item in request["actions"]]
+            self.assertEqual("BUDGET_EXHAUSTED", reconciled["status"])
+            self.assertEqual(
+                action_ids,
+                reconciled["terminal_transition"]["denied_action_ids"],
+            )
+            self.assertEqual(
+                action_ids,
+                reconciled["terminal_transition"]["required_action_ids"],
+            )
+            self.assertEqual(
+                1,
+                len(reconciled["required_denial_reconciliation"]["action_evidence"]),
+            )
 
     def test_mixed_required_policy_reason_precedes_spend_reason(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
