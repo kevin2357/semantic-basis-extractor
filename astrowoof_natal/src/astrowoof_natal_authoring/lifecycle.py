@@ -673,12 +673,68 @@ def _batch_success_result(
     }
 
 
+def _recover_interrupted_batch_denial(
+    run_dir: Path, state: dict[str, Any], request: dict[str, Any], digest: str,
+) -> bool:
+    """Finish only the exact, cryptographically verified batch-denial write set."""
+    batches = state.get("providerless_denial_batches") or {}
+    record = batches.get(digest)
+    if not isinstance(record, dict) or record.get("request") != request:
+        return False
+    if record.get("result_state_revision") != state.get("state_revision"):
+        return False
+    artifact_path = run_dir / record["result_artifact"]
+    staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+    expected_artifact = _batch_denial_artifact_content(record)
+    candidate = artifact_path if artifact_path.is_file() else staged_path
+    if not candidate.is_file() or load_json(candidate) != expected_artifact:
+        return False
+    action_by_id = {
+        item.get("action_id"): item
+        for item in (state.get("spend_ledger") or {}).get("actions", [])
+    }
+    for member in record.get("actions") or []:
+        action = action_by_id.get(member.get("action_id")) or {}
+        denial = action.get("negative_authorization") or {}
+        if (
+            action.get("state") != "DENIED_PROVIDERLESS"
+            or denial.get("batch_request_sha256") != digest
+            or denial.get("result_artifact") != record["result_artifact"]
+        ):
+            return False
+    manifest_path = run_dir / SNAPSHOT_NAME
+    if not manifest_path.is_file():
+        return False
+    manifest = load_json(manifest_path)
+    expected_members = {item["path"]: item for item in manifest.get("members", [])}
+    actual_members = {
+        item["path"]: item for item in snapshot_inventory(run_dir, use_process_cache=False)
+    }
+    allowed_changed = {
+        "run.json", "public-run.json", "spend-authorization-requests.json",
+        record["result_artifact"],
+    }
+    changed = {
+        path for path in set(expected_members) | set(actual_members)
+        if expected_members.get(path) != actual_members.get(path)
+    }
+    if not changed or not changed <= allowed_changed or "run.json" not in changed:
+        return False
+    if candidate == staged_path:
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.replace(artifact_path)
+    write_workspace_snapshot(run_dir)
+    validate_workspace_snapshot(run_dir, state)
+    return True
+
+
 def deny_providerless_actions(
     run_dir: Path,
     request: dict[str, Any],
     *,
     decision_at: str | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
+    _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Atomically deny one ordered batch of exact provider-less actions.
 
@@ -704,7 +760,12 @@ def deny_providerless_actions(
         )
     try:
         state = load_json(run_dir / "run.json")
-        validate_workspace_snapshot(run_dir, state)
+        try:
+            validate_workspace_snapshot(run_dir, state)
+        except ValueError:
+            if not _recover_interrupted_batch_denial(run_dir, state, request, digest):
+                raise
+            state = load_json(run_dir / "run.json")
         batches = state.get("providerless_denial_batches") or {}
         existing = batches.get(digest)
         if isinstance(existing, dict):
@@ -774,12 +835,20 @@ def deny_providerless_actions(
         state.setdefault("providerless_denial_batches", {})[digest] = record
         staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
         write_json_atomic(staged_path, _batch_denial_artifact_content(record))
+        if _failure_injector:
+            _failure_injector("after_artifact_staged")
         persist_state(run_dir / "run.json", state)
         if state["state_revision"] != anticipated_revision:
             raise RuntimeError("Unexpected batch denial state revision advance")
+        if _failure_injector:
+            _failure_injector("after_state_persisted")
         artifact_path.parent.mkdir(parents=True, exist_ok=True)
         staged_path.replace(artifact_path)
+        if _failure_injector:
+            _failure_injector("after_artifact_promoted")
         write_workspace_snapshot(run_dir)
+        if _failure_injector:
+            _failure_injector("after_snapshot_published")
         validate_workspace_snapshot(run_dir, state)
         return _batch_success_result(run_dir, state, record, replay=False)
     finally:

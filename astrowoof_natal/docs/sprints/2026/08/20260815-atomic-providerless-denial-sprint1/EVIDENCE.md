@@ -64,6 +64,44 @@ The new terminal two-action baseline proves:
 
 Provider operations: 0. Paid spend: $0. API key used: no.
 
+## Slice 4: Interrupted-write recovery and concurrency
+
+Failure injection passed after:
+
+- exact artifact staging;
+- state/public/authorization-projection persistence;
+- artifact promotion; and
+- snapshot publication.
+
+Each restart reached one complete two-action disposition and stable exact replay.
+Negative recovery tests rejected unrelated bytes plus missing/changed staged and
+promoted artifacts. The recovery allow-list is limited to the exact known write set
+and requires state-recorded request/digest/revision/action evidence to match the
+cryptographically verified artifact.
+
+The contention test held the cross-process lock during persistence. Competing batch
+and legacy single-action operations both returned typed
+`exclusivity_not_established`; the winner applied both actions and later replayed
+idempotently.
+
+Focused command:
+
+```text
+python -m unittest astrowoof_natal.tests.test_batch_negative_authorization -v
+Ran 14 tests in 3.127s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 292 tests in 114.603s
+OK
+```
+
+Provider operations: 0. Paid spend: $0. API key used: no.
+
 ## Slice 3: Durable mutation and replay
 
 The public Python operation now proves:

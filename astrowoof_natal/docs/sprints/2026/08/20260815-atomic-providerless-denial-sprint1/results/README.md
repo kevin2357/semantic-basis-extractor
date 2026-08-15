@@ -8,3 +8,5 @@
   mutation-free all-members decision boundary and refusal coverage.
 - [`SLICE 3 MUTATION AND REPLAY.md`](SLICE%203%20MUTATION%20AND%20REPLAY.md)
   records the public Python mutation, durable evidence, and exact replay behavior.
+- [`SLICE 4 RECOVERY AND CONCURRENCY.md`](SLICE%204%20RECOVERY%20AND%20CONCURRENCY.md)
+  records exhaustive native write-boundary recovery and single-writer contention.

@@ -6,6 +6,7 @@ import inspect
 import json
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -22,6 +23,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
 from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     _locked_batch_denial_preflight,
     deny_providerless_actions,
+    deny_providerless_action,
     inspect_lifecycle,
 )
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
@@ -385,6 +387,139 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
             retained = load_json(root / "run.json")["spend_ledger"]["actions"][2]
             self.assertEqual("AUTHORIZED", retained["state"])
             self.assertNotIn("provider", inspect.signature(deny_providerless_actions).parameters)
+
+    def test_crash_restart_recovers_every_batch_write_boundary(self) -> None:
+        points = (
+            "after_artifact_staged", "after_state_persisted",
+            "after_artifact_promoted", "after_snapshot_published",
+        )
+        for point in points:
+            with self.subTest(point=point), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                request, _ = self.materialize(root)
+
+                def fail(observed: str) -> None:
+                    if observed == point:
+                        raise RuntimeError(f"injected:{point}")
+
+                with self.assertRaisesRegex(RuntimeError, f"injected:{point}"):
+                    deny_providerless_actions(
+                        root, request, decision_at="2026-08-15T20:00:03Z",
+                        _failure_injector=fail,
+                    )
+                recovered = deny_providerless_actions(root, request)
+                validate(recovered, self.schema, self.schema)
+                self.assertIn(recovered["outcome"], {"applied", "idempotent_replay"})
+                self.assertEqual(
+                    ["DENIED_PROVIDERLESS", "DENIED_PROVIDERLESS"],
+                    [item["state"] for item in load_json(root / "run.json")
+                     ["spend_ledger"]["actions"]],
+                )
+                before_replay = tree_hashes(root)
+                replay = deny_providerless_actions(root, request)
+                self.assertEqual(before_replay, tree_hashes(root))
+                self.assertEqual("idempotent_replay", replay["outcome"])
+
+    def test_recovery_rejects_unrelated_or_changed_protocol_bytes(self) -> None:
+        for mutation in (
+            "unrelated", "missing_staged", "changed_staged",
+            "missing_promoted", "changed_promoted",
+        ):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                request, _ = self.materialize(root)
+
+                def fail(point: str) -> None:
+                    expected_point = (
+                        "after_artifact_promoted"
+                        if mutation in {"missing_promoted", "changed_promoted"}
+                        else "after_state_persisted"
+                    )
+                    if point == expected_point:
+                        raise RuntimeError("injected")
+
+                with self.assertRaisesRegex(RuntimeError, "injected"):
+                    deny_providerless_actions(root, request, _failure_injector=fail)
+                digest = hashlib.sha256(
+                    json.dumps(request, ensure_ascii=False, sort_keys=True,
+                               separators=(",", ":")).encode("utf-8")
+                ).hexdigest()
+                staged = (root / "lifecycle" / "negative-authorization-batches" /
+                          f".{digest}.json.tmp")
+                promoted = staged.with_name(f"{digest}.json")
+                if mutation == "unrelated":
+                    (root / "unrelated.json").write_text("{}\n", encoding="utf-8")
+                elif mutation == "missing_staged":
+                    staged.unlink()
+                elif mutation == "changed_staged":
+                    staged.write_text('{"changed":true}\n', encoding="utf-8")
+                elif mutation == "missing_promoted":
+                    promoted.unlink()
+                else:
+                    promoted.write_text('{"changed":true}\n', encoding="utf-8")
+                before = tree_hashes(root)
+                with self.assertRaisesRegex(ValueError, "snapshot"):
+                    deny_providerless_actions(root, request)
+                self.assertEqual(before, tree_hashes(root))
+
+    def test_competing_batch_and_single_calls_never_split_application(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            entered = threading.Event()
+            release = threading.Event()
+            original_persist = __import__(
+                "astrowoof_natal_authoring.lifecycle", fromlist=["persist_state"]
+            ).persist_state
+
+            def blocking_persist(*args, **kwargs):
+                entered.set()
+                if not release.wait(timeout=10):
+                    raise RuntimeError("test synchronization timeout")
+                return original_persist(*args, **kwargs)
+
+            first_result: list[dict] = []
+            first_error: list[BaseException] = []
+
+            def run_first() -> None:
+                try:
+                    first_result.append(deny_providerless_actions(root, request))
+                except BaseException as exc:  # pragma: no cover - diagnostic capture
+                    first_error.append(exc)
+
+            with mock.patch(
+                "astrowoof_natal_authoring.lifecycle.persist_state",
+                side_effect=blocking_persist,
+            ):
+                worker = threading.Thread(target=run_first)
+                worker.start()
+                self.assertTrue(entered.wait(timeout=10))
+                competing_batch = deny_providerless_actions(root, request)
+                member = request["actions"][0]
+                single_request = {
+                    "schema_version": "astrowoof.provider_negative_authorization_request.v0.1",
+                    "run_id": request["run_id"],
+                    "action_id": member["action_id"],
+                    "binding": copy.deepcopy(member["binding"]),
+                    "observed": copy.deepcopy(request["observed"]),
+                    "denial_reason": member["denial_reason"],
+                    "external_authority_reference": member["external_authority_reference"],
+                }
+                competing_single = deny_providerless_action(root, single_request)
+                release.set()
+                worker.join(timeout=10)
+            self.assertFalse(worker.is_alive())
+            self.assertEqual([], first_error)
+            self.assertEqual("exclusivity_not_established", competing_batch["outcome"])
+            self.assertEqual("exclusivity_not_established", competing_single["outcome"])
+            self.assertEqual("applied", first_result[0]["outcome"])
+            self.assertEqual(
+                ["DENIED_PROVIDERLESS", "DENIED_PROVIDERLESS"],
+                [item["state"] for item in load_json(root / "run.json")
+                 ["spend_ledger"]["actions"]],
+            )
+            replay = deny_providerless_actions(root, request)
+            self.assertEqual("idempotent_replay", replay["outcome"])
 
 
 if __name__ == "__main__":

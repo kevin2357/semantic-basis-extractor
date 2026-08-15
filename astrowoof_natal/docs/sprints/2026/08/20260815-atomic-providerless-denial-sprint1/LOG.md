@@ -79,3 +79,19 @@
   289 tests in 122.062 seconds.
 - Slice 3 is complete and paused at its review gate. Exhaustive interrupted-write
   recovery is intentionally reserved for Slice 4.
+- Kevin approved Slice 3. Committed and pushed it as `166b177`; Slice 4 began.
+- Added failure injection after artifact staging, state/projection persistence,
+  artifact promotion, and snapshot publication. Restart safely reruns before native
+  mutation, narrowly completes the exact known write set after mutation, or replays
+  after a completed snapshot.
+- Added constrained recovery checks for exact request/digest, result revision,
+  action-local batch references, artifact content, and allow-listed changed paths.
+  Missing/changed staged or promoted artifacts and unrelated workspace bytes fail
+  closed without snapshot blessing.
+- Added deterministic batch-versus-batch and batch-versus-single contention. Both
+  competitors receive typed exclusivity refusal while the lock holder applies the
+  complete batch; no split action state is observed.
+- Focused batch tests passed all 14 tests. The complete repository suite passed all
+  292 tests in 114.603 seconds.
+- Slice 4 is complete and paused at its review gate. The evidence explicitly avoids
+  claiming filesystem-wide or external-provider transactionality.
