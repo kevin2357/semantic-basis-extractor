@@ -1,7 +1,7 @@
 # AstroWoof Natal Authoring 0.4.1
 
-Status: qualified release candidate pending publication under immutable annotated
-tag `astrowoof-natal-authoring-v0.4.1`.
+Status: published under immutable annotated tag
+`astrowoof-natal-authoring-v0.4.1`.
 
 This patch release adds an atomic providerless-denial batch lifecycle operation
 for API-owned terminal cleanup. It preserves all 0.4.0 exact-Natal, bounded-Natal,
@@ -36,3 +36,8 @@ zero / `$0`.
   3.11 using the exact candidate bytes; and
 - artifact source commit:
   `1fa1151ab1e72b768697674b17c295c32a8ba78f`.
+
+Publication is complete. Authenticated download verification matched the qualified
+wheel SHA-256. The immutable tag identifies release-record commit
+`b9aa4af11fbe9d83099474646a288842285860e6`; this post-publication evidence does
+not move that tag.

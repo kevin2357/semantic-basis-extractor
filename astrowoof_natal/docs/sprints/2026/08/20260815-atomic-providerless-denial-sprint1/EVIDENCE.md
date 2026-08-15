@@ -175,6 +175,32 @@ Release recommendation: separately authorize versioned `0.4.1` preparation and
 publication. The temporary 0.4.0-named wheel is evidence only and is not pinnable.
 The final external qualification build/venv directory was removed after capture.
 
+## Authorized 0.4.1 publication
+
+Kevin separately authorized the recommended patch release after sprint closeout.
+
+```text
+artifact source commit: 1fa1151ab1e72b768697674b17c295c32a8ba78f
+release-record/tag commit: b9aa4af11fbe9d83099474646a288842285860e6
+annotated tag object: e6b743787892b90f840c294fc55b0572857aefff
+tag: astrowoof-natal-authoring-v0.4.1
+wheel: astrowoof_natal_authoring-0.4.1-py3-none-any.whl
+bytes: 720149
+sha256: 5bbb2317fbb314d22a6407a75ce03e0a406a928bdaa8160eed51682318650351
+entries/resources/cache entries: 82 / 42 / 0
+repository suite: 294 passed
+Windows CPython 3.12 installed smoke: pass
+Linux CPython 3.11 installed smoke: pass
+authenticated published-asset download verification: pass
+GitHub release id: 371079324
+published: 2026-08-15T15:14:10Z
+provider operations/spend: 0 / $0
+```
+
+Two independent fixed-epoch builds from the artifact source commit were
+byte-identical. The immutable annotated tag was not moved after publication;
+publication evidence is retained in a later documentation-only commit.
+
 ## Slice 4: Interrupted-write recovery and concurrency
 
 Failure injection passed after:

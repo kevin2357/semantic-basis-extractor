@@ -133,3 +133,14 @@
   occurred here.
 - Removed the final external qualification build/venv tree after evidence capture;
   no temporary artifact tree remains in the repository or retained closeout path.
+- Kevin separately authorized the recommended 0.4.1 patch release. Prepared and
+  pushed artifact source commit `1fa1151`, reran the complete 294-test suite, and
+  built two byte-identical fixed-epoch wheels.
+- Fresh installed lifecycle smoke passed on Windows CPython 3.12 and Linux CPython
+  3.11 against the exact 0.4.1 wheel. The wheel contains 82 entries, 42 packaged
+  resources, four batch fixtures, `py.typed`, and no cache/bytecode entries.
+- Locked release coordinates in `b9aa4af`, created and pushed immutable annotated
+  tag `astrowoof-natal-authoring-v0.4.1`, and published GitHub release 371079324.
+- Authenticated download verification matched SHA-256
+  `5bbb2317fbb314d22a6407a75ce03e0a406a928bdaa8160eed51682318650351`.
+  This later documentation commit records publication without moving the tag.
