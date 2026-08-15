@@ -5,6 +5,7 @@
 - [Slice 2 atomic terminalization](SLICE%202%20ATOMIC%20TERMINALIZATION.md)
 - [Slice 3 recovery coherence](SLICE%203%20RECOVERY%20COHERENCE.md)
 - [Slice 4 consumer surfaces](SLICE%204%20CONSUMER%20SURFACES.md)
+- [Slice 5 closeout](SLICE%205%20CLOSEOUT.md)
 
 Add one compact, reviewable result document per later slice and link the full plan,
 log, evidence, and relevant result at every gate.

@@ -1,7 +1,7 @@
 # Required-Action Denial Terminalization Sprint 2 Plan
 
 ```yaml
-status: in_progress
+status: complete
 date: 2026-08-15
 owner: semantic-basis-extractor
 consumer: astrowoof-api
@@ -356,6 +356,6 @@ Implementation began after plan approval. Later slices retain explicit review
 gates. Release/tag/publication requires a separate authorization after sprint
 closeout.
 
-Slices 0 through 3 are committed. Slice 4 is complete and paused at its review
-gate. Final evidence lock and release recommendation remain assigned to Slice 5.
-Release, tag, and publication remain unauthorized.
+Slices 0 through 4 are committed. Slice 5 is complete and paused at its review
+gate. The sprint recommends a separately authorized pinnable 0.4.2 patch release;
+version bump, immutable build, tag, and publication remain unauthorized.

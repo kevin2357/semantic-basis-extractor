@@ -267,3 +267,57 @@ OK
 ```
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
+
+## Slice 5: final qualification and recommendation
+
+Committed Slice 4 consumer surfaces:
+
+```text
+50051cd feat: expose required denial recovery
+```
+
+Reproducible qualification builds:
+
+```text
+SOURCE_DATE_EPOCH: commit timestamp of 50051cd
+filename: astrowoof_natal_authoring-0.4.1-py3-none-any.whl
+build A: a344dfedf3b71beef52006ed7f19037d5c001cadc583f9d88026c05d4067f296
+build B: a344dfedf3b71beef52006ed7f19037d5c001cadc583f9d88026c05d4067f296
+byte-identical: yes
+```
+
+Installed qualification:
+
+```text
+Windows: Python 3.11 fresh venv, --no-index --no-deps, smoke pass
+Linux: cached python:3.11-slim, --network none, --no-index --no-deps, smoke pass
+both runtime modules: site-packages
+both terminal outcomes: budget_exhausted
+both local dependency counts: 0
+both closeout dispositions: closed
+wheel content: py.typed, catalog, lifecycle schema, v0.2 fixtures present
+```
+
+Source qualification carried forward unchanged:
+
+```text
+focused lifecycle/consumer tests: 79 passed in 23.393s
+complete repository tests: 310 passed in 134.137s
+py_compile: pass
+git diff --check: pass
+```
+
+Cleanup proof:
+
+```text
+qualification root resolved exactly under astrowoof_natal/.qualification
+qualification root recursively removed: true
+empty .qualification parent removed: true
+```
+
+Release recommendation: pinnable `0.4.2` patch after separate authorization.
+The qualification wheel is not the release artifact. Exact release source commit,
+version bump, final reproducible hash, immutable tag, and publication remain future
+release work.
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
