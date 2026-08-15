@@ -93,6 +93,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "fixtures/lifecycle/negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-result.v0.1.json",
+        "fixtures/lifecycle/negative-authorization-result.v0.2.json",
+        "fixtures/lifecycle/batch-negative-authorization-result.v0.2.json",
     ):
         try:
             json.loads(read_resource_text(resource_name))
@@ -187,6 +189,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "batch_action_count": 2,
         "batch_replay_outcome": "idempotent_replay",
         "batch_replay_stable": True,
+        "closeout_disposition": "closed",
         "closeout_replay_stable": True,
         "snapshot_valid": True,
     }
@@ -195,6 +198,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
             errors.append(f"{name}: expected {expected_value!r}, got {checks[name]!r}")
     if checks["event_names"] != [
         "authorization.denied_providerless",
+        "terminal.transitioned",
         "authorization.denied_providerless",
         "authorization.denied_providerless",
         "authorization.denied_providerless_batch",

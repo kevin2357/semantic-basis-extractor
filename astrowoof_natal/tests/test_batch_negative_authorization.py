@@ -157,7 +157,7 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
             )
             self.assertEqual("established", result["decision_basis"]["native_exclusive_access"])
 
-    def test_required_external_batch_denial_reproduces_one_nonterminal_loop(self) -> None:
+    def test_required_external_batch_denial_terminalizes_once(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             request, _ = self.materialize(root)
@@ -191,11 +191,43 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
                 ["DENIED_PROVIDERLESS", "DENIED_PROVIDERLESS"],
                 [item["state"] for item in persisted["spend_ledger"]["actions"]],
             )
-            self.assertEqual("AUTHORING", persisted["status"])
+            self.assertEqual("BUDGET_EXHAUSTED", persisted["status"])
+            self.assertEqual(
+                [item["action_id"] for item in request["actions"]],
+                result["run_transition"]["denied_action_ids"],
+            )
+            self.assertEqual(
+                [item["action_id"] for item in request["actions"]],
+                result["run_transition"]["required_action_ids"],
+            )
             self.assertFalse(after["terminal"]["provider_continuation_remains"])
-            self.assertTrue(after["terminal"]["local_continuation_remains"])
-            self.assertEqual("continuation_required", closeout["disposition"])
+            self.assertFalse(after["terminal"]["local_continuation_remains"])
+            self.assertEqual("closed", closeout["disposition"])
             self.assertEqual([], closeout["unresolved_action_ids"])
+
+    def test_mixed_required_policy_reason_precedes_spend_reason(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            state = load_json(root / "run.json")
+            state["status"] = "AUTHORING"
+            state["subjects"] = {}
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            request["observed"] = inspect_lifecycle(
+                root, native_exclusive_access="declared"
+            )["observation"]
+            request["actions"][0]["denial_reason"] = "external_authority_denied"
+            request["actions"][1]["denial_reason"] = "product_policy_denied"
+            result = deny_providerless_actions(root, request)
+            self.assertEqual("POLICY_STOPPED", load_json(root / "run.json")["status"])
+            self.assertEqual("policy_stopped", result["run_transition"]["terminal_outcome"])
+            self.assertEqual(
+                "external_product_policy_denied",
+                result["run_transition"]["terminal_reason"],
+            )
 
     def test_stale_observation_refuses_all_as_not_evaluated(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

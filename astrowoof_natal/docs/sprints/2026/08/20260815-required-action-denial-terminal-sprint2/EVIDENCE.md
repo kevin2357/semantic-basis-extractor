@@ -81,6 +81,53 @@ which leaves both runner and lifecycle projections treating work as resumable.
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
 
+## Slice 2: atomic new-denial terminalization
+
+Committed Slice 1 contract baseline:
+
+```text
+984d3fc feat: define required-denial terminal transition contract
+```
+
+Final focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_negative_authorization \
+  astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_bounded_lifecycle \
+  astrowoof_natal.tests.test_lifecycle_closeout \
+  astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 70 tests in 19.637s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 301 tests in 121.713s
+OK
+```
+
+Proven behaviors:
+
+- one required spend denial -> v0.2 result, one `BUDGET_EXHAUSTED` transition;
+- one required product denial -> `POLICY_STOPPED`;
+- mixed required batch -> one policy-stop transition with exact causal members;
+- optional bounded polish denial -> skip and delivery, no resubmission;
+- accepted delivery cleanup -> delivery status preserved;
+- cleanup after prior terminalization -> first terminal authority preserved;
+- public state -> bounded outcome/cause/revision only;
+- inspection/closeout -> terminal, quiescent, no dependencies/actions, closed;
+- exact replay -> stable checkpoint and no second transition;
+- provider identity/consumption/report/ambiguity refusals -> unchanged; and
+- installed lifecycle smoke/CLI consumer expectations -> v0.2 and one terminal
+  observation.
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
+
 ## Slice 1: proposed terminal contract
 
 The reviewed proposal is recorded in `results/SLICE 1 CONTRACT.md`. It freezes:

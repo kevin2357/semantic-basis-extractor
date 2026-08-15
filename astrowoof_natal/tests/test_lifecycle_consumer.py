@@ -30,6 +30,7 @@ class TestLifecycleConsumer(unittest.TestCase):
             self.assertEqual(
                 [
                     "authorization.denied_providerless",
+                    "terminal.transitioned",
                     "authorization.denied_providerless",
                     "authorization.denied_providerless",
                     "authorization.denied_providerless_batch",
@@ -107,11 +108,12 @@ class TestLifecycleConsumer(unittest.TestCase):
             self.assertEqual(0, completed.returncode, completed.stderr)
             result = json.loads(completed.stdout)
             self.assertEqual(
-                "astrowoof.provider_negative_authorization_batch_result.v0.1",
+                "astrowoof.provider_negative_authorization_batch_result.v0.2",
                 result["schema_version"],
             )
             self.assertEqual("applied", result["outcome"])
             self.assertEqual(2, len(result["actions"]))
+            self.assertEqual("terminalized", result["run_transition"]["outcome"])
 
 
 if __name__ == "__main__":

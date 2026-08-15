@@ -235,7 +235,7 @@
       "properties": {
         "outcome": {"enum": ["nonterminal", "delivery_complete", "policy_stopped", "review_required", "budget_exhausted", "ambiguous", "failed"]},
         "terminal": {"type": "boolean"},
-        "terminal_reason": {"type": ["string", "null"], "enum": [null, "delivery_complete", "native_policy_stop", "native_qa_failure", "budget_exhausted", "providerless_denial", "review_required", "ambiguous_provider_submission", "native_failure"]},
+        "terminal_reason": {"type": ["string", "null"], "enum": [null, "delivery_complete", "native_policy_stop", "native_qa_failure", "budget_exhausted", "providerless_denial", "review_required", "ambiguous_provider_submission", "native_failure", "external_spend_authority_denied", "external_spend_reservation_unavailable", "external_product_policy_denied", "run_cancelled_before_submission"]},
         "deck_bytes_exist": {"type": "boolean"},
         "native_qa_passed": {"type": "boolean"},
         "assembly_lint_validation_accepted": {"type": "boolean"},

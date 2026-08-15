@@ -75,3 +75,24 @@
 - Slice 1 is implementation-complete and paused for Kevin's gate approval. No
   denial mutation, run transition, recovery mutation, provider operation, build,
   release, or tag has begun.
+- Kevin approved Slice 1. Committed and pushed the API-approved v0.2 contract as
+  `984d3fc`; Slice 2 began.
+- Implemented locked run-consequence derivation and same-revision terminalization
+  for new single and batch denials. Required spend refusals use
+  `BUDGET_EXHAUSTED`; product/cancellation refusals use `POLICY_STOPPED`; mixed
+  batch precedence and dual denied/required causal lists match the approved
+  contract.
+- Added durable terminal authority to private state, bounded cause/outcome to
+  public state, terminal-aware status recomputation, exact inspection/closeout
+  mapping, and early exact/bounded runner return before paid work.
+- Preserved accepted delivery and first terminal authority. Added a real bounded
+  optional-polish denial test that skips the stage and reaches delivery without a
+  second provider submission.
+- The first full-suite run exposed three expected consumer-smoke compatibility
+  assertions: new success schema v0.2 and the new terminal event. Updated installed
+  smoke and CLI consumer expectations, while ensuring only first terminalization
+  emits the event. The corrected focused ladder passed 70 tests.
+- The corrected complete repository suite passed all 301 tests in 121.713 seconds.
+- Slice 2 is complete and paused for review. Retained 0.4.1 reconciliation and
+  exhaustive new-transition failure injection remain explicitly assigned to
+  Slice 3. No provider operation, paid work, build, release, or tag occurred.

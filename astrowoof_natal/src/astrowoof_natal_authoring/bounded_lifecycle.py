@@ -349,6 +349,8 @@ def resume_bounded_run(
     if state.get("route_contract") != BOUNDED_RUN_CONTRACT:
         raise ValueError("Run is not a supported bounded-Natal lifecycle")
     validate_workspace_snapshot(run_dir, state)
+    if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        return state
     if state.get("provider") != provider.name:
         raise ValueError("Resume provider does not match the frozen run provider")
     if authorizations:

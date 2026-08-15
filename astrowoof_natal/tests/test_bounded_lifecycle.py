@@ -302,11 +302,66 @@ class TestBoundedLifecycle(unittest.TestCase):
                 run_dir, native_exclusive_access="declared"
             )
             self.assertFalse(after["terminal"]["provider_continuation_remains"])
-            self.assertTrue(after["terminal"]["local_continuation_remains"])
-            self.assertEqual("continuation_required", closeout_run(run_dir)["disposition"])
+            self.assertFalse(after["terminal"]["local_continuation_remains"])
+            self.assertEqual("budget_exhausted", after["terminal"]["outcome"])
+            self.assertEqual("closed", closeout_run(run_dir)["disposition"])
+            resumed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("BUDGET_EXHAUSTED", resumed["status"])
+            self.assertEqual(0, provider.submissions)
+
+    def test_optional_providerless_denial_skips_and_delivers_without_resubmit(self) -> None:
+        provider = PaidScriptedProvider()
+        profile = {
+            "optional_stages": {
+                "polish": True,
+                "qualitative_critic": False,
+                "qualitative_candidate": False,
+            },
+            "spend_policy": spend_policy(),
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile=profile,
+            )
             with self.assertRaises(AwaitingSpendAuthorization):
                 resume_bounded_run(run_dir, provider=provider)
-            self.assertEqual(0, provider.submissions)
+            initial = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0]
+            authorization = {
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": initial["action_id"],
+                "binding": initial["binding"],
+                "authorization_reference": "api-reservation-initial",
+            }
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(
+                    run_dir, provider=provider, authorizations=[authorization]
+                )
+            paused = load_json(run_dir / "run.json")
+            polish = next(
+                item for item in paused["spend_ledger"]["actions"]
+                if item["binding"]["stage"] == "polish"
+            )
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared"
+            )
+            request = {
+                "schema_version": NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
+                "run_id": paused["run_id"],
+                "action_id": polish["action_id"],
+                "binding": polish["binding"],
+                "observed": inspection["observation"],
+                "denial_reason": "external_authority_denied",
+                "external_authority_reference": "api-global:optional-polish",
+            }
+            denied = deny_providerless_action(run_dir, request)
+            self.assertEqual("optional_stage_skipped", denied["run_transition"]["outcome"])
+            self.assertEqual([], denied["run_transition"]["required_action_ids"])
+            completed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", completed["status"])
+            self.assertIn("polish", completed["bounded"]["skipped_stages"])
+            self.assertEqual(1, provider.submissions)
 
     def test_interrupted_submission_reconciles_durable_id_without_resubmit(self) -> None:
         provider = PaidScriptedProvider(interrupt_after_identity=True)

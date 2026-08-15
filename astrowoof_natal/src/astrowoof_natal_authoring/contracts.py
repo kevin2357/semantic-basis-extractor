@@ -213,6 +213,7 @@ def public_run_state(state: dict[str, Any]) -> dict[str, Any]:
     accepted = sum(item.get("state") == "PASS_QA_ACCEPTED" for item in passes)
     ledger = state.get("spend_ledger") or {}
     actions = ledger.get("actions") or []
+    terminal = state.get("terminal_transition") or {}
     return {
         "schema_version": PUBLIC_RUN_SCHEMA,
         "status": state.get("status"),
@@ -235,6 +236,11 @@ def public_run_state(state: dict[str, Any]) -> dict[str, Any]:
                 if item.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
             ],
         },
+        "terminal": ({
+            "outcome": terminal.get("terminal_outcome"),
+            "reason": terminal.get("terminal_reason"),
+            "state_revision": state.get("state_revision"),
+        } if terminal.get("outcome") == "terminalized" else None),
         "subjects": {
             subject: {
                 "status": record.get("state"),

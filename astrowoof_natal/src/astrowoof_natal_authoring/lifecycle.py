@@ -20,6 +20,7 @@ from .closure import (
     persist_state,
     sha256_file,
     snapshot_inventory,
+    update_run_status,
     validate_workspace_snapshot,
     write_json_atomic,
     write_workspace_snapshot,
@@ -28,11 +29,13 @@ from .lifecycle_contracts import (
     BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS,
     BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
     BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+    BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2,
     CLOSEOUT_RESULT_SCHEMA,
     DENIAL_REASONS,
     LIFECYCLE_INSPECTION_SCHEMA,
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
     NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+    NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2,
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
     action_presentation_key,
     batch_negative_authorization_request_sha256,
@@ -147,7 +150,139 @@ def _action_record(action: dict[str, Any], *, snapshot_valid: bool) -> dict[str,
     }
 
 
+_OPTIONAL_DENIAL_STAGES = {
+    "polish", "qualitative_critic", "qualitative_candidate",
+}
+_SPEND_DENIAL_REASONS = {
+    "external_authority_denied", "reservation_unavailable",
+}
+_POLICY_DENIAL_REASONS = {
+    "product_policy_denied", "run_cancelled_before_submission",
+}
+
+
+def _accepted_delivery(state: dict[str, Any]) -> bool:
+    subjects = list((state.get("subjects") or {}).values())
+    return bool(subjects) and all(
+        item.get("state") in FINAL_SUCCESS_STATES for item in subjects
+    ) and state.get("status") in FINAL_SUCCESS_STATES
+
+
+def _optional_denial_skip(state: dict[str, Any], action: dict[str, Any]) -> bool:
+    stage = str((action.get("binding") or {}).get("stage") or "")
+    if stage not in _OPTIONAL_DENIAL_STAGES:
+        return False
+    policy = ((state.get("spend_ledger") or {}).get("policy") or {})
+    behavior = (policy.get("optional_stage_budget_behavior") or {}).get(stage)
+    return behavior == "skip"
+
+
+def _run_transition_for_denial(
+    state: dict[str, Any],
+    actions: list[dict[str, Any]],
+    denial_reasons: dict[str, str],
+) -> dict[str, Any]:
+    """Derive one exact run consequence from the locked pre-denial state."""
+    denied_ids = [item["action_id"] for item in actions]
+    prior_status = str(state.get("status") or "AUTHORING")
+    existing_terminal = state.get("terminal_transition") or {}
+    if existing_terminal.get("outcome") == "terminalized":
+        return {
+            "outcome": "no_run_transition",
+            "trigger": "required_action_providerless_denial",
+            "prior_status": prior_status,
+            "resulting_status": prior_status,
+            "terminal_outcome": existing_terminal["terminal_outcome"],
+            "terminal_reason": existing_terminal["terminal_reason"],
+            "denied_action_ids": denied_ids,
+            "required_action_ids": [],
+        }
+    if _accepted_delivery(state):
+        return {
+            "outcome": "delivery_status_preserved",
+            "trigger": "accepted_delivery_precedence",
+            "prior_status": prior_status,
+            "resulting_status": prior_status,
+            "terminal_outcome": "delivery_complete",
+            "terminal_reason": "delivery_complete",
+            "denied_action_ids": denied_ids,
+            "required_action_ids": [],
+        }
+    required = [
+        item for item in actions if not _optional_denial_skip(state, item)
+    ]
+    required_ids = [item["action_id"] for item in required]
+    if not required:
+        return {
+            "outcome": "optional_stage_skipped",
+            "trigger": "optional_action_providerless_denial",
+            "prior_status": prior_status,
+            "resulting_status": prior_status,
+            "terminal_outcome": "nonterminal",
+            "terminal_reason": "optional_stage_skipped",
+            "denied_action_ids": denied_ids,
+            "required_action_ids": [],
+        }
+    required_reasons = {denial_reasons[item["action_id"]] for item in required}
+    if required_reasons & _POLICY_DENIAL_REASONS:
+        status = "POLICY_STOPPED"
+        terminal_outcome = "policy_stopped"
+        terminal_reason = (
+            "external_product_policy_denied"
+            if "product_policy_denied" in required_reasons
+            else "run_cancelled_before_submission"
+        )
+    else:
+        status = "BUDGET_EXHAUSTED"
+        terminal_outcome = "budget_exhausted"
+        terminal_reason = (
+            "external_spend_authority_denied"
+            if "external_authority_denied" in required_reasons
+            else "external_spend_reservation_unavailable"
+        )
+    return {
+        "outcome": "terminalized",
+        "trigger": "required_action_providerless_denial",
+        "prior_status": prior_status,
+        "resulting_status": status,
+        "terminal_outcome": terminal_outcome,
+        "terminal_reason": terminal_reason,
+        "denied_action_ids": denied_ids,
+        "required_action_ids": required_ids,
+    }
+
+
+def _apply_run_transition(
+    state: dict[str, Any], transition: dict[str, Any], *, committed_at: str,
+) -> None:
+    if transition["outcome"] == "optional_stage_skipped":
+        bounded = state.get("bounded")
+        if isinstance(bounded, dict):
+            skipped = bounded.setdefault("skipped_stages", [])
+            by_id = {
+                item.get("action_id"): item
+                for item in (state.get("spend_ledger") or {}).get("actions", [])
+            }
+            for action_id in transition["denied_action_ids"]:
+                stage = str(
+                    (by_id.get(action_id, {}).get("binding") or {}).get("stage") or ""
+                )
+                if stage in _OPTIONAL_DENIAL_STAGES and stage not in skipped:
+                    skipped.append(stage)
+        update_run_status(state)
+        transition["resulting_status"] = str(state.get("status") or "AUTHORING")
+    if transition["outcome"] == "terminalized":
+        state["terminal_transition"] = {
+            "schema_version": "astrowoof.required_providerless_denial_terminal.v0.1",
+            **deepcopy(transition),
+            "committed_at": committed_at,
+        }
+        state["status"] = transition["resulting_status"]
+
+
 def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
+    if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        return []
     status = str(state.get("status") or "")
     dependencies: list[dict[str, Any]] = []
     mapping = {
@@ -230,15 +365,24 @@ def inspect_lifecycle(
         item.get("state") == "FINAL_QA_PASSED"
         for item in subjects
     )
+    terminal_transition = state.get("terminal_transition") or {}
     terminal = complete or status in {
         "FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW",
         "FAILED_REQUIRES_REVIEW", "BUDGET_EXHAUSTED",
-        "AMBIGUOUS_PROVIDER_SUBMISSION",
+        "AMBIGUOUS_PROVIDER_SUBMISSION", "POLICY_STOPPED",
     }
     if complete:
         outcome, terminal_reason = "delivery_complete", "delivery_complete"
     elif status == "BUDGET_EXHAUSTED":
-        outcome, terminal_reason = "budget_exhausted", "budget_exhausted"
+        outcome, terminal_reason = (
+            "budget_exhausted",
+            terminal_transition.get("terminal_reason") or "budget_exhausted",
+        )
+    elif status == "POLICY_STOPPED":
+        outcome, terminal_reason = (
+            "policy_stopped",
+            terminal_transition.get("terminal_reason") or "native_policy_stop",
+        )
     elif status == "AMBIGUOUS_PROVIDER_SUBMISSION":
         outcome, terminal_reason = "ambiguous", "ambiguous_provider_submission"
     elif terminal:
@@ -632,7 +776,7 @@ def _locked_batch_denial_preflight(
 
 
 def _batch_denial_artifact_content(record: dict[str, Any]) -> dict[str, Any]:
-    return {
+    content = {
         "schema_version": "astrowoof.provider_negative_authorization_batch_record.v0.1",
         "run_id": record["request"]["run_id"],
         "batch_request_sha256": record["batch_request_sha256"],
@@ -642,6 +786,9 @@ def _batch_denial_artifact_content(record: dict[str, Any]) -> dict[str, Any]:
         "committed_at": record["committed_at"],
         "actions": deepcopy(record["actions"]),
     }
+    if record.get("run_transition") is not None:
+        content["run_transition"] = deepcopy(record["run_transition"])
+    return content
 
 
 def _batch_success_result(
@@ -655,8 +802,12 @@ def _batch_success_result(
         observed_at=record["committed_at"],
     )["observation"]
     outcome = "idempotent_replay" if replay else "applied"
-    return {
-        "schema_version": BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+    result = {
+        "schema_version": (
+            BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2
+            if record.get("run_transition") is not None
+            else BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA
+        ),
         "run_id": state["run_id"],
         "batch_request_sha256": record["batch_request_sha256"],
         "applied": not replay,
@@ -671,6 +822,9 @@ def _batch_success_result(
             "result_artifact": _artifact_descriptor(artifact_path, run_dir),
         },
     }
+    if record.get("run_transition") is not None:
+        result["run_transition"] = deepcopy(record["run_transition"])
+    return result
 
 
 def _emit_batch_denial_result(
@@ -701,6 +855,12 @@ def _emit_batch_denial_result(
         data=batch_data,
         correlation={"native_run_id": result["run_id"]},
     )
+    transition = result.get("run_transition") or {}
+    if result.get("outcome") == "applied" and transition.get("outcome") == "terminalized":
+        event_emitter.emit("terminal.transitioned", data={
+            "outcome": transition["terminal_outcome"],
+            "terminal_reason": transition["terminal_reason"],
+        }, correlation={"native_run_id": result["run_id"]})
 
 
 def _recover_interrupted_batch_denial(
@@ -833,6 +993,12 @@ def deny_providerless_actions(
         artifact_path = run_dir / artifact_relative
         committed_at = decision_at or _utc_now()
         anticipated_revision = int(state.get("state_revision") or 0) + 1
+        denial_reasons = {
+            item["action_id"]: item["denial_reason"] for item in request["actions"]
+        }
+        run_transition = _run_transition_for_denial(
+            state, list(resolved or []), denial_reasons
+        )
         action_results: list[dict[str, Any]] = []
         for action in resolved or []:
             member = members_by_id[action["action_id"]]
@@ -856,7 +1022,13 @@ def deny_providerless_actions(
                 "request_observation": deepcopy(request["observed"]),
                 "result_artifact": artifact_relative.as_posix(),
                 "batch_request_sha256": digest,
+                "run_transition": deepcopy(run_transition),
             }
+        _apply_run_transition(state, run_transition, committed_at=committed_at)
+        for action in resolved or []:
+            action["negative_authorization"]["run_transition"] = deepcopy(
+                run_transition
+            )
         record = {
             "batch_request_sha256": digest,
             "request": deepcopy(request),
@@ -865,6 +1037,7 @@ def deny_providerless_actions(
             "result_artifact": artifact_relative.as_posix(),
             "committed_at": committed_at,
             "actions": action_results,
+            "run_transition": deepcopy(run_transition),
         }
         state.setdefault("providerless_denial_batches", {})[digest] = record
         staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
@@ -971,7 +1144,11 @@ def deny_providerless_action(
                 )
             artifact_path = run_dir / existing["result_artifact"]
             result = {
-                "schema_version": NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+                "schema_version": (
+                    NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2
+                    if existing.get("run_transition") is not None
+                    else NEGATIVE_AUTHORIZATION_RESULT_SCHEMA
+                ),
                 "run_id": state["run_id"],
                 "action_id": action["action_id"],
                 "binding": deepcopy(action["binding"]),
@@ -990,6 +1167,8 @@ def deny_providerless_action(
                     "result_artifact": _artifact_descriptor(artifact_path, run_dir),
                 },
             }
+            if existing.get("run_transition") is not None:
+                result["run_transition"] = deepcopy(existing["run_transition"])
             if event_emitter is not None:
                 event_emitter.emit("authorization.denied_providerless", data={
                     "action_id": action["action_id"],
@@ -1076,6 +1255,12 @@ def deny_providerless_action(
         )
         artifact_path = run_dir / artifact_relative
         authorization_previously_recorded = bool(action.get("authorization"))
+        committed_at = decision_at or _utc_now()
+        run_transition = _run_transition_for_denial(
+            state,
+            [action],
+            {action["action_id"]: request["denial_reason"]},
+        )
         native_record = {
             "schema_version": "astrowoof.provider_negative_authorization_record.v0.1",
             "run_id": state["run_id"],
@@ -1087,6 +1272,7 @@ def deny_providerless_action(
             "external_authority_reference": authority,
             "request_observation": deepcopy(request["observed"]),
             "decision_basis": deepcopy(observation),
+            "run_transition": deepcopy(run_transition),
         }
         action["state"] = "DENIED_PROVIDERLESS"
         action["negative_authorization"] = {
@@ -1096,13 +1282,17 @@ def deny_providerless_action(
             "decision_basis": deepcopy(observation),
             "request_observation": deepcopy(request["observed"]),
             "result_artifact": artifact_relative.as_posix(),
+            "run_transition": deepcopy(run_transition),
         }
+        _apply_run_transition(state, run_transition, committed_at=committed_at)
+        action["negative_authorization"]["run_transition"] = deepcopy(run_transition)
+        native_record["run_transition"] = deepcopy(run_transition)
         persist_state(run_dir / "run.json", state)
         write_json_atomic(artifact_path, native_record)
         write_workspace_snapshot(run_dir)
         validate_workspace_snapshot(run_dir, state)
         result = {
-            "schema_version": NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+            "schema_version": NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2,
             "run_id": state["run_id"],
             "action_id": action["action_id"],
             "binding": deepcopy(action["binding"]),
@@ -1115,6 +1305,7 @@ def deny_providerless_action(
             "external_authority_reference": authority,
             "request_observation": deepcopy(request["observed"]),
             "decision_basis": observation,
+            "run_transition": deepcopy(run_transition),
             "result_checkpoint": {
                 "operator_state_revision": state["state_revision"],
                 "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
@@ -1127,6 +1318,11 @@ def deny_providerless_action(
                 "denial_reason": request["denial_reason"],
                 "outcome": "applied",
             }, correlation={"action_id": action["action_id"]})
+            if run_transition["outcome"] == "terminalized":
+                event_emitter.emit("terminal.transitioned", data={
+                    "outcome": run_transition["terminal_outcome"],
+                    "terminal_reason": run_transition["terminal_reason"],
+                }, correlation={"native_run_id": state["run_id"]})
         return result
     finally:
         lock.__exit__(None, None, None)

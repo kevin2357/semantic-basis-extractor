@@ -2160,7 +2160,10 @@ def update_run_status(state: dict[str, Any]) -> None:
     final_states = {
         record["state"] for record in state.get("subjects", {}).values()
     }
-    if "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
+    terminal_transition = state.get("terminal_transition") or {}
+    if terminal_transition.get("outcome") == "terminalized":
+        state["status"] = terminal_transition["resulting_status"]
+    elif "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
         state["status"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
     elif "BUDGET_EXHAUSTED" in spend_states:
         state["status"] = "BUDGET_EXHAUSTED"
@@ -2645,6 +2648,21 @@ class SpendController:
                     )
                     existing = prepare_action(self.ledger, binding)
                     persist_state(self.run_json, self.state)
+                if existing["state"] == "DENIED_PROVIDERLESS":
+                    transition = (existing.get("negative_authorization") or {}).get(
+                        "run_transition"
+                    ) or {}
+                    if transition.get("outcome") == "optional_stage_skipped":
+                        skipped = deepcopy(existing)
+                        skipped["state"] = "SKIPPED_BUDGET_EXHAUSTED"
+                        raise BudgetExhausted(
+                            "Optional paid stage skipped after providerless denial",
+                            action=skipped,
+                        )
+                    raise AwaitingSpendAuthorization(
+                        "Required paid action was denied providerlessly",
+                        action=existing,
+                    )
                 prior_state = existing["state"]
                 classify_prepared_budget(self.ledger, existing)
                 if existing["state"] != prior_state:
@@ -6596,6 +6614,9 @@ def main() -> None:
             "run.resumed" if args.resume else "run.started",
             data={"state_revision": int(state.get("state_revision") or 0)},
         )
+    if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        output_result(state)
+        return
     if args.spend_authorization:
         documents = [load_json(path) for path in args.spend_authorization]
         try:

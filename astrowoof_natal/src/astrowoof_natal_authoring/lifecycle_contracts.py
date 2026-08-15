@@ -72,6 +72,10 @@ TERMINAL_REASONS = (
     "review_required",
     "ambiguous_provider_submission",
     "native_failure",
+    "external_spend_authority_denied",
+    "external_spend_reservation_unavailable",
+    "external_product_policy_denied",
+    "run_cancelled_before_submission",
 )
 
 DENIAL_TERMINAL_REASONS = (

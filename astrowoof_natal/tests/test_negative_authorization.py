@@ -141,8 +141,7 @@ class TestNegativeAuthorization(unittest.TestCase):
                 action["negative_authorization"]["authorization_previously_recorded"]
             )
 
-    def test_required_external_denial_reproduces_nonterminal_continuation_gap(self) -> None:
-        """Freeze the API-reported required-action terminalization gap."""
+    def test_required_external_denial_terminalizes_native_run(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             state = self.base_state(root)
@@ -182,16 +181,45 @@ class TestNegativeAuthorization(unittest.TestCase):
 
             self.assertEqual("applied", result["outcome"])
             self.assertEqual("DENIED_PROVIDERLESS", persisted["spend_ledger"]["actions"][0]["state"])
-            self.assertEqual("AUTHORING", persisted["status"])
+            self.assertEqual("BUDGET_EXHAUSTED", persisted["status"])
+            self.assertEqual(
+                "external_spend_authority_denied",
+                persisted["terminal_transition"]["terminal_reason"],
+            )
+            public = load_json(root / "public-run.json")
+            self.assertEqual("BUDGET_EXHAUSTED", public["status"])
+            self.assertEqual("budget_exhausted", public["terminal"]["outcome"])
+            self.assertEqual(
+                "external_spend_authority_denied", public["terminal"]["reason"]
+            )
+            self.assertEqual(
+                [action["action_id"]], result["run_transition"]["denied_action_ids"]
+            )
+            self.assertEqual(
+                [action["action_id"]], result["run_transition"]["required_action_ids"]
+            )
             self.assertFalse(after["action_inventory"]["actions"][0]["necessary"])
-            self.assertEqual("nonterminal", after["terminal"]["outcome"])
+            self.assertEqual("budget_exhausted", after["terminal"]["outcome"])
             self.assertFalse(after["terminal"]["provider_continuation_remains"])
-            self.assertTrue(after["terminal"]["local_continuation_remains"])
-            self.assertEqual("retry_preparation", after["local_dependencies"][0]["kind"])
-            self.assertEqual("authoring_continuation", after["local_dependencies"][0]["reason_code"])
-            self.assertEqual("continuation_required", closeout["disposition"])
+            self.assertFalse(after["terminal"]["local_continuation_remains"])
+            self.assertEqual([], after["local_dependencies"])
+            self.assertEqual("closed", closeout["disposition"])
             self.assertEqual([], closeout["unresolved_action_ids"])
-            self.assertFalse(closeout["terminal"]["terminal"])
+            self.assertTrue(closeout["terminal"]["terminal"])
+
+    def test_required_product_policy_denial_uses_policy_stopped(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request = self.materialize(root, authorized=True)
+            request["denial_reason"] = "product_policy_denied"
+            result = deny_providerless_action(root, request)
+            state = load_json(root / "run.json")
+            self.assertEqual("POLICY_STOPPED", state["status"])
+            self.assertEqual("policy_stopped", result["run_transition"]["terminal_outcome"])
+            self.assertEqual(
+                "external_product_policy_denied",
+                result["run_transition"]["terminal_reason"],
+            )
 
     def test_replay_returns_same_semantic_disposition_without_second_write(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -467,11 +495,10 @@ class TestNegativeAuthorization(unittest.TestCase):
             emitter = ExecutionEventEmitter(release="test", sink=delivered.append)
             result = deny_providerless_action(root, request, event_emitter=emitter)
             self.assertTrue(result["applied"])
-            self.assertEqual(1, len(delivered))
-            self.assertEqual(
-                "authorization.denied_providerless", delivered[0]["event_name"]
-            )
-            self.assertNotIn("binding", delivered[0]["data"])
+            self.assertEqual([
+                "authorization.denied_providerless", "terminal.transitioned",
+            ], [item["event_name"] for item in delivered])
+            self.assertTrue(all("binding" not in item["data"] for item in delivered))
 
 
 if __name__ == "__main__":
