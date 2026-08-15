@@ -51,3 +51,17 @@
 - The API will release nothing for a refused batch and will retain exact request,
   digest, per-member evidence, outcome, and shared checkpoint as audit/recovery
   provenance. Slice 1's consumer gate is complete.
+- Committed and pushed the API-approved Slice 1 contract as `e2f31ac`; Slice 2
+  began.
+- Implemented strict batch request validation plus a one-lock, read-only preflight
+  that evaluates every requested action against one native state, inspection, and
+  validated snapshot. The helper returns resolved ordered actions only when every
+  member passes, otherwise a typed all-or-none refusal.
+- Added provider-free coverage for success, stale observation, mixed ineligibility,
+  duplicate/unknown/binding mismatch, provider evidence and ambiguous submission,
+  snapshot invalidity, lock contention, and programmer misuse. Each normal refusal
+  proves authoritative workspace hashes are unchanged.
+- Focused batch/contract tests passed all 21 tests. The complete repository suite
+  passed all 285 tests in 119.423 seconds.
+- Slice 2 is complete and paused at its review gate. The preflight remains internal
+  until Slice 3 can expose a complete supported mutation/replay operation.

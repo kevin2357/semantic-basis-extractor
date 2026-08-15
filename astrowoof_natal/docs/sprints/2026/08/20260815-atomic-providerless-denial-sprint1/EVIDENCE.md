@@ -81,6 +81,38 @@ Approved without blocking revisions. The API explicitly accepted:
 The optional batch refusal event is diagnostic only and may contain only bounded,
 redacted category information.
 
+## Slice 2: Locked all-or-none preflight
+
+Implemented and evidenced:
+
+- strict runtime request validation before workspace access;
+- one acquisition of the existing lifecycle/spend cross-process lock;
+- one locked state/snapshot/inspection decision basis;
+- ordered all-member resolution and eligibility evaluation;
+- provider-safety evidence precedence over generic staleness;
+- typed batch and per-member refusals; and
+- authoritative workspace byte equality across all normal refusal cases and the
+  successful preflight.
+
+Focused command:
+
+```text
+python -m unittest astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 21 tests in 0.874s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 285 tests in 119.423s
+OK
+```
+
+Provider operations: 0. Paid spend: $0. API key used: no.
+
 ## Slice 1: Versioned batch contract
 
 Added package-resource contracts:

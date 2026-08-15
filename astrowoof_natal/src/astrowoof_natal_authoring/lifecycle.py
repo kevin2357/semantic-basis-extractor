@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -24,6 +25,9 @@ from .closure import (
     write_workspace_snapshot,
 )
 from .lifecycle_contracts import (
+    BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS,
+    BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
+    BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
     CLOSEOUT_RESULT_SCHEMA,
     DENIAL_REASONS,
     LIFECYCLE_INSPECTION_SCHEMA,
@@ -31,6 +35,7 @@ from .lifecycle_contracts import (
     NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
     action_presentation_key,
+    batch_negative_authorization_request_sha256,
     observation_transition_errors,
 )
 from .execution_events import ExecutionEventEmitter
@@ -336,6 +341,294 @@ def _artifact_descriptor(path: Path, run_dir: Path) -> dict[str, Any]:
         "bytes": path.stat().st_size,
         "sha256": sha256_file(path),
     }
+
+
+_BATCH_REQUEST_FIELDS = frozenset({"schema_version", "run_id", "observed", "actions"})
+_BATCH_MEMBER_FIELDS = frozenset({
+    "action_id", "binding", "denial_reason", "external_authority_reference",
+})
+_BINDING_FIELDS = frozenset({
+    "run_id", "profile_sha256", "prepared_state_revision", "stage", "route",
+    "request_sha256", "model", "service_level", "maximum_output_tokens",
+    "commitment_micro_usd", "price_book_version",
+})
+_OBSERVATION_FIELDS = frozenset({
+    "operator_state_revision", "snapshot_sha256", "logical_workspace_root",
+    "snapshot_complete", "inventory_valid", "observed_at",
+    "native_exclusive_access", "writer_race_possible",
+})
+
+
+def _validate_batch_denial_request(request: dict[str, Any]) -> None:
+    if not isinstance(request, dict):
+        raise ValueError("Batch negative-authorization request must be an object")
+    if set(request) != _BATCH_REQUEST_FIELDS:
+        raise ValueError("Batch negative-authorization request has unsupported shape")
+    if request.get("schema_version") != BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA:
+        raise ValueError("Unsupported batch negative-authorization request schema")
+    if not isinstance(request.get("run_id"), str) or not request["run_id"]:
+        raise ValueError("A non-empty batch run_id is required")
+    observed = request.get("observed")
+    if not isinstance(observed, dict) or set(observed) != _OBSERVATION_FIELDS:
+        raise ValueError("Batch observed identity has unsupported shape")
+    if (
+        not isinstance(observed["operator_state_revision"], int)
+        or isinstance(observed["operator_state_revision"], bool)
+        or observed["operator_state_revision"] < 0
+        or not isinstance(observed["snapshot_sha256"], str)
+        or not re.fullmatch(r"[0-9a-f]{64}", observed["snapshot_sha256"])
+        or not isinstance(observed["logical_workspace_root"], str)
+        or not observed["logical_workspace_root"]
+        or not isinstance(observed["snapshot_complete"], bool)
+        or not isinstance(observed["inventory_valid"], bool)
+        or not isinstance(observed["observed_at"], str)
+        or not observed["observed_at"]
+        or observed["native_exclusive_access"] not in {
+            "established", "declared", "not_established", "unknown",
+        }
+        or not isinstance(observed["writer_race_possible"], bool)
+    ):
+        raise ValueError("Batch observed identity contains invalid values")
+    actions = request.get("actions")
+    if not isinstance(actions, list) or not 1 <= len(actions) <= BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS:
+        raise ValueError(
+            f"Batch actions must contain 1..{BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS} members"
+        )
+    for member in actions:
+        if not isinstance(member, dict) or set(member) != _BATCH_MEMBER_FIELDS:
+            raise ValueError("Batch action member has unsupported shape")
+        action_id = member.get("action_id")
+        if not isinstance(action_id, str) or not re.fullmatch(r"paid_[0-9a-f]{24}", action_id):
+            raise ValueError("Batch action_id has unsupported shape")
+        binding = member.get("binding")
+        if not isinstance(binding, dict) or set(binding) != _BINDING_FIELDS:
+            raise ValueError("Batch immutable binding has unsupported shape")
+        if (
+            not isinstance(binding["run_id"], str) or not binding["run_id"]
+            or not isinstance(binding["profile_sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", binding["profile_sha256"])
+            or not isinstance(binding["prepared_state_revision"], int)
+            or isinstance(binding["prepared_state_revision"], bool)
+            or binding["prepared_state_revision"] < 0
+            or binding["stage"] not in {
+                "authoring_initial", "creative_retry", "polish",
+                "qualitative_critic", "qualitative_candidate",
+            }
+            or not isinstance(binding["route"], str) or not binding["route"]
+            or not isinstance(binding["request_sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", binding["request_sha256"])
+            or not isinstance(binding["model"], str) or not binding["model"]
+            or binding["service_level"] not in {"interactive", "batch"}
+            or not isinstance(binding["maximum_output_tokens"], int)
+            or isinstance(binding["maximum_output_tokens"], bool)
+            or binding["maximum_output_tokens"] < 1
+            or not isinstance(binding["commitment_micro_usd"], int)
+            or isinstance(binding["commitment_micro_usd"], bool)
+            or binding["commitment_micro_usd"] < 0
+            or not isinstance(binding["price_book_version"], str)
+            or not binding["price_book_version"]
+        ):
+            raise ValueError("Batch immutable binding contains invalid values")
+        if member.get("denial_reason") not in DENIAL_REASONS:
+            raise ValueError("Unsupported batch negative-authorization denial_reason")
+        authority = member.get("external_authority_reference")
+        if (
+            not isinstance(authority, str) or not authority or len(authority) > 512
+            or "\n" in authority or "\r" in authority
+        ):
+            raise ValueError("A bounded single-line external_authority_reference is required")
+
+
+def _batch_member_refusal(
+    member: dict[str, Any], outcome: str, review_reasons: list[str],
+) -> dict[str, Any]:
+    return {
+        "action_id": member["action_id"],
+        "binding": deepcopy(member["binding"]),
+        "outcome": outcome,
+        "release_eligible": False,
+        "external_authority_reference": member["external_authority_reference"],
+        "review_reasons": review_reasons,
+    }
+
+
+def _batch_refusal_result(
+    request: dict[str, Any], *, outcome: str,
+    member_results: list[dict[str, Any]], review_reasons: list[str],
+    actual_observation: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    result = {
+        "schema_version": BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+        "run_id": request["run_id"],
+        "batch_request_sha256": batch_negative_authorization_request_sha256(request),
+        "applied": False,
+        "outcome": outcome,
+        "request_observation": deepcopy(request["observed"]),
+        "actions": member_results,
+        "review_reasons": sorted(set(review_reasons)),
+    }
+    if actual_observation is not None:
+        result["actual_observation"] = deepcopy(actual_observation)
+    return result
+
+
+def _batch_preflight_under_lock(
+    state: dict[str, Any], request: dict[str, Any], actual: dict[str, Any],
+) -> tuple[list[dict[str, Any]] | None, dict[str, Any] | None]:
+    """Validate every batch member against one locked decision basis.
+
+    Returns resolved native actions on success or a typed all-or-none refusal.
+    This function performs no mutation.
+    """
+    observation = actual["observation"]
+    members = request["actions"]
+    if not observation["inventory_valid"]:
+        results = [
+            _batch_member_refusal(
+                member, "not_evaluated", ["shared_precondition_not_evaluated"]
+            ) for member in members
+        ]
+        return None, _batch_refusal_result(
+            request, outcome="native_state_inconsistent", member_results=results,
+            review_reasons=["snapshot_incomplete_or_invalid"],
+            actual_observation=observation,
+        )
+    native_actions = (state.get("spend_ledger") or {}).get("actions") or []
+    by_id = {item.get("action_id"): item for item in native_actions}
+    inventory = {
+        item["action_id"]: item for item in actual["action_inventory"]["actions"]
+    }
+    seen: set[str] = set()
+    resolved: list[dict[str, Any]] = []
+    assessments: list[tuple[dict[str, Any], str, list[str]]] = []
+    for member in members:
+        action_id = member["action_id"]
+        if action_id in seen:
+            assessments.append((member, "duplicate_action", ["duplicate_action"]))
+            continue
+        seen.add(action_id)
+        action = by_id.get(action_id)
+        if action is None:
+            assessments.append((member, "unknown_action", ["unknown_action"]))
+            continue
+        if request["run_id"] != state.get("run_id") or member["binding"] != action.get("binding"):
+            assessments.append((
+                member, "immutable_binding_mismatch", ["immutable_binding_mismatch"]
+            ))
+            continue
+        if action.get("consumption"):
+            assessments.append((
+                member, "consumption_evidence_appeared", ["provider_consumption_present"]
+            ))
+            continue
+        provider = action.get("provider") or {}
+        if provider.get("id"):
+            assessments.append((
+                member, "provider_identity_appeared", ["provider_identity_present"]
+            ))
+            continue
+        if action.get("reported") or provider:
+            assessments.append((
+                member, "provider_evidence_appeared", ["provider_evidence_present"]
+            ))
+            continue
+        if action.get("state") in {"SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION"}:
+            assessments.append((
+                member, "ambiguous_submission_boundary",
+                ["submitting_without_provider_identity"],
+            ))
+            continue
+        eligibility = inventory[action_id]
+        if not eligibility["providerless_denial_eligible"]:
+            assessments.append((member, "action_ineligible", ["action_ineligible"]))
+            continue
+        assessments.append((member, "eligible", []))
+        resolved.append(action)
+
+    action_failures = [item for item in assessments if item[1] != "eligible"]
+    transition_errors = observation_transition_errors(request["observed"], observation)
+    if not action_failures and transition_errors:
+        reason_map = {
+            "operator_state_revision": "operator_revision_mismatch",
+            "snapshot_sha256": "snapshot_identity_mismatch",
+            "logical_workspace_root": "snapshot_identity_mismatch",
+            "snapshot_complete": "snapshot_incomplete_or_invalid",
+            "inventory_valid": "snapshot_incomplete_or_invalid",
+            "native_exclusive_access": "writer_race_possible",
+            "writer_race_possible": "writer_race_possible",
+        }
+        reasons = sorted({reason_map[item] for item in transition_errors})
+        results = [
+            _batch_member_refusal(
+                member, "not_evaluated", ["shared_precondition_not_evaluated"]
+            ) for member in members
+        ]
+        return None, _batch_refusal_result(
+            request, outcome="stale_observation", member_results=results,
+            review_reasons=reasons, actual_observation=observation,
+        )
+    if action_failures:
+        precedence = (
+            "duplicate_action", "unknown_action", "immutable_binding_mismatch",
+            "consumption_evidence_appeared", "provider_identity_appeared",
+            "provider_evidence_appeared", "ambiguous_submission_boundary",
+            "action_ineligible", "native_state_inconsistent",
+        )
+        outcomes = {item[1] for item in action_failures}
+        batch_outcome = next(item for item in precedence if item in outcomes)
+        results = [
+            _batch_member_refusal(
+                member,
+                member_outcome,
+                reasons if member_outcome != "eligible" else ["batch_refused_by_other_member"],
+            )
+            for member, member_outcome, reasons in assessments
+        ]
+        review_reasons = [reason for _, _, reasons in action_failures for reason in reasons]
+        return None, _batch_refusal_result(
+            request, outcome=batch_outcome, member_results=results,
+            review_reasons=review_reasons, actual_observation=observation,
+        )
+    return resolved, None
+
+
+def _locked_batch_denial_preflight(
+    run_dir: Path, request: dict[str, Any], *, decision_at: str | None = None,
+) -> dict[str, Any]:
+    """Exercise the Slice 2 locked preflight without exposing a public operation."""
+    _validate_batch_denial_request(request)
+    run_dir = run_dir.resolve()
+    try:
+        lock = _exclusive_lifecycle_lock(run_dir)
+        lock.__enter__()
+    except (OSError, BlockingIOError):
+        members = [
+            _batch_member_refusal(
+                member, "not_evaluated", ["shared_precondition_not_evaluated"]
+            ) for member in request["actions"]
+        ]
+        return _batch_refusal_result(
+            request, outcome="exclusivity_not_established", member_results=members,
+            review_reasons=["writer_race_possible"],
+        )
+    try:
+        state = load_json(run_dir / "run.json")
+        actual = inspect_lifecycle(
+            run_dir, native_exclusive_access="established",
+            observed_at=decision_at or _utc_now(),
+        )
+        resolved, refusal = _batch_preflight_under_lock(state, request, actual)
+        if refusal is not None:
+            return refusal
+        return {
+            "eligible": True,
+            "run_id": state["run_id"],
+            "batch_request_sha256": batch_negative_authorization_request_sha256(request),
+            "decision_basis": actual["observation"],
+            "action_ids": [item["action_id"] for item in resolved or []],
+        }
+    finally:
+        lock.__exit__(None, None, None)
 
 
 def deny_providerless_action(
