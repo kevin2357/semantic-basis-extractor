@@ -32,6 +32,9 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "authorization.awaiting": ("action_id", "stage", "commitment_micro_usd"),
     "authorization.granted": ("action_id", "stage", "commitment_micro_usd"),
     "authorization.denied_providerless": ("action_id", "denial_reason", "outcome"),
+    "authorization.denied_providerless_batch": (
+        "batch_request_sha256", "outcome", "action_count",
+    ),
     "provider.submission_started": ("action_id", "stage", "attempt"),
     "provider.identity_recorded": ("action_id", "provider_operation_id"),
     "provider.waiting": ("action_id", "provider_operation_id"),

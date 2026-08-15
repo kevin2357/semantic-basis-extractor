@@ -17,6 +17,8 @@
     "qualitative_critic_findings": "astrowoof.qualitative_critic_findings.v0.1",
     "provider_negative_authorization_request": "astrowoof.provider_negative_authorization_request.v0.1",
     "provider_negative_authorization_result": "astrowoof.provider_negative_authorization_result.v0.1",
+    "provider_negative_authorization_batch_request": "astrowoof.provider_negative_authorization_batch_request.v0.1",
+    "provider_negative_authorization_batch_result": "astrowoof.provider_negative_authorization_batch_result.v0.1",
     "provider_action_inventory": "astrowoof.provider_action_inventory.v0.1",
     "authoring_lifecycle_inspection": "astrowoof.authoring_lifecycle_inspection.v0.1",
     "authoring_closeout_result": "astrowoof.authoring_closeout_result.v0.1",

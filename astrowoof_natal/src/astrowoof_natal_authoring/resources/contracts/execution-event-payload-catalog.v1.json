@@ -8,6 +8,7 @@
     "authorization.awaiting": {"required_fields": ["action_id", "stage", "commitment_micro_usd"]},
     "authorization.granted": {"required_fields": ["action_id", "stage", "commitment_micro_usd"]},
     "authorization.denied_providerless": {"required_fields": ["action_id", "denial_reason", "outcome"]},
+    "authorization.denied_providerless_batch": {"required_fields": ["batch_request_sha256", "outcome", "action_count"]},
     "provider.submission_started": {"required_fields": ["action_id", "stage", "attempt"]},
     "provider.identity_recorded": {"required_fields": ["action_id", "provider_operation_id"]},
     "provider.waiting": {"required_fields": ["action_id", "provider_operation_id"]},

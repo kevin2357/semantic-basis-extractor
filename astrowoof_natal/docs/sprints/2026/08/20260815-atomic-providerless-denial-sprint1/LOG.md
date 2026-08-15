@@ -27,3 +27,27 @@
   not terminal-state rejection, provider behavior, or delivery mutation.
 - Slice 0 is complete and paused at its review gate. No batch contract or
   implementation has begun; no provider operation or paid work occurred.
+- Kevin approved Slice 0. Committed and pushed it as `8442aa3`; Slice 1 began.
+- Added strict v0.1 batch request/result schemas, a 32-member bound, canonical
+  ordered request hashing, closed batch/per-action outcomes, four sanitized
+  fixtures, contract-catalog entries, and a batch-level execution-event contract.
+- Documented terminal-delivery support, all-or-none semantics, exact replay,
+  provider-safety precedence, single-action compatibility, and the API review
+  questions in `results/SLICE 1 CONTRACT.md`.
+- The first full-suite run exposed the expected catalog synchronization guard: the
+  new event name was present in the vocabulary and packaged catalog but absent from
+  the code-owned required-payload map. Added the matching three-field definition;
+  this was a contract-wiring omission, not a runtime mutation issue.
+- Focused contract/event tests then passed all 21 tests. The corrected complete
+  repository suite passed all 278 tests in 108.805 seconds.
+- Slice 1 is implementation-complete and paused at its planned API-agent contract
+  review gate. No lifecycle mutation function, CLI operation, provider call, or
+  paid work was introduced in this slice.
+- AstroWoof API-agent review approved Slice 1 without requested contract changes:
+  the fixed 32-action bound, result/release mapping, exact observation-timestamp
+  replay binding, `eligible` versus `not_evaluated`, provider-safety precedence,
+  and initial/replay event policy are all accepted. An optional bounded batch-level
+  refusal event is useful diagnostically but remains non-authoritative.
+- The API will release nothing for a refused batch and will retain exact request,
+  digest, per-member evidence, outcome, and shared checkpoint as audit/recovery
+  provenance. Slice 1's consumer gate is complete.

@@ -15,12 +15,17 @@ sys.path.insert(0, str(ROOT / "src"))
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     ACTION_STATE_PRESENTATION_ORDER,
     AMBIGUITY_REVIEW_REASONS,
+    BATCH_ACTION_VALIDATION_OUTCOMES,
+    BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS,
+    BATCH_NEGATIVE_AUTHORIZATION_OUTCOMES,
+    BATCH_NEGATIVE_AUTHORIZATION_REVIEW_REASONS,
     DENIAL_REASONS,
     EVENT_NAMES,
     LOCAL_DEPENDENCY_KINDS,
     PROVIDERLESS_ELIGIBILITY_REASONS,
     PROVIDER_ACTION_STATES,
     action_presentation_key,
+    batch_negative_authorization_request_sha256,
     canonical_contract_json,
     observation_transition_errors,
     prohibited_event_paths,
@@ -34,6 +39,10 @@ FIXTURE_NAMES = (
     "negative-authorization-request.v0.1.json",
     "negative-authorization-result.v0.1.json",
     "negative-authorization-refused.v0.1.json",
+    "batch-negative-authorization-request.v0.1.json",
+    "batch-negative-authorization-result.v0.1.json",
+    "batch-negative-authorization-replay.v0.1.json",
+    "batch-negative-authorization-refused.v0.1.json",
     "action-inventory.v0.1.json",
     "inspection.v0.1.json",
     "closeout-result.v0.1.json",
@@ -107,6 +116,8 @@ def validate(value: Any, schema: dict[str, Any], root: dict[str, Any], path: str
     if isinstance(value, list):
         if len(value) < schema.get("minItems", 0):
             raise AssertionError(f"{path}: too few items")
+        if len(value) > schema.get("maxItems", len(value)):
+            raise AssertionError(f"{path}: too many items")
         if schema.get("uniqueItems") and len({json.dumps(item, sort_keys=True) for item in value}) != len(value):
             raise AssertionError(f"{path}: duplicate items")
         if "items" in schema:
@@ -172,6 +183,9 @@ class TestLifecycleContracts(unittest.TestCase):
             LOCAL_DEPENDENCY_KINDS,
             PROVIDERLESS_ELIGIBILITY_REASONS,
             EVENT_NAMES,
+            BATCH_NEGATIVE_AUTHORIZATION_OUTCOMES,
+            BATCH_ACTION_VALIDATION_OUTCOMES,
+            BATCH_NEGATIVE_AUTHORIZATION_REVIEW_REASONS,
         )
         self.assertTrue(all(len(items) == len(set(items)) for items in vocabularies))
         defs = self.schema["$defs"]
@@ -259,6 +273,68 @@ class TestLifecycleContracts(unittest.TestCase):
             canonical_contract_json(fixture),
             canonical_contract_json(json.loads(json.dumps(fixture))),
         )
+
+    def test_batch_request_digest_preserves_member_order(self) -> None:
+        request = self.fixtures["batch-negative-authorization-request.v0.1.json"]
+        result = self.fixtures["batch-negative-authorization-result.v0.1.json"]
+        self.assertEqual(
+            result["batch_request_sha256"],
+            batch_negative_authorization_request_sha256(request),
+        )
+        same = json.loads(json.dumps(request, indent=4, sort_keys=True))
+        self.assertEqual(
+            batch_negative_authorization_request_sha256(request),
+            batch_negative_authorization_request_sha256(same),
+        )
+        reordered = copy.deepcopy(request)
+        reordered["actions"].reverse()
+        self.assertNotEqual(
+            batch_negative_authorization_request_sha256(request),
+            batch_negative_authorization_request_sha256(reordered),
+        )
+
+    def test_batch_contract_is_bounded_and_rejects_duplicates_semantically(self) -> None:
+        request = self.fixtures["batch-negative-authorization-request.v0.1.json"]
+        self.assertEqual(32, BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS)
+        empty = copy.deepcopy(request)
+        empty["actions"] = []
+        with self.assertRaises(AssertionError):
+            validate(empty, self.schema, self.schema)
+        oversized = copy.deepcopy(request)
+        oversized["actions"] = [copy.deepcopy(request["actions"][0])
+                                  for _ in range(BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS + 1)]
+        with self.assertRaises(AssertionError):
+            validate(oversized, self.schema, self.schema)
+        unknown = copy.deepcopy(request)
+        unknown["actions"][0]["future_field"] = True
+        with self.assertRaises(AssertionError):
+            validate(unknown, self.schema, self.schema)
+        newline = copy.deepcopy(request)
+        newline["actions"][0]["external_authority_reference"] = "unsafe\nreference"
+        with self.assertRaises(AssertionError):
+            validate(newline, self.schema, self.schema)
+        # JSON Schema validates shape; the locked native preflight owns uniqueness.
+        duplicate = copy.deepcopy(request)
+        duplicate["actions"][1] = copy.deepcopy(duplicate["actions"][0])
+        validate(duplicate, self.schema, self.schema)
+        self.assertEqual(
+            len(duplicate["actions"]),
+            len(duplicate["actions"]) - len({item["action_id"] for item in duplicate["actions"]}) + 1,
+        )
+
+    def test_batch_results_separate_success_replay_and_all_or_none_refusal(self) -> None:
+        applied = self.fixtures["batch-negative-authorization-result.v0.1.json"]
+        replay = self.fixtures["batch-negative-authorization-replay.v0.1.json"]
+        refusal = self.fixtures["batch-negative-authorization-refused.v0.1.json"]
+        self.assertTrue(applied["applied"])
+        self.assertEqual("applied", applied["outcome"])
+        self.assertFalse(replay["applied"])
+        self.assertEqual("idempotent_replay", replay["outcome"])
+        self.assertEqual(applied["result_checkpoint"], replay["result_checkpoint"])
+        self.assertFalse(refusal["applied"])
+        self.assertEqual("provider_identity_appeared", refusal["outcome"])
+        self.assertNotIn("result_checkpoint", refusal)
+        self.assertTrue(all(not item["release_eligible"] for item in refusal["actions"]))
 
     def test_event_payload_prohibited_fields_are_detected_recursively(self) -> None:
         fixture = self.fixtures["execution-event.v1.json"]

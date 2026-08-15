@@ -1,0 +1,62 @@
+{
+  "schema_version": "astrowoof.provider_negative_authorization_batch_result.v0.1",
+  "run_id": "run_batch_fixture_001",
+  "batch_request_sha256": "6ec26f8bec1a87eaf678a8a017919ea5430aea19c08eb921e2a705ce0d109c42",
+  "applied": false,
+  "outcome": "idempotent_replay",
+  "request_observation": {
+    "operator_state_revision": 21, "snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "logical_workspace_root": "/work/run", "snapshot_complete": true,
+    "inventory_valid": true, "observed_at": "2026-08-15T18:00:00Z",
+    "native_exclusive_access": "declared", "writer_race_possible": false
+  },
+  "decision_basis": {
+    "operator_state_revision": 21, "snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "logical_workspace_root": "/work/run", "snapshot_complete": true,
+    "inventory_valid": true, "observed_at": "2026-08-15T18:00:01Z",
+    "native_exclusive_access": "established", "writer_race_possible": false
+  },
+  "actions": [
+    {
+      "action_id": "paid_111111111111111111111111",
+      "binding": {
+        "run_id": "run_batch_fixture_001", "profile_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "prepared_state_revision": 19, "stage": "creative_retry", "route": "ella:creative_retry:001",
+        "request_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "model": "gpt-5.6", "service_level": "interactive", "maximum_output_tokens": 4000,
+        "commitment_micro_usd": 50000, "price_book_version": "openai-public-2026-08-07.v1"
+      },
+      "outcome": "idempotent_replay", "disposition": "DENIED_PROVIDERLESS",
+      "denial_reason": "reservation_unavailable", "authorization_previously_recorded": true,
+      "release_eligible": true, "external_authority_reference": "api-fence:slot-001"
+    },
+    {
+      "action_id": "paid_222222222222222222222222",
+      "binding": {
+        "run_id": "run_batch_fixture_001", "profile_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "prepared_state_revision": 20, "stage": "creative_retry", "route": "ella:creative_retry:002",
+        "request_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "model": "gpt-5.6", "service_level": "interactive", "maximum_output_tokens": 4000,
+        "commitment_micro_usd": 50000, "price_book_version": "openai-public-2026-08-07.v1"
+      },
+      "outcome": "idempotent_replay", "disposition": "DENIED_PROVIDERLESS",
+      "denial_reason": "reservation_unavailable", "authorization_previously_recorded": true,
+      "release_eligible": true, "external_authority_reference": "api-fence:slot-002"
+    }
+  ],
+  "post_mutation_observation": {
+    "operator_state_revision": 22, "snapshot_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "logical_workspace_root": "/work/run", "snapshot_complete": true,
+    "inventory_valid": true, "observed_at": "2026-08-15T18:00:02Z",
+    "native_exclusive_access": "established", "writer_race_possible": false
+  },
+  "result_checkpoint": {
+    "operator_state_revision": 22,
+    "snapshot_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "result_artifact": {
+      "logical_path": "lifecycle/negative-authorization-batches/6ec26f8bec1a87eaf678a8a017919ea5430aea19c08eb921e2a705ce0d109c42.json",
+      "bytes": 2400,
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  }
+}

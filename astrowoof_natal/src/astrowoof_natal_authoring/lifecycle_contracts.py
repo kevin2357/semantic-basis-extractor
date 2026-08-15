@@ -6,6 +6,7 @@ mutate a run; those operations are introduced by later sprint slices.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
@@ -16,6 +17,13 @@ NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA = (
 NEGATIVE_AUTHORIZATION_RESULT_SCHEMA = (
     "astrowoof.provider_negative_authorization_result.v0.1"
 )
+BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA = (
+    "astrowoof.provider_negative_authorization_batch_request.v0.1"
+)
+BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA = (
+    "astrowoof.provider_negative_authorization_batch_result.v0.1"
+)
+BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
@@ -112,6 +120,49 @@ NEGATIVE_AUTHORIZATION_OUTCOMES = (
     "review_required",
 )
 
+BATCH_NEGATIVE_AUTHORIZATION_OUTCOMES = (
+    "applied",
+    "idempotent_replay",
+    "stale_observation",
+    "immutable_binding_mismatch",
+    "unknown_action",
+    "duplicate_action",
+    "provider_identity_appeared",
+    "provider_evidence_appeared",
+    "consumption_evidence_appeared",
+    "ambiguous_submission_boundary",
+    "action_ineligible",
+    "native_state_inconsistent",
+    "exclusivity_not_established",
+    "writer_race_possible",
+    "review_required",
+)
+
+BATCH_ACTION_VALIDATION_OUTCOMES = (
+    "eligible",
+    "applied",
+    "idempotent_replay",
+    "not_evaluated",
+    "immutable_binding_mismatch",
+    "unknown_action",
+    "duplicate_action",
+    "provider_identity_appeared",
+    "provider_evidence_appeared",
+    "consumption_evidence_appeared",
+    "ambiguous_submission_boundary",
+    "action_ineligible",
+    "native_state_inconsistent",
+)
+
+BATCH_NEGATIVE_AUTHORIZATION_REVIEW_REASONS = (
+    "batch_refused_by_other_member",
+    "shared_precondition_not_evaluated",
+    "unknown_action",
+    "duplicate_action",
+    "action_ineligible",
+    *AMBIGUITY_REVIEW_REASONS,
+)
+
 QUIESCENCE_STATES = ("quiescent", "not_quiescent", "unknown_review_required")
 QUIESCENCE_REASONS = (
     "no_provider_or_local_continuation",
@@ -172,6 +223,7 @@ EVENT_NAMES = (
     "authorization.awaiting",
     "authorization.granted",
     "authorization.denied_providerless",
+    "authorization.denied_providerless_batch",
     "provider.submission_started",
     "provider.identity_recorded",
     "provider.waiting",
@@ -233,6 +285,15 @@ def canonical_contract_json(value: Any) -> str:
     return json.dumps(
         value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     )
+
+
+def batch_negative_authorization_request_sha256(request: dict[str, Any]) -> str:
+    """Hash the exact versioned batch request using canonical contract JSON.
+
+    Array order is deliberately preserved. Object-key order and insignificant JSON
+    whitespace are deliberately ignored.
+    """
+    return hashlib.sha256(canonical_contract_json(request).encode("utf-8")).hexdigest()
 
 
 def observation_transition_errors(

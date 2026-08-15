@@ -63,3 +63,64 @@ The new terminal two-action baseline proves:
 - accepted deck and delivery SHA-256 identities are unchanged throughout.
 
 Provider operations: 0. Paid spend: $0. API key used: no.
+
+### API consumer review
+
+Approved without blocking revisions. The API explicitly accepted:
+
+- the fixed 32-action maximum;
+- release only from exact matching successful/replay members with
+  `release_eligible: true`;
+- zero release for every refused batch, including `eligible` members;
+- exact replay binding to the original observation timestamp;
+- provider-bound evidence precedence over generic staleness;
+- `eligible`/`not_evaluated` refusal semantics; and
+- ordered per-action then batch events on first application, with batch-only event
+  observation on exact replay.
+
+The optional batch refusal event is diagnostic only and may contain only bounded,
+redacted category information.
+
+## Slice 1: Versioned batch contract
+
+Added package-resource contracts:
+
+- `astrowoof.provider_negative_authorization_batch_request.v0.1`;
+- `astrowoof.provider_negative_authorization_batch_result.v0.1`;
+- `authorization.denied_providerless_batch` under `sbe.execution_event.v1`;
+- four sanitized request/applied/replay/refusal fixtures; and
+- contract/payload catalog entries.
+
+Contract properties evidenced by tests:
+
+- strict object shapes and closed vocabularies;
+- 1 through 32 ordered members;
+- canonical digest stability across JSON formatting/key order;
+- digest difference after member reordering;
+- fixture result digest exactly matches its request;
+- rejection of empty/oversized requests, unknown fields, and multiline external
+  authority references;
+- explicit semantic ownership of duplicate-ID refusal by locked preflight;
+- distinct applied, replay, and all-or-none refusal results; and
+- packaged resource discovery through the supported resource accessor.
+
+Focused command after catalog synchronization:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_contracts \
+  astrowoof_natal.tests.test_execution_events -v
+Ran 21 tests in 0.153s
+OK
+```
+
+The first full-suite attempt correctly failed one catalog-consistency test because
+the code-owned required-payload map lacked the newly declared batch event. After
+adding the exact required fields, the final full-suite command passed:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 278 tests in 108.805s
+OK
+```
+
+Provider operations: 0. Paid spend: $0. API key used: no.

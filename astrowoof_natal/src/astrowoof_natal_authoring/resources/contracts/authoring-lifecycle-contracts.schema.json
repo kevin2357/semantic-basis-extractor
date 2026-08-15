@@ -5,6 +5,8 @@
   "oneOf": [
     {"$ref": "#/$defs/negativeAuthorizationRequest"},
     {"$ref": "#/$defs/negativeAuthorizationResult"},
+    {"$ref": "#/$defs/batchNegativeAuthorizationRequest"},
+    {"$ref": "#/$defs/batchNegativeAuthorizationResult"},
     {"$ref": "#/$defs/actionInventory"},
     {"$ref": "#/$defs/lifecycleInspection"},
     {"$ref": "#/$defs/closeoutResult"},
@@ -300,6 +302,142 @@
       },
       "additionalProperties": false
     },
+    "batchNegativeAuthorizationMemberRequest": {
+      "type": "object",
+      "required": ["action_id", "binding", "denial_reason", "external_authority_reference"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "denial_reason": {"$ref": "#/$defs/denialReason"},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"}
+      },
+      "additionalProperties": false
+    },
+    "batchNegativeAuthorizationRequest": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "observed", "actions"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_batch_request.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observed": {"$ref": "#/$defs/snapshotObservation"},
+        "actions": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "items": {"$ref": "#/$defs/batchNegativeAuthorizationMemberRequest"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "batchActionSuccess": {
+      "type": "object",
+      "required": ["action_id", "binding", "outcome", "disposition", "denial_reason", "authorization_previously_recorded", "release_eligible", "external_authority_reference"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "outcome": {"enum": ["applied", "idempotent_replay"]},
+        "disposition": {"const": "DENIED_PROVIDERLESS"},
+        "denial_reason": {"$ref": "#/$defs/denialReason"},
+        "authorization_previously_recorded": {"type": "boolean"},
+        "release_eligible": {"const": true},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"}
+      },
+      "additionalProperties": false
+    },
+    "batchActionRefusal": {
+      "type": "object",
+      "required": ["action_id", "binding", "outcome", "release_eligible", "external_authority_reference", "review_reasons"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "outcome": {"enum": [
+          "eligible", "not_evaluated", "immutable_binding_mismatch",
+          "unknown_action", "duplicate_action", "provider_identity_appeared",
+          "provider_evidence_appeared", "consumption_evidence_appeared",
+          "ambiguous_submission_boundary", "action_ineligible",
+          "native_state_inconsistent"
+        ]},
+        "release_eligible": {"const": false},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+        "review_reasons": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/batchReviewReason"}}
+      },
+      "additionalProperties": false
+    },
+    "batchNegativeAuthorizationResult": {
+      "oneOf": [
+        {"$ref": "#/$defs/batchNegativeAuthorizationAppliedResult"},
+        {"$ref": "#/$defs/batchNegativeAuthorizationRefusedResult"}
+      ]
+    },
+    "batchNegativeAuthorizationAppliedResult": {
+      "type": "object",
+      "allOf": [
+        {
+          "if": {"properties": {"outcome": {"const": "applied"}}},
+          "then": {
+            "properties": {
+              "applied": {"const": true},
+              "actions": {"items": {"properties": {"outcome": {"const": "applied"}}}}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"outcome": {"const": "idempotent_replay"}}},
+          "then": {
+            "properties": {
+              "applied": {"const": false},
+              "actions": {"items": {"properties": {"outcome": {"const": "idempotent_replay"}}}}
+            }
+          }
+        }
+      ],
+      "required": ["schema_version", "run_id", "batch_request_sha256", "applied", "outcome", "request_observation", "decision_basis", "actions", "post_mutation_observation", "result_checkpoint"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_batch_result.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "batch_request_sha256": {"$ref": "#/$defs/sha256"},
+        "applied": {"type": "boolean"},
+        "outcome": {"enum": ["applied", "idempotent_replay"]},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "actions": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/batchActionSuccess"}},
+        "post_mutation_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
+      },
+      "additionalProperties": false
+    },
+    "batchNegativeAuthorizationRefusedResult": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "batch_request_sha256", "applied", "outcome", "request_observation", "actions", "review_reasons"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_batch_result.v0.1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "batch_request_sha256": {"$ref": "#/$defs/sha256"},
+        "applied": {"const": false},
+        "outcome": {"enum": [
+          "stale_observation", "immutable_binding_mismatch", "unknown_action",
+          "duplicate_action", "provider_identity_appeared",
+          "provider_evidence_appeared", "consumption_evidence_appeared",
+          "ambiguous_submission_boundary", "action_ineligible",
+          "native_state_inconsistent", "exclusivity_not_established",
+          "writer_race_possible", "review_required"
+        ]},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "actual_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "actions": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/batchActionRefusal"}},
+        "review_reasons": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/batchReviewReason"}}
+      },
+      "additionalProperties": false
+    },
+    "batchReviewReason": {
+      "enum": [
+        "batch_refused_by_other_member", "shared_precondition_not_evaluated",
+        "unknown_action", "duplicate_action", "action_ineligible",
+        "submitting_without_provider_identity", "provider_identity_present",
+        "provider_consumption_present", "provider_evidence_present",
+        "immutable_binding_mismatch", "operator_revision_mismatch",
+        "snapshot_identity_mismatch", "snapshot_incomplete_or_invalid",
+        "native_state_inconsistent", "writer_race_possible"
+      ]
+    },
     "closeoutResult": {
       "type": "object",
       "required": ["schema_version", "run_id", "disposition", "decision_basis", "terminal", "quiescence", "local_dependencies", "unresolved_action_ids", "result_checkpoint", "semantic_result_sha256"],
@@ -328,7 +466,8 @@
         "event_name": {"enum": [
           "run.started", "run.resumed", "run.detached", "pass.prepared",
           "authorization.awaiting", "authorization.granted",
-          "authorization.denied_providerless", "provider.submission_started",
+          "authorization.denied_providerless", "authorization.denied_providerless_batch",
+          "provider.submission_started",
           "provider.identity_recorded", "provider.waiting", "provider.completed",
           "qa.started", "qa.completed", "retry.decided", "polish.decided",
           "critic.decided", "checkpoint.committed", "terminal.transitioned",
