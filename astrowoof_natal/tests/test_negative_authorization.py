@@ -322,6 +322,90 @@ class TestNegativeAuthorization(unittest.TestCase):
             self.assertEqual("DENIED_PROVIDERLESS", actions[0]["state"])
             self.assertEqual("PREPARED", actions[1]["state"])
 
+    def test_terminal_two_action_sequential_denial_reproduces_stale_seam(self) -> None:
+        """Freeze the API-reported pre-batch behavior as a regression baseline."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            deck = root / "final" / "ella" / "deck.json"
+            deck.parent.mkdir(parents=True)
+            deck.write_text('{"accepted":true}\n', encoding="utf-8")
+            delivery = root / "final" / "ella" / "delivery.zip"
+            delivery.write_bytes(b"accepted-terminal-delivery")
+
+            state = self.base_state(root)
+            state["status"] = "DELIVERY_COMPLETE"
+            state["subjects"] = {"ella": {
+                "state": "DELIVERY_COMPLETE",
+                "deck": str(deck),
+                "delivery": str(delivery),
+            }}
+            first = state["spend_ledger"]["actions"][0]
+            first["state"] = "AUTHORIZED"
+            first["binding"]["stage"] = "creative_retry"
+            first["binding"]["route"] = "ella:creative_retry:001"
+            first["authorization"] = {
+                "schema_version": "astrowoof.provider_spend_authorization.v0.1",
+                "action_id": first["action_id"],
+                "binding": copy.deepcopy(first["binding"]),
+                "authorization_reference": "api-slot-001",
+            }
+            second = copy.deepcopy(first)
+            second["action_id"] = "paid_abcdefabcdefabcdefabcdef"
+            second["binding"]["route"] = "ella:creative_retry:002"
+            second["binding"]["request_sha256"] = "3" * 64
+            second["authorization"]["action_id"] = second["action_id"]
+            second["authorization"]["binding"] = copy.deepcopy(second["binding"])
+            second["authorization"]["authorization_reference"] = "api-slot-002"
+            state["spend_ledger"]["actions"].append(second)
+            self.materialize_state(root, state)
+
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T18:00:00Z",
+            )
+            self.assertEqual("delivery_complete", inspection["terminal"]["outcome"])
+            self.assertEqual(2, len(inspection["action_inventory"]["actions"]))
+            self.assertTrue(all(
+                item["providerless_denial_eligible"]
+                for item in inspection["action_inventory"]["actions"]
+            ))
+            accepted_before = (hashlib.sha256(deck.read_bytes()).hexdigest(),
+                               hashlib.sha256(delivery.read_bytes()).hexdigest())
+
+            def request_for(action: dict, authority: str) -> dict:
+                return {
+                    "schema_version": NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
+                    "run_id": state["run_id"],
+                    "action_id": action["action_id"],
+                    "binding": copy.deepcopy(action["binding"]),
+                    "observed": copy.deepcopy(inspection["observation"]),
+                    "denial_reason": "reservation_unavailable",
+                    "external_authority_reference": authority,
+                }
+
+            first_request = request_for(first, "api-fence:slot-001")
+            second_request = request_for(second, "api-fence:slot-002")
+            first_result = deny_providerless_action(root, first_request)
+            first_replay = deny_providerless_action(root, first_request)
+            before_stale = tree_hashes(root)
+            second_result = deny_providerless_action(root, second_request)
+
+            self.assertEqual("applied", first_result["outcome"])
+            self.assertEqual("idempotent_replay", first_replay["outcome"])
+            self.assertEqual("stale_observation", second_result["outcome"])
+            self.assertFalse(second_result["applied"])
+            self.assertEqual(before_stale, tree_hashes(root))
+            actions = load_json(root / "run.json")["spend_ledger"]["actions"]
+            self.assertEqual(
+                ["DENIED_PROVIDERLESS", "AUTHORIZED"],
+                [item["state"] for item in actions],
+            )
+            self.assertEqual(accepted_before, (
+                hashlib.sha256(deck.read_bytes()).hexdigest(),
+                hashlib.sha256(delivery.read_bytes()).hexdigest(),
+            ))
+
     def test_applied_denial_emits_bounded_non_authoritative_event(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
