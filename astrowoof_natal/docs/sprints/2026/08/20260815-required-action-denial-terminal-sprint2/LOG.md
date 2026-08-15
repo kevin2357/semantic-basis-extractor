@@ -117,3 +117,26 @@
   seconds.
 - Slice 3 is complete and paused for Kevin's gate
   review. No paid operation, API key, build, release, or tag was used.
+- Kevin approved Slice 3. Committed and pushed retained-workspace reconciliation
+  as `f62e559`; Slice 4 began.
+- Added the supported provider-free `reconcile-required-denial` lifecycle CLI. It
+  returns a typed fresh inspection and supports ordinary JSON or event-plus-result
+  JSONL transport. The matching Python reconciler accepts an optional event
+  emitter.
+- Reconciliation emits the existing redacted `terminal.transitioned` observation
+  only on first mutation; exact replay emits no duplicate transition event.
+- Updated the packaged contract catalog to identify v0.2 as the current successful
+  single/batch result and v0.1 explicitly as historical reader compatibility.
+- Expanded installed lifecycle smoke with terminal result schema, outcome,
+  quiescence, and dependency checks. Updated the consumer handoff with exact API
+  sequence, causal-member mapping, terminal reason mapping, optional/delivery
+  precedence, and retained 0.4.1 recovery instructions.
+- Focused consumer/lifecycle tests passed all 79 tests. The complete repository
+  suite passed all 310 tests in 134.137 seconds.
+- Built and installed a fresh Windows Python 3.11 qualification wheel outside the
+  source import path. Installed smoke passed; installed inspect returned a valid
+  terminal/quiescent state; CLI help exposed the new command. The temporary wheel
+  SHA-256 was `12f91c8a7c61612ee901726c444ee130004e0765933b375d165527b37c4c145e`.
+  The qualification tree was removed afterward.
+- Slice 4 is complete and paused for Kevin's review. No provider operation, paid
+  work, API key, release, tag, or publication occurred.

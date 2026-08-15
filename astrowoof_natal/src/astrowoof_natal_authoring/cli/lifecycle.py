@@ -18,6 +18,7 @@ from ..lifecycle import (
     deny_providerless_action,
     deny_providerless_actions,
     inspect_lifecycle,
+    reconcile_required_providerless_denial,
 )
 from ..closure import load_json
 from .. import __version__
@@ -55,6 +56,9 @@ def main() -> None:
     batch_deny_parser.add_argument("--request", required=True, type=Path)
     batch_deny_parser.add_argument("--decision-at")
 
+    reconcile_parser = subparsers.add_parser("reconcile-required-denial")
+    reconcile_parser.add_argument("--reconciled-at")
+
     closeout_parser = subparsers.add_parser("closeout")
     closeout_parser.add_argument("--observed-at")
 
@@ -86,6 +90,15 @@ def main() -> None:
         result = deny_providerless_actions(
             args.run_dir, load_json(args.request),
             decision_at=args.decision_at, event_emitter=emitter,
+        )
+    elif args.operation == "reconcile-required-denial":
+        reconcile_required_providerless_denial(
+            args.run_dir, reconciled_at=args.reconciled_at,
+            event_emitter=emitter,
+        )
+        result = inspect_lifecycle(
+            args.run_dir, native_exclusive_access="declared",
+            observed_at=args.reconciled_at,
         )
     else:
         result = closeout_run(

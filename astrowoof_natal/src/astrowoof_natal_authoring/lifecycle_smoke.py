@@ -164,6 +164,11 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
             for item in after_denial["action_inventory"]["actions"]
             if item["action_id"] == action["action_id"]
         ),
+        "denial_result_schema": denial.get("schema_version"),
+        "denial_terminal_outcome": (denial.get("run_transition") or {}).get("outcome"),
+        "inspection_terminal": after_denial["terminal"]["terminal"],
+        "inspection_terminal_outcome": after_denial["terminal"]["outcome"],
+        "inspection_local_dependency_count": len(after_denial["local_dependencies"]),
         "batch_denial_applied": batch_denial.get("applied"),
         "batch_action_count": len(batch_denial.get("actions") or []),
         "batch_replay_outcome": batch_replay.get("outcome"),
@@ -185,6 +190,11 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "denial_applied": True,
         "denial_disposition": "DENIED_PROVIDERLESS",
         "post_denial_reason": "already_denied_providerless",
+        "denial_result_schema": "astrowoof.provider_negative_authorization_result.v0.2",
+        "denial_terminal_outcome": "terminalized",
+        "inspection_terminal": True,
+        "inspection_terminal_outcome": "budget_exhausted",
+        "inspection_local_dependency_count": 0,
         "batch_denial_applied": True,
         "batch_action_count": 2,
         "batch_replay_outcome": "idempotent_replay",

@@ -81,6 +81,54 @@ which leaves both runner and lifecycle projections treating work as resumable.
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
 
+## Slice 4: supported consumer surfaces
+
+Committed Slice 3 recovery:
+
+```text
+f62e559 fix: reconcile retained required denials
+```
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_negative_authorization \
+  astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_bounded_lifecycle \
+  astrowoof_natal.tests.test_lifecycle_closeout \
+  astrowoof_natal.tests.test_lifecycle_contracts -q
+Ran 79 tests in 23.393s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 310 tests in 134.137s
+OK
+```
+
+Fresh installed-wheel qualification:
+
+```text
+wheel: astrowoof_natal_authoring-0.4.1-py3-none-any.whl
+sha256: 12f91c8a7c61612ee901726c444ee130004e0765933b375d165527b37c4c145e
+runtime: Windows Python 3.11 fresh venv
+installation: --no-index --no-deps
+astrowoof-lifecycle-smoke --require-installed: pass
+installed lifecycle inspect: terminal=true, quiescent, inventory_valid=true
+installed CLI command inventory: reconcile-required-denial present
+qualification tree retained: no
+```
+
+The qualification wheel is temporary evidence only. It was not copied into
+`dist/`, promoted, tagged, published, or represented as pinnable.
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
+
 ## Slice 3: retained-workspace reconciliation
 
 Committed Slice 2 implementation:

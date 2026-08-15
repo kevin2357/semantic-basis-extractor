@@ -17,6 +17,8 @@ astrowoof-authoring-lifecycle --run-dir RUN deny-providerless \
 astrowoof-authoring-lifecycle --run-dir RUN deny-providerless-batch \
   --request BATCH_NEGATIVE_AUTHORIZATION.json
 
+astrowoof-authoring-lifecycle --run-dir RUN reconcile-required-denial
+
 astrowoof-authoring-lifecycle --run-dir RUN closeout
 
 astrowoof-lifecycle-smoke --require-installed
@@ -32,6 +34,7 @@ The public Python functions are:
 - `astrowoof_natal_authoring.lifecycle.inspect_lifecycle`;
 - `astrowoof_natal_authoring.lifecycle.deny_providerless_action`;
 - `astrowoof_natal_authoring.lifecycle.deny_providerless_actions`;
+- `astrowoof_natal_authoring.lifecycle.reconcile_required_providerless_denial`;
 - and `astrowoof_natal_authoring.lifecycle.closeout_run`.
 
 Python callers may inject an `ExecutionEventEmitter`; execution results remain
@@ -53,13 +56,19 @@ normal return values and never depend on event delivery.
    binding, and authority reference, and that member has `release_eligible: true`.
    Release nothing for every refused batch, including members labeled `eligible`.
    SBE never releases the reservation itself.
-7. Retain the exact batch request, returned request digest, top-level and per-member
-   outcomes, and shared checkpoint as API audit/recovery provenance. Obtain a fresh
-   inspection after every first application.
-8. Call closeout without a denial request.
-9. Persist the mapped API lifecycle state. HTTP status endpoints read only API-owned
+7. Retain the exact request, returned digest where applicable, top-level and
+   per-member outcomes, `run_transition`, and shared checkpoint as API
+   audit/recovery provenance. For newly admitted behavior, require the v0.2 success
+   result; v0.1 remains historical-reader compatibility only.
+8. Interpret `run_transition` directly. A required external spend refusal yields
+   `BUDGET_EXHAUSTED` with an external-spend terminal reason; product denial or
+   cancellation yields `POLICY_STOPPED`. Obtain a fresh inspection after every
+   first application and require terminal, quiescent, dependency-free native state
+   before releasing worker capacity.
+9. Call closeout without a denial request.
+10. Persist the mapped API lifecycle state. HTTP status endpoints read only API-owned
    persisted authority; they never execute SBE or depend on a live workspace.
-10. Apply API cleanup policy only after evaluating the typed closeout, quiescence,
+11. Apply API cleanup policy only after evaluating the typed closeout, quiescence,
     dependencies, unresolved actions, API lease, and product policy.
 
 Normal lifecycle races are typed results. Exceptions are reserved for unsupported
@@ -77,7 +86,9 @@ resources:
 - `contracts/execution-event-payload-catalog.v1.json`; and
 - sanitized examples under `fixtures/lifecycle/`.
 
-The catalog versions inspection, single and batch negative-authorization
+The catalog identifies v0.2 as the current single and batch successful
+negative-authorization result and identifies v0.1 explicitly as historical reader
+compatibility. It also versions inspection, negative-authorization
 request/results, action inventory, closeout result, execution event, event payload
 catalog, and command result. Reject unsupported authoritative document versions deterministically.
 Unknown events are ignored or quarantined and never mutate state.
@@ -86,8 +97,10 @@ Unknown events are ignored or quarantined and never mutate state.
 
 The complete packaged examples are:
 
+- `fixtures/lifecycle/negative-authorization-result.v0.2.json`;
 - `fixtures/lifecycle/batch-negative-authorization-request.v0.1.json`;
 - `fixtures/lifecycle/batch-negative-authorization-result.v0.1.json`;
+- `fixtures/lifecycle/batch-negative-authorization-result.v0.2.json`;
 - `fixtures/lifecycle/batch-negative-authorization-replay.v0.1.json`; and
 - `fixtures/lifecycle/batch-negative-authorization-refused.v0.1.json`.
 
@@ -121,6 +134,11 @@ post-mutation observation, and shared result checkpoint. A refused result has
 outcome, and an ordered member assessment. `eligible` means only that the member
 passed independently while the batch failed elsewhere; it is never release evidence.
 
+Every newly applied successful single or batch denial returns a v0.2
+`run_transition`. `denied_action_ids` identifies every accepted member;
+`required_action_ids` is the exact causal subset whose native requiredness produced
+terminalization. Do not infer causality from the full denied set.
+
 Exact replay requires the identical complete request, including member order and
 original observation timestamp. First application emits ordered per-action denial
 events followed by one batch event. Replay emits only the batch replay event. A
@@ -146,6 +164,50 @@ workspace. SBE either restarts before mutation, narrowly completes its exact kno
 write set, or returns idempotent replay. Missing/changed protocol artifacts,
 unrelated workspace changes, provider evidence, and ambiguous submission fail
 closed. SBE does not provide general snapshot repair.
+
+## Required-action terminal outcomes
+
+An accepted providerless denial is final. `reservation_unavailable` is not a
+temporary wait once submitted to SBE; an API intending to wait must retain its
+authority and not deny the native action.
+
+| Native condition | Status / terminal outcome | Delivery |
+|---|---|---|
+| Required `external_authority_denied` or `reservation_unavailable` | `BUDGET_EXHAUSTED` / `budget_exhausted`, with an external-spend reason | Non-publishable unless already accepted |
+| Required `product_policy_denied` or cancellation | `POLICY_STOPPED` / `policy_stopped` | Non-publishable unless already accepted |
+| Optional stage with frozen `skip` behavior | Nonterminal stage skip | Continue normally |
+| Accepted delivery with unused providerless action | Preserve `DELIVERY_COMPLETE` | Publishability unchanged |
+| Provider identity, consumption, report, or ambiguity exists | Denial refused or review required | Retain workspace |
+
+`BUDGET_EXHAUSTED` alone does not identify who owned the ceiling. Consume the
+closed terminal reason to distinguish API/global authority refusal from SBE's
+frozen per-run spend ceiling. Dollar spend remains unrelated to the fifty-claim
+semantic-selection budget.
+
+## Retained 0.4.1 recovery
+
+Affected retained 0.4.1 workspaces can be restored at their stable logical
+absolute path and passed to normal closeout, normal route resume, or the explicit
+provider-free command:
+
+```text
+astrowoof-authoring-lifecycle --run-dir RUN reconcile-required-denial \
+  --reconciled-at 2026-08-15T23:30:02Z
+```
+
+The command prints a fresh typed lifecycle inspection. The Python reconciler
+returns the updated native state. Both operate under the lifecycle single-writer
+lock and emit `terminal.transitioned` only on the first successful reconciliation;
+replay emits no duplicate transition event.
+
+Reconciliation requires a complete valid snapshot, exact v0.4.1 single or batch
+denial artifact and binding, no provider/consumption/report/ambiguity evidence,
+frozen native requiredness, and no competing delivery/review condition. It writes
+`lifecycle/required-denial-terminal-reconciliation.json`, one coherent state
+revision, and one snapshot. Interrupted recovery may complete only that declared
+write set. Missing, changed, contradictory, optional-only, provider-bound, or
+unrelated bytes fail closed; retain those workspaces for review and do not edit
+native files.
 
 ## Ownership boundary
 

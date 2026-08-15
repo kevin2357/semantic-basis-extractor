@@ -470,6 +470,7 @@ def reconcile_required_providerless_denial(
     run_dir: Path,
     *,
     reconciled_at: str | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
     _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Narrowly terminalize a verified legacy required providerless denial."""
@@ -487,11 +488,18 @@ def reconcile_required_providerless_denial(
             if not _recover_interrupted_terminal_reconciliation(run_dir, state):
                 raise
             state = load_json(run_dir / "run.json")
-        _reconcile_required_providerless_denial_under_lock(
+        changed = _reconcile_required_providerless_denial_under_lock(
             run_dir, state, reconciled_at=reconciled_at or _utc_now(),
             _failure_injector=_failure_injector,
         )
-        return load_json(run_dir / "run.json")
+        result = load_json(run_dir / "run.json")
+        if changed and event_emitter is not None:
+            transition = result["terminal_transition"]
+            event_emitter.emit("terminal.transitioned", data={
+                "outcome": transition["terminal_outcome"],
+                "terminal_reason": transition["terminal_reason"],
+            }, correlation={"native_run_id": result["run_id"]})
+        return result
     finally:
         lock.__exit__(None, None, None)
 

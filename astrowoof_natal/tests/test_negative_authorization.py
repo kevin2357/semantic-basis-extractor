@@ -146,8 +146,11 @@ class TestNegativeAuthorization(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             legacy = self.materialize_legacy_denial(root)
+            events = []
+            emitter = ExecutionEventEmitter(release="test", sink=events.append)
             result = reconcile_required_providerless_denial(
-                root, reconciled_at="2026-08-15T12:00:00Z"
+                root, reconciled_at="2026-08-15T12:00:00Z",
+                event_emitter=emitter,
             )
             self.assertEqual(legacy["state_revision"] + 1, result["state_revision"])
             self.assertEqual("BUDGET_EXHAUSTED", result["status"])
@@ -163,10 +166,15 @@ class TestNegativeAuthorization(unittest.TestCase):
             self.assertTrue(artifact.is_file())
             before = tree_hashes(root)
             replay = reconcile_required_providerless_denial(
-                root, reconciled_at="2026-08-15T12:01:00Z"
+                root, reconciled_at="2026-08-15T12:01:00Z",
+                event_emitter=emitter,
             )
             self.assertEqual(result, replay)
             self.assertEqual(before, tree_hashes(root))
+            self.assertEqual(
+                ["terminal.transitioned"],
+                [item["event_name"] for item in events],
+            )
             closed = closeout_run(
                 root, observed_at="2026-08-15T12:02:00Z",
             )
