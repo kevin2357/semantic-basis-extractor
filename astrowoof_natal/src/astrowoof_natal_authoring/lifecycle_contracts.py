@@ -17,11 +17,23 @@ NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA = (
 NEGATIVE_AUTHORIZATION_RESULT_SCHEMA = (
     "astrowoof.provider_negative_authorization_result.v0.1"
 )
+NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2 = (
+    "astrowoof.provider_negative_authorization_result.v0.2"
+)
+NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2 = (
+    "astrowoof.provider_negative_authorization_result.v0.2"
+)
 BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA = (
     "astrowoof.provider_negative_authorization_batch_request.v0.1"
 )
 BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA = (
     "astrowoof.provider_negative_authorization_batch_result.v0.1"
+)
+BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2 = (
+    "astrowoof.provider_negative_authorization_batch_result.v0.2"
+)
+BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2 = (
+    "astrowoof.provider_negative_authorization_batch_result.v0.2"
 )
 BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
@@ -60,6 +72,52 @@ TERMINAL_REASONS = (
     "review_required",
     "ambiguous_provider_submission",
     "native_failure",
+)
+
+DENIAL_TERMINAL_REASONS = (
+    "external_spend_authority_denied",
+    "external_spend_reservation_unavailable",
+    "external_product_policy_denied",
+    "run_cancelled_before_submission",
+    "optional_stage_skipped",
+    "delivery_complete",
+    "no_run_transition",
+)
+
+RUN_TRANSITION_OUTCOMES = (
+    "terminalized",
+    "optional_stage_skipped",
+    "delivery_status_preserved",
+    "no_run_transition",
+)
+
+RUN_TRANSITION_TRIGGERS = (
+    "required_action_providerless_denial",
+    "optional_action_providerless_denial",
+    "accepted_delivery_precedence",
+)
+
+DENIAL_TERMINAL_REASONS = (
+    "external_spend_authority_denied",
+    "external_spend_reservation_unavailable",
+    "external_product_policy_denied",
+    "run_cancelled_before_submission",
+    "optional_stage_skipped",
+    "delivery_complete",
+    "no_run_transition",
+)
+
+RUN_TRANSITION_OUTCOMES = (
+    "terminalized",
+    "optional_stage_skipped",
+    "delivery_status_preserved",
+    "no_run_transition",
+)
+
+RUN_TRANSITION_TRIGGERS = (
+    "required_action_providerless_denial",
+    "optional_action_providerless_denial",
+    "accepted_delivery_precedence",
 )
 
 AMBIGUITY_REVIEW_REASONS = (

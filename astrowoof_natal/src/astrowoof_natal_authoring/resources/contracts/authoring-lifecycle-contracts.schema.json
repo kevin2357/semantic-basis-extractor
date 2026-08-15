@@ -5,8 +5,10 @@
   "oneOf": [
     {"$ref": "#/$defs/negativeAuthorizationRequest"},
     {"$ref": "#/$defs/negativeAuthorizationResult"},
+    {"$ref": "#/$defs/negativeAuthorizationAppliedResultV02"},
     {"$ref": "#/$defs/batchNegativeAuthorizationRequest"},
     {"$ref": "#/$defs/batchNegativeAuthorizationResult"},
+    {"$ref": "#/$defs/batchNegativeAuthorizationAppliedResultV02"},
     {"$ref": "#/$defs/actionInventory"},
     {"$ref": "#/$defs/lifecycleInspection"},
     {"$ref": "#/$defs/closeoutResult"},
@@ -120,6 +122,46 @@
             "sha256": {"$ref": "#/$defs/sha256"}
           },
           "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "runTransition": {
+      "type": "object",
+      "required": [
+        "outcome", "trigger", "prior_status", "resulting_status",
+        "terminal_outcome", "terminal_reason", "denied_action_ids",
+        "required_action_ids"
+      ],
+      "properties": {
+        "outcome": {"enum": [
+          "terminalized", "optional_stage_skipped",
+          "delivery_status_preserved", "no_run_transition"
+        ]},
+        "trigger": {"enum": [
+          "required_action_providerless_denial",
+          "optional_action_providerless_denial",
+          "accepted_delivery_precedence"
+        ]},
+        "prior_status": {"type": "string", "minLength": 1, "maxLength": 128},
+        "resulting_status": {"type": "string", "minLength": 1, "maxLength": 128},
+        "terminal_outcome": {"enum": [
+          "nonterminal", "delivery_complete", "policy_stopped", "budget_exhausted"
+        ]},
+        "terminal_reason": {"enum": [
+          "external_spend_authority_denied",
+          "external_spend_reservation_unavailable",
+          "external_product_policy_denied",
+          "run_cancelled_before_submission",
+          "optional_stage_skipped", "delivery_complete", "no_run_transition"
+        ]},
+        "denied_action_ids": {
+          "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}
+        },
+        "required_action_ids": {
+          "type": "array", "maxItems": 32, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}
         }
       },
       "additionalProperties": false
@@ -302,6 +344,28 @@
       },
       "additionalProperties": false
     },
+    "negativeAuthorizationAppliedResultV02": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "action_id", "binding", "applied", "outcome", "disposition", "denial_reason", "authorization_previously_recorded", "release_eligible", "external_authority_reference", "request_observation", "decision_basis", "run_transition", "result_checkpoint"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_result.v0.2"},
+        "run_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "applied": {"type": "boolean"},
+        "outcome": {"enum": ["applied", "idempotent_replay"]},
+        "disposition": {"const": "DENIED_PROVIDERLESS"},
+        "denial_reason": {"$ref": "#/$defs/denialReason"},
+        "authorization_previously_recorded": {"type": "boolean"},
+        "release_eligible": {"type": "boolean"},
+        "external_authority_reference": {"$ref": "#/$defs/boundedOpaqueReference"},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "run_transition": {"$ref": "#/$defs/runTransition"},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
+      },
+      "additionalProperties": false
+    },
     "batchNegativeAuthorizationMemberRequest": {
       "type": "object",
       "required": ["action_id", "binding", "denial_reason", "external_authority_reference"],
@@ -424,6 +488,24 @@
         "actual_observation": {"$ref": "#/$defs/snapshotObservation"},
         "actions": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/batchActionRefusal"}},
         "review_reasons": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/batchReviewReason"}}
+      },
+      "additionalProperties": false
+    },
+    "batchNegativeAuthorizationAppliedResultV02": {
+      "type": "object",
+      "required": ["schema_version", "run_id", "batch_request_sha256", "applied", "outcome", "request_observation", "decision_basis", "actions", "run_transition", "post_mutation_observation", "result_checkpoint"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_negative_authorization_batch_result.v0.2"},
+        "run_id": {"type": "string", "minLength": 1},
+        "batch_request_sha256": {"$ref": "#/$defs/sha256"},
+        "applied": {"type": "boolean"},
+        "outcome": {"enum": ["applied", "idempotent_replay"]},
+        "request_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "actions": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/batchActionSuccess"}},
+        "run_transition": {"$ref": "#/$defs/runTransition"},
+        "post_mutation_observation": {"$ref": "#/$defs/snapshotObservation"},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
       },
       "additionalProperties": false
     },

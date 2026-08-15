@@ -80,3 +80,47 @@ all behave correctly. The gap is the absence of a run-level terminal consequence
 which leaves both runner and lifecycle projections treating work as resumable.
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.
+
+## Slice 1: proposed terminal contract
+
+The reviewed proposal is recorded in `results/SLICE 1 CONTRACT.md`. It freezes:
+
+- required/optional/delivery precedence;
+- external-spend versus product-policy/cancellation status and cause mapping;
+- final semantics of an accepted denial request;
+- single/batch v0.2 result-transition evidence;
+- terminal inspection, quiescence, and closed non-delivery closeout shape;
+- runner short-circuit requirements;
+- event ordering/redaction; and
+- a narrowly verified retained-0.4.1 reconciliation seam.
+
+The API accepted all seven questions and requested dual batch provenance lists.
+The approved contract now packages:
+
+- `astrowoof.provider_negative_authorization_result.v0.2`;
+- `astrowoof.provider_negative_authorization_batch_result.v0.2`;
+- required `run_transition` on successful v0.2 results;
+- ordered `denied_action_ids` plus causal `required_action_ids`;
+- closed transition outcome, trigger, and terminal-reason vocabularies; and
+- sanitized required-single and mixed required/optional batch fixtures.
+
+Historical v0.1 schemas remain readable and requests remain v0.1. The runtime does
+not emit v0.2 until Slice 2 implements the matching atomic mutation.
+
+Focused command:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 16 tests in 0.015s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 298 tests in 129.648s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Release artifact: none.

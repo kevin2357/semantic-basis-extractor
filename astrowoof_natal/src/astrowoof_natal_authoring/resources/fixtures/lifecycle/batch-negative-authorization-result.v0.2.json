@@ -1,0 +1,105 @@
+{
+  "schema_version": "astrowoof.provider_negative_authorization_batch_result.v0.2",
+  "run_id": "run_mixed_terminal_fixture_001",
+  "batch_request_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "applied": true,
+  "outcome": "applied",
+  "request_observation": {
+    "operator_state_revision": 21,
+    "snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-15T22:10:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "decision_basis": {
+    "operator_state_revision": 21,
+    "snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-15T22:10:00Z",
+    "native_exclusive_access": "established",
+    "writer_race_possible": false
+  },
+  "actions": [
+    {
+      "action_id": "paid_111111111111111111111111",
+      "binding": {
+        "run_id": "run_mixed_terminal_fixture_001",
+        "profile_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "prepared_state_revision": 19,
+        "stage": "creative_retry",
+        "route": "ella:creative_retry:002",
+        "request_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "model": "gpt-5.6",
+        "service_level": "interactive",
+        "maximum_output_tokens": 4000,
+        "commitment_micro_usd": 50000,
+        "price_book_version": "openai-public-2026-08-07.v1"
+      },
+      "outcome": "applied",
+      "disposition": "DENIED_PROVIDERLESS",
+      "denial_reason": "external_authority_denied",
+      "authorization_previously_recorded": true,
+      "release_eligible": true,
+      "external_authority_reference": "api-global:required-001"
+    },
+    {
+      "action_id": "paid_222222222222222222222222",
+      "binding": {
+        "run_id": "run_mixed_terminal_fixture_001",
+        "profile_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "prepared_state_revision": 20,
+        "stage": "polish",
+        "route": "ella:polish:001",
+        "request_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "model": "gpt-5.6",
+        "service_level": "interactive",
+        "maximum_output_tokens": 4000,
+        "commitment_micro_usd": 50000,
+        "price_book_version": "openai-public-2026-08-07.v1"
+      },
+      "outcome": "applied",
+      "disposition": "DENIED_PROVIDERLESS",
+      "denial_reason": "external_authority_denied",
+      "authorization_previously_recorded": true,
+      "release_eligible": true,
+      "external_authority_reference": "api-global:optional-001"
+    }
+  ],
+  "run_transition": {
+    "outcome": "terminalized",
+    "trigger": "required_action_providerless_denial",
+    "prior_status": "AUTHORING",
+    "resulting_status": "BUDGET_EXHAUSTED",
+    "terminal_outcome": "budget_exhausted",
+    "terminal_reason": "external_spend_authority_denied",
+    "denied_action_ids": [
+      "paid_111111111111111111111111",
+      "paid_222222222222222222222222"
+    ],
+    "required_action_ids": ["paid_111111111111111111111111"]
+  },
+  "post_mutation_observation": {
+    "operator_state_revision": 22,
+    "snapshot_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-15T22:10:01Z",
+    "native_exclusive_access": "established",
+    "writer_race_possible": false
+  },
+  "result_checkpoint": {
+    "operator_state_revision": 22,
+    "snapshot_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "result_artifact": {
+      "logical_path": "lifecycle/negative-authorization-batches/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json",
+      "bytes": 3200,
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  }
+}

@@ -43,3 +43,35 @@
 - Slice 0 is complete and paused for review. No runtime fix, terminal status,
   schema vocabulary, recovery mutation, provider call, build, release, or tag was
   introduced.
+- Kevin approved Slice 0. Committed and pushed the regression baseline as
+  `80ca0b7`; Slice 1 began.
+- Drafted the complete required-denial terminal contract without changing runtime
+  schemas or mutation behavior before consumer review.
+- The leading mapping uses `BUDGET_EXHAUSTED` plus a closed external-spend cause
+  for `external_authority_denied` and `reservation_unavailable`. It proposes
+  `POLICY_STOPPED` for product denial/cancellation, preserves frozen optional-stage
+  skips and accepted-delivery precedence, and treats every accepted denial as
+  final rather than a temporary reservation delay.
+- Proposed v0.2 single/batch success results with required `run_transition`
+  evidence, one coherent batch consequence, runner short-circuiting, closed
+  terminal closeout, and narrowly verified automatic reconciliation for affected
+  retained 0.4.1 workspaces on normal resume/closeout.
+- Slice 1 is paused at its planned Kevin/API-agent review gate. No production
+  contract resource, state mutation, provider operation, build, release, or tag
+  has been introduced.
+- The AstroWoof API agent accepted all seven contract questions without a blocker:
+  familiar spend status plus exact cause, distinct `POLICY_STOPPED`, final denial
+  semantics, v0.2 transition results, mixed-batch precedence, narrow retained-run
+  reconciliation, and closed non-delivery capacity release.
+- The API requested one provenance clarification: a mixed-batch transition must
+  separately expose all ordered `denied_action_ids` and the causal ordered subset
+  `required_action_ids`. Incorporated that distinction into the contract, schema,
+  fixture, and tests.
+- Added strict packaged v0.2 success-result schemas while retaining historical
+  v0.1 result schemas, two sanitized fixtures, closed transition outcome/trigger/
+  reason vocabularies, and catalog entries. Requests remain v0.1.
+- Focused lifecycle contract tests passed all 16 tests. The complete repository
+  suite passed all 298 tests in 129.648 seconds.
+- Slice 1 is implementation-complete and paused for Kevin's gate approval. No
+  denial mutation, run transition, recovery mutation, provider operation, build,
+  release, or tag has begun.

@@ -20,10 +20,13 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     BATCH_NEGATIVE_AUTHORIZATION_OUTCOMES,
     BATCH_NEGATIVE_AUTHORIZATION_REVIEW_REASONS,
     DENIAL_REASONS,
+    DENIAL_TERMINAL_REASONS,
     EVENT_NAMES,
     LOCAL_DEPENDENCY_KINDS,
     PROVIDERLESS_ELIGIBILITY_REASONS,
     PROVIDER_ACTION_STATES,
+    RUN_TRANSITION_OUTCOMES,
+    RUN_TRANSITION_TRIGGERS,
     action_presentation_key,
     batch_negative_authorization_request_sha256,
     canonical_contract_json,
@@ -38,9 +41,11 @@ from astrowoof_natal_authoring.resource_access import (  # noqa: E402
 FIXTURE_NAMES = (
     "negative-authorization-request.v0.1.json",
     "negative-authorization-result.v0.1.json",
+    "negative-authorization-result.v0.2.json",
     "negative-authorization-refused.v0.1.json",
     "batch-negative-authorization-request.v0.1.json",
     "batch-negative-authorization-result.v0.1.json",
+    "batch-negative-authorization-result.v0.2.json",
     "batch-negative-authorization-replay.v0.1.json",
     "batch-negative-authorization-refused.v0.1.json",
     "action-inventory.v0.1.json",
@@ -186,12 +191,54 @@ class TestLifecycleContracts(unittest.TestCase):
             BATCH_NEGATIVE_AUTHORIZATION_OUTCOMES,
             BATCH_ACTION_VALIDATION_OUTCOMES,
             BATCH_NEGATIVE_AUTHORIZATION_REVIEW_REASONS,
+            DENIAL_TERMINAL_REASONS,
+            RUN_TRANSITION_OUTCOMES,
+            RUN_TRANSITION_TRIGGERS,
         )
         self.assertTrue(all(len(items) == len(set(items)) for items in vocabularies))
         defs = self.schema["$defs"]
         self.assertEqual(list(PROVIDER_ACTION_STATES), defs["actionState"]["enum"])
         self.assertEqual(list(DENIAL_REASONS), defs["denialReason"]["enum"])
         self.assertEqual(list(EVENT_NAMES), defs["executionEvent"]["properties"]["event_name"]["enum"])
+        transition = defs["runTransition"]["properties"]
+        self.assertEqual(list(DENIAL_TERMINAL_REASONS), transition["terminal_reason"]["enum"])
+        self.assertEqual(list(RUN_TRANSITION_OUTCOMES), transition["outcome"]["enum"])
+        self.assertEqual(list(RUN_TRANSITION_TRIGGERS), transition["trigger"]["enum"])
+
+    def test_v02_single_result_requires_exact_run_transition(self) -> None:
+        result = self.fixtures["negative-authorization-result.v0.2.json"]
+        transition = result["run_transition"]
+        self.assertEqual("terminalized", transition["outcome"])
+        self.assertEqual("BUDGET_EXHAUSTED", transition["resulting_status"])
+        self.assertEqual("budget_exhausted", transition["terminal_outcome"])
+        self.assertEqual(
+            "external_spend_authority_denied", transition["terminal_reason"]
+        )
+        self.assertEqual([result["action_id"]], transition["denied_action_ids"])
+        self.assertEqual([result["action_id"]], transition["required_action_ids"])
+        missing = copy.deepcopy(result)
+        del missing["run_transition"]
+        with self.assertRaises(AssertionError):
+            validate(missing, self.schema, self.schema)
+
+    def test_v02_mixed_batch_separates_denied_and_required_causal_members(self) -> None:
+        result = self.fixtures["batch-negative-authorization-result.v0.2.json"]
+        transition = result["run_transition"]
+        action_ids = [item["action_id"] for item in result["actions"]]
+        self.assertEqual(action_ids, transition["denied_action_ids"])
+        self.assertEqual(action_ids[:1], transition["required_action_ids"])
+        self.assertLess(
+            len(transition["required_action_ids"]),
+            len(transition["denied_action_ids"]),
+        )
+        self.assertTrue(
+            set(transition["required_action_ids"])
+            <= set(transition["denied_action_ids"])
+        )
+        unknown = copy.deepcopy(result)
+        unknown["run_transition"]["policy_detail"] = "secret API policy"
+        with self.assertRaises(AssertionError):
+            validate(unknown, self.schema, self.schema)
 
     def test_negative_decision_separates_basis_and_result_checkpoint(self) -> None:
         result = self.fixtures["negative-authorization-result.v0.1.json"]
