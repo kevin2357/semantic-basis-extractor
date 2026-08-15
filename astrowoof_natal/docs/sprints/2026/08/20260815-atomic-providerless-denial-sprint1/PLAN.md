@@ -1,12 +1,13 @@
 # Atomic Providerless-Denial Batch Lifecycle Sprint 1 Plan
 
 ```yaml
-status: in_progress
+status: complete
 date: 2026-08-15
 owner: semantic-basis-extractor
 consumer: astrowoof-api
 scope: atomic batch denial of exact providerless paid actions
 implementation_started: true
+release_recommendation: patch_0.4.1
 ```
 
 ## Purpose

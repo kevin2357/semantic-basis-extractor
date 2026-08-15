@@ -119,6 +119,62 @@ The temporary external wheel/venv directory was removed after evidence capture.
 Kevin approved Slice 5 and reported positive AstroWoof API-agent review. No
 blocking contract, CLI, event, packaging, or handoff revision was requested.
 
+## Slice 6: Final closeout
+
+Final committed runtime source:
+
+```text
+0c158932a6138051ea6904c515a04fc0ec905635
+```
+
+Final focused gate:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_execution_events \
+  astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 39 tests in 4.782s
+OK
+```
+
+Final full-suite gate:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 294 tests in 149.030s
+OK
+```
+
+Reproducible artifact gate:
+
+```text
+SOURCE_DATE_EPOCH=1786805826
+two independent pip wheel builds: byte-identical
+wheel: astrowoof_natal_authoring-0.4.0-py3-none-any.whl
+bytes: 720151
+sha256: 0bdcb2e1e28f35dc9d922fdfa540aa68768460fcbf4a513f7e97d87520713a5d
+wheel entries: 82
+cache/bytecode entries: 0
+packaged batch fixtures: 4
+```
+
+Installed exact-artifact gates:
+
+- Windows CPython 3.12 fresh venv, imported from `site-packages`: lifecycle smoke
+  pass; batch CLI present.
+- Linux CPython 3.11 cached `python:3.11-slim`, imported from
+  `/usr/local/lib/python3.11/site-packages`: lifecycle smoke pass.
+- Both smokes exercised single denial, two-action batch application, exact replay,
+  approved events, closeout replay, and complete snapshot validation.
+
+Provider operations: 0. Paid spend: $0. API key used: no.
+
+Release recommendation: separately authorize versioned `0.4.1` preparation and
+publication. The temporary 0.4.0-named wheel is evidence only and is not pinnable.
+The final external qualification build/venv directory was removed after capture.
+
 ## Slice 4: Interrupted-write recovery and concurrency
 
 Failure injection passed after:

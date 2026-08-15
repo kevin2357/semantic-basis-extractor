@@ -12,3 +12,7 @@
   records exhaustive native write-boundary recovery and single-writer contention.
 - [`SLICE 5 CONSUMER SURFACE.md`](SLICE%205%20CONSUMER%20SURFACE.md) records the
   public CLI/events/handoff and installed-wheel qualification.
+- [`SLICE 6 CLOSEOUT.md`](SLICE%206%20CLOSEOUT.md) records final cross-platform
+  qualification and the patch-release recommendation.
+- [`API CONSUMER RESPONSE.md`](API%20CONSUMER%20RESPONSE.md) answers every source
+  semantic question with an explicit confidence assessment.
