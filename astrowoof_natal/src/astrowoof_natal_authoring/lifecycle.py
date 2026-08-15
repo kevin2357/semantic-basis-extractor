@@ -631,6 +631,161 @@ def _locked_batch_denial_preflight(
         lock.__exit__(None, None, None)
 
 
+def _batch_denial_artifact_content(record: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "astrowoof.provider_negative_authorization_batch_record.v0.1",
+        "run_id": record["request"]["run_id"],
+        "batch_request_sha256": record["batch_request_sha256"],
+        "request": deepcopy(record["request"]),
+        "decision_basis": deepcopy(record["decision_basis"]),
+        "result_state_revision": record["result_state_revision"],
+        "committed_at": record["committed_at"],
+        "actions": deepcopy(record["actions"]),
+    }
+
+
+def _batch_success_result(
+    run_dir: Path, state: dict[str, Any], record: dict[str, Any], *, replay: bool,
+) -> dict[str, Any]:
+    artifact_path = run_dir / record["result_artifact"]
+    if not artifact_path.is_file() or load_json(artifact_path) != _batch_denial_artifact_content(record):
+        raise ValueError("Durable batch negative-authorization result is missing or changed")
+    post = inspect_lifecycle(
+        run_dir, native_exclusive_access="established",
+        observed_at=record["committed_at"],
+    )["observation"]
+    outcome = "idempotent_replay" if replay else "applied"
+    return {
+        "schema_version": BATCH_NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
+        "run_id": state["run_id"],
+        "batch_request_sha256": record["batch_request_sha256"],
+        "applied": not replay,
+        "outcome": outcome,
+        "request_observation": deepcopy(record["request"]["observed"]),
+        "decision_basis": deepcopy(record["decision_basis"]),
+        "actions": [{**deepcopy(item), "outcome": outcome} for item in record["actions"]],
+        "post_mutation_observation": post,
+        "result_checkpoint": {
+            "operator_state_revision": state["state_revision"],
+            "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+            "result_artifact": _artifact_descriptor(artifact_path, run_dir),
+        },
+    }
+
+
+def deny_providerless_actions(
+    run_dir: Path,
+    request: dict[str, Any],
+    *,
+    decision_at: str | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
+) -> dict[str, Any]:
+    """Atomically deny one ordered batch of exact provider-less actions.
+
+    All members are preflighted under one native single-writer lock before any
+    semantic mutation. No provider client is accepted or reachable.
+    """
+    del event_emitter  # Slice 5 wires the approved observational event policy.
+    _validate_batch_denial_request(request)
+    run_dir = run_dir.resolve()
+    digest = batch_negative_authorization_request_sha256(request)
+    try:
+        lock = _exclusive_lifecycle_lock(run_dir)
+        lock.__enter__()
+    except (OSError, BlockingIOError):
+        members = [
+            _batch_member_refusal(
+                member, "not_evaluated", ["shared_precondition_not_evaluated"]
+            ) for member in request["actions"]
+        ]
+        return _batch_refusal_result(
+            request, outcome="exclusivity_not_established", member_results=members,
+            review_reasons=["writer_race_possible"],
+        )
+    try:
+        state = load_json(run_dir / "run.json")
+        validate_workspace_snapshot(run_dir, state)
+        batches = state.get("providerless_denial_batches") or {}
+        existing = batches.get(digest)
+        if isinstance(existing, dict):
+            if existing.get("request") != request:
+                raise ValueError("Batch request digest collision or changed durable request")
+            for member in existing.get("actions") or []:
+                action = next(
+                    (item for item in (state.get("spend_ledger") or {}).get("actions", [])
+                     if item.get("action_id") == member.get("action_id")),
+                    None,
+                )
+                denial = (action or {}).get("negative_authorization") or {}
+                if (
+                    (action or {}).get("state") != "DENIED_PROVIDERLESS"
+                    or denial.get("batch_request_sha256") != digest
+                ):
+                    raise ValueError("Durable batch denial action evidence is inconsistent")
+            return _batch_success_result(run_dir, state, existing, replay=True)
+
+        actual = inspect_lifecycle(
+            run_dir, native_exclusive_access="established",
+            observed_at=decision_at or _utc_now(),
+        )
+        resolved, refusal = _batch_preflight_under_lock(state, request, actual)
+        if refusal is not None:
+            return refusal
+        members_by_id = {item["action_id"]: item for item in request["actions"]}
+        artifact_relative = (
+            Path("lifecycle") / "negative-authorization-batches" / f"{digest}.json"
+        )
+        artifact_path = run_dir / artifact_relative
+        committed_at = decision_at or _utc_now()
+        anticipated_revision = int(state.get("state_revision") or 0) + 1
+        action_results: list[dict[str, Any]] = []
+        for action in resolved or []:
+            member = members_by_id[action["action_id"]]
+            authorization_previously_recorded = bool(action.get("authorization"))
+            action_result = {
+                "action_id": action["action_id"],
+                "binding": deepcopy(action["binding"]),
+                "disposition": "DENIED_PROVIDERLESS",
+                "denial_reason": member["denial_reason"],
+                "authorization_previously_recorded": authorization_previously_recorded,
+                "release_eligible": True,
+                "external_authority_reference": member["external_authority_reference"],
+            }
+            action_results.append(action_result)
+            action["state"] = "DENIED_PROVIDERLESS"
+            action["negative_authorization"] = {
+                "denial_reason": member["denial_reason"],
+                "authorization_previously_recorded": authorization_previously_recorded,
+                "external_authority_reference": member["external_authority_reference"],
+                "decision_basis": deepcopy(actual["observation"]),
+                "request_observation": deepcopy(request["observed"]),
+                "result_artifact": artifact_relative.as_posix(),
+                "batch_request_sha256": digest,
+            }
+        record = {
+            "batch_request_sha256": digest,
+            "request": deepcopy(request),
+            "decision_basis": deepcopy(actual["observation"]),
+            "result_state_revision": anticipated_revision,
+            "result_artifact": artifact_relative.as_posix(),
+            "committed_at": committed_at,
+            "actions": action_results,
+        }
+        state.setdefault("providerless_denial_batches", {})[digest] = record
+        staged_path = artifact_path.with_name(f".{artifact_path.name}.tmp")
+        write_json_atomic(staged_path, _batch_denial_artifact_content(record))
+        persist_state(run_dir / "run.json", state)
+        if state["state_revision"] != anticipated_revision:
+            raise RuntimeError("Unexpected batch denial state revision advance")
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        staged_path.replace(artifact_path)
+        write_workspace_snapshot(run_dir)
+        validate_workspace_snapshot(run_dir, state)
+        return _batch_success_result(run_dir, state, record, replay=False)
+    finally:
+        lock.__exit__(None, None, None)
+
+
 def deny_providerless_action(
     run_dir: Path,
     request: dict[str, Any],

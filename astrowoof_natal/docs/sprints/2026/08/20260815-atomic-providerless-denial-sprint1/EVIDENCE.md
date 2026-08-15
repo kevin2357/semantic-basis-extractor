@@ -64,6 +64,41 @@ The new terminal two-action baseline proves:
 
 Provider operations: 0. Paid spend: $0. API key used: no.
 
+## Slice 3: Durable mutation and replay
+
+The public Python operation now proves:
+
+- two requested terminal creative-retry actions apply under one lock and one state
+  revision advance;
+- each member retains its positive authorization history and gains exact shared
+  batch evidence;
+- one digest-keyed native batch record and artifact bind the complete request,
+  decision basis, member list, result revision, and commit time;
+- one post-mutation snapshot validates and matches the returned checkpoint;
+- immediate exact replay changes no authoritative byte and preserves the checkpoint;
+- reordered, partial, changed-reason, and changed-authority requests are not replay;
+- unrelated actions remain unchanged;
+- accepted deck and delivery hashes remain unchanged; and
+- the public operation accepts no provider parameter.
+
+Focused command:
+
+```text
+python -m unittest astrowoof_natal.tests.test_batch_negative_authorization -v
+Ran 11 tests in 2.117s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 289 tests in 122.062s
+OK
+```
+
+Provider operations: 0. Paid spend: $0. API key used: no.
+
 ### API consumer review
 
 Approved without blocking revisions. The API explicitly accepted:

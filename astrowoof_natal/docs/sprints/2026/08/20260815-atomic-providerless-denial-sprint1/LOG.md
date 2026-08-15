@@ -65,3 +65,17 @@
   passed all 285 tests in 119.423 seconds.
 - Slice 2 is complete and paused at its review gate. The preflight remains internal
   until Slice 3 can expose a complete supported mutation/replay operation.
+- Kevin approved Slice 2. Committed and pushed it as `64aba07`; Slice 3 began.
+- Added public `deny_providerless_actions()`. It uses one locked preflight, stages
+  one batch record, dispositions every member in memory, persists one native
+  revision, promotes one shared artifact, and publishes one validated snapshot.
+- Added exact digest-keyed replay verification against the complete request,
+  durable artifact, snapshot, and every action-local batch reference. Changed,
+  reordered, or partial requests are not replay and fail closed normally.
+- Tests prove two terminal actions transition together, positive authorization and
+  unrelated action evidence remain, accepted delivery bytes do not change, exact
+  replay is byte-stable, and the public operation exposes no provider parameter.
+- Focused batch tests passed all 11 tests. The complete repository suite passed all
+  289 tests in 122.062 seconds.
+- Slice 3 is complete and paused at its review gate. Exhaustive interrupted-write
+  recovery is intentionally reserved for Slice 4.

@@ -6,3 +6,5 @@
   batch request/result, replay identity, refusal vocabulary, and review questions.
 - [`SLICE 2 PREFLIGHT.md`](SLICE%202%20PREFLIGHT.md) records the locked,
   mutation-free all-members decision boundary and refusal coverage.
+- [`SLICE 3 MUTATION AND REPLAY.md`](SLICE%203%20MUTATION%20AND%20REPLAY.md)
+  records the public Python mutation, durable evidence, and exact replay behavior.
