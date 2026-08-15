@@ -7,23 +7,24 @@
   "repository": "https://github.com/kevin2357/semantic-basis-extractor",
   "artifact": {
     "filename": "astrowoof_natal_authoring-0.4.1-py3-none-any.whl",
-    "bytes": null,
-    "sha256": null,
-    "wheel_entry_count": null,
+    "bytes": 720149,
+    "sha256": "5bbb2317fbb314d22a6407a75ce03e0a406a928bdaa8160eed51682318650351",
+    "wheel_entry_count": 82,
+    "resource_count": 42,
     "bytecode_or_cache_entries": 0,
     "py_typed": true
   },
   "build": {
-    "artifact_source_commit": null,
+    "artifact_source_commit": "1fa1151ab1e72b768697674b17c295c32a8ba78f",
     "release_evidence_base_commit": "2935a5e",
     "release_record_identity": "tag:astrowoof-natal-authoring-v0.4.1",
-    "source_date_epoch": null,
+    "source_date_epoch": 1786806669,
     "independent_build_count": 2,
-    "byte_reproducible": null
+    "byte_reproducible": true
   },
   "runtime": {
     "requires_python": ">=3.11",
-    "verified_python": [],
+    "verified_python": ["CPython 3.12 Windows", "CPython 3.11 Linux"],
     "direct_dependencies": ["semantic-projection-core==0.11.0"]
   },
   "upstream": {
@@ -33,10 +34,10 @@
     "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
   },
   "qa": {
-    "repository_test_count": null,
-    "repository_tests": "pending",
-    "windows_installed_smoke": "pending",
-    "linux_installed_smoke": "pending",
+    "repository_test_count": 294,
+    "repository_tests": "pass",
+    "windows_installed_smoke": "pass",
+    "linux_installed_smoke": "pass",
     "provider_operation_count": 0,
     "provider_spend_usd": 0
   },

@@ -1,1 +1,1 @@
-# Populated from the exact qualified release artifact before tagging.
+5bbb2317fbb314d22a6407a75ce03e0a406a928bdaa8160eed51682318650351  astrowoof_natal_authoring-0.4.1-py3-none-any.whl

@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Astrology Graph Foundry | 0.8.1 | `860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed` |
 | Semantic Projection Core | 0.11.0 | `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d` |
-| SBE release | 0.4.1 | recorded after final artifact qualification |
+| SBE release | 0.4.1 | `5bbb2317fbb314d22a6407a75ce03e0a406a928bdaa8160eed51682318650351` |
 
 Python 3.11 or newer is required. SBE directly pins
 `semantic-projection-core==0.11.0`.
