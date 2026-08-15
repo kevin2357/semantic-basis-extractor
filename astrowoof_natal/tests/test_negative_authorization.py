@@ -19,6 +19,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     write_workspace_snapshot,
 )
 from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
+    closeout_run,
     deny_providerless_action,
     inspect_lifecycle,
 )
@@ -139,6 +140,58 @@ class TestNegativeAuthorization(unittest.TestCase):
             self.assertTrue(
                 action["negative_authorization"]["authorization_previously_recorded"]
             )
+
+    def test_required_external_denial_reproduces_nonterminal_continuation_gap(self) -> None:
+        """Freeze the API-reported required-action terminalization gap."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            state = self.base_state(root)
+            state["status"] = "AUTHORING"
+            action = state["spend_ledger"]["actions"][0]
+            action["state"] = "AUTHORIZED"
+            action["binding"]["stage"] = "creative_retry"
+            action["binding"]["route"] = "ella:creative_retry:002"
+            action["authorization"] = {
+                "schema_version": "astrowoof.provider_spend_authorization.v0.1",
+                "action_id": action["action_id"],
+                "binding": copy.deepcopy(action["binding"]),
+                "authorization_reference": "api-slot-required-single",
+            }
+            self.materialize_state(root, state)
+            before = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T22:00:00Z",
+            )
+            self.assertTrue(before["action_inventory"]["actions"][0]["necessary"])
+            request = {
+                "schema_version": NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
+                "run_id": state["run_id"],
+                "action_id": action["action_id"],
+                "binding": copy.deepcopy(action["binding"]),
+                "observed": copy.deepcopy(before["observation"]),
+                "denial_reason": "external_authority_denied",
+                "external_authority_reference": "api-global:required-single",
+            }
+            result = deny_providerless_action(root, request)
+            persisted = load_json(root / "run.json")
+            after = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T22:00:01Z",
+            )
+            closeout = closeout_run(root, observed_at="2026-08-15T22:00:02Z")
+
+            self.assertEqual("applied", result["outcome"])
+            self.assertEqual("DENIED_PROVIDERLESS", persisted["spend_ledger"]["actions"][0]["state"])
+            self.assertEqual("AUTHORING", persisted["status"])
+            self.assertFalse(after["action_inventory"]["actions"][0]["necessary"])
+            self.assertEqual("nonterminal", after["terminal"]["outcome"])
+            self.assertFalse(after["terminal"]["provider_continuation_remains"])
+            self.assertTrue(after["terminal"]["local_continuation_remains"])
+            self.assertEqual("retry_preparation", after["local_dependencies"][0]["kind"])
+            self.assertEqual("authoring_continuation", after["local_dependencies"][0]["reason_code"])
+            self.assertEqual("continuation_required", closeout["disposition"])
+            self.assertEqual([], closeout["unresolved_action_ids"])
+            self.assertFalse(closeout["terminal"]["terminal"])
 
     def test_replay_returns_same_semantic_disposition_without_second_write(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

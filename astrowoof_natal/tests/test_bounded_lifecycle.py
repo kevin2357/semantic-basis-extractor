@@ -298,6 +298,15 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual("idempotent_replay", second["outcome"])
             self.assertEqual(0, provider.submissions)
             validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared"
+            )
+            self.assertFalse(after["terminal"]["provider_continuation_remains"])
+            self.assertTrue(after["terminal"]["local_continuation_remains"])
+            self.assertEqual("continuation_required", closeout_run(run_dir)["disposition"])
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual(0, provider.submissions)
 
     def test_interrupted_submission_reconciles_durable_id_without_resubmit(self) -> None:
         provider = PaidScriptedProvider(interrupt_after_identity=True)

@@ -22,6 +22,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
 )
 from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     _locked_batch_denial_preflight,
+    closeout_run,
     deny_providerless_actions,
     deny_providerless_action,
     inspect_lifecycle,
@@ -155,6 +156,46 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
                 result["action_ids"],
             )
             self.assertEqual("established", result["decision_basis"]["native_exclusive_access"])
+
+    def test_required_external_batch_denial_reproduces_one_nonterminal_loop(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            state = load_json(root / "run.json")
+            state["status"] = "AUTHORING"
+            state["subjects"] = {}
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            observed = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T22:10:00Z",
+            )
+            request["observed"] = copy.deepcopy(observed["observation"])
+            for member in request["actions"]:
+                member["denial_reason"] = "external_authority_denied"
+
+            result = deny_providerless_actions(root, request)
+            replay = deny_providerless_actions(root, request)
+            after = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T22:10:01Z",
+            )
+            closeout = closeout_run(root, observed_at="2026-08-15T22:10:02Z")
+            persisted = load_json(root / "run.json")
+
+            self.assertEqual("applied", result["outcome"])
+            self.assertEqual("idempotent_replay", replay["outcome"])
+            self.assertEqual(
+                ["DENIED_PROVIDERLESS", "DENIED_PROVIDERLESS"],
+                [item["state"] for item in persisted["spend_ledger"]["actions"]],
+            )
+            self.assertEqual("AUTHORING", persisted["status"])
+            self.assertFalse(after["terminal"]["provider_continuation_remains"])
+            self.assertTrue(after["terminal"]["local_continuation_remains"])
+            self.assertEqual("continuation_required", closeout["disposition"])
+            self.assertEqual([], closeout["unresolved_action_ids"])
 
     def test_stale_observation_refuses_all_as_not_evaluated(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

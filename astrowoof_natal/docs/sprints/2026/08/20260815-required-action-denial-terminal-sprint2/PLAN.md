@@ -1,12 +1,12 @@
 # Required-Action Denial Terminalization Sprint 2 Plan
 
 ```yaml
-status: proposed
+status: in_progress
 date: 2026-08-15
 owner: semantic-basis-extractor
 consumer: astrowoof-api
 scope: native terminalization after providerless denial of required actions
-implementation_started: false
+implementation_started: true
 release_status: not_authorized
 ```
 
@@ -352,6 +352,10 @@ counts, hashes, mutations, recovery outcomes, and provider/spend evidence.
 run proportionate tests and `git diff --check`, update all three records, link them
 in the handoff, and pause for approval before committing.
 
-Implementation has not started. Approval of this plan authorizes Slice 0 only;
-later slices retain explicit review gates. Release/tag/publication requires a
-separate authorization after sprint closeout.
+Implementation began after plan approval. Later slices retain explicit review
+gates. Release/tag/publication requires a separate authorization after sprint
+closeout.
+
+Slice 0 is now complete and paused at its review gate. No terminal contract or
+production lifecycle behavior has been implemented; approval is required before
+Slice 0 is committed and Slice 1 begins.

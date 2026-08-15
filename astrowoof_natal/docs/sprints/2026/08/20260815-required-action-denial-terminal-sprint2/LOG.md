@@ -24,3 +24,22 @@
 - Revised the leading contract proposal to `BUDGET_EXHAUSTED` with a distinct
   machine-readable external-authority cause, while retaining a Slice 1 comparison
   against a separate policy-stop status. No implementation has begun.
+- Kevin approved the plan. Committed and pushed the planning package as `f8d4851`;
+  Sprint 2 entered `in_progress` and Slice 0 began.
+- Added provider-free baselines for one authorized required creative retry, an
+  atomic two-action required batch, and a real bounded prepared required action.
+- Single and batch `external_authority_denied` operations persist exact
+  `DENIED_PROVIDERLESS` action evidence and replay correctly, but leave the parent
+  `AUTHORING` status unchanged. Inspection then reports no provider continuation,
+  blocking local retry preparation, and a nonterminal outcome; closeout returns
+  `continuation_required` with no unresolved action IDs.
+- The bounded runner reproduces the shared problem from a real frozen profile:
+  denial/replay and snapshot validation pass, inspection/closeout remain
+  nonterminal, and a subsequent normal resume returns to
+  `AwaitingSpendAuthorization` for the denied action. Provider submissions remain
+  zero.
+- Focused denial/batch/bounded tests passed all 38 tests. The complete repository
+  suite passed all 296 tests in 137.913 seconds.
+- Slice 0 is complete and paused for review. No runtime fix, terminal status,
+  schema vocabulary, recovery mutation, provider call, build, release, or tag was
+  introduced.
