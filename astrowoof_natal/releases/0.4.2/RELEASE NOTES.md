@@ -1,7 +1,7 @@
 # AstroWoof Natal Authoring 0.4.2
 
-Status: qualified for immutable annotated tag
-`astrowoof-natal-authoring-v0.4.2`. Publication is pending.
+Status: published under immutable annotated tag
+`astrowoof-natal-authoring-v0.4.2`.
 
 This patch closes the required-action providerless-denial lifecycle gap. A denial
 accepted for native required work now commits an explicit run-level terminal
@@ -40,4 +40,7 @@ zero / `$0`.
 - artifact source commit:
   `9516a601929334dea287a4fc5ae0560d23c437c1`.
 
-Tagging and publication remain pending until the release-record commit is locked.
+Publication is complete. Authenticated download verification matched the qualified
+wheel SHA-256. The immutable tag identifies release-record commit
+`7ba53ac1a2bf6dab37d7a138db9f895e1396a90d`; this post-publication evidence does
+not move that tag.
