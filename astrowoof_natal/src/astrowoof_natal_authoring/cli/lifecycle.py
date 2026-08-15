@@ -13,7 +13,12 @@ from ..execution_events import (
     StdoutJsonlSink,
     command_result_envelope,
 )
-from ..lifecycle import closeout_run, deny_providerless_action, inspect_lifecycle
+from ..lifecycle import (
+    closeout_run,
+    deny_providerless_action,
+    deny_providerless_actions,
+    inspect_lifecycle,
+)
 from ..closure import load_json
 from .. import __version__
 
@@ -46,6 +51,10 @@ def main() -> None:
     deny_parser.add_argument("--request", required=True, type=Path)
     deny_parser.add_argument("--decision-at")
 
+    batch_deny_parser = subparsers.add_parser("deny-providerless-batch")
+    batch_deny_parser.add_argument("--request", required=True, type=Path)
+    batch_deny_parser.add_argument("--decision-at")
+
     closeout_parser = subparsers.add_parser("closeout")
     closeout_parser.add_argument("--observed-at")
 
@@ -70,6 +79,11 @@ def main() -> None:
         )
     elif args.operation == "deny-providerless":
         result = deny_providerless_action(
+            args.run_dir, load_json(args.request),
+            decision_at=args.decision_at, event_emitter=emitter,
+        )
+    elif args.operation == "deny-providerless-batch":
+        result = deny_providerless_actions(
             args.run_dir, load_json(args.request),
             decision_at=args.decision_at, event_emitter=emitter,
         )

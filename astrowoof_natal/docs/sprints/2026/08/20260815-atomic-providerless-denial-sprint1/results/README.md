@@ -10,3 +10,5 @@
   records the public Python mutation, durable evidence, and exact replay behavior.
 - [`SLICE 4 RECOVERY AND CONCURRENCY.md`](SLICE%204%20RECOVERY%20AND%20CONCURRENCY.md)
   records exhaustive native write-boundary recovery and single-writer contention.
+- [`SLICE 5 CONSUMER SURFACE.md`](SLICE%205%20CONSUMER%20SURFACE.md) records the
+  public CLI/events/handoff and installed-wheel qualification.

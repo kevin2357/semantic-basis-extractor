@@ -64,6 +64,61 @@ The new terminal two-action baseline proves:
 
 Provider operations: 0. Paid spend: $0. API key used: no.
 
+## Slice 5: Events, CLI, packaging, and handoff
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_batch_negative_authorization \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_execution_events \
+  astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 39 tests in 4.625s
+OK
+```
+
+Full-suite command:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 294 tests in 124.812s
+OK
+```
+
+Temporary wheel build/install:
+
+```text
+python -m pip wheel --no-deps --no-build-isolation --wheel-dir <temp>/dist .
+python -m venv <temp>/venv
+<temp>/venv/python -m pip install --no-deps <wheel>
+<temp>/venv/python -m astrowoof_natal_authoring.lifecycle_smoke --require-installed
+status: pass
+runtime_module: <temp>/venv/Lib/site-packages/astrowoof_natal_authoring
+```
+
+Temporary non-promoted artifact:
+
+```text
+astrowoof_natal_authoring-0.4.0-py3-none-any.whl
+bytes: 720151
+sha256: 235e62f049a5c90b1645cbc8052d8a092d5af7275d59cf6ab6787d8765824bb3
+```
+
+Installed smoke checks passed for one legacy denial, a two-action batch, exact
+batch replay, approved event names/order, closeout replay, and final snapshot
+validity. Installed resource enumeration found all four batch fixtures. Installed
+console help lists `deny-providerless-batch` alongside existing operations.
+
+This wheel is source-checkpoint evidence only, not promoted or published.
+Provider operations: 0. Paid spend: $0. API key used: no.
+The temporary external wheel/venv directory was removed after evidence capture.
+
+### Consumer review
+
+Kevin approved Slice 5 and reported positive AstroWoof API-agent review. No
+blocking contract, CLI, event, packaging, or handoff revision was requested.
+
 ## Slice 4: Interrupted-write recovery and concurrency
 
 Failure injection passed after:

@@ -95,3 +95,23 @@
   292 tests in 114.603 seconds.
 - Slice 4 is complete and paused at its review gate. The evidence explicitly avoids
   claiming filesystem-wide or external-provider transactionality.
+- Kevin approved Slice 4. Committed and pushed it as `d230dc0`; Slice 5 began.
+- Added the `deny-providerless-batch` CLI operation, wired approved ordered
+  per-action/batch/replay/refusal events, extended installed smoke to cover legacy
+  single denial plus two-action batch/replay, and expanded the API handoff with
+  exact integration and migration rules.
+- Added consumer tests for the documented batch CLI and event tests for ordering,
+  replay suppression of duplicate action transitions, bounded refusal diagnostics,
+  redaction, and sink-failure isolation.
+- Focused batch/consumer/event/contract tests passed all 39 tests. The complete
+  repository suite passed all 294 tests in 124.812 seconds.
+- Built a temporary 0.4.0 source-checkpoint wheel, installed it into a fresh venv
+  outside the repository, and passed lifecycle smoke from `site-packages` with the
+  two-action batch and replay. The installed CLI lists the batch subcommand and all
+  four batch fixtures are packaged.
+- Slice 5 is complete and paused at its review gate. The temporary wheel is
+  qualification evidence only and was neither promoted nor published.
+- Removed the external temporary wheel/venv tree after retaining compact hashes and
+  installed-runtime evidence; no qualification build tree remains in the repository.
+- Kevin approved Slice 5 and reported that the AstroWoof API agent also considers
+  the completed consumer surface sound. The Slice 5 consumer gate is complete.

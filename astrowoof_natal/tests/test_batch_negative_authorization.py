@@ -29,6 +29,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     BATCH_NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
 )
+from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
 from astrowoof_natal_authoring.resource_access import read_resource_text  # noqa: E402
 from astrowoof_natal.tests.test_lifecycle_contracts import validate  # noqa: E402
 
@@ -520,6 +521,67 @@ class TestBatchNegativeAuthorizationPreflight(unittest.TestCase):
             )
             replay = deny_providerless_actions(root, request)
             self.assertEqual("idempotent_replay", replay["outcome"])
+
+    def test_batch_events_are_ordered_replay_safe_and_failure_isolated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            delivered: list[dict] = []
+            emitter = ExecutionEventEmitter(release="test", sink=delivered.append)
+            applied = deny_providerless_actions(root, request, event_emitter=emitter)
+            self.assertTrue(applied["applied"])
+            self.assertEqual([
+                "authorization.denied_providerless",
+                "authorization.denied_providerless",
+                "authorization.denied_providerless_batch",
+            ], [item["event_name"] for item in delivered])
+            self.assertEqual(
+                [item["action_id"] for item in request["actions"]],
+                [item["correlation"]["action_id"] for item in delivered[:2]],
+            )
+            self.assertTrue(all("binding" not in item["data"] for item in delivered))
+            before_replay_events = len(delivered)
+            replay = deny_providerless_actions(root, request, event_emitter=emitter)
+            self.assertEqual("idempotent_replay", replay["outcome"])
+            self.assertEqual(before_replay_events + 1, len(delivered))
+            self.assertEqual(
+                "authorization.denied_providerless_batch", delivered[-1]["event_name"]
+            )
+            self.assertEqual("idempotent_replay", delivered[-1]["data"]["outcome"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+            stale = copy.deepcopy(request)
+            stale["observed"]["operator_state_revision"] -= 1
+            refused_events: list[dict] = []
+            refusal = deny_providerless_actions(
+                root, stale,
+                event_emitter=ExecutionEventEmitter(
+                    release="test", sink=refused_events.append
+                ),
+            )
+            self.assertEqual("stale_observation", refusal["outcome"])
+            self.assertEqual(1, len(refused_events))
+            self.assertEqual("stale_observation",
+                             refused_events[0]["data"]["reason_category"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            request, _ = self.materialize(root)
+
+            def fail(_event):
+                raise RuntimeError("sink unavailable")
+
+            emitter = ExecutionEventEmitter(release="test", sink=fail)
+            result = deny_providerless_actions(root, request, event_emitter=emitter)
+            self.assertTrue(result["applied"])
+            self.assertEqual(3, emitter.stats.dropped)
+            self.assertEqual(
+                ["DENIED_PROVIDERLESS", "DENIED_PROVIDERLESS"],
+                [item["state"] for item in load_json(root / "run.json")
+                 ["spend_ledger"]["actions"]],
+            )
 
 
 if __name__ == "__main__":

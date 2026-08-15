@@ -673,6 +673,36 @@ def _batch_success_result(
     }
 
 
+def _emit_batch_denial_result(
+    event_emitter: ExecutionEventEmitter | None, result: dict[str, Any],
+) -> None:
+    if event_emitter is None:
+        return
+    if result.get("outcome") == "applied":
+        for item in result.get("actions") or []:
+            event_emitter.emit(
+                "authorization.denied_providerless",
+                data={
+                    "action_id": item["action_id"],
+                    "denial_reason": item["denial_reason"],
+                    "outcome": "applied",
+                },
+                correlation={"action_id": item["action_id"]},
+            )
+    batch_data = {
+        "batch_request_sha256": result["batch_request_sha256"],
+        "outcome": result["outcome"],
+        "action_count": len(result.get("actions") or []),
+    }
+    if result["outcome"] not in {"applied", "idempotent_replay"}:
+        batch_data["reason_category"] = result["outcome"]
+    event_emitter.emit(
+        "authorization.denied_providerless_batch",
+        data=batch_data,
+        correlation={"native_run_id": result["run_id"]},
+    )
+
+
 def _recover_interrupted_batch_denial(
     run_dir: Path, state: dict[str, Any], request: dict[str, Any], digest: str,
 ) -> bool:
@@ -741,7 +771,6 @@ def deny_providerless_actions(
     All members are preflighted under one native single-writer lock before any
     semantic mutation. No provider client is accepted or reachable.
     """
-    del event_emitter  # Slice 5 wires the approved observational event policy.
     _validate_batch_denial_request(request)
     run_dir = run_dir.resolve()
     digest = batch_negative_authorization_request_sha256(request)
@@ -754,10 +783,12 @@ def deny_providerless_actions(
                 member, "not_evaluated", ["shared_precondition_not_evaluated"]
             ) for member in request["actions"]
         ]
-        return _batch_refusal_result(
+        result = _batch_refusal_result(
             request, outcome="exclusivity_not_established", member_results=members,
             review_reasons=["writer_race_possible"],
         )
+        _emit_batch_denial_result(event_emitter, result)
+        return result
     try:
         state = load_json(run_dir / "run.json")
         try:
@@ -783,7 +814,9 @@ def deny_providerless_actions(
                     or denial.get("batch_request_sha256") != digest
                 ):
                     raise ValueError("Durable batch denial action evidence is inconsistent")
-            return _batch_success_result(run_dir, state, existing, replay=True)
+            result = _batch_success_result(run_dir, state, existing, replay=True)
+            _emit_batch_denial_result(event_emitter, result)
+            return result
 
         actual = inspect_lifecycle(
             run_dir, native_exclusive_access="established",
@@ -791,6 +824,7 @@ def deny_providerless_actions(
         )
         resolved, refusal = _batch_preflight_under_lock(state, request, actual)
         if refusal is not None:
+            _emit_batch_denial_result(event_emitter, refusal)
             return refusal
         members_by_id = {item["action_id"]: item for item in request["actions"]}
         artifact_relative = (
@@ -850,7 +884,9 @@ def deny_providerless_actions(
         if _failure_injector:
             _failure_injector("after_snapshot_published")
         validate_workspace_snapshot(run_dir, state)
-        return _batch_success_result(run_dir, state, record, replay=False)
+        result = _batch_success_result(run_dir, state, record, replay=False)
+        _emit_batch_denial_result(event_emitter, result)
+        return result
     finally:
         lock.__exit__(None, None, None)
 
