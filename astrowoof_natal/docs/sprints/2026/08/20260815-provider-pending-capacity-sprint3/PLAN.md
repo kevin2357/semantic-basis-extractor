@@ -1,13 +1,13 @@
 # Provider-Pending Capacity Release Sprint 3 Plan
 
 ```yaml
-status: in_progress
+status: implementation_complete_pending_final_review
 date: 2026-08-15
 owner: semantic-basis-extractor
 consumer: astrowoof-api
 scope: provider-pending custody, local-capacity release, and bounded reconciliation scheduling
 implementation_started: true
-release_status: not_authorized
+release_status: 0.4.3_patch_recommended_not_authorized
 ```
 
 ## Purpose
@@ -576,5 +576,6 @@ slice result, and pause for approval before committing. Slice 1 requires explici
 AstroWoof API-agent review before runtime orchestration changes begin.
 
 Kevin approved the plan with the API agent's four Slice 1 refinements incorporated.
-Implementation begins with Slice 0 only. Provider operations, version bump,
-release, tagging, and publication have not started.
+All SBE-native slices are complete. Final API review and separate release
+authorization remain. Provider operations, version bump, release, tagging, and
+publication have not occurred.

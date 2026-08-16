@@ -293,9 +293,31 @@ Ran 339 tests in 158.959s
 OK
 ```
 
-Provider operations: 0. Paid spend: `$0`. API key used: no. Qualification trees
-remain outside the repository under the dedicated `C:\\tmp` path. No version bump,
-tag, publication, or API capacity-allocation assertion occurred.
+Provider operations: 0. Paid spend: `$0`. API key used: no. The dedicated external
+qualification tree was removed after compact hashes/results were retained here. No
+version bump, tag, publication, or API capacity-allocation assertion occurred.
+
+## Slice 7: closeout
+
+Committed Slice 6 qualification:
+
+```text
+5793403 test: qualify provider pending capacity release
+```
+
+Final artifacts:
+
+```text
+FINAL API RESPONSE.md
+API COMPANION ADOPTION CHECKLIST.md
+results/SLICE 7 CLOSEOUT.md
+Authoring Lifecycle Consumer Handoff.md
+```
+
+Release recommendation: pinnable patch 0.4.3 after final API review and separate
+authorization. Provider operations: 0. Paid spend: `$0`. API key used: no. Version
+bump, tag, publication, and API companion capacity-slot qualification remain
+unperformed.
 
 ## Slice 1: proposed public contract
 

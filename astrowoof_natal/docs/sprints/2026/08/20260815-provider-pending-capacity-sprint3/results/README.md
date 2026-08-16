@@ -10,3 +10,4 @@ plan, log, evidence, and current slice result at every approval gate.
 - [Slice 4 stage completeness](SLICE%204%20STAGE%20COMPLETENESS.md)
 - [Slice 5 public interfaces](SLICE%205%20PUBLIC%20INTERFACES.md)
 - [Slice 6 qualification](SLICE%206%20QUALIFICATION.md)
+- [Slice 7 closeout](SLICE%207%20CLOSEOUT.md)
