@@ -967,13 +967,13 @@ def reconciled_response_evidence(
     attempt_root: Path, response_id: str,
 ) -> dict[str, Any] | None:
     """Load a completed response already retrieved by a bounded native cycle."""
-    try:
-        run_dir = attempt_root.parents[2]
-    except IndexError:
+    run_dir = next(
+        (parent for parent in attempt_root.parents if (parent / "run.json").is_file()),
+        None,
+    )
+    if run_dir is None:
         return None
     run_json = run_dir / "run.json"
-    if not run_json.is_file():
-        return None
     state = load_json(run_json)
     action = next((
         item for item in (state.get("spend_ledger") or {}).get("actions", [])

@@ -322,6 +322,148 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             )
             self.assertEqual("unsupported", inspection["provider_custody"]["state"])
 
+    def test_exact_interactive_stage_support_and_disabled_optional_guard(self) -> None:
+        optional = {"polish", "qualitative_critic", "qualitative_candidate"}
+        for stage in (
+            "authoring_initial", "creative_retry", "polish",
+            "qualitative_critic", "qualitative_candidate",
+        ):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                self.materialize(root)
+                state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+                state["authoring_profile"] = {"qa": {
+                    "polish": True,
+                    "qualitative_critic": True,
+                    "qualitative_candidate": True,
+                }}
+                for action in state["spend_ledger"]["actions"]:
+                    action["binding"]["stage"] = stage
+                (root / "run.json").write_text(
+                    json.dumps(state, indent=2) + "\n", encoding="utf-8"
+                )
+                write_workspace_snapshot(root)
+                inspection = inspect_lifecycle(
+                    root, native_exclusive_access="declared",
+                    observed_at="2026-08-15T20:10:00Z",
+                )
+                self.assertEqual(
+                    "release_until_due",
+                    inspection["execution_capacity"]["disposition"],
+                )
+                if stage in optional:
+                    state["authoring_profile"]["qa"][stage] = False
+                    (root / "run.json").write_text(
+                        json.dumps(state, indent=2) + "\n", encoding="utf-8"
+                    )
+                    write_workspace_snapshot(root)
+                    disabled = inspect_lifecycle(
+                        root, native_exclusive_access="declared",
+                        observed_at="2026-08-15T20:10:00Z",
+                    )
+                    self.assertEqual(
+                        "unsupported_retain_capacity",
+                        disabled["execution_capacity"]["disposition"],
+                    )
+
+    def test_bounded_natal_never_inherits_exact_interactive_release(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            state["schema_version"] = "astrowoof.bounded_natal.authoring_run.v1"
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            calls: list[str] = []
+            result = reconcile_provider_cycle(
+                root, observed_at="2026-08-15T20:18:00Z",
+                retrieve=lambda provider_id, _timeout: calls.append(provider_id) or {},
+            )
+            self.assertEqual("unsupported", result["outcome"])
+            self.assertEqual([], calls)
+            self.assertEqual(
+                "unsupported_retain_capacity",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+
+    def test_optional_stage_attempt_roots_find_native_completed_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            action = state["spend_ledger"]["actions"][0]
+            action["provider_reconciliation"].update({
+                "provider_retrieval_attempt_count": 1,
+                "last_attempt_at": "2026-08-15T20:18:00Z",
+                "last_outcome": "completed",
+                "resume_not_before": None,
+            })
+            response = {
+                "id": action["provider"]["id"],
+                "status": "completed",
+                "output": [],
+            }
+            evidence = (
+                root / "lifecycle" / "provider-reconciliation" /
+                f"{action['action_id']}.response.json"
+            )
+            evidence.parent.mkdir(parents=True)
+            evidence.write_text(json.dumps(response), encoding="utf-8")
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            for attempt_root in (
+                root / "final" / "kevin" / "polish" / "attempt-001",
+                root / "final" / "kevin" / "qualitative" / "critic",
+                root / "final" / "kevin" / "qualitative" / "candidate",
+            ):
+                with self.subTest(attempt_root=attempt_root):
+                    self.assertEqual(
+                        response,
+                        reconciled_response_evidence(
+                            attempt_root, action["provider"]["id"]
+                        ),
+                    )
+
+    def test_publishable_delivery_can_release_while_nonblocking_critic_is_pending(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            state["authoring_profile"] = {"qa": {
+                "polish": False,
+                "qualitative_critic": True,
+                "qualitative_candidate": False,
+            }}
+            for action in state["spend_ledger"]["actions"]:
+                action["binding"]["stage"] = "qualitative_critic"
+            deck = root / "final" / "kevin" / "deck.json"
+            deck.parent.mkdir(parents=True)
+            deck.write_text("{}", encoding="utf-8")
+            state["status"] = "DELIVERY_COMPLETE"
+            state["subjects"] = {"kevin": {
+                "state": "DELIVERY_COMPLETE", "deck": str(deck),
+            }}
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            inspection = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertTrue(inspection["terminal"]["delivery_publishable"])
+            self.assertEqual(
+                "release_until_due",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual(
+                3,
+                inspection["provider_custody"]["reservation_retention_action_count"],
+            )
+
     def test_frozen_backoff_and_monotonic_attempt_evidence(self) -> None:
         self.assertEqual(
             [15, 30, 60, 120, 240, 300, 300],

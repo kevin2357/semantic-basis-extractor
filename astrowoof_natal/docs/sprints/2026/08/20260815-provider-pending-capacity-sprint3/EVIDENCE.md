@@ -142,6 +142,53 @@ Provider operations: 0. Paid spend: `$0`. API key used: no. No action commitment
 authorization, consumption, or reported-cost record was created by a poll-only
 cycle.
 
+## Slice 4: exact-stage completeness and secondary routes
+
+Committed Slice 3 implementation:
+
+```text
+d994a4a feat: add bounded provider reconciliation cycle
+```
+
+Route/stage assertions:
+
+```text
+exact interactive initial authoring: supported
+exact interactive creative retry: supported
+exact interactive polish: supported when frozen profile enables polish
+exact interactive qualitative critic: supported when enabled
+exact interactive qualitative candidate: supported when enabled
+disabled optional stage: unsupported, zero retrieval
+Batch: unsupported, zero retrieval
+bounded Natal: unsupported, zero retrieval
+unsupported/review/authority/terminal classification: nonmutating
+delivery plus nonblocking critic: publishable + release_until_due
+pending critic action: retain_consumer_authority = true
+optional completed evidence: consumed with zero second GET and zero POST
+```
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_provider_pending_capacity \
+  astrowoof_natal.tests.test_semantic_closure.TestSemanticClosure.test_optional_complete_json_stages_consume_reconciled_evidence_without_get \
+  astrowoof_natal.tests.test_semantic_closure.TestSemanticClosure.test_bounded_cycle_consumes_completed_response_without_second_get_or_post
+Ran 22 tests in 5.164s
+OK
+```
+
+Complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 335 tests in 158.131s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. No build, version bump,
+tag, or publication occurred. Runtime release remains 0.4.2.
+
 ## Slice 1: proposed public contract
 
 Committed Slice 0 baseline:

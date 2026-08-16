@@ -561,7 +561,27 @@ def _capacity_and_custody(
     projected: list[dict[str, Any]] = []
     unsupported = False
     for action in provider_bound:
-        timing = validated_timing(action)
+        binding = action.get("binding") or {}
+        exact_interactive_supported = bool(
+            state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
+            and binding.get("service_level") == "interactive"
+            and binding.get("stage") in {
+                "authoring_initial", "creative_retry", "polish",
+                "qualitative_critic", "qualitative_candidate",
+            }
+        )
+        stage = str(binding.get("stage") or "")
+        if stage in {"polish", "qualitative_critic", "qualitative_candidate"}:
+            qa = (state.get("authoring_profile") or {}).get("qa") or {}
+            enabled_key = {
+                "polish": "polish",
+                "qualitative_critic": "qualitative_critic",
+                "qualitative_candidate": "qualitative_candidate",
+            }[stage]
+            exact_interactive_supported = bool(
+                exact_interactive_supported and qa.get(enabled_key)
+            )
+        timing = validated_timing(action) if exact_interactive_supported else None
         if timing is None:
             unsupported = True
             resume_not_before = None

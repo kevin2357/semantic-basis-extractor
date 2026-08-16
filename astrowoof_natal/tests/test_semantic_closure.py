@@ -406,6 +406,59 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_optional_complete_json_stages_consume_reconciled_evidence_without_get(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            run_dir.mkdir()
+            for index, (stage, attempt_root) in enumerate((
+                ("polish", run_dir / "final" / "bre" / "polish" / "attempt-001"),
+                ("qualitative_critic", run_dir / "final" / "bre" / "qualitative" / "critic"),
+                ("qualitative_candidate", run_dir / "final" / "bre" / "qualitative" / "candidate"),
+            ), 1):
+                action_id = f"paid_{index:024d}"
+                response_id = f"resp_optional_{index}"
+                binding = {
+                    "stage": stage, "service_level": "interactive",
+                }
+                state = {
+                    "spend_ledger": {"actions": [{
+                        "action_id": action_id, "state": "WAITING",
+                        "binding": binding,
+                        "provider": {"id": response_id, "kind": "response"},
+                        "provider_reconciliation": {
+                            "last_outcome": "completed",
+                        },
+                    }]},
+                }
+                (run_dir / "run.json").write_text(
+                    json.dumps(state), encoding="utf-8"
+                )
+                evidence = (
+                    run_dir / "lifecycle" / "provider-reconciliation" /
+                    f"{action_id}.response.json"
+                )
+                evidence.parent.mkdir(parents=True, exist_ok=True)
+                evidence.write_text(json.dumps(completed_response(
+                    {"stage": stage}, response_id=response_id
+                )), encoding="utf-8")
+                attempt_root.mkdir(parents=True, exist_ok=True)
+                (attempt_root / "openai-background-response.json").write_text(
+                    json.dumps({"id": response_id, "status": "in_progress"}),
+                    encoding="utf-8",
+                )
+                transport = ScriptedTransport([])
+                provider = OpenAIResponsesProvider(
+                    api_key="test-key", transport=transport, sleep=lambda _: None,
+                )
+                value, metadata = provider.complete_json(
+                    system="fixture", user="fixture",
+                    schema={"type": "object"}, schema_name=f"fixture_{stage}",
+                    attempt_root=attempt_root, idempotency_material=stage,
+                )
+                self.assertEqual({"stage": stage}, value)
+                self.assertEqual(response_id, metadata["response_id"])
+                self.assertEqual([], transport.calls)
+
     def test_bounded_cycle_consumes_completed_response_without_second_get_or_post(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -419,9 +472,7 @@ class TestSemanticClosure(SemanticClosureFixture):
             record = state["passes"]["bre_1"]
             for pass_id, other in state["passes"].items():
                 if pass_id != "bre_1":
-                    other["state"] = "PASS_QA_ACCEPTED"
-                    other["accepted_workspace"] = str(root / "accepted-placeholder" / pass_id)
-                    other["accepted_attempt"] = 1
+                    other["state"] = "SUBMITTED"
             attempt_root = root / "run" / "passes" / "bre_1" / "attempt-001"
             attempt_root.mkdir(parents=True)
             (attempt_root / "openai-background-response.json").write_text(

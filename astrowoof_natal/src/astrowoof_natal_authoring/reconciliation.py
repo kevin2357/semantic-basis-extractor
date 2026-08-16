@@ -204,6 +204,39 @@ def reconcile_provider_cycle(
                 },
                 "inspection": before,
             }
+        if capacity["disposition"] in {
+            "unsupported_retain_capacity", "retain_for_review",
+            "await_external_authority", "terminal",
+        }:
+            return {
+                "schema_version": "astrowoof.provider_reconciliation_cycle_result.v0.1",
+                "run_id": state["run_id"],
+                "outcome": {
+                    "unsupported_retain_capacity": "unsupported",
+                    "retain_for_review": "review_required",
+                    "await_external_authority": "awaiting_external_authority",
+                    "terminal": "terminal",
+                }[capacity["disposition"]],
+                "decision_basis": before["observation"],
+                "cycle": {
+                    "started_at": instant, "finished_at": instant,
+                    "wall_clock_limit_seconds": 20,
+                    "provider_retrieval_count": 0,
+                    "retrieved_action_ids": [], "completed_action_ids": [],
+                    "still_pending_action_ids": before["provider_custody"]["action_ids"],
+                    "transport_warning_action_ids": [],
+                },
+                "inspection": before,
+                "result_checkpoint": {
+                    "operator_state_revision": before["observation"]["operator_state_revision"],
+                    "snapshot_sha256": before["observation"]["snapshot_sha256"],
+                    "result_artifact": {
+                        "logical_path": SNAPSHOT_NAME,
+                        "bytes": (run_dir / SNAPSHOT_NAME).stat().st_size,
+                        "sha256": before["observation"]["snapshot_sha256"],
+                    },
+                },
+            }
         due_ids = set(before["provider_custody"]["next_due_action_ids"])
         now = parse_utc_instant(instant)
         actions: list[dict[str, Any]] = []
@@ -344,13 +377,19 @@ def run_bounded_authoring_reconciliation(
     python_executable: Path,
     observed_at: str,
     event_emitter: Any = None,
+    polish_provider: Any = None,
+    critic_provider: Any = None,
+    qualitative_editor_provider: Any = None,
 ) -> dict[str, Any]:
     """Retrieve one due wave and exhaust its newly unblocked pass-local work."""
     from .closure import (
         SNAPSHOT_NAME,
         SpendController,
         author_pending_passes,
+        finalize_subjects,
         load_json,
+        run_qualitative_review,
+        save_state,
         sha256_file,
         write_json_atomic,
         write_workspace_snapshot,
@@ -383,7 +422,7 @@ def run_bounded_authoring_reconciliation(
         retrieval_provider.http_timeout_seconds = original_timeout
         retrieval_provider.max_transport_retries = original_retries
     completed_ids = set(result["cycle"]["completed_action_ids"])
-    if not completed_ids:
+    if not completed_ids or result["outcome"] == "review_required":
         return result
 
     state = load_json(run_dir / "run.json")
@@ -391,19 +430,39 @@ def run_bounded_authoring_reconciliation(
         item for item in (state.get("spend_ledger") or {}).get("actions", [])
         if item.get("action_id") in completed_ids
     ]
+    stages = {
+        str((item.get("binding") or {}).get("stage") or "")
+        for item in completed_actions
+    }
     unsupported = [
         item["action_id"] for item in completed_actions
         if (item.get("binding") or {}).get("stage")
-        not in {"authoring_initial", "creative_retry"}
+        not in {
+            "authoring_initial", "creative_retry", "polish",
+            "qualitative_critic", "qualitative_candidate",
+        }
     ]
     if unsupported:
         raise ValueError(
-            "Slice 3 pass-local reconciliation does not support stages: "
+            "Bounded exact-interactive reconciliation does not support stages: "
             + ", ".join(unsupported)
+        )
+    if "polish" in stages and polish_provider is None:
+        raise ValueError("Polish reconciliation requires the frozen polish provider")
+    if "qualitative_critic" in stages and critic_provider is None:
+        raise ValueError("Critic reconciliation requires the frozen critic provider")
+    if (
+        "qualitative_candidate" in stages
+        and qualitative_editor_provider is None
+    ):
+        raise ValueError(
+            "Qualitative-candidate reconciliation requires the frozen editor provider"
         )
     pass_ids = {
         str(item["binding"]["route"]).rsplit(":attempt-", 1)[0]
         for item in completed_actions
+        if (item.get("binding") or {}).get("stage")
+        in {"authoring_initial", "creative_retry"}
     }
     controller = SpendController(
         state=state,
@@ -413,24 +472,76 @@ def run_bounded_authoring_reconciliation(
         event_emitter=event_emitter,
         reconciliation_only=True,
     )
-    author_pending_passes(
-        state=state,
-        provider=provider,
-        run_dir=run_dir,
-        max_attempts=max_attempts,
-        python_executable=python_executable,
-        run_json=run_dir / "run.json",
-        max_workers=min(
-            PROVIDER_RECONCILIATION_POLICY["maximum_parallel_retrievals"],
-            max(len(pass_ids), 1),
-        ),
-        spend_controller=controller,
-        only_pass_ids=pass_ids,
-    )
+    if pass_ids:
+        author_pending_passes(
+            state=state,
+            provider=provider,
+            run_dir=run_dir,
+            max_attempts=max_attempts,
+            python_executable=python_executable,
+            run_json=run_dir / "run.json",
+            max_workers=min(
+                PROVIDER_RECONCILIATION_POLICY["maximum_parallel_retrievals"],
+                max(len(pass_ids), 1),
+            ),
+            spend_controller=controller,
+            only_pass_ids=pass_ids,
+        )
+    qa = (state.get("authoring_profile") or {}).get("qa") or {}
+    try:
+        finalize_subjects(
+            state=state,
+            run_dir=run_dir,
+            python_executable=python_executable,
+            allow_lint_warnings=bool(qa.get("allow_lint_warnings")),
+            polish=bool(qa.get("polish")),
+            polish_provider=polish_provider,
+            max_polish_attempts=int(qa.get("max_polish_attempts") or 2),
+            spend_controller=controller,
+        )
+        if bool(qa.get("qualitative_critic")) and critic_provider is not None:
+            for subject_record in state.get("subjects", {}).values():
+                if subject_record.get("state") in {
+                    "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS",
+                }:
+                    run_qualitative_review(
+                        record=subject_record,
+                        critic_provider=critic_provider,
+                        editor_provider=(
+                            qualitative_editor_provider
+                            if bool(qa.get("qualitative_candidate")) else None
+                        ),
+                        run_dir=run_dir,
+                        python_executable=python_executable,
+                        max_findings=int(qa.get("max_critic_findings") or 8),
+                        max_target_fields=int(
+                            qa.get("max_qualitative_target_fields") or 12
+                        ),
+                        max_target_cards=int(
+                            qa.get("max_qualitative_target_cards") or 6
+                        ),
+                        spend_controller=controller,
+                        run_state=state,
+                    )
+    except Exception as exc:
+        from .spend import (
+            AmbiguousProviderSubmission,
+            AwaitingSpendAuthorization,
+            BudgetExhausted,
+        )
+        if not isinstance(exc, (
+            AwaitingSpendAuthorization,
+            BudgetExhausted,
+            AmbiguousProviderSubmission,
+        )):
+            raise
+    finally:
+        save_state(run_dir / "run.json", state)
     artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
     record = json.loads(artifact.read_text(encoding="utf-8"))
     record["local_continuation"] = {
         "pass_ids": sorted(pass_ids),
+        "stages": sorted(stages),
         "completed_action_ids": sorted(completed_ids),
         "exhausted_before_detach": True,
     }

@@ -7,3 +7,4 @@ plan, log, evidence, and current slice result at every approval gate.
 - [Slice 1 contract](SLICE%201%20CONTRACT.md)
 - [Slice 2 durable timing](SLICE%202%20DURABLE%20TIMING.md)
 - [Slice 3 bounded reconciliation](SLICE%203%20BOUNDED%20RECONCILIATION.md)
+- [Slice 4 stage completeness](SLICE%204%20STAGE%20COMPLETENESS.md)
