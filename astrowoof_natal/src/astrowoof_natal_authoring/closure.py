@@ -6228,6 +6228,15 @@ def main() -> None:
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument(
+        "--bounded-provider-reconciliation",
+        action="store_true",
+        help=(
+            "On an exact interactive OpenAI resume, retrieve one bounded due "
+            "wave of already-known Responses operations, exhaust newly unblocked "
+            "local work, checkpoint, and detach without any new submission."
+        ),
+    )
+    parser.add_argument(
         "--events-jsonl",
         type=Path,
         help=(
@@ -6562,6 +6571,20 @@ def main() -> None:
         parser.error("--service-level batch requires --provider openai")
     if args.batch_detach and args.service_level != "batch":
         parser.error("--batch-detach requires --service-level batch")
+    if args.bounded_provider_reconciliation and not args.resume:
+        parser.error("--bounded-provider-reconciliation requires --resume")
+    if args.bounded_provider_reconciliation and args.provider != "openai":
+        parser.error("--bounded-provider-reconciliation requires --provider openai")
+    if args.bounded_provider_reconciliation and args.service_level != "interactive":
+        parser.error(
+            "--bounded-provider-reconciliation supports interactive service only"
+        )
+    if args.bounded_provider_reconciliation and (
+        args.spend_authorization or args.spend_reconciliation
+    ):
+        parser.error(
+            "bounded reconciliation cannot apply spend authorization or reconciliation"
+        )
     if args.batch_poll_interval_seconds <= 0:
         parser.error("--batch-poll-interval-seconds must be positive")
     if not args.resume and args.input_package is None:
@@ -6658,6 +6681,38 @@ def main() -> None:
                 model=args.qualitative_editor_model,
                 reasoning_effort=args.qualitative_editor_reasoning_effort,
             )
+    if args.bounded_provider_reconciliation:
+        from .reconciliation import run_bounded_authoring_reconciliation
+
+        preliminary_state = load_json(args.run_dir / "run.json")
+        event_emitter = (
+            ExecutionEventEmitter(
+                release=__version__,
+                sink=(
+                    StdoutJsonlSink()
+                    if args.events_stdout_jsonl
+                    else JsonlEventSink(args.events_jsonl)
+                ),
+                base_correlation={
+                    "native_run_id": str(preliminary_state.get("run_id") or "")
+                },
+            )
+            if args.events_jsonl is not None or args.events_stdout_jsonl
+            else None
+        )
+        result = run_bounded_authoring_reconciliation(
+            args.run_dir,
+            provider=provider,
+            max_attempts=args.max_attempts,
+            python_executable=args.python_executable,
+            observed_at=utc_now(),
+            event_emitter=event_emitter,
+            polish_provider=polish_provider,
+            critic_provider=critic_provider,
+            qualitative_editor_provider=qualitative_editor_provider,
+        )
+        output_result(result)
+        return
     if args.resume:
         preliminary_state = load_json(args.run_dir / "run.json")
         legacy_denial_present = any(

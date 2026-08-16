@@ -133,3 +133,21 @@
   repository suite passed all 335 tests in 158.131 seconds.
 - Slice 4 is complete and paused for Kevin's gate review. No provider operation,
   build, version bump, release, or tag occurred.
+- Kevin approved Slice 4. Committed and pushed stage completeness as `d2c51de`;
+  Slice 5 began.
+- Added the supported installed `--bounded-provider-reconciliation` resume mode to
+  the semantic-closure CLI and documented the public Python reconciliation
+  operation.
+- The CLI rejects incompatible new-run, fake-provider, Batch, and simultaneous
+  spend-authority mutation combinations. Exact route/profile/action binding still
+  fails closed inside native reconciliation.
+- Added redacted, failure-isolated detach/checkpoint observations to the public
+  Python path. Strict early `not_due` remains nonmutating and emits no checkpoint.
+- Made progressed-cycle `local_continuation` evidence an explicit strict contract
+  field and expanded installed lifecycle smoke resource checks.
+- Published the complete API mapping for capacity, custody, lower-bound timing,
+  closed outcomes, optional delivery precedence, and HTTP status ownership.
+- Focused Slice 5 coverage passed all 53 tests in 5.344 seconds. The complete
+  repository suite passed all 338 tests in 158.531 seconds.
+- Slice 5 is complete and paused for Kevin's gate review. No provider operation,
+  build, version bump, release, or tag occurred.

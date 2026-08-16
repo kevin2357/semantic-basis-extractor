@@ -189,6 +189,52 @@ OK
 Provider operations: 0. Paid spend: `$0`. API key used: no. No build, version bump,
 tag, or publication occurred. Runtime release remains 0.4.2.
 
+## Slice 5: public interfaces, events, and consumer handoff
+
+Committed Slice 4 implementation:
+
+```text
+d2c51de feat: complete bounded reconciliation stages
+```
+
+Installed/public assertions:
+
+```text
+CLI flag: --bounded-provider-reconciliation
+CLI boundary: --resume + --provider openai + interactive only
+spend authorization/reconciliation mutation in bounded mode: rejected
+Python: reconciliation.run_bounded_authoring_reconciliation
+result schema: astrowoof.provider_reconciliation_cycle_result.v0.1
+progress evidence: strict local_continuation object
+checkpoint events: run.detached, checkpoint.committed
+not_due: no mutation, no result checkpoint, no checkpoint event
+installed smoke resources: catalog + inspection v0.2 + policy + not_due fixture
+HTTP status authority: API-persisted state only
+```
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_lifecycle_contracts \
+  astrowoof_natal.tests.test_provider_pending_capacity \
+  astrowoof_natal.tests.test_execution_events
+Ran 53 tests in 5.344s
+OK
+```
+
+Complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 338 tests in 158.531s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. No wheel, version bump,
+tag, or publication occurred. Runtime release remains 0.4.2.
+
 ## Slice 1: proposed public contract
 
 Committed Slice 0 baseline:

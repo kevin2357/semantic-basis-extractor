@@ -22,6 +22,9 @@ astrowoof-authoring-lifecycle --run-dir RUN reconcile-required-denial
 astrowoof-authoring-lifecycle --run-dir RUN closeout
 
 astrowoof-lifecycle-smoke --require-installed
+
+astrowoof-semantic-closure --run-dir RUN --resume --provider openai \
+  --service-level interactive --bounded-provider-reconciliation
 ```
 
 Each command prints one typed JSON result by default. Add `--stdout-jsonl` to the
@@ -35,10 +38,60 @@ The public Python functions are:
 - `astrowoof_natal_authoring.lifecycle.deny_providerless_action`;
 - `astrowoof_natal_authoring.lifecycle.deny_providerless_actions`;
 - `astrowoof_natal_authoring.lifecycle.reconcile_required_providerless_denial`;
-- and `astrowoof_natal_authoring.lifecycle.closeout_run`.
+- `astrowoof_natal_authoring.lifecycle.closeout_run`; and
+- `astrowoof_natal_authoring.reconciliation.run_bounded_authoring_reconciliation`.
 
 Python callers may inject an `ExecutionEventEmitter`; execution results remain
 normal return values and never depend on event delivery.
+
+## Provider-pending capacity release
+
+Lifecycle inspection v0.2 separates short-lived local execution capacity from
+durable provider custody. The API may release its worker claim only when
+`execution_capacity.checkpoint_safe_for_worker_release` is true and the closed
+disposition permits release. It must retain its separately owned reservation and
+financial authority for every `provider_custody.actions` member whose
+`custody_classification` is `retain_consumer_authority`.
+
+`resume_not_before` is SBE's durable lower-bound recommendation. The API may
+schedule later. An earlier bounded cycle returns `not_due`, performs no provider
+retrieval, mutates no native bytes, and returns no new result checkpoint.
+
+The bounded command is supported only for exact interactive OpenAI runs. It polls
+at most four due, already-known Response IDs in one parallel wave, gives each GET
+a maximum 15-second transport timeout, permits no transport retry, and reserves a
+20-second total native cycle allowance. It then exhausts newly unblocked local
+work and publishes one complete checkpoint before detaching. A known provider ID
+is retrieved only; this mode cannot submit a replacement or create a new spend
+commitment.
+
+The command must receive the run's frozen authoring and optional-stage provider
+configuration through the existing model/routing/polish/critic CLI options. Exact
+request binding prevents mismatched configuration from consuming evidence or
+submitting work. Consumers should retain their original launch configuration with
+the workspace. Batch and bounded-Natal runs return the typed `unsupported`
+classification and must not infer capacity release.
+
+Capacity result handling is:
+
+- `detached_provider_pending`: persist the inspection/checkpoint, release local
+  capacity, retain every listed provider authority, and schedule no earlier than
+  `resume_not_before`;
+- `progressed_local`: persist the new checkpoint and consume its fresh inspection;
+- `not_due`: release the short claim without replacing the existing checkpoint;
+- `awaiting_external_authority`: retain the action and use the existing exact
+  authorization or providerless-denial lifecycle operation;
+- `review_required`: retain workspace, provider custody, and authority for review;
+- `terminal`: consume the native terminal state and follow closeout policy; and
+- `unsupported`: retain capacity or enter consumer review.
+
+A publishable delivery can coexist with nonblocking critic/candidate provider
+custody. Reader delivery may proceed, but the pending action and its API-owned
+authority remain retained until native reconciliation or denial resolves it.
+
+Events remain non-authoritative observations. A bounded CLI checkpoint may emit
+`run.detached` followed by `checkpoint.committed`; HTTP status endpoints must read
+only the API's validated, persisted mapping of the typed result and inspection.
 
 ## Required API sequence
 

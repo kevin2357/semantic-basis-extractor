@@ -89,12 +89,16 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
     # Prove installed package resources, not source-relative files, are available.
     for resource_name in (
         "contracts/authoring-lifecycle-contracts.schema.json",
+        "contracts/contract-catalog.json",
         "contracts/execution-event-payload-catalog.v1.json",
         "fixtures/lifecycle/negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-result.v0.1.json",
         "fixtures/lifecycle/negative-authorization-result.v0.2.json",
         "fixtures/lifecycle/batch-negative-authorization-result.v0.2.json",
+        "fixtures/lifecycle/inspection.v0.2.json",
+        "fixtures/lifecycle/reconciliation-policy.v0.1.json",
+        "fixtures/lifecycle/reconciliation-cycle-not-due.v0.1.json",
     ):
         try:
             json.loads(read_resource_text(resource_name))

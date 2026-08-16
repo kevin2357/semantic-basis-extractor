@@ -271,6 +271,31 @@ class TestLifecycleContracts(unittest.TestCase):
         with self.assertRaises(AssertionError):
             validate(malformed, self.schema, self.schema)
 
+    def test_progressed_cycle_exposes_strict_local_continuation(self) -> None:
+        result = copy.deepcopy(
+            self.fixtures["reconciliation-cycle-not-due.v0.1.json"]
+        )
+        result["outcome"] = "progressed_local"
+        result["local_continuation"] = {
+            "pass_ids": ["kevin-pass-1"],
+            "stages": ["authoring_initial", "polish"],
+            "completed_action_ids": ["paid_111111111111111111111111"],
+            "exhausted_before_detach": True,
+        }
+        result["result_checkpoint"] = {
+            "operator_state_revision": 13,
+            "snapshot_sha256": "4" * 64,
+            "result_artifact": {
+                "logical_path": "lifecycle/provider-reconciliation/cycle-00000013.json",
+                "bytes": 128,
+                "sha256": "5" * 64,
+            },
+        }
+        validate(result, self.schema, self.schema)
+        result["local_continuation"]["stages"] = ["future_stage"]
+        with self.assertRaises(AssertionError):
+            validate(result, self.schema, self.schema)
+
     def test_v02_single_result_requires_exact_run_transition(self) -> None:
         result = self.fixtures["negative-authorization-result.v0.2.json"]
         transition = result["run_transition"]

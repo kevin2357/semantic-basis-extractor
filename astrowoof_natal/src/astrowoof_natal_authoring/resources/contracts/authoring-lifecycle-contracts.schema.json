@@ -465,6 +465,17 @@
         "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
         "cycle": {"$ref": "#/$defs/reconciliationCycle"},
         "inspection": {"$ref": "#/$defs/lifecycleInspectionV02"},
+        "local_continuation": {
+          "type": "object",
+          "required": ["pass_ids", "stages", "completed_action_ids", "exhausted_before_detach"],
+          "properties": {
+            "pass_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "stages": {"type": "array", "uniqueItems": true, "items": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]}},
+            "completed_action_ids": {"type": "array", "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+            "exhausted_before_detach": {"const": true}
+          },
+          "additionalProperties": false
+        },
         "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
       },
       "additionalProperties": false

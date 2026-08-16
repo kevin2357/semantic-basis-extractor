@@ -396,6 +396,19 @@ def run_bounded_authoring_reconciliation(
     )
     from .lifecycle import inspect_lifecycle
 
+    def emit_checkpoint_events(value: dict[str, Any]) -> None:
+        checkpoint = value.get("result_checkpoint")
+        if event_emitter is None or not isinstance(checkpoint, dict):
+            return
+        event_emitter.emit("run.detached", data={
+            "state_revision": checkpoint["operator_state_revision"],
+            "reason_code": value["outcome"],
+        })
+        event_emitter.emit("checkpoint.committed", data={
+            "state_revision": checkpoint["operator_state_revision"],
+            "snapshot_sha256": checkpoint["snapshot_sha256"],
+        })
+
     if getattr(provider, "name", None) != "openai":
         raise ValueError("Bounded authoring reconciliation requires OpenAI provider")
     retrieval_provider = getattr(provider, "initial", provider)
@@ -423,6 +436,7 @@ def run_bounded_authoring_reconciliation(
         retrieval_provider.max_transport_retries = original_retries
     completed_ids = set(result["cycle"]["completed_action_ids"])
     if not completed_ids or result["outcome"] == "review_required":
+        emit_checkpoint_events(result)
         return result
 
     state = load_json(run_dir / "run.json")
@@ -539,12 +553,13 @@ def run_bounded_authoring_reconciliation(
         save_state(run_dir / "run.json", state)
     artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
     record = json.loads(artifact.read_text(encoding="utf-8"))
-    record["local_continuation"] = {
+    local_continuation = {
         "pass_ids": sorted(pass_ids),
         "stages": sorted(stages),
         "completed_action_ids": sorted(completed_ids),
         "exhausted_before_detach": True,
     }
+    record["local_continuation"] = local_continuation
     write_json_atomic(artifact, record)
     write_workspace_snapshot(run_dir)
     inspection = inspect_lifecycle(
@@ -562,6 +577,7 @@ def run_bounded_authoring_reconciliation(
         "continue_local_cycle": "progressed_local",
     }[disposition]
     result["inspection"] = inspection
+    result["local_continuation"] = local_continuation
     result["result_checkpoint"] = {
         "operator_state_revision": inspection["observation"]["operator_state_revision"],
         "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
@@ -571,4 +587,5 @@ def run_bounded_authoring_reconciliation(
             "sha256": _file_sha256(artifact),
         },
     }
+    emit_checkpoint_events(result)
     return result

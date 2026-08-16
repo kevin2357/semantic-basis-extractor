@@ -30,7 +30,9 @@ from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     initial_timing,
     reconcile_provider_cycle,
     record_attempt,
+    run_bounded_authoring_reconciliation,
 )
+from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
 
 
 def hashes(root: Path) -> dict[str, str]:
@@ -724,6 +726,65 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertEqual(
                 "retain_for_review",
                 inspection["execution_capacity"]["disposition"],
+            )
+
+    def test_public_cli_advertises_bounded_reconciliation(self) -> None:
+        completed = subprocess.run(
+            [
+                sys.executable, "-c",
+                "from astrowoof_natal_authoring.closure import main; main()",
+                "--help",
+            ],
+            cwd=ROOT,
+            env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        self.assertIn("--bounded-provider-reconciliation", completed.stdout)
+
+    def test_high_level_pending_cycle_emits_checkpoint_observations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+
+            class RetrievalProvider:
+                name = "openai"
+                base_url = "https://api.openai.invalid/v1"
+                http_timeout_seconds = 60.0
+                max_transport_retries = 4
+
+                def _request_with_retry(inner_self, **_kwargs):
+                    return {
+                        "id": "resp_provider_pending_1",
+                        "status": "in_progress",
+                    }, 1
+
+            # Give each lookup its exact durable ID while retaining one bounded
+            # scripted transport and no provider submission surface.
+            provider = RetrievalProvider()
+            def retrieve(**kwargs):
+                response_id = str(kwargs["url"]).rsplit("/", 1)[-1]
+                return {"id": response_id, "status": "in_progress"}, 1
+
+            provider._request_with_retry = retrieve  # type: ignore[method-assign]
+            events: list[dict] = []
+            emitter = ExecutionEventEmitter(
+                release="test", sink=events.append,
+                base_correlation={"native_run_id": "run_provider_pending_capacity_001"},
+            )
+            result = run_bounded_authoring_reconciliation(
+                root,
+                provider=provider,
+                max_attempts=3,
+                python_executable=Path(sys.executable),
+                observed_at="2026-08-15T20:18:00Z",
+                event_emitter=emitter,
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(
+                ["run.detached", "checkpoint.committed"],
+                [item["event_name"] for item in events],
             )
 
 
