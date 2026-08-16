@@ -235,6 +235,68 @@ OK
 Provider operations: 0. Paid spend: `$0`. API key used: no. No wheel, version bump,
 tag, or publication occurred. Runtime release remains 0.4.2.
 
+## Slice 6: native parallel and cross-platform qualification
+
+Committed Slice 5 implementation:
+
+```text
+b21f333 feat: expose bounded reconciliation interfaces
+```
+
+Parallel native cohort:
+
+```text
+workspaces: aster, bramble, clover
+aster + bramble: concurrent bounded cycles
+outcome: detached_provider_pending
+capacity: release_until_due
+provider IDs and consumer-authority references: preserved
+clover: independently inspectable, continue_local_cycle
+focused cohort test: 1 passed in 0.292s
+```
+
+Candidate build/content:
+
+```text
+filename: astrowoof_natal_authoring-0.4.2-py3-none-any.whl
+fixed SOURCE_DATE_EPOCH reproducible build A:
+  2db4602132531c5842aca649ce2bdc453cb0923e821ee6a4d08f98da770ab1c5
+fixed SOURCE_DATE_EPOCH reproducible build B:
+  2db4602132531c5842aca649ce2bdc453cb0923e821ee6a4d08f98da770ab1c5
+wheel members: 88
+py.typed: present
+lifecycle contract schema: present
+reconciliation not_due fixture: present
+```
+
+Cross-platform installed checks:
+
+```text
+Windows Python 3.11.9:
+  exact local SBE 0.4.2 + SPC 0.11.0 wheels installed
+  pip check: no broken requirements
+  astrowoof-lifecycle-smoke --require-installed: pass
+  --bounded-provider-reconciliation installed CLI flag: present
+
+Linux python:3.11-slim:
+  exact local SBE 0.4.2 + SPC 0.11.0 wheels installed
+  pip check: no broken requirements
+  astrowoof-lifecycle-smoke --require-installed: pass
+  --bounded-provider-reconciliation installed CLI flag: present
+```
+
+Complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 339 tests in 158.959s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Qualification trees
+remain outside the repository under the dedicated `C:\\tmp` path. No version bump,
+tag, publication, or API capacity-allocation assertion occurred.
+
 ## Slice 1: proposed public contract
 
 Committed Slice 0 baseline:

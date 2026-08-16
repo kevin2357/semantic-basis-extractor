@@ -8,6 +8,7 @@ import sys
 import tempfile
 import threading
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from unittest.mock import patch
 
@@ -786,6 +787,50 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 ["run.detached", "checkpoint.committed"],
                 [item["event_name"] for item in events],
             )
+
+    def test_parallel_pending_cohort_has_no_cross_run_process_dependency(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            cohort = Path(temporary).resolve()
+            roots = [cohort / name for name in ("aster", "bramble", "clover")]
+            for root in roots:
+                root.mkdir()
+                self.materialize(root)
+
+            def one_cycle(root: Path) -> dict:
+                return reconcile_provider_cycle(
+                    root,
+                    observed_at="2026-08-15T20:18:00Z",
+                    retrieve=lambda provider_id, _timeout: {
+                        "id": provider_id, "status": "in_progress"
+                    },
+                )
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                waiting = list(pool.map(one_cycle, roots[:2]))
+            self.assertTrue(all(
+                item["outcome"] == "detached_provider_pending"
+                and item["inspection"]["execution_capacity"]["disposition"]
+                == "release_until_due"
+                for item in waiting
+            ))
+            third = inspect_lifecycle(
+                roots[2],
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:18:00Z",
+            )
+            self.assertEqual(
+                "continue_local_cycle",
+                third["execution_capacity"]["disposition"],
+            )
+            for root in roots[:2]:
+                persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
+                self.assertTrue(all(
+                    action["provider"]["id"].startswith("resp_provider_pending_")
+                    and action["authorization"]["authorization_reference"].startswith(
+                        "api-reservation-"
+                    )
+                    for action in persisted["spend_ledger"]["actions"]
+                ))
 
 
 if __name__ == "__main__":
