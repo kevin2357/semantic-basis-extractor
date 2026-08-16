@@ -29,3 +29,21 @@
   fail-closed/deferred.
 - Incorporated all refinements. Kevin approved the revised plan and authorized
   Slice 0. No runtime implementation or provider operation has begun yet.
+- Committed and pushed the approved planning package as `1b47808`; Slice 0 began.
+- Added a provider-free baseline with three authorized/consumed `WAITING` actions,
+  three durable provider Response IDs, parent `WAITING_FOR_RESPONSE` state, and a
+  complete valid snapshot.
+- Inspection reports provider continuation and blocking local continuation,
+  therefore `not_quiescent`, while exposing all three provider identities. It has
+  no capacity-release, custody, or next-due projection.
+- Fresh-process CLI inspection returned the same provider identities without
+  changing any workspace hash. Closeout remained `continuation_required`, listed
+  all three action IDs as unresolved, and preserved their provider identities.
+- Existing provider regressions prove a pending background Response resumes the
+  same attempt through `GET` only and does not consume a retry. Static orchestration
+  inspection found no authoritative state intentionally retained only in a worker
+  thread after the coordinator returns.
+- Focused tests passed all 5 tests. The complete repository suite passed all 313
+  tests in 160.785 seconds.
+- Slice 0 is complete and paused for review. No production contract, polling
+  behavior, provider operation, build, version bump, release, or tag changed.

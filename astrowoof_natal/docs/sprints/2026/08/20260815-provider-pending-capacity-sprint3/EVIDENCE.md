@@ -40,3 +40,51 @@ API cohort: actual capacity release and third-reading admission proof
 required route: full exact interactive pipeline across every enabled stage
 secondary routes: explicit parity-supported or fail-closed/deferred classification
 ```
+
+## Slice 0: exact baseline
+
+Committed planning baseline:
+
+```text
+1b47808 docs: plan provider pending capacity release
+```
+
+Provider-free fixture:
+
+```text
+run status: WAITING_FOR_RESPONSE
+paid actions: 3
+action state: WAITING x3
+durable provider IDs: resp_provider_pending_1..3
+snapshot valid: true
+fresh-process inspection: pass, no mutation
+provider continuation: true
+local continuation: true
+quiescence: not_quiescent
+closeout: continuation_required
+unresolved action IDs: 3
+public capacity-release conclusion: absent
+public next due time: absent
+```
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_semantic_closure.TestSemanticClosure.test_background_timeout_preserves_response_for_same_attempt_resume \
+  astrowoof_natal.tests.test_semantic_closure.TestSemanticClosure.test_pending_background_response_does_not_consume_a_retry \
+  astrowoof_natal.tests.test_provider_pending_capacity -v
+Ran 5 tests in 3.883s
+OK
+```
+
+Complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 313 tests in 160.785s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
+0.4.2.
