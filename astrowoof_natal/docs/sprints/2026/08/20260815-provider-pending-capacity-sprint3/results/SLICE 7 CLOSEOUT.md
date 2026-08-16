@@ -1,7 +1,6 @@
 # Slice 7: Closeout and Release Recommendation
 
-Status: closeout complete; pending Kevin/API final review and separate release
-authorization.
+Status: complete; Kevin/API approved and 0.4.3 tagged/published.
 
 The sprint answers every question in the original API brief, publishes the exact
 consumer sequence and companion adoption checklist, reconciles all slice evidence,
@@ -20,5 +19,8 @@ Final native evidence is 339 passing repository tests, Windows/Linux Python 3.11
 installed smoke, a three-workspace parallel cohort, and two byte-identical
 fixed-epoch qualification wheels. Provider operations and paid spend were zero.
 
-No version bump, tag, publication, or immutable artifact is authorized by this
-closeout.
+Kevin subsequently authorized release. Version 0.4.3 was reproducibly built,
+tagged at immutable commit `88260156e74e10e4487145693f2d48320c363486`,
+published, authenticated-downloaded, and hash-verified. The qualified/published
+wheel SHA-256 is
+`429bf43b39033f931ebab42e41d14bfa078c1585a32896564ddc11f51cca4c61`.

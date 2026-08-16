@@ -177,3 +177,16 @@
 - All SBE-native exit criteria pass. A pinnable 0.4.3 patch is recommended after
   final API review and separate release authorization. No version bump, tag,
   publication, provider operation, or paid spend occurred.
+- Kevin approved the complete sprint and API checklist and explicitly authorized
+  maximum tagged-and-released 0.4.3 publication.
+- Prepared artifact source commit `101328f`, passed all 339 tests under Windows
+  CPython 3.11, and produced two byte-identical fixed-epoch wheels at SHA-256
+  `429bf43b39033f931ebab42e41d14bfa078c1585a32896564ddc11f51cca4c61`.
+- Exact candidate bytes plus published SPC 0.11.0 passed `pip check`, lifecycle
+  smoke, and full packaged release smoke on Windows and Linux CPython 3.11.
+- Locked and pushed annotated tag `astrowoof-natal-authoring-v0.4.3` at commit
+  `88260156e74e10e4487145693f2d48320c363486` and published wheel/checksum assets.
+- Authenticated download verification matched the qualified wheel hash. GitHub
+  release ID is `371210514`; publication completed at `2026-08-16T02:23:00Z`.
+- Post-publication evidence records the immutable tag without moving it. Provider
+  operations: 0. Paid spend: `$0`.

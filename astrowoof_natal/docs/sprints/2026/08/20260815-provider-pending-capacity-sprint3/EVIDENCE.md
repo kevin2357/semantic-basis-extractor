@@ -319,6 +319,33 @@ authorization. Provider operations: 0. Paid spend: `$0`. API key used: no. Versi
 bump, tag, publication, and API companion capacity-slot qualification remain
 unperformed.
 
+## 0.4.3 release and publication
+
+```text
+artifact source commit: 101328fdaf3da38458b1474888b8b9ad989e7168
+release tag commit: 88260156e74e10e4487145693f2d48320c363486
+annotated tag object: 231d449d9b95b13e83448729ec03d72e7efb2442
+SOURCE_DATE_EPOCH: 1786846479
+independent fixed-epoch builds: 2, byte-identical
+wheel: astrowoof_natal_authoring-0.4.3-py3-none-any.whl
+bytes / entries / resources / cache: 740271 / 88 / 47 / 0
+wheel SHA-256: 429bf43b39033f931ebab42e41d14bfa078c1585a32896564ddc11f51cca4c61
+repository tests: 339 passed in 155.249s
+Windows CPython 3.11 installed pip check/lifecycle/release smoke: pass
+Linux CPython 3.11 installed pip check/lifecycle/release smoke: pass
+GitHub release ID: 371210514
+published: 2026-08-16T02:23:00Z
+wheel asset ID: 516325883
+checksum asset ID: 516325884
+authenticated downloaded wheel hash: match
+downloaded checksum content: match
+provider operations / paid spend: 0 / $0
+```
+
+The immutable tag remains on the release-lock commit. This post-publication record
+does not move it. The API companion capacity-slot qualification remains API-owned;
+it does not affect the completed SBE publication.
+
 ## Slice 1: proposed public contract
 
 Committed Slice 0 baseline:

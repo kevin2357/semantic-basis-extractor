@@ -1,6 +1,7 @@
 # AstroWoof Natal Authoring 0.4.3
 
-Status: qualified for immutable annotated tag; publication pending.
+Status: published under immutable annotated tag
+`astrowoof-natal-authoring-v0.4.3`.
 
 This patch separates short-lived local execution capacity from durable
 provider-pending custody. Exact interactive runs can checkpoint and detach while
@@ -40,4 +41,7 @@ zero / `$0`.
 - artifact source commit:
   `101328fdaf3da38458b1474888b8b9ad989e7168`.
 
-Publication remains pending the immutable release-record tag.
+Publication is complete. Authenticated download verification matched the qualified
+wheel SHA-256. The immutable tag identifies release-record commit
+`88260156e74e10e4487145693f2d48320c363486`; this post-publication evidence does
+not move that tag.
