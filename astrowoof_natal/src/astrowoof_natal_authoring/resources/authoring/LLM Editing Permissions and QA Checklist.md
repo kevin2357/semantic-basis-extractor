@@ -1,4 +1,4 @@
-# LLM Editing Permissions and QA Checklist v0.4.2
+# LLM Editing Permissions and QA Checklist v0.4.3
 
 ## Editable
 

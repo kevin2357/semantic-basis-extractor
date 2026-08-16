@@ -1,4 +1,4 @@
-# Multi-Subject LLM Handoff v0.4.2
+# Multi-Subject LLM Handoff v0.4.3
 
 This root contains one or more independent AstroWoof subject handoffs.
 

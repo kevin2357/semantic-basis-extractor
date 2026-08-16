@@ -1,4 +1,4 @@
-# LLM Card-by-Card Authoring Execution Protocol v0.4.2
+# LLM Card-by-Card Authoring Execution Protocol v0.4.3
 
 This protocol governs the working method used to turn one AstroWoof selected
 authoring packet into a finished deck. It is mandatory. The authoring manual

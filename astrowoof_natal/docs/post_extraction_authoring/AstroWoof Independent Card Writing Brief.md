@@ -1,4 +1,4 @@
-# AstroWoof Independent Card Writing Brief v0.4.2
+# AstroWoof Independent Card Writing Brief v0.4.3
 
 ## The creative assignment
 

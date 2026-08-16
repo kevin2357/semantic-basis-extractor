@@ -1,4 +1,4 @@
-# Proposed LLM Handoff Prompt v0.4.2
+# Proposed LLM Handoff Prompt v0.4.3
 
 Edit the supplied AstroWoof projected natal authoring packet into the final
 `natal.<subject>.cards.json` artifact.
