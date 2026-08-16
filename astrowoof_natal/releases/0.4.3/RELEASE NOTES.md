@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.3
 
-Status: release candidate pending immutable tag and publication.
+Status: qualified for immutable annotated tag; publication pending.
 
 This patch separates short-lived local execution capacity from durable
 provider-pending custody. Exact interactive runs can checkpoint and detach while
@@ -32,6 +32,12 @@ zero / `$0`.
 - complete repository suite: 339 passed;
 - three-workspace native parallel cohort passed;
 - fresh installed lifecycle smoke passed on Windows and Linux CPython 3.11;
-- two fixed-epoch candidate builds will be required byte-identical before tag;
+- two fixed-epoch candidate builds were byte-identical;
+- wheel SHA-256:
+  `429bf43b39033f931ebab42e41d14bfa078c1585a32896564ddc11f51cca4c61`;
+- wheel bytes/entries/resources/cache entries: 740271 / 88 / 47 / 0;
 - exact AGF 0.8.1 and SPC 0.11.0 compatibility remains pinned; and
-- artifact hash/source commit will be locked after the reproducible build gate.
+- artifact source commit:
+  `101328fdaf3da38458b1474888b8b9ad989e7168`.
+
+Publication remains pending the immutable release-record tag.
