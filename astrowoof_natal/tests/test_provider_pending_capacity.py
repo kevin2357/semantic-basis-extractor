@@ -22,6 +22,11 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     closeout_run,
     inspect_lifecycle,
 )
+from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    delay_seconds,
+    initial_timing,
+    record_attempt,
+)
 
 
 def hashes(root: Path) -> dict[str, str]:
@@ -71,6 +76,13 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                     "consumed_at": f"2026-08-15T20:0{index}:00Z",
                 },
                 "provider": {"id": response_id, "kind": "response"},
+                "provider_reconciliation": {
+                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                    "provider_retrieval_attempt_count": 0,
+                    "last_attempt_at": None,
+                    "last_outcome": "provider_identity_recorded",
+                    "resume_not_before": f"2026-08-15T20:{14 + index:02d}:00Z",
+                },
                 "reported": None,
             })
             passes[f"pass-{index}"] = {
@@ -110,7 +122,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
         write_workspace_snapshot(root)
         return state
 
-    def test_known_provider_wait_is_snapshot_safe_but_not_capacity_releasable(self) -> None:
+    def test_known_provider_wait_projects_safe_release_and_earliest_due(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             state = self.materialize(root)
@@ -140,9 +152,33 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 }],
                 inspection["local_dependencies"],
             )
-            self.assertNotIn("execution_capacity", inspection)
-            self.assertNotIn("provider_custody", inspection)
-            self.assertNotIn("resume_not_before", inspection)
+            self.assertEqual(
+                "astrowoof.authoring_lifecycle_inspection.v0.2",
+                inspection["schema_version"],
+            )
+            self.assertEqual(
+                {
+                    "disposition": "release_until_due",
+                    "local_work_ready_now": False,
+                    "checkpoint_safe_for_worker_release": True,
+                    "resume_not_before": "2026-08-15T20:15:00Z",
+                    "reason_code": "known_provider_work_pending",
+                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                },
+                inspection["execution_capacity"],
+            )
+            custody = inspection["provider_custody"]
+            self.assertEqual("known_operations_pending", custody["state"])
+            self.assertEqual(3, custody["reservation_retention_action_count"])
+            self.assertEqual("2026-08-15T20:15:00Z", custody["earliest_resume_not_before"])
+            self.assertEqual(
+                [
+                    "paid_000000000000000000000001",
+                    "paid_000000000000000000000002",
+                    "paid_000000000000000000000003",
+                ],
+                custody["next_due_action_ids"],
+            )
             action_ids = inspection["action_inventory"]["actions"]
             self.assertEqual(3, len(action_ids))
             self.assertTrue(all(item["necessary"] for item in action_ids))
@@ -180,6 +216,10 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertTrue(inspection["observation"]["inventory_valid"])
             self.assertEqual("not_quiescent", inspection["quiescence"]["state"])
             self.assertEqual(
+                "release_until_due",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual(
                 3,
                 sum(
                     item["provider_identity_present"]
@@ -212,6 +252,117 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                     "resp_provider_pending_3",
                 ],
                 [item["provider"]["id"] for item in persisted["spend_ledger"]["actions"]],
+            )
+
+    def test_due_time_makes_local_cycle_runnable_without_releasing_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:15:00Z",
+            )
+            self.assertEqual(
+                "continue_local_cycle",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertTrue(inspection["execution_capacity"]["local_work_ready_now"])
+            self.assertIsNone(inspection["execution_capacity"]["resume_not_before"])
+            self.assertEqual(
+                3,
+                inspection["provider_custody"]["reservation_retention_action_count"],
+            )
+
+    def test_legacy_pending_action_without_timing_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            for action in state["spend_ledger"]["actions"]:
+                action.pop("provider_reconciliation")
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertEqual(
+                "unsupported_retain_capacity",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+            self.assertEqual(3, inspection["provider_custody"]["reservation_retention_action_count"])
+
+    def test_batch_timing_cannot_accidentally_claim_interactive_parity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            state["spend_ledger"]["actions"][0]["binding"]["service_level"] = "batch"
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertEqual(
+                "unsupported_retain_capacity",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+
+    def test_frozen_backoff_and_monotonic_attempt_evidence(self) -> None:
+        self.assertEqual(
+            [15, 30, 60, 120, 240, 300, 300],
+            [delay_seconds(attempt) for attempt in range(7)],
+        )
+        timing = initial_timing(recorded_at="2026-08-15T20:00:00Z")
+        self.assertEqual("2026-08-15T20:00:15Z", timing["resume_not_before"])
+        record_attempt(
+            timing, attempted_at="2026-08-15T20:00:15Z", outcome="pending"
+        )
+        self.assertEqual(1, timing["provider_retrieval_attempt_count"])
+        self.assertEqual("2026-08-15T20:00:45Z", timing["resume_not_before"])
+        previous = json.loads(json.dumps(timing))
+        with self.assertRaises(ValueError):
+            record_attempt(
+                timing,
+                attempted_at="2026-08-15T20:00:14Z",
+                outcome="pending",
+            )
+        self.assertEqual(previous, timing)
+
+    def test_incomplete_checkpoint_can_never_be_declared_releasable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            state["spend_ledger"]["actions"][0]["provider_reconciliation"][
+                "resume_not_before"
+            ] = "2026-08-15T20:30:00Z"
+            # Simulate state persistence succeeding before snapshot publication.
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertFalse(inspection["observation"]["snapshot_complete"])
+            self.assertFalse(
+                inspection["execution_capacity"]["checkpoint_safe_for_worker_release"]
+            )
+            self.assertEqual(
+                "retain_for_review",
+                inspection["execution_capacity"]["disposition"],
             )
 
 

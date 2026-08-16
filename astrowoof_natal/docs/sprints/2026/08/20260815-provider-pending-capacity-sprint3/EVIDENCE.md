@@ -154,3 +154,63 @@ OK
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
 0.4.2 and still emits lifecycle inspection v0.1 pending Slice 2.
+
+## Slice 2: durable timing and checkpoint projection
+
+Committed Slice 1 contract:
+
+```text
+513614f feat: define provider reconciliation lifecycle contract
+```
+
+Implemented evidence:
+
+```text
+new provider identity: durable timing, initial due +15 seconds
+backoff: 15, 30, 60, 120, 240, 300, 300... seconds
+multiple actions: stable due-time/action-ID fan-in, maximum four next actions
+future due: release_until_due only with complete safe checkpoint
+due now: continue_local_cycle, provider authority retained
+legacy missing timing: unsupported_retain_capacity, authority retained
+state persisted before snapshot: retain_for_review, checkpoint release false
+inspection current: astrowoof.authoring_lifecycle_inspection.v0.2
+inspection historical: astrowoof.authoring_lifecycle_inspection.v0.1
+```
+
+Focused command after correcting historical consumer assertions:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_lifecycle_consumer \
+  astrowoof_natal.tests.test_provider_pending_capacity \
+  astrowoof_natal.tests.test_lifecycle_contracts -v
+Ran 30 tests in 2.776s
+OK
+```
+
+First complete-suite diagnostic:
+
+```text
+Ran 320 tests in 159.594s
+FAILED (failures=2)
+both failures: consumer tests expected lifecycle inspection v0.1
+resolution: update assertions to approved current v0.2 contract
+```
+
+Corrected complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 320 tests in 154.782s
+OK
+```
+
+Final gate after explicit Batch fail-closed coverage:
+
+```text
+focused lifecycle/capacity/consumer contracts: 31 tests, OK
+complete repository suite: 321 tests in 148.808s, OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
+0.4.2.

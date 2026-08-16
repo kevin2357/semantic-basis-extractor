@@ -56,6 +56,7 @@ from .provenance import (
     migrated_run_provenance,
     refresh_execution_provenance,
 )
+from .reconciliation import initial_timing
 from .spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
@@ -2752,6 +2753,14 @@ class SpendController:
                     provider_id=str(provider_id or ""),
                     kind=kind,
                 )
+                # This sprint's releasable scheduling contract is intentionally
+                # exact-interactive only. Batch retains its existing detach path
+                # and fails closed in lifecycle projection until Slice 4 assigns
+                # an explicit parity classification.
+                if service_level == "interactive":
+                    action["provider_reconciliation"] = initial_timing(
+                        recorded_at=utc_now().replace("+00:00", "Z")
+                    )
                 try:
                     persist_state(self.run_json, self.state)
                 except Exception as exc:

@@ -42,6 +42,7 @@ from .lifecycle_contracts import (
     observation_transition_errors,
 )
 from .execution_events import ExecutionEventEmitter
+from .reconciliation import parse_utc_instant, validated_timing
 
 
 def _utc_now() -> str:
@@ -546,6 +547,132 @@ def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
     return [unique[key] for key in sorted(unique)]
 
 
+def _capacity_and_custody(
+    state: dict[str, Any], observation: dict[str, Any],
+    dependencies: list[dict[str, Any]], *, observed_at: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Project orthogonal local capacity and provider custody from durable bytes."""
+    actions = list((state.get("spend_ledger") or {}).get("actions") or [])
+    provider_bound = [
+        item for item in actions
+        if item.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+        and (item.get("provider") or {}).get("id")
+    ]
+    projected: list[dict[str, Any]] = []
+    unsupported = False
+    for action in provider_bound:
+        timing = validated_timing(action)
+        if timing is None:
+            unsupported = True
+            resume_not_before = None
+            reason_code = "reconciliation_timing_missing"
+        else:
+            resume_not_before = timing["resume_not_before"]
+            reason_code = "known_provider_operation_pending"
+        projected.append({
+            "action_id": str(action.get("action_id") or ""),
+            "stage": str((action.get("binding") or {}).get("stage") or ""),
+            "provider_operation_id": str((action.get("provider") or {}).get("id") or ""),
+            "custody_classification": (
+                "unsupported" if timing is None else "retain_consumer_authority"
+            ),
+            "resume_not_before": resume_not_before,
+            "reason_code": reason_code,
+        })
+    projected.sort(key=lambda item: (
+        item["resume_not_before"] is None,
+        item["resume_not_before"] or "",
+        item["action_id"],
+    ))
+    scheduled = [item for item in projected if item["resume_not_before"] is not None]
+    earliest = scheduled[0]["resume_not_before"] if scheduled else None
+    next_ids = [item["action_id"] for item in scheduled[:4]]
+    if unsupported:
+        custody_state = "unsupported"
+    elif projected:
+        custody_state = "known_operations_pending"
+    elif (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        custody_state = "terminal_no_custody"
+    else:
+        custody_state = "none"
+    custody = {
+        "state": custody_state,
+        "provider_action_count": len(projected),
+        # Unsupported native scheduling never authorizes the consumer to release
+        # its separate reservation/custody authority.
+        "reservation_retention_action_count": len(projected),
+        "action_ids": [item["action_id"] for item in projected],
+        "next_due_action_ids": next_ids,
+        "earliest_resume_not_before": earliest,
+        "actions": projected,
+    }
+    checkpoint_safe = bool(
+        observation["snapshot_complete"]
+        and observation["inventory_valid"]
+        and observation["native_exclusive_access"] in {"established", "declared"}
+        and not observation["writer_race_possible"]
+    )
+    terminal_status = str(state.get("status") or "") in {
+        "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS", "FINAL_QA_FAILED",
+        "FINAL_QA_REQUIRES_REVIEW", "FAILED_REQUIRES_REVIEW", "BUDGET_EXHAUSTED",
+        "AMBIGUOUS_PROVIDER_SUBMISSION", "POLICY_STOPPED",
+    }
+    non_provider_local = any(
+        item["kind"] != "provider_result_reconciliation" for item in dependencies
+    )
+    prepared = any(item.get("state") == "PREPARED" for item in actions)
+    ambiguous = any(item.get("state") in {
+        "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
+    } for item in actions)
+    now = parse_utc_instant(observed_at)
+    due = any(
+        parse_utc_instant(item["resume_not_before"]) <= now for item in scheduled
+    )
+    if not checkpoint_safe:
+        disposition, local_ready, reason = (
+            "retain_for_review", False,
+            "snapshot_invalid" if not observation["snapshot_complete"]
+            else "writer_or_lease_not_exclusive",
+        )
+    elif ambiguous:
+        disposition, local_ready, reason = (
+            "retain_for_review", False, "provider_submission_ambiguous",
+        )
+    elif unsupported:
+        disposition, local_ready, reason = (
+            "unsupported_retain_capacity", False, "reconciliation_timing_missing",
+        )
+    elif non_provider_local or due:
+        disposition, local_ready, reason = (
+            "continue_local_cycle", True, "local_work_ready",
+        )
+    elif prepared:
+        disposition, local_ready, reason = (
+            "await_external_authority", False, "spend_authorization_required",
+        )
+    elif projected:
+        disposition, local_ready, reason = (
+            "release_until_due", False, "known_provider_work_pending",
+        )
+    elif terminal_status:
+        disposition, local_ready, reason = (
+            "terminal", False, "terminal_native_outcome",
+        )
+    else:
+        disposition, local_ready, reason = (
+            "continue_local_cycle", True, "local_work_ready",
+        )
+    capacity = {
+        "disposition": disposition,
+        "local_work_ready_now": local_ready,
+        "checkpoint_safe_for_worker_release": checkpoint_safe,
+        "resume_not_before": earliest if disposition == "release_until_due" else None,
+        "reason_code": reason,
+        "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+    }
+    return capacity, custody
+
+
 def inspect_lifecycle(
     run_dir: Path,
     *,
@@ -642,6 +769,9 @@ def inspect_lifecycle(
             "state": "quiescent",
             "reasons": ["no_provider_or_local_continuation"],
         }
+    capacity, custody = _capacity_and_custody(
+        state, observation, dependencies, observed_at=observation["observed_at"],
+    )
     return {
         "schema_version": LIFECYCLE_INSPECTION_SCHEMA,
         "run_id": str(state.get("run_id") or ""),
@@ -651,6 +781,8 @@ def inspect_lifecycle(
         "local_dependencies": dependencies,
         "action_inventory": inventory,
         "review_reasons": sorted(set(review_reasons)),
+        "execution_capacity": capacity,
+        "provider_custody": custody,
     }
 
 

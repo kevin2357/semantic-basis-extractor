@@ -39,9 +39,9 @@ BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
-LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.1"
-LIFECYCLE_INSPECTION_SCHEMA_V0_2 = (
-    "astrowoof.authoring_lifecycle_inspection.v0.2"
+LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.2"
+LIFECYCLE_INSPECTION_SCHEMA_HISTORICAL = (
+    "astrowoof.authoring_lifecycle_inspection.v0.1"
 )
 PROVIDER_RECONCILIATION_POLICY_SCHEMA = (
     "astrowoof.provider_reconciliation_policy.v0.1"
@@ -80,6 +80,8 @@ EXECUTION_CAPACITY_REASON_CODES = (
     "provider_identity_conflict",
     "native_review_required",
     "route_or_stage_not_supported",
+    "reconciliation_timing_missing",
+    "reconciliation_timing_missing",
 )
 PROVIDER_CUSTODY_STATES = (
     "none",

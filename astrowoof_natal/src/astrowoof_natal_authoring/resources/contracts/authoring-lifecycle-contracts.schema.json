@@ -327,7 +327,7 @@
           "terminal_native_outcome", "snapshot_invalid",
           "writer_or_lease_not_exclusive", "provider_submission_ambiguous",
           "provider_identity_conflict", "native_review_required",
-          "route_or_stage_not_supported"
+          "route_or_stage_not_supported", "reconciliation_timing_missing"
         ]},
         "policy_version": {"const": "astrowoof.provider_reconciliation_policy.v0.1"}
       },
@@ -355,7 +355,7 @@
           "known_provider_operation_pending", "provider_evidence_complete",
           "provider_identity_absent", "provider_submission_ambiguous",
           "provider_identity_conflict", "deferred_by_cycle_limit",
-          "route_or_stage_not_supported"
+          "route_or_stage_not_supported", "reconciliation_timing_missing"
         ]}
       },
       "additionalProperties": false

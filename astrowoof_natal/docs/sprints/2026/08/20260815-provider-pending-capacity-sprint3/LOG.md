@@ -81,3 +81,23 @@
 - The complete repository suite passed all 316 tests in 156.752 seconds. Slice 1 is
   paused for Kevin's gate review; no provider operation, runtime polling change,
   build, version bump, release, or tag occurred.
+- Kevin approved Slice 1. Committed and pushed the contract package as `513614f`;
+  Slice 2 began.
+- Added durable per-action provider reconciliation timing when an interactive
+  provider identity is first recorded. Frozen exponential delay is capped at 300
+  seconds and rejects backwards attempt timestamps.
+- Promoted public lifecycle inspection to v0.2 and derived execution capacity,
+  checkpoint safety, earliest due time, bounded next-action ordering, immutable
+  stage, provider custody, and consumer-authority retention from native bytes.
+- Preserved fail-closed behavior for legacy timing-free provider work, incomplete
+  snapshots, absent exclusivity, and ambiguous submission. A stale snapshot can
+  never advertise a releasable checkpoint.
+- Focused Slice 2 coverage passed 30 tests. The first complete-suite pass ran 320
+  tests and found two expected historical v0.1 consumer assertions; both were
+  updated to the approved v0.2 contract and the focused rerun passed.
+- The corrected complete repository suite passed all 320 tests in 154.782 seconds.
+  Slice 2 is paused for Kevin's gate review; no provider operation, build, version
+  bump, release, or tag occurred.
+- Added an explicit Batch guard so timing-like bytes cannot accidentally claim
+  interactive scheduling parity. Focused coverage passed 31 tests and the final
+  complete suite passed all 321 tests in 148.808 seconds.
