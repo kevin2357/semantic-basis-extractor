@@ -89,6 +89,59 @@ OK
 Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
 0.4.2.
 
+## Slice 3: bounded interactive reconciliation
+
+Committed Slice 2 implementation:
+
+```text
+150d396 feat: persist provider reconciliation timing
+```
+
+Native assertions:
+
+```text
+early cycle: not_due, zero retrievals, zero mutation, no checkpoint
+due wave: maximum 4 actions, parallel GET-only retrieval
+HTTP retrieval: timeout <= 15 seconds, transport retries = 0
+pending: backoff advances once, provider custody retained
+transport warning: distinct timing outcome, authority unchanged
+completed: immutable response evidence, immediate local continuation
+local QA: cached response consumed, exactly one GET total, zero POST
+mixed: completed local work plus pending-provider detach
+identity mismatch: review_required, never ordinary retry
+snapshot failure: checkpoint release false, retain_for_review
+six due actions: four retrieved, two attempt counters unchanged
+```
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_provider_pending_capacity \
+  astrowoof_natal.tests.test_semantic_closure.TestSemanticClosure.test_bounded_cycle_consumes_completed_response_without_second_get_or_post -v
+Ran 17 tests in 3.920s
+OK
+```
+
+Initial complete suite before the final two focused guards:
+
+```text
+Ran 328 tests in 155.167s
+OK
+```
+
+Final complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 330 tests in 156.238s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. No action commitment,
+authorization, consumption, or reported-cost record was created by a poll-only
+cycle.
+
 ## Slice 1: proposed public contract
 
 Committed Slice 0 baseline:

@@ -568,13 +568,20 @@ def _capacity_and_custody(
             reason_code = "reconciliation_timing_missing"
         else:
             resume_not_before = timing["resume_not_before"]
-            reason_code = "known_provider_operation_pending"
+            reason_code = (
+                "provider_evidence_complete"
+                if timing["last_outcome"] == "completed"
+                else "known_provider_operation_pending"
+            )
         projected.append({
             "action_id": str(action.get("action_id") or ""),
             "stage": str((action.get("binding") or {}).get("stage") or ""),
             "provider_operation_id": str((action.get("provider") or {}).get("id") or ""),
             "custody_classification": (
-                "unsupported" if timing is None else "retain_consumer_authority"
+                "unsupported" if timing is None
+                else "completed_provider_evidence"
+                if timing["last_outcome"] == "completed"
+                else "retain_consumer_authority"
             ),
             "resume_not_before": resume_not_before,
             "reason_code": reason_code,
@@ -589,6 +596,11 @@ def _capacity_and_custody(
     next_ids = [item["action_id"] for item in scheduled[:4]]
     if unsupported:
         custody_state = "unsupported"
+    elif projected and all(
+        item["custody_classification"] == "completed_provider_evidence"
+        for item in projected
+    ):
+        custody_state = "completed_evidence_pending_local_work"
     elif projected:
         custody_state = "known_operations_pending"
     elif (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
@@ -628,6 +640,10 @@ def _capacity_and_custody(
     due = any(
         parse_utc_instant(item["resume_not_before"]) <= now for item in scheduled
     )
+    completed_evidence = any(
+        item["custody_classification"] == "completed_provider_evidence"
+        for item in projected
+    )
     if not checkpoint_safe:
         disposition, local_ready, reason = (
             "retain_for_review", False,
@@ -642,7 +658,7 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "unsupported_retain_capacity", False, "reconciliation_timing_missing",
         )
-    elif non_provider_local or due:
+    elif non_provider_local or due or completed_evidence:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",
         )

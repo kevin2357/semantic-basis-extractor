@@ -101,3 +101,20 @@
 - Added an explicit Batch guard so timing-like bytes cannot accidentally claim
   interactive scheduling parity. Focused coverage passed 31 tests and the final
   complete suite passed all 321 tests in 148.808 seconds.
+- Kevin approved Slice 2. Committed and pushed durable timing and projection as
+  `150d396`; Slice 3 began.
+- Added the GET-only bounded reconciliation engine: strict early `not_due`, one
+  four-action parallel wave, 15-second per-GET timeout, zero transport retries,
+  durable pending/completed/warning timing, response identity validation, private
+  completed-response evidence, and typed checkpoint results.
+- Added local pass continuation from cached completed evidence. Initial/retry
+  reconstruction and QA run without a second GET or POST; reconciliation-only
+  spend control prevents a subsequent provider submission.
+- Added fail-closed identity-conflict and snapshot-publication behavior. Provider
+  custody/authorization/consumption remain intact across ordinary transport
+  warnings, while identity mismatch becomes native review.
+- Focused Slice 3 coverage passed 17 tests. The initial complete suite passed all
+  328 tests in 155.167 seconds before the final parallel/snapshot guard additions.
+- The final complete repository suite passed all 330 tests in 156.238 seconds.
+  Slice 3 is paused for Kevin's gate review; no provider operation, build, version
+  bump, release, or tag occurred.

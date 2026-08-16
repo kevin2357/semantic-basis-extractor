@@ -56,7 +56,7 @@ from .provenance import (
     migrated_run_provenance,
     refresh_execution_provenance,
 )
-from .reconciliation import initial_timing
+from .reconciliation import initial_timing, record_attempt
 from .spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
@@ -963,6 +963,39 @@ def response_output_text(response: dict[str, Any]) -> str:
     return "".join(texts)
 
 
+def reconciled_response_evidence(
+    attempt_root: Path, response_id: str,
+) -> dict[str, Any] | None:
+    """Load a completed response already retrieved by a bounded native cycle."""
+    try:
+        run_dir = attempt_root.parents[2]
+    except IndexError:
+        return None
+    run_json = run_dir / "run.json"
+    if not run_json.is_file():
+        return None
+    state = load_json(run_json)
+    action = next((
+        item for item in (state.get("spend_ledger") or {}).get("actions", [])
+        if (item.get("provider") or {}).get("id") == response_id
+    ), None)
+    if action is None:
+        return None
+    timing = action.get("provider_reconciliation") or {}
+    if timing.get("last_outcome") != "completed":
+        return None
+    path = (
+        run_dir / "lifecycle" / "provider-reconciliation" /
+        f"{action['action_id']}.response.json"
+    )
+    if not path.is_file():
+        raise ValueError("Completed reconciliation evidence is missing")
+    response = load_json(path)
+    if response.get("id") != response_id or response.get("status") != "completed":
+        raise ValueError("Completed reconciliation evidence identity is invalid")
+    return response
+
+
 def normalized_usage(response: dict[str, Any]) -> dict[str, int]:
     usage = response.get("usage") or {}
     input_details = usage.get("input_tokens_details") or {}
@@ -1368,11 +1401,15 @@ class OpenAIResponsesProvider:
                 )
             if provider_created is not None:
                 provider_created(response_id, "response")
-            response, retrieval_attempts = self._request_with_retry(
-                method="GET",
-                url=f"{self.base_url}/responses/{response_id}",
-                payload=None,
-            )
+            response = reconciled_response_evidence(attempt_root, response_id)
+            if response is None:
+                response, retrieval_attempts = self._request_with_retry(
+                    method="GET",
+                    url=f"{self.base_url}/responses/{response_id}",
+                    payload=None,
+                )
+            else:
+                retrieval_attempts = 0
             create_transport_attempts = 0
             retrieve_transport_attempts = retrieval_attempts
         else:
@@ -1566,11 +1603,15 @@ class OpenAIResponsesProvider:
                 )
             if provider_created is not None:
                 provider_created(response_id, "response")
-            response, retrieve_attempts = self._request_with_retry(
-                method="GET",
-                url=f"{self.base_url}/responses/{response_id}",
-                payload=None,
-            )
+            response = reconciled_response_evidence(attempt_root, response_id)
+            if response is None:
+                response, retrieve_attempts = self._request_with_retry(
+                    method="GET",
+                    url=f"{self.base_url}/responses/{response_id}",
+                    payload=None,
+                )
+            else:
+                retrieve_attempts = 0
             create_attempts = 0
         else:
             if self.require_spend_authorization and before_submit is None:
@@ -2530,12 +2571,14 @@ class SpendController:
         state_lock: threading.Lock,
         consumer_id: str,
         event_emitter: ExecutionEventEmitter | None = None,
+        reconciliation_only: bool = False,
     ) -> None:
         self.state = state
         self.run_json = run_json
         self.state_lock = state_lock
         self.consumer_id = consumer_id
         self.event_emitter = event_emitter
+        self.reconciliation_only = reconciliation_only
         self.local = threading.local()
 
     @property
@@ -2687,6 +2730,11 @@ class SpendController:
                         "Optional paid stage skipped under frozen generation profile",
                         action=existing,
                     )
+                if self.reconciliation_only and not existing.get("provider"):
+                    raise AwaitingSpendAuthorization(
+                        "Bounded reconciliation cannot submit new provider work",
+                        action=existing,
+                    )
                 if existing["state"] in {
                     "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
                     "PROVIDER_ID_RECORDED", "WAITING",
@@ -2809,12 +2857,25 @@ class SpendController:
             action = self.active_action()
             if action["state"] == "PROVIDER_ID_RECORDED":
                 action["state"] = "WAITING"
-                persist_state(self.run_json, self.state)
-                if self.event_emitter is not None:
-                    self.event_emitter.emit("provider.waiting", data={
-                        "action_id": action["action_id"],
-                        "provider_operation_id": action["provider"]["id"],
-                    }, correlation={"action_id": action["action_id"]})
+            elif action["state"] == "WAITING":
+                timing = action.get("provider_reconciliation")
+                if not isinstance(timing, dict):
+                    raise ValueError(
+                        "Interactive provider wait lacks reconciliation timing"
+                    )
+                record_attempt(
+                    timing,
+                    attempted_at=utc_now().replace("+00:00", "Z"),
+                    outcome="pending",
+                )
+            else:
+                return
+            persist_state(self.run_json, self.state)
+            if self.event_emitter is not None:
+                self.event_emitter.emit("provider.waiting", data={
+                    "action_id": action["action_id"],
+                    "provider_operation_id": action["provider"]["id"],
+                }, correlation={"action_id": action["action_id"]})
 
     def settle_active(self, metadata: dict[str, Any]) -> None:
         action_id = getattr(self.local, "active_action", None)
@@ -2826,6 +2887,18 @@ class SpendController:
         )
         with self.state_lock:
             action = self.active_action()
+            if action.get("state") == "WAITING":
+                timing = action.get("provider_reconciliation")
+                if not isinstance(timing, dict):
+                    raise ValueError(
+                        "Completed interactive response lacks reconciliation timing"
+                    )
+                if timing.get("last_outcome") != "completed":
+                    record_attempt(
+                        timing,
+                        attempted_at=utc_now().replace("+00:00", "Z"),
+                        outcome="completed",
+                    )
             record_reported_cost(
                 action,
                 usage=metadata.get("usage") or {},
@@ -3107,6 +3180,7 @@ def author_pending_passes(
     stop_after_attempts: int | None = None,
     max_workers: int = 1,
     spend_controller: SpendController | None = None,
+    only_pass_ids: set[str] | None = None,
 ) -> None:
     if max_workers < 1:
         raise ValueError("max_workers must be at least 1")
@@ -3124,6 +3198,7 @@ def author_pending_passes(
         spec
         for spec in specs_from_state(state)
         if state["passes"][spec.pass_id]["state"] not in TERMINAL_STATES
+        and (only_pass_ids is None or spec.pass_id in only_pass_ids)
     ]
 
     def run_spec(spec: PassSpec) -> None:

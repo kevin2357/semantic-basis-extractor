@@ -105,6 +105,9 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     AwaitingSpendAuthorization,
     authorize_action,
 )
+from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    run_bounded_authoring_reconciliation,
+)
 
 
 def test_spend_policy() -> dict:
@@ -403,6 +406,90 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_bounded_cycle_consumes_completed_response_without_second_get_or_post(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=ScriptedTransport([]),
+                sleep=lambda _: None,
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            record = state["passes"]["bre_1"]
+            for pass_id, other in state["passes"].items():
+                if pass_id != "bre_1":
+                    other["state"] = "PASS_QA_ACCEPTED"
+                    other["accepted_workspace"] = str(root / "accepted-placeholder" / pass_id)
+                    other["accepted_attempt"] = 1
+            attempt_root = root / "run" / "passes" / "bre_1" / "attempt-001"
+            attempt_root.mkdir(parents=True)
+            (attempt_root / "openai-background-response.json").write_text(
+                json.dumps({"id": "resp_bounded", "status": "in_progress"}),
+                encoding="utf-8",
+            )
+            record["state"] = "WAITING_FOR_RESPONSE"
+            record["attempts"] = [{
+                "attempt_number": 1,
+                "state": "WAITING_FOR_RESPONSE",
+                "started_at": "2026-08-15T20:00:00+00:00",
+                "finished_at": None,
+                "response_workspace": str(attempt_root / "response" / "bre_1"),
+                "provider_metadata": None,
+                "qa": None,
+                "error": None,
+            }]
+            binding = {
+                "run_id": state["run_id"], "profile_sha256": "1" * 64,
+                "prepared_state_revision": 1, "stage": "authoring_initial",
+                "route": "bre_1:attempt-001", "request_sha256": "2" * 64,
+                "model": provider.model, "service_level": "interactive",
+                "maximum_output_tokens": provider.max_output_tokens,
+                "commitment_micro_usd": 50000,
+                "price_book_version": PRICE_BOOK_VERSION,
+            }
+            state["spend_ledger"]["actions"] = [{
+                "action_id": "paid_111111111111111111111111",
+                "state": "WAITING", "binding": binding,
+                "authorization": {
+                    "schema_version": AUTHORIZATION_SCHEMA,
+                    "action_id": "paid_111111111111111111111111",
+                    "binding": binding, "authorization_reference": "api-fixture",
+                },
+                "consumption": {"consumer_id": "worker-fixture", "state_revision": 1},
+                "provider": {"id": "resp_bounded", "kind": "response"},
+                "provider_reconciliation": {
+                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                    "provider_retrieval_attempt_count": 0,
+                    "last_attempt_at": None,
+                    "last_outcome": "provider_identity_recorded",
+                    "resume_not_before": "2026-08-15T20:00:15Z",
+                },
+                "reported": None, "reconciliation_reference_ids": [],
+            }]
+            save_state(run_json, state)
+            with tempfile.TemporaryDirectory() as extracted:
+                with zipfile.ZipFile(Path(record["source_zip"])) as archive:
+                    archive.extractall(extracted)
+                authored = authored_field_payload(Path(extracted) / "bre_1")
+            transport = ScriptedTransport([
+                completed_response(authored, response_id="resp_bounded")
+            ])
+            provider.transport = transport
+            result = run_bounded_authoring_reconciliation(
+                root / "run", provider=provider, max_attempts=3,
+                python_executable=Path(sys.executable),
+                observed_at="2026-08-15T20:01:00Z",
+            )
+            persisted = load_json(run_json)
+            self.assertEqual("PASS_QA_ACCEPTED", persisted["passes"]["bre_1"]["state"])
+            self.assertEqual("REPORTED", persisted["spend_ledger"]["actions"][0]["state"])
+            self.assertEqual(["GET"], [item["method"] for item in transport.calls])
+            self.assertNotIn(
+                "paid_111111111111111111111111",
+                result["inspection"]["provider_custody"]["action_ids"],
+            )
+
     def test_packaged_critic_contract_and_fixture_are_versioned(self) -> None:
         resources = SRC / "astrowoof_natal_authoring" / "resources"
         catalog = load_json(resources / "contracts" / "contract-catalog.json")

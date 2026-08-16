@@ -6,8 +6,10 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +18,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from astrowoof_natal_authoring.closure import (  # noqa: E402
     normalized_path,
     public_run_state,
+    reconciled_response_evidence,
     write_workspace_snapshot,
 )
 from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
@@ -25,6 +28,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     delay_seconds,
     initial_timing,
+    reconcile_provider_cycle,
     record_attempt,
 )
 
@@ -355,6 +359,221 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 root,
                 native_exclusive_access="declared",
                 observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertFalse(inspection["observation"]["snapshot_complete"])
+            self.assertFalse(
+                inspection["execution_capacity"]["checkpoint_safe_for_worker_release"]
+            )
+            self.assertEqual(
+                "retain_for_review",
+                inspection["execution_capacity"]["disposition"],
+            )
+
+    def test_early_cycle_is_strictly_nonmutating_not_due(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            before = hashes(root)
+            calls: list[tuple[str, float]] = []
+            result = reconcile_provider_cycle(
+                root,
+                observed_at="2026-08-15T20:10:00Z",
+                retrieve=lambda provider_id, timeout: calls.append(
+                    (provider_id, timeout)
+                ) or {},
+            )
+            self.assertEqual("not_due", result["outcome"])
+            self.assertEqual([], calls)
+            self.assertNotIn("result_checkpoint", result)
+            self.assertEqual(before, hashes(root))
+
+    def test_one_due_wave_polls_known_ids_only_and_detaches(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            calls: list[tuple[str, float]] = []
+
+            def retrieve(provider_id: str, timeout: float) -> dict:
+                calls.append((provider_id, timeout))
+                return {"id": provider_id, "status": "in_progress"}
+
+            result = reconcile_provider_cycle(
+                root, observed_at="2026-08-15T20:18:00Z", retrieve=retrieve
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(3, result["cycle"]["provider_retrieval_count"])
+            self.assertEqual(
+                ["resp_provider_pending_1", "resp_provider_pending_2", "resp_provider_pending_3"],
+                sorted(item[0] for item in calls),
+            )
+            self.assertTrue(all(timeout == 15.0 for _, timeout in calls))
+            persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            for action in persisted["spend_ledger"]["actions"]:
+                timing = action["provider_reconciliation"]
+                self.assertEqual(1, timing["provider_retrieval_attempt_count"])
+                self.assertEqual("pending", timing["last_outcome"])
+                self.assertEqual("2026-08-15T20:18:30Z", timing["resume_not_before"])
+            self.assertEqual(
+                "release_until_due",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+            self.assertEqual(13, result["result_checkpoint"]["operator_state_revision"])
+            self.assertTrue(result["result_checkpoint"]["result_artifact"]["logical_path"].endswith("cycle-00000013.json"))
+
+    def test_mixed_completed_pending_persists_response_and_requests_local_work(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+
+            def retrieve(provider_id: str, _timeout: float) -> dict:
+                status = "completed" if provider_id.endswith("_1") else "in_progress"
+                return {"id": provider_id, "status": status, "output": []}
+
+            result = reconcile_provider_cycle(
+                root, observed_at="2026-08-15T20:18:00Z", retrieve=retrieve
+            )
+            self.assertEqual("progressed_local", result["outcome"])
+            self.assertEqual(
+                ["paid_000000000000000000000001"],
+                result["cycle"]["completed_action_ids"],
+            )
+            self.assertTrue((
+                root / "lifecycle" / "provider-reconciliation" /
+                "paid_000000000000000000000001.response.json"
+            ).is_file())
+            cached = reconciled_response_evidence(
+                root / "passes" / "pass-1" / "attempt-001",
+                "resp_provider_pending_1",
+            )
+            self.assertEqual("completed", cached["status"])
+            self.assertEqual(
+                "continue_local_cycle",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+            action = next(
+                item for item in result["inspection"]["provider_custody"]["actions"]
+                if item["action_id"] == "paid_000000000000000000000001"
+            )
+            self.assertEqual("completed_provider_evidence", action["custody_classification"])
+            self.assertIsNone(action["resume_not_before"])
+
+    def test_cycle_limit_retrieves_only_four_of_six_due_actions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            template = state["spend_ledger"]["actions"][0]
+            for index in range(4, 7):
+                action = json.loads(json.dumps(template))
+                action["action_id"] = f"paid_{index:024d}"
+                action["provider"]["id"] = f"resp_provider_pending_{index}"
+                action["binding"]["route"] = f"kevin:authoring_initial:{index:03d}"
+                action["provider_reconciliation"]["resume_not_before"] = "2026-08-15T20:15:00Z"
+                state["spend_ledger"]["actions"].append(action)
+            (root / "run.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            write_workspace_snapshot(root)
+            calls: list[str] = []
+            result = reconcile_provider_cycle(
+                root,
+                observed_at="2026-08-15T20:18:00Z",
+                retrieve=lambda provider_id, _timeout: calls.append(provider_id) or {
+                    "id": provider_id, "status": "in_progress"
+                },
+            )
+            self.assertEqual(4, len(calls))
+            self.assertEqual(4, result["cycle"]["provider_retrieval_count"])
+            persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            untouched = [
+                item for item in persisted["spend_ledger"]["actions"]
+                if item["provider_reconciliation"]["provider_retrieval_attempt_count"] == 0
+            ]
+            self.assertEqual(2, len(untouched))
+
+    def test_transport_warning_backs_off_without_losing_provider_custody(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            before = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            result = reconcile_provider_cycle(
+                root,
+                observed_at="2026-08-15T20:18:00Z",
+                retrieve=lambda _provider_id, _timeout: (_ for _ in ()).throw(
+                    TimeoutError("fixture transport timeout")
+                ),
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(3, len(result["cycle"]["transport_warning_action_ids"]))
+            after = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            for old, new in zip(
+                before["spend_ledger"]["actions"],
+                after["spend_ledger"]["actions"],
+            ):
+                self.assertEqual(old["provider"], new["provider"])
+                self.assertEqual(old["authorization"], new["authorization"])
+                self.assertEqual(old["consumption"], new["consumption"])
+                self.assertEqual("transport_warning", new["provider_reconciliation"]["last_outcome"])
+
+    def test_provider_identity_mismatch_fails_closed_for_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            result = reconcile_provider_cycle(
+                root,
+                observed_at="2026-08-15T20:18:00Z",
+                retrieve=lambda provider_id, _timeout: {
+                    "id": provider_id + "-wrong", "status": "in_progress"
+                },
+            )
+            self.assertEqual("review_required", result["outcome"])
+            self.assertEqual(
+                "retain_for_review",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+            persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            self.assertTrue(all(
+                item["state"] == "AMBIGUOUS_PROVIDER_SUBMISSION"
+                for item in persisted["spend_ledger"]["actions"]
+            ))
+
+    def test_four_due_retrievals_run_in_one_parallel_wave(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            rendezvous = threading.Barrier(3, timeout=1.0)
+            arrivals: list[str] = []
+            guard = threading.Lock()
+
+            def retrieve(provider_id: str, _timeout: float) -> dict:
+                with guard:
+                    arrivals.append(provider_id)
+                rendezvous.wait()
+                return {"id": provider_id, "status": "in_progress"}
+
+            reconcile_provider_cycle(
+                root, observed_at="2026-08-15T20:18:00Z", retrieve=retrieve
+            )
+            self.assertEqual(3, len(arrivals))
+
+    def test_snapshot_publication_failure_never_advertises_release(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            with patch(
+                "astrowoof_natal_authoring.closure.write_workspace_snapshot",
+                side_effect=OSError("injected snapshot failure"),
+            ):
+                with self.assertRaisesRegex(OSError, "injected snapshot failure"):
+                    reconcile_provider_cycle(
+                        root,
+                        observed_at="2026-08-15T20:18:00Z",
+                        retrieve=lambda provider_id, _timeout: {
+                            "id": provider_id, "status": "in_progress"
+                        },
+                    )
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at="2026-08-15T20:18:01Z",
             )
             self.assertFalse(inspection["observation"]["snapshot_complete"])
             self.assertFalse(
