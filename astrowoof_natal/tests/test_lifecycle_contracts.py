@@ -23,6 +23,12 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     DENIAL_TERMINAL_REASONS,
     EVENT_NAMES,
     LOCAL_DEPENDENCY_KINDS,
+    EXECUTION_CAPACITY_DISPOSITIONS,
+    PROVIDER_CUSTODY_CLASSIFICATIONS,
+    PROVIDER_CUSTODY_STAGES,
+    PROVIDER_CUSTODY_STATES,
+    PROVIDER_RECONCILIATION_CYCLE_OUTCOMES,
+    PROVIDER_RECONCILIATION_POLICY,
     PROVIDERLESS_ELIGIBILITY_REASONS,
     PROVIDER_ACTION_STATES,
     RUN_TRANSITION_OUTCOMES,
@@ -50,6 +56,9 @@ FIXTURE_NAMES = (
     "batch-negative-authorization-refused.v0.1.json",
     "action-inventory.v0.1.json",
     "inspection.v0.1.json",
+    "inspection.v0.2.json",
+    "reconciliation-policy.v0.1.json",
+    "reconciliation-cycle-not-due.v0.1.json",
     "closeout-result.v0.1.json",
     "execution-event.v1.json",
 )
@@ -194,6 +203,11 @@ class TestLifecycleContracts(unittest.TestCase):
             DENIAL_TERMINAL_REASONS,
             RUN_TRANSITION_OUTCOMES,
             RUN_TRANSITION_TRIGGERS,
+            EXECUTION_CAPACITY_DISPOSITIONS,
+            PROVIDER_CUSTODY_CLASSIFICATIONS,
+            PROVIDER_CUSTODY_STAGES,
+            PROVIDER_CUSTODY_STATES,
+            PROVIDER_RECONCILIATION_CYCLE_OUTCOMES,
         )
         self.assertTrue(all(len(items) == len(set(items)) for items in vocabularies))
         defs = self.schema["$defs"]
@@ -204,6 +218,58 @@ class TestLifecycleContracts(unittest.TestCase):
         self.assertEqual(list(DENIAL_TERMINAL_REASONS), transition["terminal_reason"]["enum"])
         self.assertEqual(list(RUN_TRANSITION_OUTCOMES), transition["outcome"]["enum"])
         self.assertEqual(list(RUN_TRANSITION_TRIGGERS), transition["trigger"]["enum"])
+
+    def test_reconciliation_policy_is_one_bounded_retrieval_wave(self) -> None:
+        fixture = self.fixtures["reconciliation-policy.v0.1.json"]
+        self.assertEqual(PROVIDER_RECONCILIATION_POLICY, fixture)
+        self.assertEqual(4, fixture["maximum_due_actions_per_cycle"])
+        self.assertEqual(
+            fixture["maximum_due_actions_per_cycle"],
+            fixture["maximum_parallel_retrievals"],
+        )
+        self.assertLess(
+            fixture["provider_retrieval_timeout_seconds"],
+            fixture["maximum_cycle_wall_clock_seconds"],
+        )
+        delays = [min(15 * (2 ** attempt), 300) for attempt in range(6)]
+        self.assertEqual([15, 30, 60, 120, 240, 300], delays)
+
+    def test_inspection_v02_capacity_and_custody_are_strict(self) -> None:
+        inspection = self.fixtures["inspection.v0.2.json"]
+        custody_action = inspection["provider_custody"]["actions"][0]
+        self.assertEqual("release_until_due", inspection["execution_capacity"]["disposition"])
+        self.assertTrue(inspection["execution_capacity"]["checkpoint_safe_for_worker_release"])
+        self.assertEqual("authoring_initial", custody_action["stage"])
+        self.assertEqual(
+            "retain_consumer_authority",
+            custody_action["custody_classification"],
+        )
+        malformed = copy.deepcopy(inspection)
+        malformed["provider_custody"]["actions"][0]["stage"] = "future_stage"
+        with self.assertRaises(AssertionError):
+            validate(malformed, self.schema, self.schema)
+        historical = copy.deepcopy(self.fixtures["inspection.v0.1.json"])
+        historical["execution_capacity"] = inspection["execution_capacity"]
+        with self.assertRaises(AssertionError):
+            validate(historical, self.schema, self.schema)
+
+    def test_not_due_is_strictly_nonmutating_without_checkpoint(self) -> None:
+        result = self.fixtures["reconciliation-cycle-not-due.v0.1.json"]
+        self.assertEqual("not_due", result["outcome"])
+        self.assertEqual(0, result["cycle"]["provider_retrieval_count"])
+        self.assertNotIn("result_checkpoint", result)
+        malformed = copy.deepcopy(result)
+        malformed["result_checkpoint"] = {
+            "operator_state_revision": 13,
+            "snapshot_sha256": "4" * 64,
+            "result_artifact": {
+                "logical_path": "lifecycle/reconciliation-cycle.json",
+                "bytes": 128,
+                "sha256": "5" * 64,
+            },
+        }
+        with self.assertRaises(AssertionError):
+            validate(malformed, self.schema, self.schema)
 
     def test_v02_single_result_requires_exact_run_transition(self) -> None:
         result = self.fixtures["negative-authorization-result.v0.2.json"]

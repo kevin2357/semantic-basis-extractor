@@ -88,3 +88,69 @@ OK
 
 Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
 0.4.2.
+
+## Slice 1: proposed public contract
+
+Committed Slice 0 baseline:
+
+```text
+aa65f77 test: reproduce provider pending capacity seam
+```
+
+Proposed contract identities:
+
+```text
+astrowoof.authoring_lifecycle_inspection.v0.2
+astrowoof.provider_reconciliation_policy.v0.1
+astrowoof.provider_reconciliation_cycle_result.v0.1
+```
+
+The contract freezes capacity/custody vocabulary, checkpoint-release safety,
+durable lower-bound timing, early nonmutating `not_due`, bounded cycle/transport
+limits, exact-interactive stage coverage, secondary-route fail-closed behavior,
+events, compatibility, and API ownership. Values remain pending API review; no
+runtime emits them yet. Lifecycle v0.1 remains the current runtime output during
+this gate.
+
+Provider operations: 0. Paid spend: `$0`. API key used: no.
+
+API review accepted with one required timing correction:
+
+```text
+maximum_due_actions_per_cycle: 4
+maximum_parallel_retrievals: 4
+provider_retrieval_timeout_seconds: 15
+maximum_cycle_wall_clock_seconds: 20
+excess due action deferral: cycle finish + 15 seconds, no provider-attempt increment
+custody projection stage: required immutable context
+delivery with nonblocking critic pending: publishable + release_until_due
+```
+
+Packaged contract resources added:
+
+```text
+inspection v0.2 strict schema and sanitized fixture
+reconciliation policy v0.1 strict schema and sanitized fixture
+reconciliation cycle result v0.1 strict applied/not_due variants
+not_due sanitized fixture with no result_checkpoint
+contract catalog: v0.2 current; v0.1 historical
+```
+
+Focused command:
+
+```text
+python -m unittest astrowoof_natal.tests.test_lifecycle_contracts
+Ran 19 tests in 0.089s
+OK
+```
+
+Complete suite:
+
+```text
+python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"
+Ran 316 tests in 156.752s
+OK
+```
+
+Provider operations: 0. Paid spend: `$0`. API key used: no. Runtime release remains
+0.4.2 and still emits lifecycle inspection v0.1 pending Slice 2.

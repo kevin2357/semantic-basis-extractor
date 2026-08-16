@@ -40,6 +40,78 @@ OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
 LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.1"
+LIFECYCLE_INSPECTION_SCHEMA_V0_2 = (
+    "astrowoof.authoring_lifecycle_inspection.v0.2"
+)
+PROVIDER_RECONCILIATION_POLICY_SCHEMA = (
+    "astrowoof.provider_reconciliation_policy.v0.1"
+)
+PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA = (
+    "astrowoof.provider_reconciliation_cycle_result.v0.1"
+)
+PROVIDER_RECONCILIATION_POLICY = {
+    "schema_version": PROVIDER_RECONCILIATION_POLICY_SCHEMA,
+    "initial_delay_seconds": 15,
+    "backoff_multiplier": 2,
+    "maximum_delay_seconds": 300,
+    "maximum_cycle_wall_clock_seconds": 20,
+    "provider_retrieval_timeout_seconds": 15,
+    "maximum_due_actions_per_cycle": 4,
+    "maximum_parallel_retrievals": 4,
+    "jitter": "none",
+}
+EXECUTION_CAPACITY_DISPOSITIONS = (
+    "continue_local_cycle",
+    "release_until_due",
+    "await_external_authority",
+    "retain_for_review",
+    "terminal",
+    "unsupported_retain_capacity",
+)
+EXECUTION_CAPACITY_REASON_CODES = (
+    "local_work_ready",
+    "known_provider_work_pending",
+    "provider_reconciliation_not_due",
+    "spend_authorization_required",
+    "terminal_native_outcome",
+    "snapshot_invalid",
+    "writer_or_lease_not_exclusive",
+    "provider_submission_ambiguous",
+    "provider_identity_conflict",
+    "native_review_required",
+    "route_or_stage_not_supported",
+)
+PROVIDER_CUSTODY_STATES = (
+    "none",
+    "known_operations_pending",
+    "completed_evidence_pending_local_work",
+    "ambiguous_or_conflicting",
+    "unsupported",
+    "terminal_no_custody",
+)
+PROVIDER_CUSTODY_CLASSIFICATIONS = (
+    "retain_consumer_authority",
+    "completed_provider_evidence",
+    "no_provider_custody",
+    "ambiguous_review",
+    "unsupported",
+)
+PROVIDER_CUSTODY_STAGES = (
+    "authoring_initial",
+    "creative_retry",
+    "polish",
+    "qualitative_critic",
+    "qualitative_candidate",
+)
+PROVIDER_RECONCILIATION_CYCLE_OUTCOMES = (
+    "not_due",
+    "detached_provider_pending",
+    "progressed_local",
+    "awaiting_external_authority",
+    "terminal",
+    "review_required",
+    "unsupported",
+)
 CLOSEOUT_RESULT_SCHEMA = "astrowoof.authoring_closeout_result.v0.1"
 EXECUTION_EVENT_SCHEMA = "sbe.execution_event.v1"
 

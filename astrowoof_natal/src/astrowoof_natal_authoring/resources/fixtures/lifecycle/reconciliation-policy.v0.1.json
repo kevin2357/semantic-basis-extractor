@@ -1,0 +1,11 @@
+{
+  "schema_version": "astrowoof.provider_reconciliation_policy.v0.1",
+  "initial_delay_seconds": 15,
+  "backoff_multiplier": 2,
+  "maximum_delay_seconds": 300,
+  "maximum_cycle_wall_clock_seconds": 20,
+  "provider_retrieval_timeout_seconds": 15,
+  "maximum_due_actions_per_cycle": 4,
+  "maximum_parallel_retrievals": 4,
+  "jitter": "none"
+}

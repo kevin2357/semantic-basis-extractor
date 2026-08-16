@@ -47,3 +47,37 @@
   tests in 160.785 seconds.
 - Slice 0 is complete and paused for review. No production contract, polling
   behavior, provider operation, build, version bump, release, or tag changed.
+- Kevin approved Slice 0. Committed and pushed the baseline as `aa65f77`; Slice 1
+  began.
+- Drafted lifecycle inspection v0.2 with orthogonal execution-capacity and
+  provider-custody projections, plus separately versioned frozen reconciliation
+  policy and bounded-cycle result contracts.
+- Preserved lifecycle v0.1 and existing quiescence semantics. Capacity release
+  requires an allowed disposition plus explicit checkpoint safety; absence of v0.2
+  always means retain/unknown.
+- Proposed durable lower-bound timing, strict nonmutating early `not_due`, bounded
+  cycle/HTTP ceilings, native custody-retention wording, exact-interactive
+  all-stage coverage, and parity-or-fail-closed secondary-route classification.
+- Slice 1 is paused at its required Kevin/API-agent review gate. No packaged schema,
+  fixture, runtime polling change, provider operation, build, release, or tag has
+  been introduced.
+- The API agent conditionally approved the contract and identified an internal
+  timing inconsistency. Reduced due actions per cycle from eight to four so one
+  four-worker retrieval wave fits within the 20-second cycle and 15-second HTTP
+  timeout.
+- Accepted durable 15-second deferral for excess due actions without incrementing
+  provider-attempt count, immutable stage context, the reviewed backoff sequence,
+  strict nonmutating `not_due`, runnable-local-work precedence, v0.2-only capacity
+  release, and exact-stage/secondary-route boundaries.
+- Added delivery precedence for nonblocking critic/candidate custody: reader
+  delivery remains publishable while provider custody and consumer authority are
+  retained through bounded reconciliation.
+- Published the accepted inspection v0.2, policy v0.1, and cycle-result v0.1 as
+  strict packaged schemas with sanitized fixtures. Preserved v0.1 inspection as
+  historical and as the unchanged current runtime emission until Slice 2.
+- Focused lifecycle-contract validation passed all 19 tests, including frozen
+  one-wave timing, strict capacity/custody vocabulary, immutable stage, v0.1/v0.2
+  separation, and mutation-free `not_due`.
+- The complete repository suite passed all 316 tests in 156.752 seconds. Slice 1 is
+  paused for Kevin's gate review; no provider operation, runtime polling change,
+  build, version bump, release, or tag occurred.
