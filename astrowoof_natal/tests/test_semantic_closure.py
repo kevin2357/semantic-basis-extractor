@@ -2852,6 +2852,10 @@ class TestSemanticClosure(SemanticClosureFixture):
                 inspection["execution_capacity"]["disposition"],
             )
             self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+            custody_action = inspection["provider_custody"]["actions"][0]
+            self.assertEqual("exact_natal", custody_action["route_family"])
+            self.assertEqual("batch", custody_action["provider_operation_kind"])
+            self.assertEqual("batch-round-001", custody_action["native_operation_ref"])
             self.assertEqual(
                 [persisted["spend_ledger"]["actions"][0]["action_id"]],
                 inspection["provider_custody"]["action_ids"],

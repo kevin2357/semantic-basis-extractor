@@ -14,14 +14,87 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .lifecycle_contracts import (
+    PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
+    PROVIDER_RECONCILIATION_POLICY_SCHEMA_V0_1,
 )
 
 
 RECONCILIABLE_PROVIDER_STATES = {
     "PROVIDER_ID_RECORDED", "WAITING",
 }
+EXACT_RUN_CONTRACT = "astrowoof.semantic_closure_run.v0.9"
+BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
+
+
+def native_provider_route_identity(
+    state: dict[str, Any], action: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return strict native route/mechanism identity and adapter classification."""
+    route_contract = state.get("route_contract")
+    if route_contract == BOUNDED_RUN_CONTRACT and state.get("route") == "bounded_natal.v1":
+        route_family = "bounded_natal"
+        contract = BOUNDED_RUN_CONTRACT
+    elif route_contract is None and state.get("schema_version") == EXACT_RUN_CONTRACT:
+        route_family = "exact_natal"
+        contract = EXACT_RUN_CONTRACT
+    else:
+        return {
+            "route_family": None, "route_contract": str(route_contract or ""),
+            "provider_operation_kind": None, "native_operation_ref": None,
+            "valid": False, "adapter": "unsupported",
+            "reason_code": "route_or_stage_not_supported",
+        }
+    if action is None:
+        return {
+            "route_family": route_family, "route_contract": contract,
+            "provider_operation_kind": None, "native_operation_ref": None,
+            "valid": True, "adapter": None, "reason_code": None,
+        }
+    binding = action.get("binding") or {}
+    provider = action.get("provider") or {}
+    kind = str(provider.get("kind") or "")
+    service = str(binding.get("service_level") or "")
+    stage = str(binding.get("stage") or "")
+    native_ref = str(binding.get("route") or "")
+    stages = {
+        "authoring_initial", "creative_retry", "polish",
+        "qualitative_critic", "qualitative_candidate",
+    }
+    valid = bool(kind in {"response", "batch"} and stage in stages and native_ref)
+    adapter = "unsupported"
+    if route_family == "exact_natal" and kind == "response" and service == "interactive":
+        adapter = "exact_interactive"
+    elif (
+        route_family == "exact_natal" and kind == "batch" and service == "batch"
+        and stage in {"authoring_initial", "creative_retry"}
+    ):
+        adapter = "exact_batch_deferred"
+        rounds = (state.get("batch_service") or {}).get("rounds") or []
+        matches = [
+            item for item in rounds
+            if f"batch-round-{int(item.get('round_number') or 0):03d}" == native_ref
+            and item.get("batch_id") == provider.get("id")
+        ]
+        valid = bool(valid and len(matches) == 1)
+    elif (
+        route_family == "bounded_natal" and kind == "response"
+        and service == "interactive" and native_ref.startswith("bounded_natal.v1:")
+    ):
+        adapter = "bounded_interactive_deferred"
+    elif route_family == "bounded_natal" and (kind == "batch" or service == "batch"):
+        adapter = "bounded_batch_unsupported"
+        valid = False
+    else:
+        valid = False
+    return {
+        "route_family": route_family, "route_contract": contract,
+        "provider_operation_kind": kind or None,
+        "native_operation_ref": native_ref or None,
+        "valid": valid, "adapter": adapter,
+        "reason_code": None if valid else "route_or_stage_not_supported",
+    }
 
 
 class ProviderRetrievalIdentityMismatch(ValueError):
@@ -49,10 +122,9 @@ def delay_seconds(attempt_count: int) -> int:
         raise ValueError("Reconciliation attempt count must be an integer")
     if attempt_count < 0:
         raise ValueError("Reconciliation attempt count cannot be negative")
-    initial = PROVIDER_RECONCILIATION_POLICY["initial_delay_seconds"]
-    multiplier = PROVIDER_RECONCILIATION_POLICY["backoff_multiplier"]
-    maximum = PROVIDER_RECONCILIATION_POLICY["maximum_delay_seconds"]
-    return min(initial * (multiplier ** attempt_count), maximum)
+    policy = PROVIDER_RECONCILIATION_POLICY["mechanisms"]["response"]
+    delays = policy["delays_seconds"]
+    return delays[min(attempt_count, len(delays) - 1)]
 
 
 def initial_timing(*, recorded_at: str) -> dict[str, Any]:
@@ -73,7 +145,10 @@ def record_attempt(
 ) -> dict[str, Any]:
     if outcome not in {"pending", "completed", "transport_warning", "provider_failed"}:
         raise ValueError(f"Unsupported reconciliation outcome: {outcome}")
-    if timing.get("policy_version") != PROVIDER_RECONCILIATION_POLICY_SCHEMA:
+    if timing.get("policy_version") not in {
+        PROVIDER_RECONCILIATION_POLICY_SCHEMA,
+        PROVIDER_RECONCILIATION_POLICY_SCHEMA_V0_1,
+    }:
         raise ValueError("Unsupported reconciliation timing policy")
     attempted = parse_utc_instant(attempted_at)
     previous = timing.get("last_attempt_at")
@@ -107,7 +182,10 @@ def validated_timing(action: dict[str, Any]) -> dict[str, Any] | None:
     }
     if set(timing) != required:
         return None
-    if timing["policy_version"] != PROVIDER_RECONCILIATION_POLICY_SCHEMA:
+    if timing["policy_version"] not in {
+        PROVIDER_RECONCILIATION_POLICY_SCHEMA,
+        PROVIDER_RECONCILIATION_POLICY_SCHEMA_V0_1,
+    }:
         return None
     count = timing["provider_retrieval_attempt_count"]
     if not isinstance(count, int) or isinstance(count, bool) or count < 0:
@@ -188,7 +266,7 @@ def reconcile_provider_cycle(
         capacity = before["execution_capacity"]
         if capacity["disposition"] == "release_until_due":
             return {
-                "schema_version": "astrowoof.provider_reconciliation_cycle_result.v0.1",
+                "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
                 "run_id": state["run_id"],
                 "outcome": "not_due",
                 "decision_basis": before["observation"],
@@ -203,13 +281,14 @@ def reconcile_provider_cycle(
                     "transport_warning_action_ids": [],
                 },
                 "inspection": before,
+                "provider_operations": [],
             }
         if capacity["disposition"] in {
             "unsupported_retain_capacity", "retain_for_review",
             "await_external_authority", "terminal",
         }:
             return {
-                "schema_version": "astrowoof.provider_reconciliation_cycle_result.v0.1",
+                "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
                 "run_id": state["run_id"],
                 "outcome": {
                     "unsupported_retain_capacity": "unsupported",
@@ -227,6 +306,7 @@ def reconcile_provider_cycle(
                     "transport_warning_action_ids": [],
                 },
                 "inspection": before,
+                "provider_operations": [],
                 "result_checkpoint": {
                     "operator_state_revision": before["observation"]["operator_state_revision"],
                     "snapshot_sha256": before["observation"]["snapshot_sha256"],
@@ -253,7 +333,8 @@ def reconcile_provider_cycle(
             item["provider_reconciliation"]["resume_not_before"],
             item["action_id"],
         ))
-        actions = actions[:PROVIDER_RECONCILIATION_POLICY["maximum_due_actions_per_cycle"]]
+        response_policy = PROVIDER_RECONCILIATION_POLICY["mechanisms"]["response"]
+        actions = actions[:response_policy["maximum_due_actions_per_cycle"]]
         if not actions:
             raise ValueError(
                 "No due known interactive provider operation is eligible for retrieval"
@@ -265,9 +346,7 @@ def reconcile_provider_cycle(
             try:
                 response = retrieve(
                     provider_id,
-                    float(PROVIDER_RECONCILIATION_POLICY[
-                        "provider_retrieval_timeout_seconds"
-                    ]),
+                    float(response_policy["provider_request_timeout_seconds"]),
                 )
                 if not isinstance(response, dict) or response.get("id") != provider_id:
                     raise ProviderRetrievalIdentityMismatch(
@@ -278,7 +357,7 @@ def reconcile_provider_cycle(
                 return action_id, exc
 
         with concurrent.futures.ThreadPoolExecutor(
-            max_workers=PROVIDER_RECONCILIATION_POLICY["maximum_parallel_retrievals"],
+            max_workers=response_policy["maximum_parallel_requests"],
             thread_name_prefix="astrowoof-retrieve",
         ) as executor:
             results = list(executor.map(get, actions))
@@ -287,6 +366,7 @@ def reconcile_provider_cycle(
         completed: list[str] = []
         warnings: list[str] = []
         identity_conflicts: list[str] = []
+        operation_summaries: list[dict[str, Any]] = []
         by_id = {item["action_id"]: item for item in actions}
         evidence_root = run_dir / "lifecycle" / "provider-reconciliation"
         for action_id, value in results:
@@ -300,24 +380,62 @@ def reconcile_provider_cycle(
                     action["ambiguity"] = {
                         "reason": "provider retrieval identity mismatch"
                     }
+                    retrieval_outcome = "identity_conflict"
+                    cost_disposition = "not_applicable_provider_pending"
+                    operation_summaries.append({
+                        "action_id": action_id, "route_family": "exact_natal",
+                        "provider_operation_kind": "response",
+                        "provider_operation_id": action["provider"]["id"],
+                        "retrieval_outcome": retrieval_outcome,
+                        "cost_disposition": cost_disposition,
+                        "member_count": None, "ingested_member_count": None,
+                        "failed_member_count": None,
+                    })
                     continue
                 warnings.append(action_id)
                 record_attempt(
                     timing, attempted_at=instant, outcome="transport_warning"
                 )
+                operation_summaries.append({
+                    "action_id": action_id, "route_family": "exact_natal",
+                    "provider_operation_kind": "response",
+                    "provider_operation_id": action["provider"]["id"],
+                    "retrieval_outcome": "transport_warning",
+                    "cost_disposition": "not_applicable_provider_pending",
+                    "member_count": None, "ingested_member_count": None,
+                    "failed_member_count": None,
+                })
                 continue
             status = value.get("status")
             if status in {"queued", "in_progress"}:
                 record_attempt(timing, attempted_at=instant, outcome="pending")
+                retrieval_outcome = "pending"
+                cost_disposition = "not_applicable_provider_pending"
             elif status == "completed":
                 record_attempt(timing, attempted_at=instant, outcome="completed")
                 completed.append(action_id)
                 write_json_atomic(evidence_root / f"{action_id}.response.json", value)
+                retrieval_outcome = "completed"
+                cost_disposition = (
+                    "provider_usage_reported" if isinstance(value.get("usage"), dict)
+                    else "provider_usage_unavailable_billing_reconciliation_pending"
+                )
             else:
                 warnings.append(action_id)
                 record_attempt(
                     timing, attempted_at=instant, outcome="transport_warning"
                 )
+                retrieval_outcome = "transport_warning"
+                cost_disposition = "not_applicable_provider_pending"
+            operation_summaries.append({
+                "action_id": action_id, "route_family": "exact_natal",
+                "provider_operation_kind": "response",
+                "provider_operation_id": action["provider"]["id"],
+                "retrieval_outcome": retrieval_outcome,
+                "cost_disposition": cost_disposition,
+                "member_count": None, "ingested_member_count": None,
+                "failed_member_count": None,
+            })
 
         persist_state(run_dir / "run.json", state)
         cycle = {
@@ -339,6 +457,7 @@ def reconcile_provider_cycle(
             "run_id": state["run_id"],
             "decision_basis": before["observation"],
             "cycle": cycle,
+            "provider_operations": operation_summaries,
         })
         write_workspace_snapshot(run_dir)
         after = inspect_lifecycle(
@@ -347,7 +466,7 @@ def reconcile_provider_cycle(
             observed_at=instant,
         )
         return {
-            "schema_version": "astrowoof.provider_reconciliation_cycle_result.v0.1",
+            "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
             "run_id": state["run_id"],
             "outcome": (
                 "review_required" if identity_conflicts
@@ -357,6 +476,7 @@ def reconcile_provider_cycle(
             "decision_basis": before["observation"],
             "cycle": cycle,
             "inspection": after,
+            "provider_operations": operation_summaries,
             "result_checkpoint": {
                 "operator_state_revision": state["state_revision"],
                 "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
@@ -495,7 +615,9 @@ def run_bounded_authoring_reconciliation(
             python_executable=python_executable,
             run_json=run_dir / "run.json",
             max_workers=min(
-                PROVIDER_RECONCILIATION_POLICY["maximum_parallel_retrievals"],
+                PROVIDER_RECONCILIATION_POLICY["mechanisms"]["response"][
+                    "maximum_parallel_requests"
+                ],
                 max(len(pass_ids), 1),
             ),
             spend_controller=controller,

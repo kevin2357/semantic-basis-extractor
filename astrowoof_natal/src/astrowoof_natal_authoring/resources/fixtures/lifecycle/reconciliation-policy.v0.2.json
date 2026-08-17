@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.provider_reconciliation_policy.v0.2",
+  "mechanisms": {
+    "response": {
+      "delays_seconds": [15, 30, 60, 120, 240, 300],
+      "maximum_delay_seconds": 300,
+      "provider_io_wall_clock_limit_seconds": 20,
+      "provider_request_timeout_seconds": 15,
+      "maximum_due_actions_per_cycle": 4,
+      "maximum_parallel_requests": 4
+    },
+    "batch": {
+      "delays_seconds": [60, 120, 300, 600, 900, 1800],
+      "maximum_delay_seconds": 1800,
+      "provider_io_wall_clock_limit_seconds": 40,
+      "provider_request_timeout_seconds": 15,
+      "maximum_due_actions_per_cycle": 1,
+      "maximum_parallel_requests": 2
+    }
+  },
+  "jitter": "none"
+}

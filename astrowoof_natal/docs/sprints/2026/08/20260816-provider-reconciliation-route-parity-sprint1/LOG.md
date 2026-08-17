@@ -86,3 +86,25 @@
   durable, which retains consumer authority without further polling.
 - Slice 1 is approved and ready to commit. Provider operations remain 0 and paid
   spend remains `$0`.
+- Committed and pushed the approved Slice 1 contract as `9488c92`; Slice 2 began.
+- Promoted lifecycle inspection to strict v0.3 native-route, per-action mechanism/
+  native-operation, and separate consumer-authority evidence. Historical
+  inspection v0.1/v0.2 remains packaged.
+- Added policy v0.2 with the approved Response and Batch schedules and I/O limits,
+  plus cycle-result v0.2 provider-operation and cost-disposition summaries.
+- Added one native route classifier for exact interactive, exact Batch, bounded
+  interactive, bounded Batch, and contradictory identity. Exact Batch round/ID
+  and bounded contract/route bindings are validated before adapter selection.
+- Kept exact Batch and bounded interactive explicitly deferred in capacity
+  projection until their implementation slices. Bounded Batch remains invalid.
+  This fixes the Slice 0 bounded accidental-inheritance defect without claiming
+  unimplemented parity.
+- Added independent consumer-authority projection. Provider retrieval custody can
+  end while billing-reconciliation-pending or ambiguity evidence still requires
+  API authority retention; unavailable provider usage is never represented as
+  reported zero usage.
+- Focused contract, route, lifecycle, consumer, release-catalog, bounded, and Batch
+  baseline coverage passed all 77 tests in 22.831 seconds.
+- The complete repository suite passed all 343 tests in 133.889 seconds.
+- Slice 2 is complete and paused for review. Provider operations remain 0 and paid
+  spend remains `$0`; no build, version bump, release, or tag occurred.

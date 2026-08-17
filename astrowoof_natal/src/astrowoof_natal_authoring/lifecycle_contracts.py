@@ -39,27 +39,62 @@ BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
-LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.2"
+LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.3"
+LIFECYCLE_INSPECTION_SCHEMA_V0_2 = (
+    "astrowoof.authoring_lifecycle_inspection.v0.2"
+)
 LIFECYCLE_INSPECTION_SCHEMA_HISTORICAL = (
     "astrowoof.authoring_lifecycle_inspection.v0.1"
 )
 PROVIDER_RECONCILIATION_POLICY_SCHEMA = (
+    "astrowoof.provider_reconciliation_policy.v0.2"
+)
+PROVIDER_RECONCILIATION_POLICY_SCHEMA_V0_1 = (
     "astrowoof.provider_reconciliation_policy.v0.1"
 )
 PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA = (
+    "astrowoof.provider_reconciliation_cycle_result.v0.2"
+)
+PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA_V0_1 = (
     "astrowoof.provider_reconciliation_cycle_result.v0.1"
 )
 PROVIDER_RECONCILIATION_POLICY = {
     "schema_version": PROVIDER_RECONCILIATION_POLICY_SCHEMA,
-    "initial_delay_seconds": 15,
-    "backoff_multiplier": 2,
-    "maximum_delay_seconds": 300,
-    "maximum_cycle_wall_clock_seconds": 20,
-    "provider_retrieval_timeout_seconds": 15,
-    "maximum_due_actions_per_cycle": 4,
-    "maximum_parallel_retrievals": 4,
+    "mechanisms": {
+        "response": {
+            "delays_seconds": [15, 30, 60, 120, 240, 300],
+            "maximum_delay_seconds": 300,
+            "provider_io_wall_clock_limit_seconds": 20,
+            "provider_request_timeout_seconds": 15,
+            "maximum_due_actions_per_cycle": 4,
+            "maximum_parallel_requests": 4,
+        },
+        "batch": {
+            "delays_seconds": [60, 120, 300, 600, 900, 1800],
+            "maximum_delay_seconds": 1800,
+            "provider_io_wall_clock_limit_seconds": 40,
+            "provider_request_timeout_seconds": 15,
+            "maximum_due_actions_per_cycle": 1,
+            "maximum_parallel_requests": 2,
+        },
+    },
     "jitter": "none",
 }
+PROVIDER_ROUTE_FAMILIES = ("exact_natal", "bounded_natal")
+PROVIDER_OPERATION_KINDS = ("response", "batch")
+COST_DISPOSITIONS = (
+    "provider_usage_reported",
+    "provider_usage_unavailable_billing_reconciliation_pending",
+    "no_provider_work_consumed",
+    "not_applicable_provider_pending",
+)
+CONSUMER_AUTHORITY_STATES = ("none", "retain")
+CONSUMER_AUTHORITY_RETENTION_REASONS = (
+    "provider_operation_pending",
+    "provider_output_integrity_review",
+    "provider_submission_ambiguous",
+    "billing_reconciliation_pending",
+)
 EXECUTION_CAPACITY_DISPOSITIONS = (
     "continue_local_cycle",
     "release_until_due",

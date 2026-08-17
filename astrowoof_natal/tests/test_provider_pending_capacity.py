@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import copy
 import json
 import os
 import subprocess
@@ -29,6 +30,7 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     delay_seconds,
     initial_timing,
+    native_provider_route_identity,
     reconcile_provider_cycle,
     record_attempt,
     run_bounded_authoring_reconciliation,
@@ -160,7 +162,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 inspection["local_dependencies"],
             )
             self.assertEqual(
-                "astrowoof.authoring_lifecycle_inspection.v0.2",
+                "astrowoof.authoring_lifecycle_inspection.v0.3",
                 inspection["schema_version"],
             )
             self.assertEqual(
@@ -170,7 +172,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                     "checkpoint_safe_for_worker_release": True,
                     "resume_not_before": "2026-08-15T20:15:00Z",
                     "reason_code": "known_provider_work_pending",
-                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.2",
                 },
                 inspection["execution_capacity"],
             )
@@ -304,6 +306,43 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertEqual("unsupported", inspection["provider_custody"]["state"])
             self.assertEqual(3, inspection["provider_custody"]["reservation_retention_action_count"])
 
+    def test_terminal_usage_unavailable_retains_authority_without_polling(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            for action in state["spend_ledger"]["actions"]:
+                action["state"] = "REPORTED"
+                action["reported"] = {
+                    "cost_disposition": (
+                        "provider_usage_unavailable_billing_reconciliation_pending"
+                    )
+                }
+                action.pop("provider_reconciliation", None)
+            state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            inspection = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T20:10:00Z",
+            )
+            self.assertEqual([], inspection["provider_custody"]["action_ids"])
+            self.assertEqual("retain", inspection["consumer_authority"]["state"])
+            self.assertEqual(3, inspection["consumer_authority"]["action_count"])
+            self.assertTrue(all(
+                item["retention_reason"] == "billing_reconciliation_pending"
+                and item["cost_disposition"] == (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                )
+                for item in inspection["consumer_authority"]["actions"]
+            ))
+            self.assertNotEqual(
+                "release_until_due",
+                inspection["execution_capacity"]["disposition"],
+            )
+
     def test_batch_timing_cannot_accidentally_claim_interactive_parity(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
@@ -324,6 +363,38 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 inspection["execution_capacity"]["disposition"],
             )
             self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+
+    def test_route_dispatch_identity_is_closed_and_fail_closed(self) -> None:
+        exact = {
+            "schema_version": "astrowoof.semantic_closure_run.v0.9",
+        }
+        response = {
+            "binding": {
+                "stage": "authoring_initial", "service_level": "interactive",
+                "route": "kevin:authoring_initial:001",
+            },
+            "provider": {"kind": "response", "id": "resp_exact"},
+        }
+        identity = native_provider_route_identity(exact, response)
+        self.assertTrue(identity["valid"])
+        self.assertEqual("exact_interactive", identity["adapter"])
+        bounded = {
+            "schema_version": "astrowoof.semantic_closure_run.v0.9",
+            "route_contract": "astrowoof.bounded_natal.authoring_run.v1",
+            "route": "bounded_natal.v1",
+        }
+        bounded_response = copy.deepcopy(response)
+        bounded_response["binding"]["route"] = "bounded_natal.v1:authoring_initial:1"
+        identity = native_provider_route_identity(bounded, bounded_response)
+        self.assertTrue(identity["valid"])
+        self.assertEqual("bounded_interactive_deferred", identity["adapter"])
+        bounded_response["binding"]["service_level"] = "batch"
+        bounded_response["provider"]["kind"] = "batch"
+        identity = native_provider_route_identity(bounded, bounded_response)
+        self.assertFalse(identity["valid"])
+        self.assertEqual("bounded_batch_unsupported", identity["adapter"])
+        unknown = native_provider_route_identity({"schema_version": "future.v9"})
+        self.assertFalse(unknown["valid"])
 
     def test_exact_interactive_stage_support_and_disabled_optional_guard(self) -> None:
         optional = {"polish", "qualitative_critic", "qualitative_candidate"}

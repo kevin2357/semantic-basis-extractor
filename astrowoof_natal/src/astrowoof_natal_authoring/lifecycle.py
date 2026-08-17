@@ -37,12 +37,17 @@ from .lifecycle_contracts import (
     NEGATIVE_AUTHORIZATION_RESULT_SCHEMA,
     NEGATIVE_AUTHORIZATION_RESULT_SCHEMA_V0_2,
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
+    PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     action_presentation_key,
     batch_negative_authorization_request_sha256,
     observation_transition_errors,
 )
 from .execution_events import ExecutionEventEmitter
-from .reconciliation import parse_utc_instant, validated_timing
+from .reconciliation import (
+    native_provider_route_identity,
+    parse_utc_instant,
+    validated_timing,
+)
 
 
 def _utc_now() -> str:
@@ -550,7 +555,7 @@ def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
 def _capacity_and_custody(
     state: dict[str, Any], observation: dict[str, Any],
     dependencies: list[dict[str, Any]], *, observed_at: str,
-) -> tuple[dict[str, Any], dict[str, Any]]:
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     """Project orthogonal local capacity and provider custody from durable bytes."""
     actions = list((state.get("spend_ledger") or {}).get("actions") or [])
     provider_bound = [
@@ -560,11 +565,17 @@ def _capacity_and_custody(
     ]
     projected: list[dict[str, Any]] = []
     unsupported = False
+    run_identity = native_provider_route_identity(state)
+    route_family = run_identity.get("route_family") or "exact_natal"
+    route_contract = str(run_identity.get("route_contract") or "")
     for action in provider_bound:
         binding = action.get("binding") or {}
+        provider = action.get("provider") or {}
+        identity = native_provider_route_identity(state, action)
+        operation_kind = str(identity.get("provider_operation_kind") or "")
+        native_operation_ref = str(identity.get("native_operation_ref") or "")
         exact_interactive_supported = bool(
-            state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
-            and binding.get("service_level") == "interactive"
+            identity.get("valid") and identity.get("adapter") == "exact_interactive"
             and binding.get("stage") in {
                 "authoring_initial", "creative_retry", "polish",
                 "qualitative_critic", "qualitative_candidate",
@@ -585,7 +596,12 @@ def _capacity_and_custody(
         if timing is None:
             unsupported = True
             resume_not_before = None
-            reason_code = "reconciliation_timing_missing"
+            reason_code = (
+                "route_or_stage_not_supported"
+                if not identity.get("valid")
+                or identity.get("adapter") != "exact_interactive"
+                else "reconciliation_timing_missing"
+            )
         else:
             resume_not_before = timing["resume_not_before"]
             reason_code = (
@@ -595,8 +611,12 @@ def _capacity_and_custody(
             )
         projected.append({
             "action_id": str(action.get("action_id") or ""),
+            "route_family": str(identity.get("route_family") or route_family),
             "stage": str((action.get("binding") or {}).get("stage") or ""),
+            "service_level": str(binding.get("service_level") or ""),
+            "provider_operation_kind": operation_kind,
             "provider_operation_id": str((action.get("provider") or {}).get("id") or ""),
+            "native_operation_ref": native_operation_ref,
             "custody_classification": (
                 "unsupported" if timing is None
                 else "completed_provider_evidence"
@@ -637,6 +657,44 @@ def _capacity_and_custody(
         "next_due_action_ids": next_ids,
         "earliest_resume_not_before": earliest,
         "actions": projected,
+    }
+    authority_actions = [{
+        "action_id": item["action_id"],
+        "retention_reason": "provider_operation_pending",
+        "cost_disposition": "not_applicable_provider_pending",
+    } for item in projected]
+    for action in actions:
+        if action.get("state") in {
+            "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
+        } and not any(
+            item["action_id"] == action.get("action_id")
+            for item in authority_actions
+        ):
+            authority_actions.append({
+                "action_id": str(action.get("action_id") or ""),
+                "retention_reason": "provider_submission_ambiguous",
+                "cost_disposition": "not_applicable_provider_pending",
+            })
+        reported = action.get("reported") or {}
+        if reported.get("cost_disposition") == (
+            "provider_usage_unavailable_billing_reconciliation_pending"
+        ) and not any(
+            item["action_id"] == action.get("action_id")
+            for item in authority_actions
+        ):
+            authority_actions.append({
+                "action_id": str(action.get("action_id") or ""),
+                "retention_reason": "billing_reconciliation_pending",
+                "cost_disposition": (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+            })
+    authority_actions.sort(key=lambda item: item["action_id"])
+    consumer_authority = {
+        "state": "retain" if authority_actions else "none",
+        "action_count": len(authority_actions),
+        "action_ids": [item["action_id"] for item in authority_actions],
+        "actions": authority_actions,
     }
     checkpoint_safe = bool(
         observation["snapshot_complete"]
@@ -704,9 +762,12 @@ def _capacity_and_custody(
         "checkpoint_safe_for_worker_release": checkpoint_safe,
         "resume_not_before": earliest if disposition == "release_until_due" else None,
         "reason_code": reason,
-        "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+        "policy_version": PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     }
-    return capacity, custody
+    return capacity, custody, {
+        "route_family": route_family,
+        "route_contract": route_contract,
+    }, consumer_authority
 
 
 def inspect_lifecycle(
@@ -805,7 +866,7 @@ def inspect_lifecycle(
             "state": "quiescent",
             "reasons": ["no_provider_or_local_continuation"],
         }
-    capacity, custody = _capacity_and_custody(
+    capacity, custody, native_route, consumer_authority = _capacity_and_custody(
         state, observation, dependencies, observed_at=observation["observed_at"],
     )
     return {
@@ -819,6 +880,8 @@ def inspect_lifecycle(
         "review_reasons": sorted(set(review_reasons)),
         "execution_capacity": capacity,
         "provider_custody": custody,
+        "native_route": native_route,
+        "consumer_authority": consumer_authority,
     }
 
 

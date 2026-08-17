@@ -12,8 +12,11 @@
     {"$ref": "#/$defs/actionInventory"},
     {"$ref": "#/$defs/lifecycleInspection"},
     {"$ref": "#/$defs/lifecycleInspectionV02"},
+    {"$ref": "#/$defs/lifecycleInspectionV03"},
     {"$ref": "#/$defs/reconciliationPolicy"},
+    {"$ref": "#/$defs/reconciliationPolicyV02"},
     {"$ref": "#/$defs/reconciliationCycleResult"},
+    {"$ref": "#/$defs/reconciliationCycleResultV02"},
     {"$ref": "#/$defs/closeoutResult"},
     {"$ref": "#/$defs/executionEvent"}
   ],
@@ -305,6 +308,42 @@
       },
       "additionalProperties": false
     },
+    "reconciliationMechanismPolicyV02": {
+      "type": "object",
+      "required": [
+        "delays_seconds", "maximum_delay_seconds",
+        "provider_io_wall_clock_limit_seconds",
+        "provider_request_timeout_seconds", "maximum_due_actions_per_cycle",
+        "maximum_parallel_requests"
+      ],
+      "properties": {
+        "delays_seconds": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "integer", "minimum": 1}},
+        "maximum_delay_seconds": {"type": "integer", "minimum": 1},
+        "provider_io_wall_clock_limit_seconds": {"type": "integer", "minimum": 1},
+        "provider_request_timeout_seconds": {"const": 15},
+        "maximum_due_actions_per_cycle": {"type": "integer", "minimum": 1, "maximum": 4},
+        "maximum_parallel_requests": {"type": "integer", "minimum": 1, "maximum": 4}
+      },
+      "additionalProperties": false
+    },
+    "reconciliationPolicyV02": {
+      "type": "object",
+      "required": ["schema_version", "mechanisms", "jitter"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_reconciliation_policy.v0.2"},
+        "mechanisms": {
+          "type": "object",
+          "required": ["response", "batch"],
+          "properties": {
+            "response": {"$ref": "#/$defs/reconciliationMechanismPolicyV02"},
+            "batch": {"$ref": "#/$defs/reconciliationMechanismPolicyV02"}
+          },
+          "additionalProperties": false
+        },
+        "jitter": {"const": "none"}
+      },
+      "additionalProperties": false
+    },
     "executionCapacity": {
       "type": "object",
       "required": [
@@ -329,7 +368,10 @@
           "provider_identity_conflict", "native_review_required",
           "route_or_stage_not_supported", "reconciliation_timing_missing"
         ]},
-        "policy_version": {"const": "astrowoof.provider_reconciliation_policy.v0.1"}
+        "policy_version": {"enum": [
+          "astrowoof.provider_reconciliation_policy.v0.1",
+          "astrowoof.provider_reconciliation_policy.v0.2"
+        ]}
       },
       "additionalProperties": false
     },
@@ -412,6 +454,125 @@
       },
       "additionalProperties": false
     },
+    "nativeRouteV03": {
+      "type": "object",
+      "required": ["route_family", "route_contract"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "route_contract": {"enum": [
+          "astrowoof.semantic_closure_run.v0.9",
+          "astrowoof.bounded_natal.authoring_run.v1"
+        ]}
+      },
+      "additionalProperties": false
+    },
+    "providerCustodyActionV03": {
+      "type": "object",
+      "required": [
+        "action_id", "route_family", "stage", "service_level",
+        "provider_operation_kind", "provider_operation_id",
+        "native_operation_ref", "custody_classification",
+        "resume_not_before", "reason_code"
+      ],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "stage": {"enum": [
+          "authoring_initial", "creative_retry", "polish",
+          "qualitative_critic", "qualitative_candidate"
+        ]},
+        "service_level": {"enum": ["interactive", "batch"]},
+        "provider_operation_kind": {"enum": ["response", "batch"]},
+        "provider_operation_id": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+        "native_operation_ref": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+        "custody_classification": {"enum": [
+          "retain_consumer_authority", "completed_provider_evidence",
+          "no_provider_custody", "ambiguous_review", "unsupported"
+        ]},
+        "resume_not_before": {"$ref": "#/$defs/reconciliationInstant"},
+        "reason_code": {"enum": [
+          "known_provider_operation_pending", "provider_evidence_complete",
+          "provider_identity_absent", "provider_submission_ambiguous",
+          "provider_identity_conflict", "deferred_by_cycle_limit",
+          "route_or_stage_not_supported", "reconciliation_timing_missing"
+        ]}
+      },
+      "additionalProperties": false
+    },
+    "providerCustodyV03": {
+      "type": "object",
+      "required": [
+        "state", "provider_action_count", "reservation_retention_action_count",
+        "action_ids", "next_due_action_ids", "earliest_resume_not_before",
+        "actions"
+      ],
+      "properties": {
+        "state": {"enum": [
+          "none", "known_operations_pending",
+          "completed_evidence_pending_local_work", "ambiguous_or_conflicting",
+          "unsupported", "terminal_no_custody"
+        ]},
+        "provider_action_count": {"type": "integer", "minimum": 0, "maximum": 32},
+        "reservation_retention_action_count": {"type": "integer", "minimum": 0, "maximum": 32},
+        "action_ids": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "next_due_action_ids": {"type": "array", "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "earliest_resume_not_before": {"$ref": "#/$defs/reconciliationInstant"},
+        "actions": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/providerCustodyActionV03"}}
+      },
+      "additionalProperties": false
+    },
+    "consumerAuthorityActionV03": {
+      "type": "object",
+      "required": ["action_id", "retention_reason", "cost_disposition"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "retention_reason": {"enum": [
+          "provider_operation_pending", "provider_output_integrity_review",
+          "provider_submission_ambiguous", "billing_reconciliation_pending"
+        ]},
+        "cost_disposition": {"enum": [
+          "provider_usage_reported",
+          "provider_usage_unavailable_billing_reconciliation_pending",
+          "no_provider_work_consumed", "not_applicable_provider_pending"
+        ]}
+      },
+      "additionalProperties": false
+    },
+    "consumerAuthorityV03": {
+      "type": "object",
+      "required": ["state", "action_count", "action_ids", "actions"],
+      "properties": {
+        "state": {"enum": ["none", "retain"]},
+        "action_count": {"type": "integer", "minimum": 0, "maximum": 32},
+        "action_ids": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "actions": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/consumerAuthorityActionV03"}}
+      },
+      "additionalProperties": false
+    },
+    "lifecycleInspectionV03": {
+      "type": "object",
+      "required": [
+        "schema_version", "run_id", "observation", "terminal", "quiescence",
+        "local_dependencies", "action_inventory", "review_reasons",
+        "execution_capacity", "provider_custody", "native_route",
+        "consumer_authority"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.3"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/snapshotObservation"},
+        "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "quiescence": {"$ref": "#/$defs/quiescence"},
+        "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
+        "action_inventory": {"$ref": "#/$defs/actionInventory"},
+        "review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true},
+        "execution_capacity": {"$ref": "#/$defs/executionCapacity"},
+        "provider_custody": {"$ref": "#/$defs/providerCustodyV03"},
+        "native_route": {"$ref": "#/$defs/nativeRouteV03"},
+        "consumer_authority": {"$ref": "#/$defs/consumerAuthorityV03"}
+      },
+      "additionalProperties": false
+    },
     "reconciliationCycle": {
       "type": "object",
       "required": [
@@ -423,7 +584,7 @@
       "properties": {
         "started_at": {"$ref": "#/$defs/reconciliationInstant"},
         "finished_at": {"$ref": "#/$defs/reconciliationInstant"},
-        "wall_clock_limit_seconds": {"const": 20},
+        "wall_clock_limit_seconds": {"enum": [20, 40]},
         "provider_retrieval_count": {"type": "integer", "minimum": 0, "maximum": 4},
         "retrieved_action_ids": {"type": "array", "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
         "completed_action_ids": {"type": "array", "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
@@ -437,6 +598,67 @@
         {"$ref": "#/$defs/reconciliationCycleNotDueResult"},
         {"$ref": "#/$defs/reconciliationCycleAppliedResult"}
       ]
+    },
+    "providerOperationSummaryV02": {
+      "type": "object",
+      "required": [
+        "action_id", "route_family", "provider_operation_kind",
+        "provider_operation_id", "retrieval_outcome", "cost_disposition",
+        "member_count", "ingested_member_count", "failed_member_count"
+      ],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_operation_kind": {"enum": ["response", "batch"]},
+        "provider_operation_id": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+        "retrieval_outcome": {"enum": [
+          "not_due", "pending", "completed", "provider_failed",
+          "transport_warning", "identity_conflict", "output_invalid"
+        ]},
+        "cost_disposition": {"enum": [
+          "provider_usage_reported",
+          "provider_usage_unavailable_billing_reconciliation_pending",
+          "no_provider_work_consumed", "not_applicable_provider_pending"
+        ]},
+        "member_count": {"type": ["integer", "null"], "minimum": 0},
+        "ingested_member_count": {"type": ["integer", "null"], "minimum": 0},
+        "failed_member_count": {"type": ["integer", "null"], "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "reconciliationCycleResultV02": {
+      "type": "object",
+      "required": [
+        "schema_version", "run_id", "outcome", "decision_basis", "cycle",
+        "inspection", "provider_operations"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.provider_reconciliation_cycle_result.v0.2"},
+        "run_id": {"type": "string", "minLength": 1},
+        "outcome": {"enum": [
+          "not_due", "detached_provider_pending", "progressed_local",
+          "awaiting_external_authority", "terminal", "review_required",
+          "unsupported"
+        ]},
+        "decision_basis": {"$ref": "#/$defs/snapshotObservation"},
+        "cycle": {"$ref": "#/$defs/reconciliationCycle"},
+        "inspection": {"$ref": "#/$defs/lifecycleInspectionV03"},
+        "provider_operations": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/providerOperationSummaryV02"}},
+        "local_continuation": {"$ref": "#/$defs/localContinuationV02"},
+        "result_checkpoint": {"$ref": "#/$defs/checkpointResult"}
+      },
+      "additionalProperties": false
+    },
+    "localContinuationV02": {
+      "type": "object",
+      "required": ["pass_ids", "stages", "completed_action_ids", "exhausted_before_detach"],
+      "properties": {
+        "pass_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "stages": {"type": "array", "uniqueItems": true, "items": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]}},
+        "completed_action_ids": {"type": "array", "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "exhausted_before_detach": {"const": true}
+      },
+      "additionalProperties": false
     },
     "reconciliationCycleNotDueResult": {
       "type": "object",

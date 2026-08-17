@@ -24,6 +24,11 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     EVENT_NAMES,
     LOCAL_DEPENDENCY_KINDS,
     EXECUTION_CAPACITY_DISPOSITIONS,
+    CONSUMER_AUTHORITY_RETENTION_REASONS,
+    CONSUMER_AUTHORITY_STATES,
+    COST_DISPOSITIONS,
+    PROVIDER_OPERATION_KINDS,
+    PROVIDER_ROUTE_FAMILIES,
     PROVIDER_CUSTODY_CLASSIFICATIONS,
     PROVIDER_CUSTODY_STAGES,
     PROVIDER_CUSTODY_STATES,
@@ -57,7 +62,9 @@ FIXTURE_NAMES = (
     "action-inventory.v0.1.json",
     "inspection.v0.1.json",
     "inspection.v0.2.json",
+    "inspection.v0.3.json",
     "reconciliation-policy.v0.1.json",
+    "reconciliation-policy.v0.2.json",
     "reconciliation-cycle-not-due.v0.1.json",
     "closeout-result.v0.1.json",
     "execution-event.v1.json",
@@ -208,6 +215,11 @@ class TestLifecycleContracts(unittest.TestCase):
             PROVIDER_CUSTODY_STAGES,
             PROVIDER_CUSTODY_STATES,
             PROVIDER_RECONCILIATION_CYCLE_OUTCOMES,
+            PROVIDER_ROUTE_FAMILIES,
+            PROVIDER_OPERATION_KINDS,
+            COST_DISPOSITIONS,
+            CONSUMER_AUTHORITY_STATES,
+            CONSUMER_AUTHORITY_RETENTION_REASONS,
         )
         self.assertTrue(all(len(items) == len(set(items)) for items in vocabularies))
         defs = self.schema["$defs"]
@@ -220,19 +232,73 @@ class TestLifecycleContracts(unittest.TestCase):
         self.assertEqual(list(RUN_TRANSITION_TRIGGERS), transition["trigger"]["enum"])
 
     def test_reconciliation_policy_is_one_bounded_retrieval_wave(self) -> None:
-        fixture = self.fixtures["reconciliation-policy.v0.1.json"]
+        fixture = self.fixtures["reconciliation-policy.v0.2.json"]
         self.assertEqual(PROVIDER_RECONCILIATION_POLICY, fixture)
-        self.assertEqual(4, fixture["maximum_due_actions_per_cycle"])
+        response = fixture["mechanisms"]["response"]
+        batch = fixture["mechanisms"]["batch"]
+        self.assertEqual(4, response["maximum_due_actions_per_cycle"])
         self.assertEqual(
-            fixture["maximum_due_actions_per_cycle"],
-            fixture["maximum_parallel_retrievals"],
+            response["maximum_due_actions_per_cycle"],
+            response["maximum_parallel_requests"],
         )
         self.assertLess(
-            fixture["provider_retrieval_timeout_seconds"],
-            fixture["maximum_cycle_wall_clock_seconds"],
+            response["provider_request_timeout_seconds"],
+            response["provider_io_wall_clock_limit_seconds"],
         )
-        delays = [min(15 * (2 ** attempt), 300) for attempt in range(6)]
-        self.assertEqual([15, 30, 60, 120, 240, 300], delays)
+        self.assertEqual([15, 30, 60, 120, 240, 300], response["delays_seconds"])
+        self.assertEqual([60, 120, 300, 600, 900, 1800], batch["delays_seconds"])
+        self.assertEqual(1, batch["maximum_due_actions_per_cycle"])
+        self.assertEqual(40, batch["provider_io_wall_clock_limit_seconds"])
+
+    def test_inspection_v03_binds_native_route_mechanism_and_authority(self) -> None:
+        inspection = self.fixtures["inspection.v0.3.json"]
+        self.assertEqual("exact_natal", inspection["native_route"]["route_family"])
+        action = inspection["provider_custody"]["actions"][0]
+        self.assertEqual("response", action["provider_operation_kind"])
+        self.assertEqual("interactive", action["service_level"])
+        self.assertEqual(
+            action["action_id"], inspection["consumer_authority"]["action_ids"][0]
+        )
+        malformed = copy.deepcopy(inspection)
+        malformed["provider_custody"]["actions"][0]["provider_operation_kind"] = "file"
+        with self.assertRaises(AssertionError):
+            validate(malformed, self.schema, self.schema)
+        missing = copy.deepcopy(inspection)
+        del missing["native_route"]
+        with self.assertRaises(AssertionError):
+            validate(missing, self.schema, self.schema)
+
+    def test_cycle_v02_cost_disposition_is_closed_and_explicit(self) -> None:
+        inspection = copy.deepcopy(self.fixtures["inspection.v0.3.json"])
+        result = {
+            "schema_version": "astrowoof.provider_reconciliation_cycle_result.v0.2",
+            "run_id": inspection["run_id"], "outcome": "not_due",
+            "decision_basis": inspection["observation"],
+            "cycle": {
+                "started_at": "2026-08-13T18:00:05Z",
+                "finished_at": "2026-08-13T18:00:05Z",
+                "wall_clock_limit_seconds": 20, "provider_retrieval_count": 0,
+                "retrieved_action_ids": [], "completed_action_ids": [],
+                "still_pending_action_ids": ["paid_111111111111111111111111"],
+                "transport_warning_action_ids": [],
+            },
+            "inspection": inspection, "provider_operations": [],
+        }
+        validate(result, self.schema, self.schema)
+        operation = {
+            "action_id": "paid_111111111111111111111111",
+            "route_family": "exact_natal", "provider_operation_kind": "batch",
+            "provider_operation_id": "batch_fixture_001",
+            "retrieval_outcome": "provider_failed",
+            "cost_disposition": "provider_usage_unavailable_billing_reconciliation_pending",
+            "member_count": 6, "ingested_member_count": 0,
+            "failed_member_count": 6,
+        }
+        result["provider_operations"] = [operation]
+        validate(result, self.schema, self.schema)
+        operation["cost_disposition"] = "estimated_zero"
+        with self.assertRaises(AssertionError):
+            validate(result, self.schema, self.schema)
 
     def test_inspection_v02_capacity_and_custody_are_strict(self) -> None:
         inspection = self.fixtures["inspection.v0.2.json"]

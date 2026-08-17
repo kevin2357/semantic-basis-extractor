@@ -482,16 +482,20 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual(before, workspace_hashes(run_dir))
             self.assertTrue(inspection["observation"]["snapshot_complete"])
             self.assertTrue(inspection["observation"]["inventory_valid"])
-            # Baseline discovery: bounded runs share the exact run schema_version
-            # and identify their route separately. The 0.4.3 predicate therefore
-            # inherits exact scheduling eligibility before a bounded adapter exists.
+            # Route-aware v0.3 projection fixes the Slice 0 accidental inheritance;
+            # the bounded adapter is enabled only in its dedicated slice.
             self.assertEqual(
-                "continue_local_cycle",
+                "unsupported_retain_capacity",
                 inspection["execution_capacity"]["disposition"],
             )
             self.assertEqual(
-                "known_operations_pending",
+                "unsupported",
                 inspection["provider_custody"]["state"],
+            )
+            self.assertEqual("bounded_natal", inspection["native_route"]["route_family"])
+            self.assertEqual(
+                "response",
+                inspection["provider_custody"]["actions"][0]["provider_operation_kind"],
             )
             self.assertEqual(
                 [interrupted["spend_ledger"]["actions"][0]["action_id"]],

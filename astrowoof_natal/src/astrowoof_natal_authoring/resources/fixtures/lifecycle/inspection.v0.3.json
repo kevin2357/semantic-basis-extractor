@@ -1,0 +1,81 @@
+{
+  "schema_version": "astrowoof.authoring_lifecycle_inspection.v0.3",
+  "run_id": "run_fixture_001",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-13T18:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "terminal": {
+    "outcome": "nonterminal", "terminal": false, "terminal_reason": null,
+    "deck_bytes_exist": true, "native_qa_passed": true,
+    "assembly_lint_validation_accepted": true,
+    "delivery_package_complete": false, "delivery_publishable": false,
+    "provider_continuation_remains": true, "local_continuation_remains": true
+  },
+  "quiescence": {
+    "state": "not_quiescent",
+    "reasons": ["provider_continuation_remains", "local_continuation_remains"]
+  },
+  "local_dependencies": [{
+    "kind": "provider_result_reconciliation", "blocking": true,
+    "reason_code": "known_provider_operation_pending"
+  }],
+  "action_inventory": {
+    "schema_version": "astrowoof.provider_action_inventory.v0.1",
+    "run_id": "run_fixture_001",
+    "observation": {
+      "operator_state_revision": 12,
+      "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "logical_workspace_root": "/work/run",
+      "snapshot_complete": true, "inventory_valid": true,
+      "observed_at": "2026-08-13T18:00:00Z",
+      "native_exclusive_access": "declared", "writer_race_possible": false
+    },
+    "ordering_semantics": "deterministic_presentation_only_not_execution_order",
+    "actions": []
+  },
+  "review_reasons": [],
+  "execution_capacity": {
+    "disposition": "release_until_due", "local_work_ready_now": false,
+    "checkpoint_safe_for_worker_release": true,
+    "resume_not_before": "2026-08-13T18:00:15Z",
+    "reason_code": "known_provider_work_pending",
+    "policy_version": "astrowoof.provider_reconciliation_policy.v0.2"
+  },
+  "provider_custody": {
+    "state": "known_operations_pending", "provider_action_count": 1,
+    "reservation_retention_action_count": 1,
+    "action_ids": ["paid_111111111111111111111111"],
+    "next_due_action_ids": ["paid_111111111111111111111111"],
+    "earliest_resume_not_before": "2026-08-13T18:00:15Z",
+    "actions": [{
+      "action_id": "paid_111111111111111111111111",
+      "route_family": "exact_natal", "stage": "authoring_initial",
+      "service_level": "interactive", "provider_operation_kind": "response",
+      "provider_operation_id": "resp_fixture_001",
+      "native_operation_ref": "kevin:authoring_initial:001",
+      "custody_classification": "retain_consumer_authority",
+      "resume_not_before": "2026-08-13T18:00:15Z",
+      "reason_code": "known_provider_operation_pending"
+    }]
+  },
+  "native_route": {
+    "route_family": "exact_natal",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9"
+  },
+  "consumer_authority": {
+    "state": "retain", "action_count": 1,
+    "action_ids": ["paid_111111111111111111111111"],
+    "actions": [{
+      "action_id": "paid_111111111111111111111111",
+      "retention_reason": "provider_operation_pending",
+      "cost_disposition": "not_applicable_provider_pending"
+    }]
+  }
+}
