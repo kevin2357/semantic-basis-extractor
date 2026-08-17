@@ -222,9 +222,12 @@ Freeze the route-parity semantics before schemas or runtime behavior change.
 
 ### Tests
 
-- Strict schema/fixture validation for proposed examples.
-- Closed-vocabulary and invalid-combination truth-table tests.
-- Explicit bounded-Batch rejection cases.
+- Review exact JSON examples and closed vocabularies against the current strict
+  contract boundary. Because Slice 0 changed the proposed route shape, encode and
+  validate new strict schemas/fixtures at the start of Slice 2 after approval,
+  before runtime dispatch changes.
+- Run current lifecycle contract, invalid-combination, and bounded-Batch rejection
+  regressions unchanged.
 
 ### Gate
 
@@ -242,8 +245,9 @@ weakening the exact-interactive 0.4.3 contract.
 
 - Extract only the shared custody/timing/checkpoint decisions needed by all
   supported routes; keep provider mechanics in route adapters.
-- Project eligible exact Batch and bounded interactive provider work into the
-  approved inspection contract.
+- Project eligible exact Batch and bounded interactive provider work into strict
+  inspection v0.3 native-route, provider-mechanism, custody, and separate
+  consumer-authority contracts.
 - Add supported route dispatch that does not require consumers to read private
   state.
 - Preserve exact-interactive behavior byte-for-byte where its contract is
@@ -253,6 +257,8 @@ weakening the exact-interactive 0.4.3 contract.
 ### Tests
 
 - Exact-interactive golden regressions.
+- Provider custody versus billing-reconciliation-pending consumer-authority tests;
+  unavailable terminal usage must never become reported zero usage.
 - Exact/Batch/bounded route matrix and dispatcher tests.
 - Early `not_due`, stale snapshot, absent exclusivity, writer contention, legacy
   timing, ambiguity, and bounded-Batch refusal.
