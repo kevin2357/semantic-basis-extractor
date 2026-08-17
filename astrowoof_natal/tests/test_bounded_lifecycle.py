@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -47,6 +48,14 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     AwaitingSpendAuthorization,
 )
 from test_bounded_authoring import compiled  # noqa: E402
+
+
+def workspace_hashes(root: Path) -> dict[str, str]:
+    return {
+        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in root.rglob("*")
+        if path.is_file() and not path.name.endswith(".lock")
+    }
 
 
 def spend_policy() -> dict:
@@ -465,6 +474,29 @@ class TestBoundedLifecycle(unittest.TestCase):
             interrupted = load_json(run_dir / "run.json")
             validate_workspace_snapshot(run_dir, interrupted)
             self.assertEqual("PROVIDER_ID_RECORDED", interrupted["spend_ledger"]["actions"][0]["state"])
+            before = workspace_hashes(run_dir)
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared",
+                observed_at="2026-08-16T12:00:00Z",
+            )
+            self.assertEqual(before, workspace_hashes(run_dir))
+            self.assertTrue(inspection["observation"]["snapshot_complete"])
+            self.assertTrue(inspection["observation"]["inventory_valid"])
+            # Baseline discovery: bounded runs share the exact run schema_version
+            # and identify their route separately. The 0.4.3 predicate therefore
+            # inherits exact scheduling eligibility before a bounded adapter exists.
+            self.assertEqual(
+                "continue_local_cycle",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual(
+                "known_operations_pending",
+                inspection["provider_custody"]["state"],
+            )
+            self.assertEqual(
+                [interrupted["spend_ledger"]["actions"][0]["action_id"]],
+                inspection["provider_custody"]["action_ids"],
+            )
             final = resume_bounded_run(run_dir, provider=provider)
             self.assertEqual("DELIVERY_COMPLETE", final["status"])
             self.assertEqual(1, provider.submissions)

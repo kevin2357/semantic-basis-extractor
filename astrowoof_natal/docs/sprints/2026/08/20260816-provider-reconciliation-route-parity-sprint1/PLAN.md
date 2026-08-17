@@ -39,8 +39,15 @@ SBE 0.4.3 already provides:
   fail-closed ambiguity/review handling; and
 - installed Python/CLI/schema/event consumer surfaces.
 
-The prior release intentionally classifies exact Batch and bounded Natal as
-`unsupported_retain_capacity`. The underlying routes are nevertheless durable:
+The prior release intended to classify exact Batch and bounded Natal as
+`unsupported_retain_capacity`. Slice 0 confirmed exact Batch does fail closed, but
+also found that real bounded runs share the exact run `schema_version` and carry a
+separate `route_contract`; the 0.4.3 predicate checks only the former. Bounded
+interactive therefore accidentally inherits exact-interactive scheduling
+eligibility before it has a supported route adapter. Correcting that route binding
+is an early requirement, not a reason to broaden the existing generic path.
+
+The underlying routes are nevertheless durable:
 
 - exact Batch persists prepared input JSONL, uploaded File ID, Batch ID/status,
   request membership, output/error File IDs, downloaded JSONL, and per-pass
@@ -179,7 +186,8 @@ interactive waiting states before changing contracts.
 - Create compact scripted fixtures for one detached Batch round and one bounded
   Response-pending action without making provider calls.
 - Capture current lifecycle inspection, closeout, resume, and CLI behavior,
-  including the intentional `unsupported_retain_capacity` classification.
+  including exact Batch's intentional `unsupported_retain_capacity` result and
+  any discrepancy in the real bounded-route classification.
 - Identify all state that is native authority versus derived observation.
 
 ### Tests

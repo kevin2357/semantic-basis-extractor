@@ -3,4 +3,4 @@
 Add one compact, reviewable result document per completed slice. At every gate,
 link the full plan, log, results index, and current evidence file.
 
-No slice has started. The sprint is awaiting plan approval.
+- [Slice 0 baseline](SLICE%200%20BASELINE.md)

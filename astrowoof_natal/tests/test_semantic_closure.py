@@ -108,6 +108,15 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     run_bounded_authoring_reconciliation,
 )
+from astrowoof_natal_authoring.lifecycle import inspect_lifecycle  # noqa: E402
+
+
+def workspace_hashes(root: Path) -> dict[str, str]:
+    return {
+        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in root.rglob("*")
+        if path.is_file() and not path.name.endswith(".lock")
+    }
 
 
 def test_spend_policy() -> dict:
@@ -199,13 +208,17 @@ class ScriptedBatchTransport:
     def __init__(self, *, initially_complete: bool = True) -> None:
         self.initially_complete = initially_complete
         self.lines: list[dict] = []
+        self.upload_calls = 0
+        self.create_calls = 0
         self.retrieve_calls = 0
 
     def upload_jsonl(self, content: bytes, filename: str) -> dict:
+        self.upload_calls += 1
         self.lines = [json.loads(line) for line in content.decode().splitlines()]
         return {"id": "file_input"}
 
     def create_batch(self, payload: dict) -> dict:
+        self.create_calls += 1
         return {
             "id": "batch_test",
             "status": "completed" if self.initially_complete else "in_progress",
@@ -2826,6 +2839,38 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "batch_test",
                 persisted["spend_ledger"]["actions"][0]["provider"]["id"],
             )
+            before = workspace_hashes(root / "run")
+            inspection = inspect_lifecycle(
+                root / "run", native_exclusive_access="declared",
+                observed_at="2026-08-16T12:00:00Z",
+            )
+            self.assertEqual(before, workspace_hashes(root / "run"))
+            self.assertTrue(inspection["observation"]["snapshot_complete"])
+            self.assertTrue(inspection["observation"]["inventory_valid"])
+            self.assertEqual(
+                "unsupported_retain_capacity",
+                inspection["execution_capacity"]["disposition"],
+            )
+            self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+            self.assertEqual(
+                [persisted["spend_ledger"]["actions"][0]["action_id"]],
+                inspection["provider_custody"]["action_ids"],
+            )
+            uploads = transport.upload_calls
+            creates = transport.create_calls
+            self.assertTrue(author_pending_passes_batch(
+                state=persisted, provider=provider, transport=transport,
+                run_dir=root / "run", max_attempts=3,
+                python_executable=Path(sys.executable), run_json=run_json,
+                detach=False, poll_interval_seconds=0, sleep=lambda _: None,
+                spend_controller=SpendController(
+                    state=persisted, run_json=run_json,
+                    state_lock=threading.Lock(), consumer_id="batch-worker-resume",
+                ),
+            ))
+            self.assertEqual(uploads, transport.upload_calls)
+            self.assertEqual(creates, transport.create_calls)
+            self.assertEqual(1, transport.retrieve_calls)
 
     def test_batch_cost_is_half_of_interactive_estimate(self) -> None:
         usage = {
