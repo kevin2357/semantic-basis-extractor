@@ -70,7 +70,7 @@ def native_provider_route_identity(
         route_family == "exact_natal" and kind == "batch" and service == "batch"
         and stage in {"authoring_initial", "creative_retry"}
     ):
-        adapter = "exact_batch_deferred"
+        adapter = "exact_batch"
         rounds = (state.get("batch_service") or {}).get("rounds") or []
         matches = [
             item for item in rounds
@@ -116,18 +116,20 @@ def utc_instant(value: datetime) -> str:
     return normalized.isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
-def delay_seconds(attempt_count: int) -> int:
+def delay_seconds(attempt_count: int, *, mechanism: str = "response") -> int:
     """Return the frozen lower-bound delay after ``attempt_count`` retrievals."""
     if not isinstance(attempt_count, int) or isinstance(attempt_count, bool):
         raise ValueError("Reconciliation attempt count must be an integer")
     if attempt_count < 0:
         raise ValueError("Reconciliation attempt count cannot be negative")
-    policy = PROVIDER_RECONCILIATION_POLICY["mechanisms"]["response"]
+    if mechanism not in {"response", "batch"}:
+        raise ValueError(f"Unsupported provider reconciliation mechanism: {mechanism}")
+    policy = PROVIDER_RECONCILIATION_POLICY["mechanisms"][mechanism]
     delays = policy["delays_seconds"]
     return delays[min(attempt_count, len(delays) - 1)]
 
 
-def initial_timing(*, recorded_at: str) -> dict[str, Any]:
+def initial_timing(*, recorded_at: str, mechanism: str = "response") -> dict[str, Any]:
     recorded = parse_utc_instant(recorded_at)
     return {
         "policy_version": PROVIDER_RECONCILIATION_POLICY_SCHEMA,
@@ -135,13 +137,14 @@ def initial_timing(*, recorded_at: str) -> dict[str, Any]:
         "last_attempt_at": None,
         "last_outcome": "provider_identity_recorded",
         "resume_not_before": utc_instant(
-            recorded + timedelta(seconds=delay_seconds(0))
+            recorded + timedelta(seconds=delay_seconds(0, mechanism=mechanism))
         ),
     }
 
 
 def record_attempt(
     timing: dict[str, Any], *, attempted_at: str, outcome: str,
+    mechanism: str = "response",
 ) -> dict[str, Any]:
     if outcome not in {"pending", "completed", "transport_warning", "provider_failed"}:
         raise ValueError(f"Unsupported reconciliation outcome: {outcome}")
@@ -160,7 +163,9 @@ def record_attempt(
     timing["last_outcome"] = outcome
     timing["resume_not_before"] = (
         None if outcome in {"completed", "provider_failed"}
-        else utc_instant(attempted + timedelta(seconds=delay_seconds(count)))
+        else utc_instant(
+            attempted + timedelta(seconds=delay_seconds(count, mechanism=mechanism))
+        )
     )
     return timing
 
@@ -168,7 +173,9 @@ def record_attempt(
 def validated_timing(action: dict[str, Any]) -> dict[str, Any] | None:
     if action.get("state") not in RECONCILIABLE_PROVIDER_STATES:
         return None
-    if (action.get("binding") or {}).get("service_level") != "interactive":
+    service = (action.get("binding") or {}).get("service_level")
+    kind = (action.get("provider") or {}).get("kind")
+    if (service, kind) not in {("interactive", "response"), ("batch", "batch")}:
         return None
     provider = action.get("provider") or {}
     if not provider.get("id"):
@@ -487,6 +494,530 @@ def reconcile_provider_cycle(
                 },
             },
         }
+
+
+def reconcile_batch_provider_cycle(
+    run_dir: Path,
+    *,
+    provider: Any,
+    transport: Any,
+    max_attempts: int,
+    python_executable: Path,
+    observed_at: str,
+    event_emitter: Any = None,
+    polish_provider: Any = None,
+    critic_provider: Any = None,
+    qualitative_editor_provider: Any = None,
+    _failure_injector: Callable[[str], None] | None = None,
+) -> dict[str, Any]:
+    """Retrieve and ingest at most one known exact-Natal Batch round."""
+    from .closure import (
+        SNAPSHOT_NAME,
+        SpendController,
+        _batch_jsonl_records,
+        author_pending_passes_batch,
+        finalize_subjects,
+        load_json,
+        persist_state,
+        save_state,
+        sha256_file,
+        update_run_status,
+        run_qualitative_review,
+        write_json_atomic,
+        write_workspace_snapshot,
+    )
+    from .lifecycle import inspect_lifecycle
+
+    run_dir = run_dir.resolve()
+    instant = utc_instant(parse_utc_instant(observed_at))
+    batch_policy = PROVIDER_RECONCILIATION_POLICY["mechanisms"]["batch"]
+
+    def empty_result(
+        state: dict[str, Any], inspection: dict[str, Any], outcome: str,
+    ) -> dict[str, Any]:
+        result = {
+            "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
+            "run_id": state["run_id"], "outcome": outcome,
+            "decision_basis": inspection["observation"],
+            "cycle": {
+                "started_at": instant, "finished_at": instant,
+                "wall_clock_limit_seconds": 40,
+                "provider_retrieval_count": 0, "retrieved_action_ids": [],
+                "completed_action_ids": [],
+                "still_pending_action_ids": inspection["provider_custody"]["action_ids"],
+                "transport_warning_action_ids": [],
+            },
+            "inspection": inspection, "provider_operations": [],
+        }
+        if outcome != "not_due":
+            result["result_checkpoint"] = {
+                "operator_state_revision": inspection["observation"]["operator_state_revision"],
+                "snapshot_sha256": inspection["observation"]["snapshot_sha256"],
+                "result_artifact": {
+                    "logical_path": SNAPSHOT_NAME,
+                    "bytes": (run_dir / SNAPSHOT_NAME).stat().st_size,
+                    "sha256": inspection["observation"]["snapshot_sha256"],
+                },
+            }
+        return result
+
+    def exhaust_local_continuation(
+        state: dict[str, Any], controller: Any,
+    ) -> None:
+        from .spend import (
+            AmbiguousProviderSubmission,
+            AwaitingSpendAuthorization,
+            BudgetExhausted,
+        )
+        qa = (state.get("authoring_profile") or {}).get("qa") or {}
+        try:
+            finalize_subjects(
+                state=state, run_dir=run_dir,
+                python_executable=python_executable,
+                allow_lint_warnings=bool(qa.get("allow_lint_warnings")),
+                polish=bool(qa.get("polish")),
+                polish_provider=polish_provider,
+                max_polish_attempts=int(qa.get("max_polish_attempts") or 2),
+                spend_controller=controller,
+            )
+            if bool(qa.get("qualitative_critic")) and critic_provider is not None:
+                for subject_record in state.get("subjects", {}).values():
+                    if subject_record.get("state") in {
+                        "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS",
+                    }:
+                        run_qualitative_review(
+                            record=subject_record,
+                            critic_provider=critic_provider,
+                            editor_provider=(
+                                qualitative_editor_provider
+                                if bool(qa.get("qualitative_candidate")) else None
+                            ),
+                            run_dir=run_dir, python_executable=python_executable,
+                            max_findings=int(qa.get("max_critic_findings") or 8),
+                            max_target_fields=int(
+                                qa.get("max_qualitative_target_fields") or 12
+                            ),
+                            max_target_cards=int(
+                                qa.get("max_qualitative_target_cards") or 6
+                            ),
+                            spend_controller=controller, run_state=state,
+                        )
+        except (
+            AwaitingSpendAuthorization, BudgetExhausted,
+            AmbiguousProviderSubmission,
+        ):
+            pass
+
+    with _single_writer(run_dir):
+        state = load_json(run_dir / "run.json")
+        from .closure import validate_workspace_snapshot
+        validate_workspace_snapshot(run_dir, state)
+        before = inspect_lifecycle(
+            run_dir, native_exclusive_access="established", observed_at=instant,
+        )
+        replayed_rounds = [
+            item for item in (state.get("batch_service") or {}).get("rounds", [])
+            if item.get("state") == "INGESTED" and item.get("batch_id")
+        ]
+        if replayed_rounds:
+            replayed = replayed_rounds[-1]
+            action = next((
+                item for item in (state.get("spend_ledger") or {}).get("actions", [])
+                if (item.get("provider") or {}).get("id") == replayed["batch_id"]
+            ), None)
+            if action is not None and action.get("state") == "REPORTED":
+                controller = SpendController(
+                    state=state, run_json=run_dir / "run.json",
+                    state_lock=threading.Lock(),
+                    consumer_id=f"batch-reconcile:{os.getpid()}",
+                    event_emitter=event_emitter, reconciliation_only=True,
+                )
+                exhaust_local_continuation(state, controller)
+                save_state(run_dir / "run.json", state)
+                after = inspect_lifecycle(
+                    run_dir, native_exclusive_access="established",
+                    observed_at=instant,
+                )
+                result = empty_result(state, after, "progressed_local")
+                result["cycle"]["completed_action_ids"] = [action["action_id"]]
+                member_count = len(replayed["requests"])
+                failed_count = sum(
+                    1 for request in replayed["requests"]
+                    if state["passes"][request["pass_id"]]["attempts"]
+                    [request["attempt_number"] - 1].get("state") == "ATTEMPT_ERROR"
+                )
+                result["provider_operations"] = [{
+                    "action_id": action["action_id"],
+                    "route_family": "exact_natal",
+                    "provider_operation_kind": "batch",
+                    "provider_operation_id": replayed["batch_id"],
+                    "retrieval_outcome": "completed",
+                    "cost_disposition": str(
+                        ((action.get("reported") or {}).get("cost_disposition"))
+                        or "provider_usage_reported"
+                    ),
+                    "member_count": member_count,
+                    "ingested_member_count": member_count - failed_count,
+                    "failed_member_count": failed_count,
+                }]
+                return result
+        disposition = before["execution_capacity"]["disposition"]
+        if disposition == "release_until_due":
+            return empty_result(state, before, "not_due")
+        if disposition in {
+            "unsupported_retain_capacity", "retain_for_review",
+            "await_external_authority", "terminal",
+        }:
+            return empty_result(state, before, {
+                "unsupported_retain_capacity": "unsupported",
+                "retain_for_review": "review_required",
+                "await_external_authority": "awaiting_external_authority",
+                "terminal": "terminal",
+            }[disposition])
+        due_ids = before["provider_custody"]["next_due_action_ids"]
+        actions = [
+            item for item in (state.get("spend_ledger") or {}).get("actions", [])
+            if item.get("action_id") in due_ids
+            and native_provider_route_identity(state, item).get("adapter") == "exact_batch"
+        ]
+        if len(actions) != 1:
+            raise ValueError("Exactly one due exact Batch action is required")
+        action = actions[0]
+        identity = native_provider_route_identity(state, action)
+        if not identity["valid"]:
+            raise ValueError("Exact Batch native operation binding is invalid")
+        timing = validated_timing(action)
+        if (
+            timing is None or timing.get("resume_not_before") is None
+            or parse_utc_instant(timing["resume_not_before"])
+            > parse_utc_instant(instant)
+        ):
+            return empty_result(state, before, "not_due")
+        round_record = next(
+            item for item in state["batch_service"]["rounds"]
+            if f"batch-round-{int(item['round_number']):03d}" == identity["native_operation_ref"]
+        )
+        batch_id = action["provider"]["id"]
+        try:
+            batch = transport.retrieve_batch(batch_id)
+        except Exception:
+            record_attempt(
+                action["provider_reconciliation"], attempted_at=instant,
+                outcome="transport_warning", mechanism="batch",
+            )
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "detached_provider_pending")
+            result["cycle"]["provider_retrieval_count"] = 1
+            result["cycle"]["retrieved_action_ids"] = [action["action_id"]]
+            result["cycle"]["transport_warning_action_ids"] = [action["action_id"]]
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id,
+                "retrieval_outcome": "transport_warning",
+                "cost_disposition": "not_applicable_provider_pending",
+                "member_count": len(round_record["requests"]),
+                "ingested_member_count": 0, "failed_member_count": 0,
+            }]
+            return result
+        if not isinstance(batch, dict) or batch.get("id") != batch_id:
+            action["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+            action["ambiguity"] = {"reason": "Batch retrieval identity mismatch"}
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "review_required")
+            result["cycle"]["provider_retrieval_count"] = 1
+            result["cycle"]["retrieved_action_ids"] = [action["action_id"]]
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id,
+                "retrieval_outcome": "identity_conflict",
+                "cost_disposition": "not_applicable_provider_pending",
+                "member_count": len(round_record["requests"]),
+                "ingested_member_count": 0, "failed_member_count": 0,
+            }]
+            return result
+        status = str(batch.get("status") or "")
+        round_record["batch_status"] = status
+        round_record["request_counts"] = batch.get("request_counts")
+        pending_statuses = {"validating", "in_progress", "finalizing"}
+        if status in pending_statuses:
+            record_attempt(
+                action["provider_reconciliation"], attempted_at=instant,
+                outcome="pending", mechanism="batch",
+            )
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "detached_provider_pending")
+            result["cycle"].update({
+                "provider_retrieval_count": 1,
+                "retrieved_action_ids": [action["action_id"]],
+            })
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id, "retrieval_outcome": "pending",
+                "cost_disposition": "not_applicable_provider_pending",
+                "member_count": len(round_record["requests"]),
+                "ingested_member_count": 0, "failed_member_count": 0,
+            }]
+            return result
+        terminal_statuses = {"completed", "failed", "expired", "cancelled"}
+        if status not in terminal_statuses:
+            record_attempt(
+                action["provider_reconciliation"], attempted_at=instant,
+                outcome="transport_warning", mechanism="batch",
+            )
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            return empty_result(state, after, "detached_provider_pending")
+
+        round_root = Path(round_record["input_path"]).parent
+        write_json_atomic(round_root / "batch-object.json", batch)
+        persist_state(run_dir / "run.json", state)
+        write_workspace_snapshot(run_dir)
+        if _failure_injector:
+            _failure_injector("after_batch_terminal_object")
+        member_count = len(round_record["requests"])
+        if status != "completed":
+            round_record["state"] = "FAILED"
+            round_record["finished_at"] = instant
+            for request in round_record["requests"]:
+                record = state["passes"][request["pass_id"]]
+                attempt = record["attempts"][request["attempt_number"] - 1]
+                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["finished_at"] = instant
+                attempt["error"] = {
+                    "type": "OpenAIBatchError",
+                    "message": f"Batch ended with status {status}",
+                }
+                record["state"] = "ATTEMPT_ERROR"
+            action["reported"] = {
+                "usage": None, "estimated_micro_usd": None,
+                "cost_disposition": (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+            }
+            action["state"] = "REPORTED"
+            update_run_status(state)
+            save_state(run_dir / "run.json", state)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "progressed_local")
+            result["cycle"].update({
+                "provider_retrieval_count": 1,
+                "retrieved_action_ids": [action["action_id"]],
+                "completed_action_ids": [action["action_id"]],
+                "still_pending_action_ids": [],
+            })
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id,
+                "retrieval_outcome": "provider_failed",
+                "cost_disposition": (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+                "member_count": member_count, "ingested_member_count": 0,
+                "failed_member_count": member_count,
+            }]
+            return result
+
+        try:
+            output_text = (
+                transport.download_file(batch["output_file_id"])
+                if batch.get("output_file_id") else ""
+            )
+            error_text = (
+                transport.download_file(batch["error_file_id"])
+                if batch.get("error_file_id") else ""
+            )
+        except Exception:
+            record_attempt(
+                action["provider_reconciliation"], attempted_at=instant,
+                outcome="transport_warning", mechanism="batch",
+            )
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "detached_provider_pending")
+            result["cycle"].update({
+                "provider_retrieval_count": 1,
+                "retrieved_action_ids": [action["action_id"]],
+                "transport_warning_action_ids": [action["action_id"]],
+            })
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id,
+                "retrieval_outcome": "transport_warning",
+                "cost_disposition": "not_applicable_provider_pending",
+                "member_count": member_count, "ingested_member_count": 0,
+                "failed_member_count": 0,
+            }]
+            return result
+        (round_root / "batch-output.jsonl").write_text(output_text, encoding="utf-8")
+        if error_text:
+            (round_root / "batch-errors.jsonl").write_text(error_text, encoding="utf-8")
+        parse_error = None
+        supplied_sequence: list[str] = []
+        try:
+            for text in (output_text, error_text):
+                for line in text.splitlines():
+                    if line.strip():
+                        item = json.loads(line)
+                        custom_id = item.get("custom_id")
+                        if not isinstance(custom_id, str) or not custom_id:
+                            raise ValueError("Batch member custom_id is missing")
+                        supplied_sequence.append(custom_id)
+            outputs = _batch_jsonl_records(output_text)
+            errors = _batch_jsonl_records(error_text)
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            outputs, errors, parse_error = {}, {}, str(exc)
+        expected = [item["custom_id"] for item in round_record["requests"]]
+        supplied = set(outputs) | set(errors)
+        duplicate_ids = sorted({
+            item for item in supplied_sequence
+            if supplied_sequence.count(item) > 1
+        })
+        if (
+            parse_error or duplicate_ids or set(outputs) & set(errors)
+            or supplied != set(expected)
+        ):
+            integrity_evidence = {
+                "reason": (
+                    "Batch output JSONL invalid" if parse_error
+                    else "Batch output membership mismatch"
+                ),
+                "expected_custom_ids": expected,
+                "output_custom_ids": sorted(outputs),
+                "error_custom_ids": sorted(errors),
+            }
+            if duplicate_ids:
+                integrity_evidence["duplicate_custom_ids"] = duplicate_ids
+            if parse_error:
+                integrity_evidence["parse_error"] = parse_error
+            round_record["integrity_review"] = integrity_evidence
+            action["integrity_review"] = integrity_evidence
+            action["reported"] = {
+                "usage": None, "estimated_micro_usd": None,
+                "cost_disposition": (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+            }
+            action["state"] = "REPORTED"
+            persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            result = empty_result(state, after, "review_required")
+            result["cycle"].update({
+                "provider_retrieval_count": 1,
+                "retrieved_action_ids": [action["action_id"]],
+                "still_pending_action_ids": [],
+            })
+            result["provider_operations"] = [{
+                "action_id": action["action_id"], "route_family": "exact_natal",
+                "provider_operation_kind": "batch",
+                "provider_operation_id": batch_id,
+                "retrieval_outcome": "output_invalid",
+                "cost_disposition": (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+                "member_count": member_count, "ingested_member_count": 0,
+                "failed_member_count": 0,
+            }]
+            return result
+        persist_state(run_dir / "run.json", state)
+        write_workspace_snapshot(run_dir)
+        if _failure_injector:
+            _failure_injector("after_batch_files_durable")
+
+        class CachedBatchTransport:
+            def retrieve_batch(self, requested_id: str) -> dict[str, Any]:
+                if requested_id != batch_id:
+                    raise ValueError("Cached Batch ID mismatch")
+                return batch
+
+            def download_file(self, file_id: str) -> str:
+                if file_id == batch.get("output_file_id"):
+                    return output_text
+                if file_id == batch.get("error_file_id"):
+                    return error_text
+                raise ValueError("Cached Batch File ID mismatch")
+
+            def upload_jsonl(self, content: bytes, filename: str) -> dict[str, Any]:
+                raise AssertionError("Reconciliation cannot upload Batch input")
+
+            def create_batch(self, payload: dict[str, Any]) -> dict[str, Any]:
+                raise AssertionError("Reconciliation cannot create a Batch")
+
+        controller = SpendController(
+            state=state, run_json=run_dir / "run.json", state_lock=threading.Lock(),
+            consumer_id=f"batch-reconcile:{os.getpid()}",
+            event_emitter=event_emitter, reconciliation_only=True,
+        )
+        author_pending_passes_batch(
+            state=state, provider=provider, transport=CachedBatchTransport(),
+            run_dir=run_dir, max_attempts=max_attempts,
+            python_executable=python_executable, run_json=run_dir / "run.json",
+            detach=True, sleep=lambda _: None, spend_controller=controller,
+            reconciliation_only=True,
+        )
+        if _failure_injector:
+            _failure_injector("after_batch_member_ingestion")
+        update_run_status(state)
+        exhaust_local_continuation(state, controller)
+        save_state(run_dir / "run.json", state)
+        if _failure_injector:
+            _failure_injector("after_batch_local_continuation")
+        if _failure_injector:
+            _failure_injector("after_batch_state_persistence")
+        after = inspect_lifecycle(
+            run_dir, native_exclusive_access="established", observed_at=instant,
+        )
+        result = empty_result(state, after, "progressed_local")
+        result["cycle"].update({
+            "provider_retrieval_count": 1,
+            "retrieved_action_ids": [action["action_id"]],
+            "completed_action_ids": [action["action_id"]],
+            "still_pending_action_ids": [],
+        })
+        failed_count = sum(1 for item in expected if item in errors)
+        result["provider_operations"] = [{
+            "action_id": action["action_id"], "route_family": "exact_natal",
+            "provider_operation_kind": "batch", "provider_operation_id": batch_id,
+            "retrieval_outcome": "completed",
+            "cost_disposition": "provider_usage_reported",
+            "member_count": member_count,
+            "ingested_member_count": member_count - failed_count,
+            "failed_member_count": failed_count,
+        }]
+        result["local_continuation"] = {
+            "pass_ids": sorted(item["pass_id"] for item in round_record["requests"]),
+            "stages": [action["binding"]["stage"]],
+            "completed_action_ids": [action["action_id"]],
+            "exhausted_before_detach": True,
+        }
+        return result
 
 
 def run_bounded_authoring_reconciliation(

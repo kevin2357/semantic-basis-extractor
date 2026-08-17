@@ -108,3 +108,28 @@
 - The complete repository suite passed all 343 tests in 133.889 seconds.
 - Slice 2 is complete and paused for review. Provider operations remain 0 and paid
   spend remains `$0`; no build, version bump, release, or tag occurred.
+- Kevin approved Slice 2. Committed and pushed it as `81182c3`; Slice 3 began.
+- Added a bounded retrieval-only exact-Natal Batch reconciliation cycle. Durable
+  Batch timing, exact round/ID binding, strict early `not_due`, Batch backoff, and
+  one-known-ID retrieval are now native lifecycle behavior.
+- Terminal Batch object and output/error files are checkpointed before atomic
+  member preflight and ingestion. The cache-only ingestion transport rejects File
+  upload and Batch creation, preventing reconciliation from becoming submission.
+- Added closed terminal cost handling. Failed, expired, cancelled, and terminal
+  integrity-review cases never fabricate zero usage; provider retrieval custody
+  ends while consumer authority remains retained for billing or review.
+- Added missing, unknown, duplicate, malformed, identity-conflicting, retrieval-
+  warning, download-warning, and unknown-status evidence tests. All fail closed
+  before partial member acceptance.
+- Concurrent resume coverage proves the native byte lock permits one retrieval;
+  the contending writer fails closed without a second provider operation.
+- Failure injection covers terminal-object persistence, downloaded files, member
+  ingestion, local continuation, and state persistence. The local-continuation
+  injection exposed and corrected a snapshot-ordering edge before the gate:
+  output mutations and native state are now checkpointed coherently before that
+  interruption boundary.
+- Completed and interrupted replays exhaust deterministic assembly/QA from cached
+  evidence and do not retrieve an ingested Batch again.
+- The complete repository suite passed all 350 tests in 198.857 seconds.
+- Slice 3 is complete and paused for review. Provider operations remain 0 and paid
+  spend remains `$0`; no build, version bump, release, or tag occurred.

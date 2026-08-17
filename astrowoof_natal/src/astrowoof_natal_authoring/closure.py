@@ -2801,13 +2801,10 @@ class SpendController:
                     provider_id=str(provider_id or ""),
                     kind=kind,
                 )
-                # This sprint's releasable scheduling contract is intentionally
-                # exact-interactive only. Batch retains its existing detach path
-                # and fails closed in lifecycle projection until Slice 4 assigns
-                # an explicit parity classification.
-                if service_level == "interactive":
+                if service_level in {"interactive", "batch"}:
                     action["provider_reconciliation"] = initial_timing(
-                        recorded_at=utc_now().replace("+00:00", "Z")
+                        recorded_at=utc_now().replace("+00:00", "Z"),
+                        mechanism=("batch" if service_level == "batch" else "response"),
                     )
                 try:
                     persist_state(self.run_json, self.state)
@@ -3298,6 +3295,7 @@ def author_pending_passes_batch(
     detach: bool = False,
     sleep: Any = time.sleep,
     spend_controller: SpendController | None = None,
+    reconciliation_only: bool = False,
 ) -> bool:
     """Author pending passes in model-homogeneous, resumable Batch rounds."""
     service = state.setdefault(
@@ -3704,6 +3702,8 @@ def author_pending_passes_batch(
                 "estimated_cost": {"estimated_amount": aggregate_cost},
             })
         save_state(run_json, state)
+        if reconciliation_only:
+            return False
 
 
 def select_cache_warmer(specs: list[PassSpec]) -> PassSpec:

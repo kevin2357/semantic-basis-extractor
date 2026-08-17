@@ -574,8 +574,10 @@ def _capacity_and_custody(
         identity = native_provider_route_identity(state, action)
         operation_kind = str(identity.get("provider_operation_kind") or "")
         native_operation_ref = str(identity.get("native_operation_ref") or "")
-        exact_interactive_supported = bool(
-            identity.get("valid") and identity.get("adapter") == "exact_interactive"
+        route_adapter_supported = bool(
+            identity.get("valid") and identity.get("adapter") in {
+                "exact_interactive", "exact_batch",
+            }
             and binding.get("stage") in {
                 "authoring_initial", "creative_retry", "polish",
                 "qualitative_critic", "qualitative_candidate",
@@ -589,17 +591,17 @@ def _capacity_and_custody(
                 "qualitative_critic": "qualitative_critic",
                 "qualitative_candidate": "qualitative_candidate",
             }[stage]
-            exact_interactive_supported = bool(
-                exact_interactive_supported and qa.get(enabled_key)
+            route_adapter_supported = bool(
+                route_adapter_supported and qa.get(enabled_key)
             )
-        timing = validated_timing(action) if exact_interactive_supported else None
+        timing = validated_timing(action) if route_adapter_supported else None
         if timing is None:
             unsupported = True
             resume_not_before = None
             reason_code = (
                 "route_or_stage_not_supported"
                 if not identity.get("valid")
-                or identity.get("adapter") != "exact_interactive"
+                or identity.get("adapter") not in {"exact_interactive", "exact_batch"}
                 else "reconciliation_timing_missing"
             )
         else:
@@ -664,6 +666,18 @@ def _capacity_and_custody(
         "cost_disposition": "not_applicable_provider_pending",
     } for item in projected]
     for action in actions:
+        if action.get("integrity_review") and not any(
+            item["action_id"] == action.get("action_id")
+            for item in authority_actions
+        ):
+            authority_actions.append({
+                "action_id": str(action.get("action_id") or ""),
+                "retention_reason": "provider_output_integrity_review",
+                "cost_disposition": str(
+                    ((action.get("reported") or {}).get("cost_disposition"))
+                    or "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+            })
         if action.get("state") in {
             "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
         } and not any(
@@ -714,6 +728,7 @@ def _capacity_and_custody(
     ambiguous = any(item.get("state") in {
         "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
     } for item in actions)
+    integrity_review = any(item.get("integrity_review") for item in actions)
     now = parse_utc_instant(observed_at)
     due = any(
         parse_utc_instant(item["resume_not_before"]) <= now for item in scheduled
@@ -731,6 +746,10 @@ def _capacity_and_custody(
     elif ambiguous:
         disposition, local_ready, reason = (
             "retain_for_review", False, "provider_submission_ambiguous",
+        )
+    elif integrity_review:
+        disposition, local_ready, reason = (
+            "retain_for_review", False, "native_review_required",
         )
     elif unsupported:
         disposition, local_ready, reason = (

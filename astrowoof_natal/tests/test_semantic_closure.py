@@ -106,6 +106,7 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     authorize_action,
 )
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    reconcile_batch_provider_cycle,
     run_bounded_authoring_reconciliation,
 )
 from astrowoof_natal_authoring.lifecycle import inspect_lifecycle  # noqa: E402
@@ -205,8 +206,25 @@ class ScriptedTransport:
 
 
 class ScriptedBatchTransport:
-    def __init__(self, *, initially_complete: bool = True) -> None:
+    def __init__(
+        self, *, initially_complete: bool = True,
+        retrieve_status: str = "completed", drop_last_output: bool = False,
+        mismatched_retrieval_id: bool = False,
+        duplicate_first_output: bool = False,
+        unknown_output: bool = False,
+        malformed_output: bool = False,
+        retrieval_error: bool = False,
+        download_error: bool = False,
+    ) -> None:
         self.initially_complete = initially_complete
+        self.retrieve_status = retrieve_status
+        self.drop_last_output = drop_last_output
+        self.mismatched_retrieval_id = mismatched_retrieval_id
+        self.duplicate_first_output = duplicate_first_output
+        self.unknown_output = unknown_output
+        self.malformed_output = malformed_output
+        self.retrieval_error = retrieval_error
+        self.download_error = download_error
         self.lines: list[dict] = []
         self.upload_calls = 0
         self.create_calls = 0
@@ -228,17 +246,24 @@ class ScriptedBatchTransport:
 
     def retrieve_batch(self, batch_id: str) -> dict:
         self.retrieve_calls += 1
+        if self.retrieval_error:
+            raise TimeoutError("fixture retrieval timeout")
+        terminal = self.retrieve_status in {"completed", "failed", "expired", "cancelled"}
         return {
-            "id": batch_id,
-            "status": "completed",
-            "output_file_id": "file_output",
+            "id": "batch_conflict" if self.mismatched_retrieval_id else batch_id,
+            "status": self.retrieve_status,
+            "output_file_id": "file_output" if self.retrieve_status == "completed" else None,
             "error_file_id": None,
             "request_counts": {
-                "total": len(self.lines), "completed": len(self.lines), "failed": 0
+                "total": len(self.lines),
+                "completed": len(self.lines) if terminal else 0,
+                "failed": 0,
             },
         }
 
     def download_file(self, file_id: str) -> str:
+        if self.download_error:
+            raise TimeoutError("fixture download timeout")
         output = []
         for index, line in enumerate(self.lines, 1):
             files_schema = line["body"]["text"]["format"]["schema"]["properties"]["files"]
@@ -264,6 +289,16 @@ class ScriptedBatchTransport:
                 },
                 "error": None,
             }))
+        if self.drop_last_output:
+            output = output[:-1]
+        if self.duplicate_first_output:
+            output.append(output[0])
+        if self.unknown_output:
+            unknown = json.loads(output[-1])
+            unknown["custom_id"] = "unknown-member"
+            output[-1] = json.dumps(unknown)
+        if self.malformed_output:
+            output[-1] = "{malformed"
         return "\n".join(output) + "\n"
 
 
@@ -396,10 +431,16 @@ class SemanticClosureFixture(unittest.TestCase):
         provider: FakeAuthoringProvider,
         *,
         max_attempts: int = 3,
+        cards_per_pass: int = 2,
     ) -> tuple[dict, Path]:
-        manifest, specs, _ = self.make_passes(root)
+        manifest, specs, _ = self.make_passes(root, cards_per_pass=cards_per_pass)
         run_dir = root / "run"
         run_dir.mkdir()
+        packet_dir = run_dir / "sbe" / "semantic-basis-output" / "bre"
+        packet_dir.mkdir(parents=True)
+        (packet_dir / "bre.selected-authoring-packet.json").write_text(
+            json.dumps(self.packet, indent=2) + "\n", encoding="utf-8"
+        )
         state = initial_run_state(
             input_package=EXAMPLES,
             run_dir=run_dir,
@@ -416,6 +457,44 @@ class SemanticClosureFixture(unittest.TestCase):
         run_json = run_dir / "run.json"
         save_state(run_json, state)
         return state, run_json
+
+    def make_authorized_detached_batch(
+        self, root: Path, transport: ScriptedBatchTransport,
+    ) -> tuple[OpenAIResponsesProvider, dict, Path, dict]:
+        provider = OpenAIResponsesProvider(
+            api_key="test-key", model="gpt-5.6-luna",
+            max_output_tokens=30_000, prompt_cache_mode="disabled",
+            require_spend_authorization=True,
+        )
+        state, run_json = self.make_state(root, provider, cards_per_pass=10)
+        state["service_level"] = "batch"
+        save_state(run_json, state)
+        controller = SpendController(
+            state=state, run_json=run_json,
+            state_lock=threading.Lock(), consumer_id="batch-worker",
+        )
+        with self.assertRaises(AwaitingSpendAuthorization):
+            author_pending_passes_batch(
+                state=state, provider=provider, transport=transport,
+                run_dir=root / "run", max_attempts=3,
+                python_executable=Path(sys.executable), run_json=run_json,
+                detach=True, sleep=lambda _: None,
+                spend_controller=controller,
+            )
+        action = state["spend_ledger"]["actions"][0]
+        authorize_action(state["spend_ledger"], {
+            "schema_version": AUTHORIZATION_SCHEMA,
+            "action_id": action["action_id"], "binding": action["binding"],
+            "authorization_reference": "test-reservation",
+        })
+        save_state(run_json, state)
+        self.assertFalse(author_pending_passes_batch(
+            state=state, provider=provider, transport=transport,
+            run_dir=root / "run", max_attempts=3,
+            python_executable=Path(sys.executable), run_json=run_json,
+            detach=True, sleep=lambda _: None, spend_controller=controller,
+        ))
+        return provider, load_json(run_json), run_json, action
 
 
 class TestSemanticClosure(SemanticClosureFixture):
@@ -2798,7 +2877,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 max_output_tokens=30_000, prompt_cache_mode="disabled",
                 require_spend_authorization=True,
             )
-            state, run_json = self.make_state(root, provider)
+            state, run_json = self.make_state(root, provider, cards_per_pass=10)
             state["service_level"] = "batch"
             save_state(run_json, state)
             controller = SpendController(
@@ -2847,11 +2926,14 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertEqual(before, workspace_hashes(root / "run"))
             self.assertTrue(inspection["observation"]["snapshot_complete"])
             self.assertTrue(inspection["observation"]["inventory_valid"])
-            self.assertEqual(
-                "unsupported_retain_capacity",
+            self.assertIn(
                 inspection["execution_capacity"]["disposition"],
+                {"release_until_due", "continue_local_cycle"},
             )
-            self.assertEqual("unsupported", inspection["provider_custody"]["state"])
+            self.assertEqual(
+                "known_operations_pending",
+                inspection["provider_custody"]["state"],
+            )
             custody_action = inspection["provider_custody"]["actions"][0]
             self.assertEqual("exact_natal", custody_action["route_family"])
             self.assertEqual("batch", custody_action["provider_operation_kind"])
@@ -2862,19 +2944,248 @@ class TestSemanticClosure(SemanticClosureFixture):
             )
             uploads = transport.upload_calls
             creates = transport.create_calls
-            self.assertTrue(author_pending_passes_batch(
-                state=persisted, provider=provider, transport=transport,
-                run_dir=root / "run", max_attempts=3,
-                python_executable=Path(sys.executable), run_json=run_json,
-                detach=False, poll_interval_seconds=0, sleep=lambda _: None,
-                spend_controller=SpendController(
-                    state=persisted, run_json=run_json,
-                    state_lock=threading.Lock(), consumer_id="batch-worker-resume",
-                ),
-            ))
+            result = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=action["provider_reconciliation"]["resume_not_before"],
+            )
+            self.assertEqual("progressed_local", result["outcome"])
+            self.assertEqual("batch", result["provider_operations"][0]["provider_operation_kind"])
+            self.assertEqual(6, result["provider_operations"][0]["member_count"])
             self.assertEqual(uploads, transport.upload_calls)
             self.assertEqual(creates, transport.create_calls)
             self.assertEqual(1, transport.retrieve_calls)
+
+    def test_batch_reconciliation_pending_and_replay_are_bounded(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedBatchTransport(
+                initially_complete=False, retrieve_status="in_progress"
+            )
+            provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                root, transport
+            )
+            due = action["provider_reconciliation"]["resume_not_before"]
+            pending = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=due,
+            )
+            self.assertEqual("detached_provider_pending", pending["outcome"])
+            self.assertEqual(40, pending["cycle"]["wall_clock_limit_seconds"])
+            self.assertEqual("pending", pending["provider_operations"][0]["retrieval_outcome"])
+            self.assertEqual(1, transport.retrieve_calls)
+            next_due = load_json(root / "run" / "run.json")["spend_ledger"]["actions"][0][
+                "provider_reconciliation"
+            ]["resume_not_before"]
+            not_due = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=due,
+            )
+            self.assertEqual("not_due", not_due["outcome"])
+            self.assertEqual(1, transport.retrieve_calls)
+            transport.retrieve_status = "completed"
+            completed = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=next_due,
+            )
+            self.assertEqual("progressed_local", completed["outcome"])
+            self.assertEqual(2, transport.retrieve_calls)
+            replay = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=next_due,
+            )
+            self.assertEqual("progressed_local", replay["outcome"])
+            self.assertEqual(2, transport.retrieve_calls)
+            self.assertEqual(1, transport.create_calls)
+
+    def test_batch_reconciliation_output_membership_is_atomic_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedBatchTransport(
+                initially_complete=False, drop_last_output=True,
+            )
+            provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                root, transport
+            )
+            result = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=action["provider_reconciliation"]["resume_not_before"],
+            )
+            self.assertEqual("review_required", result["outcome"])
+            self.assertEqual("output_invalid", result["provider_operations"][0]["retrieval_outcome"])
+            self.assertEqual([], result["inspection"]["provider_custody"]["action_ids"])
+            self.assertEqual("retain", result["inspection"]["consumer_authority"]["state"])
+            self.assertEqual(
+                "provider_output_integrity_review",
+                result["inspection"]["consumer_authority"]["actions"][0]["retention_reason"],
+            )
+            persisted = load_json(root / "run" / "run.json")
+            self.assertTrue(all(
+                record["state"] == "BATCH_SUBMITTED"
+                for record in persisted["passes"].values()
+            ))
+
+    def test_batch_reconciliation_rejects_conflicting_member_evidence(self) -> None:
+        cases = (
+            {"drop_last_output": True},
+            {"duplicate_first_output": True},
+            {"unknown_output": True},
+            {"malformed_output": True},
+        )
+        for settings in cases:
+            with self.subTest(settings=settings), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                transport = ScriptedBatchTransport(
+                    initially_complete=False, **settings,
+                )
+                provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                    root, transport
+                )
+                result = reconcile_batch_provider_cycle(
+                    root / "run", provider=provider, transport=transport,
+                    max_attempts=3, python_executable=Path(sys.executable),
+                    observed_at=action["provider_reconciliation"]["resume_not_before"],
+                )
+                self.assertEqual("review_required", result["outcome"])
+                self.assertEqual(
+                    "output_invalid",
+                    result["provider_operations"][0]["retrieval_outcome"],
+                )
+                self.assertEqual(0, result["provider_operations"][0]["ingested_member_count"])
+
+    def test_batch_reconciliation_conflict_and_transport_warnings_fail_closed(self) -> None:
+        cases = (
+            ({"mismatched_retrieval_id": True}, "review_required", "identity_conflict"),
+            ({"retrieval_error": True}, "detached_provider_pending", "transport_warning"),
+            ({"download_error": True}, "detached_provider_pending", "transport_warning"),
+            ({"retrieve_status": "mystery"}, "detached_provider_pending", None),
+        )
+        for settings, expected_outcome, expected_retrieval in cases:
+            with self.subTest(settings=settings), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                transport = ScriptedBatchTransport(
+                    initially_complete=False, **settings,
+                )
+                provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                    root, transport
+                )
+                result = reconcile_batch_provider_cycle(
+                    root / "run", provider=provider, transport=transport,
+                    max_attempts=3, python_executable=Path(sys.executable),
+                    observed_at=action["provider_reconciliation"]["resume_not_before"],
+                )
+                self.assertEqual(expected_outcome, result["outcome"])
+                if expected_retrieval is not None:
+                    self.assertEqual(
+                        expected_retrieval,
+                        result["provider_operations"][0]["retrieval_outcome"],
+                    )
+                self.assertEqual(1, transport.retrieve_calls)
+                self.assertEqual(1, transport.create_calls)
+
+    def test_batch_reconciliation_concurrent_resume_has_one_retrieval(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedBatchTransport(initially_complete=False)
+            provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                root, transport
+            )
+            due = action["provider_reconciliation"]["resume_not_before"]
+            results: list[dict] = []
+            failures: list[BaseException] = []
+
+            def resume() -> None:
+                try:
+                    results.append(reconcile_batch_provider_cycle(
+                        root / "run", provider=provider, transport=transport,
+                        max_attempts=3, python_executable=Path(sys.executable),
+                        observed_at=due,
+                    ))
+                except BaseException as exc:  # pragma: no cover - asserted below
+                    failures.append(exc)
+
+            workers = [threading.Thread(target=resume) for _ in range(2)]
+            for worker in workers:
+                worker.start()
+            for worker in workers:
+                worker.join(timeout=30)
+            self.assertFalse(any(worker.is_alive() for worker in workers))
+            self.assertEqual(1, len(failures))
+            self.assertIsInstance(failures[0], OSError)
+            self.assertEqual(1, len(results))
+            self.assertEqual(1, transport.retrieve_calls)
+            self.assertEqual(1, transport.create_calls)
+
+    def test_batch_terminal_without_usage_retains_financial_authority(self) -> None:
+        for terminal_status in ("failed", "expired", "cancelled"):
+            with self.subTest(status=terminal_status), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                transport = ScriptedBatchTransport(
+                    initially_complete=False, retrieve_status=terminal_status,
+                )
+                provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                    root, transport
+                )
+                result = reconcile_batch_provider_cycle(
+                    root / "run", provider=provider, transport=transport,
+                    max_attempts=3, python_executable=Path(sys.executable),
+                    observed_at=action["provider_reconciliation"]["resume_not_before"],
+                )
+                operation = result["provider_operations"][0]
+                self.assertEqual("provider_failed", operation["retrieval_outcome"])
+                self.assertEqual(
+                    "provider_usage_unavailable_billing_reconciliation_pending",
+                    operation["cost_disposition"],
+                )
+                self.assertEqual([], result["inspection"]["provider_custody"]["action_ids"])
+                authority = result["inspection"]["consumer_authority"]
+                self.assertEqual("retain", authority["state"])
+                self.assertIsNone(
+                    load_json(root / "run" / "run.json")["spend_ledger"]["actions"][0]
+                    ["reported"]["estimated_micro_usd"]
+                )
+
+    def test_batch_reconciliation_crash_checkpoints_resume_without_submission(self) -> None:
+        for failure_point in (
+            "after_batch_terminal_object", "after_batch_files_durable",
+            "after_batch_member_ingestion", "after_batch_local_continuation",
+            "after_batch_state_persistence",
+        ):
+            with self.subTest(point=failure_point), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                transport = ScriptedBatchTransport(initially_complete=False)
+                provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                    root, transport
+                )
+
+                def inject(point: str) -> None:
+                    if point == failure_point:
+                        raise RuntimeError(f"injected {point}")
+
+                with self.assertRaisesRegex(RuntimeError, failure_point):
+                    reconcile_batch_provider_cycle(
+                        root / "run", provider=provider, transport=transport,
+                        max_attempts=3, python_executable=Path(sys.executable),
+                        observed_at=action["provider_reconciliation"]["resume_not_before"],
+                        _failure_injector=inject,
+                    )
+                interrupted = load_json(root / "run" / "run.json")
+                validate_workspace_snapshot(root / "run", interrupted)
+                calls = transport.retrieve_calls
+                resumed = reconcile_batch_provider_cycle(
+                    root / "run", provider=provider, transport=transport,
+                    max_attempts=3, python_executable=Path(sys.executable),
+                    observed_at=action["provider_reconciliation"]["resume_not_before"],
+                )
+                self.assertEqual("progressed_local", resumed["outcome"])
+                self.assertLessEqual(transport.retrieve_calls, calls + 1)
+                self.assertEqual(1, transport.create_calls)
+                self.assertEqual(1, transport.upload_calls)
 
     def test_batch_cost_is_half_of_interactive_estimate(self) -> None:
         usage = {
