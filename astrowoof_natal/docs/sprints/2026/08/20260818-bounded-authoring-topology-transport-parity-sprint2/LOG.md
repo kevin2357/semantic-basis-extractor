@@ -258,3 +258,31 @@
 - Provider operations: 0. Spend: USD 0.
 - Slice 7 is complete and paused for API consumer review before installed release
   qualification.
+
+## 2026-08-18 — Slice 8 installed qualification and release recommendation
+
+- API review approved Slice 7 with two release conditions: use a fresh immutable
+  version rather than changing 0.4.5, and carry the accepted fixture hashes into
+  the final release handoff. Kevin approved the same conditions.
+- Full repository qualification passed 423 tests in 428.695 seconds with 10
+  expected environment-dependent skips. A separate environment with Draft 2020-12
+  validation passed all 48 focused contract/release checks without skips.
+- Built two fixed-epoch qualification wheels from source commit `58f6779`; both are
+  byte-identical at SHA-256
+  `bf864e2376ba36f3a8a292b3092c095ee52fac2ce8fcf081521f6ad3a3350ff2`.
+- Verified 106 wheel entries, 61 resources, `py.typed`, packaged oracle v2 and
+  bounded traces, no tests, and no bytecode/cache entries.
+- Isolated Windows CPython 3.12 and fresh Linux CPython 3.11 installs passed `pip
+  check`, lifecycle smoke, release smoke, route evidence export, and installed fake
+  route checks for exact interactive, exact Batch, bounded interactive, and bounded
+  Batch.
+- Prepared a 0.4.6 release recommendation, compatibility contract, API handoff,
+  known limitations, and candidate manifest. Both API-approved Slice 7 resource
+  hashes are repeated verbatim.
+- The current wheel retains version 0.4.5 and is qualification-only. It must never
+  replace the published immutable 0.4.5 artifact. Final release authorization must
+  bump to 0.4.6, commit the exact source, rebuild twice, and rerun final installed
+  gates before tag/publication.
+- Provider operations: 0. Spend: USD 0.
+- Slice 8 is complete; the sprint recommends 0.4.6 and pauses for explicit release
+  authorization.

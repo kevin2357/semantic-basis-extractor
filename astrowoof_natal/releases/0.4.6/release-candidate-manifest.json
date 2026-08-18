@@ -1,0 +1,42 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release_candidate.v0.1",
+  "recommended_version": "0.4.6",
+  "status": "qualified_unversioned_candidate_not_publishable",
+  "qualification_artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.5-py3-none-any.whl",
+    "purpose": "post-0.4.5 source qualification only",
+    "bytes": 800957,
+    "sha256": "bf864e2376ba36f3a8a292b3092c095ee52fac2ce8fcf081521f6ad3a3350ff2",
+    "wheel_entry_count": 106,
+    "resource_count": 61,
+    "py_typed": true,
+    "publishable": false
+  },
+  "build": {
+    "source_commit": "58f6779",
+    "source_date_epoch": 1787040000,
+    "independent_build_count": 2,
+    "byte_reproducible": true
+  },
+  "upstream": {
+    "agf_version": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc_version": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "consumer_resources": {
+    "route_parity_transition_oracle_v2_sha256": "c355a3c47b69fcbc78622df97b89572172133253f34d0342ae18e609e1e4d97d",
+    "bounded_route_parity_traces_v1_sha256": "02d8aba73028c144c97e8c806cd0f8b3505fe4ca3410284d4bc8e2d4c33f0268"
+  },
+  "qa": {
+    "repository_tests_passed": 423,
+    "repository_expected_skips": 10,
+    "strict_contract_tests_passed": 48,
+    "windows_installed_smoke": "pass",
+    "linux_python_3_11_installed_smoke": "pass",
+    "installed_four_route_fake_provider_smoke": "pass",
+    "provider_operation_count": 0,
+    "provider_spend_usd": 0
+  },
+  "release_condition": "bump to 0.4.6, commit exact source, rebuild twice, rerun exact final installed gates, then obtain tag/publication authorization"
+}
