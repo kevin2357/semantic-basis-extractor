@@ -34,6 +34,12 @@ to the exact request digest, run/profile/state revision, route, maximum output,
 commitment, and price book. Polling already identified provider work does not
 require authorization.
 
+The fresh exact-interactive initial round is authorized as a complete set. Pass
+the API-issued `--initial-wave-authorization WAVE.json` together with exactly six
+ordered `--spend-authorization MEMBER.json` documents. SBE validates the envelope
+and every member against one preparation revision before applying any authority or
+creating provider work. A partial or mismatched set mutates nothing.
+
 Required-stage ceiling failure produces `BUDGET_EXHAUSTED`. A provider-creation
 window without a durably recorded provider ID produces
 `AMBIGUOUS_PROVIDER_SUBMISSION` and is never automatically retried. Optional
@@ -198,10 +204,14 @@ the only supported TTL value exposed by the runner.
 default is six. Reduce it when an account's token-per-minute limit cannot
 support all six requests concurrently.
 
-For a fresh cached run with concurrent workers, the runner first completes the
-smallest generated pass as a cache warmer. It then submits the other five in
-parallel. This avoids six simultaneous cache writes for the same subject
-prefix. Resume never repeats an accepted pass merely to warm the cache.
+For a fresh OpenAI interactive run, the six initial passes form one authorized
+wave. The runner requires one exact wave envelope plus all six member
+authorizations, creates the six independent background Responses concurrently,
+and durably records each returned Response ID before detaching. It does not wait
+for one full response as a cache warmer. Fresh reconciliation cycles retrieve at
+most four due Responses concurrently; create fan-out and retrieval pressure are
+deliberately separate controls. Creative retries retain the ordinary pass-local
+authorization and execution path.
 
 There are two retry layers:
 

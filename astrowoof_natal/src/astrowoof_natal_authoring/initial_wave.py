@@ -66,6 +66,7 @@ class InitialWaveMemberSpec:
 class ProviderCreateResult:
     provider_id: str
     provider_kind: str = "response"
+    metadata: Mapping[str, Any] | None = None
 
 
 def _require_sha256(value: Any, label: str) -> str:
@@ -426,24 +427,28 @@ def execute_initial_wave_creates(
                 "pass_id": member["pass_id"],
                 "outcome": "provider_bound",
                 "provider": {"kind": "response", "id": result.provider_id},
+                "provider_create_metadata": dict(result.metadata or {}),
                 "reason": None,
             }
         except DefinitelyUnattemptedCreate as exc:
             return {
                 "action_id": member["action_id"], "pass_id": member["pass_id"],
                 "outcome": "authorized_unstarted", "provider": None,
+                "provider_create_metadata": None,
                 "reason": str(exc),
             }
         except ProviderCreateRefused as exc:
             return {
                 "action_id": member["action_id"], "pass_id": member["pass_id"],
                 "outcome": "create_refused", "provider": None,
+                "provider_create_metadata": None,
                 "reason": str(exc),
             }
         except Exception as exc:
             return {
                 "action_id": member["action_id"], "pass_id": member["pass_id"],
                 "outcome": "ambiguous_submission", "provider": None,
+                "provider_create_metadata": None,
                 "reason": str(exc),
             }
 

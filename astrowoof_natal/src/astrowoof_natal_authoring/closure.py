@@ -51,6 +51,14 @@ from .execution_events import (
 )
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 from .pass_protocol import bind_logical_pass_request
+from .initial_wave import (
+    InitialWaveError,
+    InitialWaveMemberSpec,
+    ProviderCreateResult as InitialWaveProviderCreateResult,
+    build_initial_wave,
+    execute_initial_wave_creates,
+    preflight_wave_authorization,
+)
 from .provenance import (
     artifact_descriptor,
     initial_provenance,
@@ -1145,6 +1153,7 @@ class OpenAIResponsesProvider:
         url: str,
         payload: dict[str, Any] | None,
         idempotency_key: str | None = None,
+        timeout_seconds: float | None = None,
     ) -> tuple[dict[str, Any], int]:
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -1159,7 +1168,10 @@ class OpenAIResponsesProvider:
                     url=url,
                     headers=headers,
                     payload=payload,
-                    timeout_seconds=self.http_timeout_seconds,
+                    timeout_seconds=(
+                        self.http_timeout_seconds
+                        if timeout_seconds is None else timeout_seconds
+                    ),
                 )
                 return response, transport_attempt
             except OpenAIServiceError as exc:
@@ -1180,6 +1192,26 @@ class OpenAIResponsesProvider:
                 )
                 self.sleep(delay)
         raise AssertionError("unreachable")
+
+    def create_response_only(
+        self,
+        request_payload: dict[str, Any],
+        *,
+        idempotency_key: str,
+        timeout_seconds: float,
+    ) -> tuple[dict[str, Any], int]:
+        """Create one background Response without polling or workspace mutation."""
+        response, attempts = self._request_with_retry(
+            method="POST",
+            url=f"{self.base_url}/responses",
+            payload=request_payload,
+            idempotency_key=idempotency_key,
+            timeout_seconds=timeout_seconds,
+        )
+        response_id = response.get("id")
+        if not isinstance(response_id, str) or not response_id:
+            raise OpenAIServiceError("OpenAI response has no response ID")
+        return response, attempts
 
     def _prompt(
         self,
@@ -1301,82 +1333,11 @@ class OpenAIResponsesProvider:
         before_submit: Any = None,
         provider_created: Any = None,
     ) -> ProviderResult:
-        expected_fields = writable_fields(source_workspace)
-        system, prompt_segments = self._prompt(
-            spec=spec,
-            workspace=source_workspace,
-            feedback=feedback,
-        )
-        request_payload: dict[str, Any] = {
-            "model": self.model,
-            "input": [
-                {
-                    "role": "system",
-                    "content": [self._input_text_block(system)],
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        self._input_text_block(
-                            prompt_segments["static_prefix"],
-                            breakpoint=True,
-                        ),
-                        self._input_text_block(
-                            prompt_segments["subject_prefix"],
-                            breakpoint=True,
-                        ),
-                        self._input_text_block(
-                            prompt_segments["pass_assignment"]
-                        ),
-                    ],
-                },
-            ],
-            "background": self.background,
-            "reasoning": {"effort": self.reasoning_effort},
-            "text": {
-                "verbosity": "high",
-                "format": {
-                    "type": "json_schema",
-                    "name": "astrowoof_authoring_pass",
-                    "strict": True,
-                    "schema": authoring_output_schema(expected_fields),
-                },
-            },
-            "max_output_tokens": self.max_output_tokens,
-        }
-        if self.prompt_cache_mode != "disabled":
-            request_payload["prompt_cache_options"] = {
-                "mode": self.prompt_cache_mode,
-                "ttl": self.prompt_cache_ttl,
-            }
-            subject_hash = hashlib.sha256(
-                prompt_segments["subject_prefix"].encode("utf-8")
-            ).hexdigest()
-            request_payload["prompt_cache_key"] = (
-                f"astrowoof:{self.model}:{subject_hash[:32]}"
+        request_payload, prompt_layout, prompt_segments = (
+            build_interactive_authoring_request(
+                self, spec=spec, workspace=source_workspace,
+                feedback=feedback, attempt_number=attempt_number,
             )
-        prompt_layout = self.prompt_layout(
-            spec=spec,
-            workspace=source_workspace,
-            feedback=feedback,
-        )
-        if self.safety_identifier:
-            request_payload["safety_identifier"] = self.safety_identifier
-        # Traverse the shared transport-neutral identity seam without changing the
-        # exact-route request bytes or provider envelope.
-        bind_logical_pass_request(
-            route_family="exact_natal",
-            route_contract=SCHEMA_VERSION,
-            assignment_sha256=spec.source_sha256,
-            pass_id=spec.pass_id,
-            pass_number=spec.pass_number,
-            pass_count=PASS_COUNT,
-            attempt_number=attempt_number,
-            stage=("authoring_initial" if attempt_number == 1 else "creative_retry"),
-            resource_identity={"source_sha256": spec.source_sha256},
-            prompt=request_payload["input"],
-            output_schema=request_payload["text"]["format"]["schema"],
-            maximum_output_tokens=self.max_output_tokens,
         )
         attempt_root = response_workspace.parents[1]
         write_json_atomic(
@@ -1781,6 +1742,64 @@ def openai_provider_for_attempt(
     if isinstance(provider, OpenAIResponsesProvider):
         return provider
     raise TypeError("Batch service level requires an OpenAI provider")
+
+
+def build_interactive_authoring_request(
+    provider: OpenAIResponsesProvider,
+    *,
+    spec: PassSpec,
+    workspace: Path,
+    feedback: dict[str, Any] | None,
+    attempt_number: int = 1,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, str]]:
+    """Build the exact interactive request without provider I/O or mutation."""
+    expected_fields = writable_fields(workspace)
+    system, segments = provider._prompt(
+        spec=spec, workspace=workspace, feedback=feedback,
+    )
+    payload: dict[str, Any] = {
+        "model": provider.model,
+        "input": [
+            {"role": "system", "content": [provider._input_text_block(system)]},
+            {"role": "user", "content": [
+                provider._input_text_block(segments["static_prefix"], breakpoint=True),
+                provider._input_text_block(segments["subject_prefix"], breakpoint=True),
+                provider._input_text_block(segments["pass_assignment"]),
+            ]},
+        ],
+        "background": provider.background,
+        "reasoning": {"effort": provider.reasoning_effort},
+        "text": {"verbosity": "high", "format": {
+            "type": "json_schema", "name": "astrowoof_authoring_pass",
+            "strict": True, "schema": authoring_output_schema(expected_fields),
+        }},
+        "max_output_tokens": provider.max_output_tokens,
+    }
+    if provider.prompt_cache_mode != "disabled":
+        payload["prompt_cache_options"] = {
+            "mode": provider.prompt_cache_mode, "ttl": provider.prompt_cache_ttl,
+        }
+        subject_hash = hashlib.sha256(
+            segments["subject_prefix"].encode("utf-8")
+        ).hexdigest()
+        payload["prompt_cache_key"] = (
+            f"astrowoof:{provider.model}:{subject_hash[:32]}"
+        )
+    if provider.safety_identifier:
+        payload["safety_identifier"] = provider.safety_identifier
+    bind_logical_pass_request(
+        route_family="exact_natal", route_contract=SCHEMA_VERSION,
+        assignment_sha256=spec.source_sha256, pass_id=spec.pass_id,
+        pass_number=spec.pass_number, pass_count=PASS_COUNT,
+        attempt_number=attempt_number,
+        stage=("authoring_initial" if attempt_number == 1 else "creative_retry"),
+        resource_identity={"source_sha256": spec.source_sha256},
+        prompt=payload["input"], output_schema=payload["text"]["format"]["schema"],
+        maximum_output_tokens=provider.max_output_tokens,
+    )
+    return payload, provider.prompt_layout(
+        spec=spec, workspace=workspace, feedback=feedback,
+    ), segments
 
 
 def build_batch_authoring_request(
@@ -2961,6 +2980,274 @@ def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
         return workspace
     safe_extract_zip(spec.source_zip, source_root)
     return find_workspace_root(source_root, spec.pass_id)
+
+
+def prepare_exact_interactive_initial_wave(
+    *, state: dict[str, Any], provider: AuthoringProvider,
+    run_dir: Path, run_json: Path,
+) -> dict[str, Any] | None:
+    """Prepare all six fresh exact-interactive actions at one state basis."""
+    if state.get("initial_authoring_wave"):
+        return state["initial_authoring_wave"]
+    specs = specs_from_state(state)
+    if len(specs) != PASS_COUNT or any(
+        state["passes"][spec.pass_id].get("attempts") for spec in specs
+    ):
+        return None
+    routed = openai_provider_for_attempt(provider, 1)
+    ledger = state.get("spend_ledger")
+    if not isinstance(ledger, dict):
+        raise ValueError("OpenAI initial wave requires a durable spend ledger")
+    basis_revision = int(state.get("state_revision") or 0)
+    profile_sha256 = spend_profile_digest(state.get("authoring_profile"))
+    members: list[InitialWaveMemberSpec] = []
+    request_index: dict[str, dict[str, Any]] = {}
+    for spec in specs:
+        pass_root = run_dir / "passes" / spec.pass_id
+        source_workspace = prepare_source_workspace(spec, pass_root)
+        payload, prompt_layout, segments = build_interactive_authoring_request(
+            routed, spec=spec, workspace=source_workspace,
+            feedback=None, attempt_number=1,
+        )
+        request_sha256 = spend_digest(payload)
+        commitment = conservative_commitment_micros(
+            model=routed.model,
+            input_tokens=estimated_text_tokens(json.dumps(
+                payload, ensure_ascii=False, separators=(",", ":"),
+            )),
+            maximum_output_tokens=routed.max_output_tokens,
+            service_level="interactive",
+        )
+        binding = action_binding(
+            run_id=state["run_id"], profile_sha256=profile_sha256,
+            prepared_state_revision=basis_revision,
+            stage="authoring_initial", route=f"{spec.pass_id}:attempt-001",
+            request_sha256=request_sha256, model=routed.model,
+            service_level="interactive",
+            maximum_output_tokens=routed.max_output_tokens,
+            commitment_micro_usd=commitment,
+        )
+        action = prepare_action(ledger, binding)
+        if action["state"] != "PREPARED":
+            raise BudgetExhausted(
+                "Complete initial wave exceeds frozen spend authority", action=action,
+            )
+        members.append(InitialWaveMemberSpec(
+            action_id=action["action_id"], binding=binding,
+            pass_id=spec.pass_id, pass_number=spec.pass_number,
+        ))
+        attempt_root = pass_root / "attempt-001"
+        response_workspace = attempt_root / "response" / spec.pass_id
+        write_json_atomic(attempt_root / "openai-request.json", {
+            **payload, "input": [payload["input"][0], {
+                "role": "user", "content": (
+                    "[workspace prompt persisted separately as "
+                    "openai-workspace-prompt.txt]"
+                ),
+            }],
+        })
+        request_payload_path = attempt_root / "openai-request-payload.private.json"
+        write_json_atomic(request_payload_path, payload)
+        (attempt_root / "openai-workspace-prompt.txt").write_text(
+            "\n\n".join(segments.values()), encoding="utf-8",
+        )
+        attempt = {
+            "attempt_number": 1, "state": "AWAITING_SPEND_AUTHORIZATION",
+            "started_at": utc_now(), "finished_at": None,
+            "response_workspace": normalized_path(response_workspace),
+            "provider_metadata": None, "qa": None, "error": None,
+            "paid_action_id": action["action_id"],
+        }
+        record = state["passes"][spec.pass_id]
+        record["attempts"].append(attempt)
+        record["state"] = "AWAITING_SPEND_AUTHORIZATION"
+        request_index[action["action_id"]] = {
+            "request_payload_path": normalized_path(request_payload_path),
+            "request_sha256": request_sha256,
+            "prompt_layout": prompt_layout,
+            "attempt_root": normalized_path(attempt_root),
+            "pass_id": spec.pass_id,
+        }
+    assignment_sha256 = spend_digest([
+        {"pass_id": spec.pass_id, "source_sha256": spec.source_sha256}
+        for spec in specs
+    ])
+    aggregate_commitment = sum(
+        member.binding["commitment_micro_usd"] for member in members
+    )
+    policy = ledger["policy"]
+    if (
+        aggregate_commitment > policy["run_ceiling_micro_usd"]
+        or aggregate_commitment
+        > policy["stage_ceilings_micro_usd"]["authoring_initial"]
+    ):
+        for member in members:
+            action = next(item for item in ledger["actions"]
+                          if item["action_id"] == member.action_id)
+            action["state"] = "BUDGET_EXHAUSTED"
+            record = state["passes"][member.pass_id]
+            record["state"] = "BUDGET_EXHAUSTED"
+            record["attempts"][-1]["state"] = "BUDGET_EXHAUSTED"
+        persist_state(run_json, state)
+        raise BudgetExhausted(
+            "Complete initial wave exceeds frozen spend ceiling",
+            action=next(item for item in ledger["actions"]
+                        if item["action_id"] == members[0].action_id),
+        )
+    wave = build_initial_wave(
+        run_id=state["run_id"], route_family="exact_natal",
+        route_contract=SCHEMA_VERSION, assignment_sha256=assignment_sha256,
+        profile_sha256=profile_sha256,
+        preparation_basis_revision=basis_revision, members=members,
+    )
+    state["initial_authoring_wave"] = {
+        **wave, "state": "AWAITING_SPEND_AUTHORIZATION",
+        "requests": request_index,
+    }
+    persist_state(run_json, state)
+    return state["initial_authoring_wave"]
+
+
+def authorize_exact_interactive_initial_wave(
+    *, state: dict[str, Any], run_json: Path,
+    envelope: dict[str, Any], member_authorizations: list[dict[str, Any]],
+) -> None:
+    """Apply the complete external authority set, or mutate nothing."""
+    stored = state.get("initial_authoring_wave")
+    if not isinstance(stored, dict):
+        raise InitialWaveError("wave_missing", "No prepared initial wave exists")
+    wave = {key: value for key, value in stored.items() if key not in {"state", "requests"}}
+    preflight_wave_authorization(wave, envelope, member_authorizations)
+    candidate = deepcopy(state["spend_ledger"])
+    for document in member_authorizations:
+        authorize_action(candidate, document)
+    state["spend_ledger"] = candidate
+    stored["state"] = "AUTHORIZED"
+    stored["authorization"] = deepcopy(envelope)
+    persist_state(run_json, state)
+
+
+def execute_exact_interactive_initial_wave(
+    *, state: dict[str, Any], provider: AuthoringProvider,
+    run_json: Path, event_emitter: ExecutionEventEmitter | None = None,
+) -> dict[str, Any]:
+    """Create six exact Responses concurrently and durably bind each identity."""
+    stored = state.get("initial_authoring_wave")
+    if not isinstance(stored, dict) or stored.get("state") != "AUTHORIZED":
+        raise InitialWaveError("authorization_missing", "Initial wave is not authorized")
+    wave = {key: value for key, value in stored.items() if key not in {
+        "state", "requests", "authorization", "result",
+    }}
+    documents = [
+        next(action["authorization"] for action in state["spend_ledger"]["actions"]
+             if action["action_id"] == member["action_id"])
+        for member in wave["ordered_members"]
+    ]
+    routed = openai_provider_for_attempt(provider, 1)
+    mutation_lock = threading.Lock()
+
+    def action_for(action_id: str) -> dict[str, Any]:
+        return next(item for item in state["spend_ledger"]["actions"]
+                    if item["action_id"] == action_id)
+
+    def submit(member: dict[str, Any], timeout_seconds: int) -> InitialWaveProviderCreateResult:
+        action_id = member["action_id"]
+        request = stored["requests"][action_id]
+        payload = load_json(Path(request["request_payload_path"]))
+        if spend_digest(payload) != member["request_sha256"]:
+            raise InitialWaveError(
+                "request_digest_mismatch",
+                "Prepared initial-wave request changed before submission",
+            )
+        with mutation_lock:
+            action = action_for(action_id)
+            recorded = action.get("provider") or {}
+            if recorded.get("id"):
+                return InitialWaveProviderCreateResult(
+                    provider_id=str(recorded["id"]),
+                    metadata={"resumed_from_durable_identity": True},
+                )
+            if action.get("state") == "SUBMITTING":
+                raise RuntimeError(
+                    "submission resumed without a durable provider identity"
+                )
+            if action.get("state") != "AUTHORIZED":
+                raise RuntimeError(
+                    f"initial-wave action is not submit-eligible: {action.get('state')}"
+                )
+            begin_submission(
+                action, consumer_id=f"pid:{os.getpid()}",
+                state_revision=int(state.get("state_revision") or 0),
+            )
+            persist_state(run_json, state)
+        response, attempts = routed.create_response_only(
+            payload,
+            idempotency_key=hashlib.sha256((
+                f"{member['request_sha256']}:{action_id}"
+            ).encode("utf-8")).hexdigest(),
+            timeout_seconds=float(timeout_seconds),
+        )
+        return InitialWaveProviderCreateResult(
+            provider_id=response["id"], metadata={
+                "status": response.get("status"),
+                "create_transport_attempts": attempts,
+            },
+        )
+
+    def persist_outcome(member: dict[str, Any], outcome: dict[str, Any]) -> None:
+        # Other create workers may still be crossing their pre-submit boundary.
+        # Serialize this immediate ID commit with those ledger mutations.
+        with mutation_lock:
+            action = action_for(member["action_id"])
+            request = stored["requests"][member["action_id"]]
+            attempt = state["passes"][member["pass_id"]]["attempts"][-1]
+            if outcome["outcome"] == "provider_bound":
+                provider_id = outcome["provider"]["id"]
+                if not action.get("provider"):
+                    record_provider_id(action, provider_id=provider_id, kind="response")
+                elif action["provider"] != {"kind": "response", "id": provider_id}:
+                    raise AmbiguousProviderSubmission(
+                        "Initial-wave provider identity conflicts with durable ledger",
+                        action=action,
+                    )
+                if not isinstance(action.get("provider_reconciliation"), dict):
+                    action["provider_reconciliation"] = initial_timing(
+                        recorded_at=utc_now().replace("+00:00", "Z"),
+                        mechanism="response",
+                    )
+                action["state"] = "WAITING"
+                write_json_atomic(Path(request["attempt_root"]) / "openai-background-response.json", {
+                    "id": provider_id,
+                    "status": (outcome.get("provider_create_metadata") or {}).get("status"),
+                    "created_at": utc_now(),
+                })
+                attempt["state"] = "WAITING_FOR_RESPONSE"
+                attempt["provider_metadata"] = outcome.get("provider_create_metadata")
+                state["passes"][member["pass_id"]]["state"] = "WAITING_FOR_RESPONSE"
+                if event_emitter is not None:
+                    event_emitter.emit("provider.identity_recorded", data={
+                        "action_id": action["action_id"],
+                        "provider_operation_id": provider_id,
+                    }, correlation={"action_id": action["action_id"]})
+                    event_emitter.emit("provider.waiting", data={
+                        "action_id": action["action_id"],
+                        "provider_operation_id": provider_id,
+                    }, correlation={"action_id": action["action_id"]})
+            elif outcome["outcome"] == "ambiguous_submission":
+                mark_ambiguous(action, reason=outcome.get("reason") or "create outcome ambiguous")
+                attempt["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+                state["passes"][member["pass_id"]]["state"] = attempt["state"]
+            persist_state(run_json, state)
+
+    result = execute_initial_wave_creates(
+        wave, authorization=stored["authorization"],
+        member_authorizations=documents, submit=submit,
+        persist_member_outcome=persist_outcome,
+    )
+    stored["state"] = "DETACHED" if result["outcome"] == "detached_provider_pending" else "FAILED"
+    stored["result"] = result
+    save_state(run_json, state)
+    return result
 
 
 def run_pass_acceptance(
@@ -6326,6 +6613,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--initial-wave-authorization",
+        type=Path,
+        help=(
+            "Apply the one exact six-member initial-wave authorization envelope; "
+            "requires six ordered --spend-authorization documents."
+        ),
+    )
+    parser.add_argument(
         "--spend-reconciliation",
         action="append",
         type=Path,
@@ -6641,9 +6936,15 @@ def main() -> None:
         )
     if reconciliation_cycle and (
         args.spend_authorization or args.spend_reconciliation
+        or args.initial_wave_authorization
     ):
         parser.error(
             "provider reconciliation cannot apply spend authorization or reconciliation"
+        )
+    if args.initial_wave_authorization and len(args.spend_authorization) != PASS_COUNT:
+        parser.error(
+            "--initial-wave-authorization requires exactly six ordered "
+            "--spend-authorization documents"
         )
     if args.provider_reconciliation_cycle and not args.observed_at:
         parser.error("--provider-reconciliation-cycle requires --observed-at")
@@ -6859,7 +7160,7 @@ def main() -> None:
         )
         output_result(state)
         return
-    if args.spend_authorization:
+    if args.spend_authorization and not args.initial_wave_authorization:
         documents = [load_json(path) for path in args.spend_authorization]
         try:
             apply_spend_authorizations(state, documents)
@@ -6890,6 +7191,50 @@ def main() -> None:
         )
         write_json_atomic(args.prompt_layout_report, report)
         output_result(report)
+        return
+    exact_initial_wave_mode = bool(
+        args.provider == "openai"
+        and args.service_level == "interactive"
+        and (
+            isinstance(state.get("initial_authoring_wave"), dict)
+            or all(
+                not record.get("attempts")
+                for record in state.get("passes", {}).values()
+            )
+        )
+    )
+    if exact_initial_wave_mode:
+        wave = prepare_exact_interactive_initial_wave(
+            state=state, provider=provider, run_dir=args.run_dir,
+            run_json=run_json,
+        )
+        if wave is None:
+            raise InitialWaveError(
+                "mixed_initial_state",
+                "Exact initial wave cannot adopt a partially started legacy run",
+            )
+        if args.initial_wave_authorization:
+            authorize_exact_interactive_initial_wave(
+                state=state, run_json=run_json,
+                envelope=load_json(args.initial_wave_authorization),
+                member_authorizations=[
+                    load_json(path) for path in args.spend_authorization
+                ],
+            )
+        if state["initial_authoring_wave"]["state"] == "AUTHORIZED":
+            execute_exact_interactive_initial_wave(
+                state=state, provider=provider, run_json=run_json,
+                event_emitter=event_emitter,
+            )
+        else:
+            save_state(run_json, state)
+        from .native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=utc_now(),
+            event_emitter=event_emitter,
+        )
+        output_result(state)
         return
     authoring_complete = True
     with checkpoint_spend_boundary(run_json, state):

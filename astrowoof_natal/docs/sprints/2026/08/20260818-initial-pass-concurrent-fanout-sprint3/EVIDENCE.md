@@ -119,3 +119,25 @@ Result:
 - Related strict tests: 66 passed in 6.718 seconds.
 - Compile and `git diff --check`: pass.
 - Provider operations and spend: 0.
+
+## Slice 3
+
+Result:
+[SLICE 3 - Exact Interactive Concurrent Submission.md](results/SLICE%203%20-%20Exact%20Interactive%20Concurrent%20Submission.md)
+
+- Fresh exact interactive now prepares one six-action wave at one revision.
+- One API wave envelope plus six exact ordered member authorizations is mandatory;
+  failed preflight applies no member authority and creates nothing.
+- Six create-only POSTs overlap; no initial thread polls and no full-response cache
+  warmer runs.
+- Each returned Response ID receives an immediate serialized ledger/journal/marker
+  write before aggregate detach publication.
+- Durable IDs are replay-safe; identity-less interrupted submissions fail closed as
+  ambiguous.
+- Existing four-at-a-time fresh-worker retrieval and deterministic fan-in remain the
+  reconciliation boundary.
+- Focused tests: 12 passed in 3.881 seconds.
+- Full exact/coordinator suite: 96 passed in 160.701 seconds, plus the subsequently
+  added all-or-none regression in the focused pass.
+- Compile and `git diff --check`: pass.
+- Provider operations and spend: 0.

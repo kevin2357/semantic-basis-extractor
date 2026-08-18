@@ -39,6 +39,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     author_pending_passes_batch,
     batch_estimated_cost,
     build_batch_authoring_request,
+    build_interactive_authoring_request,
     build_prompt_layout_report,
     checkpoint_spend_boundary,
     cleanup_completed_run,
@@ -56,6 +57,9 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     polish_subject,
     polish_target_paths,
     persist_state,
+    prepare_exact_interactive_initial_wave,
+    authorize_exact_interactive_initial_wave,
+    execute_exact_interactive_initial_wave,
     provider_configuration,
     provider_visible_markdown,
     provider_visible_subject,
@@ -113,6 +117,10 @@ from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     run_bounded_authoring_reconciliation,
 )
 from astrowoof_natal_authoring.lifecycle import inspect_lifecycle  # noqa: E402
+from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
+    InitialWaveError,
+    build_wave_authorization,
+)
 
 
 def workspace_hashes(root: Path) -> dict[str, str]:
@@ -501,6 +509,120 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_exact_interactive_initial_wave_prepares_authorizes_and_detaches(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedTransport([
+                {"id": f"resp_wave_{number}", "status": "in_progress"}
+                for number in range(1, 7)
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                transport=transport, max_transport_retries=0,
+                prompt_cache_mode="disabled", require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            prepared = prepare_exact_interactive_initial_wave(
+                state=state, provider=provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            self.assertIsNotNone(prepared)
+            self.assertEqual(6, len(state["spend_ledger"]["actions"]))
+            self.assertEqual(
+                {"AWAITING_SPEND_AUTHORIZATION"},
+                {record["state"] for record in state["passes"].values()},
+            )
+            wave = {key: value for key, value in prepared.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    action["binding"] for action in state["spend_ledger"]["actions"]
+                    if action["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"reservation-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="reservation-set-1",
+                issuer="api-test", authorized_at="2026-08-18T12:00:00Z",
+            )
+            authorize_exact_interactive_initial_wave(
+                state=state, run_json=run_json, envelope=envelope,
+                member_authorizations=documents,
+            )
+            result = execute_exact_interactive_initial_wave(
+                state=state, provider=provider, run_json=run_json,
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(6, len(transport.calls))
+            self.assertEqual(
+                {"WAITING_FOR_RESPONSE"},
+                {record["state"] for record in state["passes"].values()},
+            )
+            self.assertEqual(
+                {f"resp_wave_{number}" for number in range(1, 7)},
+                {action["provider"]["id"] for action in state["spend_ledger"]["actions"]},
+            )
+            for record in state["passes"].values():
+                marker = Path(record["attempts"][0]["response_workspace"]).parents[1]
+                self.assertTrue((marker / "openai-background-response.json").is_file())
+
+    def test_interactive_request_builder_matches_author_transport_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            _, specs, _ = self.make_passes(root)
+            source = root / specs[0].pass_id
+            response = completed_response(authored_field_payload(source))
+            transport = ScriptedTransport([response])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", background=False, transport=transport,
+                sleep=lambda _: None,
+            )
+            expected, _, _ = build_interactive_authoring_request(
+                provider, spec=specs[0], workspace=source,
+                feedback=None, attempt_number=1,
+            )
+            provider.author(source, root / "response" / specs[0].pass_id, specs[0], 1)
+            self.assertEqual(expected, transport.calls[0]["payload"])
+
+    def test_exact_initial_wave_authorization_is_all_or_none(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                prompt_cache_mode="disabled", require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            prepared = prepare_exact_interactive_initial_wave(
+                state=state, provider=provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            wave = {key: value for key, value in prepared.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    action["binding"] for action in state["spend_ledger"]["actions"]
+                    if action["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"reservation-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="reservation-set-1",
+                issuer="api-test", authorized_at="2026-08-18T12:00:00Z",
+            )
+            changed = deepcopy(documents)
+            changed[-1]["authorization_reference"] = ""
+            before = deepcopy(state["spend_ledger"])
+            with self.assertRaises(InitialWaveError):
+                authorize_exact_interactive_initial_wave(
+                    state=state, run_json=run_json, envelope=envelope,
+                    member_authorizations=changed,
+                )
+            self.assertEqual(before, state["spend_ledger"])
+
     def test_optional_complete_json_stages_consume_reconciled_evidence_without_get(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run_dir = Path(temporary) / "run"

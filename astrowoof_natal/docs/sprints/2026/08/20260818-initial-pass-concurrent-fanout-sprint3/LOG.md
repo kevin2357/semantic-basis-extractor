@@ -106,3 +106,25 @@
 - Provider operations, paid spend, production route changes, and public contract
   catalog changes: zero.
 - Paused before Slice 3 exact-interactive integration.
+
+## 2026-08-18 — Slice 3 complete; awaiting review
+
+- Integrated the transport-neutral coordinator into fresh exact-Natal interactive
+  authoring only; Batch and bounded routes remain unchanged in this slice.
+- Added one canonical interactive request builder and proved byte equality with the
+  established provider transport payload.
+- Added one-revision six-action preparation, aggregate frozen-budget validation,
+  complete wave/member authorization preflight, and all-or-none ledger authority.
+- Added six create-only Response calls with no cache-warmer wait and no response
+  polling in the submission threads.
+- Serialized every native mutation and persisted each returned provider ID,
+  reconciliation clock, marker, pass state, ledger state, and journal projection
+  immediately as creates complete.
+- Made recovery reuse durable IDs and fail closed on identity-less `SUBMITTING`
+  actions rather than POSTing again.
+- Added the public `--initial-wave-authorization` seam and documented the exact six
+  ordered member-document requirement.
+- Focused integration/coordinator tests: 12 passed. Full exact/coordinator suite:
+  96 passed before the final all-or-none regression, which passed in focus.
+- Provider operations and spend: zero. Compile and diff hygiene passed.
+- Paused before Slice 4 bounded-interactive adoption.
