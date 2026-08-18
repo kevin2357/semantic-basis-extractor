@@ -215,3 +215,10 @@ Status: planned; implementation has not started.
   malformed result for invalid native identity.
 - SBE-native Slice 6 qualification is complete. The real API worker/PostgreSQL/R2
   terminal-first trace remains API-owned and pending; no SBE claim is made for it.
+- API review accepted Slice 6 without changes and authorized commit plus Slice 7
+  preparation. Committed and pushed Slice 6 as `cce216c`.
+- Prepared the final API response and adoption checklist, locked contract/fixture
+  hashes, reconciled the results index, and documented the irreducible provider and
+  filesystem atomicity gaps.
+- Recommend the next pinnable patch as `0.4.5`, subject to final Kevin/API review
+  and separate explicit authorization for version bump, tag, and publication.
