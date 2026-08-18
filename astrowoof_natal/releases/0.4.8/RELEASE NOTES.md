@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.8 Release
 
-Status: qualified immutable artifact; publication authorized
+Status: published under immutable tag `astrowoof-natal-authoring-v0.4.8`
 
 ## Summary
 
@@ -32,5 +32,6 @@ Two fixed-epoch builds were byte-identical. Exact installed Windows and
 network-isolated Linux gates passed without provider calls or paid spend.
 
 Kevin and the AstroWoof API consumer approved the contract and authorized the
-fresh 0.4.8 tag and publication. Post-publication verification will be recorded
-in `release-manifest.json` without moving the immutable tag.
+fresh 0.4.8 tag and publication. Publication is complete. Authenticated
+re-download verified the published wheel against the locked SHA-256 without
+moving the immutable tag; full evidence is in `release-manifest.json`.

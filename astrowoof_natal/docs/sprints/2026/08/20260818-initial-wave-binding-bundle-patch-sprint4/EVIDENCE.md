@@ -1,5 +1,17 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Evidence
 
+## Publication
+
+- Tag: `astrowoof-natal-authoring-v0.4.8`.
+- Tag commit: `d34bd5810949cf88368f4962968928461d982ac3`.
+- Annotated tag object: `796e3ccd38ec27c8beef2fc5dd826f375272c558`.
+- GitHub release ID: `372680192`.
+- Wheel asset ID: `520038440`; checksum asset ID: `520038439`.
+- Authenticated re-download: 828,375 bytes, SHA-256
+  `572a46f310b9ea150a49d32705a45e3d0ced501462d2b2743d989ef5b44fb9e1`.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.8`.
+
 ## Exact 0.4.8 artifact
 
 - Artifact source commit:

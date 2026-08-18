@@ -1,5 +1,14 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Log
 
+## 2026-08-18 — 0.4.8 tagged, published, and verified
+
+- Created annotated tag `astrowoof-natal-authoring-v0.4.8` at release-lock commit
+  `d34bd5810949cf88368f4962968928461d982ac3`.
+- Published GitHub release ID `372680192` with the exact wheel and checksum asset.
+- Authenticated independent re-download matched 828,375 bytes and SHA-256
+  `572a46f310b9ea150a49d32705a45e3d0ced501462d2b2743d989ef5b44fb9e1`.
+- Release is neither draft nor prerelease. The immutable tag was not moved.
+
 ## 2026-08-18 — Exact 0.4.8 artifact qualified and authorized
 
 - Kevin explicitly authorized a fresh immutable 0.4.8 tag and publication.
