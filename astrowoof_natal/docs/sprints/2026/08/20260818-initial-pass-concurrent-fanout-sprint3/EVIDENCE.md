@@ -261,3 +261,14 @@ Installed qualification driver:
 - AstroWoof API consumer approval: accepted.
 - Authorized release: fresh immutable 0.4.7 with exact-source rebuild and
   post-publication asset verification.
+
+## Exact 0.4.7 artifact
+
+- Source: `e8f5cd74ef600db27c73f12360ec9ea41539e08d`.
+- Epoch: `1787085282`.
+- Wheel: `astrowoof_natal_authoring-0.4.7-py3-none-any.whl`.
+- Bytes / SHA-256: 821,729 /
+  `8fd5268e69a64517e82a3c33eda700ceeaf13bb4465a9e3efe91aafafacc4ad8`.
+- Two independent builds: byte-identical.
+- Windows 3.12 and network-isolated Linux 3.11 installed qualification: pass.
+- Provider operations / spend: 0 / USD 0.

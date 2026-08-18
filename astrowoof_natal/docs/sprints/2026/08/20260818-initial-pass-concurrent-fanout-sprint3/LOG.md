@@ -246,3 +246,13 @@
   verification.
 - The retained 0.4.6-named qualification artifact remains evidence only and will
   not be published or substituted for the exact 0.4.7 artifact.
+
+## 2026-08-18 — Exact 0.4.7 artifact qualified
+
+- Exact artifact source commit: `e8f5cd74ef600db27c73f12360ec9ea41539e08d`.
+- Two fixed-epoch (`1787085282`) builds were byte-identical: 821,729 bytes,
+  SHA-256 `8fd5268e69a64517e82a3c33eda700ceeaf13bb4465a9e3efe91aafafacc4ad8`.
+- Wheel inventory: 114 entries, 67 resources, `py.typed`, no tests or bytecode.
+- Exact installed Windows 3.12 and network-isolated Linux 3.11 gates passed:
+  dependency check, lifecycle smoke, release smoke, all four routes, and timing.
+- Provider operations and paid spend: zero.

@@ -1,0 +1,57 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.7",
+  "status": "locked_pending_publication",
+  "release_tag": "astrowoof-natal-authoring-v0.4.7",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.7-py3-none-any.whl",
+    "bytes": 821729,
+    "sha256": "8fd5268e69a64517e82a3c33eda700ceeaf13bb4465a9e3efe91aafafacc4ad8",
+    "wheel_entry_count": 114,
+    "resource_count": 67,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "e8f5cd74ef600db27c73f12360ec9ea41539e08d",
+    "release_record_identity": "tag:astrowoof-natal-authoring-v0.4.7",
+    "source_date_epoch": 1787085282,
+    "independent_build_count": 2,
+    "byte_reproducible": true
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.11 Linux", "CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "upstream": {
+    "agf": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "consumer_resources": {
+    "initial_wave_contracts_v1_sha256": "b618cce07fdbfc4f888a5d486e8cb20b51e00362f04b773d08ffebdb4fb3f00e",
+    "initial_wave_result_v1_sha256": "eed796850627dec7bb55fedd2205c36d5f23cd2d64fbef2fdfef7d4475bd4c4d",
+    "prepared_wave_v1_sha256": "5038451168439def94437cef60dc161affc8cb1c5661b8231cea501e2c3c1f6c",
+    "wave_authorization_v1_sha256": "d6087a449cc0f71d970d1e997d2e712a40d8de3880ea8632cdb13fae7b5ae129",
+    "six_id_detach_v1_sha256": "15a550213e0234e2066359026393d182e98f5a4a864d2af7d1a6179bef113092",
+    "partial_ambiguity_v1_sha256": "005d34bac7165955f17da511b6511913d32ff5fea200a61bbe119d30a79772a9"
+  },
+  "qa": {
+    "repository_test_count": 456,
+    "repository_pass_count": 438,
+    "repository_expected_skip_count": 18,
+    "strict_contract_test_count": 41,
+    "windows_installed_smoke": "pass",
+    "linux_installed_smoke": "pass",
+    "installed_four_route_smoke": "pass",
+    "provider_operation_count": 0,
+    "provider_spend_usd": 0
+  },
+  "publication": {
+    "status": "pending"
+  }
+}

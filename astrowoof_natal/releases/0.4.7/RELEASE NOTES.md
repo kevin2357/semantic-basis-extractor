@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.7 Release
 
-Status: authorized; exact release artifact pending
+Status: final artifact qualified; tag and publication pending
 
 ## Summary
 
@@ -28,5 +28,11 @@ cycle.
 ## Release gate
 
 Kevin and the AstroWoof API consumer approved Slice 8 and authorized the fresh
-0.4.7 build, tag, and publication. Final artifact identity and post-publication
-verification are recorded in `release-manifest.json`.
+0.4.7 build, tag, and publication.
+
+The final wheel is 821,729 bytes with SHA-256
+`8fd5268e69a64517e82a3c33eda700ceeaf13bb4465a9e3efe91aafafacc4ad8`.
+Two fixed-epoch builds were byte-identical. Exact installed Windows and
+network-isolated Linux gates passed without provider calls or paid spend. Final
+artifact identity and post-publication verification are recorded in
+`release-manifest.json`.
