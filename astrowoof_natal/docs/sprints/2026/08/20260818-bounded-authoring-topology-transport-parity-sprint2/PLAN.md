@@ -1,7 +1,7 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Plan
 
 Date: 2026-08-18
-Status: complete; 0.4.6 final artifact qualified, tag/publication in progress
+Status: complete; 0.4.6 tagged and published
 Starting release: SBE 0.4.5
 
 ## Purpose

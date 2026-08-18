@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slices 0-8 complete; 0.4.6 release recommendation awaiting authorization
+Status: complete; 0.4.6 tagged and published
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -241,3 +241,18 @@ Provider operations: 0. Spend: USD 0.
 - Installed exact interactive, exact Batch, bounded interactive, and bounded Batch
   fake-provider routes: pass.
 - Provider operations: 0. Spend: USD 0.
+
+## 0.4.6 publication evidence
+
+- Release lock: `62205d2ea2345667d265d0acaf25ae537b05cb15`.
+- Annotated tag: `astrowoof-natal-authoring-v0.4.6`.
+- Tag object: `208cb8a3efce069c1e169c16f609e640acb55bcf`.
+- GitHub release ID: `372473332`.
+- Published at: `2026-08-18T15:51:41Z`.
+- Wheel asset ID: `519659679`; checksum asset ID: `519659678`.
+- Published wheel SHA-256:
+  `1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
+- GitHub asset digest and authenticated re-download both match the qualified
+  artifact.
+- URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.6`.

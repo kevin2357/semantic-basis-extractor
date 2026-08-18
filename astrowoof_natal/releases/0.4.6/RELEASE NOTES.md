@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.6 Release Candidate
 
-Status: final artifact qualified; tag and publication pending
+Status: published under immutable tag `astrowoof-natal-authoring-v0.4.6`
 
 ## Summary
 
@@ -35,3 +35,6 @@ The final wheel is 800,957 bytes with SHA-256
 `1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
 Two fixed-epoch builds were byte-identical. Exact installed Windows and Linux gates
 passed without provider calls or paid spend.
+
+Publication is complete. Post-publication evidence includes authenticated asset
+re-download verification against the same SHA-256.

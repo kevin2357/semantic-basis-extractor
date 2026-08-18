@@ -302,3 +302,18 @@
   check`, lifecycle smoke, release smoke, route-evidence export, version identity,
   and all four fake-provider routes.
 - Provider operations: 0. Spend: USD 0.
+
+## 2026-08-18 — 0.4.6 publication
+
+- Committed and pushed release lock
+  `62205d2ea2345667d265d0acaf25ae537b05cb15`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.6`; tag object
+  `208cb8a3efce069c1e169c16f609e640acb55bcf` targets the release lock.
+- Published GitHub release `372473332` at
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.6`.
+- Wheel asset `519659679` is 800,957 bytes and GitHub reports digest
+  `sha256:1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
+- Checksum asset ID is `519659678`.
+- Authenticated re-download independently matched the qualified wheel SHA-256.
+- The immutable tag remains fixed; this post-publication documentation records
+  external publication evidence only.
