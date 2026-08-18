@@ -218,3 +218,22 @@
 - Clarified that `prepared_wave.run_id` binds to
   `SbeAuthoringRun.native_run_id`, never API `GenerationRun.id`.
 - Reconciled the consumer-review manifest to `api_approved`.
+
+## 2026-08-18 — Slice 8 complete; awaiting final review
+
+- Added a provider-free installed-route driver covering exact interactive, exact
+  Batch, bounded interactive, and bounded Batch from `site-packages`.
+- Added deterministic serial/concurrent timing qualification. Windows measured
+  451.7/78.1 ms (0.173); Linux measured 451.1/78.9 ms (0.175).
+- Built twice at fixed epoch `1787084172`; both wheels are byte-identical SHA-256
+  `0609928cbeef837ac8b718b00217b46203a0ce1c119060d41011190ff2e2479b`.
+- Wheel inventory: 821,731 bytes, 114 entries, 67 resources, `py.typed`, no tests,
+  no bytecode.
+- Windows CPython 3.12.13 and network-isolated Linux CPython 3.11.15 passed exact
+  pinned-SPC installation, `pip check`, lifecycle/release smokes, and all four
+  installed route modes.
+- Full repository suite: 438 passed in 428.516 seconds with 18 expected environment
+  skips (456 total). Strict installed contract suite: 41 passed without skips.
+- Provider operations and spend: zero.
+- Recommend a fresh immutable 0.4.7 after final Kevin/API review and explicit
+  release authorization; the 0.4.6-named qualification wheel is not publishable.

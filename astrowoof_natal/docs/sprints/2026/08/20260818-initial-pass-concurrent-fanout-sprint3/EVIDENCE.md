@@ -229,3 +229,28 @@ Review manifest:
   `30b91c0d422e1a1e1fd14e1019cc0b9e4bb33b576f00b071b4cf2ffd3132b583`.
 - Installed Python, new CLI export, and lifecycle smoke: pass.
 - Provider operations and spend: 0.
+
+## Slice 8
+
+Result:
+[SLICE 8 - Cross Platform Qualification and Recommendation.md](results/SLICE%208%20-%20Cross%20Platform%20Qualification%20and%20Recommendation.md)
+
+Machine evidence:
+[slice8-qualification.json](results/slice8-qualification.json)
+
+Installed qualification driver:
+[slice8_installed_routes.py](qualification/slice8_installed_routes.py)
+
+- Full source: 438 passed in 428.516 seconds; 18 expected environment skips, 456
+  total.
+- Strict installed schema/contract/lifecycle subset: 41 passed, zero skips.
+- Two fixed-epoch builds: byte-identical SHA-256
+  `0609928cbeef837ac8b718b00217b46203a0ce1c119060d41011190ff2e2479b`.
+- Wheel: 821,731 bytes, 114 entries, 67 resources, `py.typed`, no tests/bytecode.
+- SPC 0.11.0 reverified:
+  `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d`.
+- Windows 3.12.13 installed: `pip check`, both smokes, four route modes, timing pass.
+- Linux 3.11.15 installed, network disabled: same gates pass.
+- Timing: Windows 0.173 and Linux 0.175 concurrent/serial ratios.
+- Provider operations: 0. Spend: USD 0.
+- Recommendation: fresh immutable 0.4.7 after explicit release authorization.

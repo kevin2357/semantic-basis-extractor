@@ -1,0 +1,15 @@
+{
+  "schema_version":"astrowoof.initial_wave_slice8_qualification.v1",
+  "status":"pass",
+  "qualified_source_commit":"05903cf",
+  "fixed_epoch":1787084172,
+  "qualification_artifact":{"filename":"astrowoof_natal_authoring-0.4.6-py3-none-any.whl","publishable":false,"reason":"0.4.6 is already immutable; next release requires a fresh version","bytes":821731,"sha256":"0609928cbeef837ac8b718b00217b46203a0ce1c119060d41011190ff2e2479b","independent_builds":2,"byte_identical":true,"entries":114,"resources":67,"py_typed":true,"tests":0,"bytecode":0},
+  "dependency":{"name":"semantic-projection-core","version":"0.11.0","sha256":"82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"},
+  "source_suite":{"passed":438,"skipped":18,"total":456,"elapsed_seconds":428.516},
+  "strict_contract_suite":{"passed":41,"skipped":0,"elapsed_seconds":0.254},
+  "windows":{"python":"3.12.13","pip_check":"pass","lifecycle_smoke":"pass","release_smoke":"pass","installed_route_modes":4,"route_tests":"pass","timing":{"scripted_member_seconds":0.075,"serial_elapsed_seconds":0.4517223,"concurrent_elapsed_seconds":0.0780629,"concurrent_to_serial_ratio":0.1728117}},
+  "linux":{"python":"3.11.15","network":"disabled","pip_check":"pass","lifecycle_smoke":"pass","release_smoke":"pass","installed_route_modes":4,"route_tests":"pass","timing":{"scripted_member_seconds":0.075,"serial_elapsed_seconds":0.451121528,"concurrent_elapsed_seconds":0.078929286,"concurrent_to_serial_ratio":0.174962357}},
+  "provider_operations":0,
+  "spend_usd":0,
+  "release_recommendation":"fresh_immutable_0.4.7_after_explicit_authorization"
+}
