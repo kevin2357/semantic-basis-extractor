@@ -286,3 +286,19 @@
 - Provider operations: 0. Spend: USD 0.
 - Slice 8 is complete; the sprint recommends 0.4.6 and pauses for explicit release
   authorization.
+
+## 2026-08-18 — Authorized 0.4.6 final artifact
+
+- Kevin authorized the 0.4.6 version bump, exact final rebuild, tag, GitHub release,
+  and publication.
+- Committed the exact versioned artifact source as
+  `ac86613b42ebc4f7d86cb557be9fbf82aaa1900d`.
+- Two final fixed-epoch builds (`SOURCE_DATE_EPOCH=1787067938`) were byte-identical
+  at SHA-256
+  `1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
+- The final wheel is 800,957 bytes and retains the qualified 106-entry/61-resource
+  inventory, `py.typed`, frozen oracle/trace hashes, no tests, and no bytecode.
+- Exact final Windows CPython 3.12 and Linux CPython 3.11 installs passed `pip
+  check`, lifecycle smoke, release smoke, route-evidence export, version identity,
+  and all four fake-provider routes.
+- Provider operations: 0. Spend: USD 0.

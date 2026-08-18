@@ -6,7 +6,7 @@ Status: release-candidate contract
 |---|---:|---|
 | Astrology Graph Foundry | 0.8.1 | `860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed` |
 | Semantic Projection Core | 0.11.0 | `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d` |
-| SBE | 0.4.6 candidate | final hash pending authorized versioned rebuild |
+| SBE | 0.4.6 | `1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788` |
 
 Python 3.11 or newer is required. Qualification covered Linux CPython 3.11 and
 Windows CPython 3.12.

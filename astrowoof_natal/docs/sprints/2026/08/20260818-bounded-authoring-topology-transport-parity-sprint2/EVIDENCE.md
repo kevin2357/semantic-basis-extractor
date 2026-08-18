@@ -227,3 +227,17 @@ Verification:
   release requires an authorized 0.4.6 version bump and exact rebuilt artifact.
 
 Provider operations: 0. Spend: USD 0.
+
+## 0.4.6 final artifact qualification
+
+- Artifact source commit:
+  `ac86613b42ebc4f7d86cb557be9fbf82aaa1900d`.
+- Final wheel: `astrowoof_natal_authoring-0.4.6-py3-none-any.whl`.
+- Bytes: 800,957.
+- SHA-256:
+  `1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
+- Fixed epoch: `1787067938`; two builds byte-identical.
+- Exact final Windows and Linux installed gates: pass.
+- Installed exact interactive, exact Batch, bounded interactive, and bounded Batch
+  fake-provider routes: pass.
+- Provider operations: 0. Spend: USD 0.

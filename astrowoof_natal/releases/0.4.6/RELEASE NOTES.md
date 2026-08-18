@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.6 Release Candidate
 
-Status: authorized final build; tag and publication pending
+Status: final artifact qualified; tag and publication pending
 
 ## Summary
 
@@ -30,3 +30,8 @@ release, even after Batch initial authoring.
 The earlier reproducible `0.4.5`-named candidate remains qualification evidence
 only. Kevin authorized the fresh 0.4.6 version bump, exact final rebuild, installed
 Windows/Linux gates, immutable tag, and publication.
+
+The final wheel is 800,957 bytes with SHA-256
+`1770d5c361b81ac5ed90b5b1a825da70aec108a665ac251a13a520d1af66e788`.
+Two fixed-epoch builds were byte-identical. Exact installed Windows and Linux gates
+passed without provider calls or paid spend.
