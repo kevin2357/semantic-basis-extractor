@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-split-assignment-v1.json",
+  "title": "AstroWoof Bounded Natal Split Assignment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_contract", "subject_id", "claim_deck_sha256", "policy", "algorithm_version", "seed", "seed_basis", "canonical_claim_ids", "card_passes", "summary_pass", "assignment_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.split_assignment.v1"},
+    "run_contract": {"const": "astrowoof.bounded_natal.authoring_run.v2"},
+    "subject_id": {"type": "string", "minLength": 1},
+    "claim_deck_sha256": {"$ref": "#/$defs/sha256"},
+    "policy": {"const": "stratified-v1"},
+    "algorithm_version": {"const": "bounded-stratified-v1"},
+    "seed": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "seed_basis": {"const": "subject_policy_claim_deck"},
+    "canonical_claim_ids": {"type": "array", "minItems": 50, "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "card_passes": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "#/$defs/cardPass"}},
+    "summary_pass": {"$ref": "#/$defs/summaryPass"},
+    "assignment_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "cardPass": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pass_id", "pass_number", "purpose", "ordered_claim_ids"],
+      "properties": {
+        "pass_id": {"type": "string", "minLength": 1},
+        "pass_number": {"type": "integer", "minimum": 1, "maximum": 5},
+        "purpose": {"const": "card_story"},
+        "ordered_claim_ids": {"type": "array", "minItems": 10, "maxItems": 10, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "summaryPass": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pass_id", "pass_number", "purpose", "ordered_claim_ids"],
+      "properties": {
+        "pass_id": {"type": "string", "minLength": 1},
+        "pass_number": {"const": 6},
+        "purpose": {"const": "summary_theme"},
+        "ordered_claim_ids": {"type": "array", "maxItems": 0}
+      }
+    }
+  }
+}

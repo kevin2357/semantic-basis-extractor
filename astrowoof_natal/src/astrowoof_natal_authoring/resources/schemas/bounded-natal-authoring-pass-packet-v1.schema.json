@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.local/schema/bounded-natal-authoring-pass-packet-v1.json",
+  "title": "AstroWoof Bounded Natal Provider Pass Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_contract", "route", "assignment_sha256", "pass_id", "pass_number", "pass_count", "purpose", "subject", "authority_notice", "provider_disclosure", "resource_set", "whole_dog_context", "claims", "summaries", "projected_term_registry", "packet_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_natal.authoring_pass_packet.v1"},
+    "run_contract": {"const": "astrowoof.bounded_natal.authoring_run.v2"},
+    "route": {"const": "bounded_natal.v2"},
+    "assignment_sha256": {"$ref": "#/$defs/sha256"},
+    "pass_id": {"type": "string", "minLength": 1},
+    "pass_number": {"type": "integer", "minimum": 1, "maximum": 6},
+    "pass_count": {"const": 6},
+    "purpose": {"enum": ["card_story", "summary_theme"]},
+    "subject": {"type": "object"},
+    "authority_notice": {"type": "object"},
+    "provider_disclosure": {"type": "object"},
+    "resource_set": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resource_contract", "resources", "resource_set_sha256"],
+      "properties": {
+        "resource_contract": {"const": "astrowoof.bounded_natal.editorial_resources.v1"},
+        "resources": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "object"}},
+        "resource_set_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "whole_dog_context": {"type": "array", "minItems": 50, "maxItems": 50, "items": {"type": "object"}},
+    "claims": {"type": "array", "maxItems": 10, "items": {"type": "object"}},
+    "summaries": {"type": "object"},
+    "projected_term_registry": {"type": "object"},
+    "packet_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"purpose": {"const": "card_story"}}},
+      "then": {
+        "properties": {
+          "pass_number": {"maximum": 5},
+          "claims": {"minItems": 10, "maxItems": 10},
+          "summaries": {"maxProperties": 0}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"purpose": {"const": "summary_theme"}}},
+      "then": {
+        "properties": {
+          "pass_number": {"const": 6},
+          "claims": {"maxItems": 0},
+          "summaries": {"minProperties": 4, "maxProperties": 4}
+        }
+      }
+    }
+  ],
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

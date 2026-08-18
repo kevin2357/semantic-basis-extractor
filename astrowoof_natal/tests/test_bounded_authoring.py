@@ -18,15 +18,26 @@ from astrowoof_natal_authoring.bounded_admission import (  # noqa: E402
 )
 from astrowoof_natal_authoring.bounded_authoring import (  # noqa: E402
     AUTHORING_PACKET_CONTRACT,
+    BOUNDED_PASS_PACKET_CONTRACT,
+    BOUNDED_RUN_V2_CONTRACT,
+    BOUNDED_SPLIT_ASSIGNMENT_CONTRACT,
     CLAIM_DECK_CONTRACT,
     FINAL_CARDS_CONTRACT,
     BoundedAuthoringError,
+    assemble_bounded_editorial_passes,
     assert_provider_minimized,
+    build_bounded_pass_packets,
+    build_bounded_split_assignment,
     compile_bounded_authoring_artifacts,
     fake_author_bounded,
     validate_bounded_authoring_packet,
     validate_bounded_claim_deck,
     validate_bounded_final_cards,
+    validate_bounded_pass_packet,
+    validate_bounded_split_assignment,
+)
+from astrowoof_natal_authoring.bounded_provider import (  # noqa: E402
+    OpenAIBoundedLifecycleProvider,
 )
 from astrowoof_natal_authoring.bounded_selection import (  # noqa: E402
     select_bounded_portfolio,
@@ -162,6 +173,141 @@ class TestBoundedAuthoring(unittest.TestCase):
         self.assertNotIn("outside_scope", rendered)
         self.assertNotIn("unselected", rendered)
 
+    def test_bounded_split_assignment_is_deterministic_complete_and_mixed(self) -> None:
+        first = self.artifacts.split_assignment
+        second = build_bounded_split_assignment(
+            self.artifacts.authoring_packet, self.artifacts.claim_deck
+        )
+        self.assertEqual(first, second)
+        self.assertEqual(BOUNDED_SPLIT_ASSIGNMENT_CONTRACT, first["schema_version"])
+        self.assertEqual(BOUNDED_RUN_V2_CONTRACT, first["run_contract"])
+        validate_bounded_split_assignment(first, self.artifacts.authoring_packet)
+        memberships = [
+            claim_id
+            for pass_record in first["card_passes"]
+            for claim_id in pass_record["ordered_claim_ids"]
+        ]
+        self.assertEqual(50, len(memberships))
+        self.assertEqual(50, len(set(memberships)))
+        self.assertEqual(
+            set(first["canonical_claim_ids"]), set(memberships)
+        )
+        by_id = {
+            claim["claim_id"]: claim for claim in self.artifacts.authoring_packet["claims"]
+        }
+        for pass_record in first["card_passes"]:
+            claims = [by_id[claim_id] for claim_id in pass_record["ordered_claim_ids"]]
+            self.assertGreaterEqual(len({claim["claim_kind"] for claim in claims}), 2)
+            self.assertGreaterEqual(len({claim["editorial_tier"] for claim in claims}), 2)
+        self.assertEqual([], first["summary_pass"]["ordered_claim_ids"])
+
+    def test_bounded_pass_packets_are_six_self_contained_minimized_views(self) -> None:
+        packets = self.artifacts.pass_packets
+        assignment = self.artifacts.split_assignment
+        self.assertEqual(6, len(packets))
+        protected = (
+            "1981-10-10T15:00:00-06:00", "39.7392", "-104.9903",
+            "SEED-PROTECTED-DENVER", "SEED-PROTECTED-START",
+            "SEED-PROTECTED-END",
+        )
+        for pass_record in [*assignment["card_passes"], assignment["summary_pass"]]:
+            packet = packets[pass_record["pass_id"]]
+            self.assertEqual(BOUNDED_PASS_PACKET_CONTRACT, packet["schema_version"])
+            self.assertEqual(BOUNDED_RUN_V2_CONTRACT, packet["run_contract"])
+            self.assertEqual(assignment["assignment_sha256"], packet["assignment_sha256"])
+            self.assertEqual(50, len(packet["whole_dog_context"]))
+            self.assertEqual(
+                pass_record["ordered_claim_ids"],
+                [claim["claim_id"] for claim in packet["claims"]],
+            )
+            self.assertEqual(
+                pass_record["purpose"] == "summary_theme", bool(packet["summaries"])
+            )
+            self.assertEqual(2, len(packet["resource_set"]["resources"]))
+            validate_bounded_pass_packet(
+                packet, self.artifacts.authoring_packet, assignment
+            )
+            assert_provider_minimized(packet, protected_values=protected)
+            term_keys = set(packet["projected_term_registry"]["terms"])
+            referenced = {
+                ref.rsplit(":", 1)[-1]
+                for claim in packet["whole_dog_context"]
+                for ref in claim["projected_term_refs"]
+            }
+            self.assertEqual(referenced, term_keys)
+
+    def test_pass_outputs_reassemble_in_canonical_order_and_hydrate_authority(self) -> None:
+        packet = self.artifacts.authoring_packet
+        assignment = self.artifacts.split_assignment
+        final = fake_author_bounded(packet)
+        final_by_id = {card["claim_id"]: card for card in final["cards"]}
+        editorial_fields = (
+            "dos", "donts", "funny_dog_quotes", "imperative_dog_quotes",
+            "applicable_canine_jokes", "densities",
+        )
+        outputs = {}
+        for pass_record in reversed(assignment["card_passes"]):
+            outputs[pass_record["pass_id"]] = {
+                "pass_id": pass_record["pass_id"],
+                "cards": [
+                    {"claim_id": claim_id} | {
+                        field: deepcopy(final_by_id[claim_id][field])
+                        for field in editorial_fields
+                    }
+                    for claim_id in reversed(pass_record["ordered_claim_ids"])
+                ],
+            }
+        outputs[assignment["summary_pass"]["pass_id"]] = {
+            "pass_id": assignment["summary_pass"]["pass_id"],
+            "summaries": [
+                {
+                    "summary_id": summary_id,
+                    "headline": deepcopy(final["summaries"][summary_id]["headline"]),
+                    "body": deepcopy(final["summaries"][summary_id]["body"]),
+                }
+                for summary_id in reversed(list(packet["summaries"]))
+            ],
+        }
+        assembled = assemble_bounded_editorial_passes(outputs, packet, assignment)
+        self.assertEqual(
+            [claim["claim_id"] for claim in packet["claims"]],
+            [card["claim_id"] for card in assembled["cards"]],
+        )
+        self.assertEqual(list(packet["summaries"]), [
+            summary["summary_id"] for summary in assembled["summaries"]
+        ])
+        hydrated = OpenAIBoundedLifecycleProvider._hydrate_cards(assembled, packet)
+        report = validate_bounded_final_cards(
+            hydrated, self.artifacts.claim_deck, packet
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_pass_assignment_and_output_mutations_fail_closed(self) -> None:
+        assignment = deepcopy(self.artifacts.split_assignment)
+        assignment["card_passes"][1]["ordered_claim_ids"][0] = (
+            assignment["card_passes"][0]["ordered_claim_ids"][0]
+        )
+        assignment["assignment_sha256"] = "0" * 64
+        with self.assertRaises(BoundedAuthoringError):
+            validate_bounded_split_assignment(assignment, self.artifacts.authoring_packet)
+
+        packets = build_bounded_pass_packets(
+            self.artifacts.authoring_packet, self.artifacts.split_assignment
+        )
+        self.assertEqual(self.artifacts.pass_packets, packets)
+        changed = deepcopy(next(iter(packets.values())))
+        changed["transport_guess"] = "batch"
+        with self.assertRaisesRegex(BoundedAuthoringError, "fields"):
+            validate_bounded_pass_packet(
+                changed,
+                self.artifacts.authoring_packet,
+                self.artifacts.split_assignment,
+            )
+        with self.assertRaisesRegex(BoundedAuthoringError, "inventory"):
+            assemble_bounded_editorial_passes(
+                {}, self.artifacts.authoring_packet, self.artifacts.split_assignment
+            )
+
     def test_registry_is_selected_subset_and_fully_closed(self) -> None:
         claim_deck = self.artifacts.claim_deck
         full_count = len(
@@ -260,6 +406,8 @@ class TestBoundedAuthoring(unittest.TestCase):
             "schemas/bounded-natal-cards-v1.schema.json": FINAL_CARDS_CONTRACT,
             "schemas/bounded-natal-delivery-v1.schema.json": "astrowoof.bounded_natal.delivery.v1",
             "schemas/bounded-natal-critic-v1.schema.json": "astrowoof.bounded_natal.critic.v1",
+            "schemas/bounded-natal-split-assignment-v1.schema.json": BOUNDED_SPLIT_ASSIGNMENT_CONTRACT,
+            "schemas/bounded-natal-authoring-pass-packet-v1.schema.json": BOUNDED_PASS_PACKET_CONTRACT,
         }
         for resource, contract in schemas.items():
             schema = json.loads(read_resource_text(resource))
@@ -277,6 +425,14 @@ class TestBoundedAuthoring(unittest.TestCase):
         self.assertEqual(
             "astrowoof.bounded_natal.delivery.v1",
             catalog["contracts"]["bounded_natal_delivery"],
+        )
+        self.assertEqual(
+            BOUNDED_SPLIT_ASSIGNMENT_CONTRACT,
+            catalog["contracts"]["bounded_natal_split_assignment"],
+        )
+        self.assertEqual(
+            BOUNDED_PASS_PACKET_CONTRACT,
+            catalog["contracts"]["bounded_natal_authoring_pass_packet"],
         )
         self.assertIn("representative time", read_resource_text("authoring/Bounded Natal Authoring Brief.md"))
         inventory = read_resource_text("authoring/Bounded Natal Provider Disclosure Inventory.md")

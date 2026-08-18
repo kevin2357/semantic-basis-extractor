@@ -90,3 +90,30 @@
   commitment/member/settlement evidence; terminal cause
   `legacy_bounded_topology_unsupported` with observed v1 identity; and an oracle trace
   for typed terminal failure before native/provider evidence exists.
+
+## 2026-08-18 — Slice 2 deterministic bounded six-pass packets
+
+- Admitted the bounded split-assignment and pass-packet contracts into the packaged
+  schema catalog rather than treating the Slice 1 proposals as loose examples.
+- Implemented deterministic bounded assignment across five ten-card passes plus one
+  summary/theme pass. Every selected claim occurs exactly once, while the assignment
+  algorithm balances claim kind, editorial tier, proof scope, and priority band and
+  reduces homogeneous adjacency inside each pass.
+- Built six self-contained minimized provider views. Each pass binds the v2 route,
+  assignment identity, exact ordered membership, bounded authority notice, minimized
+  subject, selected registry, whole-dog context, and separately named bounded
+  editorial resources. Transport selection is deliberately absent.
+- Added strict native validation for assignment and packet key sets, identities,
+  ordering, membership, summary scope, registry closure, resource identity, digest,
+  and provider-visible privacy.
+- Added deterministic canonical reassembly from unordered pass results. Card rows
+  return to claim-deck order and summaries return to the frozen summary-field order
+  before immutable authority is reattached and final bounded QA runs.
+- Kept execution state untouched in this slice: `create_bounded_run()` still uses
+  the historical one-operation lifecycle. Slice 4 will admit v2 six-pass lifecycle
+  execution; compilation alone cannot silently reinterpret an existing v1 run.
+- Focused desktop suite: 39 tests passed in 45.660 seconds. Python 3.11 Linux worker
+  image: 12 bounded-authoring tests passed. Generated assignment and all six packets
+  also passed their packaged strict schemas.
+- Provider operations: 0. Spend: USD 0.
+- Slice 2 is complete and paused for the planned gate review.

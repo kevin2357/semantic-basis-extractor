@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import Counter
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Iterable, Mapping
@@ -12,6 +13,7 @@ from typing import Any, Iterable, Mapping
 from .bounded_admission import BoundedAdmission, REQUIRED_CONTEXTS
 from .bounded_basis import DISPOSITION_CONTRACT
 from .bounded_selection import BoundedSelection, EDITORIAL_TIERS
+from .resource_access import read_resource_bytes
 
 
 CLAIM_DECK_CONTRACT = "astrowoof.bounded_natal.claim_deck.v1"
@@ -19,6 +21,13 @@ AUTHORING_PACKET_CONTRACT = "astrowoof.bounded_natal.authoring_packet.v1"
 FINAL_CARDS_CONTRACT = "astrowoof.bounded_natal.cards.v1"
 PROVIDER_DISCLOSURE_CONTRACT = "astrowoof.bounded_natal.provider_disclosure.v1"
 PROVENANCE_CONTRACT = "astrowoof.bounded_natal.delivery_provenance.v1"
+BOUNDED_RUN_V2_CONTRACT = "astrowoof.bounded_natal.authoring_run.v2"
+BOUNDED_SPLIT_ASSIGNMENT_CONTRACT = "astrowoof.bounded_natal.split_assignment.v1"
+BOUNDED_PASS_PACKET_CONTRACT = "astrowoof.bounded_natal.authoring_pass_packet.v1"
+BOUNDED_ASSIGNMENT_POLICY = "stratified-v1"
+BOUNDED_ASSIGNMENT_ALGORITHM = "bounded-stratified-v1"
+BOUNDED_CARD_PASS_COUNT = 5
+BOUNDED_TOTAL_PASS_COUNT = 6
 PROVIDER_VISIBLE_SUBJECT_FIELDS = (
     "subject_id",
     "display_name",
@@ -76,6 +85,8 @@ class BoundedAuthoringArtifacts:
     claim_deck: dict[str, Any]
     authoring_packet: dict[str, Any]
     disposition_report: dict[str, Any]
+    split_assignment: dict[str, Any]
+    pass_packets: dict[str, dict[str, Any]]
 
 
 def _canonical_sha256(value: Any) -> str:
@@ -84,6 +95,432 @@ def _canonical_sha256(value: Any) -> str:
             value, sort_keys=True, separators=(",", ":"), ensure_ascii=False
         ).encode("utf-8")
     ).hexdigest()
+
+
+def _bounded_resource_set() -> dict[str, Any]:
+    paths = (
+        "authoring/Bounded Natal Story Workspace Authoring Brief.md",
+        "authoring/Bounded Natal Authoring Guiding Lights.md",
+    )
+    resources = [
+        {
+            "path": path,
+            "sha256": hashlib.sha256(read_resource_bytes(path)).hexdigest(),
+        }
+        for path in paths
+    ]
+    return {
+        "resource_contract": "astrowoof.bounded_natal.editorial_resources.v1",
+        "resources": resources,
+        "resource_set_sha256": _canonical_sha256(resources),
+    }
+
+
+def _bounded_assignment_features(claim: Mapping[str, Any]) -> dict[str, Any]:
+    authority = claim.get("invariant_authority") or {}
+    return {
+        "claim_kind": str(claim.get("claim_kind") or "unknown"),
+        "editorial_tier": str(claim.get("editorial_tier") or "unknown"),
+        "proof_scopes": set(authority.get("proof_scopes") or []),
+        "projected_terms": set(claim.get("projected_term_refs") or []),
+        "priority_band": (int(claim["priority_id"]) - 1) // 10,
+    }
+
+
+def _bounded_assignment_similarity(
+    left: Mapping[str, Any], right: Mapping[str, Any]
+) -> float:
+    score = 3.0 if left["claim_kind"] == right["claim_kind"] else 0.0
+    score += 2.0 if left["editorial_tier"] == right["editorial_tier"] else 0.0
+    score += len(left["proof_scopes"] & right["proof_scopes"])
+    union = left["projected_terms"] | right["projected_terms"]
+    if union:
+        score += len(left["projected_terms"] & right["projected_terms"]) / len(union)
+    return score
+
+
+def validate_bounded_split_assignment(
+    assignment: Mapping[str, Any], authoring_packet: Mapping[str, Any]
+) -> None:
+    if assignment.get("schema_version") != BOUNDED_SPLIT_ASSIGNMENT_CONTRACT:
+        raise BoundedAuthoringError(
+            "bounded_assignment_contract", "wrong bounded assignment contract"
+        )
+    if assignment.get("run_contract") != BOUNDED_RUN_V2_CONTRACT:
+        raise BoundedAuthoringError(
+            "bounded_assignment_run_contract", "wrong bounded run contract"
+        )
+    claims = list(authoring_packet.get("claims") or [])
+    canonical = [claim.get("claim_id") for claim in claims]
+    if len(canonical) != 50 or len(set(canonical)) != 50:
+        raise BoundedAuthoringError(
+            "bounded_assignment_source", "assignment source must contain fifty claims"
+        )
+    if assignment.get("canonical_claim_ids") != canonical:
+        raise BoundedAuthoringError(
+            "bounded_assignment_canonical_order", "canonical claim order changed"
+        )
+    passes = assignment.get("card_passes")
+    if not isinstance(passes, list) or len(passes) != BOUNDED_CARD_PASS_COUNT:
+        raise BoundedAuthoringError(
+            "bounded_assignment_pass_count", "assignment requires five card passes"
+        )
+    flattened: list[str] = []
+    for expected_number, record in enumerate(passes, 1):
+        if record.get("pass_number") != expected_number:
+            raise BoundedAuthoringError(
+                "bounded_assignment_pass_order", "card pass numbers are not canonical"
+            )
+        if record.get("purpose") != "card_story":
+            raise BoundedAuthoringError(
+                "bounded_assignment_pass_purpose", "card pass purpose changed"
+            )
+        members = record.get("ordered_claim_ids")
+        if not isinstance(members, list) or len(members) != 10 or len(set(members)) != 10:
+            raise BoundedAuthoringError(
+                "bounded_assignment_cardinality", "each card pass requires ten claims"
+            )
+        flattened.extend(members)
+    if len(flattened) != 50 or set(flattened) != set(canonical):
+        raise BoundedAuthoringError(
+            "bounded_assignment_closure", "assignment must contain every claim once"
+        )
+    summary = assignment.get("summary_pass") or {}
+    if (
+        summary.get("pass_number") != BOUNDED_TOTAL_PASS_COUNT
+        or summary.get("purpose") != "summary_theme"
+        or summary.get("ordered_claim_ids") != []
+    ):
+        raise BoundedAuthoringError(
+            "bounded_assignment_summary", "summary pass identity is invalid"
+        )
+    basis = deepcopy(dict(assignment))
+    digest = basis.pop("assignment_sha256", None)
+    if digest != _canonical_sha256(basis):
+        raise BoundedAuthoringError(
+            "bounded_assignment_digest", "assignment digest does not match content"
+        )
+
+
+def build_bounded_split_assignment(
+    authoring_packet: Mapping[str, Any], claim_deck: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Build the replayable anti-homogeneity five-pass bounded assignment."""
+    claims = list(authoring_packet.get("claims") or [])
+    if len(claims) != 50:
+        raise BoundedAuthoringError(
+            "bounded_assignment_source", "assignment requires fifty provider claims"
+        )
+    subject_id = str((authoring_packet.get("subject") or {}).get("subject_id") or "subject")
+    claim_deck_sha256 = _canonical_sha256(claim_deck)
+    seed = hashlib.sha256(
+        (
+            f"astrowoof:{BOUNDED_ASSIGNMENT_POLICY}:{subject_id}:"
+            f"{claim_deck_sha256}"
+        ).encode("utf-8")
+    ).hexdigest()[:16]
+    features = {claim["claim_id"]: _bounded_assignment_features(claim) for claim in claims}
+    kind_frequency = Counter(item["claim_kind"] for item in features.values())
+    tier_frequency = Counter(item["editorial_tier"] for item in features.values())
+
+    def stable_value(*parts: object) -> str:
+        material = ":".join(str(part) for part in (seed, *parts))
+        return hashlib.sha256(material.encode("utf-8")).hexdigest()
+
+    ordered = sorted(
+        claims,
+        key=lambda claim: (
+            kind_frequency[features[claim["claim_id"]]["claim_kind"]],
+            tier_frequency[features[claim["claim_id"]]["editorial_tier"]],
+            stable_value("allocation", claim["claim_id"]),
+        ),
+    )
+    passes: list[list[dict[str, Any]]] = [
+        [] for _ in range(BOUNDED_CARD_PASS_COUNT)
+    ]
+    for claim in ordered:
+        feature = features[claim["claim_id"]]
+        minimum_size = min(len(items) for items in passes)
+        eligible = [
+            index for index, items in enumerate(passes)
+            if len(items) == minimum_size and len(items) < 10
+        ]
+
+        def allocation_cost(index: int) -> tuple[float, str]:
+            assigned = [features[item["claim_id"]] for item in passes[index]]
+            score = 6.0 * sum(
+                item["claim_kind"] == feature["claim_kind"] for item in assigned
+            )
+            score += 4.0 * sum(
+                item["editorial_tier"] == feature["editorial_tier"] for item in assigned
+            )
+            score += 2.0 * sum(
+                len(item["proof_scopes"] & feature["proof_scopes"])
+                for item in assigned
+            )
+            score += 4.0 * sum(
+                item["priority_band"] == feature["priority_band"] for item in assigned
+            )
+            return score, stable_value("pass", index + 1, claim["claim_id"])
+
+        passes[min(eligible, key=allocation_cost)].append(claim)
+
+    for index, assigned in enumerate(passes):
+        remaining = list(assigned)
+        first = min(
+            remaining,
+            key=lambda claim: stable_value("order", index + 1, claim["claim_id"]),
+        )
+        pass_order = [first]
+        remaining.remove(first)
+        while remaining:
+            previous = features[pass_order[-1]["claim_id"]]
+            next_claim = min(
+                remaining,
+                key=lambda claim: (
+                    _bounded_assignment_similarity(
+                        previous, features[claim["claim_id"]]
+                    ),
+                    stable_value("order", index + 1, claim["claim_id"]),
+                ),
+            )
+            pass_order.append(next_claim)
+            remaining.remove(next_claim)
+        passes[index] = pass_order
+
+    assignment: dict[str, Any] = {
+        "schema_version": BOUNDED_SPLIT_ASSIGNMENT_CONTRACT,
+        "run_contract": BOUNDED_RUN_V2_CONTRACT,
+        "subject_id": subject_id,
+        "claim_deck_sha256": claim_deck_sha256,
+        "policy": BOUNDED_ASSIGNMENT_POLICY,
+        "algorithm_version": BOUNDED_ASSIGNMENT_ALGORITHM,
+        "seed": seed,
+        "seed_basis": "subject_policy_claim_deck",
+        "canonical_claim_ids": [claim["claim_id"] for claim in claims],
+        "card_passes": [
+            {
+                "pass_id": f"{subject_id}_bounded_{index + 1}",
+                "pass_number": index + 1,
+                "purpose": "card_story",
+                "ordered_claim_ids": [claim["claim_id"] for claim in assigned],
+            }
+            for index, assigned in enumerate(passes)
+        ],
+        "summary_pass": {
+            "pass_id": f"{subject_id}_bounded_6",
+            "pass_number": 6,
+            "purpose": "summary_theme",
+            "ordered_claim_ids": [],
+        },
+    }
+    assignment["assignment_sha256"] = _canonical_sha256(assignment)
+    validate_bounded_split_assignment(assignment, authoring_packet)
+    return assignment
+
+
+def _bounded_whole_dog_context(
+    authoring_packet: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "claim_id": claim["claim_id"],
+            "claim_kind": claim["claim_kind"],
+            "editorial_tier": claim["editorial_tier"],
+            "invariant_authority": deepcopy(claim["invariant_authority"]),
+            "semantic_seed": claim["semantic_seed"],
+            "context_semantics": deepcopy(claim["context_semantics"]),
+            "projected_term_refs": list(claim["projected_term_refs"]),
+        }
+        for claim in authoring_packet["claims"]
+    ]
+
+
+def build_bounded_pass_packets(
+    authoring_packet: Mapping[str, Any], assignment: Mapping[str, Any]
+) -> dict[str, dict[str, Any]]:
+    """Create six minimized self-contained provider packets from one bounded basis."""
+    validate_bounded_split_assignment(assignment, authoring_packet)
+    by_id = {claim["claim_id"]: claim for claim in authoring_packet["claims"]}
+    whole_dog_context = _bounded_whole_dog_context(authoring_packet)
+    resource_set = _bounded_resource_set()
+    pass_records = [*assignment["card_passes"], assignment["summary_pass"]]
+    result: dict[str, dict[str, Any]] = {}
+    for pass_record in pass_records:
+        card_pass = pass_record["purpose"] == "card_story"
+        packet = {
+            "schema_version": BOUNDED_PASS_PACKET_CONTRACT,
+            "run_contract": BOUNDED_RUN_V2_CONTRACT,
+            "route": "bounded_natal.v2",
+            "assignment_sha256": assignment["assignment_sha256"],
+            "pass_id": pass_record["pass_id"],
+            "pass_number": pass_record["pass_number"],
+            "pass_count": BOUNDED_TOTAL_PASS_COUNT,
+            "purpose": pass_record["purpose"],
+            "subject": deepcopy(authoring_packet["subject"]),
+            "authority_notice": deepcopy(authoring_packet["authority_notice"]),
+            "provider_disclosure": deepcopy(authoring_packet["provider_disclosure"]),
+            "resource_set": deepcopy(resource_set),
+            "whole_dog_context": deepcopy(whole_dog_context),
+            "claims": [
+                deepcopy(by_id[claim_id])
+                for claim_id in pass_record["ordered_claim_ids"]
+            ],
+            "summaries": (
+                {} if card_pass else deepcopy(authoring_packet["summaries"])
+            ),
+            "projected_term_registry": deepcopy(
+                authoring_packet["projected_term_registry"]
+            ),
+        }
+        packet["packet_sha256"] = _canonical_sha256(packet)
+        validate_bounded_pass_packet(packet, authoring_packet, assignment)
+        result[pass_record["pass_id"]] = packet
+    return result
+
+
+def validate_bounded_pass_packet(
+    packet: Mapping[str, Any],
+    authoring_packet: Mapping[str, Any],
+    assignment: Mapping[str, Any],
+) -> None:
+    validate_bounded_split_assignment(assignment, authoring_packet)
+    expected_keys = {
+        "schema_version", "run_contract", "route", "assignment_sha256",
+        "pass_id", "pass_number", "pass_count", "purpose", "subject",
+        "authority_notice", "provider_disclosure", "resource_set",
+        "whole_dog_context", "claims", "summaries", "projected_term_registry",
+        "packet_sha256",
+    }
+    if set(packet) != expected_keys:
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_fields", "pass packet fields are not closed"
+        )
+    if (
+        packet.get("schema_version") != BOUNDED_PASS_PACKET_CONTRACT
+        or packet.get("run_contract") != BOUNDED_RUN_V2_CONTRACT
+        or packet.get("route") != "bounded_natal.v2"
+        or packet.get("assignment_sha256") != assignment["assignment_sha256"]
+        or packet.get("pass_count") != BOUNDED_TOTAL_PASS_COUNT
+    ):
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_binding", "pass packet route/assignment binding changed"
+        )
+    records = {
+        item["pass_id"]: item
+        for item in [*assignment["card_passes"], assignment["summary_pass"]]
+    }
+    expected = records.get(packet.get("pass_id"))
+    if expected is None or any(
+        packet.get(field) != expected[field]
+        for field in ("pass_id", "pass_number", "purpose")
+    ):
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_pass", "pass packet identity changed"
+        )
+    claim_ids = [claim.get("claim_id") for claim in packet.get("claims") or []]
+    if claim_ids != expected["ordered_claim_ids"]:
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_membership", "pass packet membership/order changed"
+        )
+    expected_summaries = (
+        authoring_packet["summaries"] if expected["purpose"] == "summary_theme" else {}
+    )
+    if packet.get("summaries") != expected_summaries:
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_summaries", "pass summary assignment changed"
+        )
+    whole_ids = [
+        claim.get("claim_id") for claim in packet.get("whole_dog_context") or []
+    ]
+    if whole_ids != assignment["canonical_claim_ids"]:
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_context", "whole-dog context is incomplete or reordered"
+        )
+    if packet.get("resource_set") != _bounded_resource_set():
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_resources", "bounded resource identity changed"
+        )
+    if packet.get("projected_term_registry") != authoring_packet["projected_term_registry"]:
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_registry", "bounded registry content changed"
+        )
+    basis = deepcopy(dict(packet))
+    digest = basis.pop("packet_sha256", None)
+    if digest != _canonical_sha256(basis):
+        raise BoundedAuthoringError(
+            "bounded_pass_packet_digest", "pass packet digest does not match content"
+        )
+    assert_provider_minimized(packet)
+
+
+def assemble_bounded_editorial_passes(
+    pass_outputs: Mapping[str, Mapping[str, Any]],
+    authoring_packet: Mapping[str, Any],
+    assignment: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Assemble unordered pass-local editorial output in canonical claim order."""
+    validate_bounded_split_assignment(assignment, authoring_packet)
+    expected_pass_ids = {
+        *(item["pass_id"] for item in assignment["card_passes"]),
+        assignment["summary_pass"]["pass_id"],
+    }
+    if set(pass_outputs) != expected_pass_ids:
+        raise BoundedAuthoringError(
+            "bounded_pass_output_inventory", "pass output inventory is incomplete"
+        )
+    cards_by_id: dict[str, dict[str, Any]] = {}
+    for pass_record in assignment["card_passes"]:
+        output = pass_outputs[pass_record["pass_id"]]
+        if output.get("pass_id") != pass_record["pass_id"]:
+            raise BoundedAuthoringError(
+                "bounded_pass_output_binding", "card pass output binding changed"
+            )
+        cards = output.get("cards")
+        if not isinstance(cards, list):
+            raise BoundedAuthoringError(
+                "bounded_pass_output_cards", "card pass output has no cards"
+            )
+        supplied = [card.get("claim_id") for card in cards]
+        if set(supplied) != set(pass_record["ordered_claim_ids"]) or len(supplied) != 10:
+            raise BoundedAuthoringError(
+                "bounded_pass_output_membership", "card pass membership changed"
+            )
+        for card in cards:
+            claim_id = card["claim_id"]
+            if claim_id in cards_by_id:
+                raise BoundedAuthoringError(
+                    "bounded_pass_output_duplicate", "claim output is duplicated"
+                )
+            cards_by_id[claim_id] = deepcopy(card)
+    summary_id = assignment["summary_pass"]["pass_id"]
+    summary_output = pass_outputs[summary_id]
+    if summary_output.get("pass_id") != summary_id:
+        raise BoundedAuthoringError(
+            "bounded_pass_output_binding", "summary pass output binding changed"
+        )
+    summaries = summary_output.get("summaries")
+    if not isinstance(summaries, list):
+        raise BoundedAuthoringError(
+            "bounded_pass_output_summaries", "summary pass has no summaries"
+        )
+    supplied_summary_ids = [item.get("summary_id") for item in summaries]
+    if set(supplied_summary_ids) != set(authoring_packet["summaries"]):
+        raise BoundedAuthoringError(
+            "bounded_pass_output_summary_membership", "summary membership changed"
+        )
+    summary_by_id = {item["summary_id"]: deepcopy(item) for item in summaries}
+    if len(summary_by_id) != len(summaries):
+        raise BoundedAuthoringError(
+            "bounded_pass_output_summary_duplicate", "summary output is duplicated"
+        )
+    return {
+        "cards": [cards_by_id[claim["claim_id"]] for claim in authoring_packet["claims"]],
+        "summaries": [
+            summary_by_id[summary_id]
+            for summary_id in authoring_packet["summaries"]
+        ],
+    }
 
 
 def _term_key(reference: str) -> str:
@@ -437,7 +874,15 @@ def compile_bounded_authoring_artifacts(
         )
     disposition["claim_deck_sha256"] = _canonical_sha256(claim_deck)
     disposition["authoring_packet_sha256"] = _canonical_sha256(authoring_packet)
-    return BoundedAuthoringArtifacts(claim_deck, authoring_packet, disposition)
+    split_assignment = build_bounded_split_assignment(authoring_packet, claim_deck)
+    pass_packets = build_bounded_pass_packets(authoring_packet, split_assignment)
+    return BoundedAuthoringArtifacts(
+        claim_deck,
+        authoring_packet,
+        disposition,
+        split_assignment,
+        pass_packets,
+    )
 
 
 def assert_provider_minimized(

@@ -44,6 +44,8 @@
     "bounded_natal_claim_deck": "astrowoof.bounded_natal.claim_deck.v1",
     "bounded_natal_disposition_report": "astrowoof.bounded_natal.disposition_report.v1",
     "bounded_natal_authoring_packet": "astrowoof.bounded_natal.authoring_packet.v1",
+    "bounded_natal_split_assignment": "astrowoof.bounded_natal.split_assignment.v1",
+    "bounded_natal_authoring_pass_packet": "astrowoof.bounded_natal.authoring_pass_packet.v1",
     "bounded_natal_final_cards": "astrowoof.bounded_natal.cards.v1",
     "bounded_natal_provider_disclosure": "astrowoof.bounded_natal.provider_disclosure.v1",
     "bounded_natal_delivery_provenance": "astrowoof.bounded_natal.delivery_provenance.v1",

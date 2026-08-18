@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slice 0 complete; awaiting gate review
+Status: Slices 0-2 complete; Slice 2 awaiting gate review
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -53,5 +53,29 @@ Verification:
 - both bounded editorial resource copies match their exact counterparts byte for
   byte at the working-tree gate; and
 - `git diff --check` passes.
+
+Provider operations: 0. Spend: USD 0.
+
+## Slice 2
+
+Result: [results/SLICE 2 - Bounded Six Pass Packets.md](results/SLICE%202%20-%20Bounded%20Six%20Pass%20Packets.md)
+
+Runtime contracts admitted:
+
+- `astrowoof.bounded_natal.split_assignment.v1`;
+- `astrowoof.bounded_natal.authoring_pass_packet.v1`; and
+- bounded six-pass compilation under `astrowoof.bounded_natal.authoring_run.v2`.
+
+Verification:
+
+- focused desktop bounded authoring/provider/product-QA/lifecycle suite: 39 tests
+  passed in 45.660 seconds;
+- Python 3.11 Linux worker image: all 12 bounded-authoring tests passed;
+- generated assignment and all six packets validate against the two packaged strict
+  schemas;
+- mutation checks reject extra transport guesses, altered membership, duplicate or
+  missing claims, changed ordering, and incomplete pass output; and
+- `git diff --check` passes (Git reports only the repository's expected checkout
+  line-ending notices).
 
 Provider operations: 0. Spend: USD 0.
