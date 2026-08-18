@@ -100,3 +100,22 @@ Result:
 - Strict proposal tests: 8 passed in 0.026 seconds.
 - Related lifecycle/route contract tests: 61 passed in 5.889 seconds.
 - Provider operations: 0.
+
+## Slice 2
+
+Result:
+[SLICE 2 - Transport-Neutral Wave Coordinator.md](results/SLICE%202%20-%20Transport-Neutral%20Wave%20Coordinator.md)
+
+- Added internal `astrowoof_natal_authoring.initial_wave`; not publicly exported and
+  not integrated into exact/bounded routes.
+- Deterministic content-addressed exact/bounded wave construction.
+- Mandatory complete envelope plus six-member preflight before create callbacks.
+- Six concurrent external create tasks with coordinator-thread-only persistence.
+- Regression proves at least one returned identity is persisted while other create
+  tasks remain active.
+- Canonical aggregate ordering is independent of completion order.
+- Mixed provider-bound, unstarted, refused, and ambiguous results are typed.
+- Focused tests: 9 passed in 0.029 seconds.
+- Related strict tests: 66 passed in 6.718 seconds.
+- Compile and `git diff --check`: pass.
+- Provider operations and spend: 0.

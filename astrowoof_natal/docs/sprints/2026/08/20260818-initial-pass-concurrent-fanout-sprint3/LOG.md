@@ -85,3 +85,24 @@
 - Strict proposal tests: 8 passed. Related lifecycle/route contract tests: 61
   passed. Provider operations and paid spend: zero.
 - Paused before Slice 2 runtime implementation for Kevin/API review.
+
+## 2026-08-18 — Slice 2 complete; awaiting review
+
+- Added the internal transport-neutral `initial_wave` module without switching any
+  production route or public API.
+- Implemented deterministic exact/bounded wave construction, content addressing,
+  fixed timing/cache policy, complete envelope/member preflight, and typed refusal.
+- Made complete preflight mandatory inside execution so no internal create path can
+  bypass full-wave authority.
+- Implemented six-way external create overlap with coordinator-thread-only outcome
+  persistence and canonical aggregate ordering.
+- During review, corrected an initial all-futures fan-in that delayed persistence;
+  the final completion-queue design persists each returned ID while other creates
+  may remain active.
+- Added conservative unstarted/refused/ambiguous classifications and fail-closed
+  handling when create tasks violate the wave deadline.
+- New focused tests: 9 passed. Related strict spend/lifecycle/contract tests: 66
+  passed. Compile and diff hygiene passed.
+- Provider operations, paid spend, production route changes, and public contract
+  catalog changes: zero.
+- Paused before Slice 3 exact-interactive integration.
