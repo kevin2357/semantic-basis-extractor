@@ -1,5 +1,8 @@
 # Authoring Lifecycle Consumer Handoff
 
+For route-neutral scheduling of exact Responses, exact Batch, and bounded-Natal
+Responses, see [Provider Reconciliation Route Parity Handoff](Provider%20Reconciliation%20Route%20Parity%20Handoff.md).
+
 This document defines the supported API-worker boundary for SBE lifecycle
 inspection, provider-less denial, closeout, and structured events. Consumers use an
 installed pinned wheel and these public surfaces; they do not import SBE internals,

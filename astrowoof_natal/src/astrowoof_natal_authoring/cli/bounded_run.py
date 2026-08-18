@@ -63,6 +63,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--events-jsonl", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--provider-reconciliation-cycle", action="store_true")
+    parser.add_argument("--observed-at")
     return parser
 
 
@@ -75,12 +77,39 @@ def main() -> None:
         parser.error("new bounded runs require --input-package")
     if args.prepare_only and args.resume:
         parser.error("--prepare-only cannot be combined with --resume")
+    if args.provider_reconciliation_cycle and not args.resume:
+        parser.error("--provider-reconciliation-cycle requires --resume")
+    if args.provider_reconciliation_cycle and args.provider != "openai":
+        parser.error("--provider-reconciliation-cycle requires provider=openai")
+    if args.provider_reconciliation_cycle and args.service_level != "interactive":
+        parser.error("bounded-Natal Batch reconciliation is not supported")
+    if args.provider_reconciliation_cycle and args.spend_authorization:
+        parser.error("provider reconciliation cannot apply spend authorization")
+    if args.provider_reconciliation_cycle and not args.observed_at:
+        parser.error("--provider-reconciliation-cycle requires --observed-at")
     provider = _provider(args)
     emitter = ExecutionEventEmitter(
         release=__version__,
         sink=JsonlEventSink(args.events_jsonl) if args.events_jsonl else None,
     )
     try:
+        if args.provider_reconciliation_cycle:
+            from ..reconciliation import (
+                ProviderReconciliationAdapters,
+                reconcile_authoring_provider_cycle,
+            )
+            result = reconcile_authoring_provider_cycle(
+                args.run_dir,
+                observed_at=args.observed_at,
+                provider_adapters=ProviderReconciliationAdapters(
+                    bounded_interactive_provider=provider,
+                ),
+                event_emitter=emitter,
+            )
+            print(json.dumps(result, sort_keys=True))
+            if result["outcome"] != "terminal":
+                raise SystemExit(3)
+            return
         if not args.resume:
             admission = admit_bounded_family(load_bounded_family(args.input_package))
             basis = build_bounded_basis(admission)

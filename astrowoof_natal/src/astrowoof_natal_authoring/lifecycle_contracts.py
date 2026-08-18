@@ -399,6 +399,7 @@ EVENT_NAMES = (
     "provider.identity_recorded",
     "provider.waiting",
     "provider.completed",
+    "provider.reconciliation_observed",
     "qa.started",
     "qa.completed",
     "retry.decided",

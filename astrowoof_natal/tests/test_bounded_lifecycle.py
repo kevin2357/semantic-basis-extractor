@@ -42,6 +42,8 @@ from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
 )
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    ProviderReconciliationAdapters,
+    reconcile_authoring_provider_cycle,
     run_bounded_authoring_reconciliation,
 )
 from astrowoof_natal_authoring.spend import (  # noqa: E402
@@ -571,9 +573,12 @@ class TestBoundedLifecycle(unittest.TestCase):
             due = interrupted["spend_ledger"]["actions"][0][
                 "provider_reconciliation"
             ]["resume_not_before"]
-            result = run_bounded_authoring_reconciliation(
-                run_dir, provider=provider, max_attempts=3,
-                python_executable=Path(sys.executable), observed_at=due,
+            result = reconcile_authoring_provider_cycle(
+                run_dir, observed_at=due,
+                provider_adapters=ProviderReconciliationAdapters(
+                    bounded_interactive_provider=provider,
+                    python_executable=Path(sys.executable),
+                ),
             )
             self.assertEqual("terminal", result["outcome"])
             self.assertEqual("bounded_natal", result["inspection"]["native_route"]["route_family"])

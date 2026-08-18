@@ -39,6 +39,12 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "provider.identity_recorded": ("action_id", "provider_operation_id"),
     "provider.waiting": ("action_id", "provider_operation_id"),
     "provider.completed": ("action_id", "provider_operation_id", "duration_ms"),
+    "provider.reconciliation_observed": (
+        "action_id", "route_family", "provider_operation_kind", "outcome",
+    ),
+    "provider.reconciliation_observed": (
+        "action_id", "route_family", "provider_operation_kind", "outcome",
+    ),
     "qa.started": ("scope", "attempt"),
     "qa.completed": ("scope", "attempt", "outcome"),
     "retry.decided": ("route", "attempt", "decision", "reason_code"),

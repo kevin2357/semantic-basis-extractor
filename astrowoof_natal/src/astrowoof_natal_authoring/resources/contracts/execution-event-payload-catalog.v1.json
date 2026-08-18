@@ -13,6 +13,7 @@
     "provider.identity_recorded": {"required_fields": ["action_id", "provider_operation_id"]},
     "provider.waiting": {"required_fields": ["action_id", "provider_operation_id"]},
     "provider.completed": {"required_fields": ["action_id", "provider_operation_id", "duration_ms"]},
+    "provider.reconciliation_observed": {"required_fields": ["action_id", "route_family", "provider_operation_kind", "outcome"]},
     "qa.started": {"required_fields": ["scope", "attempt"]},
     "qa.completed": {"required_fields": ["scope", "attempt", "outcome"]},
     "retry.decided": {"required_fields": ["route", "attempt", "decision", "reason_code"]},

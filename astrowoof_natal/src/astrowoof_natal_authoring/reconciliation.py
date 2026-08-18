@@ -9,6 +9,7 @@ import os
 import threading
 from contextlib import contextmanager
 from copy import deepcopy
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -26,6 +27,21 @@ RECONCILIABLE_PROVIDER_STATES = {
 }
 EXACT_RUN_CONTRACT = "astrowoof.semantic_closure_run.v0.9"
 BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
+
+
+@dataclass(frozen=True)
+class ProviderReconciliationAdapters:
+    """Configured provider adapters for one route-neutral reconciliation cycle."""
+
+    exact_interactive_provider: Any = None
+    exact_batch_provider: Any = None
+    exact_batch_transport: Any = None
+    bounded_interactive_provider: Any = None
+    max_attempts: int = 3
+    python_executable: Path = Path(os.sys.executable)
+    polish_provider: Any = None
+    critic_provider: Any = None
+    qualitative_editor_provider: Any = None
 
 
 def native_provider_route_identity(
@@ -1133,6 +1149,19 @@ def run_bounded_authoring_reconciliation(
         checkpoint = value.get("result_checkpoint")
         if event_emitter is None or not isinstance(checkpoint, dict):
             return
+        retrieved = set(value["cycle"]["retrieved_action_ids"])
+        if not retrieved:
+            return
+        for operation in value.get("provider_operations", []):
+            if operation["action_id"] not in retrieved:
+                continue
+            event_emitter.emit("provider.reconciliation_observed", data={
+                "action_id": operation["action_id"],
+                "route_family": operation["route_family"],
+                "provider_operation_kind": operation["provider_operation_kind"],
+                "outcome": operation["retrieval_outcome"],
+                "member_count": operation.get("member_count"),
+            })
         event_emitter.emit("run.detached", data={
             "state_revision": checkpoint["operator_state_revision"],
             "reason_code": value["outcome"],
@@ -1401,3 +1430,98 @@ def run_bounded_authoring_reconciliation(
     }
     emit_checkpoint_events(result)
     return result
+
+
+def reconcile_authoring_provider_cycle(
+    run_dir: Path,
+    *,
+    observed_at: str,
+    provider_adapters: ProviderReconciliationAdapters,
+    event_emitter: Any = None,
+) -> dict[str, Any]:
+    """Dispatch one bounded provider cycle from validated native route evidence."""
+    from .closure import load_json
+    from .lifecycle import inspect_lifecycle
+
+    run_dir = run_dir.resolve()
+    state = load_json(run_dir / "run.json")
+    inspection = inspect_lifecycle(
+        run_dir, native_exclusive_access="declared", observed_at=observed_at,
+    )
+    route = inspection["native_route"]["route_family"]
+    operation_kinds = {
+        item["provider_operation_kind"]
+        for item in inspection["provider_custody"]["actions"]
+        if item["custody_classification"] != "unsupported"
+    }
+    if len(operation_kinds) > 1:
+        raise ValueError("Mixed provider mechanisms cannot share one reconciliation cycle")
+    mechanism = next(iter(operation_kinds), None)
+    if mechanism is None and route == "exact_natal":
+        mechanism = "batch" if state.get("service_level") == "batch" else "response"
+    elif mechanism is None and route == "bounded_natal":
+        mechanism = "response"
+
+    if route == "bounded_natal" and mechanism == "batch":
+        raise ValueError("Bounded-Natal Batch reconciliation is not supported")
+    if route == "exact_natal" and mechanism == "batch":
+        if (
+            provider_adapters.exact_batch_provider is None
+            or provider_adapters.exact_batch_transport is None
+        ):
+            raise ValueError("Exact Batch reconciliation adapters are required")
+        result = reconcile_batch_provider_cycle(
+            run_dir,
+            provider=provider_adapters.exact_batch_provider,
+            transport=provider_adapters.exact_batch_transport,
+            max_attempts=provider_adapters.max_attempts,
+            python_executable=provider_adapters.python_executable,
+            observed_at=observed_at,
+            event_emitter=event_emitter,
+            polish_provider=provider_adapters.polish_provider,
+            critic_provider=provider_adapters.critic_provider,
+            qualitative_editor_provider=(
+                provider_adapters.qualitative_editor_provider
+            ),
+        )
+        if event_emitter is not None and result["outcome"] != "not_due":
+            retrieved = set(result["cycle"]["retrieved_action_ids"])
+            for operation in result.get("provider_operations", []):
+                if operation["action_id"] in retrieved:
+                    event_emitter.emit("provider.reconciliation_observed", data={
+                        "action_id": operation["action_id"],
+                        "route_family": operation["route_family"],
+                        "provider_operation_kind": operation["provider_operation_kind"],
+                        "outcome": operation["retrieval_outcome"],
+                        "member_count": operation.get("member_count"),
+                    })
+            checkpoint = result.get("result_checkpoint")
+            if isinstance(checkpoint, dict):
+                event_emitter.emit("run.detached", data={
+                    "state_revision": checkpoint["operator_state_revision"],
+                    "reason_code": result["outcome"],
+                })
+                event_emitter.emit("checkpoint.committed", data={
+                    "state_revision": checkpoint["operator_state_revision"],
+                    "snapshot_sha256": checkpoint["snapshot_sha256"],
+                })
+        return result
+    if route == "exact_natal" and mechanism == "response":
+        provider = provider_adapters.exact_interactive_provider
+    elif route == "bounded_natal" and mechanism == "response":
+        provider = provider_adapters.bounded_interactive_provider
+    else:
+        raise ValueError("Native route/provider mechanism is unsupported")
+    if provider is None:
+        raise ValueError(f"{route} interactive reconciliation adapter is required")
+    return run_bounded_authoring_reconciliation(
+        run_dir,
+        provider=provider,
+        max_attempts=provider_adapters.max_attempts,
+        python_executable=provider_adapters.python_executable,
+        observed_at=observed_at,
+        event_emitter=event_emitter,
+        polish_provider=provider_adapters.polish_provider,
+        critic_provider=provider_adapters.critic_provider,
+        qualitative_editor_provider=provider_adapters.qualitative_editor_provider,
+    )

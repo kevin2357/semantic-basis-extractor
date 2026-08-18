@@ -160,3 +160,34 @@
 - The complete repository suite passed all 354 tests in 265.958 seconds.
 - Slice 4 is complete and paused for review. Provider operations remain 0 and paid
   spend remains `$0`; no build, version bump, release, or tag occurred.
+- Kevin approved Slice 4. Committed and pushed it as `2b06124`; Slice 5 began.
+- Added the typed package-root `ProviderReconciliationAdapters` and
+  `reconcile_authoring_provider_cycle()` public surface. Native inspection v0.3,
+  not consumer job intent, selects exact Responses, exact Batch, or bounded
+  Responses.
+- Added neutral `--provider-reconciliation-cycle --observed-at` modes to exact and
+  bounded authoring commands. Bounded Batch, fake providers, new-run use, and
+  simultaneous authority mutation fail before provider activity.
+- Retained `--bounded-provider-reconciliation` as a deprecated exact-interactive
+  compatibility alias. It keeps its historical implicit-current-time behavior and
+  does not select bounded Natal.
+- Added the redacted, non-authoritative
+  `provider.reconciliation_observed` event before detach/checkpoint observations.
+  Not-due and retrieval-free replay do not duplicate retrieval events.
+- Published the route-parity consumer handoff with Python/CLI examples, timing,
+  outcome/custody mapping, Batch integrity, replay, cleanup restrictions,
+  compatibility, bounded-Batch deferral, and API adoption checklist.
+- Added a packaged API transition-oracle fixture spanning exact Response, exact
+  Batch, bounded Response, terminal usage-unavailable authority, and bounded-Batch
+  rejection.
+- Extended the provider-free lifecycle smoke to require the public typed surface
+  and packaged oracle resource; the smoke passed.
+- Focused public dispatcher, lifecycle contract, event, CLI, exact, bounded, and
+  smoke coverage passed all 71 tests in 38.361 seconds.
+- The complete repository suite passed all 355 tests in 247.940 seconds.
+- Removed only the generated `.tmp/lifecycle-smoke-slice5` test workspace after
+  recording its pass; it was reproducible and not recoverable, with no source or
+  evidence content removed.
+- Slice 5 is complete and paused for review. Provider operations remain 0 and paid
+  spend remains `$0`; installed-wheel/cross-platform qualification remains Slice
+  6 work, and no build, version bump, release, or tag occurred.

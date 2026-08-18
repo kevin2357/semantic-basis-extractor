@@ -1,0 +1,43 @@
+{
+  "schema_version": "astrowoof.route_parity_transition_oracle.v1",
+  "scenarios": [
+    {
+      "name": "exact_response_pending",
+      "native_route": {"route_family": "exact_natal", "provider_operation_kind": "response"},
+      "cycle_outcome": "detached_provider_pending",
+      "capacity_disposition": "release_until_due",
+      "retain_provider_custody": true,
+      "retain_consumer_authority": true
+    },
+    {
+      "name": "exact_batch_pending",
+      "native_route": {"route_family": "exact_natal", "provider_operation_kind": "batch"},
+      "cycle_outcome": "detached_provider_pending",
+      "capacity_disposition": "release_until_due",
+      "retain_provider_custody": true,
+      "retain_consumer_authority": true
+    },
+    {
+      "name": "bounded_response_pending",
+      "native_route": {"route_family": "bounded_natal", "provider_operation_kind": "response"},
+      "cycle_outcome": "detached_provider_pending",
+      "capacity_disposition": "release_until_due",
+      "retain_provider_custody": true,
+      "retain_consumer_authority": true
+    },
+    {
+      "name": "terminal_batch_usage_unavailable",
+      "native_route": {"route_family": "exact_natal", "provider_operation_kind": "batch"},
+      "cycle_outcome": "progressed_local",
+      "provider_retrieval_custody": false,
+      "consumer_authority_reason": "billing_reconciliation_pending",
+      "cost_disposition": "provider_usage_unavailable_billing_reconciliation_pending"
+    },
+    {
+      "name": "bounded_batch_rejected",
+      "native_route": {"route_family": "bounded_natal", "provider_operation_kind": "batch"},
+      "cycle_outcome": "unsupported",
+      "provider_request_allowed": false
+    }
+  ]
+}

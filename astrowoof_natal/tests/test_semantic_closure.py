@@ -106,6 +106,8 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     authorize_action,
 )
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    ProviderReconciliationAdapters,
+    reconcile_authoring_provider_cycle,
     reconcile_batch_provider_cycle,
     run_bounded_authoring_reconciliation,
 )
@@ -2944,10 +2946,14 @@ class TestSemanticClosure(SemanticClosureFixture):
             )
             uploads = transport.upload_calls
             creates = transport.create_calls
-            result = reconcile_batch_provider_cycle(
-                root / "run", provider=provider, transport=transport,
-                max_attempts=3, python_executable=Path(sys.executable),
+            result = reconcile_authoring_provider_cycle(
+                root / "run",
                 observed_at=action["provider_reconciliation"]["resume_not_before"],
+                provider_adapters=ProviderReconciliationAdapters(
+                    exact_batch_provider=provider,
+                    exact_batch_transport=transport,
+                    python_executable=Path(sys.executable),
+                ),
             )
             self.assertEqual("progressed_local", result["outcome"])
             self.assertEqual("batch", result["provider_operations"][0]["provider_operation_kind"])

@@ -28,10 +28,12 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     inspect_lifecycle,
 )
 from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    ProviderReconciliationAdapters,
     delay_seconds,
     initial_timing,
     native_provider_route_identity,
     reconcile_provider_cycle,
+    reconcile_authoring_provider_cycle,
     record_attempt,
     run_bounded_authoring_reconciliation,
 )
@@ -813,7 +815,21 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             text=True,
             check=True,
         )
+        self.assertIn("--provider-reconciliation-cycle", completed.stdout)
         self.assertIn("--bounded-provider-reconciliation", completed.stdout)
+        bounded = subprocess.run(
+            [
+                sys.executable, "-c",
+                "from astrowoof_natal_authoring.cli.bounded_run import main; main()",
+                "--help",
+            ],
+            cwd=ROOT,
+            env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        self.assertIn("--provider-reconciliation-cycle", bounded.stdout)
 
     def test_high_level_pending_cycle_emits_checkpoint_observations(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -845,17 +861,23 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 release="test", sink=events.append,
                 base_correlation={"native_run_id": "run_provider_pending_capacity_001"},
             )
-            result = run_bounded_authoring_reconciliation(
+            result = reconcile_authoring_provider_cycle(
                 root,
-                provider=provider,
-                max_attempts=3,
-                python_executable=Path(sys.executable),
                 observed_at="2026-08-15T20:18:00Z",
+                provider_adapters=ProviderReconciliationAdapters(
+                    exact_interactive_provider=provider,
+                    python_executable=Path(sys.executable),
+                ),
                 event_emitter=emitter,
             )
             self.assertEqual("detached_provider_pending", result["outcome"])
             self.assertEqual(
-                ["run.detached", "checkpoint.committed"],
+                [
+                    "provider.reconciliation_observed",
+                    "provider.reconciliation_observed",
+                    "provider.reconciliation_observed",
+                    "run.detached", "checkpoint.committed",
+                ],
                 [item["event_name"] for item in events],
             )
 

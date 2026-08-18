@@ -6228,12 +6228,23 @@ def main() -> None:
     parser.add_argument("--subject")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument(
+        "--provider-reconciliation-cycle",
+        action="store_true",
+        help=(
+            "Retrieve one bounded due cycle of already-known provider work, "
+            "exhaust route-local work, checkpoint, and detach without submission."
+        ),
+    )
+    parser.add_argument(
+        "--observed-at",
+        help="Frozen UTC decision instant for --provider-reconciliation-cycle.",
+    )
+    parser.add_argument(
         "--bounded-provider-reconciliation",
         action="store_true",
         help=(
-            "On an exact interactive OpenAI resume, retrieve one bounded due "
-            "wave of already-known Responses operations, exhaust newly unblocked "
-            "local work, checkpoint, and detach without any new submission."
+            "Deprecated exact-interactive alias for "
+            "--provider-reconciliation-cycle. It does not select bounded Natal."
         ),
     )
     parser.add_argument(
@@ -6571,20 +6582,27 @@ def main() -> None:
         parser.error("--service-level batch requires --provider openai")
     if args.batch_detach and args.service_level != "batch":
         parser.error("--batch-detach requires --service-level batch")
-    if args.bounded_provider_reconciliation and not args.resume:
-        parser.error("--bounded-provider-reconciliation requires --resume")
-    if args.bounded_provider_reconciliation and args.provider != "openai":
-        parser.error("--bounded-provider-reconciliation requires --provider openai")
+    reconciliation_cycle = bool(
+        args.provider_reconciliation_cycle or args.bounded_provider_reconciliation
+    )
+    if args.provider_reconciliation_cycle and args.bounded_provider_reconciliation:
+        parser.error("choose only one provider reconciliation spelling")
+    if reconciliation_cycle and not args.resume:
+        parser.error("provider reconciliation requires --resume")
+    if reconciliation_cycle and args.provider != "openai":
+        parser.error("provider reconciliation requires --provider openai")
     if args.bounded_provider_reconciliation and args.service_level != "interactive":
         parser.error(
-            "--bounded-provider-reconciliation supports interactive service only"
+            "the deprecated alias supports exact interactive service only"
         )
-    if args.bounded_provider_reconciliation and (
+    if reconciliation_cycle and (
         args.spend_authorization or args.spend_reconciliation
     ):
         parser.error(
-            "bounded reconciliation cannot apply spend authorization or reconciliation"
+            "provider reconciliation cannot apply spend authorization or reconciliation"
         )
+    if args.provider_reconciliation_cycle and not args.observed_at:
+        parser.error("--provider-reconciliation-cycle requires --observed-at")
     if args.batch_poll_interval_seconds <= 0:
         parser.error("--batch-poll-interval-seconds must be positive")
     if not args.resume and args.input_package is None:
@@ -6681,8 +6699,11 @@ def main() -> None:
                 model=args.qualitative_editor_model,
                 reasoning_effort=args.qualitative_editor_reasoning_effort,
             )
-    if args.bounded_provider_reconciliation:
-        from .reconciliation import run_bounded_authoring_reconciliation
+    if reconciliation_cycle:
+        from .reconciliation import (
+            ProviderReconciliationAdapters,
+            reconcile_authoring_provider_cycle,
+        )
 
         preliminary_state = load_json(args.run_dir / "run.json")
         event_emitter = (
@@ -6700,18 +6721,29 @@ def main() -> None:
             if args.events_jsonl is not None or args.events_stdout_jsonl
             else None
         )
-        result = run_bounded_authoring_reconciliation(
+        batch_provider = openai_provider_for_attempt(provider, 1)
+        result = reconcile_authoring_provider_cycle(
             args.run_dir,
-            provider=provider,
-            max_attempts=args.max_attempts,
-            python_executable=args.python_executable,
-            observed_at=utc_now(),
+            observed_at=args.observed_at or utc_now(),
+            provider_adapters=ProviderReconciliationAdapters(
+                exact_interactive_provider=provider,
+                exact_batch_provider=provider,
+                exact_batch_transport=UrllibOpenAIBatchTransport(
+                    api_key=batch_provider.api_key,
+                    base_url=batch_provider.base_url,
+                    timeout_seconds=min(batch_provider.http_timeout_seconds, 40.0),
+                ),
+                max_attempts=args.max_attempts,
+                python_executable=args.python_executable,
+                polish_provider=polish_provider,
+                critic_provider=critic_provider,
+                qualitative_editor_provider=qualitative_editor_provider,
+            ),
             event_emitter=event_emitter,
-            polish_provider=polish_provider,
-            critic_provider=critic_provider,
-            qualitative_editor_provider=qualitative_editor_provider,
         )
         output_result(result)
+        if result["outcome"] != "terminal":
+            raise SystemExit(3)
         return
     if args.resume:
         preliminary_state = load_json(args.run_dir / "run.json")

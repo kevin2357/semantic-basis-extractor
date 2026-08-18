@@ -99,6 +99,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "fixtures/lifecycle/inspection.v0.2.json",
         "fixtures/lifecycle/reconciliation-policy.v0.1.json",
         "fixtures/lifecycle/reconciliation-cycle-not-due.v0.1.json",
+        "fixtures/lifecycle/route-parity-transition-oracle.v1.json",
     ):
         try:
             json.loads(read_resource_text(resource_name))
@@ -160,6 +161,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
     )
     replay = closeout_run(run_dir)
     checks = {
+        "public_reconciliation_surface": False,
         "prepared_eligible": action["providerless_denial_eligible"],
         "denial_applied": denial.get("applied"),
         "denial_disposition": denial.get("disposition"),
@@ -189,7 +191,16 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
             run_dir, native_exclusive_access="declared"
         )["observation"]["inventory_valid"],
     }
+    try:
+        from . import ProviderReconciliationAdapters, reconcile_authoring_provider_cycle
+        checks["public_reconciliation_surface"] = bool(
+            ProviderReconciliationAdapters
+            and reconcile_authoring_provider_cycle.__annotations__
+        )
+    except Exception as exc:
+        errors.append(f"public reconciliation surface unavailable: {exc}")
     expected = {
+        "public_reconciliation_surface": True,
         "prepared_eligible": True,
         "denial_applied": True,
         "denial_disposition": "DENIED_PROVIDERLESS",

@@ -976,6 +976,7 @@
           "authorization.denied_providerless", "authorization.denied_providerless_batch",
           "provider.submission_started",
           "provider.identity_recorded", "provider.waiting", "provider.completed",
+          "provider.reconciliation_observed",
           "qa.started", "qa.completed", "retry.decided", "polish.decided",
           "critic.decided", "checkpoint.committed", "terminal.transitioned",
           "closeout.completed", "execution.failed", "event_sink.warning",

@@ -171,6 +171,15 @@ def validate(value: Any, schema: dict[str, Any], root: dict[str, Any], path: str
 
 
 class TestLifecycleContracts(unittest.TestCase):
+    def test_public_reconciliation_python_surface_is_typed(self) -> None:
+        import astrowoof_natal_authoring as public
+
+        self.assertIn("ProviderReconciliationAdapters", public.__all__)
+        self.assertIn("reconcile_authoring_provider_cycle", public.__all__)
+        self.assertTrue(public.reconcile_authoring_provider_cycle.__annotations__)
+        adapters = public.ProviderReconciliationAdapters()
+        self.assertEqual(3, adapters.max_attempts)
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.schema = json.loads(read_resource_text(
