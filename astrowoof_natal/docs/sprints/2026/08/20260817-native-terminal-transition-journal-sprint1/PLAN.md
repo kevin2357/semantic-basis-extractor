@@ -1,8 +1,8 @@
 # Native Terminal Transition Journal Sprint 1 Plan
 
 Date: 2026-08-17
-Status: in progress; Slice 2 complete and awaiting Kevin review
-Implementation: Slices 0-2 complete; provider-bound integration not started
+Status: in progress; Slice 3 complete and awaiting Kevin review
+Implementation: Slices 0-3 complete; terminal result publication not started
 Upstream consumer sprint: AstroWoof API Sprint 26, Native Terminal Transition
 Ingestion
 
@@ -276,6 +276,14 @@ Ordinary authoring and reconciliation commands publish validated terminal/native
 results before returning or raising, making native meaning primary to exit status.
 
 ### Work
+
+- Resolve the API Slice 2 full-snapshot binding request through an immutable
+  publication receipt: a result cannot contain the literal hash of the snapshot
+  that inventories that result without an unsatisfiable content-hash cycle. Freeze
+  the receipt contract with API review before implementation.
+- The API accepted this receipt contract. Result journal-range membership is the
+  authoritative command correlation; action-derived records within that range may
+  retain stable reconstruction-safe invocation IDs.
 
 - Journal delivery, `FAILED_REQUIRES_REVIEW`, budget exhaustion, policy stop,
   provider terminal failure, ambiguity, provider pending, and local continuation.

@@ -6,3 +6,4 @@ link the full plan, log, evidence ledger, results index, and current slice resul
 - [Slice 0 baseline and Aster shape](SLICE%200%20BASELINE%20AND%20ASTER%20SHAPE.md)
 - [Slice 1 contract freeze proposal](SLICE%201%20CONTRACT%20FREEZE%20PROPOSAL.md)
 - [Slice 2 journal integrity and public reader](SLICE%202%20JOURNAL%20INTEGRITY%20AND%20PUBLIC%20READER.md)
+- [Slice 3 provider-operation observation integration](SLICE%203%20PROVIDER-OPERATION%20OBSERVATION%20INTEGRATION.md)

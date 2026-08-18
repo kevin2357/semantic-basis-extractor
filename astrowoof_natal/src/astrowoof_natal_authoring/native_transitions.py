@@ -7,6 +7,7 @@ import json
 import os
 import tempfile
 import uuid
+from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -92,6 +93,31 @@ def mint_invocation_id() -> str:
     return f"ninv_{uuid.uuid4().hex[:24]}"
 
 
+@contextmanager
+def _journal_writer_lock(run_dir: Path):
+    """Serialize journal publication without recursively taking the spend lock."""
+    path = run_dir / "native-transition-journal.lock"
+    with path.open("a+b") as handle:
+        if path.stat().st_size == 0:
+            handle.write(b"0")
+            handle.flush()
+        handle.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            handle.seek(0)
+            if os.name == "nt":
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 def _validate_route(value: Any) -> None:
     if not isinstance(value, dict) or set(value) != {
         "route_family", "provider_mechanism", "native_operation_ref",
@@ -162,9 +188,13 @@ def validate_transition_journal(run_dir: Path) -> list[dict[str, Any]]:
             run_id = record["run_id"]
         elif record["run_id"] != run_id:
             raise ValueError("Native transition journal crosses run identity")
+        action_binding = record["action_binding"]
+        if action_binding is not None:
+            _validate_action(action_binding)
         provider = record["provider_observation"]
         if provider is not None:
-            _validate_action(record["action_binding"])
+            if action_binding is None:
+                raise ValueError("Provider observation requires action binding")
             if set(provider) != {
                 "observation_kind", "provider_kind", "provider_operation_id",
                 "status", "cost_disposition", "price_book_version",
@@ -177,7 +207,7 @@ def validate_transition_journal(run_dir: Path) -> list[dict[str, Any]]:
             external_id = provider.get("provider_operation_id")
             if kind == "submission_started" and external_id is not None:
                 raise ValueError("Provider ID cannot exist before identity recording")
-            if kind in {"identity_recorded", "pending", "completed", "failed", "cancelled", "expired", "usage_reported", "usage_unavailable"} and not external_id:
+            if kind in {"identity_recorded", "pending", "completed", "failed", "cancelled", "expired", "usage_reported", "usage_unavailable", "identity_conflict_refused"} and not external_id:
                 raise ValueError("Known provider observation requires external ID")
             disposition = provider["cost_disposition"]
             if disposition == "provider_usage_reported":
@@ -189,10 +219,9 @@ def validate_transition_journal(run_dir: Path) -> list[dict[str, Any]]:
     return records
 
 
-def append_transition_record(run_dir: Path, value: dict[str, Any]) -> dict[str, Any]:
-    """Append one record under the native cross-process writer lock."""
+def _append_transition_record_internal(run_dir: Path, value: dict[str, Any]) -> dict[str, Any]:
     run_dir = run_dir.resolve()
-    with _exclusive_lifecycle_lock(run_dir):
+    with _journal_writer_lock(run_dir):
         records = validate_transition_journal(run_dir)
         state = load_json(run_dir / "run.json")
         replay_basis = {
@@ -237,6 +266,186 @@ def append_transition_record(run_dir: Path, value: dict[str, Any]) -> dict[str, 
         staged.replace(path)
         validate_transition_journal(run_dir)
         return deepcopy(record)
+
+
+def append_transition_record(run_dir: Path, value: dict[str, Any]) -> dict[str, Any]:
+    """Append one record under the public native cross-process writer lock."""
+    run_dir = run_dir.resolve()
+    with _exclusive_lifecycle_lock(run_dir):
+        return _append_transition_record_internal(run_dir, value)
+
+
+def _route_binding(state: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
+    binding = action["binding"]
+    bounded = (
+        state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1"
+        and state.get("route") == "bounded_natal.v1"
+    )
+    exact = (
+        state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
+        and state.get("route_contract") is None
+    )
+    if not bounded and not exact:
+        raise ValueError("Paid action has no supported native transition route")
+    mechanism = "batch" if binding.get("service_level") == "batch" else "response"
+    if bounded and mechanism == "batch":
+        raise ValueError("Bounded Batch has no supported native transition route")
+    return {
+        "route_family": "bounded_natal" if bounded else "exact_natal",
+        "provider_mechanism": mechanism,
+        "native_operation_ref": str(binding["route"]),
+    }
+
+
+def _action_binding(action: dict[str, Any]) -> dict[str, Any]:
+    binding = action["binding"]
+    return {
+        "action_id": action["action_id"], "stage": binding["stage"],
+        "route": binding["route"], "request_sha256": binding["request_sha256"],
+        "profile_sha256": binding["profile_sha256"],
+        "maximum_output_tokens": binding["maximum_output_tokens"],
+        "commitment_micro_usd": binding["commitment_micro_usd"],
+        "price_book_version": binding["price_book_version"],
+    }
+
+
+def _provider_observation(
+    action: dict[str, Any], observation_kind: str, *, status: str,
+) -> dict[str, Any]:
+    provider = action.get("provider") or {}
+    reported = action.get("reported") or {}
+    usage = reported.get("usage")
+    amount = reported.get("estimated_micro_usd")
+    if observation_kind == "submission_started":
+        disposition, provider_id = "not_applicable_provider_pending", None
+    elif observation_kind in {"identity_recorded", "pending", "identity_conflict_refused"}:
+        disposition, provider_id = "not_applicable_provider_pending", provider.get("id")
+    elif isinstance(usage, dict) and amount is not None:
+        disposition, provider_id = "provider_usage_reported", provider.get("id")
+    else:
+        disposition = "provider_usage_unavailable_billing_reconciliation_pending"
+        provider_id = provider.get("id")
+    return {
+        "observation_kind": observation_kind,
+        "provider_kind": provider.get("kind") or (
+            "batch" if action["binding"].get("service_level") == "batch" else "response"
+        ),
+        "provider_operation_id": provider_id, "status": status,
+        "cost_disposition": disposition,
+        "price_book_version": action["binding"]["price_book_version"] if disposition == "provider_usage_reported" else None,
+        "usage_evidence_ref": (
+            {"action_id": action["action_id"], "ledger_field": "reported.usage"}
+            if disposition == "provider_usage_reported" else None
+        ),
+        "estimated_micro_usd": amount if disposition == "provider_usage_reported" else None,
+    }
+
+
+def _desired_action_records(
+    state: dict[str, Any], action: dict[str, Any], observed_at: str,
+) -> list[dict[str, Any]]:
+    base = {
+        "invocation_id": f"ninv_{action['action_id'][5:29]}",
+        "observed_at": observed_at,
+        "native_state_revision": int(state.get("state_revision") or 0),
+        "route_binding": _route_binding(state, action),
+        "action_binding": _action_binding(action), "native_transition": None,
+    }
+    desired = [{**base, "record_kind": "action.prepared", "provider_observation": None}]
+    action_state = str(action.get("state") or "")
+    if action.get("authorization") is not None or action_state in {
+        "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED", "WAITING", "REPORTED",
+        "AMBIGUOUS_PROVIDER_SUBMISSION",
+    }:
+        desired.append({**base, "record_kind": "action.authorized", "provider_observation": None})
+    if action_state == "DENIED_PROVIDERLESS":
+        denial = action.get("negative_authorization") or {}
+        desired.append({
+            **base, "record_kind": "action.denied_providerless",
+            "provider_observation": None,
+            "native_transition": {
+                "denial_reason": denial.get("denial_reason"),
+                "external_authority_reference": denial.get("external_authority_reference"),
+                "run_transition": denial.get("run_transition"),
+            },
+        })
+    if action.get("consumption") is not None:
+        desired.extend([
+            {**base, "record_kind": "action.consumed", "provider_observation": None},
+            {**base, "record_kind": "provider.submission_started",
+             "provider_observation": _provider_observation(action, "submission_started", status="submitting")},
+        ])
+    if (action.get("provider") or {}).get("id"):
+        desired.append({
+            **base, "record_kind": "provider.identity_recorded",
+            "provider_observation": _provider_observation(action, "identity_recorded", status="identity_recorded"),
+        })
+    if action_state in {"PROVIDER_ID_RECORDED", "WAITING"}:
+        desired.append({
+            **base, "record_kind": "provider.pending",
+            "provider_observation": _provider_observation(action, "pending", status="pending"),
+        })
+    if action_state == "AMBIGUOUS_PROVIDER_SUBMISSION":
+        reason = str((action.get("ambiguity") or {}).get("reason") or "")
+        if "identity" in reason.lower() and (action.get("provider") or {}).get("id"):
+            desired.append({
+                **base, "record_kind": "provider.identity_conflict_refused",
+                "provider_observation": _provider_observation(action, "identity_conflict_refused", status="identity_conflict_refused"),
+            })
+        desired.append({
+            **base, "record_kind": "provider.submission_ambiguous",
+            "provider_observation": None,
+            "native_transition": {"reason": reason or "provider submission outcome is ambiguous"},
+        })
+    if action_state == "REPORTED":
+        provider_status = str((action.get("integrity_review") or {}).get("provider_status") or "completed")
+        kind = provider_status if provider_status in {"failed", "cancelled", "expired"} else "completed"
+        desired.append({
+            **base, "record_kind": f"provider.{kind}",
+            "provider_observation": _provider_observation(action, kind, status=provider_status),
+        })
+        usage_kind = "usage_reported" if (
+            isinstance((action.get("reported") or {}).get("usage"), dict)
+            and (action.get("reported") or {}).get("estimated_micro_usd") is not None
+        ) else "usage_unavailable"
+        desired.append({
+            **base, "record_kind": f"provider.{usage_kind}",
+            "provider_observation": _provider_observation(action, usage_kind, status=provider_status),
+        })
+    return desired
+
+
+def sync_provider_transition_journal(run_dir: Path, state: dict[str, Any]) -> list[dict[str, Any]]:
+    """Project durable paid-action state into append-only provider observations."""
+    supported = (
+        state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
+        or (
+            state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1"
+            and state.get("route") == "bounded_natal.v1"
+        )
+    )
+    if not supported:
+        return []
+    actions = (state.get("spend_ledger") or {}).get("actions")
+    if not isinstance(actions, list):
+        return []
+    observed_at = str(state.get("updated_at") or "1970-01-01T00:00:00Z")
+    appended: list[dict[str, Any]] = []
+    for action in actions:
+        existing = validate_transition_journal(run_dir)
+        for candidate in _desired_action_records(state, action, observed_at):
+            semantic = {
+                key: candidate.get(key) for key in (
+                    "record_kind", "route_binding", "action_binding",
+                    "provider_observation", "native_transition",
+                )
+            }
+            if any(all(record.get(key) == value for key, value in semantic.items()) for record in existing):
+                continue
+            record = _append_transition_record_internal(run_dir, candidate)
+            existing.append(record)
+            appended.append(record)
+    return appended
 
 
 def journal_range(run_dir: Path, start: int, end: int) -> dict[str, Any]:
@@ -342,5 +551,5 @@ __all__ = [
     "EXECUTION_RESULT_SCHEMA", "JOURNAL_RECORD_SCHEMA", "append_transition_record",
     "checkpoint_basis", "journal_range", "mint_invocation_id",
     "read_native_transition_result", "validate_transition_journal",
-    "write_immutable_execution_result",
+    "sync_provider_transition_journal", "write_immutable_execution_result",
 ]

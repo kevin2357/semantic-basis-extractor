@@ -118,3 +118,24 @@ Provider operations remain 0 and paid spend remains `$0`.
   unbounded range, and oversized record.
 - Provider-bound runtime integration: not started. Provider operations: 0. Paid
   spend: `$0`.
+
+## Slice 3 provider-operation integration evidence
+
+- Integration boundary: `persist_state()` projects the already-durable native
+  spend ledger before any enclosing command publishes a workspace snapshot.
+- Covered stages: initial authoring, creative retry, polish, qualitative critic,
+  and qualitative candidate.
+- Covered mechanisms: exact interactive Responses, exact Batch rounds, and bounded
+  interactive Responses. Unsupported bounded Batch remains fail-closed.
+- Durable observations: prepare, authorize, consume, submission start, provider ID,
+  pending retrieval, completed/failed/cancelled/expired, usage reported/unavailable,
+  submission ambiguity, identity-conflict refusal, and providerless denial.
+- Cost evidence preserves the frozen four-value lifecycle vocabulary. Missing usage
+  remains billing-reconciliation-pending and is never represented as zero.
+- Exact semantic replay emitted no duplicate records. A second public writer still
+  failed without mutation under cross-process contention.
+- Failure injection after durable state but before journal append recovered from the
+  authoritative ledger on the next synchronization, exactly once.
+- Focused native transition tests: 14 passed in 1.412 seconds.
+- Broad no-provider compatibility gate: 145 passed in 182.359 seconds.
+- Provider operations: 0. Paid spend: `$0`.

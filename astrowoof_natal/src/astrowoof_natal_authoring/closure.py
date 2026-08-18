@@ -2453,6 +2453,10 @@ def persist_state(run_json: Path, state: dict[str, Any]) -> None:
             ],
         },
     )
+    # Project authoritative ledger mutations only after the state is durable and
+    # before an enclosing command publishes its workspace snapshot.
+    from .native_transitions import sync_provider_transition_journal
+    sync_provider_transition_journal(run_json.parent, state)
 
 
 def save_state(run_json: Path, state: dict[str, Any]) -> None:

@@ -9,6 +9,7 @@ import unittest
 from copy import deepcopy
 from importlib.resources import files
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -16,6 +17,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from astrowoof_natal_authoring.closure import (
     load_json,
     normalized_path,
+    persist_state,
     validate_workspace_snapshot,
     write_json_atomic,
     write_workspace_snapshot,
@@ -339,6 +341,165 @@ class TestNativeTransitions(unittest.TestCase):
             self.assertEqual(before, checkpoint_basis(run, 7)["checkpoint_basis_sha256"])
             (run / "authoritative.json").write_text("{}", encoding="utf-8")
             self.assertNotEqual(before, checkpoint_basis(run, 7)["checkpoint_basis_sha256"])
+
+    def test_paid_action_lifecycle_is_projected_once_from_durable_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            state = load_json(run / "run.json")
+            state.update({
+                "schema_version": "astrowoof.semantic_closure_run.v0.9",
+                "updated_at": "2026-08-17T22:00:00Z",
+                "spend_ledger": {"actions": []}, "passes": {}, "subjects": {},
+            })
+            action = {
+                "action_id": "paid_123456789012345678901234", "state": "PREPARED",
+                "binding": {
+                    "run_id": state["run_id"], "profile_sha256": "a" * 64,
+                    "prepared_state_revision": 7, "stage": "creative_retry",
+                    "route": "dog:creative_retry:002", "request_sha256": "b" * 64,
+                    "model": "gpt-5.6-luna", "service_level": "interactive",
+                    "maximum_output_tokens": 1000, "commitment_micro_usd": 42000,
+                    "price_book_version": "openai-public-2026-08-07.v1",
+                },
+                "authorization": None, "provider": None, "reported": None,
+                "reconciliation_reference_ids": [],
+            }
+            state["spend_ledger"]["actions"].append(action)
+            phases = (
+                ("PREPARED", {}),
+                ("AUTHORIZED", {"authorization": {"authorization_reference": "api:1"}}),
+                ("SUBMITTING", {"consumption": {"consumer_id": "worker", "state_revision": 9}}),
+                ("PROVIDER_ID_RECORDED", {"provider": {"kind": "response", "id": "resp_1"}}),
+                ("WAITING", {}),
+                ("REPORTED", {"reported": {"usage": {"input_tokens": 10}, "estimated_micro_usd": 77}}),
+            )
+            for offset, (action_state, additions) in enumerate(phases):
+                action["state"] = action_state
+                action.update(additions)
+                state["updated_at"] = f"2026-08-17T22:00:0{offset}Z"
+                persist_state(run / "run.json", state)
+            first = validate_transition_journal(run)
+            persist_state(run / "run.json", state)
+            replay = validate_transition_journal(run)
+            self.assertEqual(first, replay)
+            self.assertEqual([
+                "action.prepared", "action.authorized", "action.consumed",
+                "provider.submission_started", "provider.identity_recorded",
+                "provider.pending", "provider.completed", "provider.usage_reported",
+            ], [item["record_kind"] for item in replay])
+            self.assertEqual(
+                "provider_usage_reported",
+                replay[-1]["provider_observation"]["cost_disposition"],
+            )
+
+    def test_route_stage_matrix_batch_bounded_ambiguity_and_unavailable_usage(self) -> None:
+        stages = (
+            "authoring_initial", "creative_retry", "polish",
+            "qualitative_critic", "qualitative_candidate",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for index, stage in enumerate(stages):
+                case_root = root / f"case-{index}"
+                case_root.mkdir()
+                run = self.workspace(case_root)
+                state = load_json(run / "run.json")
+                state.update({
+                    "schema_version": "astrowoof.semantic_closure_run.v0.9",
+                    "updated_at": "2026-08-17T22:10:00Z", "spend_ledger": {"actions": []},
+                })
+                service = "batch" if index == 0 else "interactive"
+                action = {
+                    "action_id": f"paid_{index:024d}", "state": "REPORTED",
+                    "binding": {
+                        "profile_sha256": "a" * 64, "stage": stage,
+                        "route": "batch-round-001" if service == "batch" else f"dog:{stage}:001",
+                        "request_sha256": f"{index + 1:x}" * 64,
+                        "maximum_output_tokens": 10, "commitment_micro_usd": 20,
+                        "price_book_version": "openai-public-2026-08-07.v1",
+                        "service_level": service,
+                    },
+                    "authorization": {"authorization_reference": "api"},
+                    "consumption": {"consumer_id": "worker"},
+                    "provider": {"kind": service if service == "batch" else "response", "id": f"op_{index}"},
+                    "reported": {"usage": None, "estimated_micro_usd": None},
+                }
+                state["spend_ledger"]["actions"] = [action]
+                write_json_atomic(run / "run.json", state)
+                from astrowoof_natal_authoring.native_transitions import sync_provider_transition_journal
+                sync_provider_transition_journal(run, state)
+                records = validate_transition_journal(run)
+                self.assertEqual(
+                    "batch" if service == "batch" else "response",
+                    records[0]["route_binding"]["provider_mechanism"],
+                )
+                self.assertEqual("provider.usage_unavailable", records[-1]["record_kind"])
+
+            bounded_root = root / "bounded"
+            bounded_root.mkdir()
+            bounded = self.workspace(bounded_root)
+            state = load_json(bounded / "run.json")
+            state.update({
+                "schema_version": "astrowoof.bounded_natal.authoring_run.v1",
+                "route_contract": "astrowoof.bounded_natal.authoring_run.v1",
+                "route": "bounded_natal.v1", "updated_at": "2026-08-17T22:20:00Z",
+            })
+            action = deepcopy(action)
+            action["action_id"] = "paid_bounded00000000000000000"
+            action["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+            action["binding"]["service_level"] = "interactive"
+            action["binding"]["route"] = "bounded_natal.v1:authoring_initial:001"
+            action["provider"] = None
+            action["ambiguity"] = {"reason": "interrupted after request bytes left process"}
+            action["reported"] = None
+            state["spend_ledger"] = {"actions": [action]}
+            write_json_atomic(bounded / "run.json", state)
+            sync_provider_transition_journal(bounded, state)
+            records = validate_transition_journal(bounded)
+            self.assertEqual("bounded_natal", records[0]["route_binding"]["route_family"])
+            self.assertEqual("provider.submission_ambiguous", records[-1]["record_kind"])
+
+    def test_interrupted_projection_recovers_from_durable_ledger_without_duplication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            state = load_json(run / "run.json")
+            state.update({
+                "schema_version": "astrowoof.semantic_closure_run.v0.9",
+                "passes": {}, "subjects": {}, "updated_at": "2026-08-17T23:00:00Z",
+                "spend_ledger": {"actions": [{
+                    "action_id": "paid_recovery00000000000000", "state": "SUBMITTING",
+                    "binding": {
+                        "profile_sha256": "a" * 64, "stage": "authoring_initial",
+                        "route": "dog:authoring_initial:001", "request_sha256": "b" * 64,
+                        "maximum_output_tokens": 10, "commitment_micro_usd": 20,
+                        "price_book_version": "openai-public-2026-08-07.v1",
+                        "service_level": "interactive",
+                    },
+                    "authorization": {"authorization_reference": "api"},
+                    "consumption": {"consumer_id": "worker"},
+                    "provider": None, "reported": None,
+                }]},
+            })
+            with patch(
+                "astrowoof_natal_authoring.native_transitions._append_transition_record_internal",
+                side_effect=OSError("injected journal publication interruption"),
+            ):
+                with self.assertRaisesRegex(OSError, "journal publication"):
+                    persist_state(run / "run.json", state)
+            self.assertEqual(
+                "SUBMITTING",
+                load_json(run / "run.json")["spend_ledger"]["actions"][0]["state"],
+            )
+            self.assertEqual([], validate_transition_journal(run))
+            from astrowoof_natal_authoring.native_transitions import sync_provider_transition_journal
+            sync_provider_transition_journal(run, load_json(run / "run.json"))
+            first = validate_transition_journal(run)
+            sync_provider_transition_journal(run, load_json(run / "run.json"))
+            self.assertEqual(first, validate_transition_journal(run))
+            self.assertEqual(
+                ["action.prepared", "action.authorized", "action.consumed", "provider.submission_started"],
+                [item["record_kind"] for item in first],
+            )
 
 
 if __name__ == "__main__":

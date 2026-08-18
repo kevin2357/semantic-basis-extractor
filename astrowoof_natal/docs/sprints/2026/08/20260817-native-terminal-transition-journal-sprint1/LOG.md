@@ -90,3 +90,30 @@ Status: planned; implementation has not started.
 - Slice 2 is complete and paused for Kevin review. Provider-bound journaling and
   command result publication remain later slices; provider operations remain 0 and
   paid spend remains `$0`.
+- Kevin approved Slice 2. Committed and pushed it as `590da05`; Slice 3 began.
+- Integrated journal projection at the authoritative durable spend-ledger boundary,
+  covering every paid stage across exact Responses, exact Batch, and bounded
+  Responses without relying on non-authoritative execution events.
+- Added deterministic prepare, authorization, consumption, submission-started,
+  identity, pending, terminal provider, usage, ambiguity, identity-conflict, and
+  providerless-denial observations. Exact semantic replay appends nothing.
+- Preserved the public native writer lock while using a separate internal journal
+  publication lock, avoiding recursive spend-lock acquisition during state
+  persistence and retaining cross-process refusal for public mutation.
+- Added route/stage matrix, unavailable-cost, ambiguity, replay, and interrupted
+  journal-publication recovery tests. The interruption case proves durable ledger
+  truth can reconstruct missing journal observations exactly once.
+- Native focused coverage passed all 14 tests in 1.412 seconds. The broad spend,
+  provider-capacity, bounded-provider, and semantic-closure compatibility gate
+  passed all 145 tests in 182.359 seconds.
+- Slice 3 is complete and paused for Kevin review. No live provider operation was
+  made and paid spend remains `$0`.
+- During final hygiene, discovered the newly added API Slice 2 review requesting a
+  complete snapshot hash inside the result that the snapshot itself inventories.
+  Documented the irreducible content-hash cycle and proposed an immutable external
+  publication receipt binding result, complete snapshot, checkpoint basis, and
+  journal range. This requires API confirmation before Slice 4 implementation but
+  does not alter the completed Slice 3 provider-observation boundary.
+- The API agent accepted the immutable publication-receipt solution, approved Slice
+  3, and clarified that command correlation is the result's bounded journal range,
+  not a requirement that action-derived projection records share one invocation ID.

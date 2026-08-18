@@ -53,7 +53,7 @@
           "then": {"properties": {"provider_operation_id": {"type": "null"}}}
         },
         {
-          "if": {"properties": {"observation_kind": {"enum": ["identity_recorded", "pending", "completed", "failed", "cancelled", "expired", "usage_reported", "usage_unavailable"]}}},
+          "if": {"properties": {"observation_kind": {"enum": ["identity_recorded", "pending", "completed", "failed", "cancelled", "expired", "usage_reported", "usage_unavailable", "identity_conflict_refused"]}}},
           "then": {"properties": {"provider_operation_id": {"type": "string", "minLength": 1}}}
         },
         {
