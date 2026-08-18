@@ -1,3 +1,3 @@
 # Results
 
-Slice result artifacts will be indexed here as the sprint proceeds.
+- [Slice 0 — Contract Freeze and API Review](SLICE%200%20-%20Contract%20Freeze%20and%20API%20Review.md)

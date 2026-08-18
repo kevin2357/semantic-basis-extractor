@@ -1,7 +1,7 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Plan
 
 Date: 2026-08-18
-Status: proposed; awaiting Kevin approval
+Status: in progress; Slice 0 complete and awaiting contract review
 Starting release: SBE 0.4.7
 Target release: SBE 0.4.8
 
@@ -169,8 +169,11 @@ fails closed without advertising an ingestible checkpoint.
 - Package the strict schema and canonical exact/bounded fixtures.
 - Export root-level builder/validator/reader and a cross-validator accepting a
   prepared wave plus bundle.
+- Make the snapshot-validating production reader return one closed, content-bound
+  pair containing both the run-specific prepared wave and binding bundle; neither
+  document may be exposed if validation of either or their join fails.
 - Extend `astrowoof-initial-wave-contract` with provider-free fixture/schema export
-  and supported run-specific bundle inspection/validation.
+  and supported run-specific `--initial-wave-inputs` pair inspection/validation.
 - Reject output paths inside the inspected run workspace.
 - Add contract-catalog entries, installed lifecycle smoke coverage, disclosure
   inventory, API request/result examples, and migration guidance.
