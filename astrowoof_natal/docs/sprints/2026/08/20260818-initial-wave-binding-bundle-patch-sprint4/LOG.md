@@ -1,5 +1,33 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Log
 
+## 2026-08-18 — Final API review accepted
+
+- API approved the reviewed source boundary for a fresh immutable 0.4.8 release
+  without code, schema, or handoff changes.
+- Confirmed the public joined-reader sequence supplies every SBE-owned fact API
+  needs for atomic six-member reservation and exact-copy authorization creation.
+- Release remains gated on Kevin's explicit publication authorization, exact
+  0.4.8 rebuild, immutable tag/publication, and independent published-asset hash
+  verification.
+- Repository-root `.runs/` remains excluded from commits, tags, and wheel input.
+
+## 2026-08-18 — Slice 4 complete; release review pending
+
+- Full source suite completed 469 tests in 338.064 seconds: 449 passed and 20
+  expected environment-dependent tests skipped.
+- Built twice from `34de4798be76482dbb9f39a9fd59561bea9f81fe` at fixed
+  epoch `1787090323`; both non-publishable 0.4.7-labeled candidate wheels were
+  byte-identical SHA-256
+  `f15d0afc9fd4eaac6c0a48c78af4c0787fef696ecc55a158be5778047e633b1e`.
+- Wheel inspection found 118 entries, 71 resources, `py.typed`, all new public
+  contracts/fixtures, and no tests or bytecode.
+- Installed Windows CPython 3.12.13 and network-isolated Linux CPython 3.11.15
+  passed `pip check`, lifecycle smoke, release smoke, and exact/bounded public
+  joined-reader/CLI round trips.
+- Strict Linux initial-wave contract suite: 36 passed without skips.
+- Recommend a fresh immutable 0.4.8 only after final Kevin/API review and explicit
+  release authorization. Provider operations and spend: zero.
+
 ## 2026-08-18 — Slice 3 complete; awaiting Kevin review
 
 - Added provider-free exact and bounded API-shaped round trips from the joined

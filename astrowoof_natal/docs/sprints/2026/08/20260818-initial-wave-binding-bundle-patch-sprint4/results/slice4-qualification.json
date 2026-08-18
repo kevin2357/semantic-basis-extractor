@@ -1,0 +1,56 @@
+{
+  "schema_version": "astrowoof.initial_wave_binding_bundle_slice4_qualification.v1",
+  "status": "pass",
+  "qualified_source_commit": "34de4798be76482dbb9f39a9fd59561bea9f81fe",
+  "fixed_epoch": 1787090323,
+  "qualification_artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.7-py3-none-any.whl",
+    "publishable": false,
+    "reason": "0.4.7 is immutable; the approved patch requires a fresh 0.4.8 artifact",
+    "bytes": 828375,
+    "sha256": "f15d0afc9fd4eaac6c0a48c78af4c0787fef696ecc55a158be5778047e633b1e",
+    "independent_builds": 2,
+    "byte_identical": true,
+    "entries": 118,
+    "resources": 71,
+    "py_typed": true,
+    "tests": 0,
+    "bytecode": 0
+  },
+  "dependency": {
+    "name": "semantic-projection-core",
+    "version": "0.11.0",
+    "sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "source_suite": {
+    "passed": 449,
+    "skipped": 20,
+    "total": 469,
+    "elapsed_seconds": 338.064
+  },
+  "strict_contract_suite": {
+    "passed": 36,
+    "skipped": 0,
+    "runtime": "CPython 3.11.15 Linux"
+  },
+  "windows": {
+    "python": "3.12.13",
+    "pip_check": "pass",
+    "lifecycle_smoke": "pass",
+    "release_smoke": "pass",
+    "installed_joined_reader_routes": ["exact_natal", "bounded_natal"],
+    "installed_cli": "pass"
+  },
+  "linux": {
+    "python": "3.11.15",
+    "network": "disabled",
+    "pip_check": "pass",
+    "lifecycle_smoke": "pass",
+    "release_smoke": "pass",
+    "installed_joined_reader_routes": ["exact_natal", "bounded_natal"],
+    "installed_cli": "pass"
+  },
+  "provider_operations": 0,
+  "spend_usd": 0,
+  "release_recommendation": "fresh_immutable_0.4.8_after_explicit_authorization"
+}
