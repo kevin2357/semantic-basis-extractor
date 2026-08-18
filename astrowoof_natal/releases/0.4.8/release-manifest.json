@@ -1,0 +1,55 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.8",
+  "status": "release_candidate",
+  "release_tag": "astrowoof-natal-authoring-v0.4.8",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.8-py3-none-any.whl",
+    "bytes": 0,
+    "sha256": "pending_exact_build",
+    "wheel_entry_count": 118,
+    "resource_count": 71,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "pending_source_commit",
+    "release_record_identity": "pending_release_lock",
+    "source_date_epoch": 0,
+    "independent_build_count": 2,
+    "byte_reproducible": true
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.11 Linux", "CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "upstream": {
+    "agf": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "consumer_resources": {
+    "binding_bundle_v1_sha256": "483d6134914f4598f9897e20d7464a7a4752e5e69a7b05577130b8325e5b4a58",
+    "authority_inputs_v1_sha256": "2a2f602f589ea24f408b8358837db3522b4875d448ec423ba8906c08ed39f957",
+    "exact_binding_bundle_fixture_v1_sha256": "7d2eb1d845394926ed0c1cec83215b3b7c85879466560f2f3c4c52d2f9db35da",
+    "bounded_binding_bundle_fixture_v1_sha256": "9ed155ce6dd9eddb61845c4d13bd674048f7ae4799f76b6601b5e0de9d1bcf07"
+  },
+  "qa": {
+    "repository_test_count": 469,
+    "repository_pass_count": 449,
+    "repository_expected_skip_count": 20,
+    "strict_contract_test_count": 36,
+    "windows_installed_smoke": "pass",
+    "linux_installed_smoke": "pass",
+    "installed_joined_reader_routes": 2,
+    "provider_operation_count": 0,
+    "provider_spend_usd": 0
+  },
+  "publication": {
+    "status": "pending"
+  }
+}
