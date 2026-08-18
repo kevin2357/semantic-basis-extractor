@@ -38,3 +38,38 @@ historical preservation. Required planning refinements were incorporated:
 - explicit API fixture-contract review after Slice 5; and
 - precise atomic-publication language in which only a jointly validated journal
   range, snapshot identity, and hash set makes a result visible/valid.
+
+## Slice 0 evidence
+
+- Sanitized characterization fixture:
+  `fixtures/aster-shaped-authoritative-gap.v0.json`.
+- Focused reproduction: 1 test passed in 1.256 seconds.
+- Complete repository suite: 357 tests passed in 237.475 seconds.
+- Native final truth present: operator/public state, provider metadata, complete
+  snapshot, and inspection v0.3 review terminal.
+- Native handoff truth absent: append-only transition/provider-operation history
+  and invocation result bound to the exact journal range and snapshot.
+- Exact ordinary CLI: terminal snapshot, diagnostic event/stdout, then exit 2.
+- Bounded ordinary CLI: public state output without equivalent explicit review exit
+  conversion.
+- Neutral reconciliation: typed v0.2 result returned/printed but not preserved as a
+  complete ordinary-plus-reconciliation invocation history.
+- Provider operations: 0. Paid spend: `$0`. Historical Aster records changed: no.
+- Required next gate: API review of reproduction, missing facts, crash windows, and
+  five questions in the Slice 0 result.
+
+## Slice 0 API gate
+
+The in-repository `API Agent Slice 0 Review and Responses.md` records
+`approved-for-slice-1-contract-freeze`. It confirms all five answers and adds the
+following binding requirements for Slice 1:
+
+- immutable per-invocation result identity and artifact;
+- journal range/digest plus run identity as replay basis;
+- SBE provider-observation record identity, closed kind, and `observed_at`;
+- frozen request/profile digests;
+- versioned price/usage evidence reference for reported cost;
+- provider external ID absent until genuinely recorded; and
+- no second distinct provider ID while supersession remains unsupported.
+
+API ingestion acknowledgement remains outside SBE authority.

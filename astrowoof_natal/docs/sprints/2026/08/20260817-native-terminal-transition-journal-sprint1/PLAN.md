@@ -1,8 +1,8 @@
 # Native Terminal Transition Journal Sprint 1 Plan
 
 Date: 2026-08-17
-Status: proposed; awaiting Kevin and API-agent review
-Implementation: not started
+Status: in progress; Slice 0 API-approved for Slice 1 contract freeze
+Implementation: Slice 0 complete; Slice 1 not started
 Upstream consumer sprint: AstroWoof API Sprint 26, Native Terminal Transition
 Ingestion
 
@@ -77,15 +77,17 @@ behavior are implemented.
 The journal will be a bounded-authority append-only artifact with:
 
 - explicit schema and journal versions;
-- run ID, monotonically increasing sequence, record ID, and prior-record hash;
+- run ID, monotonically increasing sequence, SBE record ID distinct from any
+  provider external operation ID, and prior-record hash;
 - native state revision and complete snapshot identity;
-- observed-at timestamp and closed record kind/outcome vocabulary;
+- `observed_at` timestamp and closed observation kind/outcome vocabulary;
 - immutable route family, provider mechanism, native operation, stage, and exact
   action binding where applicable;
 - provider operation identity and state observations without treating a local
   deterministic key as provider idempotency;
 - submission boundary, identity-recorded, terminal result/failure, cost basis,
-  usage/reference, ambiguity, and supersession fields as applicable;
+  versioned price/usage evidence reference, ambiguity, and predecessor/supersession
+  fields as applicable;
 - terminal/review transition evidence with machine-readable status and cause; and
 - release/resource/profile/contract identities needed to validate the producer.
 
@@ -96,7 +98,8 @@ embedded blobs.
 ### Native execution result
 
 Every supported ordinary authoring and neutral reconciliation invocation will leave
-one versioned result published through the fail-closed protocol, describing:
+one immutable, versioned, independently identified result artifact published
+through the fail-closed protocol, describing:
 
 - invocation identity and journal range/digest;
 - pre/post native revisions and snapshot identities;
@@ -110,7 +113,10 @@ one versioned result published through the fail-closed protocol, describing:
   result exists.
 
 The result is native evidence, not an API scheduling or PostgreSQL mutation command.
-Exit codes remain secondary observations.
+Exit codes remain secondary observations. A mutable `latest` pointer/index may be
+offered only as a derived operator convenience; it is never authoritative and never
+the sole API ingestion target. Replay/idempotency binds the immutable invocation-
+result identity, journal range/digest, and native run identity.
 
 ### Compatibility
 
@@ -167,6 +173,12 @@ agent acceptance before implementing schemas or runtime writes.
 
 - Freeze closed record kinds, outcomes, cause codes, route/mechanism/stage/action
   binding, provider-operation shape, cost dispositions, and terminal semantics.
+- Require each provider observation to carry a distinct SBE record identity,
+  closed observation kind, `observed_at`, and versioned price/usage evidence
+  reference when an amount is reported; raw provider bodies/prompts remain private.
+- Bind actions to the frozen request and generation-profile digests. Provider
+  external ID remains absent before identity recording and is never fabricated from
+  a deterministic local key.
 - Specify sequence/hash integrity, idempotent replay, cursor/range ingestion,
   compaction/retention posture, and maximum bounded record sizes.
 - Specify the atomic publication protocol, validation/visibility rule, write
@@ -178,6 +190,9 @@ agent acceptance before implementing schemas or runtime writes.
   legacy workspaces.
 - Reconcile the proposal with inspection v0.3, cycle result v0.2, lifecycle events,
   spend ledger, denial terminalization, and provider reconciliation.
+- Keep supersession unsupported in this sprint. The schema may represent an
+  explicit predecessor/supersession reference for future evolution, but a second
+  distinct external provider ID for one action is refused now.
 
 ### Tests
 
@@ -204,8 +219,9 @@ Implement the versioned append-only native journal as a strict packaged contract
 - Implement deterministic record identity, sequence, prior-hash chaining, journal
   digest, crash-safe append publication, strict validation, and single-writer
   enforcement.
-- Add a public read/validate API that returns bounded cursor/range evidence without
-  exposing private mutable internals.
+- Add a public read/validate API that returns one specified immutable invocation
+  result and its bounded journal evidence without exposing private mutable
+  internals. Any latest index is explicitly derived/non-authoritative.
 - Define snapshot membership and restoration behavior so incomplete, forked,
   truncated, additional, or changed journal evidence cannot resume or ingest.
 
@@ -292,7 +308,8 @@ for its persistence and worker slices.
 
 ### Work
 
-- Expose typed public inspection of journal ranges and the latest execution result.
+- Expose typed public inspection of a specified immutable invocation result and its
+  journal range. Any latest-result lookup is a derived convenience only.
 - Add a neutral CLI inspection/export mode that performs no provider work or native
   mutation.
 - Publish exact Responses, exact Batch, and bounded Responses fixtures for

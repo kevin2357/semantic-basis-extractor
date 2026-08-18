@@ -3580,6 +3580,67 @@ class TestSemanticClosure(SemanticClosureFixture):
                 )
             )
 
+    def test_aster_shaped_terminal_baseline_lacks_ingestible_history(self) -> None:
+        """Characterize the pre-journal handoff gap without provider activity."""
+        fixture_path = ROOT / "docs" / "sprints" / "2026" / "08" / (
+            "20260817-native-terminal-transition-journal-sprint1"
+        ) / "fixtures" / "aster-shaped-authoritative-gap.v0.json"
+        fixture = load_json(fixture_path)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json = self.make_state(root, FakeAuthoringProvider())
+            failed = state["passes"]["bre_1"]
+            failed["state"] = "FAILED_REQUIRES_REVIEW"
+            failed["attempts"] = [{
+                "attempt_number": 1,
+                "state": "ATTEMPT_ERROR",
+                "started_at": "2026-08-17T00:00:00Z",
+                "finished_at": "2026-08-17T00:01:00Z",
+                "response_workspace": None,
+                "provider_metadata": {
+                    "provider": "openai",
+                    "id": "resp_aster_shape_001",
+                    "status": "failed",
+                },
+                "qa": None,
+                "error": {
+                    "type": "ProviderTerminalError",
+                    "message": "sanitized provider-free fixture",
+                },
+            }]
+            save_state(run_json, state)
+
+            persisted = load_json(run_json)
+            public = load_json(run_json.with_name("public-run.json"))
+            inspection = inspect_lifecycle(
+                root / "run",
+                native_exclusive_access="established",
+                observed_at="2026-08-17T00:02:00Z",
+            )
+            observed = {
+                "run_status": persisted["status"],
+                "public_status": public["status"],
+                "lifecycle_terminal": inspection["terminal"]["terminal"],
+                "lifecycle_terminal_outcome": inspection["terminal"]["outcome"],
+                "snapshot_complete": inspection["observation"]["snapshot_complete"],
+                "recorded_provider_operation_id": (
+                    persisted["passes"]["bre_1"]["attempts"][0]
+                    ["provider_metadata"]["id"]
+                ),
+            }
+            self.assertEqual(fixture["native_observation"], observed)
+            validate_workspace_snapshot(root / "run", persisted)
+
+            # Current state and inspection preserve the final truth, but there is
+            # no durable invocation result or append-only route to the transition.
+            self.assertNotIn("native_transition_journal", persisted)
+            self.assertNotIn("native_execution_result", persisted)
+            self.assertFalse((root / "run" / "native-transition-journal.jsonl").exists())
+            self.assertFalse((root / "run" / "native-execution-result.json").exists())
+            self.assertFalse(
+                fixture["diagnostic_only_historical_step"]["authority"]
+            )
+
     def test_completed_run_cleanup_is_dry_runnable_safe_and_idempotent(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run = Path(temporary) / "run"

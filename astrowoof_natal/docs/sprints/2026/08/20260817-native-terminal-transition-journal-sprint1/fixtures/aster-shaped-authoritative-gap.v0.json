@@ -1,0 +1,40 @@
+{
+  "schema_version": "astrowoof.sbe_aster_shape_baseline.v0.1",
+  "fixture_kind": "provider_free_characterization",
+  "historical_records_modified": false,
+  "provider_operation_count": 0,
+  "paid_spend_usd": 0,
+  "native_observation": {
+    "run_status": "FAILED_REQUIRES_REVIEW",
+    "public_status": "FAILED_REQUIRES_REVIEW",
+    "lifecycle_terminal": true,
+    "lifecycle_terminal_outcome": "review_required",
+    "snapshot_complete": true,
+    "recorded_provider_operation_id": "resp_aster_shape_001"
+  },
+  "durable_authoritative_present": [
+    "run.json current operator state",
+    "public-run.json current public state",
+    "workspace-snapshot.json complete current inventory",
+    "current attempt provider metadata",
+    "derived lifecycle inspection v0.3"
+  ],
+  "durable_authoritative_absent": [
+    "append-only cross-invocation native transition journal",
+    "append-only provider-operation history beneath the logical paid action",
+    "invocation-scoped terminal result bound to a journal range and snapshot",
+    "durable proof that terminal native meaning preceded subprocess fallback",
+    "durable API acknowledgement that terminal evidence was ingested"
+  ],
+  "diagnostic_only_historical_step": {
+    "subprocess_exit": 2,
+    "consumer_misclassification": "generic_retryable_dependency_failure",
+    "effective_next_step": "job_reclaimed",
+    "authority": false
+  },
+  "intended_successor": {
+    "native_outcome": "review_terminal",
+    "generic_exit_fallback_permitted": false,
+    "second_provider_operation_permitted": false
+  }
+}
