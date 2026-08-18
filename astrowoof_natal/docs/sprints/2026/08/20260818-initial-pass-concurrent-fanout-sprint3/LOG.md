@@ -31,3 +31,37 @@
 - Required Slice 1 to freeze numeric per-create and total submission-cycle limits
   from baseline evidence, with qualification against slowest-create time plus
   bounded overhead rather than six sequential durations.
+
+## 2026-08-18 — Slice 0 complete; awaiting review
+
+- Audited exact interactive, exact Batch, bounded interactive, and bounded Batch
+  provider-free submission and reconciliation seams.
+- Confirmed exact interactive defaults to six workers but serializes one cache
+  warmer when caching is enabled and keeps worker threads polling until completion.
+- Confirmed bounded interactive executes all six passes serially.
+- Confirmed exact and bounded Batch already use one six-member paid round and one
+  provider identity/reservation.
+- Measured the retained bounded live run's first-to-sixth provider-ID span at 588
+  seconds, with 104–131 second gaps between identities.
+- Confirmed the released bounded reconciliation substrate retrieves up to four due
+  Responses concurrently without new commitment.
+- Ran five focused topology/custody tests; all passed in 8.738 seconds with zero new
+  provider operations.
+- Ran the complete source suite: 423 passed in 321.471 seconds with 10 expected
+  skips and no failures.
+- Published the complete baseline and seam recommendation in the Slice 0 result.
+- Paused before Slice 1 contract/schema work as planned.
+
+## 2026-08-18 — API Slice 0 review incorporated
+
+- API review approved the baseline and progression to Slice 1.
+- Elevated cache-warming into an explicit Slice 1 contract decision. Leading policy
+  removes full-response warm-up serialization; any create-only alternative must be
+  nonblocking and empirically justified.
+- Kept six-create submission fan-out distinct from the released four-retrieval
+  reconciliation cap. Six members may reconcile through two short subwaves.
+- Clarified immediate durability: each returned provider ID receives its serialized
+  ledger/journal write immediately. Only the aggregate wave snapshot/result/receipt
+  waits for all create tasks to unwind.
+- Reconfirmed the complete-wave API reservation/SBE authorization boundary and the
+  bounded final-QA/duplicate-admission scope.

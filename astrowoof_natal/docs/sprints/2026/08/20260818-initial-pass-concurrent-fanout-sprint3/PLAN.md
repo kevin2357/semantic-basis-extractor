@@ -1,7 +1,7 @@
 # Initial Authoring Pass Concurrent Fan-Out Sprint 3 Plan
 
 Date: 2026-08-18
-Status: proposed; awaiting Kevin and AstroWoof API review
+Status: in progress; Slice 0 complete and awaiting gate review
 Starting release: SBE 0.4.6
 
 ## Purpose
@@ -111,6 +111,11 @@ global reservation authority.
   ceiling is not an accepted contract. Qualification must show that six durable IDs
   normally take approximately the slowest create plus bounded coordination and
   persistence overhead, never the sum of six create durations.
+- Submission concurrency and retrieval concurrency are separate controls. Six
+  initial creates may overlap, while released reconciliation remains capped at four
+  due Response retrievals per cycle unless independent evidence and contract review
+  justify a later change. A six-member wave may therefore reconcile in two short
+  retrieval subwaves without weakening correctness or initial latency.
 
 ## Scope
 
@@ -192,6 +197,14 @@ contract or runtime behavior changes in this slice.
   total submission-cycle wall-clock bound, plus deterministic presentation and
   detach behavior. The values must be justified by Slice 0 evidence and become
   versioned contract constants rather than caller-selected production tuning.
+- Freeze the exact interactive cache-warming decision. The reviewed leading policy
+  is to eliminate full-response cache-warmer serialization for initial waves and
+  accept measured cache economics. A create-only warm-up may be retained only if it
+  does not delay the other five creates and evidence shows useful behavior. Waiting
+  for one complete Response before beginning the remaining five is prohibited as an
+  implicit optimization.
+- Preserve the released retrieval maximum of four per short cycle as an independent
+  rate-pressure control; do not raise it to six merely to match create cardinality.
 - Define partial-create outcomes: provider-bound, untouched authorized/unstarted,
   ambiguous, refused, and safe replay/reconciliation.
 - Confirm that existing inspection v0.3, cycle-result v0.2, public states, capacity
@@ -210,6 +223,10 @@ contract or runtime behavior changes in this slice.
   preflight performs zero provider creates and zero authorization consumption.
 - Deterministic timing tests proving the frozen submission-cycle bound covers six
   overlapping creates and serialized immediate ID commits.
+- Cache-policy comparison proving the chosen initial-wave behavior has no hidden
+  full-response warm-up barrier, plus explicit cost/cache evidence classification.
+- Six pending members reconciled safely through the existing maximum-four retrieval
+  subwaves with monotonic member evidence and deterministic fan-in.
 - Existing-state composition and transition-oracle proposal.
 
 ### Gate
