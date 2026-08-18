@@ -191,3 +191,28 @@
 - Slice 5 is complete and paused for review. Provider operations remain 0 and paid
   spend remains `$0`; installed-wheel/cross-platform qualification remains Slice
   6 work, and no build, version bump, release, or tag occurred.
+- Kevin approved Slice 5. Committed and pushed it as `c109892`; Slice 6 began.
+- A concurrent exact-Responses, exact-Batch, and bounded-Responses cohort exposed
+  one bounded lifecycle projection defect: durable provider wait still carried a
+  generic `AUTHORING` local dependency and retained worker capacity.
+- Corrected bounded dependency projection so an authoritative pending provider
+  action reports only provider-result reconciliation. The three-route cohort now
+  detaches every member as `detached_provider_pending` / `release_until_due` while
+  preserving route and mechanism identity.
+- The complete repository suite passed all 356 tests in 244.061 seconds. Existing
+  fresh-worker, timing, partial-progress, terminal/review, concurrency, stale-
+  checkpoint, and failure-injection coverage remained green.
+- The existing API transition-oracle suite passed all 18 tests in 0.08 seconds.
+  The packaged route-parity oracle is ready for API-owned adoption; no API source
+  or authority was changed.
+- Fixed-epoch candidate builds were byte-identical at SHA-256
+  `1a305a15eb9b01860de79bfd6c525b312189b5a46809e894a867ba39a99d69ef`
+  (`751149` bytes, 91 members, 50 resources, zero cache artifacts).
+- Clean Linux Python 3.11 installed-wheel qualification passed `pip check`, the
+  installed lifecycle smoke, typed/resource imports, and both neutral CLIs. Clean
+  Windows qualification used the locally available Python 3.12.13 and passed the
+  same applicable installed-runtime checks after installing declared dependencies.
+- No output artifact changed, so visual QA was not applicable. Provider operations
+  remain 0 and paid spend remains `$0`.
+- Slice 6 is complete and paused for review. The candidate remains unpublished;
+  no version bump, release, or tag occurred.

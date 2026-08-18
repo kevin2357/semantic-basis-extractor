@@ -5,6 +5,7 @@ import hashlib
 import sys
 import tempfile
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from pathlib import Path
 
@@ -53,6 +54,7 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     AwaitingSpendAuthorization,
 )
 from test_bounded_authoring import compiled  # noqa: E402
+import test_provider_pending_capacity as provider_pending_fixtures  # noqa: E402
 
 
 def workspace_hashes(root: Path) -> dict[str, str]:
@@ -516,7 +518,8 @@ class TestBoundedLifecycle(unittest.TestCase):
             before = workspace_hashes(run_dir)
             inspection = inspect_lifecycle(
                 run_dir, native_exclusive_access="declared",
-                observed_at="2026-08-16T12:00:00Z",
+                observed_at=interrupted["spend_ledger"]["actions"][0]
+                ["provider_reconciliation"]["resume_not_before"],
             )
             self.assertEqual(before, workspace_hashes(run_dir))
             self.assertTrue(inspection["observation"]["snapshot_complete"])
@@ -749,6 +752,111 @@ class TestBoundedLifecycle(unittest.TestCase):
                 self.assertEqual(1, provider.submissions)
                 self.assertLessEqual(provider.polls, 1)
                 validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+
+    def test_mixed_route_pending_cohort_has_independent_capacity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            cohort = Path(temporary).resolve()
+            exact_root = cohort / "exact-response"
+            exact_root.mkdir()
+            baseline = provider_pending_fixtures.TestProviderPendingCapacityBaseline()
+            baseline.materialize(exact_root)
+
+            batch_root = cohort / "exact-batch"
+            batch_root.mkdir()
+            batch_state = baseline.materialize(batch_root)
+            action = batch_state["spend_ledger"]["actions"][0]
+            batch_state["spend_ledger"]["actions"] = [action]
+            action["binding"]["service_level"] = "batch"
+            action["binding"]["route"] = "batch-round-001"
+            action["provider"]["kind"] = "batch"
+            action["provider"]["id"] = "batch-cohort-001"
+            batch_state["service_level"] = "batch"
+            batch_state["batch_service"] = {"rounds": [{
+                "round_number": 1, "batch_id": "batch-cohort-001",
+                "state": "SUBMITTED", "requests": [],
+            }]}
+            (batch_root / "run.json").write_text(
+                json.dumps(batch_state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(batch_root)
+
+            bounded_root = cohort / "bounded-response"
+            bounded_provider = PaidScriptedProvider(
+                interrupt_after_identity=True, retrieval_status="in_progress"
+            )
+            profile = {
+                "optional_stages": {stage: False for stage in (
+                    "polish", "qualitative_critic", "qualitative_candidate"
+                )},
+                "spend_policy": spend_policy(),
+            }
+            create_bounded_run(
+                bounded_root, self.artifacts, provider=bounded_provider,
+                generation_profile=profile,
+            )
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(bounded_root, provider=bounded_provider)
+            bounded_action = load_json(bounded_root / "run.json")["spend_ledger"]["actions"][0]
+            with self.assertRaisesRegex(RuntimeError, "injected"):
+                resume_bounded_run(bounded_root, provider=bounded_provider, authorizations=[{
+                    "schema_version": AUTHORIZATION_SCHEMA,
+                    "action_id": bounded_action["action_id"],
+                    "binding": bounded_action["binding"],
+                    "authorization_reference": "api-cohort-bounded",
+                }])
+            bounded_due = load_json(bounded_root / "run.json")["spend_ledger"]["actions"][0][
+                "provider_reconciliation"
+            ]["resume_not_before"]
+
+            class PendingResponses:
+                name = "openai"
+                base_url = "https://api.openai.invalid/v1"
+                http_timeout_seconds = 60.0
+                max_transport_retries = 4
+
+                def _request_with_retry(self, **kwargs):
+                    operation_id = str(kwargs["url"]).rsplit("/", 1)[-1]
+                    return {"id": operation_id, "status": "in_progress"}, 1
+
+            class PendingBatch:
+                def retrieve_batch(self, batch_id):
+                    return {"id": batch_id, "status": "in_progress"}
+
+            response_provider = PendingResponses()
+            adapters = (
+                ProviderReconciliationAdapters(
+                    exact_interactive_provider=response_provider,
+                ),
+                ProviderReconciliationAdapters(
+                    exact_batch_provider=response_provider,
+                    exact_batch_transport=PendingBatch(),
+                ),
+                ProviderReconciliationAdapters(
+                    bounded_interactive_provider=bounded_provider,
+                ),
+            )
+            work = (
+                (exact_root, "2026-08-15T20:18:00Z", adapters[0]),
+                (batch_root, "2026-08-15T20:18:00Z", adapters[1]),
+                (bounded_root, bounded_due, adapters[2]),
+            )
+            with ThreadPoolExecutor(max_workers=3) as pool:
+                results = list(pool.map(
+                    lambda item: reconcile_authoring_provider_cycle(
+                        item[0], observed_at=item[1], provider_adapters=item[2]
+                    ),
+                    work,
+                ))
+            self.assertTrue(all(
+                item["outcome"] == "detached_provider_pending"
+                and item["inspection"]["execution_capacity"]["disposition"]
+                == "release_until_due"
+                for item in results
+            ), [(item["outcome"], item["inspection"]["execution_capacity"]) for item in results])
+            self.assertEqual(
+                ["exact_natal", "exact_natal", "bounded_natal"],
+                [item["inspection"]["native_route"]["route_family"] for item in results],
+            )
 
     def test_optional_paid_stages_skip_under_frozen_profile_ceiling(self) -> None:
         provider = PaidScriptedProvider()

@@ -513,6 +513,20 @@ def reconcile_required_providerless_denial(
 def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         return []
+    if state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1":
+        bounded_provider_wait = any(
+            action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+            and (action.get("provider") or {}).get("id")
+            and ((action.get("provider_reconciliation") or {}).get("last_outcome"))
+            != "completed"
+            for action in (state.get("spend_ledger") or {}).get("actions", [])
+        )
+        if bounded_provider_wait:
+            return [{
+                "kind": "provider_result_reconciliation",
+                "blocking": True,
+                "reason_code": "provider_result_pending",
+            }]
     status = str(state.get("status") or "")
     dependencies: list[dict[str, Any]] = []
     mapping = {
