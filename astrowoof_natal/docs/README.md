@@ -36,16 +36,17 @@ as work to reconcile. Do not silently reinterpret either document as stale.
 
 ## Current release
 
-The current immutable AstroWoof natal authoring runtime is version `0.1.0`,
-published under the annotated tag `astrowoof-natal-authoring-v0.1.0`.
+The current immutable AstroWoof natal authoring runtime is version `0.4.5`,
+published under the annotated tag `astrowoof-natal-authoring-v0.4.5`.
 
 Start with:
 
-- [`../releases/0.1.0/API WORKER INTEGRATION.md`](../releases/0.1.0/API%20WORKER%20INTEGRATION.md)
-  for the pinned installation, invocation, polling, terminal-state, and service
-  ownership handoff;
-- [`../releases/0.1.0/COMPATIBILITY.md`](../releases/0.1.0/COMPATIBILITY.md)
+- [`../releases/0.4.5/API CONSUMER HANDOFF.md`](../releases/0.4.5/API%20CONSUMER%20HANDOFF.md)
+  for the native-result ingestion and service-ownership handoff;
+- [`../releases/0.4.5/COMPATIBILITY.md`](../releases/0.4.5/COMPATIBILITY.md)
   for supported Python, input, run-state, delivery, and upstream boundaries;
+- [`post_extraction_authoring/Native Worker Change Playbook.md`](post_extraction_authoring/Native%20Worker%20Change%20Playbook.md)
+  for safely planning, implementing, qualifying, and jointly integrating changes;
 - [`post_extraction_authoring/Semantic Closure Runner.md`](post_extraction_authoring/Semantic%20Closure%20Runner.md)
   for the detailed CLI and operational reference; and
 - [`post_extraction_authoring/Maintainer Release Playbook.md`](post_extraction_authoring/Maintainer%20Release%20Playbook.md)
@@ -56,11 +57,11 @@ Start with:
   for the API prepare/authorize/execute integration contract; and
 - [`post_extraction_authoring/Provider Disclosure and Durable Workspace Contract.md`](post_extraction_authoring/Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
   for minimized provider fields and complete stable-path snapshots; and
-- [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.1.0)
+- [the GitHub release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.5)
   for the immutable wheel and checksum assets.
 
 The released wheel SHA-256 is
-`58f8d93066cce040ebfc07bc89ffb11254895f0768965aa305296a722aa39dfe`.
+`9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`.
 Release-specific handoff files are authoritative for consuming that immutable
 version. Sprint records explain how it was qualified but are not the primary
 consumer documentation.
