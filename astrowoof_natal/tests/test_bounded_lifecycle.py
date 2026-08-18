@@ -302,6 +302,26 @@ class BoundedBatchTransport:
         return "\n".join(lines) + "\n"
 
 
+class BoundedBatchWithFakeOptionalProvider(OpenAIBoundedLifecycleProvider):
+    paid = False
+
+    def __init__(self, *, run_dir, transport):
+        super().__init__(
+            run_dir=run_dir, api_key="test-key", service_level="batch",
+            model="gpt-5.6-luna", maximum_output_tokens=1000,
+        )
+        self.batch_transport = transport
+        self.optional_calls = []
+
+    def execute(self, **kwargs):
+        if kwargs["stage"] not in {
+            "polish", "qualitative_critic", "qualitative_candidate"
+        }:
+            raise AssertionError("Initial/retry bounded Batch cannot use Responses")
+        self.optional_calls.append(kwargs["stage"])
+        return FakeBoundedLifecycleProvider().execute(**kwargs)
+
+
 class RejectInitialPaidProvider(PaidScriptedProvider):
     rejected_once = False
 
@@ -413,6 +433,77 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual("provider_usage_reported", rounds[0]["cost_disposition"])
             self.assertEqual(1, transport.upload_calls)
             self.assertEqual(1, transport.create_calls)
+
+    def test_interactive_and_batch_converge_before_and_through_optional_stages(self) -> None:
+        optional = {
+            "polish": True, "qualitative_critic": True,
+            "qualitative_candidate": True,
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            interactive_dir = root / "interactive"
+            batch_dir = root / "batch"
+            interactive = run_bounded_authoring(
+                interactive_dir, self.artifacts,
+                provider=FakeBoundedLifecycleProvider(),
+                generation_profile={"optional_stages": optional},
+            )
+            batch_provider = BoundedBatchWithFakeOptionalProvider(
+                run_dir=batch_dir, transport=BoundedBatchTransport()
+            )
+            create_bounded_run(
+                batch_dir, self.artifacts, provider=batch_provider,
+                generation_profile={"optional_stages": optional},
+            )
+            batch = resume_bounded_run(batch_dir, provider=batch_provider)
+            self.assertEqual("DELIVERY_COMPLETE", interactive["status"])
+            self.assertEqual("DELIVERY_COMPLETE", batch["status"])
+            self.assertEqual(
+                load_json(interactive_dir / "bounded/final/cards.json"),
+                load_json(batch_dir / "bounded/final/cards.json"),
+            )
+            interactive_delivery = load_json(
+                interactive_dir / "bounded/final/delivery.json"
+            )
+            batch_delivery = load_json(batch_dir / "bounded/final/delivery.json")
+            self.assertEqual(
+                interactive_delivery["completed_stages"],
+                batch_delivery["completed_stages"],
+            )
+            self.assertEqual([], batch_delivery["skipped_stages"])
+            self.assertEqual(
+                ["polish", "qualitative_critic", "qualitative_candidate"],
+                batch_provider.optional_calls,
+            )
+            self.assertEqual(1, len(batch["batch_service"]["rounds"]))
+            self.assertEqual(6, batch["batch_service"]["rounds"][0]["member_count"])
+
+    def test_batch_initial_transport_prepares_optional_stage_as_interactive_action(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.batch_transport = BoundedBatchTransport()
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "optional_stages": {
+                        "polish": True, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                    "spend_policy": spend_policy(),
+                },
+            )
+            state, polish = self.drive_authorized(
+                run_dir, provider, stop_before_stage="polish"
+            )
+            initial = state["spend_ledger"]["actions"][0]
+            self.assertEqual("batch", initial["binding"]["service_level"])
+            self.assertEqual("interactive", polish["binding"]["service_level"])
+            self.assertEqual("bounded_natal.v2:polish:1", polish["binding"]["route"])
+            self.assertEqual("PREPARED", polish["state"])
 
     def test_bounded_batch_retries_only_rejected_member_in_second_round(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -382,6 +382,25 @@ class TestBoundedAuthoring(unittest.TestCase):
                 )
                 self.assertEqual("fail", report["status"])
 
+    def test_cross_pass_normalized_repetition_fails_whole_deck_qa(self) -> None:
+        final_cards = fake_author_bounded(self.artifacts.authoring_packet)
+        assignment = self.artifacts.split_assignment["card_passes"]
+        first_id = assignment[0]["ordered_claim_ids"][0]
+        second_id = assignment[1]["ordered_claim_ids"][0]
+        cards = {card["claim_id"]: card for card in final_cards["cards"]}
+        repeated = (
+            "This deliberately repeated twelve word passage crosses two isolated "
+            "authoring contexts today"
+        )
+        for claim_id in (first_id, second_id):
+            cards[claim_id]["densities"]["no_astro"]["body"]["handler"] = repeated
+        report = validate_bounded_final_cards(
+            final_cards, self.artifacts.claim_deck,
+            self.artifacts.authoring_packet,
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertIn("normalized editorial passage is duplicated", report["errors"])
+
     def test_missing_registry_term_and_provider_field_injection_fail_closed(self) -> None:
         broken_admission = admission()
         for artifact in broken_admission.artifacts_by_context.values():
@@ -419,7 +438,7 @@ class TestBoundedAuthoring(unittest.TestCase):
             catalog["contracts"]["bounded_natal_delivery_provenance"],
         )
         self.assertEqual(
-            "astrowoof.bounded_natal.authoring_run.v1",
+            BOUNDED_RUN_V2_CONTRACT,
             catalog["contracts"]["bounded_natal_authoring_run"],
         )
         self.assertEqual(

@@ -213,3 +213,22 @@
 - Python 3.11 Linux read-only-container gate: 120 tests passed in 27.162 seconds.
 - Provider operations: 0. Spend: USD 0.
 - Slice 5 is complete and paused for API fixture/lifecycle review before Slice 6.
+
+## 2026-08-18 — Slice 6 assembly, whole-deck QA, and optional continuity
+
+- Proved bounded interactive-initial and Batch-initial runs converge on the same
+  canonical final cards and the same enabled optional-stage sequence.
+- Added an explicit paid-action binding regression showing that a Batch-initial run
+  prepares polish as an interactive Responses action. Under the approved contract,
+  Batch covers initial authoring and creative retries; polish, critic, and
+  qualitative candidate remain interactive. Optional-stage Batch transport is
+  deferred to the separate cost-calibration work rather than being inferred here.
+- Added a cross-pass normalized-repetition regression: duplicate prose originating
+  in two distinct bounded authoring passes is still rejected by whole-deck final QA.
+- Preserved optional-stage reconciliation, polish retry snapshot/resume, canonical
+  assembly, and delivery behavior without adding a public lifecycle state.
+- Desktop bounded/lifecycle gate: 135 tests passed in 132.412 seconds.
+- Python 3.11 Linux read-only-container gate: 135 tests passed in 31.004 seconds.
+- Provider operations: 0. Spend: USD 0.
+- Slice 6 is complete and paused for gate review before public lifecycle fixtures
+  and consumer handoff work.

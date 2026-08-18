@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slices 0-5 complete; Slice 5 awaiting API fixture/lifecycle review
+Status: Slices 0-6 complete; Slice 6 awaiting gate review
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -147,6 +147,28 @@ Verification:
   seconds;
 - Python 3.11 Linux with a read-only repository mount: 120 tests passed in 27.162
   seconds; and
+- `git diff --check` passes with expected checkout line-ending notices only.
+
+Provider operations: 0. Spend: USD 0.
+
+## Slice 6
+
+Result: [results/SLICE 6 - Assembly Whole Deck QA and Optional Continuity.md](results/SLICE%206%20-%20Assembly%20Whole%20Deck%20QA%20and%20Optional%20Continuity.md)
+
+Verification:
+
+- interactive-initial and Batch-initial bounded runs assemble byte-identical final
+  cards before and through the enabled optional stages;
+- Batch initial authoring and creative retries remain Batch transport, while
+  polish, critic, and qualitative-candidate actions are explicitly bound to
+  interactive Responses transport under the approved release contract;
+- normalized duplicate prose authored in two independently assigned passes is
+  rejected by whole-deck final QA;
+- existing optional-stage reconciliation and polish crash-checkpoint regressions
+  remain green;
+- desktop bounded/lifecycle gate: 135 tests passed in 132.412 seconds;
+- Python 3.11 Linux with a read-only repository mount: the same 135 tests passed in
+  31.004 seconds; and
 - `git diff --check` passes with expected checkout line-ending notices only.
 
 Provider operations: 0. Spend: USD 0.
