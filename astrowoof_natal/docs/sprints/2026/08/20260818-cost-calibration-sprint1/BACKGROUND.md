@@ -22,6 +22,55 @@ This is distinct from SBE's semantic claim budget. The fifty-claim basis limit i
 an editorial/extraction constraint; the subject here is provider token usage and
 dollar spend.
 
+## Bounded live-run qualification finding
+
+A retained SBE 0.4.6 interactive bounded-Natal run on 2026-08-18 provides the
+first full-deck live calibration evidence for the new six-pass topology. All six
+initial passes were accepted on their first attempt. Native accounting recorded
+596,523 input tokens, 30,841 output tokens, 962 reasoning tokens, and an estimated
+cost of USD 1.9539225. No creative retry, polish, critic, or candidate provider
+work was submitted.
+
+The assembled 50-card deck then correctly failed deterministic final QA because
+two independently selected foundational claims represented the same North Node
+editorial semantics through separate Mean Node and True Node source objects. The
+two isolated passes consequently authored nine byte-equivalent body variants.
+This is useful quality evidence, but it also exposed a state-projection defect:
+the bounded lifecycle assigned `FINAL_QA_REQUIRES_REVIEW`, after which shared
+`persist_state()` status recomputation inferred `AUTHORING_COMPLETE` solely from
+the six accepted pass states and overwrote the more authoritative final-QA state.
+
+The provider-safety consequence was limited in this run: the final-QA gate still
+returned before polish, so no additional paid work was submitted. The public and
+native status was nevertheless misleading. This must be repaired before bounded
+observations are admitted into automated calibration cohorts, because cohort
+outcome classification must distinguish accepted authoring passes from a deck
+that failed cross-pass final QA.
+
+The retained evidence workspace is intentionally preserved outside the release
+tree at:
+
+```text
+C:\dev\github\semantic-basis-extractor\.runs\kevin-bounded-live-20260818\run
+```
+
+Its run ID is
+`9e0ed9d979b6aaf8cd86e65672704648e1ea8dc59c7dcb6159ad700e811470ba`.
+The workspace is diagnostic evidence, not a release fixture and not a completed
+delivery. It must not be manually edited, blessed, or resumed past the failed QA
+gate.
+
+### Ownership and defensive policy
+
+SPC owns the upstream bounded-projection decision about whether Mean Node, True
+Node, or both are emitted. SBE should not silently choose one source record or
+collapse their provenance. SBE does, however, own editorial admission and can
+fail closed before paid authoring when two selected claims have equivalent
+provider-visible/editorial semantics and would predictably yield duplicate cards.
+The future check should report both claim IDs, source refs, correspondence/evidence
+identities, and the equivalence basis so an upstream policy issue remains
+diagnosable.
+
 ## Current commitment and settlement behavior
 
 SBE's current pre-submission commitment is intentionally simple and conservative:
@@ -163,6 +212,10 @@ The working starting point is:
 5. Derive p50/p90/p95 and upper-tail behavior by cohort, with minimum sample sizes,
    anomaly rules, and conservative fallback for unseen or changed cohorts.
 6. Only then evaluate a tighter commitment formula and qualification strategy.
+
+Before step 1 admits bounded observations, fix and qualify the bounded final-QA
+state precedence described above. Otherwise historical queries could incorrectly
+label a cross-pass QA failure as an authoring-complete outcome.
 
 Historical evidence lacking a stable prompt identity should be labeled explicitly,
 for example `legacy_unknown`. It may inform exploratory analysis but should not be
