@@ -1,8 +1,8 @@
 # Native Terminal Transition Journal Sprint 1 Plan
 
 Date: 2026-08-17
-Status: in progress; Slice 0 API-approved for Slice 1 contract freeze
-Implementation: Slice 0 complete; Slice 1 not started
+Status: in progress; Slice 1 contract API-approved, awaiting Kevin gate
+Implementation: Slices 0-1 complete; runtime not started
 Upstream consumer sprint: AstroWoof API Sprint 26, Native Terminal Transition
 Ingestion
 

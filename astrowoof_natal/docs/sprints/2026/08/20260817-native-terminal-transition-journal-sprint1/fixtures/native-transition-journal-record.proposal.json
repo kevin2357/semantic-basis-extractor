@@ -1,0 +1,42 @@
+{
+  "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+  "record_id": "ntr_aaaaaaaaaaaaaaaaaaaaaaaa",
+  "record_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "run_id": "run_aster_shape_fixture",
+  "invocation_id": "ninv_bbbbbbbbbbbbbbbbbbbbbbbb",
+  "sequence": 4,
+  "previous_record_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "observed_at": "2026-08-17T21:45:00Z",
+  "native_state_revision": 18,
+  "record_kind": "provider.completed",
+  "route_binding": {
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "native_operation_ref": "semantic_closure.resume"
+  },
+  "action_binding": {
+    "action_id": "paid_fixture_001",
+    "stage": "creative_retry",
+    "route": "bre_1:attempt-002",
+    "request_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "profile_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "maximum_output_tokens": 30000,
+    "commitment_micro_usd": 500000,
+    "price_book_version": "openai-2026-08-01.v1"
+  },
+  "provider_observation": {
+    "observation_kind": "completed",
+    "provider_kind": "response",
+    "provider_operation_id": "resp_fixture_001",
+    "status": "completed",
+    "cost_disposition": "provider_usage_reported",
+    "price_book_version": "openai-2026-08-01.v1",
+    "usage_evidence_ref": {
+      "path": "passes/bre_1/attempt-002/provider-result.json",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "schema_version": "openai.response.usage.v1"
+    },
+    "estimated_micro_usd": 16644
+  },
+  "native_transition": null
+}

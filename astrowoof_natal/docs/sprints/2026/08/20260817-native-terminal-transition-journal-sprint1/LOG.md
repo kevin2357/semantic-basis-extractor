@@ -51,3 +51,26 @@ Status: planned; implementation has not started.
   and refusal of a second distinct provider ID while supersession is unsupported.
 - API acknowledgement/ingestion remains an API-owned PostgreSQL receipt. SBE result
   publication must never claim consumer acknowledgement.
+- Kevin approved Slice 0. Committed and pushed it as `96e3a92`; Slice 1 began.
+- Published the native transition journal and immutable execution-result contract
+  proposal with closed vocabularies, canonical hashing, API mapping, retention/
+  bounds, compatibility, and six explicit API decisions.
+- Resolved the result/snapshot self-reference problem with a stable checkpoint-basis
+  digest plus mandatory validation of the ordinary full snapshot that inventories
+  the result. Publication namespace exclusion applies only to basis calculation,
+  never to restoration or full-snapshot membership.
+- Added strict non-packaged proposal schema and canonical journal/result examples.
+  Three proposal tests passed in 0.020 seconds; proposal plus current lifecycle
+  compatibility passed all 33 tests in 0.377 seconds.
+- Slice 1 is complete as a proposal and paused for mandatory Kevin/API contract
+  review. No runtime or packaged contract changed; provider operations remain 0 and
+  paid spend remains `$0`.
+- The API agent approved the publication protocol, idempotency key, closed native
+  outcomes/causes, and permanent journal v0.1 no-compaction posture.
+- Applied the one required compatibility correction: retained the exact lifecycle
+  v0.2 cost vocabulary, adding `not_applicable_provider_pending` and restoring the
+  full `provider_usage_unavailable_billing_reconciliation_pending` spelling.
+- Removed `api_acknowledgement` and future-only predecessor/supersession fields from
+  v0.1. API receipts and future recovery models remain wholly outside this schema.
+- Slice 1 is API-approved for implementation and paused for Kevin's commit/proceed
+  gate before Slice 2.

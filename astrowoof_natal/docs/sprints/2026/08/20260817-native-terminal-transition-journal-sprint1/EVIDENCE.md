@@ -73,3 +73,32 @@ following binding requirements for Slice 1:
 - no second distinct provider ID while supersession remains unsupported.
 
 API ingestion acknowledgement remains outside SBE authority.
+
+## Slice 1 contract proposal evidence
+
+- Proposal: `NATIVE TRANSITION CONTRACT PROPOSAL.md`.
+- Draft strict schema: `fixtures/native-transition-contracts.proposal.schema.json`.
+- Canonical examples: one completed-provider journal record and one ordinary
+  review-terminal immutable invocation result.
+- Proposal validation: 3 tests passed in 0.020 seconds.
+- Proposal plus inspection v0.3/current lifecycle compatibility: 33 tests passed in
+  0.377 seconds.
+- Checkpoint-basis digest avoids self-reference; full snapshot still includes and
+  protects every publication artifact.
+- Runtime/package mutation: none. Provider operations: 0. Paid spend: `$0`.
+- Required next gate: Kevin/API answer the six decisions in the Slice 1 result and
+  approve the complete cross-repository contract before Slice 2.
+
+## Slice 1 API gate
+
+`API Agent Slice 1 Review and Responses.md` approves the corrected contract for
+implementation. The checkpoint-basis protocol, idempotency key plus canonical
+result hash, outcome/cause vocabulary, and no-compaction posture are accepted.
+
+The frozen corrections are:
+
+- exact reconciliation v0.2 cost disposition spellings, including pending;
+- no SBE API-acknowledgement field; and
+- no predecessor/supersession fields until a later real recovery contract.
+
+Provider operations remain 0 and paid spend remains `$0`.
