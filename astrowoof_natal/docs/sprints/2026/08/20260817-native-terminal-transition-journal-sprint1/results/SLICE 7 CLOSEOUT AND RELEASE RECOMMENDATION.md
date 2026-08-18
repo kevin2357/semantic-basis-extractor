@@ -1,7 +1,7 @@
 # Slice 7 Closeout and Release Recommendation
 
 Date: 2026-08-17
-Status: prepared for final Kevin/API review
+Status: accepted; 0.4.5 final artifact qualified
 
 ## Recommendation
 
@@ -43,6 +43,8 @@ and publish only the resulting final hash.
 
 ## Publication boundary
 
-This closeout does not bump a version, create a release directory, build a release
-artifact, tag Git, create a GitHub release, or publish bytes. Those actions require
-explicit authorization after final consumer review.
+Kevin and the API agent accepted this closeout. Kevin separately authorized the
+0.4.5 version bump, reproducible final build, installed gates, immutable tag, and
+publication. Final wheel SHA-256 is
+`9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`;
+tag/publication evidence is recorded after those operations complete.

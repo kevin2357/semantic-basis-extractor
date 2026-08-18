@@ -1,8 +1,8 @@
 # Native Terminal Transition Journal Sprint 1 Plan
 
 Date: 2026-08-17
-Status: in progress; Slice 7 closeout prepared for final Kevin/API review
-Implementation: Slices 0-6 complete; release recommendation prepared, not released
+Status: complete; 0.4.5 release publication authorized and underway
+Implementation: Slices 0-7 complete; final artifact qualified
 Upstream consumer sprint: AstroWoof API Sprint 26, Native Terminal Transition
 Ingestion
 

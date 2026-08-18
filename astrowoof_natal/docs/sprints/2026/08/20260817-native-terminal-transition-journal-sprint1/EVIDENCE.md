@@ -157,8 +157,27 @@ Provider operations remain 0 and paid spend remains `$0`.
   `1fa992b07cef80725829137c4d6f1871f65d0b01e1f53b69d9bf4eaa78c05b26`.
 - Recommendation: prepare `0.4.5` as the next patch after final consumer review.
   The qualified `0.4.4`-named wheel is evidence only and must not be published.
-- Version bump, release artifact build, immutable tag, and publication have not
-  occurred and require separate explicit authorization.
+- At Slice 7 closeout, version bump, release build, tag, and publication had not
+  occurred; Kevin supplied the separate authorization recorded below.
+
+## 0.4.5 final release qualification
+
+- Final API review: accepted; release recommendation supported.
+- Artifact source commit:
+  `2df6b8f63179fdada9fb5fffc144abb89813655c`.
+- Version: `0.4.5`.
+- `SOURCE_DATE_EPOCH`: `1787032964`.
+- Complete source suite: 383 passed in 295.134 seconds; 4 expected skips.
+- Two final wheels: byte-identical.
+- Final wheel SHA-256:
+  `9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`.
+- Wheel bytes / entries / resources / cache entries: 770978 / 98 / 55 / 0.
+- Exact published SPC 0.11.0 hash verification: pass.
+- Windows CPython 3.11 `pip check` / lifecycle smoke / release smoke: pass.
+- Linux CPython 3.11 `pip check` / lifecycle smoke / release smoke: pass.
+- Focused release-contract/runtime/consumer suite: 22 passed in 23.621 seconds.
+- Provider operations: 0. Paid spend: `$0`.
+- Tag and publication are authorized but not yet recorded at this checkpoint.
 
 ## Slice 4 terminal result and receipt evidence
 
