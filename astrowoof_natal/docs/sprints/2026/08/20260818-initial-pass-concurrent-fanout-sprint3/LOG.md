@@ -189,6 +189,7 @@
   edge: concrete all-subject delivery evidence may close a reviewed run, while
   generic pass-derived persistence still may not erase final QA.
 - Provider operations and paid spend: zero.
+
 - Paused before Slice 7 public interfaces and consumer handoff.
 
 ## 2026-08-18 — Slice 7 complete; awaiting API review
@@ -256,3 +257,14 @@
 - Exact installed Windows 3.12 and network-isolated Linux 3.11 gates passed:
   dependency check, lifecycle smoke, release smoke, all four routes, and timing.
 - Provider operations and paid spend: zero.
+
+## 2026-08-18 — 0.4.7 tagged and published
+
+- Lock commit: `b1c1fdc7168b2824c79c117d3cdb310bf0c9dc63`.
+- Annotated tag object: `4b027f2d95fd913559333381cb08276ca9dc9c1e`.
+- Published immutable tag `astrowoof-natal-authoring-v0.4.7` as GitHub release
+  `372630485` with wheel asset `519947193` and checksum asset `519947195`.
+- Authenticated asset re-download matched SHA-256
+  `8fd5268e69a64517e82a3c33eda700ceeaf13bb4465a9e3efe91aafafacc4ad8`.
+- The tag remains at the release-lock commit; this later commit records publication
+  evidence only.

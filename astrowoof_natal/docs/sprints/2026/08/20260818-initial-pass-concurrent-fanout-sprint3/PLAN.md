@@ -1,7 +1,7 @@
 # Initial Authoring Pass Concurrent Fan-Out Sprint 3 Plan
 
 Date: 2026-08-18
-Status: complete; 0.4.7 release authorized
+Status: complete; 0.4.7 published
 Starting release: SBE 0.4.6
 
 ## Purpose

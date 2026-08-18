@@ -272,3 +272,13 @@ Installed qualification driver:
 - Two independent builds: byte-identical.
 - Windows 3.12 and network-isolated Linux 3.11 installed qualification: pass.
 - Provider operations / spend: 0 / USD 0.
+
+## Publication
+
+- Tag: `astrowoof-natal-authoring-v0.4.7`.
+- Tag commit / annotated object: `b1c1fdc7168b2824c79c117d3cdb310bf0c9dc63` /
+  `4b027f2d95fd913559333381cb08276ca9dc9c1e`.
+- GitHub release / wheel asset / checksum asset: `372630485` / `519947193` /
+  `519947195`.
+- Published at: `2026-08-18T20:40:11Z`.
+- Authenticated wheel re-download SHA-256: exact match.
