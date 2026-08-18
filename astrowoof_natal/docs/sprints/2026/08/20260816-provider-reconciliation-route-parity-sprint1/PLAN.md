@@ -1,8 +1,8 @@
 # Provider Reconciliation Route Parity Sprint 1 Plan
 
 Date: 2026-08-16  
-Status: SBE-native implementation and API consumer review complete  
-Implementation: Slices 0-7 complete; release authorized separately
+Status: complete; `0.4.4` tagged and published
+Implementation: Slices 0-7 complete; immutable release published
 
 ## Purpose
 

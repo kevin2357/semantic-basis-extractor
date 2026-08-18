@@ -233,3 +233,15 @@
   identified useful starting points for the next joint handoff-hardening sprint.
 - Kevin approved Slice 7 and separately authorized commit, push, versioning,
   tagging, and publication of `0.4.4`.
+- Committed and pushed Slice 7 as `fb2cd6e`, then froze artifact source commit
+  `8ca7bf98a2d48f059eb218834e756482dba439a3` with the `0.4.4` version transition.
+- Built two byte-identical fixed-epoch `0.4.4` wheels at SHA-256
+  `ee98db9512a5d0bb7082ef1e4b92ab5923bac9bbb88014f2a35fbfceeee2e6bd`.
+  The exact wheel passed clean Linux CPython 3.11 `pip check`, installed lifecycle,
+  typing/resource, public API, and exact/bounded CLI smokes.
+- Committed the release record as `d9caed9`, created annotated tag
+  `astrowoof-natal-authoring-v0.4.4` (tag object `9022d53`), and published release
+  `372064863` with wheel asset `518847628` and checksum asset `518847629`.
+- Authenticated download verification matched the qualified wheel and checksum
+  hashes. The release is neither draft nor prerelease, and the immutable tag was
+  not moved by this post-publication evidence update.

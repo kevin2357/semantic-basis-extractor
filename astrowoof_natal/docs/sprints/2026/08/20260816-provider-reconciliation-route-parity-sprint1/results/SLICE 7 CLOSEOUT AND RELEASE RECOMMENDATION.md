@@ -27,3 +27,9 @@ reviewable source, test, contract, documentation, and sprint evidence changes.
 All SBE-native exit criteria pass. The API agent accepted the final handoff and
 Kevin separately authorized versioning, tagging, and publication of `0.4.4`. API
 queue/reservation qualification remains the next joint handoff-hardening concern.
+
+Version `0.4.4` was subsequently built reproducibly from artifact source commit
+`8ca7bf98a2d48f059eb218834e756482dba439a3`, tagged at release-record commit
+`d9caed9da7f8ccafc71fc36af82b6f6d7e7ce6d6`, published, authenticated-downloaded,
+and hash-verified. The immutable tag was not moved. The published wheel SHA-256 is
+`ee98db9512a5d0bb7082ef1e4b92ab5923bac9bbb88014f2a35fbfceeee2e6bd`.

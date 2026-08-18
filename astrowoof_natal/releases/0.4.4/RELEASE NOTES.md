@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.4
 
-Status: release candidate for immutable annotated tag
+Status: published under immutable annotated tag
 `astrowoof-natal-authoring-v0.4.4`.
 
 This patch extends bounded, fresh-worker provider reconciliation across every
@@ -48,6 +48,7 @@ zero / `$0`.
 - artifact source commit:
   `8ca7bf98a2d48f059eb218834e756482dba439a3`.
 
-Tagging, publication, and authenticated-download verification are pending the
-release-record commit.
-
+Publication is complete. Authenticated download verification matched the qualified
+wheel SHA-256. The immutable tag identifies release-record commit
+`d9caed9da7f8ccafc71fc36af82b6f6d7e7ce6d6`; this post-publication evidence does
+not move that tag.
