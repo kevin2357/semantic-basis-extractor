@@ -27,14 +27,6 @@ questions are recorded in [BACKGROUND.md](BACKGROUND.md).
 - Treat cache behavior as measured historical evidence, never as guaranteed savings
   at the provider-submission boundary.
 - Keep the fifty-claim semantic basis budget out of this dollar-spend work.
-- Repair bounded final-QA state preservation before using bounded live runs as
-  calibration observations. A failed assembled-deck QA result must remain
-  machine-visible as `FINAL_QA_REQUIRES_REVIEW`; generic pass-derived status
-  recomputation must not overwrite it with `AUTHORING_COMPLETE`.
-- Add defensive bounded selection/packet QA for semantically equivalent claims
-  that would predictably produce duplicate cards across isolated passes. SBE must
-  fail closed with typed evidence; SPC remains authoritative for whether upstream
-  bounded projection should emit only one of Mean Node or True Node.
 
 ## Ownership boundary to preserve
 
@@ -64,16 +56,10 @@ The discovery should establish:
    commitments; and
 8. the cross-repository qualification and consumer-review boundary.
 
-The implementation plan must also include regression coverage proving that:
-
-- assembled bounded final-QA failure survives every native persistence, public
-  state, snapshot, lifecycle inspection, and terminal-result projection;
-- optional paid stages are not prepared or submitted while final QA requires
-  review;
-- an equivalent Mean Node/True Node selected pair is detected before provider
-  authoring when both claims have the same editorial semantics; and
-- the defensive check does not silently delete, merge, or rewrite upstream
-  evidence and does not make SBE the owner of SPC projection policy.
+The bounded final-QA state defect discovered during the live calibration run is
+owned and qualified by the concurrent-fan-out sprint, not this cost sprint. Cost
+calibration may consume bounded observations only after that fix is released and
+must preserve the resulting outcome classification.
 
 ## Explicit non-decisions
 

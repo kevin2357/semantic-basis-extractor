@@ -7,11 +7,10 @@ One retained live-run discovery result now informs the future plan:
 
 - SBE 0.4.6 bounded interactive six-pass authoring accepted all six initial passes
   for an estimated USD 1.9539225.
-- Cross-pass final QA rejected the assembled deck for nine duplicate normalized
-  passages produced by semantically equivalent Mean Node and True Node claims.
-- No optional-stage provider work was submitted.
-- Persistence incorrectly projected the run as `AUTHORING_COMPLETE` instead of
-  preserving `FINAL_QA_REQUIRES_REVIEW`.
+- The run was not delivered and must not enter an accepted-delivery calibration
+  cohort.
+- The associated runtime defect and QA regressions are owned by
+  `20260818-initial-pass-concurrent-fanout-sprint3`.
 
 The complete diagnostic workspace remains at
 `C:\dev\github\semantic-basis-extractor\.runs\kevin-bounded-live-20260818\run`.
