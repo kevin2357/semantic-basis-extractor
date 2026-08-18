@@ -142,3 +142,33 @@
   10 focused tests passed.
 - Provider operations: 0. Spend: USD 0.
 - Slice 3 is complete and paused for gate review before lifecycle execution changes.
+
+## 2026-08-18 — Slice 4 bounded interactive six-context authoring
+
+- Replaced the bounded whole-deck provider operation with the frozen five card
+  passes plus one summary/theme pass under
+  `astrowoof.bounded_natal.authoring_run.v2`.
+- Bound every interactive paid action to the bounded v2 route, assignment, pass,
+  attempt, stage, and exact logical request. Each pass crosses its own external
+  authorization boundary and persists provider evidence before later mutation.
+- Added independent result validation and authority hydration for every pass,
+  canonical assembly after all six are accepted, and pass-local creative retry.
+  A rejected pass carries minimized native QA feedback and does not regenerate any
+  accepted pass.
+- Kept legacy one-operation v1 workspaces fail closed with the typed cause
+  `legacy_bounded_topology_unsupported`; no synthetic six-pass history is created.
+- Extended native transition and reconciliation route recognition for bounded v2
+  while retaining bounded v1 as inspectable historical evidence.
+- Corrected lifecycle-capacity precedence so due or completed pass work is driven
+  locally, prepared work waits for external authority, and genuinely scheduled
+  future work releases capacity until due. The blocking scheduler regression proves
+  a completed initial wave reaches its next authorization boundary without an
+  indefinite lease, silent stop, or operator repair.
+- Desktop focused bounded suite: 31 tests passed in 110.463 seconds.
+- Desktop shared lifecycle/native-transition/reconciliation/spend regression suite:
+  109 tests passed in 21.780 seconds.
+- Python 3.11 Linux read-only-container qualification: 31 tests passed in 21.955
+  seconds.
+- `git diff --check` passes with only expected checkout line-ending notices.
+- Provider operations: 0. Spend: USD 0.
+- Slice 4 is complete and paused for gate review before bounded Batch work.

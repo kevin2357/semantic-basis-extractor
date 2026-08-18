@@ -793,13 +793,25 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "unsupported_retain_capacity", False, "reconciliation_timing_missing",
         )
-    elif non_provider_local or due or completed_evidence:
+    elif due:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",
         )
     elif prepared:
         disposition, local_ready, reason = (
             "await_external_authority", False, "spend_authorization_required",
+        )
+    elif completed_evidence:
+        disposition, local_ready, reason = (
+            "continue_local_cycle", True, "local_work_ready",
+        )
+    elif scheduled:
+        disposition, local_ready, reason = (
+            "release_until_due", False, "known_provider_work_pending",
+        )
+    elif non_provider_local:
+        disposition, local_ready, reason = (
+            "continue_local_cycle", True, "local_work_ready",
         )
     elif projected:
         disposition, local_ready, reason = (

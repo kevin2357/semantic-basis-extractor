@@ -16,7 +16,9 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
 
 from .bounded_authoring import (
+    BOUNDED_RUN_V2_CONTRACT,
     BoundedAuthoringArtifacts,
+    assemble_bounded_editorial_passes,
     assert_provider_minimized,
     fake_author_bounded,
     validate_bounded_final_cards,
@@ -46,8 +48,9 @@ from .spend import (
 )
 
 
-BOUNDED_ROUTE = "bounded_natal.v1"
-BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
+BOUNDED_ROUTE = "bounded_natal.v2"
+BOUNDED_RUN_CONTRACT = BOUNDED_RUN_V2_CONTRACT
+LEGACY_BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
 BOUNDED_DELIVERY_CONTRACT = "astrowoof.bounded_natal.delivery.v1"
 FINAL_STAGES = ("polish", "qualitative_critic", "qualitative_candidate")
 
@@ -164,9 +167,17 @@ def create_bounded_run(
         "claim-deck.json": artifacts.claim_deck,
         "authoring-packet.json": artifacts.authoring_packet,
         "disposition-report.json": artifacts.disposition_report,
+        "split-assignment.json": artifacts.split_assignment,
     }
     for name, value in values.items():
         write_json_atomic(inputs / name, value)
+    packets_dir = inputs / "passes"
+    packets_dir.mkdir()
+    packet_artifacts: dict[str, dict[str, Any]] = {}
+    for pass_id, packet in artifacts.pass_packets.items():
+        packet_path = packets_dir / f"{pass_id}.json"
+        write_json_atomic(packet_path, packet)
+        packet_artifacts[pass_id] = _artifact(packet_path, run_dir)
     now = utc_now()
     subject = artifacts.authoring_packet["subject"]
     subject_id = str(subject.get("subject_id") or "bounded-subject")
@@ -176,7 +187,10 @@ def create_bounded_run(
         "claim_deck_sha256": _digest(artifacts.claim_deck),
         "created_at": now,
     })
-    pass_id = f"{subject_id}:bounded"
+    pass_records = [
+        *artifacts.split_assignment["card_passes"],
+        artifacts.split_assignment["summary_pass"],
+    ]
     state: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "route_contract": BOUNDED_RUN_CONTRACT,
@@ -209,20 +223,36 @@ def create_bounded_run(
         },
         "max_attempts": int(profile.get("max_attempts", 2)),
         "sbe": {"status": "pass", "subject_count": 1, "route": BOUNDED_ROUTE},
-        "passes": {pass_id: {
-            "pass_id": pass_id, "subject": subject_id, "pass_number": 1,
-            "source_zip": normalized_path(inputs / "authoring-packet.json"),
-            "source_sha256": sha256_file(inputs / "authoring-packet.json"),
-            "state": "GENERATED", "attempts": [],
-            "accepted_workspace": None, "accepted_attempt": None,
-        }},
+        "passes": {
+            record["pass_id"]: {
+                "pass_id": record["pass_id"],
+                "subject": subject_id,
+                "pass_number": record["pass_number"],
+                "purpose": record["purpose"],
+                "ordered_claim_ids": list(record["ordered_claim_ids"]),
+                "source_zip": normalized_path(
+                    run_dir / packet_artifacts[record["pass_id"]]["path"]
+                ),
+                "source_sha256": packet_artifacts[record["pass_id"]]["sha256"],
+                "state": "GENERATED",
+                "attempts": [],
+                "accepted_workspace": None,
+                "accepted_attempt": None,
+            }
+            for record in pass_records
+        },
         "subjects": {},
         "bounded": {
-            "stage": "AUTHORING", "pass_id": pass_id,
+            "stage": "AUTHORING",
+            "assignment_sha256": artifacts.split_assignment["assignment_sha256"],
+            "pass_ids": [record["pass_id"] for record in pass_records],
             "claim_deck": _artifact(inputs / "claim-deck.json", run_dir),
             "authoring_packet": _artifact(inputs / "authoring-packet.json", run_dir),
             "disposition_report": _artifact(inputs / "disposition-report.json", run_dir),
+            "split_assignment": _artifact(inputs / "split-assignment.json", run_dir),
+            "pass_packets": packet_artifacts,
             "completed_stages": [], "skipped_stages": [],
+            "completed_pass_ids": [],
         },
     }
     if provider.paid:
@@ -248,16 +278,40 @@ def create_bounded_run(
         })
         for name, value in values.items():
             _emit_artifact(event_emitter, name[:-5], value["schema_version"], inputs / name)
+        for pass_id, descriptor in packet_artifacts.items():
+            _emit_artifact(
+                event_emitter,
+                f"authoring-pass:{pass_id}",
+                artifacts.pass_packets[pass_id]["schema_version"],
+                run_dir / descriptor["path"],
+            )
     return state
 
 
-def _payload(state: dict[str, Any], run_dir: Path, stage: str) -> dict[str, Any]:
-    packet = load_json(run_dir / state["bounded"]["authoring_packet"]["path"])
+def _payload(
+    state: dict[str, Any], run_dir: Path, stage: str, pass_id: str | None = None
+) -> dict[str, Any]:
+    bounded = state["bounded"]
+    packet_descriptor = (
+        bounded["pass_packets"][pass_id]
+        if pass_id is not None else bounded["authoring_packet"]
+    )
+    packet = load_json(run_dir / packet_descriptor["path"])
     payload: dict[str, Any] = {
         "route": BOUNDED_ROUTE,
         "stage": stage,
         "authoring_packet": packet,
     }
+    if stage == "creative_retry" and pass_id is not None:
+        attempts = state["passes"][pass_id]["attempts"]
+        if not attempts or attempts[-1]["state"] != "PASS_QA_REJECTED":
+            raise ValueError("Bounded creative retry has no rejected pass-local attempt")
+        payload["retry_feedback"] = {
+            "schema_version": "astrowoof.bounded_natal.pass_retry_feedback.v1",
+            "pass_id": pass_id,
+            "previous_attempt": attempts[-1]["attempt"],
+            "reason_codes": list(attempts[-1]["qa"]["report"]["errors"]),
+        }
     cards = run_dir / "bounded" / "final" / "cards.json"
     if cards.is_file():
         payload["cards"] = load_json(cards)
@@ -268,9 +322,15 @@ def _payload(state: dict[str, Any], run_dir: Path, stage: str) -> dict[str, Any]
 def _execute_stage(
     state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
     stage: str, attempt: int, controller: SpendController | None,
+    pass_id: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    route = f"{BOUNDED_ROUTE}:{stage}:{attempt}"
-    result_path = run_dir / "bounded" / "provider-results" / f"{stage}-{attempt}.json"
+    if pass_id is not None:
+        route = f"{BOUNDED_ROUTE}:{pass_id}:attempt-{attempt:03d}"
+        result_name = f"{pass_id}-attempt-{attempt:03d}.json"
+    else:
+        route = f"{BOUNDED_ROUTE}:{stage}:{attempt}"
+        result_name = f"{stage}-{attempt}.json"
+    result_path = run_dir / "bounded" / "provider-results" / result_name
     if result_path.is_file():
         durable = load_json(result_path)
         if durable.get("route") != route:
@@ -296,7 +356,7 @@ def _execute_stage(
             stage=stage,
             route=route,
             provider_operation_id=resumed["provider"]["id"],
-            payload=_payload(state, run_dir, stage),
+            payload=_payload(state, run_dir, stage, pass_id),
         )
         write_json_atomic(result_path, {
             "schema_version": "astrowoof.bounded_natal.provider_result.v1",
@@ -314,7 +374,8 @@ def _execute_stage(
         )
     try:
         result, metadata = provider.execute(
-            stage=stage, route=route, payload=_payload(state, run_dir, stage),
+            stage=stage, route=route,
+            payload=_payload(state, run_dir, stage, pass_id),
             before_submit=before, provider_created=created,
         )
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
@@ -332,6 +393,82 @@ def _execute_stage(
     return result, metadata
 
 
+def _pass_result_report(
+    result: Mapping[str, Any], packet: Mapping[str, Any]
+) -> dict[str, Any]:
+    errors: list[str] = []
+    if result.get("subject") != packet.get("subject"):
+        errors.append("provider-visible subject drifted")
+    if result.get("authority_notice") != packet.get("authority_notice"):
+        errors.append("authority notice drifted")
+    if result.get("projected_term_registry") != packet.get("projected_term_registry"):
+        errors.append("projected term registry drifted")
+    expected = {claim["claim_id"]: claim for claim in packet["claims"]}
+    cards = result.get("cards") or []
+    supplied = [card.get("claim_id") for card in cards]
+    if len(supplied) != len(expected) or set(supplied) != set(expected):
+        errors.append("pass card membership changed")
+    for card in cards:
+        source = expected.get(card.get("claim_id"))
+        if source is None:
+            continue
+        for field in (
+            "priority_id", "claim_kind", "editorial_tier", "invariant_authority"
+        ):
+            if card.get(field) != source.get(field):
+                errors.append(f"{card.get('claim_id')} changed locked {field}")
+    expected_summaries = set(packet.get("summaries") or {})
+    supplied_summaries = set((result.get("summaries") or {}).keys())
+    if supplied_summaries != expected_summaries:
+        errors.append("pass summary membership changed")
+    return {
+        "schema_version": "astrowoof.bounded_natal.pass_validation.v1",
+        "pass_id": packet["pass_id"],
+        "status": "pass" if not errors else "fail",
+        "errors": errors,
+    }
+
+
+def _assemble_accepted_passes(
+    state: dict[str, Any], run_dir: Path
+) -> dict[str, Any]:
+    bounded = state["bounded"]
+    packet = load_json(run_dir / bounded["authoring_packet"]["path"])
+    assignment = load_json(run_dir / bounded["split_assignment"]["path"])
+    pass_outputs: dict[str, dict[str, Any]] = {}
+    final_by_pass: dict[str, dict[str, Any]] = {}
+    for pass_id in bounded["pass_ids"]:
+        record = state["passes"][pass_id]
+        if record["state"] != "PASS_QA_ACCEPTED":
+            raise ValueError("Cannot assemble bounded deck before every pass is accepted")
+        accepted = load_json(Path(record["accepted_workspace"]))
+        final_by_pass[pass_id] = accepted
+        pass_outputs[pass_id] = {
+            "pass_id": pass_id,
+            "cards": deepcopy(accepted.get("cards") or []),
+            "summaries": [
+                {"summary_id": summary_id, **deepcopy(summary)}
+                for summary_id, summary in (accepted.get("summaries") or {}).items()
+            ],
+        }
+    assembled = assemble_bounded_editorial_passes(pass_outputs, packet, assignment)
+    summaries = {
+        item["summary_id"]: {
+            key: deepcopy(value) for key, value in item.items() if key != "summary_id"
+        }
+        for item in assembled["summaries"]
+    }
+    return {
+        "schema_version": next(iter(final_by_pass.values()))["schema_version"],
+        "editorial_status": "complete",
+        "subject": deepcopy(packet["subject"]),
+        "authority_notice": deepcopy(packet["authority_notice"]),
+        "cards": assembled["cards"],
+        "summaries": summaries,
+        "projected_term_registry": deepcopy(packet["projected_term_registry"]),
+    }
+
+
 def resume_bounded_run(
     run_dir: Path,
     *,
@@ -347,6 +484,8 @@ def resume_bounded_run(
     run_dir = run_dir.resolve()
     run_json = run_dir / "run.json"
     state = load_json(run_json)
+    if state.get("route_contract") == LEGACY_BOUNDED_RUN_CONTRACT:
+        raise ValueError("legacy_bounded_topology_unsupported")
     if state.get("route_contract") != BOUNDED_RUN_CONTRACT:
         raise ValueError("Run is not a supported bounded-Natal lifecycle")
     legacy_denial_present = any(
@@ -380,28 +519,33 @@ def resume_bounded_run(
     try:
         with checkpoint_spend_boundary(run_json, state):
             bounded = state["bounded"]
-            pass_record = state["passes"][bounded["pass_id"]]
             final_dir = run_dir / "bounded" / "final"
             final_dir.mkdir(parents=True, exist_ok=True)
-            if pass_record["state"] != "PASS_QA_ACCEPTED":
+            pass_results_dir = final_dir / "passes"
+            pass_results_dir.mkdir(exist_ok=True)
+            for pass_id in bounded["pass_ids"]:
+                pass_record = state["passes"][pass_id]
+                if pass_record["state"] == "PASS_QA_ACCEPTED":
+                    continue
+                packet = load_json(
+                    run_dir / bounded["pass_packets"][pass_id]["path"]
+                )
                 while len(pass_record["attempts"]) < state["max_attempts"]:
                     attempt = len(pass_record["attempts"]) + 1
                     stage = "authoring_initial" if attempt == 1 else "creative_retry"
                     cards, metadata = _execute_stage(
-                        state, run_dir, provider, stage, attempt, controller
+                        state, run_dir, provider, stage, attempt, controller, pass_id
                     )
                     if _failure_injector:
                         _failure_injector(
                             "after_authoring_provider_result"
                             if attempt == 1 else "after_creative_retry_provider_result"
                         )
-                    report = validate_bounded_final_cards(
-                        cards,
-                        load_json(run_dir / bounded["claim_deck"]["path"]),
-                        load_json(run_dir / bounded["authoring_packet"]["path"]),
-                    )
-                    write_json_atomic(final_dir / "cards.json", cards)
-                    write_json_atomic(final_dir / "validation-report.json", report)
+                    report = _pass_result_report(cards, packet)
+                    result_path = pass_results_dir / f"{pass_id}.json"
+                    report_path = pass_results_dir / f"{pass_id}.validation.json"
+                    write_json_atomic(result_path, cards)
+                    write_json_atomic(report_path, report)
                     accepted = report["status"] == "pass"
                     pass_record["attempts"].append({
                         "attempt": attempt,
@@ -413,8 +557,11 @@ def resume_bounded_run(
                     if accepted:
                         pass_record["state"] = "PASS_QA_ACCEPTED"
                         pass_record["accepted_attempt"] = attempt
-                        pass_record["accepted_workspace"] = normalized_path(final_dir)
-                        bounded["completed_stages"].append(stage)
+                        pass_record["accepted_workspace"] = normalized_path(result_path)
+                        if pass_id not in bounded["completed_pass_ids"]:
+                            bounded["completed_pass_ids"].append(pass_id)
+                        if stage not in bounded["completed_stages"]:
+                            bounded["completed_stages"].append(stage)
                     elif attempt == state["max_attempts"]:
                         pass_record["state"] = "FAILED_REQUIRES_REVIEW"
                     save_state(run_json, state)
@@ -427,6 +574,19 @@ def resume_bounded_run(
                         break
                 if pass_record["state"] != "PASS_QA_ACCEPTED":
                     return state
+
+            assembled_cards = _assemble_accepted_passes(state, run_dir)
+            assembled_report = validate_bounded_final_cards(
+                assembled_cards,
+                load_json(run_dir / bounded["claim_deck"]["path"]),
+                load_json(run_dir / bounded["authoring_packet"]["path"]),
+            )
+            write_json_atomic(final_dir / "cards.json", assembled_cards)
+            write_json_atomic(final_dir / "validation-report.json", assembled_report)
+            if assembled_report["status"] != "pass":
+                state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+                save_state(run_json, state)
+                return state
 
             optional = state["authoring_profile"]["optional_stages"]
             for stage in FINAL_STAGES:
@@ -469,11 +629,14 @@ def resume_bounded_run(
                     _failure_injector(f"after_{stage}_checkpoint")
 
             cards_path = final_dir / "cards.json"
+            subject_id = state["passes"][bounded["pass_ids"][0]]["subject"]
             delivery = {
                 "schema_version": BOUNDED_DELIVERY_CONTRACT,
-                "route": BOUNDED_ROUTE,
+                # Delivery v1 remains the stable bounded product contract; v2 is
+                # the native authoring topology, not a new reader-facing product.
+                "route": "bounded_natal.v1",
                 "run_id": state["run_id"],
-                "subject_id": next(iter(state["subjects"]), None) or pass_record["subject"],
+                "subject_id": next(iter(state["subjects"]), None) or subject_id,
                 "cards": _artifact(cards_path, run_dir),
                 "claim_deck": deepcopy(bounded["claim_deck"]),
                 "authoring_packet": deepcopy(bounded["authoring_packet"]),
@@ -483,7 +646,6 @@ def resume_bounded_run(
                 "skipped_stages": list(bounded["skipped_stages"]),
             }
             write_json_atomic(final_dir / "delivery.json", delivery)
-            subject_id = pass_record["subject"]
             state["subjects"] = {subject_id: {
                 "subject": subject_id, "state": "DELIVERY_COMPLETE",
                 "deck": normalized_path(cards_path),

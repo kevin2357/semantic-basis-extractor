@@ -292,8 +292,12 @@ def append_transition_record(run_dir: Path, value: dict[str, Any]) -> dict[str, 
 def _route_binding(state: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
     binding = action["binding"]
     bounded = (
-        state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1"
-        and state.get("route") == "bounded_natal.v1"
+        state.get("route_contract")
+        in {
+            "astrowoof.bounded_natal.authoring_run.v1",
+            "astrowoof.bounded_natal.authoring_run.v2",
+        }
+        and state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"}
     )
     exact = (
         state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
@@ -434,8 +438,12 @@ def sync_provider_transition_journal(run_dir: Path, state: dict[str, Any]) -> li
     supported = (
         state.get("schema_version") == "astrowoof.semantic_closure_run.v0.9"
         or (
-            state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1"
-            and state.get("route") == "bounded_natal.v1"
+            state.get("route_contract")
+            in {
+                "astrowoof.bounded_natal.authoring_run.v1",
+                "astrowoof.bounded_natal.authoring_run.v2",
+            }
+            and state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"}
         )
     )
     if not supported:
@@ -540,12 +548,12 @@ def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> d
 
 
 def _native_route(state: dict[str, Any]) -> dict[str, Any]:
-    bounded = state.get("route") == "bounded_natal.v1"
+    bounded = state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"}
     mechanism = "batch" if state.get("service_level") == "batch" else "response"
     return {
         "route_family": "bounded_natal" if bounded else "exact_natal",
         "provider_mechanism": mechanism,
-        "native_operation_ref": "bounded_natal.v1" if bounded else "semantic_closure",
+        "native_operation_ref": str(state.get("route")) if bounded else "semantic_closure",
     }
 
 

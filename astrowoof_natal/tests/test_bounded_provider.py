@@ -128,6 +128,40 @@ class TestBoundedOpenAIProvider(unittest.TestCase):
                     service_level="batch",
                 )
 
+    def test_interactive_pass_request_is_isolated_and_hydrates_only_its_authority(self):
+        pass_id = self.artifacts.split_assignment["card_passes"][0]["pass_id"]
+        packet = self.artifacts.pass_packets[pass_id]
+        pass_cards = fake_author_bounded(packet)
+        with tempfile.TemporaryDirectory() as temporary:
+            transport = Transport(completed_response(editorial_response(pass_cards)))
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=Path(temporary), api_key="test-key",
+                model="gpt-5.6-luna", maximum_output_tokens=5000,
+                transport=transport,
+            )
+            payload = {
+                "route": "bounded_natal.v2",
+                "stage": "authoring_initial",
+                "authoring_packet": packet,
+            }
+            result, _ = provider.execute(
+                stage="authoring_initial",
+                route=f"bounded_natal.v2:{pass_id}:attempt-001",
+                payload=payload,
+                before_submit=lambda _: None,
+                provider_created=lambda *_: None,
+            )
+            self.assertEqual(10, len(result["cards"]))
+            self.assertEqual({}, result["summaries"])
+            schema = transport.calls[0]["payload"]["text"]["format"]["schema"]
+            self.assertEqual(10, schema["properties"]["cards"]["minItems"])
+            self.assertEqual(0, schema["properties"]["summaries"]["maxItems"])
+            self.assertEqual(
+                {item["claim_id"] for item in packet["claims"]},
+                set(schema["properties"]["cards"]["items"]
+                    ["properties"]["claim_id"]["enum"]),
+            )
+
     def test_generated_cards_schema_is_strict_and_locks_semantic_fields(self):
         payload = {"authoring_packet": self.artifacts.authoring_packet}
         schema = OpenAIBoundedLifecycleProvider._schema("authoring_initial", payload)

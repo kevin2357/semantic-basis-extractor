@@ -49,7 +49,7 @@
     "bounded_natal_final_cards": "astrowoof.bounded_natal.cards.v1",
     "bounded_natal_provider_disclosure": "astrowoof.bounded_natal.provider_disclosure.v1",
     "bounded_natal_delivery_provenance": "astrowoof.bounded_natal.delivery_provenance.v1",
-    "bounded_natal_authoring_run": "astrowoof.bounded_natal.authoring_run.v1",
+    "bounded_natal_authoring_run": "astrowoof.bounded_natal.authoring_run.v2",
     "bounded_natal_delivery": "astrowoof.bounded_natal.delivery.v1",
     "bounded_natal_critic": "astrowoof.bounded_natal.critic.v1"
   },

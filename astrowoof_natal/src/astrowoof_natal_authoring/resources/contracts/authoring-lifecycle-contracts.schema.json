@@ -461,7 +461,8 @@
         "route_family": {"enum": ["exact_natal", "bounded_natal"]},
         "route_contract": {"enum": [
           "astrowoof.semantic_closure_run.v0.9",
-          "astrowoof.bounded_natal.authoring_run.v1"
+          "astrowoof.bounded_natal.authoring_run.v1",
+          "astrowoof.bounded_natal.authoring_run.v2"
         ]}
       },
       "additionalProperties": false

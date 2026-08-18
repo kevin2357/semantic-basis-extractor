@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slices 0-3 complete; Slice 3 awaiting gate review
+Status: Slices 0-4 complete; Slice 4 awaiting gate review
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -92,6 +92,29 @@ Verification:
 - bounded protocol/provider/packet focused suite: 21 tests passed in 1.215 seconds;
 - Python 3.11 Linux worker image: 10 focused shared-pass, bounded-provider, and exact
   live/Batch parity tests passed; and
+- `git diff --check` passes with only expected checkout line-ending notices.
+
+Provider operations: 0. Spend: USD 0.
+
+## Slice 4
+
+Result: [results/SLICE 4 - Bounded Interactive Six Pass Lifecycle.md](results/SLICE%204%20-%20Bounded%20Interactive%20Six%20Pass%20Lifecycle.md)
+
+Verification:
+
+- desktop bounded lifecycle/product-QA/provider suite: 31 tests passed in 110.463
+  seconds;
+- desktop shared provider-capacity, lifecycle inspection/contracts/consumer/
+  closeout, native-transition, and spend-enforcement suite: 109 tests passed in
+  21.780 seconds;
+- Python 3.11 Linux container with the repository mounted read-only: the same 31
+  focused bounded tests passed in 21.955 seconds;
+- six initial isolated calls preserve exact pass membership and canonical assembly;
+- authorization waits are exercised at every pass boundary, and one rejected pass
+  produces only one pass-local retry;
+- the post-wave scheduler regression reaches the next durable external-authority
+  boundary without retaining a lease or duplicating provider work;
+- v1 legacy state refuses with `legacy_bounded_topology_unsupported`; and
 - `git diff --check` passes with only expected checkout line-ending notices.
 
 Provider operations: 0. Spend: USD 0.

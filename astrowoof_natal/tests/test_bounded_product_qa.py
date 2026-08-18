@@ -62,11 +62,18 @@ class CapturingProvider(FakeBoundedLifecycleProvider):
     def __init__(self, *, reject_initial: bool = False) -> None:
         self.payloads = []
         self.reject_initial = reject_initial
+        self.rejected_once = False
 
     def execute(self, **kwargs):
         self.payloads.append(deepcopy(kwargs["payload"]))
         result, metadata = super().execute(**kwargs)
-        if self.reject_initial and kwargs["stage"] == "authoring_initial":
+        if (
+            self.reject_initial
+            and kwargs["stage"] == "authoring_initial"
+            and result["cards"]
+            and not self.rejected_once
+        ):
+            self.rejected_once = True
             result = deepcopy(result)
             result["cards"][0]["priority_id"] = "injected-retry-trigger"
         return result, metadata
@@ -199,7 +206,9 @@ class TestBoundedProductQA(unittest.TestCase):
         self.assertEqual("DELIVERY_COMPLETE", state["status"])
         self.assertEqual(
             [
-                "authoring_initial", "creative_retry", "polish",
+                "authoring_initial", "creative_retry",
+                "authoring_initial", "authoring_initial", "authoring_initial",
+                "authoring_initial", "authoring_initial", "polish",
                 "qualitative_critic", "qualitative_candidate",
             ],
             [payload["stage"] for payload in provider.payloads],

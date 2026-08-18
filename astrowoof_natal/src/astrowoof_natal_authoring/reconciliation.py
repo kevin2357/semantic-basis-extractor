@@ -26,7 +26,8 @@ RECONCILIABLE_PROVIDER_STATES = {
     "PROVIDER_ID_RECORDED", "WAITING",
 }
 EXACT_RUN_CONTRACT = "astrowoof.semantic_closure_run.v0.9"
-BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
+BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v2"
+LEGACY_BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
 
 
 @dataclass(frozen=True)
@@ -49,9 +50,12 @@ def native_provider_route_identity(
 ) -> dict[str, Any]:
     """Return strict native route/mechanism identity and adapter classification."""
     route_contract = state.get("route_contract")
-    if route_contract == BOUNDED_RUN_CONTRACT and state.get("route") == "bounded_natal.v1":
+    if (
+        route_contract in {BOUNDED_RUN_CONTRACT, LEGACY_BOUNDED_RUN_CONTRACT}
+        and state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"}
+    ):
         route_family = "bounded_natal"
-        contract = BOUNDED_RUN_CONTRACT
+        contract = str(route_contract)
     elif route_contract is None and state.get("schema_version") == EXACT_RUN_CONTRACT:
         route_family = "exact_natal"
         contract = EXACT_RUN_CONTRACT
@@ -96,7 +100,8 @@ def native_provider_route_identity(
         valid = bool(valid and len(matches) == 1)
     elif (
         route_family == "bounded_natal" and kind == "response"
-        and service == "interactive" and native_ref.startswith("bounded_natal.v1:")
+        and service == "interactive"
+        and native_ref.startswith(("bounded_natal.v1:", "bounded_natal.v2:"))
     ):
         adapter = "bounded_interactive"
     elif route_family == "bounded_natal" and (kind == "batch" or service == "batch"):
@@ -1231,9 +1236,18 @@ def run_bounded_authoring_reconciliation(
             item for item in (state.get("spend_ledger") or {}).get("actions", [])
             if item.get("action_id") in completed_ids
         ]
+        def bounded_pass_id(item: dict[str, Any]) -> str:
+            native_ref = str((item.get("binding") or {}).get("route") or "")
+            parts = native_ref.split(":")
+            return (
+                parts[1]
+                if len(parts) >= 3 and parts[0] == "bounded_natal.v2"
+                else native_ref
+            )
+
         local_continuation = {
             "pass_ids": sorted({
-                str((item.get("binding") or {}).get("route") or "").split(":", 1)[0]
+                bounded_pass_id(item)
                 for item in completed_actions
                 if (item.get("binding") or {}).get("stage")
                 in {"authoring_initial", "creative_retry"}

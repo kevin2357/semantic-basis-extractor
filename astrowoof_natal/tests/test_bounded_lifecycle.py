@@ -27,6 +27,7 @@ from astrowoof_natal_authoring.bounded_lifecycle import (  # noqa: E402
 )
 from astrowoof_natal_authoring.closure import (  # noqa: E402
     load_json,
+    save_state,
     validate_workspace_snapshot,
     write_workspace_snapshot,
 )
@@ -148,18 +149,48 @@ class PaidScriptedProvider:
 
 
 class RetryFakeProvider(FakeBoundedLifecycleProvider):
+    rejected_once = False
+
     def execute(self, **kwargs):
         result, metadata = super().execute(**kwargs)
-        if kwargs["stage"] == "authoring_initial":
+        if (
+            kwargs["stage"] == "authoring_initial"
+            and result["cards"]
+            and not self.rejected_once
+        ):
+            self.rejected_once = True
             result = deepcopy(result)
             result["cards"][0]["priority_id"] = "drifted"
         return result, metadata
 
 
+class RecordingFakeProvider(FakeBoundedLifecycleProvider):
+    def __init__(self):
+        self.pass_ids = []
+        self.memberships = []
+        self.retry_feedback = []
+
+    def execute(self, **kwargs):
+        packet = kwargs["payload"]["authoring_packet"]
+        if kwargs["stage"] in {"authoring_initial", "creative_retry"}:
+            self.pass_ids.append(packet["pass_id"])
+            self.memberships.append([claim["claim_id"] for claim in packet["claims"]])
+            if kwargs["stage"] == "creative_retry":
+                self.retry_feedback.append(deepcopy(kwargs["payload"]["retry_feedback"]))
+        return super().execute(**kwargs)
+
+
 class RejectInitialPaidProvider(PaidScriptedProvider):
+    rejected_once = False
+
     def execute(self, **kwargs):
         result, metadata = super().execute(**kwargs)
-        if kwargs["stage"] == "authoring_initial":
+        if (
+            kwargs["stage"] == "authoring_initial"
+            and result["cards"]
+            and not self.rejected_once
+        ):
+            self.rejected_once = True
             result = deepcopy(result)
             result["cards"][0]["priority_id"] = "drifted"
         return result, metadata
@@ -169,6 +200,35 @@ class TestBoundedLifecycle(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.artifacts = compiled()
+
+    def drive_authorized(
+        self, run_dir: Path, provider, *, stop_before_stage: str | None = None,
+        reference: str = "api-drive",
+    ):
+        authorizations = None
+        while True:
+            try:
+                return resume_bounded_run(
+                    run_dir, provider=provider, authorizations=authorizations
+                )
+            except AwaitingSpendAuthorization:
+                state = load_json(run_dir / "run.json")
+                prepared = [
+                    item for item in state["spend_ledger"]["actions"]
+                    if item["state"] == "PREPARED"
+                ]
+                self.assertEqual(1, len(prepared))
+                action = prepared[0]
+                if action["binding"]["stage"] == stop_before_stage:
+                    return state, action
+                authorizations = [{
+                    "schema_version": AUTHORIZATION_SCHEMA,
+                    "action_id": action["action_id"],
+                    "binding": deepcopy(action["binding"]),
+                    "authorization_reference": (
+                        f"{reference}:{len(state['spend_ledger']['actions'])}"
+                    ),
+                }]
 
     def test_fake_route_completes_shared_lifecycle_and_closeout(self) -> None:
         events = []
@@ -203,6 +263,53 @@ class TestBoundedLifecycle(unittest.TestCase):
                 "bounded.selection.completed", "bounded.disposition.completed",
                 "bounded.artifact.committed", "terminal.transitioned",
             } <= names)
+
+    def test_v2_run_persists_six_passes_and_executes_isolated_membership(self) -> None:
+        provider = RecordingFakeProvider()
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            created = create_bounded_run(run_dir, self.artifacts, provider=provider)
+            self.assertEqual(
+                "astrowoof.bounded_natal.authoring_run.v2",
+                created["route_contract"],
+            )
+            self.assertEqual(6, len(created["passes"]))
+            self.assertEqual(6, len(created["bounded"]["pass_packets"]))
+            final = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", final["status"])
+            self.assertEqual(final["bounded"]["pass_ids"], provider.pass_ids)
+            self.assertEqual([10, 10, 10, 10, 10, 0], list(map(len, provider.memberships)))
+            flattened = [claim_id for group in provider.memberships for claim_id in group]
+            self.assertEqual(50, len(flattened))
+            self.assertEqual(50, len(set(flattened)))
+
+    def test_reordered_pass_completion_assembles_canonical_claim_order(self) -> None:
+        provider = RecordingFakeProvider()
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            state = create_bounded_run(run_dir, self.artifacts, provider=provider)
+            state["bounded"]["pass_ids"].reverse()
+            save_state(run_dir / "run.json", state)
+            final = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", final["status"])
+            cards = load_json(run_dir / "bounded/final/cards.json")["cards"]
+            claim_deck = load_json(run_dir / "bounded/inputs/claim-deck.json")
+            self.assertEqual(
+                [claim["claim_id"] for claim in claim_deck["claims"]],
+                [card["claim_id"] for card in cards],
+            )
+
+    def test_legacy_one_operation_run_fails_closed_with_typed_reason(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            state = create_bounded_run(run_dir, self.artifacts)
+            state["route_contract"] = "astrowoof.bounded_natal.authoring_run.v1"
+            state["route"] = "bounded_natal.v1"
+            save_state(run_dir / "run.json", state)
+            with self.assertRaisesRegex(
+                ValueError, "legacy_bounded_topology_unsupported"
+            ):
+                resume_bounded_run(run_dir)
 
     def test_snapshot_rejects_mutation_and_wrong_restore_path(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -248,6 +355,12 @@ class TestBoundedLifecycle(unittest.TestCase):
                 [attempt["state"] for attempt in record["attempts"]],
             )
             self.assertIn("creative_retry", state["bounded"]["completed_stages"])
+            attempts = [len(item["attempts"]) for item in state["passes"].values()]
+            self.assertEqual([2, 1, 1, 1, 1, 1], attempts)
+            self.assertIn(
+                "changed locked priority_id",
+                record["attempts"][0]["qa"]["report"]["errors"][0],
+            )
 
     def test_every_bounded_persistence_boundary_resumes_monotonically(self) -> None:
         points = (
@@ -297,23 +410,22 @@ class TestBoundedLifecycle(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             run_dir = Path(temporary) / "run"
             create_bounded_run(run_dir, self.artifacts, provider=provider, generation_profile=profile)
-            with self.assertRaises(AwaitingSpendAuthorization):
-                resume_bounded_run(run_dir, provider=provider)
-            paused = load_json(run_dir / "run.json")
-            validate_workspace_snapshot(run_dir, paused)
-            action = paused["spend_ledger"]["actions"][0]
-            authorization = {
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": action["action_id"],
-                "binding": deepcopy(action["binding"]),
-                "authorization_reference": "api-reservation-bounded-1",
-            }
-            state = resume_bounded_run(
-                run_dir, provider=provider, authorizations=[authorization]
+            state = self.drive_authorized(
+                run_dir, provider, reference="api-reservation-bounded"
             )
             self.assertEqual("DELIVERY_COMPLETE", state["status"])
-            self.assertEqual(1, provider.submissions)
-            self.assertEqual("REPORTED", state["spend_ledger"]["actions"][0]["state"])
+            self.assertEqual(6, provider.submissions)
+            self.assertEqual(
+                ["REPORTED"] * 6,
+                [item["state"] for item in state["spend_ledger"]["actions"]],
+            )
+            self.assertEqual(
+                state["bounded"]["pass_ids"], state["bounded"]["completed_pass_ids"]
+            )
+            routes = [item["binding"]["route"] for item in state["spend_ledger"]["actions"]]
+            self.assertEqual(6, len(set(routes)))
+            self.assertTrue(all(route.startswith("bounded_natal.v2:") for route in routes))
+            self.assertTrue(all(":attempt-001" in route for route in routes))
 
     def test_prepared_bounded_action_supports_providerless_denial_and_replay(self) -> None:
         provider = PaidScriptedProvider()
@@ -453,23 +565,9 @@ class TestBoundedLifecycle(unittest.TestCase):
                 run_dir, self.artifacts, provider=provider,
                 generation_profile=profile,
             )
-            with self.assertRaises(AwaitingSpendAuthorization):
-                resume_bounded_run(run_dir, provider=provider)
-            initial = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0]
-            authorization = {
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": initial["action_id"],
-                "binding": initial["binding"],
-                "authorization_reference": "api-reservation-initial",
-            }
-            with self.assertRaises(AwaitingSpendAuthorization):
-                resume_bounded_run(
-                    run_dir, provider=provider, authorizations=[authorization]
-                )
-            paused = load_json(run_dir / "run.json")
-            polish = next(
-                item for item in paused["spend_ledger"]["actions"]
-                if item["binding"]["stage"] == "polish"
+            paused, polish = self.drive_authorized(
+                run_dir, provider, stop_before_stage="polish",
+                reference="api-reservation-initial",
             )
             inspection = inspect_lifecycle(
                 run_dir, native_exclusive_access="declared"
@@ -489,7 +587,7 @@ class TestBoundedLifecycle(unittest.TestCase):
             completed = resume_bounded_run(run_dir, provider=provider)
             self.assertEqual("DELIVERY_COMPLETE", completed["status"])
             self.assertIn("polish", completed["bounded"]["skipped_stages"])
-            self.assertEqual(1, provider.submissions)
+            self.assertEqual(6, provider.submissions)
 
     def test_interrupted_submission_reconciles_durable_id_without_resubmit(self) -> None:
         provider = PaidScriptedProvider(interrupt_after_identity=True)
@@ -541,9 +639,13 @@ class TestBoundedLifecycle(unittest.TestCase):
                 [interrupted["spend_ledger"]["actions"][0]["action_id"]],
                 inspection["provider_custody"]["action_ids"],
             )
-            final = resume_bounded_run(run_dir, provider=provider)
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(run_dir, provider=provider)
+            final = self.drive_authorized(
+                run_dir, provider, reference="api-reservation-after-reconcile"
+            )
             self.assertEqual("DELIVERY_COMPLETE", final["status"])
-            self.assertEqual(1, provider.submissions)
+            self.assertEqual(6, provider.submissions)
             self.assertEqual(1, provider.polls)
 
     def test_bounded_reconciliation_retrieves_once_then_exhausts_local_work(self) -> None:
@@ -583,12 +685,25 @@ class TestBoundedLifecycle(unittest.TestCase):
                     python_executable=Path(sys.executable),
                 ),
             )
-            self.assertEqual("terminal", result["outcome"])
+            self.assertEqual("awaiting_external_authority", result["outcome"])
             self.assertEqual("bounded_natal", result["inspection"]["native_route"]["route_family"])
             self.assertEqual(1, provider.submissions)
             self.assertEqual(1, provider.retrievals)
             self.assertEqual(1, provider.polls)
             self.assertTrue(result["local_continuation"]["exhausted_before_detach"])
+            self.assertEqual(
+                [interrupted["bounded"]["pass_ids"][0]],
+                result["local_continuation"]["pass_ids"],
+            )
+            self.assertEqual(
+                "await_external_authority",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+            final = self.drive_authorized(
+                run_dir, provider, reference="api-after-retrieval"
+            )
+            self.assertEqual("DELIVERY_COMPLETE", final["status"])
+            self.assertEqual(6, provider.submissions)
             validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
 
     def test_bounded_reconciliation_pending_warning_and_conflict_fail_closed(self) -> None:
@@ -662,20 +777,9 @@ class TestBoundedLifecycle(unittest.TestCase):
                     run_dir, self.artifacts, provider=provider,
                     generation_profile=profile,
                 )
-                with self.assertRaises(AwaitingSpendAuthorization):
-                    resume_bounded_run(run_dir, provider=provider)
-                state = load_json(run_dir / "run.json")
-                initial = state["spend_ledger"]["actions"][-1]
-                with self.assertRaises(AwaitingSpendAuthorization):
-                    resume_bounded_run(run_dir, provider=provider, authorizations=[{
-                        "schema_version": AUTHORIZATION_SCHEMA,
-                        "action_id": initial["action_id"], "binding": initial["binding"],
-                        "authorization_reference": f"api-initial-{target_stage}",
-                    }])
-                state = load_json(run_dir / "run.json")
-                target = next(
-                    item for item in state["spend_ledger"]["actions"]
-                    if item["binding"]["stage"] == target_stage
+                state, target = self.drive_authorized(
+                    run_dir, provider, stop_before_stage=target_stage,
+                    reference=f"api-initial-{target_stage}",
                 )
                 provider.interrupt_after_identity = True
                 with self.assertRaisesRegex(RuntimeError, "injected"):
@@ -693,11 +797,22 @@ class TestBoundedLifecycle(unittest.TestCase):
                     run_dir, provider=provider, max_attempts=3,
                     python_executable=Path(sys.executable), observed_at=due,
                 )
-                self.assertEqual("terminal", result["outcome"])
+                expected_outcome = (
+                    "awaiting_external_authority"
+                    if target_stage == "creative_retry" else "terminal"
+                )
+                self.assertEqual(expected_outcome, result["outcome"])
                 self.assertIn(target_stage, result["local_continuation"]["stages"])
                 self.assertEqual(1, provider.retrievals)
-                self.assertEqual(2, provider.submissions)
+                expected_before_finish = 2 if target_stage == "creative_retry" else 7
+                self.assertEqual(expected_before_finish, provider.submissions)
                 self.assertEqual(1, provider.polls)
+                if target_stage == "creative_retry":
+                    final = self.drive_authorized(
+                        run_dir, provider, reference="api-after-creative-retry"
+                    )
+                    self.assertEqual("DELIVERY_COMPLETE", final["status"])
+                    self.assertEqual(7, provider.submissions)
                 validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
 
     def test_bounded_reconciliation_crash_checkpoints_resume_without_retrieval(self) -> None:
@@ -743,14 +858,28 @@ class TestBoundedLifecycle(unittest.TestCase):
                         _failure_injector=inject,
                     )
                 validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
-                recovered = run_bounded_authoring_reconciliation(
-                    run_dir, provider=provider, max_attempts=3,
-                    python_executable=Path(sys.executable), observed_at=due,
-                )
-                self.assertEqual("terminal", recovered["outcome"])
+                if failure_point == "after_provider_retrieval_checkpoint":
+                    recovered = run_bounded_authoring_reconciliation(
+                        run_dir, provider=provider, max_attempts=3,
+                        python_executable=Path(sys.executable), observed_at=due,
+                    )
+                    self.assertEqual("awaiting_external_authority", recovered["outcome"])
+                else:
+                    inspection = inspect_lifecycle(
+                        run_dir, native_exclusive_access="declared"
+                    )
+                    self.assertEqual(
+                        "await_external_authority",
+                        inspection["execution_capacity"]["disposition"],
+                    )
                 self.assertEqual(1, provider.retrievals)
                 self.assertEqual(1, provider.submissions)
                 self.assertLessEqual(provider.polls, 1)
+                final = self.drive_authorized(
+                    run_dir, provider, reference=f"api-recovered-{failure_point}"
+                )
+                self.assertEqual("DELIVERY_COMPLETE", final["status"])
+                self.assertEqual(6, provider.submissions)
                 validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
 
     def test_mixed_route_pending_cohort_has_independent_capacity(self) -> None:
@@ -876,25 +1005,15 @@ class TestBoundedLifecycle(unittest.TestCase):
                 run_dir, self.artifacts, provider=provider,
                 generation_profile=profile,
             )
-            with self.assertRaises(AwaitingSpendAuthorization):
-                resume_bounded_run(run_dir, provider=provider)
-            paused = load_json(run_dir / "run.json")
-            action = paused["spend_ledger"]["actions"][0]
-            authorization = {
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": action["action_id"],
-                "binding": action["binding"],
-                "authorization_reference": "api-reservation-optional-skip",
-            }
-            final = resume_bounded_run(
-                run_dir, provider=provider, authorizations=[authorization]
+            final = self.drive_authorized(
+                run_dir, provider, reference="api-reservation-optional-skip"
             )
             self.assertEqual("DELIVERY_COMPLETE", final["status"])
             self.assertEqual(
                 ["polish", "qualitative_critic", "qualitative_candidate"],
                 final["bounded"]["skipped_stages"],
             )
-            self.assertEqual(1, provider.submissions)
+            self.assertEqual(6, provider.submissions)
 
 
 if __name__ == "__main__":
