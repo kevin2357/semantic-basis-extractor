@@ -1,5 +1,20 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Log
 
+## 2026-08-18 — Slice 3 complete; awaiting Kevin review
+
+- Added provider-free exact and bounded API-shaped round trips from the joined
+  public authority inputs through six ordinary authorizations, the wave envelope,
+  all-or-none preflight, and six independently persisted simulated identities.
+- Changed exact/bounded route integration tests to source complete bindings from
+  the public bundle rather than the private native spend ledger.
+- Added reordered, missing, duplicate, unknown, cross-run, profile, revision,
+  price-book, model, wrapper, wave, order, and one-field binding mismatch cases.
+- Every refusal proves zero create callbacks; existing route integration continues
+  to cover zero native authorization consumption on failed preflight.
+- Focused route/round-trip gate: 5 passed. Initial-wave public/contract suite:
+  36 passed with 10 optional schema-library skips in the base Windows runtime.
+- Provider operations and spend: zero.
+
 ## 2026-08-18 — Sprint proposed
 
 - API Slice 2 identified that Initial Authoring Wave v1 exposes binding digests but

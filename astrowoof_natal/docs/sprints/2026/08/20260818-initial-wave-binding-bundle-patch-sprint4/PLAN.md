@@ -1,7 +1,7 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Plan
 
 Date: 2026-08-18
-Status: in progress; Slice 2 complete and awaiting API review
+Status: in progress; Slice 3 complete and awaiting Kevin review
 Starting release: SBE 0.4.7
 Target release: SBE 0.4.8
 

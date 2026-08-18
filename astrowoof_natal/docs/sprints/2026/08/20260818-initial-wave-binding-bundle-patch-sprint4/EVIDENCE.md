@@ -1,5 +1,19 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Evidence
 
+## Slice 3
+
+- [Slice 3 result](results/SLICE%203%20-%20Authorization%20Round%20Trip%20and%20Failure%20Matrix.md)
+- Exact and bounded integration authorizations now copy their complete bindings
+  from the public bundle rather than private ledger state.
+- API-shaped provider-free round trips validate the joined public input, create six
+  ordinary authorization documents, build the wave envelope, preflight all six,
+  and persist six simulated provider identities.
+- The mismatch matrix covers membership/order and run/profile/revision/price-book/
+  model/request/wave/wrapper conflicts; every refusal performs zero creates.
+- Focused gate: 5 passed. Initial-wave public/contract gate: 36 passed with 10
+  optional `jsonschema` skips in the base Windows runtime.
+- Provider operations / spend: 0 / USD 0.
+
 ## Planning evidence
 
 - Released prepared-wave contract: `astrowoof.initial_authoring_wave.v1`.

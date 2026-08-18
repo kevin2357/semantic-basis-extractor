@@ -77,7 +77,7 @@ class TestInitialWavePublicContract(unittest.TestCase):
             / "fixtures" / "slice2-consumer-review-manifest.json"
         )
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        self.assertEqual("awaiting_api_review", manifest["status"])
+        self.assertEqual("api_approved", manifest["status"])
         package = ROOT / "src" / "astrowoof_natal_authoring" / "resources"
         for item in manifest["resources"]:
             self.assertEqual(

@@ -564,8 +564,8 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "schema_version": AUTHORIZATION_SCHEMA,
                 "action_id": member["action_id"],
                 "binding": next(
-                    action["binding"] for action in state["spend_ledger"]["actions"]
-                    if action["action_id"] == member["action_id"]
+                    item["binding"] for item in bundle["ordered_members"]
+                    if item["action_id"] == member["action_id"]
                 ),
                 "authorization_reference": f"reservation-{member['pass_number']}",
             } for member in wave["ordered_members"]]
