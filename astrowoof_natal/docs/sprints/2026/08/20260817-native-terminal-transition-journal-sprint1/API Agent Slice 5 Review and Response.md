@@ -1,6 +1,6 @@
 # API Agent Slice 5 Review and Response
 
-Status: accepted with one narrow CLI read-only correction before commit.
+Status: accepted after committed CLI read-only correction.
 
 ## Accepted boundary
 
@@ -22,14 +22,14 @@ hand-off guidance, installed-wheel smoke, and provider-call sentinel are all ali
 with API Sprint 26. No API-side contract change is needed for exact Responses,
 exact Batch, or bounded Responses; bounded Batch remains refused.
 
-## Required correction: keep the CLI workspace-read-only
+## Resolved correction: keep the CLI workspace-read-only
 
 `astrowoof-native-transition` currently permits `--output` at an arbitrary path.
 If that path is inside `--run-dir`, the declared inspection/export command can write
 into the native workspace, which conflicts with the Slice 5 and handoff guarantee
 that it performs no native mutation.
 
-Recommended fix:
+Implemented fix:
 
 - reject an `--output` path that is equal to, or a descendant of, the resolved
   `--run-dir`; and
