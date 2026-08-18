@@ -1,0 +1,31 @@
+{
+  "schema_version": "astrowoof.bounded_natal.split_assignment.v1",
+  "run_contract": "astrowoof.bounded_natal.authoring_run.v2",
+  "subject_id": "fixture-dog",
+  "claim_deck_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "policy": "stratified-v1",
+  "algorithm_version": "bounded-stratified-v1",
+  "seed": "0123456789abcdef",
+  "seed_basis": "subject_policy_claim_deck",
+  "canonical_claim_ids": [
+    "claim-001", "claim-002", "claim-003", "claim-004", "claim-005",
+    "claim-006", "claim-007", "claim-008", "claim-009", "claim-010",
+    "claim-011", "claim-012", "claim-013", "claim-014", "claim-015",
+    "claim-016", "claim-017", "claim-018", "claim-019", "claim-020",
+    "claim-021", "claim-022", "claim-023", "claim-024", "claim-025",
+    "claim-026", "claim-027", "claim-028", "claim-029", "claim-030",
+    "claim-031", "claim-032", "claim-033", "claim-034", "claim-035",
+    "claim-036", "claim-037", "claim-038", "claim-039", "claim-040",
+    "claim-041", "claim-042", "claim-043", "claim-044", "claim-045",
+    "claim-046", "claim-047", "claim-048", "claim-049", "claim-050"
+  ],
+  "card_passes": [
+    {"pass_id": "fixture-dog_bounded_1", "pass_number": 1, "purpose": "card_story", "ordered_claim_ids": ["claim-001", "claim-006", "claim-011", "claim-016", "claim-021", "claim-026", "claim-031", "claim-036", "claim-041", "claim-046"]},
+    {"pass_id": "fixture-dog_bounded_2", "pass_number": 2, "purpose": "card_story", "ordered_claim_ids": ["claim-002", "claim-007", "claim-012", "claim-017", "claim-022", "claim-027", "claim-032", "claim-037", "claim-042", "claim-047"]},
+    {"pass_id": "fixture-dog_bounded_3", "pass_number": 3, "purpose": "card_story", "ordered_claim_ids": ["claim-003", "claim-008", "claim-013", "claim-018", "claim-023", "claim-028", "claim-033", "claim-038", "claim-043", "claim-048"]},
+    {"pass_id": "fixture-dog_bounded_4", "pass_number": 4, "purpose": "card_story", "ordered_claim_ids": ["claim-004", "claim-009", "claim-014", "claim-019", "claim-024", "claim-029", "claim-034", "claim-039", "claim-044", "claim-049"]},
+    {"pass_id": "fixture-dog_bounded_5", "pass_number": 5, "purpose": "card_story", "ordered_claim_ids": ["claim-005", "claim-010", "claim-015", "claim-020", "claim-025", "claim-030", "claim-035", "claim-040", "claim-045", "claim-050"]}
+  ],
+  "summary_pass": {"pass_id": "fixture-dog_bounded_6", "pass_number": 6, "purpose": "summary_theme", "ordered_claim_ids": []},
+  "assignment_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+}

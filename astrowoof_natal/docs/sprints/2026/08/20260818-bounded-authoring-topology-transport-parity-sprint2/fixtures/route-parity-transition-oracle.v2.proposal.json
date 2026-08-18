@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.route_parity_transition_oracle.v2",
+  "public_vocabulary_change": false,
+  "scenarios": [
+    {"name": "bounded_batch_awaiting_authorization", "provider_operation_kind": "batch", "cycle_outcome": "awaiting_external_authority", "provider_request_allowed": false},
+    {"name": "bounded_batch_pending", "provider_operation_kind": "batch", "cycle_outcome": "detached_provider_pending", "capacity_disposition": "release_until_due", "retain_provider_custody": true, "retain_consumer_authority": true},
+    {"name": "bounded_batch_not_due", "provider_operation_kind": "batch", "cycle_outcome": "not_due", "mutation_allowed": false},
+    {"name": "bounded_batch_reclaimed", "provider_operation_kind": "batch", "cycle_outcome": "progressed_local", "provider_retrieval_custody": true},
+    {"name": "bounded_batch_mixed_member_continuation", "provider_operation_kind": "batch", "cycle_outcome": "progressed_local", "local_continuation": "pass_local_retry"},
+    {"name": "bounded_batch_retry_pending", "provider_operation_kind": "batch", "cycle_outcome": "detached_provider_pending", "capacity_disposition": "release_until_due", "retain_provider_custody": true, "retain_consumer_authority": true},
+    {"name": "bounded_batch_usage_unavailable", "provider_operation_kind": "batch", "cycle_outcome": "progressed_local", "provider_retrieval_custody": false, "consumer_authority_reason": "billing_reconciliation_pending", "cost_disposition": "provider_usage_unavailable_billing_reconciliation_pending"},
+    {"name": "bounded_batch_ambiguous", "provider_operation_kind": "batch", "cycle_outcome": "ambiguous_submission"},
+    {"name": "bounded_batch_provider_failed", "provider_operation_kind": "batch", "cycle_outcome": "provider_failed"},
+    {"name": "bounded_legacy_topology_unsupported", "provider_operation_kind": "none", "cycle_outcome": "terminal_failure", "reason_code": "legacy_bounded_topology_unsupported", "observed_run_contract": "astrowoof.bounded_natal.authoring_run.v1", "provider_evidence_present": false},
+    {"name": "bounded_pre_native_failure", "provider_operation_kind": "none", "cycle_outcome": "terminal_failure", "reason_code": "pre_native_failure", "provider_evidence_present": false},
+    {"name": "bounded_batch_delivery", "provider_operation_kind": "batch", "cycle_outcome": "delivery_complete", "provider_retrieval_custody": false}
+  ]
+}

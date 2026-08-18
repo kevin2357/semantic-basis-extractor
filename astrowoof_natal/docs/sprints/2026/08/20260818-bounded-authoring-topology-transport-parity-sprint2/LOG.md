@@ -50,3 +50,43 @@
 - Focused provider-free baseline: 36 tests passed in 23.412 seconds.
 - Provider operations: 0. Spend: USD 0.
 - Slice 0 is complete and paused for the planned review gate.
+
+## 2026-08-18 — Slice 1 contract, identity, and resource freeze
+
+- Proposed `astrowoof.bounded_natal.authoring_run.v2` for six-pass state. Existing
+  v1 one-operation runs remain historical and fail closed; no implicit migration or
+  fabricated pass history is supported.
+- Proposed strict v1 split-assignment and authority-aggregation contracts with
+  canonical fixtures. The assignment binds five ordered ten-claim passes, one
+  summary/theme pass, source deck, deterministic policy/seed, canonical order, and
+  assignment digest.
+- Froze interactive authority at one paid action per route/pass/attempt and Batch
+  authority at one paid action/API global reservation per round with member evidence
+  settling beneath it. Immutable aggregate/stage run ceilings apply to both.
+- Froze request parity as bounded interactive versus bounded Batch for the same
+  frozen bounded pass, with only documented interactive cache/background and outer
+  Batch envelope differences. Exact versus bounded route packet/schema bytes are not
+  parity targets.
+- Added separately named bounded story-workspace brief and guiding-lights resources.
+  Their entry bytes exactly match the exact resources and are hash-frozen in a
+  proposal manifest. Runtime does not consume them until Slice 2.
+- Proposed route-parity oracle v2 scenarios that admit bounded Batch using existing
+  lifecycle outcomes. Packaged v1 remains unchanged with its historical
+  `bounded_batch_rejected` refusal.
+- Added six strict proposal tests covering schema validity, cardinality/closure,
+  additional-field refusal, authority units, resource hash parity, and oracle
+  evolution. All six passed under the local Python 3.11 SBE worker image.
+- The bundled desktop Python lacks `jsonschema`; its broader focused run passed 31
+  executable runtime tests and explicitly skipped five strict schema tests. No
+  validation claim relies on those skips; Docker supplied the six strict passes.
+- A Ruff invocation was attempted in the worker image, but that image does not
+  install Ruff. Unit/schema execution and `git diff --check` are the applicable gate
+  evidence here.
+- Provider operations: 0. Spend: USD 0.
+- Slice 1 is complete and paused for API contract review before runtime admission.
+- API review approved the Slice 1 identities, authority aggregation, interactive
+  binding, parity normalization, oracle direction, and state-vocabulary reuse.
+  Requested hardening was incorporated before commit: explicit Batch round aggregate
+  commitment/member/settlement evidence; terminal cause
+  `legacy_bounded_topology_unsupported` with observed v1 identity; and an oracle trace
+  for typed terminal failure before native/provider evidence exists.

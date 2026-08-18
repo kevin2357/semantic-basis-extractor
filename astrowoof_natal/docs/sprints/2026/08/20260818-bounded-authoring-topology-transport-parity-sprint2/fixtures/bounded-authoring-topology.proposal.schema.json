@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/schemas/bounded-authoring-topology.proposal.schema.json",
+  "oneOf": [
+    {"$ref": "#/$defs/assignment"},
+    {"$ref": "#/$defs/aggregation"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claimId": {"type": "string", "minLength": 1, "maxLength": 200},
+    "cardPass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass_id", "pass_number", "purpose", "ordered_claim_ids"],
+      "properties": {
+        "pass_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+_bounded_[1-5]$"},
+        "pass_number": {"type": "integer", "minimum": 1, "maximum": 5},
+        "purpose": {"const": "card_story"},
+        "ordered_claim_ids": {
+          "type": "array", "minItems": 10, "maxItems": 10,
+          "uniqueItems": true, "items": {"$ref": "#/$defs/claimId"}
+        }
+      }
+    },
+    "summaryPass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass_id", "pass_number", "purpose", "ordered_claim_ids"],
+      "properties": {
+        "pass_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+_bounded_6$"},
+        "pass_number": {"const": 6},
+        "purpose": {"const": "summary_theme"},
+        "ordered_claim_ids": {"type": "array", "maxItems": 0}
+      }
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "run_contract", "subject_id", "claim_deck_sha256",
+        "policy", "algorithm_version", "seed", "seed_basis",
+        "canonical_claim_ids", "card_passes", "summary_pass", "assignment_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.bounded_natal.split_assignment.v1"},
+        "run_contract": {"const": "astrowoof.bounded_natal.authoring_run.v2"},
+        "subject_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "claim_deck_sha256": {"$ref": "#/$defs/sha256"},
+        "policy": {"const": "stratified-v1"},
+        "algorithm_version": {"const": "bounded-stratified-v1"},
+        "seed": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+        "seed_basis": {"enum": ["subject_policy_claim_deck"]},
+        "canonical_claim_ids": {
+          "type": "array", "minItems": 50, "maxItems": 50,
+          "uniqueItems": true, "items": {"$ref": "#/$defs/claimId"}
+        },
+        "card_passes": {
+          "type": "array", "minItems": 5, "maxItems": 5,
+          "items": {"$ref": "#/$defs/cardPass"}
+        },
+        "summary_pass": {"$ref": "#/$defs/summaryPass"},
+        "assignment_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "interactiveAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "paid_action_unit", "api_reservation_unit", "binding_fields"],
+      "properties": {
+        "mode": {"const": "interactive"},
+        "paid_action_unit": {"const": "pass_attempt"},
+        "api_reservation_unit": {"const": "paid_action"},
+        "binding_fields": {
+          "const": ["route_family", "run_contract", "assignment_sha256", "pass_id", "pass_number", "attempt", "stage", "request_sha256"]
+        }
+      }
+    },
+    "batchAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "paid_action_unit", "api_reservation_unit", "member_authority", "settlement_unit", "round_artifact_fields"],
+      "properties": {
+        "mode": {"const": "batch"},
+        "paid_action_unit": {"const": "batch_round"},
+        "api_reservation_unit": {"const": "batch_round"},
+        "member_authority": {"const": "audit_and_ingestion_only"},
+        "settlement_unit": {"const": "aggregate_round_with_member_evidence"},
+        "round_artifact_fields": {
+          "const": ["aggregate_maximum_commitment_micro_usd", "member_count", "ordered_member_inventory", "settlement_basis"]
+        }
+      }
+    },
+    "aggregation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "run_contract", "immutable_run_authority", "interactive", "batch"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.bounded_natal.authority_aggregation.v1"},
+        "run_contract": {"const": "astrowoof.bounded_natal.authoring_run.v2"},
+        "immutable_run_authority": {"const": "aggregate_and_stage_ceilings"},
+        "interactive": {"$ref": "#/$defs/interactiveAuthority"},
+        "batch": {"$ref": "#/$defs/batchAuthority"}
+      }
+    }
+  }
+}

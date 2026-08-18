@@ -30,3 +30,28 @@ Focused command coverage:
 Outcome: 36 tests passed in 23.412 seconds.
 
 Provider operations: 0. Spend: USD 0.
+
+## Slice 1
+
+Contract: [BOUNDED AUTHORING TOPOLOGY CONTRACT PROPOSAL.md](BOUNDED%20AUTHORING%20TOPOLOGY%20CONTRACT%20PROPOSAL.md)
+
+Result: [results/SLICE 1 - Contract Identity and Resource Freeze.md](results/SLICE%201%20-%20Contract%20Identity%20and%20Resource%20Freeze.md)
+
+Proposal artifacts:
+
+- `fixtures/bounded-authoring-topology.proposal.schema.json`;
+- `fixtures/bounded-split-assignment.proposal.json`;
+- `fixtures/bounded-authority-aggregation.proposal.json`;
+- `fixtures/bounded-editorial-resource-parity.proposal.json`; and
+- `fixtures/route-parity-transition-oracle.v2.proposal.json`.
+
+Verification:
+
+- Python 3.11 local SBE worker image: 6 strict proposal tests passed;
+- desktop focused runtime baseline: 31 tests passed, with 5 `jsonschema`-dependent
+  proposal tests explicitly skipped because that lean interpreter lacks the module;
+- both bounded editorial resource copies match their exact counterparts byte for
+  byte at the working-tree gate; and
+- `git diff --check` passes.
+
+Provider operations: 0. Spend: USD 0.

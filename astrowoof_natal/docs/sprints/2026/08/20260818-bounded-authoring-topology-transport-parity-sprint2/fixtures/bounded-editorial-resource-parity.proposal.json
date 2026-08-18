@@ -1,0 +1,21 @@
+{
+  "schema_version": "astrowoof.bounded_natal.editorial_resource_parity.v1",
+  "status": "frozen_not_runtime_admitted",
+  "resources": [
+    {
+      "role": "story_workspace_authoring_brief",
+      "exact_path": "authoring/AstroWoof Story Workspace Authoring Brief.md",
+      "bounded_admission_path": "authoring/Bounded Natal Story Workspace Authoring Brief.md",
+      "exact_sha256": "8cd6ebf406b288bdc0897cac9b55a811523e89f91d3c8508a038b5767273c09e",
+      "bounded_initial_required_sha256": "8cd6ebf406b288bdc0897cac9b55a811523e89f91d3c8508a038b5767273c09e"
+    },
+    {
+      "role": "authoring_guiding_lights",
+      "exact_path": "authoring/AstroWoof Authoring Guiding Lights.md",
+      "bounded_admission_path": "authoring/Bounded Natal Authoring Guiding Lights.md",
+      "exact_sha256": "39f3d75f6e3df58d36c20b74c073c7d4b8d0697f64bda313df6b1258d6e01fc8",
+      "bounded_initial_required_sha256": "39f3d75f6e3df58d36c20b74c073c7d4b8d0697f64bda313df6b1258d6e01fc8"
+    }
+  ],
+  "divergence_rule": "new_version_prompt_geometry_qualification_required"
+}

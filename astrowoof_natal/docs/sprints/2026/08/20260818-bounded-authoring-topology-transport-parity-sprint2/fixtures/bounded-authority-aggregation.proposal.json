@@ -1,0 +1,19 @@
+{
+  "schema_version": "astrowoof.bounded_natal.authority_aggregation.v1",
+  "run_contract": "astrowoof.bounded_natal.authoring_run.v2",
+  "immutable_run_authority": "aggregate_and_stage_ceilings",
+  "interactive": {
+    "mode": "interactive",
+    "paid_action_unit": "pass_attempt",
+    "api_reservation_unit": "paid_action",
+    "binding_fields": ["route_family", "run_contract", "assignment_sha256", "pass_id", "pass_number", "attempt", "stage", "request_sha256"]
+  },
+  "batch": {
+    "mode": "batch",
+    "paid_action_unit": "batch_round",
+    "api_reservation_unit": "batch_round",
+    "member_authority": "audit_and_ingestion_only",
+    "settlement_unit": "aggregate_round_with_member_evidence",
+    "round_artifact_fields": ["aggregate_maximum_commitment_micro_usd", "member_count", "ordered_member_inventory", "settlement_basis"]
+  }
+}
