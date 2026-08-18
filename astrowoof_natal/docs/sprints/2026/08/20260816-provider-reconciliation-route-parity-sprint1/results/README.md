@@ -10,3 +10,4 @@ link the full plan, log, results index, and current evidence file.
 - [Slice 4 bounded interactive reconciliation](SLICE%204%20BOUNDED%20INTERACTIVE%20RECONCILIATION.md)
 - [Slice 5 public interfaces and handoff](SLICE%205%20PUBLIC%20INTERFACES%20AND%20HANDOFF.md)
 - [Slice 6 cross-platform and cohort qualification](SLICE%206%20CROSS%20PLATFORM%20AND%20COHORT%20QUALIFICATION.md)
+- [Slice 7 closeout and release recommendation](SLICE%207%20CLOSEOUT%20AND%20RELEASE%20RECOMMENDATION.md)

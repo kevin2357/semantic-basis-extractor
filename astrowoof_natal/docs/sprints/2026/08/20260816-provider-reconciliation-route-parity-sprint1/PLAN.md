@@ -1,8 +1,8 @@
 # Provider Reconciliation Route Parity Sprint 1 Plan
 
 Date: 2026-08-16  
-Status: proposed; awaiting Kevin review  
-Implementation: not started
+Status: SBE-native implementation and API consumer review complete  
+Implementation: Slices 0-7 complete; release authorized separately
 
 ## Purpose
 
