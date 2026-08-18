@@ -23,17 +23,39 @@ from .route_parity import (  # noqa: E402
     validate_bounded_route_traces,
     validate_route_parity_oracle,
 )
+from .initial_wave import (  # noqa: E402
+    InitialWaveError,
+    build_wave_authorization,
+    preflight_wave_authorization,
+    validate_initial_wave,
+    validate_initial_wave_result,
+    validate_wave_authorization_document,
+)
+from .initial_wave_contract import (  # noqa: E402
+    read_initial_wave_fixture,
+    read_initial_wave_schema,
+    validate_initial_wave_fixture,
+)
 
 __all__ = [
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
+    "InitialWaveError",
     "__version__",
     "latest_native_transition_result",
+    "build_wave_authorization",
+    "preflight_wave_authorization",
+    "read_initial_wave_fixture",
+    "read_initial_wave_schema",
     "read_native_transition_result",
     "read_bounded_route_parity_traces",
     "read_route_parity_oracle",
     "reconcile_authoring_provider_cycle",
     "validate_bounded_route_traces",
+    "validate_initial_wave",
+    "validate_initial_wave_fixture",
+    "validate_initial_wave_result",
+    "validate_wave_authorization_document",
     "validate_route_parity_oracle",
     "validate_transition_journal",
 ]

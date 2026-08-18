@@ -36,6 +36,36 @@ MEMBER_OUTCOMES = frozenset({
     "ambiguous_submission",
     "create_refused",
 })
+_WAVE_KEYS = frozenset({
+    "schema_version", "wave_id", "wave_sha256", "run_id", "route_family",
+    "route_contract", "assignment_sha256", "profile_sha256",
+    "preparation_basis_revision", "price_book_version", "member_count",
+    "ordered_members", "aggregate_maximum_commitment_micro_usd", "timing",
+})
+_WAVE_MEMBER_KEYS = frozenset({
+    "action_id", "binding_sha256", "pass_id", "pass_number", "attempt",
+    "stage", "route", "request_sha256", "model", "service_level",
+    "maximum_output_tokens", "commitment_micro_usd", "price_book_version",
+})
+_AUTHORIZATION_KEYS = frozenset({
+    "schema_version", "authorization_sha256", "wave_id", "wave_sha256",
+    "run_id", "route_family", "profile_sha256", "preparation_basis_revision",
+    "price_book_version", "member_count", "ordered_members",
+    "aggregate_maximum_commitment_micro_usd", "reservation_set_reference",
+    "issuer", "authorized_at",
+})
+_AUTHORIZATION_MEMBER_KEYS = frozenset({
+    "action_id", "binding_sha256", "member_authorization_sha256",
+})
+_RESULT_KEYS = frozenset({
+    "schema_version", "wave_id", "wave_sha256", "outcome", "member_outcomes",
+    "local_continuation_required", "provider_custody_action_ids",
+    "ambiguous_action_ids", "provider_io_elapsed_seconds",
+})
+_RESULT_MEMBER_KEYS = frozenset({
+    "action_id", "pass_id", "outcome", "provider",
+    "provider_create_metadata", "reason",
+})
 
 
 class InitialWaveError(ValueError):
@@ -223,6 +253,8 @@ def build_initial_wave(
 
 
 def validate_initial_wave(wave: Mapping[str, Any]) -> None:
+    if set(wave) != _WAVE_KEYS:
+        raise InitialWaveError("unsupported_contract", "Wave fields are not exact")
     if wave.get("schema_version") != WAVE_CONTRACT:
         raise InitialWaveError("unsupported_contract", "Unsupported wave contract")
     expected_sha256 = canonical_sha256(_wave_body(wave))
@@ -230,6 +262,17 @@ def validate_initial_wave(wave: Mapping[str, Any]) -> None:
         raise InitialWaveError("digest_mismatch", "Wave digest is invalid")
     if wave.get("wave_id") != "wave_" + expected_sha256[:24]:
         raise InitialWaveError("digest_mismatch", "Wave ID is invalid")
+    if not isinstance(wave.get("run_id"), str) or not wave["run_id"] \
+            or not isinstance(wave.get("route_contract"), str) \
+            or not wave["route_contract"]:
+        raise InitialWaveError("binding_mismatch", "Wave run/route identity is invalid")
+    _require_sha256(wave.get("assignment_sha256"), "assignment_sha256")
+    _require_sha256(wave.get("profile_sha256"), "profile_sha256")
+    revision = wave.get("preparation_basis_revision")
+    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 0:
+        raise InitialWaveError("binding_mismatch", "Wave basis revision is invalid")
+    if wave.get("price_book_version") != PRICE_BOOK_VERSION:
+        raise InitialWaveError("binding_mismatch", "Wave price book is unsupported")
     members = wave.get("ordered_members")
     if not isinstance(members, list) or len(members) != INITIAL_MEMBER_COUNT:
         raise InitialWaveError(
@@ -239,6 +282,32 @@ def validate_initial_wave(wave: Mapping[str, Any]) -> None:
         raise InitialWaveError(
             "member_inventory_mismatch", "Wave member order is invalid"
         )
+    if any(not isinstance(item, Mapping) or set(item) != _WAVE_MEMBER_KEYS
+           for item in members):
+        raise InitialWaveError(
+            "unsupported_contract", "Wave member fields are not exact"
+        )
+    for number, item in enumerate(members, 1):
+        if not isinstance(item["action_id"], str) \
+                or not item["action_id"].startswith("paid_") \
+                or len(item["action_id"]) != 29:
+            raise InitialWaveError("binding_mismatch", "Wave action ID is invalid")
+        _require_sha256(item["binding_sha256"], "binding_sha256")
+        _require_sha256(item["request_sha256"], "request_sha256")
+        if item["pass_number"] != number or item["attempt"] != 1 \
+                or item["stage"] != "authoring_initial" \
+                or item["service_level"] != "interactive" \
+                or item["price_book_version"] != wave["price_book_version"]:
+            raise InitialWaveError("binding_mismatch", "Wave member policy is invalid")
+        if not all(isinstance(item[key], str) and item[key]
+                   for key in ("pass_id", "route", "model")):
+            raise InitialWaveError("binding_mismatch", "Wave member identity is invalid")
+        if any(not isinstance(item[key], int) or isinstance(item[key], bool)
+               or item[key] <= 0
+               for key in ("maximum_output_tokens", "commitment_micro_usd")):
+            raise InitialWaveError("binding_mismatch", "Wave member limit is invalid")
+    if wave.get("route_family") not in SUPPORTED_ROUTE_FAMILIES:
+        raise InitialWaveError("route_mismatch", "Unsupported wave route family")
     if len({item.get("action_id") for item in members}) != INITIAL_MEMBER_COUNT:
         raise InitialWaveError(
             "member_inventory_mismatch", "Wave action inventory is not unique"
@@ -263,6 +332,125 @@ def validate_initial_wave(wave: Mapping[str, Any]) -> None:
     }
     if wave.get("timing") != expected_timing:
         raise InitialWaveError("binding_mismatch", "Wave timing policy changed")
+
+
+def validate_wave_authorization_document(
+    authorization: Mapping[str, Any],
+) -> None:
+    """Validate one closed wave-level API authority document without mutation."""
+    if set(authorization) != _AUTHORIZATION_KEYS:
+        raise InitialWaveError(
+            "unsupported_contract", "Wave authorization fields are not exact"
+        )
+    if authorization.get("schema_version") != WAVE_AUTHORIZATION_CONTRACT:
+        raise InitialWaveError(
+            "unsupported_contract", "Unsupported wave authorization contract"
+        )
+    if authorization.get("authorization_sha256") != canonical_sha256(
+        _authorization_body(authorization)
+    ):
+        raise InitialWaveError(
+            "digest_mismatch", "Wave authorization digest is invalid"
+        )
+    if authorization.get("route_family") not in SUPPORTED_ROUTE_FAMILIES:
+        raise InitialWaveError("route_mismatch", "Unsupported authorization route")
+    for key in ("wave_sha256", "profile_sha256"):
+        _require_sha256(authorization.get(key), key)
+    if authorization.get("price_book_version") != PRICE_BOOK_VERSION:
+        raise InitialWaveError("binding_mismatch", "Authorization price book is unsupported")
+    if not all(isinstance(authorization.get(key), str) and authorization[key]
+               for key in ("wave_id", "run_id", "reservation_set_reference", "issuer", "authorized_at")):
+        raise InitialWaveError("binding_mismatch", "Authorization identity is incomplete")
+    if authorization.get("member_count") != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError("member_inventory_mismatch", "Authorization member count is invalid")
+    revision = authorization.get("preparation_basis_revision")
+    commitment = authorization.get("aggregate_maximum_commitment_micro_usd")
+    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 0 \
+            or not isinstance(commitment, int) or isinstance(commitment, bool) \
+            or commitment <= 0:
+        raise InitialWaveError("binding_mismatch", "Authorization limits are invalid")
+    members = authorization.get("ordered_members")
+    if not isinstance(members, list) or len(members) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError(
+            "member_inventory_mismatch", "Authorization must contain six members"
+        )
+    if any(not isinstance(item, Mapping) or set(item) != _AUTHORIZATION_MEMBER_KEYS
+           for item in members):
+        raise InitialWaveError(
+            "unsupported_contract", "Authorization member fields are not exact"
+        )
+    if len({item.get("action_id") for item in members}) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError(
+            "member_inventory_mismatch", "Authorization actions are not unique"
+        )
+    for item in members:
+        if not isinstance(item.get("action_id"), str) \
+                or not item["action_id"].startswith("paid_") \
+                or len(item["action_id"]) != 29:
+            raise InitialWaveError("binding_mismatch", "Authorization action ID is invalid")
+        _require_sha256(item.get("binding_sha256"), "binding_sha256")
+        _require_sha256(
+            item.get("member_authorization_sha256"),
+            "member_authorization_sha256",
+        )
+
+
+def validate_initial_wave_result(result: Mapping[str, Any]) -> None:
+    """Validate the closed aggregate result without treating it as native state."""
+    if set(result) != _RESULT_KEYS or result.get("schema_version") != WAVE_RESULT_CONTRACT:
+        raise InitialWaveError("unsupported_contract", "Unsupported wave result")
+    members = result.get("member_outcomes")
+    if not isinstance(members, list) or len(members) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError("member_inventory_mismatch", "Result requires six members")
+    if any(not isinstance(item, Mapping) or set(item) != _RESULT_MEMBER_KEYS
+           for item in members):
+        raise InitialWaveError("unsupported_contract", "Result member fields are not exact")
+    action_ids = [item.get("action_id") for item in members]
+    if len(set(action_ids)) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError("member_inventory_mismatch", "Result actions are not unique")
+    for item in members:
+        if not isinstance(item.get("action_id"), str) \
+                or not item["action_id"].startswith("paid_") \
+                or len(item["action_id"]) != 29 \
+                or not isinstance(item.get("pass_id"), str) or not item["pass_id"]:
+            raise InitialWaveError("binding_mismatch", "Result member identity is invalid")
+        if item.get("outcome") not in MEMBER_OUTCOMES:
+            raise InitialWaveError("unsupported_outcome", "Unknown result member outcome")
+        if item.get("provider_create_metadata") is not None \
+                and not isinstance(item["provider_create_metadata"], Mapping):
+            raise InitialWaveError("binding_mismatch", "Result metadata is invalid")
+        if item.get("reason") is not None and not isinstance(item["reason"], str):
+            raise InitialWaveError("binding_mismatch", "Result reason is invalid")
+        provider = item.get("provider")
+        if item["outcome"] == "provider_bound":
+            if not isinstance(provider, Mapping) or set(provider) != {"kind", "id"} \
+                    or provider.get("kind") != "response" or not provider.get("id"):
+                raise InitialWaveError("binding_mismatch", "Provider-bound result lacks ID")
+        elif provider is not None:
+            raise InitialWaveError("binding_mismatch", "Non-bound result contains provider")
+    custody = [item["action_id"] for item in members
+               if item["outcome"] == "provider_bound"]
+    ambiguous = [item["action_id"] for item in members
+                 if item["outcome"] == "ambiguous_submission"]
+    if result.get("provider_custody_action_ids") != custody \
+            or result.get("ambiguous_action_ids") != ambiguous:
+        raise InitialWaveError("aggregate_mismatch", "Result aggregate lists conflict")
+    expected = (
+        "ambiguous_submission" if ambiguous else
+        "detached_provider_pending" if custody else
+        "awaiting_external_authority"
+    )
+    if result.get("outcome") != expected:
+        raise InitialWaveError("aggregate_mismatch", "Result outcome conflicts with members")
+    if not isinstance(result.get("local_continuation_required"), bool):
+        raise InitialWaveError("binding_mismatch", "Result continuation flag is invalid")
+    expected_local = any(item["outcome"] in {"authorized_unstarted", "create_refused"}
+                         for item in members)
+    if result["local_continuation_required"] != expected_local:
+        raise InitialWaveError("aggregate_mismatch", "Result continuation conflicts with members")
+    elapsed = result.get("provider_io_elapsed_seconds")
+    if not isinstance(elapsed, (int, float)) or isinstance(elapsed, bool) or elapsed < 0:
+        raise InitialWaveError("binding_mismatch", "Result elapsed time is invalid")
 
 
 def build_wave_authorization(
@@ -331,16 +519,7 @@ def preflight_wave_authorization(
 ) -> None:
     """Validate the complete wave authority without consuming or mutating it."""
     validate_initial_wave(wave)
-    if authorization.get("schema_version") != WAVE_AUTHORIZATION_CONTRACT:
-        raise InitialWaveError(
-            "unsupported_contract", "Unsupported wave authorization contract"
-        )
-    if authorization.get("authorization_sha256") != canonical_sha256(
-        _authorization_body(authorization)
-    ):
-        raise InitialWaveError(
-            "digest_mismatch", "Wave authorization digest is invalid"
-        )
+    validate_wave_authorization_document(authorization)
     copied_fields = (
         "wave_id", "wave_sha256", "run_id", "route_family", "profile_sha256",
         "preparation_basis_revision", "price_book_version", "member_count",

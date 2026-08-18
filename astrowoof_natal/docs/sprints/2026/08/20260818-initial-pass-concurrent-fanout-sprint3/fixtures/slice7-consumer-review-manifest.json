@@ -1,0 +1,14 @@
+{
+  "schema_version":"astrowoof.initial_wave_consumer_review_manifest.v1",
+  "status":"api_approved",
+  "provider_operations":0,
+  "resources":[
+    {"installed_path":"contracts/initial-wave-contracts.v1.schema.json","sha256":"b618cce07fdbfc4f888a5d486e8cb20b51e00362f04b773d08ffebdb4fb3f00e"},
+    {"installed_path":"contracts/initial-wave-result.v1.schema.json","sha256":"eed796850627dec7bb55fedd2205c36d5f23cd2d64fbef2fdfef7d4475bd4c4d"},
+    {"installed_path":"fixtures/initial_wave/prepared-wave.v1.json","sha256":"5038451168439def94437cef60dc161affc8cb1c5661b8231cea501e2c3c1f6c"},
+    {"installed_path":"fixtures/initial_wave/wave-authorization.v1.json","sha256":"d6087a449cc0f71d970d1e997d2e712a40d8de3880ea8632cdb13fae7b5ae129"},
+    {"installed_path":"fixtures/initial_wave/six-id-detach.v1.json","sha256":"15a550213e0234e2066359026393d182e98f5a4a864d2af7d1a6179bef113092"},
+    {"installed_path":"fixtures/initial_wave/partial-ambiguity.v1.json","sha256":"005d34bac7165955f17da511b6511913d32ff5fea200a61bbe119d30a79772a9"}
+  ],
+  "handoff":"astrowoof_natal/docs/post_extraction_authoring/Initial Authoring Wave Consumer Handoff.md"
+}

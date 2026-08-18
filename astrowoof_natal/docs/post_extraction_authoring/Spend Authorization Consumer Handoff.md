@@ -46,6 +46,12 @@ SBE validates and consumes them, executes only matching requests, and then
 completes local work, polls existing work, or prepares the next action. Polling
 a known provider ID needs no new reservation.
 
+Fresh interactive six-pass initial authoring additionally requires one atomic
+wave-level authority envelope plus exactly six ordered member authorizations. See
+[Initial Authoring Wave Consumer Handoff.md](Initial%20Authoring%20Wave%20Consumer%20Handoff.md).
+The API must reserve the complete set before any create; Batch remains one paid
+round action/reservation rather than six reservations.
+
 Treat an authorization pause as checkpoint-ready only after the SBE invocation
 has exited and its coordinator-written `workspace-snapshot.json` validates
 against the complete directory. Internal ledger persistence may precede that

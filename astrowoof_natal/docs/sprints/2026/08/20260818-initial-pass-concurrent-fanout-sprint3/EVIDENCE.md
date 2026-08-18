@@ -204,3 +204,28 @@ Result:
   absent delivery evidence, final QA remains monotonic through persistence.
 - Public lifecycle/oracle vocabulary change: none.
 - Provider operations and spend: 0.
+
+## Slice 7
+
+Result:
+[SLICE 7 - Public Consumer Surface.md](results/SLICE%207%20-%20Public%20Consumer%20Surface.md)
+
+Consumer handoff:
+[Initial Authoring Wave Consumer Handoff.md](../../../../post_extraction_authoring/Initial%20Authoring%20Wave%20Consumer%20Handoff.md)
+
+Review manifest:
+[slice7-consumer-review-manifest.json](fixtures/slice7-consumer-review-manifest.json)
+
+- Public package exports closed wave/authorization/result validators and installed
+  fixture/schema readers without private native-state parsing.
+- Provider-free CLI exports each fixture/schema from source and installed wheel.
+- Contract catalog and installed lifecycle smoke enumerate every new resource.
+- Consumer-review manifest binds six installed resource hashes.
+- API adoption order requires complete six-member reservation before create and
+  preserves one reservation per Batch round.
+- Public consumer/lifecycle/event/disclosure suite: 69 passed in 3.216 seconds.
+- Wave/public/proposal suite: 23 passed; eight optional schema-library tests skipped.
+- Candidate wheel SHA-256:
+  `30b91c0d422e1a1e1fd14e1019cc0b9e4bb33b576f00b071b4cf2ffd3132b583`.
+- Installed Python, new CLI export, and lifecycle smoke: pass.
+- Provider operations and spend: 0.

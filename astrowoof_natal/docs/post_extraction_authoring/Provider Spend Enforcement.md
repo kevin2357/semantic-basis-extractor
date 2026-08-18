@@ -31,6 +31,12 @@ Before submission SBE creates a `PREPARED` action in `run.json` and
 profile digest, prepared state revision, stage, route, request digest, model,
 service level, maximum output, micro-USD commitment, and price-book version.
 
+Fresh exact/bounded interactive initial authoring additionally binds all six member
+actions with `astrowoof.initial_authoring_wave_authorization.v1`. Complete-wave
+preflight is all-or-none before provider creation. This does not change Batch's one
+paid action/API reservation per round. See
+[Initial Authoring Wave Consumer Handoff.md](Initial%20Authoring%20Wave%20Consumer%20Handoff.md).
+
 An `astrowoof.provider_spend_authorization.v0.1` document must repeat that
 binding exactly and add an external `authorization_reference`. Authorization
 is consumed once under an inter-process lock and state-revision compare.

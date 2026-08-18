@@ -1,0 +1,24 @@
+{
+  "schema_version": "astrowoof.initial_authoring_wave_authorization.v1",
+  "authorization_sha256": "5eecfd34375ebbaf0554b27992be9e32f0114789fbfb3c2e88a01eca0e8353cf",
+  "wave_id": "wave_33f8a338470960bb887e4aa6",
+  "wave_sha256": "33f8a338470960bb887e4aa6ad1115cfbf9d2e4d6383ccecf86c5b5731567d7a",
+  "run_id": "run_contract_fixture_001",
+  "route_family": "exact_natal",
+  "profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "preparation_basis_revision": 7,
+  "price_book_version": "openai-public-2026-08-07.v1",
+  "member_count": 6,
+  "ordered_members": [
+    {"action_id":"paid_000000000000000000000001","binding_sha256":"1111111111111111111111111111111111111111111111111111111111111111","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01"},
+    {"action_id":"paid_000000000000000000000002","binding_sha256":"2222222222222222222222222222222222222222222222222222222222222222","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa02"},
+    {"action_id":"paid_000000000000000000000003","binding_sha256":"3333333333333333333333333333333333333333333333333333333333333333","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa03"},
+    {"action_id":"paid_000000000000000000000004","binding_sha256":"4444444444444444444444444444444444444444444444444444444444444444","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa04"},
+    {"action_id":"paid_000000000000000000000005","binding_sha256":"5555555555555555555555555555555555555555555555555555555555555555","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa05"},
+    {"action_id":"paid_000000000000000000000006","binding_sha256":"6666666666666666666666666666666666666666666666666666666666666666","member_authorization_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa06"}
+  ],
+  "aggregate_maximum_commitment_micro_usd": 4200021,
+  "reservation_set_reference": "api:sbe-wave-reservation-set:fixture-001",
+  "issuer": "astrowoof-api",
+  "authorized_at": "2026-08-18T18:00:00Z"
+}

@@ -190,3 +190,31 @@
   generic pass-derived persistence still may not erase final QA.
 - Provider operations and paid spend: zero.
 - Paused before Slice 7 public interfaces and consumer handoff.
+
+## 2026-08-18 — Slice 7 complete; awaiting API review
+
+- Promoted prepared-wave, complete-authorization, and aggregate-result v1 contracts
+  into the packaged contract catalog with strict schemas and fixtures.
+- Added root-package provider-free builders, validators, resource readers, and the
+  `astrowoof-initial-wave-contract` export CLI.
+- Added prepared, authorization, six-ID detach, and partial-ambiguity fixtures plus
+  a hash-bound API consumer-review manifest.
+- Published the API adoption guide covering complete-wave reservation, runner
+  arguments, crash outcomes, lifecycle scheduling, event authority, and interactive
+  versus Batch reservation cardinality.
+- Revalidated provider-visible minimization and event redaction/closed vocabulary.
+- Public consumer/lifecycle/event/disclosure tests: 69 passed. Wave/public/proposal
+  tests: 23 passed with eight optional `jsonschema` checks skipped.
+- Built and installed wheel SHA-256
+  `30b91c0d422e1a1e1fd14e1019cc0b9e4bb33b576f00b071b4cf2ffd3132b583`;
+  new CLI, root Python validation, and installed lifecycle smoke passed.
+- Provider operations and spend: zero.
+- Paused at the explicit API review gate before Slice 8.
+
+## 2026-08-18 — Slice 7 API review accepted
+
+- API approved the packaged schemas/fixtures, public Python/CLI surface, consumer
+  manifest, and wave-versus-lifecycle authority boundary for Slice 8/release.
+- Clarified that `prepared_wave.run_id` binds to
+  `SbeAuthoringRun.native_run_id`, never API `GenerationRun.id`.
+- Reconciled the consumer-review manifest to `api_approved`.
