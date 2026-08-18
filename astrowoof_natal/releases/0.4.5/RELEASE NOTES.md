@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.5
 
-Status: qualified for publication under proposed immutable annotated tag
+Status: published under immutable annotated tag
 `astrowoof-natal-authoring-v0.4.5`.
 
 This patch adds a durable native transition journal and sealed command-result
@@ -44,4 +44,7 @@ zero / `$0`.
 - artifact source commit:
   `2df6b8f63179fdada9fb5fffc144abb89813655c`.
 
-Tagging and publication are pending completion of the immutable release lock.
+Publication is complete. Authenticated download verification matched the qualified
+wheel SHA-256. The immutable tag identifies release-lock commit
+`7e4528371b688cc19bb4d5c95db4762abeec5bdb`; this post-publication evidence does
+not move that tag.

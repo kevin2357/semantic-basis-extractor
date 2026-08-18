@@ -235,3 +235,11 @@ Status: planned; implementation has not started.
 - Created the 0.4.5 release notes, compatibility record, API handoff, known
   limitations, checksum, and qualified release manifest. Provider operations and
   paid spend remain zero.
+- Committed and pushed release lock `7e45283`, then created and pushed annotated
+  tag `astrowoof-natal-authoring-v0.4.5` (tag object `62cb6188`, target
+  `7e4528371b688cc19bb4d5c95db4762abeec5bdb`).
+- Published GitHub release `372123234` with wheel asset `519025839` and checksum
+  asset `519025840`. Authenticated re-download matched SHA-256
+  `9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`.
+- 0.4.5 publication is complete. The immutable tag remains fixed; this later
+  documentation commit records publication evidence only.

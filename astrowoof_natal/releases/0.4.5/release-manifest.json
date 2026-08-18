@@ -2,7 +2,7 @@
   "schema_version": "astrowoof.natal_authoring_release.v0.1",
   "distribution": "astrowoof-natal-authoring",
   "version": "0.4.5",
-  "status": "qualified_for_publication",
+  "status": "published",
   "release_tag": "astrowoof-natal-authoring-v0.4.5",
   "repository": "https://github.com/kevin2357/semantic-basis-extractor",
   "artifact": {
@@ -43,6 +43,16 @@
     "provider_spend_usd": 0
   },
   "publication": {
-    "status": "pending"
+    "status": "published",
+    "release_id": 372123234,
+    "published_at": "2026-08-18T06:13:09Z",
+    "url": "https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.5",
+    "tag_commit": "7e4528371b688cc19bb4d5c95db4762abeec5bdb",
+    "annotated_tag_object": "62cb618858664e4378085dee6a0e060e2d547cd1",
+    "draft": false,
+    "prerelease": false,
+    "wheel_asset_id": 519025839,
+    "checksum_asset_id": 519025840,
+    "authenticated_download_verification": "pass"
   }
 }

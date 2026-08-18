@@ -1,7 +1,7 @@
 # Final API Response — Native Terminal Transition Journal
 
 Date: 2026-08-17
-Status: final consumer-review candidate
+Status: accepted; 0.4.5 published
 Recommended release: `astrowoof-natal-authoring` 0.4.5
 
 ## Delivered SBE boundary
@@ -86,5 +86,5 @@ CLI output may be written only outside the resolved native run directory.
 - Provider operations: 0.
 - Paid spend: `$0`.
 
-The SBE-native implementation is suitable for a pinnable 0.4.5 patch. Version
-bump, tag, and publication remain pending separate explicit authorization.
+The SBE-native implementation is published as pinnable 0.4.5. Wheel SHA-256 is
+`9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`.

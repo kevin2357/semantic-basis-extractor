@@ -179,6 +179,24 @@ Provider operations remain 0 and paid spend remains `$0`.
 - Provider operations: 0. Paid spend: `$0`.
 - Tag and publication are authorized but not yet recorded at this checkpoint.
 
+## 0.4.5 publication evidence
+
+- Release-lock commit: `7e4528371b688cc19bb4d5c95db4762abeec5bdb`.
+- Annotated tag: `astrowoof-natal-authoring-v0.4.5`.
+- Annotated tag object: `62cb618858664e4378085dee6a0e060e2d547cd1`.
+- Tag target equals release-lock commit: pass.
+- GitHub release ID: `372123234`.
+- Published at: `2026-08-18T06:13:09Z`.
+- Wheel asset ID: `519025839`.
+- Checksum asset ID: `519025840`.
+- Published wheel bytes: 770978.
+- GitHub asset digest and authenticated re-download SHA-256:
+  `9b5f1ce0336c791ec4fde906ccd2e8deeac3abc6bc9eac49e94f2c7ea62e71b4`.
+- Downloaded checksum content matched the wheel filename/hash: pass.
+- Draft / prerelease: false / false.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.5`.
+
 ## Slice 4 terminal result and receipt evidence
 
 - Publication order: terminal journal range, immutable result, complete snapshot,
