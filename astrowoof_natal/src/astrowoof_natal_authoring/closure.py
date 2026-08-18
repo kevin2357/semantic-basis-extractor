@@ -52,10 +52,12 @@ from .execution_events import (
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 from .pass_protocol import bind_logical_pass_request
 from .initial_wave import (
+    INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
     InitialWaveError,
     InitialWaveMemberSpec,
     ProviderCreateResult as InitialWaveProviderCreateResult,
     build_initial_wave,
+    build_initial_wave_binding_bundle,
     execute_initial_wave_creates,
     preflight_wave_authorization,
 )
@@ -3110,6 +3112,12 @@ def prepare_exact_interactive_initial_wave(
         **wave, "state": "AWAITING_SPEND_AUTHORIZATION",
         "requests": request_index,
     }
+    write_json_atomic(
+        run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
+        build_initial_wave_binding_bundle(
+            wave, [member.binding for member in members],
+        ),
+    )
     persist_state(run_json, state)
     return state["initial_authoring_wave"]
 

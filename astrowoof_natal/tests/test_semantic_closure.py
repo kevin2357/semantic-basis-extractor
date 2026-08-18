@@ -118,8 +118,10 @@ from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
 )
 from astrowoof_natal_authoring.lifecycle import inspect_lifecycle  # noqa: E402
 from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
+    INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
     InitialWaveError,
     build_wave_authorization,
+    validate_initial_wave_binding_bundle_against_wave,
 )
 
 
@@ -532,6 +534,25 @@ class TestSemanticClosure(SemanticClosureFixture):
                 run_json=run_json,
             )
             self.assertIsNotNone(prepared)
+            bundle_path = root / "run" / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
+            bundle = load_json(bundle_path)
+            validate_initial_wave_binding_bundle_against_wave(
+                bundle,
+                {key: value for key, value in prepared.items()
+                 if key not in {"state", "requests"}},
+            )
+            self.assertEqual(
+                [item["action_id"] for item in prepared["ordered_members"]],
+                [item["action_id"] for item in bundle["ordered_members"]],
+            )
+            save_state(run_json, state)
+            validate_workspace_snapshot(root / "run", load_json(run_json))
+            original_bundle_bytes = bundle_path.read_bytes()
+            bundle_path.write_bytes(original_bundle_bytes + b" ")
+            with self.assertRaisesRegex(ValueError, "snapshot.*changed"):
+                validate_workspace_snapshot(root / "run", load_json(run_json))
+            bundle_path.write_bytes(original_bundle_bytes)
+            validate_workspace_snapshot(root / "run", load_json(run_json))
             self.assertEqual(6, len(state["spend_ledger"]["actions"]))
             self.assertEqual(
                 {"AWAITING_SPEND_AUTHORIZATION"},

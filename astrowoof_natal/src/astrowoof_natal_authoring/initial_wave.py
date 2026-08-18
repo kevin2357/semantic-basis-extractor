@@ -22,6 +22,12 @@ WAVE_AUTHORIZATION_CONTRACT = (
     "astrowoof.initial_authoring_wave_authorization.v1"
 )
 WAVE_RESULT_CONTRACT = "astrowoof.initial_authoring_wave_result.v1"
+BINDING_BUNDLE_CONTRACT = (
+    "astrowoof.initial_authoring_wave_binding_bundle.v1"
+)
+INITIAL_WAVE_BINDING_BUNDLE_FILENAME = (
+    "initial-authoring-wave-binding-bundle.json"
+)
 INITIAL_MEMBER_COUNT = 6
 MAXIMUM_CONCURRENT_CREATES = 6
 PROVIDER_CREATE_TIMEOUT_SECONDS = 15
@@ -65,6 +71,20 @@ _RESULT_KEYS = frozenset({
 _RESULT_MEMBER_KEYS = frozenset({
     "action_id", "pass_id", "outcome", "provider",
     "provider_create_metadata", "reason",
+})
+_BUNDLE_KEYS = frozenset({
+    "schema_version", "bundle_sha256", "wave_id", "wave_sha256", "run_id",
+    "route_family", "profile_sha256", "preparation_basis_revision",
+    "price_book_version", "member_count", "ordered_members",
+    "aggregate_maximum_commitment_micro_usd",
+})
+_BUNDLE_MEMBER_KEYS = frozenset({
+    "action_id", "pass_id", "pass_number", "binding", "binding_sha256",
+})
+_BINDING_KEYS = frozenset({
+    "run_id", "profile_sha256", "prepared_state_revision", "stage", "route",
+    "request_sha256", "model", "service_level", "maximum_output_tokens",
+    "commitment_micro_usd", "price_book_version",
 })
 
 
@@ -121,6 +141,149 @@ def _authorization_body(authorization: Mapping[str, Any]) -> dict[str, Any]:
         key: value for key, value in authorization.items()
         if key != "authorization_sha256"
     }
+
+
+def _bundle_body(bundle: Mapping[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in bundle.items() if key != "bundle_sha256"}
+
+
+def build_initial_wave_binding_bundle(
+    wave: Mapping[str, Any], ordered_bindings: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Build the provider-safe complete binding inventory for one prepared wave."""
+    validate_initial_wave(wave)
+    if len(ordered_bindings) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError(
+            "member_inventory_mismatch", "Binding bundle requires six bindings"
+        )
+    members = []
+    for wave_member, source_binding in zip(
+        wave["ordered_members"], ordered_bindings
+    ):
+        binding = dict(source_binding)
+        binding_sha256 = canonical_sha256(binding)
+        members.append({
+            "action_id": wave_member["action_id"],
+            "pass_id": wave_member["pass_id"],
+            "pass_number": wave_member["pass_number"],
+            "binding": binding,
+            "binding_sha256": binding_sha256,
+        })
+    bundle = {
+        "schema_version": BINDING_BUNDLE_CONTRACT,
+        "wave_id": wave["wave_id"],
+        "wave_sha256": wave["wave_sha256"],
+        "run_id": wave["run_id"],
+        "route_family": wave["route_family"],
+        "profile_sha256": wave["profile_sha256"],
+        "preparation_basis_revision": wave["preparation_basis_revision"],
+        "price_book_version": wave["price_book_version"],
+        "member_count": INITIAL_MEMBER_COUNT,
+        "ordered_members": members,
+        "aggregate_maximum_commitment_micro_usd": wave[
+            "aggregate_maximum_commitment_micro_usd"
+        ],
+    }
+    bundle["bundle_sha256"] = canonical_sha256(bundle)
+    validate_initial_wave_binding_bundle_against_wave(bundle, wave)
+    return bundle
+
+
+def validate_initial_wave_binding_bundle(bundle: Mapping[str, Any]) -> None:
+    """Validate one binding bundle without filesystem or provider mutation."""
+    if set(bundle) != _BUNDLE_KEYS or bundle.get("schema_version") != BINDING_BUNDLE_CONTRACT:
+        raise InitialWaveError("unsupported_contract", "Unsupported binding bundle")
+    if bundle.get("bundle_sha256") != canonical_sha256(_bundle_body(bundle)):
+        raise InitialWaveError("digest_mismatch", "Binding bundle digest is invalid")
+    for key in ("wave_sha256", "profile_sha256"):
+        _require_sha256(bundle.get(key), key)
+    if not all(isinstance(bundle.get(key), str) and bundle[key]
+               for key in ("wave_id", "run_id", "price_book_version")):
+        raise InitialWaveError("binding_mismatch", "Bundle identity is incomplete")
+    if bundle.get("route_family") not in SUPPORTED_ROUTE_FAMILIES:
+        raise InitialWaveError("route_mismatch", "Unsupported bundle route")
+    revision = bundle.get("preparation_basis_revision")
+    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 0:
+        raise InitialWaveError("binding_mismatch", "Bundle revision is invalid")
+    members = bundle.get("ordered_members")
+    if bundle.get("member_count") != INITIAL_MEMBER_COUNT \
+            or not isinstance(members, list) or len(members) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError("member_inventory_mismatch", "Bundle requires six members")
+    if [item.get("pass_number") for item in members] != list(range(1, 7)):
+        raise InitialWaveError("member_inventory_mismatch", "Bundle order is invalid")
+    if any(not isinstance(item, Mapping) or set(item) != _BUNDLE_MEMBER_KEYS
+           for item in members):
+        raise InitialWaveError("unsupported_contract", "Bundle member fields are not exact")
+    for item in members:
+        binding = item.get("binding")
+        if not isinstance(binding, Mapping) or set(binding) != _BINDING_KEYS:
+            raise InitialWaveError("unsupported_contract", "Binding fields are not exact")
+        binding_sha256 = canonical_sha256(binding)
+        if item.get("binding_sha256") != binding_sha256:
+            raise InitialWaveError("digest_mismatch", "Member binding digest is invalid")
+        if item.get("action_id") != "paid_" + binding_sha256[:24]:
+            raise InitialWaveError("binding_mismatch", "Action ID does not bind the member")
+        if not isinstance(item.get("pass_id"), str) or not item["pass_id"]:
+            raise InitialWaveError("binding_mismatch", "Bundle pass ID is invalid")
+        expected = {
+            "run_id": bundle["run_id"],
+            "profile_sha256": bundle["profile_sha256"],
+            "prepared_state_revision": revision,
+            "stage": "authoring_initial",
+            "service_level": "interactive",
+            "price_book_version": bundle["price_book_version"],
+        }
+        if any(binding.get(key) != value for key, value in expected.items()):
+            raise InitialWaveError("binding_mismatch", "Binding conflicts with bundle")
+        _require_sha256(binding.get("request_sha256"), "request_sha256")
+        if not all(isinstance(binding.get(key), str) and binding[key]
+                   for key in ("route", "model")):
+            raise InitialWaveError("binding_mismatch", "Binding route/model is invalid")
+        if any(not isinstance(binding.get(key), int)
+               or isinstance(binding[key], bool) or binding[key] <= 0
+               for key in ("maximum_output_tokens", "commitment_micro_usd")):
+            raise InitialWaveError("binding_mismatch", "Binding limits are invalid")
+    if len({item["action_id"] for item in members}) != INITIAL_MEMBER_COUNT:
+        raise InitialWaveError("member_inventory_mismatch", "Bundle actions repeat")
+    if bundle.get("aggregate_maximum_commitment_micro_usd") != sum(
+        item["binding"]["commitment_micro_usd"] for item in members
+    ):
+        raise InitialWaveError("aggregate_mismatch", "Bundle commitment is invalid")
+
+
+def validate_initial_wave_binding_bundle_against_wave(
+    bundle: Mapping[str, Any], wave: Mapping[str, Any],
+) -> None:
+    """Validate both public documents and their exact ordered relationship."""
+    validate_initial_wave(wave)
+    validate_initial_wave_binding_bundle(bundle)
+    shared = (
+        "wave_id", "wave_sha256", "run_id", "route_family", "profile_sha256",
+        "preparation_basis_revision", "price_book_version", "member_count",
+        "aggregate_maximum_commitment_micro_usd",
+    )
+    if any(bundle.get(key) != wave.get(key) for key in shared):
+        raise InitialWaveError("wave_mismatch", "Bundle does not bind the prepared wave")
+    for bundle_member, wave_member in zip(
+        bundle["ordered_members"], wave["ordered_members"]
+    ):
+        binding = bundle_member["binding"]
+        compared = {
+            "action_id": bundle_member["action_id"],
+            "pass_id": bundle_member["pass_id"],
+            "pass_number": bundle_member["pass_number"],
+            "binding_sha256": bundle_member["binding_sha256"],
+            "route": binding["route"],
+            "request_sha256": binding["request_sha256"],
+            "model": binding["model"],
+            "service_level": binding["service_level"],
+            "maximum_output_tokens": binding["maximum_output_tokens"],
+            "commitment_micro_usd": binding["commitment_micro_usd"],
+            "price_book_version": binding["price_book_version"],
+        }
+        projected = {key: wave_member[key] for key in compared}
+        if compared != projected:
+            raise InitialWaveError("binding_mismatch", "Bundle member conflicts with wave")
 
 
 def build_initial_wave(

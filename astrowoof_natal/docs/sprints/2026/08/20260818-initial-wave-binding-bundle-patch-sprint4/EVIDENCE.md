@@ -16,6 +16,20 @@
 - [API Agent Slice 0 Review and Response.md](API%20Agent%20Slice%200%20Review%20and%20Response.md)
 - [Authority-inputs wrapper schema](contracts/initial-authoring-wave-authority-inputs.v1.schema.json)
 
+## Slice 1
+
+- [Slice 1 result](results/SLICE%201%20-%20Native%20Publication%20and%20Snapshot%20Integrity.md)
+- Fresh exact and bounded interactive paths publish
+  `initial-authoring-wave-binding-bundle.json` from authoritative complete binding
+  objects, not reconstructed prepared-wave fields.
+- Bundle builder/validator enforces exact fields, canonical digest, action identity,
+  six-member order, aggregate commitment, and complete prepared-wave relationship.
+- Complete snapshot includes the bundle; one-byte mutation fails validation and
+  exact restoration passes.
+- Combined wave/exact/bounded suite: 139 passed in 289.799 seconds.
+- Final focused regression: 5 passed in 4.810 seconds.
+- Provider operations / spend: 0 / USD 0.
+
 Implementation and qualification evidence will be appended slice by slice.
 
 ## Slice 0

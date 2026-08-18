@@ -35,3 +35,17 @@
 - Froze root reader `read_initial_wave_authority_inputs(run_dir)` and CLI operation
   `--initial-wave-inputs`; validation failure of either document or their join
   returns neither.
+
+## 2026-08-18 — Slice 1 complete
+
+- Added shared binding-bundle construction, strict validation, canonical digest,
+  action-identity validation, and prepared-wave cross-validation.
+- Exact and bounded fresh interactive preparation now write one root binding bundle
+  from the same authoritative complete bindings used for native action preparation.
+- The artifact is included in the complete workspace snapshot. Changed bytes fail
+  snapshot validation; restored exact bytes validate again.
+- Documented the publication protocol without claiming cross-file filesystem
+  atomicity. Interrupted pre-snapshot publication exposes no valid checkpoint.
+- Combined wave/exact/bounded suite: 139 passed in 289.799 seconds. Final focused
+  regression: 5 passed in 4.810 seconds.
+- Provider operations and spend: zero.

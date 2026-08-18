@@ -58,7 +58,11 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
 )
-from astrowoof_natal_authoring.initial_wave import build_wave_authorization  # noqa: E402
+from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
+    INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
+    build_wave_authorization,
+    validate_initial_wave_binding_bundle_against_wave,
+)
 from astrowoof_natal_authoring.native_transitions import (  # noqa: E402
     publish_native_execution_result,
 )
@@ -410,6 +414,17 @@ class TestBoundedLifecycle(unittest.TestCase):
             )
             prepared_state = resume_bounded_run(run_dir, provider=provider)
             stored = prepared_state["initial_authoring_wave"]
+            bundle = load_json(run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME)
+            validate_initial_wave_binding_bundle_against_wave(
+                bundle,
+                {key: value for key, value in stored.items()
+                 if key not in {"state", "requests"}},
+            )
+            self.assertEqual(
+                [item["action_id"] for item in stored["ordered_members"]],
+                [item["action_id"] for item in bundle["ordered_members"]],
+            )
+            validate_workspace_snapshot(run_dir, prepared_state)
             self.assertEqual("AWAITING_SPEND_AUTHORIZATION", stored["state"])
             self.assertEqual(6, stored["member_count"])
             self.assertEqual(0, len(transport.calls))
