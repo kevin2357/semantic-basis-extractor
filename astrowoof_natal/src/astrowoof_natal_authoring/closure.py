@@ -2256,6 +2256,14 @@ def update_run_status(state: dict[str, Any]) -> None:
     terminal_transition = state.get("terminal_transition") or {}
     if terminal_transition.get("outcome") == "terminalized":
         state["status"] = terminal_transition["resulting_status"]
+    elif final_states and final_states <= FINAL_SUCCESS_STATES:
+        # Concrete delivery evidence may close a previously reviewed run. The
+        # preservation rule below only blocks weaker pass-derived regressions.
+        state["status"] = (
+            "DELIVERY_COMPLETE_WITH_WARNINGS"
+            if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
+            else "DELIVERY_COMPLETE"
+        )
     elif state.get("status") in {"FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW"}:
         # Final-deck QA is stronger than pass-derived authoring completeness.
         # Once reached, ordinary persistence must not reopen optional stages.
@@ -2266,12 +2274,6 @@ def update_run_status(state: dict[str, Any]) -> None:
         state["status"] = "BUDGET_EXHAUSTED"
     elif "PREPARED" in spend_states:
         state["status"] = "AWAITING_SPEND_AUTHORIZATION"
-    elif final_states and final_states <= FINAL_SUCCESS_STATES:
-        state["status"] = (
-            "DELIVERY_COMPLETE_WITH_WARNINGS"
-            if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
-            else "DELIVERY_COMPLETE"
-        )
     elif "FINAL_QA_FAILED" in final_states:
         state["status"] = "FINAL_QA_FAILED"
     elif "FINAL_QA_WARN" in final_states:
@@ -3134,6 +3136,7 @@ def authorize_exact_interactive_initial_wave(
 def execute_exact_interactive_initial_wave(
     *, state: dict[str, Any], provider: AuthoringProvider,
     run_json: Path, event_emitter: ExecutionEventEmitter | None = None,
+    _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Create six exact Responses concurrently and durably bind each identity."""
     stored = state.get("initial_authoring_wave")
@@ -3149,6 +3152,23 @@ def execute_exact_interactive_initial_wave(
     ]
     routed = openai_provider_for_attempt(provider, 1)
     mutation_lock = threading.Lock()
+
+    def inject(point: str) -> None:
+        if _failure_injector is not None:
+            _failure_injector(point)
+
+    # All six SUBMITTING decisions become durable before any HTTP POST begins.
+    # The barrier action publishes one coherent checkpoint, avoiding six serial
+    # workspace scans while preserving the identity-less provider atomicity gap.
+    pre_post_barrier = threading.Barrier(
+        PASS_COUNT,
+        action=lambda: (
+            inject("before_pre_post_snapshot"),
+            write_workspace_snapshot(run_json.parent),
+            inject("after_pre_post_snapshot"),
+        ),
+        timeout=20.0,
+    )
 
     def action_for(action_id: str) -> dict[str, Any]:
         return next(item for item in state["spend_ledger"]["actions"]
@@ -3184,6 +3204,9 @@ def execute_exact_interactive_initial_wave(
                 state_revision=int(state.get("state_revision") or 0),
             )
             persist_state(run_json, state)
+        inject(f"after_submitting:{action_id}")
+        pre_post_barrier.wait()
+        inject(f"before_provider_create:{action_id}")
         response, attempts = routed.create_response_only(
             payload,
             idempotency_key=hashlib.sha256((
@@ -3191,6 +3214,7 @@ def execute_exact_interactive_initial_wave(
             ).encode("utf-8")).hexdigest(),
             timeout_seconds=float(timeout_seconds),
         )
+        inject(f"after_provider_create_before_identity:{action_id}")
         return InitialWaveProviderCreateResult(
             provider_id=response["id"], metadata={
                 "status": response.get("status"),
@@ -3242,6 +3266,10 @@ def execute_exact_interactive_initial_wave(
                 attempt["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                 state["passes"][member["pass_id"]]["state"] = attempt["state"]
             persist_state(run_json, state)
+            # Returned provider identities are not considered recoverably durable
+            # until the complete native workspace checkpoint includes them.
+            write_workspace_snapshot(run_json.parent)
+            inject(f"after_identity_checkpoint:{member['action_id']}")
 
     result = execute_initial_wave_creates(
         wave, authorization=stored["authorization"],

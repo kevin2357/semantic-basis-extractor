@@ -572,6 +572,19 @@ class TestSemanticClosure(SemanticClosureFixture):
             for record in state["passes"].values():
                 marker = Path(record["attempts"][0]["response_workspace"]).parents[1]
                 self.assertTrue((marker / "openai-background-response.json").is_file())
+            inspection = inspect_lifecycle(
+                root / "run", native_exclusive_access="declared",
+                observed_at="2026-01-01T00:00:00Z",
+            )
+            self.assertEqual(
+                "release_until_due", inspection["execution_capacity"]["disposition"]
+            )
+            self.assertEqual(6, inspection["provider_custody"]["provider_action_count"])
+            self.assertEqual(6, inspection["consumer_authority"]["action_count"])
+            self.assertEqual(
+                set(result["provider_custody_action_ids"]),
+                set(inspection["consumer_authority"]["action_ids"]),
+            )
 
     def test_interactive_request_builder_matches_author_transport_payload(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -627,6 +640,74 @@ class TestSemanticClosure(SemanticClosureFixture):
                     member_authorizations=changed,
                 )
             self.assertEqual(before, state["spend_ledger"])
+
+    def test_exact_wave_crash_after_one_identity_checkpoint_resumes_without_post(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedTransport([
+                {"id": f"resp_crash_{number}", "status": "in_progress"}
+                for number in range(1, 7)
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                transport=transport, max_transport_retries=0,
+                prompt_cache_mode="disabled", require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            prepared = prepare_exact_interactive_initial_wave(
+                state=state, provider=provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            wave = {key: value for key, value in prepared.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    action["binding"] for action in state["spend_ledger"]["actions"]
+                    if action["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"crash-reservation-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="crash-set",
+                issuer="api-test", authorized_at="2026-08-18T12:00:00Z",
+            )
+            authorize_exact_interactive_initial_wave(
+                state=state, run_json=run_json, envelope=envelope,
+                member_authorizations=documents,
+            )
+            injected = False
+
+            def fail_after_first_identity(point: str) -> None:
+                nonlocal injected
+                if point.startswith("after_identity_checkpoint:") and not injected:
+                    injected = True
+                    raise RuntimeError("simulated process loss after durable identity")
+
+            with self.assertRaisesRegex(RuntimeError, "simulated process loss"):
+                execute_exact_interactive_initial_wave(
+                    state=state, provider=provider, run_json=run_json,
+                    _failure_injector=fail_after_first_identity,
+                )
+            crashed = load_json(run_json)
+            validate_workspace_snapshot(root / "run", crashed)
+            self.assertEqual(6, len(transport.calls))
+            self.assertEqual(
+                1,
+                sum(bool((action.get("provider") or {}).get("id"))
+                    for action in crashed["spend_ledger"]["actions"]),
+            )
+
+            # The one durable ID is replayed; the five identity-less SUBMITTING
+            # actions become ambiguous. No provider create is repeated.
+            result = execute_exact_interactive_initial_wave(
+                state=crashed, provider=provider, run_json=run_json,
+            )
+            self.assertEqual("ambiguous_submission", result["outcome"])
+            self.assertEqual(5, len(result["ambiguous_action_ids"]))
+            self.assertEqual(6, len(transport.calls))
+            validate_workspace_snapshot(root / "run", load_json(run_json))
 
     def test_optional_complete_json_stages_consume_reconciled_evidence_without_get(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

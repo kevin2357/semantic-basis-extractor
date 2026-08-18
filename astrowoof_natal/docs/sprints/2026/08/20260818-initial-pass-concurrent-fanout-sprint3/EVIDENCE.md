@@ -180,3 +180,27 @@ Result:
 - Focused parity: 4 passed in 12.288 seconds. Mixed usage: 2 passed in 9.722 seconds.
   Complete Batch-focused suite: 29 passed in 138.277 seconds.
 - Provider operations and spend: 0.
+
+## Slice 6
+
+Result:
+[SLICE 6 - Failure Atomicity and Lifecycle.md](results/SLICE%206%20-%20Failure%20Atomicity%20and%20Lifecycle.md)
+
+- One complete pre-POST snapshot covers all six `SUBMITTING` decisions without
+  serializing six workspace scans ahead of create I/O.
+- Every returned ID receives a serialized ledger/journal/marker mutation followed
+  by a complete snapshot refresh.
+- Exact and bounded crash injection after the first identity checkpoint validates
+  the snapshot, reuses the known ID, classifies five unknown submissions as
+  ambiguous, and proves the provider transport remains at exactly six calls.
+- Zero-through-six known-ID matrix preserves exact provider custody and never
+  converts ambiguity into retry authority.
+- Exact and bounded six-ID lifecycle inspections return `release_until_due`, six
+  custody actions, and six retained consumer-authority actions.
+- Combined wave/bounded/capacity/lifecycle/oracle tests: 99 passed in 104.999
+  seconds. Native transition/event tests: 29 passed in 3.339 seconds. Full exact
+  semantic-closure tests: 90 passed in 172.225 seconds.
+- Final-status precedence regression: all-subject delivery closes a reviewed run;
+  absent delivery evidence, final QA remains monotonic through persistence.
+- Public lifecycle/oracle vocabulary change: none.
+- Provider operations and spend: 0.

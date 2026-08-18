@@ -289,6 +289,36 @@ class TestInitialWave(unittest.TestCase):
             [item["outcome"] for item in result["member_outcomes"]],
         )
 
+    def test_zero_through_six_known_id_matrix_never_releases_known_custody(self) -> None:
+        value = wave()
+        for known_count in range(7):
+            persisted: list[dict] = []
+
+            def submit(member: dict, _timeout: int) -> ProviderCreateResult:
+                if member["pass_number"] <= known_count:
+                    return ProviderCreateResult(f"resp_{member['pass_number']}")
+                raise DefinitelyUnattemptedCreate("create was not attempted")
+
+            result = execute(
+                value,
+                submit=submit,
+                persist_member_outcome=lambda _member, outcome: persisted.append(
+                    dict(outcome)
+                ),
+            )
+            with self.subTest(known_count=known_count):
+                expected = [
+                    f"paid_{number:024x}" for number in range(1, known_count + 1)
+                ]
+                self.assertEqual(expected, result["provider_custody_action_ids"])
+                self.assertEqual(6, len(persisted))
+                self.assertEqual([], result["ambiguous_action_ids"])
+                self.assertEqual(
+                    "detached_provider_pending" if known_count else "awaiting_external_authority",
+                    result["outcome"],
+                )
+                self.assertEqual(known_count < 6, result["local_continuation_required"])
+
     def test_prepare_and_preflight_never_call_provider_or_persistence(self) -> None:
         calls = {"provider": 0, "persist": 0}
         value = wave()

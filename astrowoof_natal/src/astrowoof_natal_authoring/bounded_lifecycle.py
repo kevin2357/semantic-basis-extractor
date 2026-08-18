@@ -39,6 +39,7 @@ from .closure import (
     sha256_file,
     utc_now,
     validate_workspace_snapshot,
+    write_workspace_snapshot,
     write_json_atomic,
     response_output_text,
 )
@@ -1018,6 +1019,7 @@ def _authorize_bounded_interactive_initial_wave(
 def _execute_bounded_interactive_initial_wave(
     state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
     event_emitter: ExecutionEventEmitter | None,
+    failure_injector: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     stored = state["initial_authoring_wave"]
     wave = {key: value for key, value in stored.items()
@@ -1030,6 +1032,20 @@ def _execute_bounded_interactive_initial_wave(
     if not callable(create):
         raise ValueError("Bounded provider cannot create interactive Responses")
     mutation_lock = threading.Lock()
+
+    def inject(point: str) -> None:
+        if failure_injector is not None:
+            failure_injector(point)
+
+    pre_post_barrier = threading.Barrier(
+        6,
+        action=lambda: (
+            inject("before_pre_post_snapshot"),
+            write_workspace_snapshot(run_dir),
+            inject("after_pre_post_snapshot"),
+        ),
+        timeout=20.0,
+    )
 
     def action_for(action_id: str) -> dict[str, Any]:
         return next(item for item in state["spend_ledger"]["actions"]
@@ -1056,10 +1072,14 @@ def _execute_bounded_interactive_initial_wave(
                 state_revision=int(state.get("state_revision") or 0),
             )
             persist_state(run_dir / "run.json", state)
+        inject(f"after_submitting:{member['action_id']}")
+        pre_post_barrier.wait()
+        inject(f"before_provider_create:{member['action_id']}")
         response, attempts = create(
             body=body, idempotency_material=member["action_id"],
             timeout_seconds=float(timeout),
         )
+        inject(f"after_provider_create_before_identity:{member['action_id']}")
         return InitialWaveProviderCreateResult(
             provider_id=response["id"], metadata={
                 "status": response.get("status"),
@@ -1104,6 +1124,8 @@ def _execute_bounded_interactive_initial_wave(
                 attempt["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                 record["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
             persist_state(run_dir / "run.json", state)
+            write_workspace_snapshot(run_dir)
+            inject(f"after_identity_checkpoint:{member['action_id']}")
 
     result = execute_initial_wave_creates(
         wave, authorization=stored["authorization"],
@@ -1217,6 +1239,7 @@ def resume_bounded_run(
                         if state["initial_authoring_wave"]["state"] == "AUTHORIZED":
                             _execute_bounded_interactive_initial_wave(
                                 state, run_dir, provider, event_emitter,
+                                _failure_injector,
                             )
                         return state
                 for pass_id in bounded["pass_ids"]:

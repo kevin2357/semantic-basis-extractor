@@ -168,3 +168,25 @@
   Complete Batch-focused four-route suite: 29 passed in 138.277 seconds.
 - Provider operations and spend: zero. Compile and diff hygiene passed.
 - Paused before Slice 6 failure atomicity, lifecycle, and transition-oracle work.
+
+## 2026-08-18 — Slice 6 complete; awaiting review
+
+- Added one pre-POST barrier checkpoint: all six actions are durably `SUBMITTING`
+  before concurrent provider creates begin.
+- Added complete snapshot publication after every serialized returned-ID commit for
+  exact and bounded interactive waves.
+- Proved a crash after one identity checkpoint resumes with that identity, marks
+  five identity-less submissions ambiguous, and performs no duplicate POST.
+- Added the exhaustive zero-through-six known-ID aggregate custody matrix.
+- Proved six-ID detach releases local capacity until due while retaining all six
+  provider-custody and API consumer-authority action IDs.
+- Kept the existing public lifecycle/oracle vocabulary unchanged and documented the
+  irreducible provider acceptance/identity-persistence atomicity gap.
+- Combined wave/bounded/capacity/lifecycle/oracle suite: 99 passed in 104.999
+  seconds. Native journal/result/receipt and event suite: 29 passed in 3.339
+  seconds. Full exact semantic-closure suite: 90 passed in 172.225 seconds.
+- The full exact suite caught and fixed an over-broad review-status preservation
+  edge: concrete all-subject delivery evidence may close a reviewed run, while
+  generic pass-derived persistence still may not erase final QA.
+- Provider operations and paid spend: zero.
+- Paused before Slice 7 public interfaces and consumer handoff.

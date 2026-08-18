@@ -444,6 +444,81 @@ class TestBoundedLifecycle(unittest.TestCase):
                 {action["provider"]["id"]
                  for action in detached["spend_ledger"]["actions"]},
             )
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared",
+                observed_at="2026-01-01T00:00:00Z",
+            )
+            self.assertEqual(
+                "release_until_due", inspection["execution_capacity"]["disposition"]
+            )
+            self.assertEqual(6, inspection["provider_custody"]["provider_action_count"])
+            self.assertEqual(6, inspection["consumer_authority"]["action_count"])
+
+    def test_bounded_wave_identity_checkpoint_crash_resumes_without_duplicate_create(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            transport = InitialWaveTransport()
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", model="gpt-5.6-luna",
+                maximum_output_tokens=1000, transport=transport,
+                max_transport_retries=0,
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "spend_policy": spend_policy(),
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                },
+            )
+            prepared = resume_bounded_run(run_dir, provider=provider)
+            stored = prepared["initial_authoring_wave"]
+            wave = {key: value for key, value in stored.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    action["binding"] for action in prepared["spend_ledger"]["actions"]
+                    if action["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"bounded-crash-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="bounded-crash-set",
+                issuer="api-test", authorized_at="2026-08-18T14:00:00Z",
+            )
+            injected = False
+
+            def fail_after_first_identity(point: str) -> None:
+                nonlocal injected
+                if point.startswith("after_identity_checkpoint:") and not injected:
+                    injected = True
+                    raise RuntimeError("bounded identity checkpoint crash")
+
+            with self.assertRaisesRegex(RuntimeError, "bounded identity checkpoint crash"):
+                resume_bounded_run(
+                    run_dir, provider=provider, authorizations=documents,
+                    initial_wave_authorization=envelope,
+                    _failure_injector=fail_after_first_identity,
+                )
+            crashed = load_json(run_dir / "run.json")
+            validate_workspace_snapshot(run_dir, crashed)
+            self.assertEqual(6, len(transport.calls))
+            self.assertEqual(
+                1,
+                sum(bool((action.get("provider") or {}).get("id"))
+                    for action in crashed["spend_ledger"]["actions"]),
+            )
+            resumed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("FAILED", resumed["initial_authoring_wave"]["state"])
+            self.assertEqual(5, len(
+                resumed["initial_authoring_wave"]["result"]["ambiguous_action_ids"]
+            ))
+            self.assertEqual(6, len(transport.calls))
+            validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
 
     def test_final_qa_review_status_survives_generic_persistence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
