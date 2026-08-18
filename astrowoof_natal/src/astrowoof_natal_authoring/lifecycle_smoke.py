@@ -101,6 +101,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "fixtures/lifecycle/reconciliation-policy.v0.1.json",
         "fixtures/lifecycle/reconciliation-cycle-not-due.v0.1.json",
         "fixtures/lifecycle/route-parity-transition-oracle.v1.json",
+        "fixtures/lifecycle/route-parity-transition-oracle.v2.json",
+        "fixtures/lifecycle/bounded-route-parity-traces.v1.json",
         "fixtures/native_transition/review-terminal-receipt.v0.1.json",
         "fixtures/native_transition/consumer-ingestion-cases.v0.1.json",
     ):
@@ -202,6 +204,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
             latest_native_transition_result,
             read_native_transition_result,
             reconcile_authoring_provider_cycle,
+            read_bounded_route_parity_traces,
+            read_route_parity_oracle,
         )
         checks["public_reconciliation_surface"] = bool(
             ProviderReconciliationAdapters
@@ -212,11 +216,16 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
             and callable(read_native_transition_result)
             and callable(latest_native_transition_result)
         )
+        checks["route_parity_resources"] = bool(
+            read_route_parity_oracle()["scenarios"]
+            and read_bounded_route_parity_traces()["traces"]
+        )
     except Exception as exc:
         errors.append(f"public reconciliation surface unavailable: {exc}")
     expected = {
         "public_reconciliation_surface": True,
         "public_native_result_surface": True,
+        "route_parity_resources": True,
         "prepared_eligible": True,
         "denial_applied": True,
         "denial_disposition": "DENIED_PROVIDERLESS",

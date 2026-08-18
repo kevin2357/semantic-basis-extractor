@@ -1,0 +1,30 @@
+{
+  "schema_version": "astrowoof.bounded_route_parity_consumer_review.v1",
+  "release_candidate": "SBE post-0.4.5 working tree",
+  "public_vocabulary_change": false,
+  "resources": [
+    {
+      "contract": "astrowoof.route_parity_transition_oracle.v2",
+      "installed_path": "fixtures/lifecycle/route-parity-transition-oracle.v2.json",
+      "sha256": "c355a3c47b69fcbc78622df97b89572172133253f34d0342ae18e609e1e4d97d"
+    },
+    {
+      "contract": "astrowoof.bounded_route_parity_traces.v1",
+      "installed_path": "fixtures/lifecycle/bounded-route-parity-traces.v1.json",
+      "sha256": "02d8aba73028c144c97e8c806cd0f8b3505fe4ca3410284d4bc8e2d4c33f0268"
+    }
+  ],
+  "required_api_adoption_traces": [
+    "interactive_multi_pass_and_retry",
+    "batch_pending_not_due_reclaim_delivery",
+    "batch_partial_member_pass_local_retry",
+    "batch_usage_unavailable_after_retrieval",
+    "batch_ambiguity_review",
+    "batch_terminal_provider_failure"
+  ],
+  "authority": {
+    "native_run_truth": "SBE lifecycle artifacts and immutable native result/receipt",
+    "trace_bundle": "consumer_adoption_evidence_only",
+    "api_state_and_global_authority": "AstroWoof API"
+  }
+}

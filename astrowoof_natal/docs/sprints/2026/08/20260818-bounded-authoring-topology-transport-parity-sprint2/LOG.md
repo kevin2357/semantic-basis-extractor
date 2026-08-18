@@ -232,3 +232,29 @@
 - Provider operations: 0. Spend: USD 0.
 - Slice 6 is complete and paused for gate review before public lifecycle fixtures
   and consumer handoff work.
+
+## 2026-08-18 — Slice 7 public lifecycle, fixtures, oracle, and handoff
+
+- Promoted the reviewed `astrowoof.route_parity_transition_oracle.v2` from sprint
+  proposal to a packaged installed resource while preserving immutable v1 refusal
+  evidence.
+- Added `astrowoof.bounded_route_parity_traces.v1` with route-specific interactive
+  multi-pass/retry and Batch pending/`not_due`/reclaim, partial-member retry,
+  unavailable-usage, ambiguity, provider-failure, and delivery trajectories.
+- Added strict public Python readers/validators and the provider-free
+  `astrowoof-route-parity-evidence` CLI. Unknown fields, versions, vocabulary,
+  duplicate scenario names, and unordered trace steps fail closed.
+- Added the two contracts to the installed contract catalog and lifecycle installed
+  smoke, then pinned their SHA-256 identities in a compact API consumer-review
+  manifest.
+- Published the consumer handoff covering request parity, paid-action cardinality,
+  capacity/custody/consumer-authority separation, billing-unavailable handling,
+  provider atomicity gaps, v1 migration refusal, optional interactive stages, and
+  API-owned global authority.
+- Desktop lifecycle/bounded/native-transition gate: 132 tests passed in 156.449
+  seconds with 6 optional `jsonschema` skips in the lean runtime.
+- Python 3.11 Linux read-only-container gate: 132 tests passed in 19.832 seconds with
+  the same 6 optional skips.
+- Provider operations: 0. Spend: USD 0.
+- Slice 7 is complete and paused for API consumer review before installed release
+  qualification.

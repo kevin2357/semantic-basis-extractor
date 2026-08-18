@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slices 0-6 complete; Slice 6 awaiting gate review
+Status: Slices 0-7 complete; Slice 7 awaiting API consumer review
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -170,5 +170,31 @@ Verification:
 - Python 3.11 Linux with a read-only repository mount: the same 135 tests passed in
   31.004 seconds; and
 - `git diff --check` passes with expected checkout line-ending notices only.
+
+Provider operations: 0. Spend: USD 0.
+
+## Slice 7
+
+Result: [results/SLICE 7 - Public Lifecycle Fixtures Oracle and Handoff.md](results/SLICE%207%20-%20Public%20Lifecycle%20Fixtures%20Oracle%20and%20Handoff.md)
+
+Consumer handoff: [BOUNDED ROUTE PARITY CONSUMER HANDOFF.md](BOUNDED%20ROUTE%20PARITY%20CONSUMER%20HANDOFF.md)
+
+Review manifest: [fixtures/bounded-route-parity-slice7-consumer-review.json](fixtures/bounded-route-parity-slice7-consumer-review.json)
+
+Verification:
+
+- strict installed Python readers and provider-free CLI export reject unknown
+  schemas, fields, vocabulary values, duplicate names, and unordered trace steps;
+- packaged route-parity oracle v2 admits bounded Batch without changing the public
+  lifecycle vocabulary and preserves legacy v1 as historical refusal evidence;
+- route-specific traces cover interactive multi-pass/retry; Batch pending,
+  `not_due`, reclaim, partial-member retry, unavailable usage, ambiguity, provider
+  failure, and delivery;
+- consumer-review manifest pins both packaged resources by SHA-256;
+- desktop lifecycle/bounded/native-transition gate: 132 tests passed in 156.449
+  seconds (6 optional `jsonschema` tests skipped in the lean runtime);
+- Python 3.11 Linux read-only-container gate: 132 tests passed in 19.832 seconds
+  with the same 6 optional skips; and
+- lifecycle installed-resource smoke passes with the v2 oracle and trace readers.
 
 Provider operations: 0. Spend: USD 0.

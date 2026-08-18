@@ -20,6 +20,9 @@ FIXTURES = ROOT / "docs" / "sprints" / "2026" / "08" / (
 PACKAGED_ORACLE = ROOT / "src" / "astrowoof_natal_authoring" / "resources" / (
     "fixtures/lifecycle/route-parity-transition-oracle.v1.json"
 )
+PACKAGED_ORACLE_V2 = ROOT / "src" / "astrowoof_natal_authoring" / "resources" / (
+    "fixtures/lifecycle/route-parity-transition-oracle.v2.json"
+)
 
 
 def load(name: str) -> dict:
@@ -156,6 +159,11 @@ class TestBoundedTopologyContractProposal(unittest.TestCase):
         )
         self.assertEqual("pre_native_failure", pre_native["reason_code"])
         self.assertFalse(pre_native["provider_evidence_present"])
+        admitted = json.loads(PACKAGED_ORACLE_V2.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {item["name"] for item in v2["scenarios"]},
+            {item["name"] for item in admitted["scenarios"]},
+        )
 
 
 if __name__ == "__main__":

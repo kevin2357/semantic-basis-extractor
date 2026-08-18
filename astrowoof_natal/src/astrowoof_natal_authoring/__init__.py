@@ -17,6 +17,12 @@ from .native_transitions import (  # noqa: E402
     read_native_transition_result,
     validate_transition_journal,
 )
+from .route_parity import (  # noqa: E402
+    read_bounded_route_parity_traces,
+    read_route_parity_oracle,
+    validate_bounded_route_traces,
+    validate_route_parity_oracle,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -24,6 +30,10 @@ __all__ = [
     "__version__",
     "latest_native_transition_result",
     "read_native_transition_result",
+    "read_bounded_route_parity_traces",
+    "read_route_parity_oracle",
     "reconcile_authoring_provider_cycle",
+    "validate_bounded_route_traces",
+    "validate_route_parity_oracle",
     "validate_transition_journal",
 ]

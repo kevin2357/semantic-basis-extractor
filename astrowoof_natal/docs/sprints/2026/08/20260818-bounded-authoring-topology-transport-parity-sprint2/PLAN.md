@@ -1,7 +1,7 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Plan
 
 Date: 2026-08-18
-Status: in progress; Slices 0-6 complete, Slice 6 awaiting gate review
+Status: in progress; Slices 0-7 complete, Slice 7 awaiting API consumer review
 Starting release: SBE 0.4.5
 
 ## Purpose

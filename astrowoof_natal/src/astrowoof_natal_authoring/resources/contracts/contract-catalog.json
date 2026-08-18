@@ -38,6 +38,8 @@
     "execution_event": "sbe.execution_event.v1",
     "execution_event_payload_catalog": "sbe.execution_event_payload_catalog.v1",
     "command_result": "sbe.command_result.v1",
+    "route_parity_transition_oracle": "astrowoof.route_parity_transition_oracle.v2",
+    "bounded_route_parity_traces": "astrowoof.bounded_route_parity_traces.v1",
     "bounded_natal_input_admission": "astrowoof.bounded_natal.input_admission.v1",
     "bounded_natal_candidate_policy": "astrowoof.bounded_natal.candidate_policy.v1",
     "bounded_natal_editorial_utility": "astrowoof.bounded_natal.editorial_utility.v1",

@@ -1,0 +1,36 @@
+{
+  "schema_version": "astrowoof.bounded_route_parity_traces.v1",
+  "authority": "consumer_adoption_evidence_only",
+  "traces": [
+    {"name":"interactive_multi_pass_and_retry","route_family":"bounded_natal","provider_operation_kind":"response","steps":[
+      {"sequence":1,"outcome":"awaiting_external_authority","capacity_disposition":"await_external_authority","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"spend_authorization_required"},
+      {"sequence":2,"outcome":"detached_provider_pending","capacity_disposition":"release_until_due","retain_provider_custody":true,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"known_provider_work_pending"},
+      {"sequence":3,"outcome":"progressed_local","capacity_disposition":"continue_local_cycle","retain_provider_custody":false,"retain_consumer_authority":false,"cost_disposition":"provider_usage_reported","reason_code":"local_work_ready"},
+      {"sequence":4,"outcome":"awaiting_external_authority","capacity_disposition":"await_external_authority","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"spend_authorization_required"},
+      {"sequence":5,"outcome":"delivery_complete","capacity_disposition":"terminal","retain_provider_custody":false,"retain_consumer_authority":false,"cost_disposition":"provider_usage_reported","reason_code":"terminal_native_outcome"}
+    ]},
+    {"name":"batch_pending_not_due_reclaim_delivery","route_family":"bounded_natal","provider_operation_kind":"batch","steps":[
+      {"sequence":1,"outcome":"detached_provider_pending","capacity_disposition":"release_until_due","retain_provider_custody":true,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"known_provider_work_pending"},
+      {"sequence":2,"outcome":"not_due","capacity_disposition":"release_until_due","retain_provider_custody":true,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"provider_reconciliation_not_due"},
+      {"sequence":3,"outcome":"progressed_local","capacity_disposition":"continue_local_cycle","retain_provider_custody":true,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"provider_reconciliation_observed"},
+      {"sequence":4,"outcome":"delivery_complete","capacity_disposition":"terminal","retain_provider_custody":false,"retain_consumer_authority":false,"cost_disposition":"provider_usage_reported","reason_code":"terminal_native_outcome"}
+    ]},
+    {"name":"batch_partial_member_pass_local_retry","route_family":"bounded_natal","provider_operation_kind":"batch","steps":[
+      {"sequence":1,"outcome":"progressed_local","capacity_disposition":"continue_local_cycle","retain_provider_custody":false,"retain_consumer_authority":false,"cost_disposition":"provider_usage_reported","reason_code":"local_work_ready"},
+      {"sequence":2,"outcome":"awaiting_external_authority","capacity_disposition":"await_external_authority","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"spend_authorization_required"},
+      {"sequence":3,"outcome":"detached_provider_pending","capacity_disposition":"release_until_due","retain_provider_custody":true,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"known_provider_work_pending"},
+      {"sequence":4,"outcome":"delivery_complete","capacity_disposition":"terminal","retain_provider_custody":false,"retain_consumer_authority":false,"cost_disposition":"provider_usage_reported","reason_code":"terminal_native_outcome"}
+    ]},
+    {"name":"batch_usage_unavailable_after_retrieval","route_family":"bounded_natal","provider_operation_kind":"batch","steps":[
+      {"sequence":1,"outcome":"progressed_local","capacity_disposition":"continue_local_cycle","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"provider_usage_unavailable_billing_reconciliation_pending","reason_code":"provider_reconciliation_observed"},
+      {"sequence":2,"outcome":"delivery_complete","capacity_disposition":"terminal","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"provider_usage_unavailable_billing_reconciliation_pending","reason_code":"terminal_native_outcome"}
+    ]},
+    {"name":"batch_ambiguity_review","route_family":"bounded_natal","provider_operation_kind":"batch","steps":[
+      {"sequence":1,"outcome":"ambiguous_submission","capacity_disposition":"retain_for_review","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"provider_submission_ambiguous"}
+    ]},
+    {"name":"batch_terminal_provider_failure","route_family":"bounded_natal","provider_operation_kind":"batch","steps":[
+      {"sequence":1,"outcome":"provider_failed","capacity_disposition":"continue_local_cycle","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"provider_usage_unavailable_billing_reconciliation_pending","reason_code":"provider_reconciliation_observed"},
+      {"sequence":2,"outcome":"awaiting_external_authority","capacity_disposition":"await_external_authority","retain_provider_custody":false,"retain_consumer_authority":true,"cost_disposition":"not_applicable_provider_pending","reason_code":"spend_authorization_required"}
+    ]}
+  ]
+}
