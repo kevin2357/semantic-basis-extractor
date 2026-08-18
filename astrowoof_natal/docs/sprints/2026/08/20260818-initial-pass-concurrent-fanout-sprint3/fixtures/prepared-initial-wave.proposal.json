@@ -1,0 +1,30 @@
+{
+  "schema_version": "astrowoof.initial_authoring_wave.v1",
+  "wave_id": "wave_33f8a338470960bb887e4aa6",
+  "wave_sha256": "33f8a338470960bb887e4aa6ad1115cfbf9d2e4d6383ccecf86c5b5731567d7a",
+  "run_id": "run_contract_fixture_001",
+  "route_family": "exact_natal",
+  "route_contract": "astrowoof.semantic_closure_run.v0.9",
+  "assignment_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "preparation_basis_revision": 7,
+  "price_book_version": "openai-public-2026-08-07.v1",
+  "member_count": 6,
+  "ordered_members": [
+    {"action_id":"paid_000000000000000000000001","binding_sha256":"1111111111111111111111111111111111111111111111111111111111111111","pass_id":"kevin_1","pass_number":1,"attempt":1,"stage":"authoring_initial","route":"kevin_1:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700001,"price_book_version":"openai-public-2026-08-07.v1"},
+    {"action_id":"paid_000000000000000000000002","binding_sha256":"2222222222222222222222222222222222222222222222222222222222222222","pass_id":"kevin_2","pass_number":2,"attempt":1,"stage":"authoring_initial","route":"kevin_2:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700002,"price_book_version":"openai-public-2026-08-07.v1"},
+    {"action_id":"paid_000000000000000000000003","binding_sha256":"3333333333333333333333333333333333333333333333333333333333333333","pass_id":"kevin_3","pass_number":3,"attempt":1,"stage":"authoring_initial","route":"kevin_3:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700003,"price_book_version":"openai-public-2026-08-07.v1"},
+    {"action_id":"paid_000000000000000000000004","binding_sha256":"4444444444444444444444444444444444444444444444444444444444444444","pass_id":"kevin_4","pass_number":4,"attempt":1,"stage":"authoring_initial","route":"kevin_4:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700004,"price_book_version":"openai-public-2026-08-07.v1"},
+    {"action_id":"paid_000000000000000000000005","binding_sha256":"5555555555555555555555555555555555555555555555555555555555555555","pass_id":"kevin_5","pass_number":5,"attempt":1,"stage":"authoring_initial","route":"kevin_5:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700005,"price_book_version":"openai-public-2026-08-07.v1"},
+    {"action_id":"paid_000000000000000000000006","binding_sha256":"6666666666666666666666666666666666666666666666666666666666666666","pass_id":"kevin_6","pass_number":6,"attempt":1,"stage":"authoring_initial","route":"kevin_6:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa6","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700006,"price_book_version":"openai-public-2026-08-07.v1"}
+  ],
+  "aggregate_maximum_commitment_micro_usd": 4200021,
+  "timing": {
+    "maximum_concurrent_creates": 6,
+    "provider_create_timeout_seconds": 15,
+    "provider_io_wall_clock_limit_seconds": 20,
+    "maximum_due_retrievals_per_cycle": 4,
+    "maximum_parallel_retrievals": 4,
+    "cache_policy": "no_serial_cache_warmer"
+  }
+}

@@ -80,3 +80,23 @@ API review approved the Slice 0 findings with three Slice 1 emphases:
 The Slice 0 report now also states precisely that per-ID ledger/journal durability
 is immediate and serialized; only aggregate wave publication waits for all create
 tasks to unwind.
+
+## Slice 1
+
+Full proposal:
+[INITIAL WAVE CONTRACT PROPOSAL.md](INITIAL%20WAVE%20CONTRACT%20PROPOSAL.md)
+
+Result:
+[SLICE 1 - Initial Wave Contract.md](results/SLICE%201%20-%20Initial%20Wave%20Contract.md)
+
+- Proposal identities: prepared wave v1, authorization envelope v1, result v1.
+- Fixed create controls: 6 parallel, 15 seconds each, 20-second provider-I/O wave.
+- Fixed retrieval controls: 4 due and 4 parallel per cycle.
+- Cache policy: `no_serial_cache_warmer`.
+- Exact complete API reservation envelope plus six member authorizations required
+  before any create/consumption.
+- Per-ID ledger/journal persistence is immediate and serialized.
+- Batch remains one round action/reservation with six members.
+- Strict proposal tests: 8 passed in 0.026 seconds.
+- Related lifecycle/route contract tests: 61 passed in 5.889 seconds.
+- Provider operations: 0.

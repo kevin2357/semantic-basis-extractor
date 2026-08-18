@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.initial_authoring_wave_contract_proposal.v1",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "member": {
+      "type": "object",
+      "required": ["action_id", "binding_sha256", "pass_id", "pass_number", "attempt", "stage", "route", "request_sha256", "model", "service_level", "maximum_output_tokens", "commitment_micro_usd", "price_book_version"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding_sha256": {"$ref": "#/$defs/sha256"},
+        "pass_id": {"type": "string", "minLength": 1},
+        "pass_number": {"type": "integer", "minimum": 1, "maximum": 6},
+        "attempt": {"const": 1},
+        "stage": {"const": "authoring_initial"},
+        "route": {"type": "string", "minLength": 1},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "model": {"type": "string", "minLength": 1},
+        "service_level": {"const": "interactive"},
+        "maximum_output_tokens": {"type": "integer", "minimum": 1},
+        "commitment_micro_usd": {"type": "integer", "minimum": 1},
+        "price_book_version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "timing": {
+      "type": "object",
+      "required": ["maximum_concurrent_creates", "provider_create_timeout_seconds", "provider_io_wall_clock_limit_seconds", "maximum_due_retrievals_per_cycle", "maximum_parallel_retrievals", "cache_policy"],
+      "properties": {
+        "maximum_concurrent_creates": {"const": 6},
+        "provider_create_timeout_seconds": {"const": 15},
+        "provider_io_wall_clock_limit_seconds": {"const": 20},
+        "maximum_due_retrievals_per_cycle": {"const": 4},
+        "maximum_parallel_retrievals": {"const": 4},
+        "cache_policy": {"const": "no_serial_cache_warmer"}
+      },
+      "additionalProperties": false
+    },
+    "prepared_wave": {
+      "type": "object",
+      "required": ["schema_version", "wave_id", "wave_sha256", "run_id", "route_family", "route_contract", "assignment_sha256", "profile_sha256", "preparation_basis_revision", "price_book_version", "member_count", "ordered_members", "aggregate_maximum_commitment_micro_usd", "timing"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.initial_authoring_wave.v1"},
+        "wave_id": {"type": "string", "pattern": "^wave_[0-9a-f]{24}$"},
+        "wave_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "route_contract": {"type": "string", "minLength": 1},
+        "assignment_sha256": {"$ref": "#/$defs/sha256"},
+        "profile_sha256": {"$ref": "#/$defs/sha256"},
+        "preparation_basis_revision": {"type": "integer", "minimum": 0},
+        "price_book_version": {"type": "string", "minLength": 1},
+        "member_count": {"const": 6},
+        "ordered_members": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/member"}},
+        "aggregate_maximum_commitment_micro_usd": {"type": "integer", "minimum": 6},
+        "timing": {"$ref": "#/$defs/timing"}
+      },
+      "additionalProperties": false
+    },
+    "authorization_member": {
+      "type": "object",
+      "required": ["action_id", "binding_sha256", "member_authorization_sha256"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "binding_sha256": {"$ref": "#/$defs/sha256"},
+        "member_authorization_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["schema_version", "authorization_sha256", "wave_id", "wave_sha256", "run_id", "route_family", "profile_sha256", "preparation_basis_revision", "price_book_version", "member_count", "ordered_members", "aggregate_maximum_commitment_micro_usd", "reservation_set_reference", "issuer", "authorized_at"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.initial_authoring_wave_authorization.v1"},
+        "authorization_sha256": {"$ref": "#/$defs/sha256"},
+        "wave_id": {"type": "string", "pattern": "^wave_[0-9a-f]{24}$"},
+        "wave_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "profile_sha256": {"$ref": "#/$defs/sha256"},
+        "preparation_basis_revision": {"type": "integer", "minimum": 0},
+        "price_book_version": {"type": "string", "minLength": 1},
+        "member_count": {"const": 6},
+        "ordered_members": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/authorization_member"}},
+        "aggregate_maximum_commitment_micro_usd": {"type": "integer", "minimum": 6},
+        "reservation_set_reference": {"type": "string", "minLength": 1, "maxLength": 256},
+        "issuer": {"type": "string", "minLength": 1, "maxLength": 128},
+        "authorized_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/prepared_wave"},
+    {"$ref": "#/$defs/authorization"}
+  ]
+}

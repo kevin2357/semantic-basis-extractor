@@ -1,7 +1,7 @@
 # Initial Authoring Pass Concurrent Fan-Out Sprint 3 Plan
 
 Date: 2026-08-18
-Status: in progress; Slice 0 complete and awaiting gate review
+Status: in progress; Slice 1 contract complete and awaiting API gate review
 Starting release: SBE 0.4.6
 
 ## Purpose

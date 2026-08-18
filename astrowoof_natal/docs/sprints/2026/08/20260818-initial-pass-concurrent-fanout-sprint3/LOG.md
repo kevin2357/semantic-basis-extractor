@@ -65,3 +65,23 @@
   waits for all create tasks to unwind.
 - Reconfirmed the complete-wave API reservation/SBE authorization boundary and the
   bounded final-QA/duplicate-admission scope.
+
+## 2026-08-18 — Slice 1 contract complete; awaiting review
+
+- Published the route-neutral prepared-wave, API authorization-envelope, and wave-
+  result proposal identities.
+- Froze six creates, 15-second per-create timeout, 20-second provider-I/O wave
+  bound, four-at-a-time retrieval, and `no_serial_cache_warmer`.
+- Defined one locked native preparation mutation against a shared basis revision and
+  zero-create/zero-consumption complete-authority preflight.
+- Defined immediate serialized per-ID durability and aggregate publication only
+  after all create tasks close.
+- Defined provider-bound, authorized-unstarted, ambiguous, and definitively refused
+  member outcomes without claiming provider atomicity.
+- Preserved existing lifecycle vocabulary, inspection v0.3, and one-reservation
+  Batch authority.
+- Added strict proposal schema, content-addressed canonical fixtures, and cross-
+  document semantic validation tests.
+- Strict proposal tests: 8 passed. Related lifecycle/route contract tests: 61
+  passed. Provider operations and paid spend: zero.
+- Paused before Slice 2 runtime implementation for Kevin/API review.
