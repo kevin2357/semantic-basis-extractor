@@ -212,6 +212,16 @@ terminalizes as budget exhaustion with a distinct cause; product cancellation or
 policy refusal remains a distinct policy stop. Optional profile-driven skipping does
 not terminalize the run.
 
+Preserve two denial lists when a successful ordered batch causes a run transition:
+
+- `denied_action_ids` is the complete ordered denial history for audit and
+  diagnostics; and
+- `required_action_ids` is the exact causal subset whose requiredness triggered
+  terminalization.
+
+Do not infer causality from the broader history or omit optional members merely
+because they did not determine the run-level disposition.
+
 ## Preserve workspace and publication integrity
 
 - Restore a resumable workspace at the stable logical absolute root recorded by the
@@ -437,8 +447,20 @@ Use this sequence unless a documented exception is reviewed:
 8. pin the exact SBE wheel URL and SHA-256 in the API;
 9. build a worker image whose digest, SBE wheel, upstream wheels, and generation
    profile are mutually compatible;
-10. run API-owned provider-free operational qualification; and
-11. authorize a bounded paid cohort only if the change needs live confirmation.
+10. update the API and every relevant worker role to the exact same compatibility
+    identities and selected profile configuration;
+11. deploy and attest each live runtime independently, including its image digest,
+    installed wheels, compatibility identities, and selected configuration;
+12. register a fresh immutable generation-profile ID for that exact combination;
+13. prove a newly created run binds the fresh profile ID and manifest rather than
+    an older still-valid configuration;
+14. run API-owned provider-free operational qualification; and
+15. authorize a bounded paid cohort only if the change needs live confirmation.
+
+Treat artifact publication, image deployment, runtime configuration selection,
+generation-profile registration, and new-run profile binding as separate evidence
+gates. A correctly pinned wheel and digest-pinned image do not prove that a live
+worker selected the intended profile.
 
 Do not hold an SBE release hostage to an API-owned operational claim when both sides
 have explicitly accepted that SBE's artifact boundary is complete. Conversely, do
@@ -478,6 +500,9 @@ Before calling the work complete:
 - update API contracts, transition oracle, runbook, and worker compatibility pins;
 - record exact source commits, schemas, fixture hashes, wheel/hash, image digest,
   test counts, platform versions, provider count, spend, and known limitations;
+- record the selected compatibility identities and configuration for every relevant
+  API/worker runtime, the fresh immutable generation-profile ID, and evidence that
+  a newly created run bound that exact profile;
 - state separately which SBE-native and API-operational claims passed;
 - preserve any pending API or product follow-up rather than implying it disappeared;
 - leave both repositories free of qualification trees and unrelated edits; and
