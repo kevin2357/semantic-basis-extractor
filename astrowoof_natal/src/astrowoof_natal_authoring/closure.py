@@ -3939,6 +3939,7 @@ def author_pending_passes_batch(
                 "requested_model": request["model"],
                 "reasoning_effort": request["reasoning_effort"],
                 "usage": usage,
+                "provider_usage_reported": isinstance(response.get("usage"), dict),
                 "estimated_cost": batch_estimated_cost(request["model"], usage),
                 "prompt_layout": request["prompt_layout"],
             }
@@ -4004,6 +4005,13 @@ def author_pending_passes_batch(
         resumable["state"] = "INGESTED"
         resumable["finished_at"] = utc_now()
         if spend_controller is not None:
+            usage_complete = all(
+                bool((
+                    state["passes"][request["pass_id"]]["attempts"]
+                    [request["attempt_number"] - 1].get("provider_metadata") or {}
+                ).get("provider_usage_reported"))
+                for request in resumable["requests"]
+            )
             aggregate_usage = {
                 key: sum(
                     int(
@@ -4032,10 +4040,22 @@ def author_pending_passes_batch(
                 )
                 for request in resumable["requests"]
             )
-            spend_controller.settle_active({
-                "usage": aggregate_usage,
-                "estimated_cost": {"estimated_amount": aggregate_cost},
-            })
+            if usage_complete:
+                resumable["cost_disposition"] = "provider_usage_reported"
+                spend_controller.settle_active({
+                    "usage": aggregate_usage,
+                    "estimated_cost": {"estimated_amount": aggregate_cost},
+                })
+            else:
+                resumable["cost_disposition"] = (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                )
+                action = spend_controller.active_action()
+                action["reported"] = {
+                    "usage": None, "estimated_micro_usd": None,
+                    "cost_disposition": resumable["cost_disposition"],
+                }
+                action["state"] = "REPORTED"
         save_state(run_json, state)
         if reconciliation_only:
             return False

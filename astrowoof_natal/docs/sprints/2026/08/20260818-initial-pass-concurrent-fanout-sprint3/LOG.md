@@ -148,3 +148,23 @@
   seconds. Focused final assertions: 4 passed.
 - Provider operations and spend: zero. Compile and diff hygiene passed.
 - Paused before Slice 5 Batch compatibility/non-regression.
+
+## 2026-08-18 — Slice 5 complete; awaiting review
+
+- Proved exact and bounded Batch still use one paid round action/API reservation
+  containing six logical initial members; neither inherits interactive wave state or
+  six-reservation authority.
+- Reconfirmed route-local interactive/Batch logical-request parity after only the
+  documented provider envelope/background normalization.
+- Preserved partial-member failure, pass-local retry, terminal provider failure,
+  detach/not-due/reclaim, identity conflict, retrieval-only replay, and final
+  assembly behavior.
+- Found and corrected exact Batch's mixed-usage asymmetry: one member without usage
+  can no longer be normalized into a partial aggregate settlement.
+- Exact and bounded Batch now both retain consumer financial authority with
+  `provider_usage_unavailable_billing_reconciliation_pending` and a null reported
+  amount until API-owned reconciliation.
+- Focused authority/request parity: 4 passed. Mixed-usage parity: 2 passed.
+  Complete Batch-focused four-route suite: 29 passed in 138.277 seconds.
+- Provider operations and spend: zero. Compile and diff hygiene passed.
+- Paused before Slice 6 failure atomicity, lifecycle, and transition-oracle work.

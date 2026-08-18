@@ -160,3 +160,23 @@ Result:
 - Combined bounded/provider-pending/lifecycle suite: 119 passed in 118.177 seconds.
   Focused expanded assertions: 4 passed in 2.698 seconds.
 - Provider operations and spend: 0.
+
+## Slice 5
+
+Result:
+[SLICE 5 - Batch Compatibility.md](results/SLICE%205%20-%20Batch%20Compatibility.md)
+
+- Exact Batch: one paid round action/reservation, six initial logical members, no
+  interactive-wave state.
+- Bounded Batch: one paid round action/reservation, six initial logical members, no
+  interactive-wave state.
+- Route-local interactive/Batch request parity remains exact after documented
+  transport normalization.
+- Mixed or missing member usage cannot settle a partial aggregate: billing remains
+  pending, the reported amount is null, retrieval custody may end, and consumer
+  financial authority remains retained.
+- Partial/error members, pass-local retries, terminal failures, conflicts,
+  detach/not-due/reclaim, replay, and final assembly remain covered.
+- Focused parity: 4 passed in 12.288 seconds. Mixed usage: 2 passed in 9.722 seconds.
+  Complete Batch-focused suite: 29 passed in 138.277 seconds.
+- Provider operations and spend: 0.

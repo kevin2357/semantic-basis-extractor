@@ -821,6 +821,8 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual("DELIVERY_COMPLETE", state["status"])
             actions = state["spend_ledger"]["actions"]
             self.assertEqual(1, len(actions))
+            self.assertNotIn("initial_authoring_wave", state)
+            self.assertEqual(6, state["batch_service"]["rounds"][0]["member_count"])
             binding = actions[0]["binding"]
             self.assertEqual("batch", binding["service_level"])
             self.assertEqual(6000, binding["maximum_output_tokens"])

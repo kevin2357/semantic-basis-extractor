@@ -224,6 +224,7 @@ class ScriptedBatchTransport:
         duplicate_first_output: bool = False,
         unknown_output: bool = False,
         malformed_output: bool = False,
+        missing_usage_member_index: int | None = None,
         retrieval_error: bool = False,
         download_error: bool = False,
     ) -> None:
@@ -234,6 +235,7 @@ class ScriptedBatchTransport:
         self.duplicate_first_output = duplicate_first_output
         self.unknown_output = unknown_output
         self.malformed_output = malformed_output
+        self.missing_usage_member_index = missing_usage_member_index
         self.retrieval_error = retrieval_error
         self.download_error = download_error
         self.lines: list[dict] = []
@@ -290,13 +292,16 @@ class ScriptedBatchTransport:
                         field=field,
                         occurrence=ordinal,
                     )
+            body = completed_response(
+                authored, response_id=f"resp_batch_{index}"
+            )
+            if index == self.missing_usage_member_index:
+                body.pop("usage", None)
             output.append(json.dumps({
                 "custom_id": line["custom_id"],
                 "response": {
                     "status_code": 200,
-                    "body": completed_response(
-                        authored, response_id=f"resp_batch_{index}"
-                    ),
+                    "body": body,
                 },
                 "error": None,
             }))
@@ -3071,6 +3076,10 @@ class TestSemanticClosure(SemanticClosureFixture):
             ))
             persisted = load_json(run_json)
             self.assertEqual(1, len(persisted["spend_ledger"]["actions"]))
+            self.assertNotIn("initial_authoring_wave", persisted)
+            self.assertEqual(
+                6, len(persisted["batch_service"]["rounds"][0]["requests"])
+            )
             self.assertEqual(
                 "PROVIDER_ID_RECORDED",
                 persisted["spend_ledger"]["actions"][0]["state"],
@@ -3314,6 +3323,39 @@ class TestSemanticClosure(SemanticClosureFixture):
                     load_json(root / "run" / "run.json")["spend_ledger"]["actions"][0]
                     ["reported"]["estimated_micro_usd"]
                 )
+
+    def test_exact_batch_mixed_member_usage_does_not_settle_partial_total(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedBatchTransport(
+                initially_complete=False, missing_usage_member_index=3,
+            )
+            provider, _state, _run_json, action = self.make_authorized_detached_batch(
+                root, transport,
+            )
+            result = reconcile_batch_provider_cycle(
+                root / "run", provider=provider, transport=transport,
+                max_attempts=3, python_executable=Path(sys.executable),
+                observed_at=action["provider_reconciliation"]["resume_not_before"],
+            )
+            self.assertEqual("progressed_local", result["outcome"])
+            persisted = load_json(root / "run" / "run.json")
+            paid = persisted["spend_ledger"]["actions"][0]
+            self.assertEqual("REPORTED", paid["state"])
+            self.assertIsNone(paid["reported"]["estimated_micro_usd"])
+            self.assertEqual(
+                "provider_usage_unavailable_billing_reconciliation_pending",
+                paid["reported"]["cost_disposition"],
+            )
+            self.assertEqual(
+                paid["reported"]["cost_disposition"],
+                persisted["batch_service"]["rounds"][0]["cost_disposition"],
+            )
+            inspection = inspect_lifecycle(
+                root / "run", native_exclusive_access="declared",
+            )
+            self.assertEqual(0, inspection["provider_custody"]["provider_action_count"])
+            self.assertEqual("retain", inspection["consumer_authority"]["state"])
 
     def test_batch_reconciliation_crash_checkpoints_resume_without_submission(self) -> None:
         for failure_point in (
