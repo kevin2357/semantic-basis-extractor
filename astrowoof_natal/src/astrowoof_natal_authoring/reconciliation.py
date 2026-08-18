@@ -38,6 +38,8 @@ class ProviderReconciliationAdapters:
     exact_batch_provider: Any = None
     exact_batch_transport: Any = None
     bounded_interactive_provider: Any = None
+    bounded_batch_provider: Any = None
+    bounded_batch_transport: Any = None
     max_attempts: int = 3
     python_executable: Path = Path(os.sys.executable)
     polish_provider: Any = None
@@ -104,6 +106,21 @@ def native_provider_route_identity(
         and native_ref.startswith(("bounded_natal.v1:", "bounded_natal.v2:"))
     ):
         adapter = "bounded_interactive"
+    elif (
+        route_family == "bounded_natal" and kind == "batch"
+        and service == "batch"
+        and stage in {"authoring_initial", "creative_retry"}
+        and native_ref.startswith("bounded_natal.v2:batch-round-")
+    ):
+        adapter = "bounded_batch"
+        rounds = (state.get("batch_service") or {}).get("rounds") or []
+        matches = [
+            item for item in rounds
+            if f"bounded_natal.v2:batch-round-{int(item.get('round_number') or 0):03d}"
+            == native_ref
+            and item.get("batch_id") == provider.get("id")
+        ]
+        valid = bool(valid and len(matches) == 1)
     elif route_family == "bounded_natal" and (kind == "batch" or service == "batch"):
         adapter = "bounded_batch_unsupported"
         valid = False
@@ -612,7 +629,7 @@ def reconcile_batch_provider_cycle(
     qualitative_editor_provider: Any = None,
     _failure_injector: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
-    """Retrieve and ingest at most one known exact-Natal Batch round."""
+    """Retrieve and ingest at most one known exact or bounded Batch round."""
     from .closure import (
         SNAPSHOT_NAME,
         SpendController,
@@ -717,6 +734,8 @@ def reconcile_batch_provider_cycle(
         before = inspect_lifecycle(
             run_dir, native_exclusive_access="established", observed_at=instant,
         )
+        route_family = before["native_route"]["route_family"]
+        bounded_batch = route_family == "bounded_natal"
         replayed_rounds = [
             item for item in (state.get("batch_service") or {}).get("rounds", [])
             if item.get("state") == "INGESTED" and item.get("batch_id")
@@ -734,7 +753,28 @@ def reconcile_batch_provider_cycle(
                     consumer_id=f"batch-reconcile:{os.getpid()}",
                     event_emitter=event_emitter, reconciliation_only=True,
                 )
-                exhaust_local_continuation(state, controller)
+                if bounded_batch:
+                    from .bounded_lifecycle import resume_bounded_run
+                    try:
+                        resume_bounded_run(
+                            run_dir, provider=provider,
+                            consumer_id=f"batch-reconcile:{os.getpid()}",
+                            reconciliation_only=True,
+                        )
+                    except Exception as exc:
+                        from .spend import (
+                            AmbiguousProviderSubmission,
+                            AwaitingSpendAuthorization,
+                            BudgetExhausted,
+                        )
+                        if not isinstance(exc, (
+                            AwaitingSpendAuthorization, BudgetExhausted,
+                            AmbiguousProviderSubmission,
+                        )):
+                            raise
+                    state = load_json(run_dir / "run.json")
+                else:
+                    exhaust_local_continuation(state, controller)
                 save_state(run_dir / "run.json", state)
                 after = inspect_lifecycle(
                     run_dir, native_exclusive_access="established",
@@ -750,7 +790,7 @@ def reconcile_batch_provider_cycle(
                 )
                 result["provider_operations"] = [{
                     "action_id": action["action_id"],
-                    "route_family": "exact_natal",
+                    "route_family": route_family,
                     "provider_operation_kind": "batch",
                     "provider_operation_id": replayed["batch_id"],
                     "retrieval_outcome": "completed",
@@ -780,14 +820,15 @@ def reconcile_batch_provider_cycle(
         actions = [
             item for item in (state.get("spend_ledger") or {}).get("actions", [])
             if item.get("action_id") in due_ids
-            and native_provider_route_identity(state, item).get("adapter") == "exact_batch"
+            and native_provider_route_identity(state, item).get("adapter")
+            == ("bounded_batch" if bounded_batch else "exact_batch")
         ]
         if len(actions) != 1:
-            raise ValueError("Exactly one due exact Batch action is required")
+            raise ValueError("Exactly one due native Batch action is required")
         action = actions[0]
         identity = native_provider_route_identity(state, action)
         if not identity["valid"]:
-            raise ValueError("Exact Batch native operation binding is invalid")
+            raise ValueError("Native Batch operation binding is invalid")
         timing = validated_timing(action)
         if (
             timing is None or timing.get("resume_not_before") is None
@@ -797,7 +838,10 @@ def reconcile_batch_provider_cycle(
             return empty_result(state, before, "not_due")
         round_record = next(
             item for item in state["batch_service"]["rounds"]
-            if f"batch-round-{int(item['round_number']):03d}" == identity["native_operation_ref"]
+            if (
+                f"bounded_natal.v2:batch-round-{int(item['round_number']):03d}"
+                if bounded_batch else f"batch-round-{int(item['round_number']):03d}"
+            ) == identity["native_operation_ref"]
         )
         batch_id = action["provider"]["id"]
         try:
@@ -817,7 +861,7 @@ def reconcile_batch_provider_cycle(
             result["cycle"]["retrieved_action_ids"] = [action["action_id"]]
             result["cycle"]["transport_warning_action_ids"] = [action["action_id"]]
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id,
                 "retrieval_outcome": "transport_warning",
@@ -838,7 +882,7 @@ def reconcile_batch_provider_cycle(
             result["cycle"]["provider_retrieval_count"] = 1
             result["cycle"]["retrieved_action_ids"] = [action["action_id"]]
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id,
                 "retrieval_outcome": "identity_conflict",
@@ -867,7 +911,7 @@ def reconcile_batch_provider_cycle(
                 "retrieved_action_ids": [action["action_id"]],
             })
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id, "retrieval_outcome": "pending",
                 "cost_disposition": "not_applicable_provider_pending",
@@ -901,13 +945,15 @@ def reconcile_batch_provider_cycle(
             for request in round_record["requests"]:
                 record = state["passes"][request["pass_id"]]
                 attempt = record["attempts"][request["attempt_number"] - 1]
-                attempt["state"] = "ATTEMPT_ERROR"
+                attempt["state"] = (
+                    "PASS_QA_REJECTED" if bounded_batch else "ATTEMPT_ERROR"
+                )
                 attempt["finished_at"] = instant
                 attempt["error"] = {
                     "type": "OpenAIBatchError",
                     "message": f"Batch ended with status {status}",
                 }
-                record["state"] = "ATTEMPT_ERROR"
+                record["state"] = attempt["state"]
             action["reported"] = {
                 "usage": None, "estimated_micro_usd": None,
                 "cost_disposition": (
@@ -928,7 +974,7 @@ def reconcile_batch_provider_cycle(
                 "still_pending_action_ids": [],
             })
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id,
                 "retrieval_outcome": "provider_failed",
@@ -966,7 +1012,7 @@ def reconcile_batch_provider_cycle(
                 "transport_warning_action_ids": [action["action_id"]],
             })
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id,
                 "retrieval_outcome": "transport_warning",
@@ -1037,7 +1083,7 @@ def reconcile_batch_provider_cycle(
                 "still_pending_action_ids": [],
             })
             result["provider_operations"] = [{
-                "action_id": action["action_id"], "route_family": "exact_natal",
+                "action_id": action["action_id"], "route_family": route_family,
                 "provider_operation_kind": "batch",
                 "provider_operation_id": batch_id,
                 "retrieval_outcome": "output_invalid",
@@ -1077,17 +1123,46 @@ def reconcile_batch_provider_cycle(
             consumer_id=f"batch-reconcile:{os.getpid()}",
             event_emitter=event_emitter, reconciliation_only=True,
         )
-        author_pending_passes_batch(
-            state=state, provider=provider, transport=CachedBatchTransport(),
-            run_dir=run_dir, max_attempts=max_attempts,
-            python_executable=python_executable, run_json=run_dir / "run.json",
-            detach=True, sleep=lambda _: None, spend_controller=controller,
-            reconciliation_only=True,
-        )
+        if bounded_batch:
+            from .bounded_lifecycle import (
+                _bounded_batch_authoring_cycle,
+                resume_bounded_run,
+            )
+            provider.batch_transport = CachedBatchTransport()
+            _bounded_batch_authoring_cycle(state, run_dir, provider, controller)
+        else:
+            author_pending_passes_batch(
+                state=state, provider=provider, transport=CachedBatchTransport(),
+                run_dir=run_dir, max_attempts=max_attempts,
+                python_executable=python_executable, run_json=run_dir / "run.json",
+                detach=True, sleep=lambda _: None, spend_controller=controller,
+                reconciliation_only=True,
+            )
         if _failure_injector:
             _failure_injector("after_batch_member_ingestion")
-        update_run_status(state)
-        exhaust_local_continuation(state, controller)
+        if not bounded_batch:
+            update_run_status(state)
+        if bounded_batch:
+            try:
+                resume_bounded_run(
+                    run_dir, provider=provider, event_emitter=event_emitter,
+                    consumer_id=f"batch-reconcile:{os.getpid()}",
+                    reconciliation_only=True,
+                )
+            except Exception as exc:
+                from .spend import (
+                    AmbiguousProviderSubmission,
+                    AwaitingSpendAuthorization,
+                    BudgetExhausted,
+                )
+                if not isinstance(exc, (
+                    AwaitingSpendAuthorization, BudgetExhausted,
+                    AmbiguousProviderSubmission,
+                )):
+                    raise
+            state = load_json(run_dir / "run.json")
+        else:
+            exhaust_local_continuation(state, controller)
         save_state(run_dir / "run.json", state)
         if _failure_injector:
             _failure_injector("after_batch_local_continuation")
@@ -1105,7 +1180,7 @@ def reconcile_batch_provider_cycle(
         })
         failed_count = sum(1 for item in expected if item in errors)
         result["provider_operations"] = [{
-            "action_id": action["action_id"], "route_family": "exact_natal",
+            "action_id": action["action_id"], "route_family": route_family,
             "provider_operation_kind": "batch", "provider_operation_id": batch_id,
             "retrieval_outcome": "completed",
             "cost_disposition": "provider_usage_reported",
@@ -1474,10 +1549,23 @@ def reconcile_authoring_provider_cycle(
     if mechanism is None and route == "exact_natal":
         mechanism = "batch" if state.get("service_level") == "batch" else "response"
     elif mechanism is None and route == "bounded_natal":
-        mechanism = "response"
+        mechanism = "batch" if state.get("service_level") == "batch" else "response"
 
     if route == "bounded_natal" and mechanism == "batch":
-        raise ValueError("Bounded-Natal Batch reconciliation is not supported")
+        if (
+            provider_adapters.bounded_batch_provider is None
+            or provider_adapters.bounded_batch_transport is None
+        ):
+            raise ValueError("Bounded Batch reconciliation adapters are required")
+        result = reconcile_batch_provider_cycle(
+            run_dir,
+            provider=provider_adapters.bounded_batch_provider,
+            transport=provider_adapters.bounded_batch_transport,
+            max_attempts=provider_adapters.max_attempts,
+            python_executable=provider_adapters.python_executable,
+            observed_at=observed_at, event_emitter=event_emitter,
+        )
+        return result
     if route == "exact_natal" and mechanism == "batch":
         if (
             provider_adapters.exact_batch_provider is None

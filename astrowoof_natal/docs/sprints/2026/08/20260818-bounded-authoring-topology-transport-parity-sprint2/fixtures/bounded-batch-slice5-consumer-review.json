@@ -1,0 +1,48 @@
+{
+  "schema_version": "astrowoof.sbe_sprint.bounded_batch_consumer_review.v1",
+  "native_route": {
+    "route_family": "bounded_natal",
+    "route_contract": "astrowoof.bounded_natal.authoring_run.v2",
+    "provider_mechanism": "batch"
+  },
+  "authority": {
+    "unit": "one_paid_action_per_batch_round",
+    "member_authority": "audit_and_usage_settlement_only",
+    "initial_member_count": 6,
+    "action_route_example": "bounded_natal.v2:batch-round-001"
+  },
+  "round_evidence": {
+    "schema_version": "astrowoof.bounded_natal.batch_round.v1",
+    "required_bindings": [
+      "input_sha256",
+      "ordered_custom_ids",
+      "aggregate_maximum_output_tokens",
+      "aggregate_commitment_micro_usd",
+      "input_file_id",
+      "batch_id",
+      "batch_status",
+      "output_file_id",
+      "error_file_id",
+      "cost_disposition"
+    ]
+  },
+  "cost_dispositions": [
+    "no_provider_work_consumed",
+    "provider_usage_reported",
+    "provider_usage_unavailable_billing_reconciliation_pending"
+  ],
+  "review_traces": [
+    "six_member_initial_round",
+    "one_member_pass_local_retry_round",
+    "pending_not_due_reclaim_and_retrieval_only_resume",
+    "partial_output_error_member_failure",
+    "provider_terminal_round_failure",
+    "member_inventory_conflict_review",
+    "terminal_usage_unavailable_retain_consumer_authority",
+    "mixed_member_usage_prevents_partial_aggregate_settlement",
+    "legacy_bounded_v1_batch_unsupported"
+  ],
+  "new_public_state_names": [],
+  "provider_operations_submitted_during_qualification": 0,
+  "qualification_spend_usd": 0
+}

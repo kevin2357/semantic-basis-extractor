@@ -25,6 +25,9 @@ from astrowoof_natal_authoring.bounded_lifecycle import (  # noqa: E402
     resume_bounded_run,
     run_bounded_authoring,
 )
+from astrowoof_natal_authoring.bounded_provider import (  # noqa: E402
+    OpenAIBoundedLifecycleProvider,
+)
 from astrowoof_natal_authoring.closure import (  # noqa: E402
     load_json,
     save_state,
@@ -180,6 +183,125 @@ class RecordingFakeProvider(FakeBoundedLifecycleProvider):
         return super().execute(**kwargs)
 
 
+def _batch_editorial(packet):
+    hydrated = fake_author_bounded(packet)
+    editorial_fields = (
+        "dos", "donts", "funny_dog_quotes", "imperative_dog_quotes",
+        "applicable_canine_jokes", "densities",
+    )
+    return {
+        "cards": [
+            {"claim_id": card["claim_id"]} |
+            {field: card[field] for field in editorial_fields}
+            for card in hydrated["cards"]
+        ],
+        "summaries": [
+            {"summary_id": summary_id, "headline": summary["headline"],
+             "body": summary["body"]}
+            for summary_id, summary in hydrated["summaries"].items()
+        ],
+    }
+
+
+class BoundedBatchTransport:
+    def __init__(
+        self, *, reject_first_member_once=False, pending_once=False,
+        error_first_member_once=False, duplicate_first_member=False,
+        usage_available=True, terminal_first_status=None,
+        missing_usage_member_index=None,
+    ):
+        self.reject_first_member_once = reject_first_member_once
+        self.pending_once = pending_once
+        self.error_first_member_once = error_first_member_once
+        self.duplicate_first_member = duplicate_first_member
+        self.usage_available = usage_available
+        self.terminal_first_status = terminal_first_status
+        self.missing_usage_member_index = missing_usage_member_index
+        self.upload_calls = 0
+        self.create_calls = 0
+        self.retrieve_calls = 0
+        self.rounds = {}
+        self.uploaded = None
+
+    def upload_jsonl(self, content, filename):
+        self.upload_calls += 1
+        self.uploaded = content.decode("utf-8")
+        return {"id": f"file-input-{self.upload_calls}"}
+
+    def create_batch(self, payload):
+        self.create_calls += 1
+        batch_id = f"batch-bounded-{self.create_calls}"
+        self.rounds[batch_id] = self.uploaded
+        status = (
+            self.terminal_first_status
+            if self.create_calls == 1 and self.terminal_first_status
+            else "in_progress" if self.pending_once else "completed"
+        )
+        return self._batch(batch_id, status)
+
+    def retrieve_batch(self, batch_id):
+        self.retrieve_calls += 1
+        self.pending_once = False
+        return self._batch(batch_id, "completed")
+
+    def _batch(self, batch_id, status):
+        return {
+            "id": batch_id, "status": status,
+            "output_file_id": f"output-{batch_id}" if status == "completed" else None,
+            "error_file_id": (
+                f"error-{batch_id}"
+                if status == "completed" and self.error_first_member_once
+                and self.create_calls == 1 else None
+            ),
+            "request_counts": {"total": 6, "completed": 6, "failed": 0},
+        }
+
+    def download_file(self, file_id):
+        is_error = file_id.startswith("error-")
+        batch_id = file_id.removeprefix("output-").removeprefix("error-")
+        lines = []
+        for index, raw in enumerate(self.rounds[batch_id].splitlines()):
+            request = json.loads(raw)
+            failed_member = (
+                self.error_first_member_once and self.create_calls == 1 and index == 0
+            )
+            if is_error:
+                if failed_member:
+                    lines.append(json.dumps({
+                        "custom_id": request["custom_id"],
+                        "error": {"code": "fixture_member_failed"},
+                    }))
+                continue
+            if failed_member:
+                continue
+            payload = json.loads(request["body"]["input"][1]["content"])
+            editorial = _batch_editorial(payload["authoring_packet"])
+            if self.reject_first_member_once and self.create_calls == 1 and index == 0:
+                editorial["cards"][0]["claim_id"] = "unknown-claim"
+            response = {
+                "id": f"resp-{request['custom_id']}", "status": "completed",
+                "model": request["body"]["model"],
+                "output": [{"type": "message", "content": [
+                    {"type": "output_text", "text": json.dumps(editorial)}
+                ]}],
+            }
+            if (
+                self.usage_available
+                and index != self.missing_usage_member_index
+            ):
+                response["usage"] = {
+                    "input_tokens": 100, "output_tokens": 100,
+                    "total_tokens": 200,
+                }
+            lines.append(json.dumps({
+                "custom_id": request["custom_id"],
+                "response": {"status_code": 200, "body": response},
+            }))
+        if self.duplicate_first_member and lines and not is_error:
+            lines.append(lines[0])
+        return "\n".join(lines) + "\n"
+
+
 class RejectInitialPaidProvider(PaidScriptedProvider):
     rejected_once = False
 
@@ -263,6 +385,371 @@ class TestBoundedLifecycle(unittest.TestCase):
                 "bounded.selection.completed", "bounded.disposition.completed",
                 "bounded.artifact.committed", "terminal.transitioned",
             } <= names)
+
+    def test_bounded_batch_authors_six_members_under_one_round(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.paid = False
+            transport = BoundedBatchTransport()
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            state = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", state["status"])
+            rounds = state["batch_service"]["rounds"]
+            self.assertEqual(1, len(rounds))
+            self.assertEqual(6, rounds[0]["member_count"])
+            self.assertEqual(6000, rounds[0]["aggregate_maximum_output_tokens"])
+            self.assertEqual("INGESTED", rounds[0]["state"])
+            self.assertEqual("provider_usage_reported", rounds[0]["cost_disposition"])
+            self.assertEqual(1, transport.upload_calls)
+            self.assertEqual(1, transport.create_calls)
+
+    def test_bounded_batch_retries_only_rejected_member_in_second_round(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.paid = False
+            transport = BoundedBatchTransport(reject_first_member_once=True)
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            state = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", state["status"])
+            rounds = state["batch_service"]["rounds"]
+            self.assertEqual([6, 1], [item["member_count"] for item in rounds])
+            retried = rounds[1]["requests"][0]
+            self.assertEqual(2, retried["attempt_number"])
+            self.assertEqual("creative_retry", retried["stage"])
+            self.assertEqual(2, transport.create_calls)
+            retry_line = json.loads(
+                transport.rounds["batch-bounded-2"].splitlines()[0]
+            )
+            retry_payload = json.loads(
+                retry_line["body"]["input"][1]["content"]
+            )
+            self.assertEqual(
+                retried["pass_id"], retry_payload["retry_feedback"]["pass_id"]
+            )
+
+    def test_bounded_batch_error_member_retries_only_that_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.paid = False
+            transport = BoundedBatchTransport(error_first_member_once=True)
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            state = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", state["status"])
+            self.assertEqual(
+                [6, 1],
+                [item["member_count"] for item in state["batch_service"]["rounds"]],
+            )
+
+    def test_bounded_batch_terminal_provider_failure_retries_the_round(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+            )
+            provider.paid = False
+            provider.batch_transport = BoundedBatchTransport(
+                terminal_first_status="failed"
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            state = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", state["status"])
+            rounds = state["batch_service"]["rounds"]
+            self.assertEqual([6, 6], [item["member_count"] for item in rounds])
+            self.assertEqual("FAILED", rounds[0]["state"])
+            self.assertEqual("creative_retry", rounds[1]["stage"])
+
+    def test_bounded_batch_duplicate_member_fails_closed_before_ingestion(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+            )
+            provider.paid = False
+            provider.batch_transport = BoundedBatchTransport(
+                duplicate_first_member=True
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            with self.assertRaisesRegex(ValueError, "repeats custom_id"):
+                resume_bounded_run(run_dir, provider=provider)
+            state = load_json(run_dir / "run.json")
+            self.assertEqual(
+                set(), set(state["bounded"]["completed_pass_ids"])
+            )
+
+    def test_bounded_batch_detaches_and_retrieves_same_provider_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.paid = False
+            transport = BoundedBatchTransport(pending_once=True)
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            pending = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("PENDING", pending["batch_service"]["rounds"][0]["state"])
+            completed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", completed["status"])
+            self.assertEqual(1, transport.upload_calls)
+            self.assertEqual(1, transport.create_calls)
+            self.assertEqual(1, transport.retrieve_calls)
+
+    def test_bounded_batch_interrupt_after_identity_never_recreates_batch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+            )
+            provider.paid = False
+            transport = BoundedBatchTransport(pending_once=True)
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+
+            def interrupt(point):
+                if point == "after_bounded_batch_provider_identity":
+                    raise RuntimeError("injected after durable Batch identity")
+
+            with self.assertRaisesRegex(RuntimeError, "durable Batch identity"):
+                resume_bounded_run(
+                    run_dir, provider=provider, _failure_injector=interrupt
+                )
+            persisted = load_json(run_dir / "run.json")
+            self.assertEqual(
+                "batch-bounded-1",
+                persisted["batch_service"]["rounds"][0]["batch_id"],
+            )
+            completed = resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual("DELIVERY_COMPLETE", completed["status"])
+            self.assertEqual(1, transport.upload_calls)
+            self.assertEqual(1, transport.create_calls)
+            self.assertEqual(1, transport.retrieve_calls)
+
+    def test_bounded_batch_round_state_rejects_unknown_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+            )
+            provider.paid = False
+            provider.batch_transport = BoundedBatchTransport(pending_once=True)
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"optional_stages": {
+                    "polish": False, "qualitative_critic": False,
+                    "qualitative_candidate": False,
+                }},
+            )
+            resume_bounded_run(run_dir, provider=provider)
+            state = load_json(run_dir / "run.json")
+            state["batch_service"]["rounds"][0]["consumer_guess"] = True
+            save_state(run_dir / "run.json", state)
+            with self.assertRaisesRegex(ValueError, "unsupported or missing fields"):
+                resume_bounded_run(run_dir, provider=provider)
+
+    def test_bounded_batch_uses_one_paid_action_for_the_round(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            transport = BoundedBatchTransport()
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                    "spend_policy": spend_policy(),
+                },
+            )
+            state = self.drive_authorized(run_dir, provider)
+            self.assertEqual("DELIVERY_COMPLETE", state["status"])
+            actions = state["spend_ledger"]["actions"]
+            self.assertEqual(1, len(actions))
+            binding = actions[0]["binding"]
+            self.assertEqual("batch", binding["service_level"])
+            self.assertEqual(6000, binding["maximum_output_tokens"])
+            self.assertEqual(
+                "bounded_natal.v2:batch-round-001", binding["route"]
+            )
+            self.assertEqual(
+                binding["commitment_micro_usd"],
+                state["batch_service"]["rounds"][0]
+                ["aggregate_commitment_micro_usd"],
+            )
+            self.assertEqual("REPORTED", actions[0]["state"])
+
+    def test_bounded_batch_reconciliation_is_retrieval_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            transport = BoundedBatchTransport(pending_once=True)
+            provider.batch_transport = transport
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                    "spend_policy": spend_policy(),
+                },
+            )
+            pending = self.drive_authorized(run_dir, provider)
+            action = pending["spend_ledger"]["actions"][0]
+            uploads, creates = transport.upload_calls, transport.create_calls
+            result = reconcile_authoring_provider_cycle(
+                run_dir,
+                observed_at=action["provider_reconciliation"]["resume_not_before"],
+                provider_adapters=ProviderReconciliationAdapters(
+                    bounded_batch_provider=provider,
+                    bounded_batch_transport=transport,
+                ),
+            )
+            self.assertIn(result["outcome"], {"progressed_local", "terminal"})
+            self.assertEqual("batch", result["provider_operations"][0]["provider_operation_kind"])
+            self.assertEqual(6, result["provider_operations"][0]["member_count"])
+            self.assertEqual(uploads, transport.upload_calls)
+            self.assertEqual(creates, transport.create_calls)
+            self.assertEqual(1, transport.retrieve_calls)
+            self.assertEqual(
+                "DELIVERY_COMPLETE", load_json(run_dir / "run.json")["status"]
+            )
+
+    def test_bounded_batch_missing_usage_retains_consumer_authority_not_custody(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.batch_transport = BoundedBatchTransport(usage_available=False)
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                    "spend_policy": spend_policy(),
+                },
+            )
+            state = self.drive_authorized(run_dir, provider)
+            action = state["spend_ledger"]["actions"][0]
+            self.assertEqual("REPORTED", action["state"])
+            self.assertEqual(
+                "provider_usage_unavailable_billing_reconciliation_pending",
+                action["reported"]["cost_disposition"],
+            )
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared"
+            )
+            self.assertEqual(0, inspection["provider_custody"]["provider_action_count"])
+            self.assertEqual("retain", inspection["consumer_authority"]["state"])
+
+    def test_bounded_batch_mixed_member_usage_does_not_settle_partial_total(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", service_level="batch",
+                model="gpt-5.6-luna", maximum_output_tokens=1000,
+            )
+            provider.batch_transport = BoundedBatchTransport(
+                missing_usage_member_index=2
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                    "spend_policy": spend_policy(),
+                },
+            )
+            state = self.drive_authorized(run_dir, provider)
+            action = state["spend_ledger"]["actions"][0]
+            round_record = state["batch_service"]["rounds"][0]
+            self.assertEqual("REPORTED", action["state"])
+            self.assertIsNone(action["reported"]["usage"])
+            self.assertIsNone(action["reported"]["estimated_micro_usd"])
+            self.assertEqual(
+                "provider_usage_unavailable_billing_reconciliation_pending",
+                action["reported"]["cost_disposition"],
+            )
+            self.assertEqual(
+                action["reported"]["cost_disposition"],
+                round_record["cost_disposition"],
+            )
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared"
+            )
+            self.assertEqual(0, inspection["provider_custody"]["provider_action_count"])
+            self.assertEqual("retain", inspection["consumer_authority"]["state"])
 
     def test_v2_run_persists_six_passes_and_executes_isolated_membership(self) -> None:
         provider = RecordingFakeProvider()

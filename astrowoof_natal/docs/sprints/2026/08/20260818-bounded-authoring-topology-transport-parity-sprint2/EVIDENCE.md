@@ -1,6 +1,6 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: Slices 0-4 complete; Slice 4 awaiting gate review
+Status: Slices 0-5 complete; Slice 5 awaiting API fixture/lifecycle review
 
 No provider operation was submitted. Slice 0 added one provider-free exact request-
 parity regression and recorded the current route/topology baseline.
@@ -116,5 +116,37 @@ Verification:
   boundary without retaining a lease or duplicating provider work;
 - v1 legacy state refuses with `legacy_bounded_topology_unsupported`; and
 - `git diff --check` passes with only expected checkout line-ending notices.
+
+Provider operations: 0. Spend: USD 0.
+
+## Slice 5
+
+Result: [results/SLICE 5 - Bounded Batch Transport.md](results/SLICE%205%20-%20Bounded%20Batch%20Transport.md)
+
+Consumer handoff: [BOUNDED BATCH SLICE 5 CONSUMER HANDOFF.md](BOUNDED%20BATCH%20SLICE%205%20CONSUMER%20HANDOFF.md)
+
+Review fixture: [fixtures/bounded-batch-slice5-consumer-review.json](fixtures/bounded-batch-slice5-consumer-review.json)
+
+Verification:
+
+- actual recorded bounded interactive request versus bounded Batch member: exact
+  equality after removing only interactive `background`;
+- one six-member initial Batch round and one-member pass-local retry round;
+- one paid action/aggregate commitment per round, never per member;
+- detach/resume and post-provider-identity interruption retrieve the same Batch ID
+  with no duplicate upload or creation;
+- output/error partial failure, provider-terminal failure, duplicate member,
+  unknown/missing inventory, strict round-state, fully unavailable usage, and
+  mixed member-usage cases;
+- aggregate settlement requires complete usage for every potentially billable
+  member; a partial total is never reported or settled as the round total;
+- retrieval-only route-neutral reconciliation with bounded v2 route/mechanism
+  identity and unchanged upload/create counts;
+- exact semantic-closure compatibility: 85 tests passed in 207.894 seconds;
+- desktop bounded/lifecycle/transition/capacity gate: 120 tests passed in 124.146
+  seconds;
+- Python 3.11 Linux with a read-only repository mount: 120 tests passed in 27.162
+  seconds; and
+- `git diff --check` passes with expected checkout line-ending notices only.
 
 Provider operations: 0. Spend: USD 0.

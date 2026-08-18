@@ -27,16 +27,19 @@ from .closure import (
     SCHEMA_VERSION,
     SNAPSHOT_SCHEMA,
     SpendController,
+    batch_estimated_cost,
     apply_spend_authorizations,
     checkpoint_spend_boundary,
     load_json,
     normalized_path,
+    normalized_usage,
     persist_state,
     save_state,
     sha256_file,
     utc_now,
     validate_workspace_snapshot,
     write_json_atomic,
+    response_output_text,
 )
 from .execution_events import ExecutionEventEmitter
 from .spend import (
@@ -61,6 +64,7 @@ class BoundedLifecycleProvider(Protocol):
     service_level: str
     maximum_output_tokens: int
     paid: bool
+    batch_transport: Any
 
     def execute(
         self,
@@ -71,6 +75,21 @@ class BoundedLifecycleProvider(Protocol):
         before_submit: Callable[[dict[str, Any]], None] | None,
         provider_created: Callable[[str | None, str], None] | None,
     ) -> tuple[dict[str, Any], dict[str, Any]]: ...
+
+
+TERMINAL_BATCH_STATES = frozenset({"completed", "failed", "expired", "cancelled"})
+BATCH_ROUND_KEYS = frozenset({
+    "schema_version", "round_number", "state", "stage", "model", "created_at",
+    "input_path", "input_sha256", "member_count", "requests",
+    "aggregate_maximum_output_tokens", "aggregate_commitment_micro_usd",
+    "input_file_id", "batch_id", "batch_status", "output_file_id",
+    "error_file_id", "cost_disposition",
+    "request_counts", "finished_at", "integrity_review",
+})
+BATCH_REQUEST_KEYS = frozenset({
+    "custom_id", "pass_id", "attempt_number", "stage", "request_sha256",
+    "packet_sha256", "model", "maximum_output_tokens",
+})
 
 
 @dataclass
@@ -369,7 +388,9 @@ def _execute_stage(
     if controller:
         before, created = controller.callbacks(
             stage=stage, route=route, model=provider.model,
-            service_level=provider.service_level,
+            service_level=(
+                "interactive" if stage in FINAL_STAGES else provider.service_level
+            ),
             maximum_output_tokens=provider.maximum_output_tokens,
         )
     try:
@@ -469,6 +490,400 @@ def _assemble_accepted_passes(
     }
 
 
+def _batch_jsonl(text: str) -> dict[str, dict[str, Any]]:
+    records: dict[str, dict[str, Any]] = {}
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if not line.strip():
+            continue
+        value = json.loads(line)
+        custom_id = value.get("custom_id")
+        if not isinstance(custom_id, str) or not custom_id:
+            raise ValueError(f"Bounded Batch line {line_number} has no custom_id")
+        if custom_id in records:
+            raise ValueError(f"Bounded Batch repeats custom_id {custom_id!r}")
+        records[custom_id] = value
+    return records
+
+
+def _batch_response(item: dict[str, Any]) -> dict[str, Any]:
+    response = item.get("response") or {}
+    body = response.get("body") if isinstance(response, dict) else None
+    if not isinstance(body, dict):
+        raise ValueError("Bounded Batch member has no Responses body")
+    return body
+
+
+def _validate_batch_round(state: dict[str, Any], value: dict[str, Any]) -> None:
+    if set(value) != BATCH_ROUND_KEYS:
+        raise ValueError("Bounded Batch round has unsupported or missing fields")
+    if value["schema_version"] != "astrowoof.bounded_natal.batch_round.v1":
+        raise ValueError("Unsupported bounded Batch round schema")
+    requests = value["requests"]
+    if not isinstance(requests, list) or not requests or len(requests) > 6:
+        raise ValueError("Bounded Batch round member inventory is invalid")
+    if value["member_count"] != len(requests):
+        raise ValueError("Bounded Batch round member count conflicts with inventory")
+    custom_ids: list[str] = []
+    maximum = 0
+    for request in requests:
+        if not isinstance(request, dict) or set(request) != BATCH_REQUEST_KEYS:
+            raise ValueError("Bounded Batch request has unsupported or missing fields")
+        pass_id = request["pass_id"]
+        attempt = request["attempt_number"]
+        if pass_id not in state["passes"] or not isinstance(attempt, int) or attempt < 1:
+            raise ValueError("Bounded Batch request binding is invalid")
+        if request["custom_id"] != f"{pass_id}:attempt-{attempt:03d}":
+            raise ValueError("Bounded Batch custom_id conflicts with pass binding")
+        if request["stage"] != value["stage"]:
+            raise ValueError("Bounded Batch mixes stage authority in one round")
+        if request["model"] != value["model"]:
+            raise ValueError("Bounded Batch mixes model authority in one round")
+        custom_ids.append(request["custom_id"])
+        maximum += request["maximum_output_tokens"]
+    if len(set(custom_ids)) != len(custom_ids):
+        raise ValueError("Bounded Batch round repeats a member identity")
+    if value["aggregate_maximum_output_tokens"] != maximum:
+        raise ValueError("Bounded Batch aggregate output authority is invalid")
+
+
+def _pending_batch_candidates(state: dict[str, Any]) -> list[tuple[str, int, str]]:
+    candidates: list[tuple[str, int, str]] = []
+    for pass_id in state["bounded"]["pass_ids"]:
+        record = state["passes"][pass_id]
+        if record["state"] == "PASS_QA_ACCEPTED":
+            continue
+        attempt = len(record["attempts"]) + 1
+        if attempt > state["max_attempts"]:
+            record["state"] = "FAILED_REQUIRES_REVIEW"
+            continue
+        stage = "authoring_initial" if attempt == 1 else "creative_retry"
+        candidates.append((pass_id, attempt, stage))
+    if not candidates:
+        return []
+    stage = candidates[0][2]
+    return [candidate for candidate in candidates if candidate[2] == stage]
+
+
+def _prepare_bounded_batch_round(
+    state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
+) -> dict[str, Any] | None:
+    candidates = _pending_batch_candidates(state)
+    if not candidates:
+        return None
+    service = state.setdefault("batch_service", {
+        "schema_version": "astrowoof.bounded_natal.batch_service.v1",
+        "service_level": "batch", "rounds": [],
+    })
+    round_number = len(service["rounds"]) + 1
+    round_root = run_dir / "bounded" / "batches" / f"round-{round_number:03d}"
+    round_root.mkdir(parents=True, exist_ok=True)
+    requests: list[dict[str, Any]] = []
+    lines: list[str] = []
+    builder = getattr(provider, "batch_request_body", None)
+    if not callable(builder):
+        raise ValueError("Bounded Batch provider cannot build pass requests")
+    for pass_id, attempt, stage in candidates:
+        packet = load_json(
+            run_dir / state["bounded"]["pass_packets"][pass_id]["path"]
+        )
+        payload = _payload(state, run_dir, stage, pass_id)
+        body = builder(
+            stage=stage, payload=payload, attempt_number=attempt,
+        )
+        custom_id = f"{pass_id}:attempt-{attempt:03d}"
+        lines.append(json.dumps({
+            "custom_id": custom_id, "method": "POST",
+            "url": "/v1/responses", "body": body,
+        }, ensure_ascii=False, sort_keys=True))
+        request = {
+            "custom_id": custom_id, "pass_id": pass_id,
+            "attempt_number": attempt, "stage": stage,
+            "request_sha256": _digest(body),
+            "packet_sha256": packet["packet_sha256"],
+            "model": provider.model,
+            "maximum_output_tokens": provider.maximum_output_tokens,
+        }
+        requests.append(request)
+        state["passes"][pass_id]["attempts"].append({
+            "attempt": attempt, "state": "BATCH_PREPARED", "accepted": False,
+            "provider_metadata": None, "qa": None,
+        })
+        state["passes"][pass_id]["state"] = "BATCH_PREPARED"
+    input_text = "\n".join(lines) + "\n"
+    input_path = round_root / "batch-input.jsonl"
+    input_path.write_text(input_text, encoding="utf-8")
+    round_record = {
+        "schema_version": "astrowoof.bounded_natal.batch_round.v1",
+        "round_number": round_number, "state": "PREPARED",
+        "stage": candidates[0][2], "model": provider.model,
+        "created_at": utc_now(), "input_path": normalized_path(input_path),
+        "input_sha256": hashlib.sha256(input_text.encode("utf-8")).hexdigest(),
+        "member_count": len(requests), "requests": requests,
+        "aggregate_maximum_output_tokens": (
+            provider.maximum_output_tokens * len(requests)
+        ),
+        "aggregate_commitment_micro_usd": None,
+        "input_file_id": None, "batch_id": None, "batch_status": None,
+        "output_file_id": None, "error_file_id": None,
+        "request_counts": None, "finished_at": None, "integrity_review": None,
+        "cost_disposition": "no_provider_work_consumed",
+    }
+    service["rounds"].append(round_record)
+    _validate_batch_round(state, round_record)
+    return round_record
+
+
+def _bounded_batch_authoring_cycle(
+    state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
+    controller: SpendController | None,
+    failure_injector: Callable[[str], None] | None = None,
+) -> bool:
+    """Advance at most one bounded Batch round; never poll in a tight loop."""
+    service = state.setdefault("batch_service", {
+        "schema_version": "astrowoof.bounded_natal.batch_service.v1",
+        "service_level": "batch", "rounds": [],
+    })
+    round_record = next((
+        item for item in service["rounds"]
+        if item["state"] not in {"INGESTED", "FAILED", "REQUIRES_REVIEW"}
+    ), None)
+    if round_record is None:
+        round_record = _prepare_bounded_batch_round(state, run_dir, provider)
+        if round_record is None:
+            return all(
+                state["passes"][pass_id]["state"] == "PASS_QA_ACCEPTED"
+                for pass_id in state["bounded"]["pass_ids"]
+            )
+        save_state(run_dir / "run.json", state)
+    _validate_batch_round(state, round_record)
+    transport = getattr(provider, "batch_transport", None)
+    if transport is None:
+        raise ValueError("Bounded Batch provider has no Batch transport")
+    input_path = Path(round_record["input_path"])
+    input_bytes = input_path.read_bytes()
+    if not round_record["input_file_id"]:
+        uploaded = transport.upload_jsonl(input_bytes, input_path.name)
+        round_record["input_file_id"] = uploaded["id"]
+        round_record["state"] = "UPLOADED"
+        save_state(run_dir / "run.json", state)
+        if failure_injector:
+            failure_injector("after_bounded_batch_input_uploaded")
+    batch_payload = {
+        "input_file_id": round_record["input_file_id"],
+        "endpoint": "/v1/responses", "completion_window": "24h",
+        "metadata": {
+            "workflow": "astrowoof_bounded_natal",
+            "round": str(round_record["round_number"]),
+        },
+    }
+    if not round_record["batch_id"]:
+        before = created = None
+        if controller:
+            action_route = (
+                f"{BOUNDED_ROUTE}:batch-round-{round_record['round_number']:03d}"
+            )
+            before, created = controller.callbacks(
+                stage=round_record["stage"],
+                route=action_route,
+                model=provider.model, service_level="batch",
+                maximum_output_tokens=round_record["aggregate_maximum_output_tokens"],
+            )
+            try:
+                before({
+                    "batch": batch_payload,
+                    "input_sha256": round_record["input_sha256"],
+                })
+            finally:
+                action = next((
+                    item for item in controller.ledger["actions"]
+                    if item["binding"]["route"] == action_route
+                ), None)
+                if action is not None:
+                    round_record["aggregate_commitment_micro_usd"] = (
+                        action["binding"]["commitment_micro_usd"]
+                    )
+                    save_state(run_dir / "run.json", state)
+        try:
+            batch = transport.create_batch(batch_payload)
+        except Exception as exc:
+            if controller:
+                controller.mark_active_ambiguous(str(exc))
+            raise
+        if created:
+            created(batch.get("id"), "batch")
+        round_record["batch_id"] = batch["id"]
+        round_record["batch_status"] = batch.get("status")
+        round_record["state"] = "SUBMITTED"
+        round_record["cost_disposition"] = (
+            "provider_usage_unavailable_billing_reconciliation_pending"
+        )
+        save_state(run_dir / "run.json", state)
+        if failure_injector:
+            failure_injector("after_bounded_batch_provider_identity")
+    else:
+        route = f"{BOUNDED_ROUTE}:batch-round-{round_record['round_number']:03d}"
+        action = next((
+            item for item in ((state.get("spend_ledger") or {}).get("actions") or [])
+            if item["binding"]["route"] == route
+            and (item.get("provider") or {}).get("id") == round_record["batch_id"]
+        ), None)
+        if controller and action:
+            controller.local.active_action = action["action_id"]
+        batch = transport.retrieve_batch(round_record["batch_id"])
+    if batch.get("id") != round_record["batch_id"]:
+        round_record["state"] = "REQUIRES_REVIEW"
+        save_state(run_dir / "run.json", state)
+        raise ValueError("Bounded Batch provider identity conflict")
+    status = str(batch.get("status") or "")
+    round_record["batch_status"] = status
+    round_record["request_counts"] = batch.get("request_counts")
+    round_record["output_file_id"] = batch.get("output_file_id")
+    round_record["error_file_id"] = batch.get("error_file_id")
+    if status not in TERMINAL_BATCH_STATES:
+        round_record["state"] = "PENDING"
+        if controller:
+            controller.mark_active_waiting()
+        save_state(run_dir / "run.json", state)
+        return False
+    round_root = input_path.parent
+    round_record["finished_at"] = utc_now()
+    write_json_atomic(round_root / "batch-object.json", batch)
+    if status != "completed":
+        for request in round_record["requests"]:
+            record = state["passes"][request["pass_id"]]
+            attempt = record["attempts"][request["attempt_number"] - 1]
+            report = {
+                "schema_version": "astrowoof.bounded_natal.pass_validation.v1",
+                "pass_id": request["pass_id"], "status": "fail",
+                "errors": [f"provider_batch_{status}"],
+            }
+            attempt.update({
+                "state": "PASS_QA_REJECTED", "accepted": False,
+                "qa": {"accepted": False, "report": report},
+            })
+            record["state"] = "PASS_QA_REJECTED"
+        round_record["state"] = "FAILED"
+        round_record["cost_disposition"] = (
+            "provider_usage_unavailable_billing_reconciliation_pending"
+        )
+        if controller:
+            action = controller.active_action()
+            action["reported"] = {
+                "usage": None, "estimated_micro_usd": None,
+                "cost_disposition": round_record["cost_disposition"],
+            }
+            action["state"] = "REPORTED"
+        save_state(run_dir / "run.json", state)
+        return False
+    output_text = (
+        transport.download_file(batch["output_file_id"])
+        if batch.get("output_file_id") else ""
+    )
+    error_text = (
+        transport.download_file(batch["error_file_id"])
+        if batch.get("error_file_id") else ""
+    )
+    (round_root / "batch-output.jsonl").write_text(output_text, encoding="utf-8")
+    (round_root / "batch-errors.jsonl").write_text(error_text, encoding="utf-8")
+    if failure_injector:
+        failure_injector("after_bounded_batch_files_durable")
+    outputs = _batch_jsonl(output_text)
+    errors = _batch_jsonl(error_text)
+    expected = [item["custom_id"] for item in round_record["requests"]]
+    if set(outputs) & set(errors) or set(outputs) | set(errors) != set(expected):
+        round_record["state"] = "REQUIRES_REVIEW"
+        state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+        save_state(run_dir / "run.json", state)
+        raise ValueError("Bounded Batch member inventory conflict")
+    estimated_total = 0.0
+    usage_complete = True
+    for request in round_record["requests"]:
+        pass_id = request["pass_id"]
+        record = state["passes"][pass_id]
+        attempt = record["attempts"][request["attempt_number"] - 1]
+        packet = load_json(
+            run_dir / state["bounded"]["pass_packets"][pass_id]["path"]
+        )
+        item = outputs.get(request["custom_id"])
+        if item is None:
+            usage_complete = False
+            report = {
+                "schema_version": "astrowoof.bounded_natal.pass_validation.v1",
+                "pass_id": pass_id, "status": "fail",
+                "errors": ["provider_batch_member_failed"],
+            }
+            hydrated = None
+            metadata = {"provider": "openai", "service_level": "batch",
+                        "batch_id": round_record["batch_id"],
+                        "custom_id": request["custom_id"], "usage": {}}
+        else:
+            response = _batch_response(item)
+            usage = normalized_usage(response)
+            member_usage_reported = isinstance(response.get("usage"), dict)
+            usage_complete = usage_complete and member_usage_reported
+            estimate = batch_estimated_cost(request["model"], usage)
+            if estimate:
+                estimated_total += float(estimate["estimated_amount"])
+            metadata = {
+                "provider": "openai", "service_level": "batch",
+                "batch_id": round_record["batch_id"],
+                "custom_id": request["custom_id"], "response_id": response.get("id"),
+                "response_status": response.get("status"), "model": response.get("model") or request["model"],
+                "usage": usage, "estimated_cost": estimate,
+            }
+            try:
+                editorial = json.loads(response_output_text(response))
+                hydrated = provider.hydrate_batch_member(editorial, packet)
+                report = _pass_result_report(hydrated, packet)
+            except Exception as exc:
+                hydrated = None
+                report = {
+                    "schema_version": "astrowoof.bounded_natal.pass_validation.v1",
+                    "pass_id": pass_id, "status": "fail",
+                    "errors": [f"output_invalid:{type(exc).__name__}"],
+                }
+        accepted = report["status"] == "pass"
+        result_root = run_dir / "bounded" / "final" / "passes"
+        result_root.mkdir(parents=True, exist_ok=True)
+        if hydrated is not None:
+            write_json_atomic(result_root / f"{pass_id}.json", hydrated)
+        write_json_atomic(result_root / f"{pass_id}.validation.json", report)
+        attempt.update({
+            "state": "PASS_QA_ACCEPTED" if accepted else "PASS_QA_REJECTED",
+            "accepted": accepted, "provider_metadata": metadata,
+            "qa": {"accepted": accepted, "report": report},
+        })
+        record["state"] = attempt["state"]
+        if accepted:
+            record["accepted_attempt"] = request["attempt_number"]
+            record["accepted_workspace"] = normalized_path(result_root / f"{pass_id}.json")
+            if pass_id not in state["bounded"]["completed_pass_ids"]:
+                state["bounded"]["completed_pass_ids"].append(pass_id)
+    round_record["state"] = "INGESTED"
+    round_record["cost_disposition"] = (
+        "provider_usage_reported" if usage_complete
+        else "provider_usage_unavailable_billing_reconciliation_pending"
+    )
+    if controller and usage_complete:
+        controller.settle_active({
+            "estimated_cost": {"currency": "USD", "estimated_amount": estimated_total}
+        })
+    elif controller:
+        action = controller.active_action()
+        action["reported"] = {
+            "usage": None, "estimated_micro_usd": None,
+            "cost_disposition": round_record["cost_disposition"],
+        }
+        action["state"] = "REPORTED"
+    save_state(run_dir / "run.json", state)
+    if failure_injector:
+        failure_injector("after_bounded_batch_member_ingestion")
+    return all(
+        state["passes"][pass_id]["state"] == "PASS_QA_ACCEPTED"
+        for pass_id in state["bounded"]["pass_ids"]
+    )
+
+
 def resume_bounded_run(
     run_dir: Path,
     *,
@@ -523,57 +938,78 @@ def resume_bounded_run(
             final_dir.mkdir(parents=True, exist_ok=True)
             pass_results_dir = final_dir / "passes"
             pass_results_dir.mkdir(exist_ok=True)
-            for pass_id in bounded["pass_ids"]:
-                pass_record = state["passes"][pass_id]
-                if pass_record["state"] == "PASS_QA_ACCEPTED":
-                    continue
-                packet = load_json(
-                    run_dir / bounded["pass_packets"][pass_id]["path"]
-                )
-                while len(pass_record["attempts"]) < state["max_attempts"]:
-                    attempt = len(pass_record["attempts"]) + 1
-                    stage = "authoring_initial" if attempt == 1 else "creative_retry"
-                    cards, metadata = _execute_stage(
-                        state, run_dir, provider, stage, attempt, controller, pass_id
+            if provider.service_level == "batch":
+                while True:
+                    complete = _bounded_batch_authoring_cycle(
+                        state, run_dir, provider, controller, _failure_injector
                     )
-                    if _failure_injector:
-                        _failure_injector(
-                            "after_authoring_provider_result"
-                            if attempt == 1 else "after_creative_retry_provider_result"
-                        )
-                    report = _pass_result_report(cards, packet)
-                    result_path = pass_results_dir / f"{pass_id}.json"
-                    report_path = pass_results_dir / f"{pass_id}.validation.json"
-                    write_json_atomic(result_path, cards)
-                    write_json_atomic(report_path, report)
-                    accepted = report["status"] == "pass"
-                    pass_record["attempts"].append({
-                        "attempt": attempt,
-                        "state": "PASS_QA_ACCEPTED" if accepted else "PASS_QA_REJECTED",
-                        "accepted": accepted,
-                        "provider_metadata": metadata,
-                        "qa": {"accepted": accepted, "report": report},
-                    })
-                    if accepted:
-                        pass_record["state"] = "PASS_QA_ACCEPTED"
-                        pass_record["accepted_attempt"] = attempt
-                        pass_record["accepted_workspace"] = normalized_path(result_path)
-                        if pass_id not in bounded["completed_pass_ids"]:
-                            bounded["completed_pass_ids"].append(pass_id)
-                        if stage not in bounded["completed_stages"]:
-                            bounded["completed_stages"].append(stage)
-                    elif attempt == state["max_attempts"]:
-                        pass_record["state"] = "FAILED_REQUIRES_REVIEW"
-                    save_state(run_json, state)
-                    if _failure_injector:
-                        _failure_injector(
-                            "after_authoring_checkpoint"
-                            if attempt == 1 else "after_creative_retry_checkpoint"
-                        )
-                    if accepted:
+                    if complete:
+                        for stage in ("authoring_initial", "creative_retry"):
+                            if any(
+                                attempt["attempt"] == (1 if stage == "authoring_initial" else 2)
+                                for record in state["passes"].values()
+                                for attempt in record["attempts"]
+                            ) and stage not in bounded["completed_stages"]:
+                                bounded["completed_stages"].append(stage)
+                        save_state(run_json, state)
                         break
-                if pass_record["state"] != "PASS_QA_ACCEPTED":
-                    return state
+                    latest = state["batch_service"]["rounds"][-1]
+                    if latest["state"] in {"PENDING", "REQUIRES_REVIEW"}:
+                        return state
+                    # A terminal round with rejected members immediately prepares
+                    # the next pass-local retry round and reaches its authorization.
+            else:
+                for pass_id in bounded["pass_ids"]:
+                    pass_record = state["passes"][pass_id]
+                    if pass_record["state"] == "PASS_QA_ACCEPTED":
+                        continue
+                    packet = load_json(
+                        run_dir / bounded["pass_packets"][pass_id]["path"]
+                    )
+                    while len(pass_record["attempts"]) < state["max_attempts"]:
+                        attempt = len(pass_record["attempts"]) + 1
+                        stage = "authoring_initial" if attempt == 1 else "creative_retry"
+                        cards, metadata = _execute_stage(
+                            state, run_dir, provider, stage, attempt, controller, pass_id
+                        )
+                        if _failure_injector:
+                            _failure_injector(
+                                "after_authoring_provider_result"
+                                if attempt == 1 else "after_creative_retry_provider_result"
+                            )
+                        report = _pass_result_report(cards, packet)
+                        result_path = pass_results_dir / f"{pass_id}.json"
+                        report_path = pass_results_dir / f"{pass_id}.validation.json"
+                        write_json_atomic(result_path, cards)
+                        write_json_atomic(report_path, report)
+                        accepted = report["status"] == "pass"
+                        pass_record["attempts"].append({
+                            "attempt": attempt,
+                            "state": "PASS_QA_ACCEPTED" if accepted else "PASS_QA_REJECTED",
+                            "accepted": accepted,
+                            "provider_metadata": metadata,
+                            "qa": {"accepted": accepted, "report": report},
+                        })
+                        if accepted:
+                            pass_record["state"] = "PASS_QA_ACCEPTED"
+                            pass_record["accepted_attempt"] = attempt
+                            pass_record["accepted_workspace"] = normalized_path(result_path)
+                            if pass_id not in bounded["completed_pass_ids"]:
+                                bounded["completed_pass_ids"].append(pass_id)
+                            if stage not in bounded["completed_stages"]:
+                                bounded["completed_stages"].append(stage)
+                        elif attempt == state["max_attempts"]:
+                            pass_record["state"] = "FAILED_REQUIRES_REVIEW"
+                        save_state(run_json, state)
+                        if _failure_injector:
+                            _failure_injector(
+                                "after_authoring_checkpoint"
+                                if attempt == 1 else "after_creative_retry_checkpoint"
+                            )
+                        if accepted:
+                            break
+                    if pass_record["state"] != "PASS_QA_ACCEPTED":
+                        return state
 
             assembled_cards = _assemble_accepted_passes(state, run_dir)
             assembled_report = validate_bounded_final_cards(

@@ -608,6 +608,7 @@ def _capacity_and_custody(
         route_adapter_supported = bool(
             identity.get("valid") and identity.get("adapter") in {
                 "exact_interactive", "exact_batch", "bounded_interactive",
+                "bounded_batch",
             }
             and binding.get("stage") in {
                 "authoring_initial", "creative_retry", "polish",
@@ -639,6 +640,7 @@ def _capacity_and_custody(
                 if not identity.get("valid")
                 or identity.get("adapter") not in {
                     "exact_interactive", "exact_batch", "bounded_interactive",
+                    "bounded_batch",
                 }
                 else "reconciliation_timing_missing"
             )

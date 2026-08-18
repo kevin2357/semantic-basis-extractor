@@ -120,13 +120,49 @@ class TestBoundedOpenAIProvider(unittest.TestCase):
             self.assertEqual(self.cards, resumed)
             self.assertEqual(["POST", "GET"], [call["method"] for call in transport.calls])
 
-    def test_batch_label_is_rejected_until_real_batch_submission_exists(self):
+    def test_batch_body_matches_interactive_logical_request(self):
         with tempfile.TemporaryDirectory() as temporary:
-            with self.assertRaisesRegex(ValueError, "Batch submission is not implemented"):
-                OpenAIBoundedLifecycleProvider(
-                    run_dir=Path(temporary), api_key="test-key",
-                    service_level="batch",
-                )
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=Path(temporary), api_key="test-key",
+                service_level="batch", model="gpt-5.6-luna",
+                maximum_output_tokens=5000,
+            )
+            pass_id = self.artifacts.split_assignment["card_passes"][0]["pass_id"]
+            packet = self.artifacts.pass_packets[pass_id]
+            payload = {
+                "route": "bounded_natal.v2", "stage": "authoring_initial",
+                "authoring_packet": packet,
+            }
+            body = provider.batch_request_body(
+                stage="authoring_initial", payload=payload, attempt_number=1,
+            )
+            live_transport = Transport(completed_response(
+                editorial_response(fake_author_bounded(packet))
+            ))
+            live_provider = OpenAIBoundedLifecycleProvider(
+                run_dir=Path(temporary) / "live", api_key="test-key",
+                service_level="interactive", model="gpt-5.6-luna",
+                maximum_output_tokens=5000, transport=live_transport,
+            )
+            live_provider.execute(
+                stage="authoring_initial",
+                route=f"bounded_natal.v2:{pass_id}:attempt-001",
+                payload=payload, before_submit=lambda _: None,
+                provider_created=lambda *_: None,
+            )
+            live_body = live_transport.calls[0]["payload"]
+            self.assertIn("background", live_body)
+            live_body.pop("background")
+            self.assertEqual(body, live_body)
+            self.assertEqual(provider._instructions("authoring_initial"), body["input"][0]["content"])
+            self.assertEqual(payload, json.loads(body["input"][1]["content"]))
+            self.assertEqual(
+                provider._schema("authoring_initial", payload),
+                body["text"]["format"]["schema"],
+            )
+            rendered = json.dumps(body, sort_keys=True)
+            self.assertNotIn("1981-10-10T15:00:00-06:00", rendered)
+            self.assertNotIn("SEED-PROTECTED-DENVER", rendered)
 
     def test_interactive_pass_request_is_isolated_and_hydrates_only_its_authority(self):
         pass_id = self.artifacts.split_assignment["card_passes"][0]["pass_id"]

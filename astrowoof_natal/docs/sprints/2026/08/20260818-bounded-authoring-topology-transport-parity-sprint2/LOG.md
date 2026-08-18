@@ -172,3 +172,44 @@
 - `git diff --check` passes with only expected checkout line-ending notices.
 - Provider operations: 0. Spend: USD 0.
 - Slice 4 is complete and paused for gate review before bounded Batch work.
+
+## 2026-08-18 — Slice 5 bounded Batch transport
+
+- Added bounded Batch as a provider transport over the same six frozen bounded
+  logical pass requests. An actual recorded interactive payload matches its Batch
+  member after removing only the interactive `background` field.
+- Persisted closed bounded Batch round/member records with exact JSONL hash, File
+  and Batch identities, ordered `custom_id` inventory, aggregate maximum output,
+  aggregate commitment, request counts, output/error File identities, terminal
+  status, and cost disposition.
+- Bound one paid action and one external reservation unit to each Batch round. The
+  six initial members and any later retry members remain audit/settlement detail;
+  they do not multiply global reservation authority.
+- Implemented one six-member initial round and pass-local retry rounds. A rejected
+  or provider-error member retries only its pass; a provider-terminal failed round
+  retries its six affected passes under creative-retry authority.
+- Added durable upload/create/detach/retrieve/download/ingest behavior. Interruption
+  after durable Batch identity resumes by retrieving that identity and never
+  uploads or creates another Batch.
+- Added bounded Batch to native transition, lifecycle inspection v0.3, custody,
+  neutral reconciliation dispatch, and CLI reconciliation. Reconciliation is
+  retrieval-only and preserves the 40-second Batch cycle bound.
+- Missing provider usage is explicitly
+  `provider_usage_unavailable_billing_reconciliation_pending`: provider retrieval
+  custody ends, while consumer billing authority remains retained. It is never
+  represented as reported zero spend.
+- API gate review required and received one conservative correction: aggregate
+  `provider_usage_reported` now requires usage for every potentially billable
+  member. Any missing member usage—including a mixed reported/unreported round or
+  an error-file member—keeps the whole round at billing reconciliation pending;
+  SBE never settles the action from a partial total.
+- Duplicate, missing, unknown, output/error-overlapping, or malformed member
+  inventories fail closed before any member is ingested. Strict native round/member
+  key and binding validation rejects consumer guesses and mixed authority.
+- Historical bounded v1 Batch remains `bounded_batch_unsupported`; only bounded v2
+  round bindings are admitted.
+- Exact semantic-closure compatibility: 85 tests passed in 207.894 seconds.
+- Desktop bounded/lifecycle gate: 120 tests passed in 124.146 seconds.
+- Python 3.11 Linux read-only-container gate: 120 tests passed in 27.162 seconds.
+- Provider operations: 0. Spend: USD 0.
+- Slice 5 is complete and paused for API fixture/lifecycle review before Slice 6.

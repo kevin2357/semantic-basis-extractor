@@ -81,8 +81,6 @@ def main() -> None:
         parser.error("--provider-reconciliation-cycle requires --resume")
     if args.provider_reconciliation_cycle and args.provider != "openai":
         parser.error("--provider-reconciliation-cycle requires provider=openai")
-    if args.provider_reconciliation_cycle and args.service_level != "interactive":
-        parser.error("bounded-Natal Batch reconciliation is not supported")
     if args.provider_reconciliation_cycle and args.spend_authorization:
         parser.error("provider reconciliation cannot apply spend authorization")
     if args.provider_reconciliation_cycle and not args.observed_at:
@@ -102,7 +100,16 @@ def main() -> None:
                 args.run_dir,
                 observed_at=args.observed_at,
                 provider_adapters=ProviderReconciliationAdapters(
-                    bounded_interactive_provider=provider,
+                    bounded_interactive_provider=(
+                        provider if args.service_level == "interactive" else None
+                    ),
+                    bounded_batch_provider=(
+                        provider if args.service_level == "batch" else None
+                    ),
+                    bounded_batch_transport=(
+                        provider.batch_transport
+                        if args.service_level == "batch" else None
+                    ),
                 ),
                 event_emitter=emitter,
             )
@@ -144,6 +151,11 @@ def main() -> None:
             event_emitter=emitter,
         )
         print(json.dumps(public_run_state(state), sort_keys=True))
+        if (
+            args.service_level == "batch"
+            and state.get("status") != "DELIVERY_COMPLETE"
+        ):
+            raise SystemExit(3)
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
         state = load_json(args.run_dir / "run.json")
         from ..native_transitions import publish_native_execution_result

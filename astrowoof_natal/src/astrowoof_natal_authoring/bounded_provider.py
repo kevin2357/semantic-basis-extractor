@@ -12,7 +12,7 @@ from .bounded_authoring import (
     VOICE_KEYS,
     assert_provider_minimized,
 )
-from .closure import OpenAIResponsesProvider
+from .closure import OpenAIResponsesProvider, UrllibOpenAIBatchTransport
 from .pass_protocol import (
     LogicalPassRequest,
     bind_logical_pass_request,
@@ -39,14 +39,18 @@ class OpenAIBoundedLifecycleProvider:
         self.reasoning_effort = reasoning_effort
         self.service_level = service_level
         self.maximum_output_tokens = maximum_output_tokens
-        if service_level == "batch":
-            raise ValueError(
-                "Bounded Batch submission is not implemented; do not claim Batch pricing"
-            )
         self.responses = OpenAIResponsesProvider(
             api_key=api_key, model=model, reasoning_effort=reasoning_effort,
             max_output_tokens=maximum_output_tokens,
             require_spend_authorization=True, **responses_options,
+        )
+        self.batch_transport = (
+            UrllibOpenAIBatchTransport(
+                api_key=api_key,
+                base_url=self.responses.base_url,
+                timeout_seconds=min(self.responses.http_timeout_seconds, 40.0),
+            )
+            if service_level == "batch" else None
         )
 
     @staticmethod
@@ -192,7 +196,7 @@ class OpenAIBoundedLifecycleProvider:
         )
         stages = {
             "authoring_initial": "Write every editorial field from the bounded packet.",
-            "creative_retry": "Rewrite the complete editorial deck after local QA rejection.",
+            "creative_retry": "Rewrite the complete assigned editorial pass after local QA rejection.",
             "polish": "Polish prose only.",
             "qualitative_critic": "Critique the current deck without rewriting it.",
             "qualitative_candidate": "Produce one complete improved editorial candidate.",
@@ -225,6 +229,47 @@ class OpenAIBoundedLifecycleProvider:
             output_schema=self._schema(stage, {"authoring_packet": packet}),
             maximum_output_tokens=self.maximum_output_tokens,
         )
+
+    def batch_request_body(
+        self, *, stage: str, payload: dict[str, Any], attempt_number: int,
+    ) -> dict[str, Any]:
+        """Serialize one frozen bounded logical pass for `/v1/responses` Batch."""
+        packet = payload["authoring_packet"]
+        self.logical_pass_request(
+            stage=stage, packet=packet, attempt_number=attempt_number,
+        )
+        instructions = self._instructions(stage)
+        output_schema = self._schema(stage, {"authoring_packet": packet})
+        body: dict[str, Any] = {
+            "model": self.model,
+            "input": [
+                {"role": "system", "content": instructions},
+                {
+                    "role": "user",
+                    "content": json.dumps(payload, ensure_ascii=False, sort_keys=True),
+                },
+            ],
+            "reasoning": {"effort": self.reasoning_effort},
+            "text": {
+                "verbosity": "high",
+                "format": {
+                    "type": "json_schema",
+                    "name": f"astrowoof_bounded_{stage}",
+                    "strict": True,
+                    "schema": output_schema,
+                },
+            },
+            "max_output_tokens": self.maximum_output_tokens,
+        }
+        if self.responses.safety_identifier:
+            body["safety_identifier"] = self.responses.safety_identifier
+        return body
+
+    def hydrate_batch_member(
+        self, editorial: dict[str, Any], packet: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Reattach immutable bounded authority after Batch member retrieval."""
+        return self._hydrate_cards(editorial, packet)
 
     def _complete(
         self, *, stage: str, route: str, payload: dict[str, Any],

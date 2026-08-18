@@ -306,8 +306,6 @@ def _route_binding(state: dict[str, Any], action: dict[str, Any]) -> dict[str, A
     if not bounded and not exact:
         raise ValueError("Paid action has no supported native transition route")
     mechanism = "batch" if binding.get("service_level") == "batch" else "response"
-    if bounded and mechanism == "batch":
-        raise ValueError("Bounded Batch has no supported native transition route")
     return {
         "route_family": "bounded_natal" if bounded else "exact_natal",
         "provider_mechanism": mechanism,
