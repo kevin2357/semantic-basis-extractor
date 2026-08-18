@@ -701,6 +701,21 @@ SBE supports two instruction profiles:
   aspect and synthesis. Use `--workspace-layout single` only for legacy or
   controlled experiments.
 
+  This split is an editorial-quality boundary, not merely a way to reduce elapsed
+  time. Asking one model context to produce hundreds of short reader-facing fields
+  encouraged bulk templating even under explicit anti-template instructions. Five
+  ten-card story contexts limit each authoring task enough to preserve independent
+  narrative decisions, while the sixth keeps summary/theme synthesis separate.
+  Execution may be sequential or concurrent, but production provider orchestration
+  must preserve the six isolated logical requests.
+
+  `stratified-v1` deterministically distributes claim types, categories, domains,
+  and priority bands and orders each pass to reduce adjacent semantic similarity.
+  Its replayable assignment is shared by interactive and Batch transport for a
+  frozen selected packet. Batch members are therefore transports for the same
+  logical authoring packets, not an opportunity to collapse them into one bulk
+  request or repartition them silently.
+
   `--full-chart-basis-format legacy` preserves the historical complete-claim
   plus recursive-registry transport. Experimental `compact-v1` instead emits
   an author-oriented pass-local `FULL CHART BASIS.md` and a structured local

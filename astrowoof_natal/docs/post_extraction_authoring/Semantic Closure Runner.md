@@ -100,6 +100,14 @@ Markdown files around their original field markers. The model cannot rename
 files, alter source guidance, edit the bundled checker, or omit a required
 field without deterministic rejection.
 
+The six-request boundary is a writing-quality control, not merely a concurrency
+optimization. A single request containing hundreds of short headline/body/voice
+assignments encouraged otherwise capable models to solve the workload through
+repeated prose templates. Five isolated ten-card story contexts preserve enough
+room for independent narrative decisions; the sixth isolates whole-dog summary and
+theme work. Lowering `--max-workers` may execute these contexts sequentially, but it
+must not combine them into one provider request.
+
 Passes 1–5 contain card assignments only. Pass 6 receives a writable
 four-thesis plan and, for subjects other than Kevin, the versioned four-summary
 Kevin craft reference. The reference demonstrates coordinated identity,
@@ -122,6 +130,12 @@ pass to reduce adjacent semantic similarity. It does not change claim IDs,
 priority IDs, selection semantics, or final deck order. SBE writes the complete
 replay map, subject-derived seed, and algorithm version to
 `<subject>.split-assignment.json` and records them in `run-manifest.json`.
+
+For a frozen selected packet, subject, and assignment-policy identity, this plan is
+the transport-neutral editorial assignment. Interactive and Batch modes consume the
+same ordered pass membership. Independent runs may receive a different plan only
+when their selected basis or an explicit versioned assignment identity differs; the
+runner does not introduce an unrecorded random shuffle.
 
 Use `--split-assignment-policy contiguous` for the historical control in which
 passes receive priority IDs 1–10, 11–20, and so on. Direct SBE invocation keeps
@@ -281,6 +295,13 @@ Batch API's 24-hour completion window. Interactive Responses remain the
 default. Batch mode uploads one JSONL request file for every model-homogeneous
 round, submits it to `/v1/responses`, persists the input file ID and Batch ID,
 then resolves returned rows by their unique pass-and-attempt `custom_id`.
+
+Batch is a provider transport, not an alternate authoring topology. Each JSONL
+member represents the same isolated logical pass that interactive mode would submit
+as its own Responses request. Switching service level must not change the frozen
+pass assignment, provider-visible instructions and ordered content, writable-field
+schema, retry feedback, local reconstruction, or acceptance behavior. Only the
+submission/retrieval envelope and its custody/accounting evidence differ.
 
 ```powershell
 python src/author_semantic_closure.py `

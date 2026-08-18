@@ -85,6 +85,13 @@ bounded contracts rather than applying exact-chart assumptions by analogy.
 - **Routes are explicit policies.** Exact Natal, bounded Natal, Responses, and
   Batch share infrastructure only where their contracts agree. Unsupported
   combinations are rejected rather than approximated.
+- **Authoring fan-out is an editorial invariant.** Five isolated ten-card story
+  contexts plus a separate summary/theme context prevent bulk short-form work from
+  collapsing into templated prose. Concurrency may be reduced, but a transport or
+  scheduler refactor must not merge those logical contexts into one model request.
+  For a frozen route assignment, interactive and Batch use the same pass membership,
+  ordering, instructions, writable schema, retry feedback, and assembly semantics;
+  only provider submission and retrieval differ.
 - **Artifacts are products, not incidental files.** Contract schemas, guidance,
   profiles, fixtures, reference data, event vocabularies, and package typing are
   part of the released runtime and must be qualified with the Python code.
