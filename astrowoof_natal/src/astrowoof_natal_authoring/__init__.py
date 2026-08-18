@@ -25,16 +25,22 @@ from .route_parity import (  # noqa: E402
 )
 from .initial_wave import (  # noqa: E402
     InitialWaveError,
+    build_initial_wave_binding_bundle,
     build_wave_authorization,
     preflight_wave_authorization,
     validate_initial_wave,
+    validate_initial_wave_binding_bundle,
+    validate_initial_wave_binding_bundle_against_wave,
     validate_initial_wave_result,
     validate_wave_authorization_document,
 )
 from .initial_wave_contract import (  # noqa: E402
+    build_initial_wave_authority_inputs,
+    read_initial_wave_authority_inputs,
     read_initial_wave_fixture,
     read_initial_wave_schema,
     validate_initial_wave_fixture,
+    validate_initial_wave_authority_inputs,
 )
 
 __all__ = [
@@ -43,9 +49,12 @@ __all__ = [
     "InitialWaveError",
     "__version__",
     "latest_native_transition_result",
+    "build_initial_wave_authority_inputs",
+    "build_initial_wave_binding_bundle",
     "build_wave_authorization",
     "preflight_wave_authorization",
     "read_initial_wave_fixture",
+    "read_initial_wave_authority_inputs",
     "read_initial_wave_schema",
     "read_native_transition_result",
     "read_bounded_route_parity_traces",
@@ -53,6 +62,9 @@ __all__ = [
     "reconcile_authoring_provider_cycle",
     "validate_bounded_route_traces",
     "validate_initial_wave",
+    "validate_initial_wave_authority_inputs",
+    "validate_initial_wave_binding_bundle",
+    "validate_initial_wave_binding_bundle_against_wave",
     "validate_initial_wave_fixture",
     "validate_initial_wave_result",
     "validate_wave_authorization_document",

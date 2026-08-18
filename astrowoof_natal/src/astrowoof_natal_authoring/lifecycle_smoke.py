@@ -94,6 +94,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "contracts/execution-event-payload-catalog.v1.json",
         "contracts/initial-wave-contracts.v1.schema.json",
         "contracts/initial-wave-result.v1.schema.json",
+        "contracts/initial-authoring-wave-binding-bundle.v1.schema.json",
+        "contracts/initial-authoring-wave-authority-inputs.v1.schema.json",
         "fixtures/lifecycle/negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-result.v0.1.json",
@@ -109,6 +111,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "fixtures/initial_wave/wave-authorization.v1.json",
         "fixtures/initial_wave/six-id-detach.v1.json",
         "fixtures/initial_wave/partial-ambiguity.v1.json",
+        "fixtures/initial_wave/exact-binding-bundle.v1.json",
+        "fixtures/initial_wave/bounded-binding-bundle.v1.json",
         "fixtures/native_transition/review-terminal-receipt.v0.1.json",
         "fixtures/native_transition/consumer-ingestion-cases.v0.1.json",
     ):

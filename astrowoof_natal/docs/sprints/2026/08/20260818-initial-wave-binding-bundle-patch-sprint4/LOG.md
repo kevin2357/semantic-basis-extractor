@@ -25,6 +25,29 @@
   `jsonschema` skips.
 - Provider operations and spend: zero.
 
+## 2026-08-18 — Slice 2 API review accepted
+
+- API approved the joined public reader, wrapper/schema, cross-validation, root
+  exports, CLI, consumer handoff, and exact/bounded test evidence without changes.
+- Confirmed API Slice 3 can consume the wrapper, persist both documents and digest,
+  atomically reserve the six ordered bindings, create six ordinary authorizations,
+  build the wave envelope, and resume without reconstructing SBE facts.
+- Reconciled the consumer-review manifest to `api_approved`.
+
+## 2026-08-18 — Slice 2 complete; awaiting API review
+
+- Added one snapshot-validating public reader that returns the exact prepared wave
+  and binding bundle together in a closed content-bound wrapper.
+- Added `--initial-wave-inputs --run-dir` CLI support and rejected output paths
+  inside the inspected workspace.
+- Packaged strict bundle/pair schemas, exact/bounded fixtures, root exports, catalog
+  entries, lifecycle-smoke resources, and updated consumer handoffs.
+- Public/contract suite: 61 passed. Strict resolved schema validation: pass.
+- Installed candidate and exact/bounded run-specific Python/CLI qualification: pass.
+- Candidate SHA-256: `15068ee064654226a7c05a37cddce18cc0e0ecb28c27b54e7824b1e8f46fd78a`;
+  qualification-only and not publishable as 0.4.7.
+- Provider operations and spend: zero.
+
 ## 2026-08-18 — Slice 0 API review accepted
 
 - API accepted the binding-bundle design with one public-reader completion

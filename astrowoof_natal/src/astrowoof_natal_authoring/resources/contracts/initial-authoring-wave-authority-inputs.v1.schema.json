@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.initial_authoring_wave_authority_inputs.v1",
+  "type": "object",
+  "required": ["schema_version", "authority_inputs_sha256", "prepared_wave", "binding_bundle"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.initial_authoring_wave_authority_inputs.v1"},
+    "authority_inputs_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "prepared_wave": {"$ref": "initial-wave-contracts.v1.schema.json#/$defs/prepared_wave"},
+    "binding_bundle": {"$ref": "initial-authoring-wave-binding-bundle.v1.schema.json"}
+  },
+  "additionalProperties": false
+}

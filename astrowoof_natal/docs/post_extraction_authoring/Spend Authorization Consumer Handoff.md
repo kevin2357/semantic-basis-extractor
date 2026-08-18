@@ -52,6 +52,13 @@ wave-level authority envelope plus exactly six ordered member authorizations. Se
 The API must reserve the complete set before any create; Batch remains one paid
 round action/reservation rather than six reservations.
 
+For fresh six-pass initial waves, obtain the prepared wave and six full bindings
+through the snapshot-validating `read_initial_wave_authority_inputs()` public
+operation (or its `--initial-wave-inputs` CLI). Do not parse
+`spend-authorization-requests.json` or reconstruct bindings from selected wave
+fields for this boundary. The legacy request projection remains the ordinary-stage
+handoff for non-wave actions.
+
 Treat an authorization pause as checkpoint-ready only after the SBE invocation
 has exited and its coordinator-written `workspace-snapshot.json` validates
 against the complete directory. Internal ledger persistence may precede that

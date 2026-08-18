@@ -10,6 +10,7 @@ from __future__ import annotations
 import concurrent.futures
 import queue
 import time
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping, Sequence
 
@@ -495,6 +496,15 @@ def validate_initial_wave(wave: Mapping[str, Any]) -> None:
     }
     if wave.get("timing") != expected_timing:
         raise InitialWaveError("binding_mismatch", "Wave timing policy changed")
+
+
+def initial_wave_public_document(stored: Mapping[str, Any]) -> dict[str, Any]:
+    """Project and validate the exact public wave from SBE-owned native state."""
+    if not isinstance(stored, Mapping) or not _WAVE_KEYS <= set(stored):
+        raise InitialWaveError("wave_missing", "No complete prepared wave exists")
+    value = {key: deepcopy(stored[key]) for key in _WAVE_KEYS}
+    validate_initial_wave(value)
+    return value
 
 
 def validate_wave_authorization_document(

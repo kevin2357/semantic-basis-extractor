@@ -11,6 +11,8 @@ authorize the exact complete wave before SBE creates any provider operation.
 | Prepared wave | `astrowoof.initial_authoring_wave.v1` |
 | API wave authorization | `astrowoof.initial_authoring_wave_authorization.v1` |
 | Aggregate create result | `astrowoof.initial_authoring_wave_result.v1` |
+| Complete binding bundle | `astrowoof.initial_authoring_wave_binding_bundle.v1` |
+| Joined authority inputs | `astrowoof.initial_authoring_wave_authority_inputs.v1` |
 
 These contracts do not replace lifecycle inspection v0.3, reconciliation-cycle
 result v0.2, the native transition journal/result/receipt, or the six ordinary
@@ -26,20 +28,26 @@ not interchangeable.
 ## API adoption sequence
 
 1. Start or resume the supported exact/bounded runner until SBE publishes the
-   prepared wave and six `PREPARED` spend actions.
-2. Validate the prepared wave v1 and every member binding. Atomically reserve the
+   prepared wave, binding bundle, and six `PREPARED` spend actions.
+2. Call `read_initial_wave_authority_inputs(run_dir)` or
+   `astrowoof-initial-wave-contract --initial-wave-inputs --run-dir <run>`. SBE
+   validates the complete snapshot, both documents, and their exact join before
+   returning either.
+3. Persist the returned prepared wave and bundle, verify both native run IDs equal
+   `SbeAuthoringRun.native_run_id`, then atomically reserve the
    exact complete six-action set in API-owned storage. A partial API reservation set
    must not cross the SBE execution boundary.
-3. Create six ordinary member authorization documents, then create the wave-level
+4. Create six ordinary member authorization documents by copying the exact complete
+   binding from each ordered bundle member. Then create the wave-level
    authorization with `build_wave_authorization()`. Persist all seven documents.
-4. Resume with `--initial-wave-authorization` and exactly six ordered
+5. Resume with `--initial-wave-authorization` and exactly six ordered
    `--spend-authorization` arguments. SBE validates the complete set before any
    provider create or authorization consumption.
-5. Ingest the immutable native result/receipt before interpreting command exit.
+6. Ingest the immutable native result/receipt before interpreting command exit.
    Validate lifecycle inspection and persist mapped API state transactionally.
-6. Release the worker slot when inspection says `release_until_due`; retain every
+7. Release the worker slot when inspection says `release_until_due`; retain every
    listed provider-custody action and consumer-authority action.
-7. Reclaim on or after `resume_not_before`. Never poll early and never use the wave
+8. Reclaim on or after `resume_not_before`. Never poll early and never use the wave
    result alone as scheduling authority.
 
 The API remains authoritative for cross-run reservations, account/global quotas,
@@ -78,21 +86,29 @@ ambiguous member into retry authority automatically.
 
 - `contracts/initial-wave-contracts.v1.schema.json`
 - `contracts/initial-wave-result.v1.schema.json`
+- `contracts/initial-authoring-wave-binding-bundle.v1.schema.json`
+- `contracts/initial-authoring-wave-authority-inputs.v1.schema.json`
 - `fixtures/initial_wave/prepared-wave.v1.json`
 - `fixtures/initial_wave/wave-authorization.v1.json`
 - `fixtures/initial_wave/six-id-detach.v1.json`
 - `fixtures/initial_wave/partial-ambiguity.v1.json`
+- `fixtures/initial_wave/exact-binding-bundle.v1.json`
+- `fixtures/initial_wave/bounded-binding-bundle.v1.json`
 
 Python consumers may import from the package root:
 
 ```python
 from astrowoof_natal_authoring import (
     build_wave_authorization,
+    read_initial_wave_authority_inputs,
     preflight_wave_authorization,
     read_initial_wave_fixture,
     read_initial_wave_schema,
     validate_initial_wave,
     validate_initial_wave_result,
+    validate_initial_wave_authority_inputs,
+    validate_initial_wave_binding_bundle,
+    validate_initial_wave_binding_bundle_against_wave,
     validate_wave_authorization_document,
 )
 ```
@@ -106,7 +122,18 @@ astrowoof-initial-wave-contract --fixture six-id-detach
 astrowoof-initial-wave-contract --fixture partial-ambiguity
 astrowoof-initial-wave-contract --schema wave
 astrowoof-initial-wave-contract --schema result
+astrowoof-initial-wave-contract --schema binding-bundle
+astrowoof-initial-wave-contract --schema authority-inputs
+astrowoof-initial-wave-contract --fixture exact-binding-bundle
+astrowoof-initial-wave-contract --fixture bounded-binding-bundle
+astrowoof-initial-wave-contract --initial-wave-inputs --run-dir <restored-run>
 ```
+
+The run-specific operation is provider-free and read-only. An `--output` path must
+resolve outside the run workspace. It returns one content-bound closed wrapper with
+both `prepared_wave` and `binding_bundle`; a snapshot, document, digest, or join
+failure returns neither. The API must not reconstruct either document from
+`run.json`, `spend-authorization-requests.json`, packet files, or logs.
 
 Unsupported versions, extra fields, changed digests, reordered/missing members, and
 aggregate/member conflicts fail closed.

@@ -1,0 +1,12 @@
+{
+  "schema_version": "astrowoof.initial_wave_binding_bundle_consumer_review.v1",
+  "status": "api_approved",
+  "provider_operations": 0,
+  "resources": [
+    {"installed_path": "contracts/initial-authoring-wave-binding-bundle.v1.schema.json", "sha256": "483d6134914f4598f9897e20d7464a7a4752e5e69a7b05577130b8325e5b4a58"},
+    {"installed_path": "contracts/initial-authoring-wave-authority-inputs.v1.schema.json", "sha256": "2a2f602f589ea24f408b8358837db3522b4875d448ec423ba8906c08ed39f957"},
+    {"installed_path": "fixtures/initial_wave/exact-binding-bundle.v1.json", "sha256": "7d2eb1d845394926ed0c1cec83215b3b7c85879466560f2f3c4c52d2f9db35da"},
+    {"installed_path": "fixtures/initial_wave/bounded-binding-bundle.v1.json", "sha256": "9ed155ce6dd9eddb61845c4d13bd674048f7ae4799f76b6601b5e0de9d1bcf07"}
+  ],
+  "handoff": "astrowoof_natal/docs/post_extraction_authoring/Initial Authoring Wave Consumer Handoff.md"
+}

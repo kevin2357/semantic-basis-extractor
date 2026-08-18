@@ -11,6 +11,23 @@
   wave-ID/digest binding, no frozen ordered inventory, and no supported run-specific
   public reader/CLI.
 - Provider operations / spend: 0 / USD 0.
+- API Slice 2 review: approved without contract changes.
+- [API Agent Slice 2 Review and Response.md](API%20Agent%20Slice%202%20Review%20and%20Response.md)
+
+## Slice 2
+
+- [Slice 2 result](results/SLICE%202%20-%20Public%20Joined%20Authority%20Inputs.md)
+- [Consumer review manifest](fixtures/slice2-consumer-review-manifest.json)
+- [Installed qualification driver](qualification/slice2_installed_authority_inputs.py)
+- Public root reader/CLI returns prepared wave plus binding bundle only after full
+  snapshot, individual document, join, and wrapper digest validation.
+- Packaged resource hashes are frozen in the consumer-review manifest.
+- Public/contract suite: 61 passed in 3.864 seconds.
+- Offline strict resolved-schema validation: pass.
+- Installed Windows exact/bounded Python and CLI round trips: pass.
+- Qualification wheel SHA-256:
+  `15068ee064654226a7c05a37cddce18cc0e0ecb28c27b54e7824b1e8f46fd78a`.
+- Provider operations / spend: 0 / USD 0.
 - API review: approved after freezing one atomic snapshot-validating public pair
   reader for the prepared wave plus binding bundle.
 - [API Agent Slice 0 Review and Response.md](API%20Agent%20Slice%200%20Review%20and%20Response.md)
