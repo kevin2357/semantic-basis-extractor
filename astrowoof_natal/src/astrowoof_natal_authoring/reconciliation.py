@@ -82,7 +82,7 @@ def native_provider_route_identity(
         route_family == "bounded_natal" and kind == "response"
         and service == "interactive" and native_ref.startswith("bounded_natal.v1:")
     ):
-        adapter = "bounded_interactive_deferred"
+        adapter = "bounded_interactive"
     elif route_family == "bounded_natal" and (kind == "batch" or service == "batch"):
         adapter = "bounded_batch_unsupported"
         valid = False
@@ -271,6 +271,63 @@ def reconcile_provider_cycle(
             observed_at=instant,
         )
         capacity = before["execution_capacity"]
+        completed_evidence = [
+            item for item in before["provider_custody"]["actions"]
+            if item["custody_classification"] == "completed_provider_evidence"
+        ]
+        if capacity["disposition"] == "continue_local_cycle" and completed_evidence:
+            completed_ids = [item["action_id"] for item in completed_evidence]
+            operation_summaries = [{
+                "action_id": item["action_id"],
+                "route_family": item["route_family"],
+                "provider_operation_kind": "response",
+                "provider_operation_id": item["provider_operation_id"],
+                "retrieval_outcome": "completed",
+                "cost_disposition": (
+                    "provider_usage_reported"
+                    if json.loads((
+                        run_dir / "lifecycle" / "provider-reconciliation" /
+                        f"{item['action_id']}.response.json"
+                    ).read_text(encoding="utf-8")).get("usage") is not None
+                    else "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+                "member_count": None, "ingested_member_count": None,
+                "failed_member_count": None,
+            } for item in completed_evidence]
+            cycle = {
+                "started_at": instant, "finished_at": instant,
+                "wall_clock_limit_seconds": 20,
+                "provider_retrieval_count": 0, "retrieved_action_ids": [],
+                "completed_action_ids": completed_ids,
+                "still_pending_action_ids": [],
+                "transport_warning_action_ids": [],
+            }
+            evidence_root = run_dir / "lifecycle" / "provider-reconciliation"
+            artifact = evidence_root / f"cycle-{state['state_revision']:08d}-local.json"
+            write_json_atomic(artifact, {
+                "schema_version": "astrowoof.provider_reconciliation_cycle_record.v0.1",
+                "run_id": state["run_id"], "decision_basis": before["observation"],
+                "cycle": cycle, "provider_operations": operation_summaries,
+            })
+            write_workspace_snapshot(run_dir)
+            after = inspect_lifecycle(
+                run_dir, native_exclusive_access="established", observed_at=instant,
+            )
+            return {
+                "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
+                "run_id": state["run_id"], "outcome": "progressed_local",
+                "decision_basis": before["observation"], "cycle": cycle,
+                "inspection": after, "provider_operations": operation_summaries,
+                "result_checkpoint": {
+                    "operator_state_revision": state["state_revision"],
+                    "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+                    "result_artifact": {
+                        "logical_path": artifact.relative_to(run_dir).as_posix(),
+                        "bytes": artifact.stat().st_size,
+                        "sha256": _file_sha256(artifact),
+                    },
+                },
+            }
         if capacity["disposition"] == "release_until_due":
             return {
                 "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
@@ -373,12 +430,17 @@ def reconcile_provider_cycle(
         completed: list[str] = []
         warnings: list[str] = []
         identity_conflicts: list[str] = []
+        provider_failures: list[str] = []
         operation_summaries: list[dict[str, Any]] = []
         by_id = {item["action_id"]: item for item in actions}
         evidence_root = run_dir / "lifecycle" / "provider-reconciliation"
         for action_id, value in results:
             retrieved.append(action_id)
             action = by_id[action_id]
+            action_route_family = str(
+                native_provider_route_identity(state, action).get("route_family")
+                or "exact_natal"
+            )
             timing = action["provider_reconciliation"]
             if isinstance(value, Exception):
                 if isinstance(value, ProviderRetrievalIdentityMismatch):
@@ -390,7 +452,7 @@ def reconcile_provider_cycle(
                     retrieval_outcome = "identity_conflict"
                     cost_disposition = "not_applicable_provider_pending"
                     operation_summaries.append({
-                        "action_id": action_id, "route_family": "exact_natal",
+                        "action_id": action_id, "route_family": action_route_family,
                         "provider_operation_kind": "response",
                         "provider_operation_id": action["provider"]["id"],
                         "retrieval_outcome": retrieval_outcome,
@@ -404,7 +466,7 @@ def reconcile_provider_cycle(
                     timing, attempted_at=instant, outcome="transport_warning"
                 )
                 operation_summaries.append({
-                    "action_id": action_id, "route_family": "exact_natal",
+                    "action_id": action_id, "route_family": action_route_family,
                     "provider_operation_kind": "response",
                     "provider_operation_id": action["provider"]["id"],
                     "retrieval_outcome": "transport_warning",
@@ -427,6 +489,25 @@ def reconcile_provider_cycle(
                     "provider_usage_reported" if isinstance(value.get("usage"), dict)
                     else "provider_usage_unavailable_billing_reconciliation_pending"
                 )
+            elif status in {"failed", "cancelled", "incomplete"}:
+                record_attempt(timing, attempted_at=instant, outcome="provider_failed")
+                completed.append(action_id)
+                provider_failures.append(action_id)
+                write_json_atomic(evidence_root / f"{action_id}.response.json", value)
+                cost_disposition = (
+                    "provider_usage_unavailable_billing_reconciliation_pending"
+                )
+                action["reported"] = {
+                    "usage": value.get("usage"),
+                    "estimated_micro_usd": None,
+                    "cost_disposition": cost_disposition,
+                }
+                action["integrity_review"] = {
+                    "reason": f"Provider Response ended with status {status}",
+                    "provider_status": status,
+                }
+                action["state"] = "REPORTED"
+                retrieval_outcome = "provider_failed"
             else:
                 warnings.append(action_id)
                 record_attempt(
@@ -435,7 +516,7 @@ def reconcile_provider_cycle(
                 retrieval_outcome = "transport_warning"
                 cost_disposition = "not_applicable_provider_pending"
             operation_summaries.append({
-                "action_id": action_id, "route_family": "exact_natal",
+                "action_id": action_id, "route_family": action_route_family,
                 "provider_operation_kind": "response",
                 "provider_operation_id": action["provider"]["id"],
                 "retrieval_outcome": retrieval_outcome,
@@ -476,7 +557,7 @@ def reconcile_provider_cycle(
             "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
             "run_id": state["run_id"],
             "outcome": (
-                "review_required" if identity_conflicts
+                "review_required" if identity_conflicts or provider_failures
                 else "progressed_local" if completed
                 else "detached_provider_pending"
             ),
@@ -1031,8 +1112,9 @@ def run_bounded_authoring_reconciliation(
     polish_provider: Any = None,
     critic_provider: Any = None,
     qualitative_editor_provider: Any = None,
+    _failure_injector: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
-    """Retrieve one due wave and exhaust its newly unblocked pass-local work."""
+    """Retrieve one due interactive wave and exhaust route-local continuation."""
     from .closure import (
         SNAPSHOT_NAME,
         SpendController,
@@ -1062,7 +1144,9 @@ def run_bounded_authoring_reconciliation(
 
     if getattr(provider, "name", None) != "openai":
         raise ValueError("Bounded authoring reconciliation requires OpenAI provider")
-    retrieval_provider = getattr(provider, "initial", provider)
+    retrieval_provider = getattr(
+        provider, "responses", getattr(provider, "initial", provider)
+    )
     original_timeout = retrieval_provider.http_timeout_seconds
     original_retries = retrieval_provider.max_transport_retries
 
@@ -1085,8 +1169,83 @@ def run_bounded_authoring_reconciliation(
     finally:
         retrieval_provider.http_timeout_seconds = original_timeout
         retrieval_provider.max_transport_retries = original_retries
+    if _failure_injector:
+        _failure_injector("after_provider_retrieval_checkpoint")
     completed_ids = set(result["cycle"]["completed_action_ids"])
     if not completed_ids or result["outcome"] == "review_required":
+        emit_checkpoint_events(result)
+        return result
+
+    route_family = result["inspection"]["native_route"]["route_family"]
+    if route_family == "bounded_natal":
+        from .bounded_lifecycle import resume_bounded_run
+        from .spend import (
+            AmbiguousProviderSubmission,
+            AwaitingSpendAuthorization,
+            BudgetExhausted,
+        )
+        try:
+            resume_bounded_run(
+                run_dir, provider=provider, event_emitter=event_emitter,
+                consumer_id=f"reconcile:{os.getpid()}",
+                reconciliation_only=True,
+            )
+        except (
+            AwaitingSpendAuthorization, BudgetExhausted,
+            AmbiguousProviderSubmission,
+        ):
+            pass
+        if _failure_injector:
+            _failure_injector("after_bounded_local_continuation")
+        state = load_json(run_dir / "run.json")
+        completed_actions = [
+            item for item in (state.get("spend_ledger") or {}).get("actions", [])
+            if item.get("action_id") in completed_ids
+        ]
+        local_continuation = {
+            "pass_ids": sorted({
+                str((item.get("binding") or {}).get("route") or "").split(":", 1)[0]
+                for item in completed_actions
+                if (item.get("binding") or {}).get("stage")
+                in {"authoring_initial", "creative_retry"}
+            }),
+            "stages": sorted({
+                str((item.get("binding") or {}).get("stage") or "")
+                for item in completed_actions
+            }),
+            "completed_action_ids": sorted(completed_ids),
+            "exhausted_before_detach": True,
+        }
+        artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
+        record = json.loads(artifact.read_text(encoding="utf-8"))
+        record["local_continuation"] = local_continuation
+        write_json_atomic(artifact, record)
+        write_workspace_snapshot(run_dir)
+        if _failure_injector:
+            _failure_injector("after_bounded_result_snapshot")
+        inspection = inspect_lifecycle(
+            run_dir, native_exclusive_access="established",
+            observed_at=utc_instant(parse_utc_instant(observed_at)),
+        )
+        result["outcome"] = {
+            "release_until_due": "detached_provider_pending",
+            "await_external_authority": "awaiting_external_authority",
+            "terminal": "terminal",
+            "retain_for_review": "review_required",
+            "unsupported_retain_capacity": "unsupported",
+            "continue_local_cycle": "progressed_local",
+        }[inspection["execution_capacity"]["disposition"]]
+        result["inspection"] = inspection
+        result["local_continuation"] = local_continuation
+        result["result_checkpoint"] = {
+            "operator_state_revision": inspection["observation"]["operator_state_revision"],
+            "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+            "result_artifact": {
+                "logical_path": artifact.relative_to(run_dir).as_posix(),
+                "bytes": artifact.stat().st_size,
+                "sha256": _file_sha256(artifact),
+            },
+        }
         emit_checkpoint_events(result)
         return result
 

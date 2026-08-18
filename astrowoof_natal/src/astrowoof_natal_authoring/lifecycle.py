@@ -576,7 +576,7 @@ def _capacity_and_custody(
         native_operation_ref = str(identity.get("native_operation_ref") or "")
         route_adapter_supported = bool(
             identity.get("valid") and identity.get("adapter") in {
-                "exact_interactive", "exact_batch",
+                "exact_interactive", "exact_batch", "bounded_interactive",
             }
             and binding.get("stage") in {
                 "authoring_initial", "creative_retry", "polish",
@@ -585,7 +585,12 @@ def _capacity_and_custody(
         )
         stage = str(binding.get("stage") or "")
         if stage in {"polish", "qualitative_critic", "qualitative_candidate"}:
-            qa = (state.get("authoring_profile") or {}).get("qa") or {}
+            profile = state.get("authoring_profile") or {}
+            qa = (
+                profile.get("optional_stages") or {}
+                if identity.get("route_family") == "bounded_natal"
+                else profile.get("qa") or {}
+            )
             enabled_key = {
                 "polish": "polish",
                 "qualitative_critic": "qualitative_critic",
@@ -601,7 +606,9 @@ def _capacity_and_custody(
             reason_code = (
                 "route_or_stage_not_supported"
                 if not identity.get("valid")
-                or identity.get("adapter") not in {"exact_interactive", "exact_batch"}
+                or identity.get("adapter") not in {
+                    "exact_interactive", "exact_batch", "bounded_interactive",
+                }
                 else "reconciliation_timing_missing"
             )
         else:

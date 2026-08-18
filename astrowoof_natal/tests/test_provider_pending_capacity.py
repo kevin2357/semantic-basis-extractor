@@ -387,7 +387,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
         bounded_response["binding"]["route"] = "bounded_natal.v1:authoring_initial:1"
         identity = native_provider_route_identity(bounded, bounded_response)
         self.assertTrue(identity["valid"])
-        self.assertEqual("bounded_interactive_deferred", identity["adapter"])
+        self.assertEqual("bounded_interactive", identity["adapter"])
         bounded_response["binding"]["service_level"] = "batch"
         bounded_response["provider"]["kind"] = "batch"
         identity = native_provider_route_identity(bounded, bounded_response)

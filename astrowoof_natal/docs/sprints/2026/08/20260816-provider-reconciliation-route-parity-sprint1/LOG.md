@@ -133,3 +133,30 @@
 - The complete repository suite passed all 350 tests in 198.857 seconds.
 - Slice 3 is complete and paused for review. Provider operations remain 0 and paid
   spend remains `$0`; no build, version bump, release, or tag occurred.
+- Kevin approved Slice 3. Committed and pushed it as `6f2eeb9`; Slice 4 began.
+- Enabled strict bounded-Natal interactive route identity in lifecycle capacity
+  projection. Optional-stage scheduling reads the bounded generation profile,
+  while bounded Batch remains unsupported.
+- Added bounded route dispatch after retrieval. Completed response evidence now
+  re-enters `resume_bounded_run()` under a reconciliation-only spend controller,
+  exhausting validation, retry preparation, optional stages, and delivery without
+  authorizing a new submission.
+- Generalized Response operation summaries to report native route family instead
+  of hard-coding exact Natal.
+- Added typed terminal provider-failure review. Failed, cancelled, or incomplete
+  Responses end retrieval polling, retain consumer authority for review/billing,
+  and never masquerade as zero-cost settlement or an automatic retry.
+- Covered authoring initial, creative retry, polish, qualitative critic, and
+  qualitative candidate, plus pending, transport warning, identity conflict,
+  provider failure, optional-stage policy, and delivery behavior.
+- Failure injection after provider retrieval found a restart seam: completed raw
+  evidence was durable, but the next cycle had no due retrieval and could not enter
+  local continuation. Added a zero-retrieval completed-evidence replay checkpoint;
+  fresh-worker recovery now continues locally without another GET or POST.
+- Failure injection after bounded local continuation and result snapshot also
+  resumes from a complete validated snapshot without duplicate provider work.
+- Focused bounded lifecycle, provider, scheduling, and contract coverage passed all
+  66 tests in 27.313 seconds.
+- The complete repository suite passed all 354 tests in 265.958 seconds.
+- Slice 4 is complete and paused for review. Provider operations remain 0 and paid
+  spend remains `$0`; no build, version bump, release, or tag occurred.

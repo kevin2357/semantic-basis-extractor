@@ -339,6 +339,7 @@ def resume_bounded_run(
     authorizations: list[dict[str, Any]] | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
     consumer_id: str = "bounded-worker",
+    reconciliation_only: bool = False,
     _failure_injector: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Advance a bounded run to its next durable pause or terminal checkpoint."""
@@ -373,6 +374,7 @@ def resume_bounded_run(
     controller = SpendController(
         state=state, run_json=run_json, state_lock=state_lock,
         consumer_id=consumer_id, event_emitter=event_emitter,
+        reconciliation_only=reconciliation_only,
     ) if provider.paid else None
 
     try:

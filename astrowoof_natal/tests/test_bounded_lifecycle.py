@@ -41,6 +41,9 @@ from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     NEGATIVE_AUTHORIZATION_REQUEST_SCHEMA,
 )
+from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    run_bounded_authoring_reconciliation,
+)
 from astrowoof_natal_authoring.spend import (  # noqa: E402
     AUTHORIZATION_SCHEMA,
     PRICE_BOOK_VERSION,
@@ -85,10 +88,35 @@ class PaidScriptedProvider:
     maximum_output_tokens = 1_000
     paid = True
 
-    def __init__(self, *, interrupt_after_identity: bool = False) -> None:
+    def __init__(
+        self, *, interrupt_after_identity: bool = False,
+        retrieval_status: str = "completed", retrieval_error: bool = False,
+        retrieval_identity_conflict: bool = False,
+    ) -> None:
         self.submissions = 0
         self.polls = 0
         self.interrupt_after_identity = interrupt_after_identity
+        self.responses = self
+        self.base_url = "https://api.openai.invalid/v1"
+        self.http_timeout_seconds = 60.0
+        self.max_transport_retries = 4
+        self.retrievals = 0
+        self.retrieval_status = retrieval_status
+        self.retrieval_error = retrieval_error
+        self.retrieval_identity_conflict = retrieval_identity_conflict
+
+    def _request_with_retry(self, **kwargs):
+        self.retrievals += 1
+        if self.retrieval_error:
+            raise TimeoutError("fixture retrieval timeout")
+        response_id = str(kwargs["url"]).rsplit("/", 1)[-1]
+        return {
+            "id": (
+                "resp-conflict" if self.retrieval_identity_conflict else response_id
+            ),
+            "status": self.retrieval_status,
+            "usage": {"input_tokens": 10, "output_tokens": 10},
+        }, 1
 
     @staticmethod
     def metadata(response_id: str) -> dict:
@@ -116,6 +144,15 @@ class PaidScriptedProvider:
 
 
 class RetryFakeProvider(FakeBoundedLifecycleProvider):
+    def execute(self, **kwargs):
+        result, metadata = super().execute(**kwargs)
+        if kwargs["stage"] == "authoring_initial":
+            result = deepcopy(result)
+            result["cards"][0]["priority_id"] = "drifted"
+        return result, metadata
+
+
+class RejectInitialPaidProvider(PaidScriptedProvider):
     def execute(self, **kwargs):
         result, metadata = super().execute(**kwargs)
         if kwargs["stage"] == "authoring_initial":
@@ -482,14 +519,12 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual(before, workspace_hashes(run_dir))
             self.assertTrue(inspection["observation"]["snapshot_complete"])
             self.assertTrue(inspection["observation"]["inventory_valid"])
-            # Route-aware v0.3 projection fixes the Slice 0 accidental inheritance;
-            # the bounded adapter is enabled only in its dedicated slice.
             self.assertEqual(
-                "unsupported_retain_capacity",
+                "continue_local_cycle",
                 inspection["execution_capacity"]["disposition"],
             )
             self.assertEqual(
-                "unsupported",
+                "known_operations_pending",
                 inspection["provider_custody"]["state"],
             )
             self.assertEqual("bounded_natal", inspection["native_route"]["route_family"])
@@ -505,6 +540,210 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual("DELIVERY_COMPLETE", final["status"])
             self.assertEqual(1, provider.submissions)
             self.assertEqual(1, provider.polls)
+
+    def test_bounded_reconciliation_retrieves_once_then_exhausts_local_work(self) -> None:
+        provider = PaidScriptedProvider(interrupt_after_identity=True)
+        profile = {
+            "optional_stages": {stage: False for stage in (
+                "polish", "qualitative_critic", "qualitative_candidate"
+            )},
+            "spend_policy": spend_policy(),
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile=profile,
+            )
+            with self.assertRaises(AwaitingSpendAuthorization):
+                resume_bounded_run(run_dir, provider=provider)
+            action = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0]
+            authorization = {
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": action["action_id"], "binding": action["binding"],
+                "authorization_reference": "api-reservation-reconcile-bounded",
+            }
+            with self.assertRaisesRegex(RuntimeError, "injected"):
+                resume_bounded_run(
+                    run_dir, provider=provider, authorizations=[authorization]
+                )
+            interrupted = load_json(run_dir / "run.json")
+            due = interrupted["spend_ledger"]["actions"][0][
+                "provider_reconciliation"
+            ]["resume_not_before"]
+            result = run_bounded_authoring_reconciliation(
+                run_dir, provider=provider, max_attempts=3,
+                python_executable=Path(sys.executable), observed_at=due,
+            )
+            self.assertEqual("terminal", result["outcome"])
+            self.assertEqual("bounded_natal", result["inspection"]["native_route"]["route_family"])
+            self.assertEqual(1, provider.submissions)
+            self.assertEqual(1, provider.retrievals)
+            self.assertEqual(1, provider.polls)
+            self.assertTrue(result["local_continuation"]["exhausted_before_detach"])
+            validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+
+    def test_bounded_reconciliation_pending_warning_and_conflict_fail_closed(self) -> None:
+        cases = (
+            ({"retrieval_status": "in_progress"}, "detached_provider_pending"),
+            ({"retrieval_error": True}, "detached_provider_pending"),
+            ({"retrieval_identity_conflict": True}, "review_required"),
+            ({"retrieval_status": "failed"}, "review_required"),
+        )
+        profile = {
+            "optional_stages": {stage: False for stage in (
+                "polish", "qualitative_critic", "qualitative_candidate"
+            )},
+            "spend_policy": spend_policy(),
+        }
+        for settings, expected in cases:
+            with self.subTest(settings=settings), tempfile.TemporaryDirectory() as temporary:
+                provider = PaidScriptedProvider(
+                    interrupt_after_identity=True, **settings
+                )
+                run_dir = Path(temporary) / "run"
+                create_bounded_run(
+                    run_dir, self.artifacts, provider=provider,
+                    generation_profile=profile,
+                )
+                with self.assertRaises(AwaitingSpendAuthorization):
+                    resume_bounded_run(run_dir, provider=provider)
+                action = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0]
+                authorization = {
+                    "schema_version": AUTHORIZATION_SCHEMA,
+                    "action_id": action["action_id"], "binding": action["binding"],
+                    "authorization_reference": "api-reservation-bounded-failure",
+                }
+                with self.assertRaisesRegex(RuntimeError, "injected"):
+                    resume_bounded_run(
+                        run_dir, provider=provider, authorizations=[authorization]
+                    )
+                due = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0][
+                    "provider_reconciliation"
+                ]["resume_not_before"]
+                result = run_bounded_authoring_reconciliation(
+                    run_dir, provider=provider, max_attempts=3,
+                    python_executable=Path(sys.executable), observed_at=due,
+                )
+                self.assertEqual(expected, result["outcome"])
+                self.assertEqual(1, provider.retrievals)
+                self.assertEqual(1, provider.submissions)
+                self.assertEqual(0, provider.polls)
+
+    def test_bounded_reconciliation_covers_retry_and_optional_stages(self) -> None:
+        cases = (
+            ("creative_retry", RejectInitialPaidProvider()),
+            ("polish", PaidScriptedProvider()),
+            ("qualitative_critic", PaidScriptedProvider()),
+            ("qualitative_candidate", PaidScriptedProvider()),
+        )
+        for target_stage, provider in cases:
+            with self.subTest(stage=target_stage), tempfile.TemporaryDirectory() as temporary:
+                run_dir = Path(temporary) / "run"
+                optional = {
+                    stage: stage == target_stage
+                    for stage in ("polish", "qualitative_critic", "qualitative_candidate")
+                }
+                if target_stage == "qualitative_candidate":
+                    optional["qualitative_critic"] = False
+                profile = {
+                    "optional_stages": optional,
+                    "spend_policy": spend_policy(),
+                }
+                create_bounded_run(
+                    run_dir, self.artifacts, provider=provider,
+                    generation_profile=profile,
+                )
+                with self.assertRaises(AwaitingSpendAuthorization):
+                    resume_bounded_run(run_dir, provider=provider)
+                state = load_json(run_dir / "run.json")
+                initial = state["spend_ledger"]["actions"][-1]
+                with self.assertRaises(AwaitingSpendAuthorization):
+                    resume_bounded_run(run_dir, provider=provider, authorizations=[{
+                        "schema_version": AUTHORIZATION_SCHEMA,
+                        "action_id": initial["action_id"], "binding": initial["binding"],
+                        "authorization_reference": f"api-initial-{target_stage}",
+                    }])
+                state = load_json(run_dir / "run.json")
+                target = next(
+                    item for item in state["spend_ledger"]["actions"]
+                    if item["binding"]["stage"] == target_stage
+                )
+                provider.interrupt_after_identity = True
+                with self.assertRaisesRegex(RuntimeError, "injected"):
+                    resume_bounded_run(run_dir, provider=provider, authorizations=[{
+                        "schema_version": AUTHORIZATION_SCHEMA,
+                        "action_id": target["action_id"], "binding": target["binding"],
+                        "authorization_reference": f"api-target-{target_stage}",
+                    }])
+                state = load_json(run_dir / "run.json")
+                due = next(
+                    item for item in state["spend_ledger"]["actions"]
+                    if item["action_id"] == target["action_id"]
+                )["provider_reconciliation"]["resume_not_before"]
+                result = run_bounded_authoring_reconciliation(
+                    run_dir, provider=provider, max_attempts=3,
+                    python_executable=Path(sys.executable), observed_at=due,
+                )
+                self.assertEqual("terminal", result["outcome"])
+                self.assertIn(target_stage, result["local_continuation"]["stages"])
+                self.assertEqual(1, provider.retrievals)
+                self.assertEqual(2, provider.submissions)
+                self.assertEqual(1, provider.polls)
+                validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+
+    def test_bounded_reconciliation_crash_checkpoints_resume_without_retrieval(self) -> None:
+        profile = {
+            "optional_stages": {stage: False for stage in (
+                "polish", "qualitative_critic", "qualitative_candidate"
+            )},
+            "spend_policy": spend_policy(),
+        }
+        for failure_point in (
+            "after_provider_retrieval_checkpoint",
+            "after_bounded_local_continuation",
+            "after_bounded_result_snapshot",
+        ):
+            with self.subTest(point=failure_point), tempfile.TemporaryDirectory() as temporary:
+                provider = PaidScriptedProvider(interrupt_after_identity=True)
+                run_dir = Path(temporary) / "run"
+                create_bounded_run(
+                    run_dir, self.artifacts, provider=provider,
+                    generation_profile=profile,
+                )
+                with self.assertRaises(AwaitingSpendAuthorization):
+                    resume_bounded_run(run_dir, provider=provider)
+                action = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0]
+                with self.assertRaisesRegex(RuntimeError, "injected"):
+                    resume_bounded_run(run_dir, provider=provider, authorizations=[{
+                        "schema_version": AUTHORIZATION_SCHEMA,
+                        "action_id": action["action_id"], "binding": action["binding"],
+                        "authorization_reference": f"api-crash-{failure_point}",
+                    }])
+                due = load_json(run_dir / "run.json")["spend_ledger"]["actions"][0][
+                    "provider_reconciliation"
+                ]["resume_not_before"]
+
+                def inject(point: str) -> None:
+                    if point == failure_point:
+                        raise RuntimeError(f"injected {point}")
+
+                with self.assertRaisesRegex(RuntimeError, failure_point):
+                    run_bounded_authoring_reconciliation(
+                        run_dir, provider=provider, max_attempts=3,
+                        python_executable=Path(sys.executable), observed_at=due,
+                        _failure_injector=inject,
+                    )
+                validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+                recovered = run_bounded_authoring_reconciliation(
+                    run_dir, provider=provider, max_attempts=3,
+                    python_executable=Path(sys.executable), observed_at=due,
+                )
+                self.assertEqual("terminal", recovered["outcome"])
+                self.assertEqual(1, provider.retrievals)
+                self.assertEqual(1, provider.submissions)
+                self.assertLessEqual(provider.polls, 1)
+                validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
 
     def test_optional_paid_stages_skip_under_frozen_profile_ceiling(self) -> None:
         provider = PaidScriptedProvider()
