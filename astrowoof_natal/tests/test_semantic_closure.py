@@ -38,6 +38,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     author_pending_passes,
     author_pending_passes_batch,
     batch_estimated_cost,
+    build_batch_authoring_request,
     build_prompt_layout_report,
     checkpoint_spend_boundary,
     cleanup_completed_run,
@@ -2760,6 +2761,42 @@ class TestSemanticClosure(SemanticClosureFixture):
                 [spec.pass_id for spec in specs],
             )
             self.assertTrue(all(len(spec.source_sha256) == 64 for spec in specs))
+
+    def test_exact_live_and_batch_share_logical_pass_request(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.make_passes(root)
+            source = root / "bre_1"
+            spec = PassSpec(
+                pass_id="bre_1",
+                subject="bre",
+                pass_number=1,
+                source_zip=root / "bundle" / "bre_1.zip",
+                source_sha256="source-hash",
+            )
+            transport = ScriptedTransport([
+                completed_response(authored_field_payload(source))
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                background=False,
+                prompt_cache_mode="disabled",
+                transport=transport,
+                sleep=lambda _: None,
+            )
+            provider.author(
+                source,
+                root / "run" / "passes" / "bre_1" / "attempt-001"
+                / "response" / "bre_1",
+                spec,
+                1,
+            )
+            live_payload = deepcopy(transport.calls[0]["payload"])
+            self.assertFalse(live_payload.pop("background"))
+            batch_payload, _, _ = build_batch_authoring_request(
+                provider, spec=spec, workspace=source, feedback=None
+            )
+            self.assertEqual(batch_payload, live_payload)
 
     def test_rejects_unsafe_zip_member(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

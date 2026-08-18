@@ -1,3 +1,3 @@
 # Results
 
-No slice results exist yet. The sprint plan is awaiting review and approval.
+- [Slice 0 — Baseline and Editorial Invariant](SLICE%200%20-%20Baseline%20and%20Editorial%20Invariant.md)

@@ -1,9 +1,9 @@
 # Bounded Authoring Topology and Transport Parity Sprint 2 Evidence
 
-Status: planning only
+Status: Slice 0 complete; awaiting gate review
 
-No implementation or qualification evidence exists yet. Slice evidence will be
-added only after the plan is approved and the corresponding work is executed.
+No provider operation was submitted. Slice 0 added one provider-free exact request-
+parity regression and recorded the current route/topology baseline.
 
 Planning facts:
 
@@ -13,3 +13,20 @@ Planning facts:
 - current bounded interactive topology: one whole-deck Responses operation;
 - current bounded Batch disposition: fail closed before submission; and
 - planning provider operations/spend: 0 / USD 0.
+
+## Slice 0
+
+Result: [results/SLICE 0 - Baseline and Editorial Invariant.md](results/SLICE%200%20-%20Baseline%20and%20Editorial%20Invariant.md)
+
+Focused command coverage:
+
+- exact deterministic stratification, balance, and canonical reassembly;
+- exact live/Batch normalized logical-request parity;
+- exact six-pass fake interactive completion;
+- exact six-member Batch completion and Batch detach/resume;
+- bounded OpenAI provider request/hydration/Batch-refusal suite; and
+- provider-pending route/capacity baseline suite.
+
+Outcome: 36 tests passed in 23.412 seconds.
+
+Provider operations: 0. Spend: USD 0.
