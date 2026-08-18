@@ -50,6 +50,7 @@ from .execution_events import (
     command_result_envelope,
 )
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
+from .pass_protocol import bind_logical_pass_request
 from .provenance import (
     artifact_descriptor,
     initial_provenance,
@@ -1361,6 +1362,22 @@ class OpenAIResponsesProvider:
         )
         if self.safety_identifier:
             request_payload["safety_identifier"] = self.safety_identifier
+        # Traverse the shared transport-neutral identity seam without changing the
+        # exact-route request bytes or provider envelope.
+        bind_logical_pass_request(
+            route_family="exact_natal",
+            route_contract=SCHEMA_VERSION,
+            assignment_sha256=spec.source_sha256,
+            pass_id=spec.pass_id,
+            pass_number=spec.pass_number,
+            pass_count=PASS_COUNT,
+            attempt_number=attempt_number,
+            stage=("authoring_initial" if attempt_number == 1 else "creative_retry"),
+            resource_identity={"source_sha256": spec.source_sha256},
+            prompt=request_payload["input"],
+            output_schema=request_payload["text"]["format"]["schema"],
+            maximum_output_tokens=self.max_output_tokens,
+        )
         attempt_root = response_workspace.parents[1]
         write_json_atomic(
             attempt_root / "openai-request.json",
@@ -1772,6 +1789,7 @@ def build_batch_authoring_request(
     spec: PassSpec,
     workspace: Path,
     feedback: dict[str, Any] | None,
+    attempt_number: int = 1,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, str]]:
     """Build the same structured authoring request for Batch transport."""
     expected_fields = writable_fields(workspace)
@@ -1810,6 +1828,20 @@ def build_batch_authoring_request(
     }
     if provider.safety_identifier:
         payload["safety_identifier"] = provider.safety_identifier
+    bind_logical_pass_request(
+        route_family="exact_natal",
+        route_contract=SCHEMA_VERSION,
+        assignment_sha256=spec.source_sha256,
+        pass_id=spec.pass_id,
+        pass_number=spec.pass_number,
+        pass_count=PASS_COUNT,
+        attempt_number=attempt_number,
+        stage=("authoring_initial" if attempt_number == 1 else "creative_retry"),
+        resource_identity={"source_sha256": spec.source_sha256},
+        prompt=payload["input"],
+        output_schema=payload["text"]["format"]["schema"],
+        maximum_output_tokens=provider.max_output_tokens,
+    )
     return payload, provider.prompt_layout(
         spec=spec,
         workspace=workspace,
@@ -3368,6 +3400,7 @@ def author_pending_passes_batch(
                     spec=spec,
                     workspace=source_workspace,
                     feedback=retry_feedback_from_record(record),
+                    attempt_number=attempt_number,
                 )
                 custom_id = f"{spec.pass_id}:attempt-{attempt_number:03d}"
                 line = {

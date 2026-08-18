@@ -117,3 +117,28 @@
   also passed their packaged strict schemas.
 - Provider operations: 0. Spend: USD 0.
 - Slice 2 is complete and paused for the planned gate review.
+
+## 2026-08-18 — Slice 3 shared pass seam and exact compatibility
+
+- Added a small transport-neutral logical-pass protocol. It binds route family and
+  contract, assignment, pass, attempt, stage, resources, prompt, output schema, and
+  maximum output into one deterministic request identity, plus a route-bound result
+  identity. It intentionally contains no Responses/Batch mechanism selection.
+- Routed exact interactive request construction through the identity seam after its
+  existing payload is built. No exact provider payload byte, prompt, schema, cache
+  option, workspace behavior, or idempotency calculation was changed.
+- Routed exact Batch request construction through the same seam and bound the actual
+  attempt number supplied by the round scheduler. The existing normalized live/Batch
+  logical-request parity remains unchanged.
+- Added the bounded pass adapter over the Slice 2 packets. It validates the packet
+  content digest and binds the separately named bounded resources and route contract.
+- Tightened bounded pass output schemas to the exact assigned inventory: a card pass
+  requires exactly ten known claim IDs and zero summaries; the summary pass requires
+  zero cards and exactly its four known summary IDs.
+- Added deterministic replay, binding-change, and exact/bounded route-crossing
+  refusal tests. Exact-shaped output cannot hydrate bounded authority.
+- Complete exact semantic-closure compatibility plus protocol suite: 90 tests passed
+  in 214.081 seconds. Focused bounded suite: 21 passed. Linux Python 3.11 worker:
+  10 focused tests passed.
+- Provider operations: 0. Spend: USD 0.
+- Slice 3 is complete and paused for gate review before lifecycle execution changes.

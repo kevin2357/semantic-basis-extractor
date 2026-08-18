@@ -13,6 +13,11 @@ from .bounded_authoring import (
     assert_provider_minimized,
 )
 from .closure import OpenAIResponsesProvider
+from .pass_protocol import (
+    LogicalPassRequest,
+    bind_logical_pass_request,
+    canonical_sha256,
+)
 from .resource_access import read_resource_text
 
 
@@ -55,7 +60,7 @@ class OpenAIBoundedLifecycleProvider:
         }
 
     @classmethod
-    def _cards_schema(cls) -> dict[str, Any]:
+    def _cards_schema(cls, packet: dict[str, Any] | None = None) -> dict[str, Any]:
         densities = {
             "type": "object", "additionalProperties": False,
             "required": list(DENSITY_KEYS),
@@ -74,8 +79,13 @@ class OpenAIBoundedLifecycleProvider:
             "type": "array", "items": {"type": "string", "minLength": 1},
             "minItems": 1,
         }
+        claim_ids = [claim["claim_id"] for claim in (packet or {}).get("claims", [])]
+        summary_ids = list((packet or {}).get("summaries", {}))
         card_properties = {
-            "claim_id": {"type": "string", "minLength": 1},
+            "claim_id": (
+                {"type": "string", "enum": claim_ids}
+                if packet is not None else {"type": "string", "minLength": 1}
+            ),
             "dos": strings | {"minItems": 3, "maxItems": 3},
             "donts": strings | {"minItems": 3, "maxItems": 3},
             "funny_dog_quotes": strings,
@@ -84,7 +94,10 @@ class OpenAIBoundedLifecycleProvider:
             "densities": densities,
         }
         summary_properties = {
-            "summary_id": {"type": "string", "minLength": 1},
+            "summary_id": (
+                {"type": "string", "enum": summary_ids}
+                if packet is not None else {"type": "string", "minLength": 1}
+            ),
             "headline": cls._voices_schema(), "body": cls._voices_schema(),
         }
         return {
@@ -92,14 +105,16 @@ class OpenAIBoundedLifecycleProvider:
             "required": ["cards", "summaries"],
             "properties": {
                 "cards": {
-                    "type": "array", "minItems": 1,
+                    "type": "array", "minItems": len(claim_ids) if packet is not None else 1,
+                    **({"maxItems": len(claim_ids)} if packet is not None else {}),
                     "items": {
                         "type": "object", "additionalProperties": False,
                         "required": list(card_properties), "properties": card_properties,
                     },
                 },
                 "summaries": {
-                    "type": "array", "minItems": 1,
+                    "type": "array", "minItems": len(summary_ids) if packet is not None else 1,
+                    **({"maxItems": len(summary_ids)} if packet is not None else {}),
                     "items": {
                         "type": "object", "additionalProperties": False,
                         "required": list(summary_properties),
@@ -111,12 +126,11 @@ class OpenAIBoundedLifecycleProvider:
 
     @classmethod
     def _schema(cls, stage: str, payload: dict[str, Any]) -> dict[str, Any]:
-        del payload
         if stage == "qualitative_critic":
             return json.loads(
                 read_resource_text("schemas/bounded-natal-critic-v1.schema.json")
             )
-        return cls._cards_schema()
+        return cls._cards_schema(payload.get("authoring_packet"))
 
     @staticmethod
     def _hydrate_cards(
@@ -186,6 +200,31 @@ class OpenAIBoundedLifecycleProvider:
         if stage not in stages:
             raise ValueError(f"Unsupported bounded OpenAI stage: {stage}")
         return f"{stages[stage]} {common}"
+
+    def logical_pass_request(
+        self, *, stage: str, packet: dict[str, Any], attempt_number: int,
+    ) -> LogicalPassRequest:
+        """Bind one bounded pass without selecting interactive or Batch transport."""
+        assert_provider_minimized(packet)
+        packet_basis = dict(packet)
+        packet_digest = packet_basis.pop("packet_sha256", None)
+        if packet_digest != canonical_sha256(packet_basis):
+            raise ValueError("Bounded pass packet digest does not match its content")
+        resource_set = packet.get("resource_set") or {}
+        return bind_logical_pass_request(
+            route_family="bounded_natal",
+            route_contract=str(packet.get("run_contract") or ""),
+            assignment_sha256=str(packet.get("assignment_sha256") or ""),
+            pass_id=str(packet.get("pass_id") or ""),
+            pass_number=packet.get("pass_number"),
+            pass_count=packet.get("pass_count"),
+            attempt_number=attempt_number,
+            stage=stage,
+            resource_identity=resource_set,
+            prompt={"instructions": self._instructions(stage), "packet": packet},
+            output_schema=self._schema(stage, {"authoring_packet": packet}),
+            maximum_output_tokens=self.maximum_output_tokens,
+        )
 
     def _complete(
         self, *, stage: str, route: str, payload: dict[str, Any],
