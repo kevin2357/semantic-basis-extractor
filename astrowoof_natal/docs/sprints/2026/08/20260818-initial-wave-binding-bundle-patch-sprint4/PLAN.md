@@ -1,7 +1,7 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Plan
 
 Date: 2026-08-18
-Status: implementation and consumer review complete; awaiting explicit 0.4.8 publication authorization
+Status: complete; exact 0.4.8 artifact qualified and publication authorized
 Starting release: SBE 0.4.7
 Target release: SBE 0.4.8
 

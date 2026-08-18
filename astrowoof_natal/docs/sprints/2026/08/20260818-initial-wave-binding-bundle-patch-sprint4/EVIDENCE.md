@@ -1,5 +1,16 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Evidence
 
+## Exact 0.4.8 artifact
+
+- Artifact source commit:
+  `4e017dbe16846d57dea0649845c76f9be693b991`.
+- Wheel: `astrowoof_natal_authoring-0.4.8-py3-none-any.whl`.
+- Bytes / SHA-256: 828,375 /
+  `572a46f310b9ea150a49d32705a45e3d0ced501462d2b2743d989ef5b44fb9e1`.
+- Two fixed-epoch builds were byte-identical.
+- Exact installed Windows/Linux gates: pass.
+- Publication explicitly authorized; provider operations / spend: 0 / USD 0.
+
 ## Final consumer review
 
 - [API Agent Final Release Review.md](API%20Agent%20Final%20Release%20Review.md)

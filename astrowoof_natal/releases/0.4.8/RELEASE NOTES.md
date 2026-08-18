@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.8 Release
 
-Status: release candidate; publication pending
+Status: qualified immutable artifact; publication authorized
 
 ## Summary
 
@@ -26,5 +26,11 @@ or API/SBE authority ownership.
 - `astrowoof.initial_authoring_wave_binding_bundle.v1`; and
 - `astrowoof.initial_authoring_wave_authority_inputs.v1`.
 
-The exact artifact identity and post-publication verification will be recorded in
-`release-manifest.json` after the versioned source boundary is rebuilt.
+The final wheel is 828,375 bytes with SHA-256
+`572a46f310b9ea150a49d32705a45e3d0ced501462d2b2743d989ef5b44fb9e1`.
+Two fixed-epoch builds were byte-identical. Exact installed Windows and
+network-isolated Linux gates passed without provider calls or paid spend.
+
+Kevin and the AstroWoof API consumer approved the contract and authorized the
+fresh 0.4.8 tag and publication. Post-publication verification will be recorded
+in `release-manifest.json` without moving the immutable tag.

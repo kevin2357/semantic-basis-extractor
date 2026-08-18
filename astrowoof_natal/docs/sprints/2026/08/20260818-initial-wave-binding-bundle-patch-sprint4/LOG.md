@@ -1,5 +1,16 @@
 # Initial-Wave Binding Bundle Patch Sprint 4 Log
 
+## 2026-08-18 — Exact 0.4.8 artifact qualified and authorized
+
+- Kevin explicitly authorized a fresh immutable 0.4.8 tag and publication.
+- Versioned artifact source commit:
+  `4e017dbe16846d57dea0649845c76f9be693b991`.
+- Two exact fixed-epoch builds were byte-identical: 828,375 bytes, SHA-256
+  `572a46f310b9ea150a49d32705a45e3d0ced501462d2b2743d989ef5b44fb9e1`.
+- The exact 0.4.8 wheel passed installed Windows and network-isolated Linux
+  `pip check`, lifecycle smoke, release smoke, and exact/bounded joined-reader/CLI
+  qualification. Provider operations and spend remained zero.
+
 ## 2026-08-18 — Final API review accepted
 
 - API approved the reviewed source boundary for a fresh immutable 0.4.8 release
