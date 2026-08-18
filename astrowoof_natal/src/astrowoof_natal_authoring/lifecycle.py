@@ -365,6 +365,20 @@ def _verified_legacy_denials(
     return verified
 
 
+def _valid_denial_journal_projection(run_dir: Path, action_ids: list[str]) -> bool:
+    """Accept only the derived journal facts for the exact persisted denials."""
+    try:
+        from .native_transitions import validate_transition_journal
+        records = validate_transition_journal(run_dir)
+    except (OSError, ValueError):
+        return False
+    projected = {
+        (item.get("action_binding") or {}).get("action_id")
+        for item in records if item.get("record_kind") == "action.denied_providerless"
+    }
+    return bool(action_ids) and set(action_ids) <= projected
+
+
 def _recover_interrupted_terminal_reconciliation(
     run_dir: Path, state: dict[str, Any],
 ) -> bool:
@@ -393,6 +407,9 @@ def _recover_interrupted_terminal_reconciliation(
         "run.json", "public-run.json", "spend-authorization-requests.json",
         record["result_artifact"],
     }
+    denied_ids = (record.get("run_transition") or {}).get("denied_action_ids") or []
+    if _valid_denial_journal_projection(run_dir, denied_ids):
+        allowed_changed.add("native-transition-journal.jsonl")
     changed = {
         path for path in set(expected_members) | set(actual_members)
         if expected_members.get(path) != actual_members.get(path)
@@ -1399,6 +1416,9 @@ def _recover_interrupted_batch_denial(
         "run.json", "public-run.json", "spend-authorization-requests.json",
         record["result_artifact"],
     }
+    denied_ids = [item.get("action_id") for item in record.get("actions") or []]
+    if _valid_denial_journal_projection(run_dir, denied_ids):
+        allowed_changed.add("native-transition-journal.jsonl")
     changed = {
         path for path in set(expected_members) | set(actual_members)
         if expected_members.get(path) != actual_members.get(path)

@@ -29,6 +29,8 @@ RESULT_INDEX_SCHEMA = "astrowoof.native_result_index.v0.1"
 JOURNAL_NAME = "native-transition-journal.jsonl"
 RESULT_DIRECTORY = "native-results"
 RESULT_INDEX_NAME = "native-result-index.json"
+RECEIPT_SCHEMA = "astrowoof.native_publication_receipt.v0.1"
+RECEIPT_DIRECTORY = "native-publication-receipts"
 MAX_RECORD_BYTES = 32 * 1024
 MAX_RESULT_BYTES = 256 * 1024
 MAX_EXPORT_RECORDS = 512
@@ -56,7 +58,8 @@ CAUSE_CODES = {
     "provider_identity_conflict", "provider_operation_pending",
     "local_continuation_ready", "spend_authorization_required",
     "external_spend_authority_denied", "native_budget_ceiling_exhausted",
-    "external_product_policy_denied", "ambiguous_provider_submission",
+    "external_spend_reservation_unavailable", "external_product_policy_denied",
+    "run_cancelled_before_submission", "ambiguous_provider_submission",
     "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence",
 }
 COST_DISPOSITIONS = {
@@ -86,6 +89,11 @@ def _record_digest(record: dict[str, Any]) -> str:
 
 def _result_digest(result: dict[str, Any]) -> str:
     basis = {k: v for k, v in result.items() if k not in {"result_id", "result_sha256"}}
+    return _digest(basis)
+
+
+def _receipt_digest(receipt: dict[str, Any]) -> str:
+    basis = {k: v for k, v in receipt.items() if k not in {"receipt_id", "receipt_sha256"}}
     return _digest(basis)
 
 
@@ -478,7 +486,7 @@ def checkpoint_basis(run_dir: Path, state_revision: int) -> dict[str, Any]:
     return {"checkpoint_basis_sha256": _digest(basis), **basis}
 
 
-def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> dict[str, Any]:
+def _write_immutable_execution_result_internal(run_dir: Path, result: dict[str, Any]) -> dict[str, Any]:
     run_dir = run_dir.resolve()
     value = deepcopy(result)
     value["schema_version"] = EXECUTION_RESULT_SCHEMA
@@ -502,22 +510,200 @@ def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> d
     value["result_id"] = f"nres_{digest[:24]}"
     if len(_canonical(value)) > MAX_RESULT_BYTES:
         raise ValueError("Native execution result exceeds size bound")
-    with _exclusive_lifecycle_lock(run_dir):
-        path = run_dir / RESULT_DIRECTORY / f"{value['result_id']}.json"
-        if path.exists():
-            existing = load_json(path)
-            if existing != value:
-                raise ValueError("Immutable native execution result identity conflict")
-        else:
-            write_json_atomic(path, value)
-        index_path = run_dir / RESULT_INDEX_NAME
-        index = load_json(index_path) if index_path.exists() else {
-            "schema_version": RESULT_INDEX_SCHEMA, "result_ids": [],
-        }
-        if value["result_id"] not in index["result_ids"]:
-            index["result_ids"].append(value["result_id"])
-        write_json_atomic(index_path, index)
+    path = run_dir / RESULT_DIRECTORY / f"{value['result_id']}.json"
+    if path.exists():
+        existing = load_json(path)
+        if existing != value:
+            raise ValueError("Immutable native execution result identity conflict")
+    else:
+        write_json_atomic(path, value)
+    index_path = run_dir / RESULT_INDEX_NAME
+    index = load_json(index_path) if index_path.exists() else {
+        "schema_version": RESULT_INDEX_SCHEMA, "result_ids": [],
+    }
+    if value["result_id"] not in index["result_ids"]:
+        index["result_ids"].append(value["result_id"])
+    write_json_atomic(index_path, index)
     return value
+
+
+def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> dict[str, Any]:
+    run_dir = run_dir.resolve()
+    with _exclusive_lifecycle_lock(run_dir):
+        return _write_immutable_execution_result_internal(run_dir, result)
+
+
+def _native_route(state: dict[str, Any]) -> dict[str, Any]:
+    bounded = state.get("route") == "bounded_natal.v1"
+    mechanism = "batch" if state.get("service_level") == "batch" else "response"
+    return {
+        "route_family": "bounded_natal" if bounded else "exact_natal",
+        "provider_mechanism": mechanism,
+        "native_operation_ref": "bounded_natal.v1" if bounded else "semantic_closure",
+    }
+
+
+def _outcome(state: dict[str, Any]) -> tuple[str, str]:
+    status = str(state.get("status") or "")
+    actions = (state.get("spend_ledger") or {}).get("actions") or []
+    terminal = state.get("terminal_transition") or {}
+    if terminal.get("outcome") == "terminalized":
+        return str(terminal["terminal_outcome"]), str(terminal["terminal_reason"])
+    if any((item.get("integrity_review") or {}).get("provider_status") for item in actions):
+        return "terminal_failure", "provider_terminal_failure"
+    if any(
+        item.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
+        and "identity" in str((item.get("ambiguity") or {}).get("reason") or "").lower()
+        for item in actions
+    ):
+        return "ambiguous_submission", "provider_identity_conflict"
+    terminal = state.get("terminal_transition") or {}
+    if terminal.get("outcome") == "terminalized":
+        return str(terminal["terminal_outcome"]), str(terminal["terminal_reason"])
+    terminal = state.get("terminal_transition") or {}
+    if terminal.get("outcome") == "terminalized":
+        return str(terminal["terminal_outcome"]), str(terminal["terminal_reason"])
+    if status == "DELIVERY_COMPLETE": return "delivery_complete", "delivery_complete"
+    if status == "DELIVERY_COMPLETE_WITH_WARNINGS": return "delivery_complete", "delivery_complete_with_warnings"
+    if status in {"FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW"}: return "review_required", "final_qa_requires_review"
+    if status == "BUDGET_EXHAUSTED": return "budget_exhausted", "native_budget_ceiling_exhausted"
+    if status == "POLICY_STOPPED": return "policy_stopped", "external_product_policy_denied"
+    if status == "AMBIGUOUS_PROVIDER_SUBMISSION": return "ambiguous_submission", "ambiguous_provider_submission"
+    if any(item.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"} for item in actions): return "provider_pending", "provider_operation_pending"
+    if any(item.get("state") == "PREPARED" for item in actions): return "awaiting_external_authority", "spend_authorization_required"
+    return "continuation_required", "local_continuation_ready"
+
+
+def _publish_receipt(
+    run_dir: Path, result: dict[str, Any], *, snapshot_sha256: str,
+    basis: dict[str, Any],
+) -> dict[str, Any]:
+    receipt_root = run_dir / RECEIPT_DIRECTORY
+    snapshot_copy = receipt_root / f"{result['result_id']}.workspace-snapshot.json"
+    basis_copy = receipt_root / f"{result['result_id']}.checkpoint-basis.json"
+    snapshot_bytes = (run_dir / SNAPSHOT_NAME).read_bytes()
+    if hashlib.sha256(snapshot_bytes).hexdigest() != snapshot_sha256:
+        raise ValueError("Complete snapshot changed before publication receipt")
+    if snapshot_copy.exists() and snapshot_copy.read_bytes() != snapshot_bytes:
+        raise ValueError("Immutable retained snapshot identity conflict")
+    snapshot_copy.parent.mkdir(parents=True, exist_ok=True)
+    if not snapshot_copy.exists():
+        with snapshot_copy.open("wb") as handle:
+            handle.write(snapshot_bytes)
+            handle.flush()
+            os.fsync(handle.fileno())
+    if basis.get("checkpoint_basis_sha256") != result["post_checkpoint"]["checkpoint_basis_sha256"]:
+        raise ValueError("Publication checkpoint basis does not match result")
+    if basis_copy.exists() and load_json(basis_copy) != basis:
+        raise ValueError("Immutable retained checkpoint basis conflict")
+    if not basis_copy.exists():
+        write_json_atomic(basis_copy, basis)
+    receipt = {
+        "schema_version": RECEIPT_SCHEMA, "receipt_id": "", "receipt_sha256": "",
+        "run_id": result["run_id"], "invocation_id": result["invocation_id"],
+        "result_id": result["result_id"], "result_sha256": result["result_sha256"],
+        "snapshot_sha256": snapshot_sha256,
+        "checkpoint_basis_sha256": result["post_checkpoint"]["checkpoint_basis_sha256"],
+        "journal_range_sha256": result["journal_range"]["range_sha256"],
+        "logical_workspace_root": normalized_path(run_dir),
+    }
+    digest = _receipt_digest(receipt)
+    receipt["receipt_sha256"] = digest
+    receipt["receipt_id"] = f"nreceipt_{digest[:24]}"
+    receipt_path = run_dir / RECEIPT_DIRECTORY / f"{result['result_id']}.json"
+    if receipt_path.exists() and load_json(receipt_path) != receipt:
+        raise ValueError("Immutable native publication receipt identity conflict")
+    write_json_atomic(receipt_path, receipt)
+    return receipt
+
+
+def publish_native_execution_result(
+    run_dir: Path, *, command_kind: str, sbe_release: str, published_at: str,
+) -> dict[str, Any]:
+    """Seal current native meaning as result + full snapshot + immutable receipt."""
+    run_dir = run_dir.resolve()
+    with _exclusive_lifecycle_lock(run_dir):
+        state = load_json(run_dir / "run.json")
+        records = validate_transition_journal(run_dir)
+        prior_end = 0
+        index_path = run_dir / RESULT_INDEX_NAME
+        indexed_results: list[dict[str, Any]] = []
+        if index_path.exists():
+            for result_id in load_json(index_path).get("result_ids", []):
+                prior = load_json(run_dir / RESULT_DIRECTORY / f"{result_id}.json")
+                indexed_results.append(prior)
+                prior_end = max(prior_end, int(prior["journal_range"]["end_sequence"]))
+        incomplete = [
+            item for item in indexed_results
+            if not (run_dir / RECEIPT_DIRECTORY / f"{item['result_id']}.json").is_file()
+        ]
+        if incomplete:
+            if len(incomplete) != 1 or incomplete[0] != indexed_results[-1]:
+                raise ValueError("Native result publication history has multiple incomplete seals")
+            orphan = incomplete[0]
+            expected = orphan["journal_range"]
+            observed = journal_range(run_dir, expected["start_sequence"], expected["end_sequence"])
+            if expected["range_sha256"] != observed["range_sha256"]:
+                raise ValueError("Incomplete native result journal range changed")
+            basis = checkpoint_basis(
+                run_dir, int(orphan["post_checkpoint"]["native_state_revision"])
+            )
+            if basis["checkpoint_basis_sha256"] != orphan["post_checkpoint"]["checkpoint_basis_sha256"]:
+                raise ValueError("Incomplete native result checkpoint basis changed")
+            from .closure import write_workspace_snapshot, sha256_file
+            write_workspace_snapshot(run_dir)
+            validate_workspace_snapshot(run_dir, state)
+            receipt = _publish_receipt(
+                run_dir, orphan, snapshot_sha256=sha256_file(run_dir / SNAPSHOT_NAME),
+                basis=basis,
+            )
+            return {"result": orphan, "receipt": receipt}
+        invocation_id = mint_invocation_id()
+        route = _native_route(state)
+        outcome, cause = _outcome(state)
+        revision = int(state.get("state_revision") or 0)
+        common = {
+            "invocation_id": invocation_id, "observed_at": published_at,
+            "native_state_revision": revision, "route_binding": route,
+            "action_binding": None, "provider_observation": None,
+        }
+        for kind, transition in (
+            ("invocation.started", None),
+            ("native.transitioned", {"outcome": outcome, "cause_code": cause, "native_status": state.get("status")}),
+            ("invocation.closed", {"outcome": outcome, "cause_code": cause}),
+        ):
+            _append_transition_record_internal(run_dir, {
+                **common, "record_kind": kind, "native_transition": transition,
+            })
+        selected = journal_range(run_dir, prior_end + 1, len(validate_transition_journal(run_dir)))
+        basis = checkpoint_basis(run_dir, revision)
+        pre_snapshot = run_dir / SNAPSHOT_NAME
+        result = _write_immutable_execution_result_internal(run_dir, {
+            "invocation_id": invocation_id, "run_id": state["run_id"],
+            "sbe_release": sbe_release, "published_at": published_at,
+            "command_kind": command_kind, "route_binding": route,
+            "pre_checkpoint": ({"snapshot_sha256": hashlib.sha256(pre_snapshot.read_bytes()).hexdigest()} if pre_snapshot.exists() else None),
+            "post_checkpoint": {
+                "native_state_revision": revision,
+                "checkpoint_basis_sha256": basis["checkpoint_basis_sha256"],
+                "logical_workspace_root": normalized_path(run_dir),
+            },
+            "journal_range": {
+                key: selected[key] for key in ("start_sequence", "end_sequence", "record_count", "range_sha256")
+            } | {"closing_record_id": selected["records"][-1]["record_id"]},
+            "outcome": outcome, "cause_code": cause,
+            "action_ids": [item["action_id"] for item in (state.get("spend_ledger") or {}).get("actions", [])],
+            "provider_operations": [deepcopy(item.get("provider")) for item in (state.get("spend_ledger") or {}).get("actions", []) if item.get("provider")],
+            "projection_refs": {},
+        })
+        from .closure import write_workspace_snapshot, sha256_file
+        write_workspace_snapshot(run_dir)
+        validate_workspace_snapshot(run_dir, state)
+        snapshot_sha256 = sha256_file(run_dir / SNAPSHOT_NAME)
+        receipt = _publish_receipt(
+            run_dir, result, snapshot_sha256=snapshot_sha256, basis=basis,
+        )
+        return {"result": result, "receipt": receipt}
 
 
 def read_native_transition_result(run_dir: Path, result_id: str) -> dict[str, Any]:
@@ -541,15 +727,49 @@ def read_native_transition_result(run_dir: Path, result_id: str) -> dict[str, An
             raise ValueError("Native execution result journal binding is invalid")
     state = load_json(run_dir / "run.json")
     validate_workspace_snapshot(run_dir, state)
-    basis = checkpoint_basis(run_dir, int(result["post_checkpoint"]["native_state_revision"]))
-    if result["post_checkpoint"].get("checkpoint_basis_sha256") != basis["checkpoint_basis_sha256"]:
+    receipt_path = run_dir / RECEIPT_DIRECTORY / f"{result_id}.json"
+    if not receipt_path.is_file():
+        raise ValueError("Native execution result has no immutable publication receipt")
+    receipt = load_json(receipt_path)
+    receipt_digest = _receipt_digest(receipt)
+    if (
+        receipt.get("schema_version") != RECEIPT_SCHEMA
+        or receipt.get("receipt_sha256") != receipt_digest
+        or receipt.get("receipt_id") != f"nreceipt_{receipt_digest[:24]}"
+        or receipt.get("result_id") != result_id
+        or receipt.get("result_sha256") != result["result_sha256"]
+        or receipt.get("journal_range_sha256") != observed["range_sha256"]
+        or receipt.get("logical_workspace_root") != normalized_path(run_dir)
+    ):
+        raise ValueError("Native publication receipt binding is invalid")
+    retained_snapshot = (
+        run_dir / RECEIPT_DIRECTORY / f"{result_id}.workspace-snapshot.json"
+    )
+    retained_basis = run_dir / RECEIPT_DIRECTORY / f"{result_id}.checkpoint-basis.json"
+    if (
+        not retained_snapshot.is_file() or not retained_basis.is_file()
+        or hashlib.sha256(retained_snapshot.read_bytes()).hexdigest()
+        != receipt.get("snapshot_sha256")
+    ):
+        raise ValueError("Native publication receipt retained evidence is invalid")
+    basis = load_json(retained_basis)
+    if basis.get("checkpoint_basis_sha256") != _digest({
+        key: basis[key] for key in (
+            "snapshot_schema", "logical_root", "native_state_revision", "members"
+        )
+    }):
+        raise ValueError("Retained checkpoint basis identity is invalid")
+    if (
+        result["post_checkpoint"].get("checkpoint_basis_sha256") != basis["checkpoint_basis_sha256"]
+        or receipt.get("checkpoint_basis_sha256") != basis["checkpoint_basis_sha256"]
+    ):
         raise ValueError("Native execution result checkpoint basis is invalid")
-    return {"result": result, "journal_range": observed}
+    return {"result": result, "journal_range": observed, "receipt": receipt}
 
 
 __all__ = [
     "EXECUTION_RESULT_SCHEMA", "JOURNAL_RECORD_SCHEMA", "append_transition_record",
     "checkpoint_basis", "journal_range", "mint_invocation_id",
-    "read_native_transition_result", "validate_transition_journal",
+    "publish_native_execution_result", "read_native_transition_result", "validate_transition_journal",
     "sync_provider_transition_journal", "write_immutable_execution_result",
 ]

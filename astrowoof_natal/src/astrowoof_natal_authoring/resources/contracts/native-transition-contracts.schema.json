@@ -108,7 +108,7 @@
         "post_checkpoint": {"type": "object"},
         "journal_range": {"type": "object"},
         "outcome": {"enum": ["delivery_complete", "review_required", "terminal_failure", "provider_pending", "continuation_required", "awaiting_external_authority", "budget_exhausted", "policy_stopped", "ambiguous_submission", "native_evidence_invalid"]},
-        "cause_code": {"enum": ["delivery_complete", "delivery_complete_with_warnings", "final_qa_requires_review", "authoring_attempts_exhausted", "provider_terminal_failure", "provider_output_invalid", "provider_identity_conflict", "provider_operation_pending", "local_continuation_ready", "spend_authorization_required", "external_spend_authority_denied", "native_budget_ceiling_exhausted", "external_product_policy_denied", "ambiguous_provider_submission", "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence"]},
+        "cause_code": {"enum": ["delivery_complete", "delivery_complete_with_warnings", "final_qa_requires_review", "authoring_attempts_exhausted", "provider_terminal_failure", "provider_output_invalid", "provider_identity_conflict", "provider_operation_pending", "local_continuation_ready", "spend_authorization_required", "external_spend_authority_denied", "native_budget_ceiling_exhausted", "external_spend_reservation_unavailable", "external_product_policy_denied", "run_cancelled_before_submission", "ambiguous_provider_submission", "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence"]},
         "action_ids": {"type": "array", "maxItems": 128, "items": {"type": "string", "maxLength": 128}},
         "provider_operations": {"type": "array", "maxItems": 128, "items": {"type": "object"}},
         "projection_refs": {"type": "object"}
@@ -121,6 +121,24 @@
       "properties": {
         "schema_version": {"const": "astrowoof.native_result_index.v0.1"},
         "result_ids": {"type": "array", "items": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"}}
+      }
+    },
+    "publication_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "receipt_id", "receipt_sha256", "run_id", "invocation_id", "result_id", "result_sha256", "snapshot_sha256", "checkpoint_basis_sha256", "journal_range_sha256", "logical_workspace_root"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.native_publication_receipt.v0.1"},
+        "receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "invocation_id": {"type": "string", "pattern": "^ninv_[0-9a-f]{24}$"},
+        "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+        "result_sha256": {"$ref": "#/$defs/sha256"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
+        "journal_range_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root": {"type": "string", "minLength": 1, "maxLength": 1024}
       }
     }
   }

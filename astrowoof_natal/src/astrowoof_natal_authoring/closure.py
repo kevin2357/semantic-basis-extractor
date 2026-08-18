@@ -2475,6 +2475,12 @@ def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
         yield
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
         save_state(run_json, state)
+        from . import __version__
+        from .native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            run_json.parent, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=utc_now(),
+        )
         raise
 
 
@@ -2486,6 +2492,7 @@ def snapshot_inventory(
         relative = path.relative_to(run_dir).as_posix()
         if (
             relative == SNAPSHOT_NAME
+            or relative.startswith("native-publication-receipts/")
             or relative.endswith(".lock")
             or path.name.startswith(".") and path.name.endswith(".tmp")
         ):
@@ -6811,6 +6818,11 @@ def main() -> None:
             data={"state_revision": int(state.get("state_revision") or 0)},
         )
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        from .native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=utc_now(),
+        )
         output_result(state)
         return
     if args.spend_authorization:
@@ -6888,6 +6900,11 @@ def main() -> None:
                 "state_revision": int(state.get("state_revision") or 0),
                 "snapshot_sha256": sha256_file(args.run_dir / SNAPSHOT_NAME),
             })
+        from .native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=utc_now(),
+        )
         output_result(state)
         return
     with checkpoint_spend_boundary(run_json, state):
@@ -6936,6 +6953,11 @@ def main() -> None:
             event_emitter.emit("terminal.transitioned", data={
                 "outcome": state["status"], "terminal_reason": terminal_reason,
             })
+    from .native_transitions import publish_native_execution_result
+    publish_native_execution_result(
+        args.run_dir, command_kind="ordinary_authoring",
+        sbe_release=__version__, published_at=utc_now(),
+    )
     output_result(state)
     if state["status"] in {
         "FAILED_REQUIRES_REVIEW",

@@ -1505,6 +1505,13 @@ def reconcile_authoring_provider_cycle(
                     "state_revision": checkpoint["operator_state_revision"],
                     "snapshot_sha256": checkpoint["snapshot_sha256"],
                 })
+        if result["outcome"] != "not_due":
+            from . import __version__
+            from .native_transitions import publish_native_execution_result
+            publish_native_execution_result(
+                run_dir, command_kind="provider_reconciliation",
+                sbe_release=__version__, published_at=observed_at,
+            )
         return result
     if route == "exact_natal" and mechanism == "response":
         provider = provider_adapters.exact_interactive_provider
@@ -1514,7 +1521,7 @@ def reconcile_authoring_provider_cycle(
         raise ValueError("Native route/provider mechanism is unsupported")
     if provider is None:
         raise ValueError(f"{route} interactive reconciliation adapter is required")
-    return run_bounded_authoring_reconciliation(
+    result = run_bounded_authoring_reconciliation(
         run_dir,
         provider=provider,
         max_attempts=provider_adapters.max_attempts,
@@ -1525,3 +1532,11 @@ def reconcile_authoring_provider_cycle(
         critic_provider=provider_adapters.critic_provider,
         qualitative_editor_provider=provider_adapters.qualitative_editor_provider,
     )
+    if result["outcome"] != "not_due":
+        from . import __version__
+        from .native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            run_dir, command_kind="provider_reconciliation",
+            sbe_release=__version__, published_at=observed_at,
+        )
+    return result

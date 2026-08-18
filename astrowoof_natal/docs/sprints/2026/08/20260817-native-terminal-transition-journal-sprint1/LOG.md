@@ -117,3 +117,39 @@ Status: planned; implementation has not started.
 - The API agent accepted the immutable publication-receipt solution, approved Slice
   3, and clarified that command correlation is the result's bounded journal range,
   not a requirement that action-derived projection records share one invocation ID.
+- Committed and pushed the API-approved Slice 3 as `64836b0`; Slice 4 began.
+- Implemented the shared result publication protocol: terminal journal records,
+  immutable execution result, complete workspace snapshot, then immutable receipt.
+  The receipt namespace is the one narrow exclusion from native snapshot inventory.
+- The receipt binds result ID/hash, exact complete-snapshot hash, checkpoint-basis
+  hash, journal-range hash, run/invocation IDs, and stable logical root. The reader
+  now refuses missing, changed, or mismatched receipts before exposing a result.
+- Retained each exact historical snapshot manifest and checkpoint-basis document in
+  the receipt namespace so older specified results remain verifiable after later
+  valid publications. API/R2 retention remains a consumer responsibility.
+- Added deterministic recovery for interruption after result publication: the next
+  invocation seals the exact orphan result rather than minting a replacement.
+- Routed exact and bounded ordinary authoring plus route-neutral provider
+  reconciliation through the shared finalizer. Strict reconciliation `not_due`
+  remains nonmutating as frozen previously.
+- Preserved external denial causes, provider terminal failure, provider identity
+  conflict, pending, ambiguity, review, delivery, and continuation as distinct
+  machine outcomes. Optional skips do not become required-action terminal failure.
+- The broad gate initially found three providerless-denial crash-recovery cases
+  where the new derived journal member was outside the legacy declared write set.
+  Narrowed recovery to admit only a valid hash-chain denial projection containing
+  every exact persisted denied action ID; arbitrary changed bytes remain refused.
+- Focused publication coverage passed all 18 tests in 2.848 seconds. The final broad
+  authoring, spend, provider-capacity, bounded, closeout, and denial recovery gate
+  passed all 197 tests in 204.543 seconds. Provider operations remain 0 and spend
+  remains `$0`.
+- Slice 4 is complete and paused for Kevin review.
+- The API agent approved Slice 4 subject to one publication hardening correction:
+  validate the just-written complete snapshot against workspace bytes before
+  hashing or sealing it on both normal and orphan-repair paths.
+- Added both validations and injected a post-manifest workspace mutation. SBE
+  refused publication before creating a receipt, then repaired the exact orphan
+  after the authoritative bytes were restored. Focused coverage now passes all 19
+  tests in 3.098 seconds.
+- The post-correction route, provider-capacity, bounded, and denial-recovery subset
+  passed all 50 tests in 11.778 seconds; `git diff --check` remained clean.

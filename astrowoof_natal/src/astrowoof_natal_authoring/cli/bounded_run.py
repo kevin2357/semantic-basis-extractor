@@ -123,6 +123,11 @@ def main() -> None:
                 event_emitter=emitter,
             )
             if args.prepare_only:
+                from ..native_transitions import publish_native_execution_result
+                publish_native_execution_result(
+                    args.run_dir, command_kind="ordinary_authoring",
+                    sbe_release=__version__, published_at=state["updated_at"],
+                )
                 print(json.dumps(public_run_state(state), sort_keys=True))
                 return
         state = resume_bounded_run(
@@ -131,9 +136,19 @@ def main() -> None:
             authorizations=[load_json(path) for path in args.spend_authorization],
             event_emitter=emitter,
         )
+        from ..native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=state["updated_at"],
+        )
         print(json.dumps(public_run_state(state), sort_keys=True))
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
         state = load_json(args.run_dir / "run.json")
+        from ..native_transitions import publish_native_execution_result
+        publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=state["updated_at"],
+        )
         print(json.dumps(public_run_state(state), sort_keys=True))
         raise SystemExit(3)
 

@@ -24,11 +24,13 @@ from astrowoof_natal_authoring.closure import (
 )
 from astrowoof_natal_authoring.native_transitions import (
     _record_digest,
+    _receipt_digest,
     _result_digest,
     append_transition_record,
     checkpoint_basis,
     journal_range,
     mint_invocation_id,
+    publish_native_execution_result,
     read_native_transition_result,
     validate_transition_journal,
     write_immutable_execution_result,
@@ -41,6 +43,7 @@ class TestNativeTransitions(unittest.TestCase):
         run = root / "run"
         run.mkdir()
         write_json_atomic(run / "run.json", {
+            "schema_version": "astrowoof.semantic_closure_run.v0.9",
             "run_id": "run_native_fixture",
             "state_revision": 7,
             "status": "FAILED_REQUIRES_REVIEW",
@@ -104,38 +107,10 @@ class TestNativeTransitions(unittest.TestCase):
         })
 
     def publish_review_result(self, run: Path) -> dict:
-        invocation = mint_invocation_id()
-        self.append(run, invocation, "invocation.started")
-        self.append(run, invocation, "native.transitioned")
-        self.append(run, invocation, "invocation.closed")
-        selected = journal_range(run, 1, 3)
-        basis = checkpoint_basis(run, 7)
-        result = write_immutable_execution_result(run, {
-            "invocation_id": invocation,
-            "run_id": "run_native_fixture",
-            "sbe_release": "0.4.4",
-            "published_at": "2026-08-17T22:01:00Z",
-            "command_kind": "ordinary_authoring",
-            "route_binding": self.route(),
-            "pre_checkpoint": None,
-            "post_checkpoint": {
-                "native_state_revision": 7,
-                "checkpoint_basis_sha256": basis["checkpoint_basis_sha256"],
-                "logical_workspace_root": normalized_path(run),
-            },
-            "journal_range": {
-                key: selected[key] for key in (
-                    "start_sequence", "end_sequence", "record_count", "range_sha256"
-                )
-            } | {"closing_record_id": selected["records"][-1]["record_id"]},
-            "outcome": "review_required",
-            "cause_code": "authoring_attempts_exhausted",
-            "action_ids": [],
-            "provider_operations": [],
-            "projection_refs": {},
-        })
-        write_workspace_snapshot(run)
-        return result
+        return publish_native_execution_result(
+            run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+            published_at="2026-08-17T22:01:00Z",
+        )["result"]
 
     def test_hash_chain_range_and_bounded_public_reader(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -254,6 +229,10 @@ class TestNativeTransitions(unittest.TestCase):
             "astrowoof.native_execution_result.v0.1",
             catalog["contracts"]["native_execution_result"],
         )
+        self.assertEqual(
+            "astrowoof.native_publication_receipt.v0.1",
+            catalog["contracts"]["native_publication_receipt"],
+        )
         fixtures = files("astrowoof_natal_authoring").joinpath(
             "resources/fixtures/native_transition"
         )
@@ -263,8 +242,12 @@ class TestNativeTransitions(unittest.TestCase):
         result = json.loads(
             fixtures.joinpath("review-terminal-result.v0.1.json").read_text("utf-8")
         )
+        receipt = json.loads(
+            fixtures.joinpath("review-terminal-receipt.v0.1.json").read_text("utf-8")
+        )
         self.assertEqual(record["record_sha256"], _record_digest(record))
         self.assertEqual(result["result_sha256"], _result_digest(result))
+        self.assertEqual(receipt["receipt_sha256"], _receipt_digest(receipt))
 
     def test_cross_process_writer_contention_fails_without_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -499,6 +482,120 @@ class TestNativeTransitions(unittest.TestCase):
             self.assertEqual(
                 ["action.prepared", "action.authorized", "action.consumed", "provider.submission_started"],
                 [item["record_kind"] for item in first],
+            )
+
+    def test_result_snapshot_receipt_interruption_repairs_exact_orphan(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            with patch(
+                "astrowoof_natal_authoring.closure.write_workspace_snapshot",
+                side_effect=OSError("injected snapshot interruption"),
+            ):
+                with self.assertRaisesRegex(OSError, "snapshot interruption"):
+                    publish_native_execution_result(
+                        run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                        published_at="2026-08-17T23:30:00Z",
+                    )
+            result_id = load_json(run / "native-result-index.json")["result_ids"][0]
+            self.assertFalse(
+                (run / "native-publication-receipts" / f"{result_id}.json").exists()
+            )
+            repaired = publish_native_execution_result(
+                run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                published_at="2026-08-17T23:31:00Z",
+            )
+            self.assertEqual(result_id, repaired["result"]["result_id"])
+            self.assertEqual(1, len(load_json(run / "native-result-index.json")["result_ids"]))
+            self.assertEqual(
+                result_id, read_native_transition_result(run, result_id)["result"]["result_id"]
+            )
+
+    def test_snapshot_manifest_must_validate_before_receipt_is_sealed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            run_json = run / "run.json"
+            original_run = run_json.read_bytes()
+
+            def write_then_change_workspace(target: Path) -> None:
+                write_workspace_snapshot(target)
+                run_json.write_bytes(original_run + b" ")
+
+            with patch(
+                "astrowoof_natal_authoring.closure.write_workspace_snapshot",
+                side_effect=write_then_change_workspace,
+            ):
+                with self.assertRaisesRegex(ValueError, "snapshot is incomplete or changed"):
+                    publish_native_execution_result(
+                        run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                        published_at="2026-08-17T23:35:00Z",
+                    )
+            result_id = load_json(run / "native-result-index.json")["result_ids"][0]
+            self.assertFalse(
+                (run / "native-publication-receipts" / f"{result_id}.json").exists()
+            )
+            run_json.write_bytes(original_run)
+            repaired = publish_native_execution_result(
+                run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                published_at="2026-08-17T23:36:00Z",
+            )
+            self.assertEqual(result_id, repaired["result"]["result_id"])
+            self.assertTrue(
+                (run / "native-publication-receipts" / f"{result_id}.json").is_file()
+            )
+
+    def test_reader_rejects_missing_or_changed_publication_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            result = self.publish_review_result(run)
+            receipt_path = (
+                run / "native-publication-receipts" / f"{result['result_id']}.json"
+            )
+            receipt = load_json(receipt_path)
+            receipt_path.unlink()
+            with self.assertRaisesRegex(ValueError, "no immutable publication receipt"):
+                read_native_transition_result(run, result["result_id"])
+            write_json_atomic(receipt_path, {**receipt, "snapshot_sha256": "0" * 64})
+            with self.assertRaisesRegex(ValueError, "receipt binding"):
+                read_native_transition_result(run, result["result_id"])
+
+    def test_historical_result_remains_bound_after_later_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            first = self.publish_review_result(run)
+            state = load_json(run / "run.json")
+            state["status"] = "DELIVERY_COMPLETE"
+            state["state_revision"] = 8
+            write_json_atomic(run / "run.json", state)
+            write_workspace_snapshot(run)
+            second = publish_native_execution_result(
+                run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                published_at="2026-08-17T23:45:00Z",
+            )["result"]
+            self.assertNotEqual(first["result_id"], second["result_id"])
+            self.assertEqual(
+                first["result_id"],
+                read_native_transition_result(run, first["result_id"])["result"]["result_id"],
+            )
+
+    def test_external_denial_terminal_cause_is_preserved(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            state = load_json(run / "run.json")
+            state.update({
+                "status": "BUDGET_EXHAUSTED",
+                "terminal_transition": {
+                    "outcome": "terminalized", "terminal_outcome": "budget_exhausted",
+                    "terminal_reason": "external_spend_authority_denied",
+                },
+            })
+            write_json_atomic(run / "run.json", state)
+            sealed = publish_native_execution_result(
+                run, command_kind="ordinary_authoring", sbe_release="0.4.4",
+                published_at="2026-08-17T23:50:00Z",
+            )
+            self.assertEqual("budget_exhausted", sealed["result"]["outcome"])
+            self.assertEqual(
+                "external_spend_authority_denied", sealed["result"]["cause_code"]
             )
 
 

@@ -139,3 +139,37 @@ Provider operations remain 0 and paid spend remains `$0`.
 - Focused native transition tests: 14 passed in 1.412 seconds.
 - Broad no-provider compatibility gate: 145 passed in 182.359 seconds.
 - Provider operations: 0. Paid spend: `$0`.
+
+## Slice 4 terminal result and receipt evidence
+
+- Publication order: terminal journal range, immutable result, complete snapshot,
+  then immutable publication receipt.
+- Narrow exclusion: only `native-publication-receipts/` is omitted from native
+  snapshot inventory. Result and journal remain ordinary authoritative members.
+- Receipt contract: `astrowoof.native_publication_receipt.v0.1`, content-addressed
+  and bound to result, full snapshot, checkpoint basis, journal range, run,
+  invocation, and logical root identities.
+- Retained evidence: exact published snapshot manifest and checkpoint-basis object
+  accompany each receipt inside the same narrow namespace.
+- Public reader refuses missing/tampered receipt, changed result/range/basis,
+  incomplete current workspace, or relocated logical root.
+- Interrupted result-before-snapshot publication repaired the exact orphan result;
+  the result index remained one member and no replacement operation was minted.
+- Historical specified-result validation remained valid after a later publication.
+- External spend denial retained `budget_exhausted` plus
+  `external_spend_authority_denied`; policy stops and native ceilings remain
+  distinguishable.
+- Route coverage: exact ordinary authoring, bounded ordinary authoring, exact
+  Response/Batch reconciliation, and bounded Response reconciliation. `not_due`
+  remains strictly nonmutating.
+- Providerless-denial crash recovery accepts the added journal member only when the
+  complete chain validates and contains each exact persisted denied action ID.
+- Focused native publication tests: 19 passed in 3.098 seconds.
+- Both normal and orphan-repair publication validate the freshly written full
+  snapshot against actual workspace bytes before calculating or sealing its hash.
+- Injected post-manifest workspace mutation was refused before receipt creation;
+  restoration permitted exact-orphan repair without replacement publication.
+- Post-correction route and crash-recovery compatibility: 50 passed in 11.778
+  seconds.
+- Broad compatibility and recovery gate: 197 passed in 204.543 seconds.
+- Provider operations: 0. Paid spend: `$0`.

@@ -1,0 +1,13 @@
+{
+  "checkpoint_basis_sha256": "236ada1d0c35c18fd87d2f815fd7e9e9a72b018b7e59c595a0aa928eed51f953",
+  "invocation_id": "ninv_111111111111111111111111",
+  "journal_range_sha256": "6843a813a42582a17788c58d6a0521376d9467ac4adeedf3273ddad4d4a2ab0a",
+  "logical_workspace_root": "/work/run/run_fixture",
+  "receipt_id": "nreceipt_5dcd5662f6c3b035e982651b",
+  "receipt_sha256": "5dcd5662f6c3b035e982651bbd6ff0bc2f9508745bbf107f0bd72619336f7a8a",
+  "result_id": "nres_871029fdd1428d1684866042",
+  "result_sha256": "871029fdd1428d168486604265300fa15921505f3b1d4820b62b794d90e5e5ff",
+  "run_id": "run_fixture",
+  "schema_version": "astrowoof.native_publication_receipt.v0.1",
+  "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
