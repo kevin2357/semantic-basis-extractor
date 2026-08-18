@@ -237,3 +237,12 @@
 - Provider operations and spend: zero.
 - Recommend a fresh immutable 0.4.7 after final Kevin/API review and explicit
   release authorization; the 0.4.6-named qualification wheel is not publishable.
+
+## 2026-08-18 — Final review accepted; 0.4.7 authorized
+
+- Kevin and the AstroWoof API agent accepted Slice 8 and the release recommendation.
+- Authorized a fresh immutable 0.4.7 version, exact-source reproducible rebuild,
+  final installed gates, annotated tag, GitHub publication, and authenticated asset
+  verification.
+- The retained 0.4.6-named qualification artifact remains evidence only and will
+  not be published or substituted for the exact 0.4.7 artifact.

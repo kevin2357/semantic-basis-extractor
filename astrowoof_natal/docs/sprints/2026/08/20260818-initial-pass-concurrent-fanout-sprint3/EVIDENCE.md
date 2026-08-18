@@ -254,3 +254,10 @@ Installed qualification driver:
 - Timing: Windows 0.173 and Linux 0.175 concurrent/serial ratios.
 - Provider operations: 0. Spend: USD 0.
 - Recommendation: fresh immutable 0.4.7 after explicit release authorization.
+
+## Final consumer/release authorization
+
+- Kevin approval: accepted.
+- AstroWoof API consumer approval: accepted.
+- Authorized release: fresh immutable 0.4.7 with exact-source rebuild and
+  post-publication asset verification.
