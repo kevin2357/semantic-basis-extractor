@@ -102,3 +102,19 @@ The frozen corrections are:
 - no predecessor/supersession fields until a later real recovery contract.
 
 Provider operations remain 0 and paid spend remains `$0`.
+
+## Slice 2 implementation evidence
+
+- Packaged contracts: journal record v0.1, immutable execution result v0.1, and
+  derived result index v0.1.
+- Packaged hash-valid canonical review-terminal fixtures and strict JSON Schema.
+- Public package boundary: explicit-result bounded reader and journal validator;
+  no public mutation API.
+- Native focused tests: 11 passed in 0.870 seconds.
+- Native plus lifecycle/snapshot/consumer compatibility: 57 passed in 3.865 seconds.
+- Cross-process contention: losing writer failed without journal mutation.
+- Integrity refusals: sequence/hash corruption, unknown kind, missing provider ID,
+  fabricated unavailable cost, changed result, partial snapshot, relocation,
+  unbounded range, and oversized record.
+- Provider-bound runtime integration: not started. Provider operations: 0. Paid
+  spend: `$0`.

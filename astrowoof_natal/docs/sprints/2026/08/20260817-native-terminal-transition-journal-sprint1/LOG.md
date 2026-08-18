@@ -74,3 +74,19 @@ Status: planned; implementation has not started.
   v0.1. API receipts and future recovery models remain wholly outside this schema.
 - Slice 1 is API-approved for implementation and paused for Kevin's commit/proceed
   gate before Slice 2.
+- Kevin approved Slice 1. Committed and pushed it as `64d67e4`; Slice 2 began.
+- Added the packaged native transition engine with canonical content identities,
+  hash-linked whole-file journal publication, bounded range digests, immutable
+  result artifacts, derived index repair, checkpoint-basis identity, and strict
+  full-snapshot reader validation.
+- Reused the native spend-consumption lock for cross-process mutation. Only the
+  bounded reader and journal validator are public package-root interfaces; mutation
+  remains SBE-internal.
+- Added packaged contract catalog entries, Draft 2020-12 schema, and hash-valid
+  review-terminal record/result fixtures.
+- Native focused coverage passed all 11 tests in 0.870 seconds. The final native,
+  lifecycle, snapshot, and consumer compatibility gate passed all 57 tests in 3.865
+  seconds.
+- Slice 2 is complete and paused for Kevin review. Provider-bound journaling and
+  command result publication remain later slices; provider operations remain 0 and
+  paid spend remains `$0`.

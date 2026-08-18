@@ -1,0 +1,23 @@
+{
+  "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+  "record_id": "ntr_17d4b4d66402aa198ac688bc",
+  "record_sha256": "17d4b4d66402aa198ac688bc43b8907222ec8613ab2d78ef38ea3f216bce1418",
+  "run_id": "run_fixture",
+  "invocation_id": "ninv_111111111111111111111111",
+  "sequence": 1,
+  "previous_record_sha256": null,
+  "observed_at": "2026-08-17T22:00:00Z",
+  "native_state_revision": 7,
+  "record_kind": "native.transitioned",
+  "route_binding": {
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "native_operation_ref": "semantic_closure.resume"
+  },
+  "action_binding": null,
+  "provider_observation": null,
+  "native_transition": {
+    "outcome": "review_required",
+    "cause_code": "authoring_attempts_exhausted"
+  }
+}

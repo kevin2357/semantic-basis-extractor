@@ -1,0 +1,35 @@
+{
+  "invocation_id": "ninv_111111111111111111111111",
+  "run_id": "run_fixture",
+  "sbe_release": "0.4.4",
+  "published_at": "2026-08-17T22:00:01Z",
+  "command_kind": "ordinary_authoring",
+  "route_binding": {
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "native_operation_ref": "semantic_closure.resume"
+  },
+  "pre_checkpoint": null,
+  "post_checkpoint": {
+    "native_state_revision": 7,
+    "checkpoint_basis_sha256": "236ada1d0c35c18fd87d2f815fd7e9e9a72b018b7e59c595a0aa928eed51f953",
+    "logical_workspace_root": "/work/run/run_fixture"
+  },
+  "journal_range": {
+    "start_sequence": 1,
+    "end_sequence": 1,
+    "record_count": 1,
+    "range_sha256": "6843a813a42582a17788c58d6a0521376d9467ac4adeedf3273ddad4d4a2ab0a",
+    "closing_record_id": "ntr_17d4b4d66402aa198ac688bc"
+  },
+  "outcome": "review_required",
+  "cause_code": "authoring_attempts_exhausted",
+  "action_ids": [],
+  "provider_operations": [],
+  "projection_refs": {
+    "lifecycle_inspection_schema": "astrowoof.authoring_lifecycle_inspection.v0.3"
+  },
+  "schema_version": "astrowoof.native_execution_result.v0.1",
+  "result_sha256": "871029fdd1428d168486604265300fa15921505f3b1d4820b62b794d90e5e5ff",
+  "result_id": "nres_871029fdd1428d1684866042"
+}

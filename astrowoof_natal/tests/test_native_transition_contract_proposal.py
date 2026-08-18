@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import unittest
 from copy import deepcopy
+from importlib.resources import files
 from pathlib import Path
 
 try:
@@ -90,6 +91,14 @@ class TestNativeTransitionContractProposal(unittest.TestCase):
             "cost_disposition": "not_applicable_provider_pending",
         })
         self.validator.validate(pending)
+
+    def test_packaged_contract_schema_is_valid(self) -> None:
+        packaged = json.loads(
+            files("astrowoof_natal_authoring")
+            .joinpath("resources/contracts/native-transition-contracts.schema.json")
+            .read_text(encoding="utf-8")
+        )
+        Draft202012Validator.check_schema(packaged)
 
 
 if __name__ == "__main__":
