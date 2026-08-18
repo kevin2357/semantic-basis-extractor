@@ -42,9 +42,6 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "provider.reconciliation_observed": (
         "action_id", "route_family", "provider_operation_kind", "outcome",
     ),
-    "provider.reconciliation_observed": (
-        "action_id", "route_family", "provider_operation_kind", "outcome",
-    ),
     "qa.started": ("scope", "attempt"),
     "qa.completed": ("scope", "attempt", "outcome"),
     "retry.decided": ("route", "attempt", "decision", "reason_code"),
@@ -52,6 +49,7 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "critic.decided": ("decision", "reason_code"),
     "checkpoint.committed": ("state_revision", "snapshot_sha256"),
     "terminal.transitioned": ("outcome", "terminal_reason"),
+    "native.result_published": ("result_id", "receipt_id", "outcome"),
     "closeout.completed": ("disposition", "semantic_result_sha256"),
     "execution.failed": ("reason_code", "failure_class"),
     "event_sink.warning": ("warning_code", "dropped_event_count"),

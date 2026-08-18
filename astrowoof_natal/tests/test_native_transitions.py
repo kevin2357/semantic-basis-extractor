@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import json
 import os
 import subprocess
@@ -7,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from copy import deepcopy
+from contextlib import redirect_stderr, redirect_stdout
 from importlib.resources import files
 from pathlib import Path
 from unittest.mock import patch
@@ -597,6 +599,111 @@ class TestNativeTransitions(unittest.TestCase):
             self.assertEqual(
                 "external_spend_authority_denied", sealed["result"]["cause_code"]
             )
+
+    def test_public_cli_explicit_and_latest_are_read_only_and_identical(self) -> None:
+        from astrowoof_natal_authoring.cli.native_transition import main as cli_main
+
+        with tempfile.TemporaryDirectory() as temporary:
+            run = self.workspace(Path(temporary))
+            result = self.publish_review_result(run)
+
+            def all_bytes() -> dict[str, bytes]:
+                return {
+                    path.relative_to(run).as_posix(): path.read_bytes()
+                    for path in run.rglob("*") if path.is_file()
+                }
+
+            before = all_bytes()
+            outputs = []
+            for selection in (["--result-id", result["result_id"]], ["--latest"]):
+                stream = io.StringIO()
+                with patch(
+                    "sys.argv", ["astrowoof-native-transition", "--run-dir", str(run), *selection]
+                ), patch(
+                    "urllib.request.urlopen", side_effect=AssertionError("provider call")
+                ), redirect_stdout(stream):
+                    cli_main()
+                outputs.append(json.loads(stream.getvalue()))
+            self.assertEqual(outputs[0], outputs[1])
+            self.assertEqual(result["result_id"], outputs[0]["result"]["result_id"])
+            self.assertEqual(before, all_bytes())
+
+    def test_public_cli_output_must_resolve_outside_workspace(self) -> None:
+        from astrowoof_natal_authoring.cli.native_transition import main as cli_main
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            run = self.workspace(root)
+            result = self.publish_review_result(run)
+
+            def all_bytes() -> dict[str, bytes]:
+                return {
+                    path.relative_to(run).as_posix(): path.read_bytes()
+                    for path in run.rglob("*") if path.is_file()
+                }
+
+            before = all_bytes()
+            external_output = root / "consumer-export.json"
+            stream = io.StringIO()
+            with patch(
+                "sys.argv", [
+                    "astrowoof-native-transition", "--run-dir", str(run),
+                    "--result-id", result["result_id"], "--output", str(external_output),
+                ]
+            ), redirect_stdout(stream):
+                cli_main()
+            self.assertEqual(json.loads(stream.getvalue()), json.loads(external_output.read_text()))
+            self.assertEqual(before, all_bytes())
+
+            for refused_output in (run, run / "exports" / "result.json"):
+                stderr = io.StringIO()
+                with patch(
+                    "sys.argv", [
+                        "astrowoof-native-transition", "--run-dir", str(run),
+                        "--result-id", result["result_id"], "--output", str(refused_output),
+                    ]
+                ), redirect_stderr(stderr), self.assertRaises(SystemExit) as raised:
+                    cli_main()
+                self.assertEqual(2, raised.exception.code)
+                self.assertIn("--output must resolve outside --run-dir", stderr.getvalue())
+                self.assertEqual(before, all_bytes())
+            self.assertFalse((run / "exports" / "result.json").exists())
+
+    def test_packaged_consumer_fixture_matrix_has_canonical_identities(self) -> None:
+        fixtures = files("astrowoof_natal_authoring").joinpath(
+            "resources/fixtures/native_transition"
+        )
+        catalog = json.loads(
+            fixtures.joinpath("consumer-ingestion-cases.v0.1.json").read_text("utf-8")
+        )
+        self.assertEqual(
+            {
+                "exact_response_delivery", "exact_response_review",
+                "exact_batch_provider_failure", "exact_response_pending",
+                "bounded_response_ambiguity", "malformed_result_refusal",
+                "exact_replay", "conflicting_second_operation_refusal",
+            },
+            {item["case_id"] for item in catalog["cases"]},
+        )
+        for case in catalog["cases"]:
+            view = case["view"]
+            record = view["journal_range"]["records"][0]
+            self.assertEqual(record["record_sha256"], _record_digest(record))
+            self.assertEqual(
+                view["receipt"]["receipt_sha256"], _receipt_digest(view["receipt"])
+            )
+            if case["expected_disposition"] == "refused":
+                self.assertNotEqual(
+                    view["result"]["result_sha256"], _result_digest(view["result"])
+                )
+            else:
+                self.assertEqual(
+                    view["result"]["result_sha256"], _result_digest(view["result"])
+                )
+                self.assertEqual(
+                    view["result"]["result_sha256"],
+                    view["receipt"]["result_sha256"],
+                )
 
 
 if __name__ == "__main__":

@@ -140,6 +140,39 @@
         "journal_range_sha256": {"$ref": "#/$defs/sha256"},
         "logical_workspace_root": {"type": "string", "minLength": 1, "maxLength": 1024}
       }
+    },
+    "consumer_fixture_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "cases"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.native_transition_consumer_fixtures.v0.1"},
+        "cases": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["case_id", "expected_disposition", "expected_refusal_reason", "view"],
+            "properties": {
+              "case_id": {"type": "string", "minLength": 1, "maxLength": 96},
+              "expected_disposition": {"enum": ["accepted", "accepted_review", "idempotent_replay", "refused"]},
+              "expected_refusal_reason": {"type": ["string", "null"], "maxLength": 96},
+              "view": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["result", "journal_range", "receipt"],
+                "properties": {
+                  "result": {"$ref": "#/$defs/execution_result"},
+                  "journal_range": {"type": "object"},
+                  "receipt": {"$ref": "#/$defs/publication_receipt"}
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

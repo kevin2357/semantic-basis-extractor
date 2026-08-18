@@ -400,6 +400,7 @@ EVENT_NAMES = (
     "provider.waiting",
     "provider.completed",
     "provider.reconciliation_observed",
+    "native.result_published",
     "qa.started",
     "qa.completed",
     "retry.decided",

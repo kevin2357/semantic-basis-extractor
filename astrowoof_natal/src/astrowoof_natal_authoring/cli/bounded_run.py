@@ -127,6 +127,7 @@ def main() -> None:
                 publish_native_execution_result(
                     args.run_dir, command_kind="ordinary_authoring",
                     sbe_release=__version__, published_at=state["updated_at"],
+                    event_emitter=emitter,
                 )
                 print(json.dumps(public_run_state(state), sort_keys=True))
                 return
@@ -140,6 +141,7 @@ def main() -> None:
         publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=state["updated_at"],
+            event_emitter=emitter,
         )
         print(json.dumps(public_run_state(state), sort_keys=True))
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
@@ -148,6 +150,7 @@ def main() -> None:
         publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=state["updated_at"],
+            event_emitter=emitter,
         )
         print(json.dumps(public_run_state(state), sort_keys=True))
         raise SystemExit(3)

@@ -877,6 +877,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                     "provider.reconciliation_observed",
                     "provider.reconciliation_observed",
                     "run.detached", "checkpoint.committed",
+                    "native.result_published",
                 ],
                 [item["event_name"] for item in events],
             )

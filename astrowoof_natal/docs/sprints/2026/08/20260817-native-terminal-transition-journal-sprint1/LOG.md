@@ -153,3 +153,41 @@ Status: planned; implementation has not started.
   tests in 3.098 seconds.
 - The post-correction route, provider-capacity, bounded, and denial-recovery subset
   passed all 50 tests in 11.778 seconds; `git diff --check` remained clean.
+- Committed and pushed the snapshot-hardened, API-approved Slice 4 as `8385990`;
+  Slice 5 began.
+- Added the typed public `NativeTransitionResultView`, authoritative explicit-ID
+  reader, explicitly derived latest-result convenience, and provider-free
+  `astrowoof-native-transition` CLI. Source tests prove explicit/latest parity and
+  byte-for-byte nonmutation with a provider-call sentinel.
+- Published a packaged eight-case consumer matrix covering exact Response delivery/
+  review/pending/replay, exact Batch provider failure, bounded Response ambiguity,
+  malformed hash refusal, and conflicting second-operation review/refusal.
+- Published the native transition consumer handoff with transactional ingestion,
+  idempotency/cursor rules, outcome mapping, ownership, cost, redaction,
+  compatibility, receipt retention, and irreducible recovery limitations.
+- Added the non-authoritative `native.result_published` event and synchronized its
+  closed vocabulary across code, JSON Schema, payload catalog, and route tests.
+- Source contract/route/consumer coverage passed all 101 tests in 44.459 seconds.
+  The source lifecycle smoke also passed.
+- Built candidate wheel SHA-256
+  `ce63937ce6385c7b45fcef069d42b174a976d655c55bab69658f65bd9872711b`,
+  installed it outside the checkout, and passed installed lifecycle/resource/type/
+  entry-point smoke. The installed explicit-result CLI returned the sealed result
+  without changing any run bytes.
+- Removed the isolated `C:\tmp\sbe-slice5-8385990` qualification tree after
+  recording compact evidence. No provider operation occurred and spend remains
+  `$0`.
+- Draft 2020-12 meta-schema validation and strict consumer-fixture validation
+  passed using an isolated cached `jsonschema` install. The validation dependency
+  tree was removed afterward.
+- API review accepted the Slice 5 contract with one required read-only hardening:
+  a CLI `--output` must resolve outside the native run directory. The corrected
+  CLI rejects both the run root and descendants before reading or writing, while
+  preserving external consumer-owned export.
+- The focused post-correction suite passed all 33 tests in 4.654 seconds. The full
+  source contract/route/consumer suite passed all 101 tests in 44.459 seconds,
+  including byte-for-byte proof for allowed and refused output paths.
+- Rebuilt candidate wheel SHA-256
+  `baca8ae1cedb050d15ba2240406b34acd83707e857e31b8e5f03c8a2fc58b2dc`;
+  isolated installed-package resource/type/entry-point checks passed.
+- Slice 5 is API-approved and complete; Slice 6 joint qualification has not begun.

@@ -6822,6 +6822,7 @@ def main() -> None:
         publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=utc_now(),
+            event_emitter=event_emitter,
         )
         output_result(state)
         return
@@ -6904,6 +6905,7 @@ def main() -> None:
         publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=utc_now(),
+            event_emitter=event_emitter,
         )
         output_result(state)
         return
@@ -6957,6 +6959,7 @@ def main() -> None:
     publish_native_execution_result(
         args.run_dir, command_kind="ordinary_authoring",
         sbe_release=__version__, published_at=utc_now(),
+        event_emitter=event_emitter,
     )
     output_result(state)
     if state["status"] in {

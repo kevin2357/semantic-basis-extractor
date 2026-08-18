@@ -1511,6 +1511,7 @@ def reconcile_authoring_provider_cycle(
             publish_native_execution_result(
                 run_dir, command_kind="provider_reconciliation",
                 sbe_release=__version__, published_at=observed_at,
+                event_emitter=event_emitter,
             )
         return result
     if route == "exact_natal" and mechanism == "response":
@@ -1538,5 +1539,6 @@ def reconcile_authoring_provider_cycle(
         publish_native_execution_result(
             run_dir, command_kind="provider_reconciliation",
             sbe_release=__version__, published_at=observed_at,
+            event_emitter=event_emitter,
         )
     return result

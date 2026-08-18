@@ -21,6 +21,7 @@
     "critic.decided": {"required_fields": ["decision", "reason_code"]},
     "checkpoint.committed": {"required_fields": ["state_revision", "snapshot_sha256"]},
     "terminal.transitioned": {"required_fields": ["outcome", "terminal_reason"]},
+    "native.result_published": {"required_fields": ["result_id", "receipt_id", "outcome"]},
     "closeout.completed": {"required_fields": ["disposition", "semantic_result_sha256"]},
     "execution.failed": {"required_fields": ["reason_code", "failure_class"]},
     "event_sink.warning": {"required_fields": ["warning_code", "dropped_event_count"]},

@@ -90,6 +90,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
     for resource_name in (
         "contracts/authoring-lifecycle-contracts.schema.json",
         "contracts/contract-catalog.json",
+        "contracts/native-transition-contracts.schema.json",
         "contracts/execution-event-payload-catalog.v1.json",
         "fixtures/lifecycle/negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-request.v0.1.json",
@@ -100,6 +101,8 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "fixtures/lifecycle/reconciliation-policy.v0.1.json",
         "fixtures/lifecycle/reconciliation-cycle-not-due.v0.1.json",
         "fixtures/lifecycle/route-parity-transition-oracle.v1.json",
+        "fixtures/native_transition/review-terminal-receipt.v0.1.json",
+        "fixtures/native_transition/consumer-ingestion-cases.v0.1.json",
     ):
         try:
             json.loads(read_resource_text(resource_name))
@@ -162,6 +165,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
     replay = closeout_run(run_dir)
     checks = {
         "public_reconciliation_surface": False,
+        "public_native_result_surface": False,
         "prepared_eligible": action["providerless_denial_eligible"],
         "denial_applied": denial.get("applied"),
         "denial_disposition": denial.get("disposition"),
@@ -192,15 +196,27 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         )["observation"]["inventory_valid"],
     }
     try:
-        from . import ProviderReconciliationAdapters, reconcile_authoring_provider_cycle
+        from . import (
+            NativeTransitionResultView,
+            ProviderReconciliationAdapters,
+            latest_native_transition_result,
+            read_native_transition_result,
+            reconcile_authoring_provider_cycle,
+        )
         checks["public_reconciliation_surface"] = bool(
             ProviderReconciliationAdapters
             and reconcile_authoring_provider_cycle.__annotations__
+        )
+        checks["public_native_result_surface"] = bool(
+            NativeTransitionResultView
+            and callable(read_native_transition_result)
+            and callable(latest_native_transition_result)
         )
     except Exception as exc:
         errors.append(f"public reconciliation surface unavailable: {exc}")
     expected = {
         "public_reconciliation_surface": True,
+        "public_native_result_surface": True,
         "prepared_eligible": True,
         "denial_applied": True,
         "denial_disposition": "DENIED_PROVIDERLESS",

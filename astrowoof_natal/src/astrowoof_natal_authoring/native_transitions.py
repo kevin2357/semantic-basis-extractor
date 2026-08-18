@@ -10,7 +10,7 @@ import uuid
 from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from .closure import (
     SNAPSHOT_NAME,
@@ -34,6 +34,12 @@ RECEIPT_DIRECTORY = "native-publication-receipts"
 MAX_RECORD_BYTES = 32 * 1024
 MAX_RESULT_BYTES = 256 * 1024
 MAX_EXPORT_RECORDS = 512
+
+
+class NativeTransitionResultView(TypedDict):
+    result: dict[str, Any]
+    journal_range: dict[str, Any]
+    receipt: dict[str, Any]
 
 RECORD_KINDS = {
     "invocation.started", "action.prepared", "action.authorized",
@@ -619,6 +625,7 @@ def _publish_receipt(
 
 def publish_native_execution_result(
     run_dir: Path, *, command_kind: str, sbe_release: str, published_at: str,
+    event_emitter: Any = None,
 ) -> dict[str, Any]:
     """Seal current native meaning as result + full snapshot + immutable receipt."""
     run_dir = run_dir.resolve()
@@ -657,7 +664,13 @@ def publish_native_execution_result(
                 run_dir, orphan, snapshot_sha256=sha256_file(run_dir / SNAPSHOT_NAME),
                 basis=basis,
             )
-            return {"result": orphan, "receipt": receipt}
+            sealed = {"result": orphan, "receipt": receipt}
+            if event_emitter is not None:
+                event_emitter.emit("native.result_published", data={
+                    "result_id": orphan["result_id"],
+                    "receipt_id": receipt["receipt_id"], "outcome": orphan["outcome"],
+                })
+            return sealed
         invocation_id = mint_invocation_id()
         route = _native_route(state)
         outcome, cause = _outcome(state)
@@ -703,10 +716,18 @@ def publish_native_execution_result(
         receipt = _publish_receipt(
             run_dir, result, snapshot_sha256=snapshot_sha256, basis=basis,
         )
-        return {"result": result, "receipt": receipt}
+        sealed = {"result": result, "receipt": receipt}
+        if event_emitter is not None:
+            event_emitter.emit("native.result_published", data={
+                "result_id": result["result_id"],
+                "receipt_id": receipt["receipt_id"], "outcome": result["outcome"],
+            })
+        return sealed
 
 
-def read_native_transition_result(run_dir: Path, result_id: str) -> dict[str, Any]:
+def read_native_transition_result(
+    run_dir: Path, result_id: str,
+) -> NativeTransitionResultView:
     """Return one immutable result and only its validated bounded journal range."""
     if not result_id.startswith("nres_") or len(result_id) != 29:
         raise ValueError("Invalid native execution result ID")
@@ -767,9 +788,20 @@ def read_native_transition_result(run_dir: Path, result_id: str) -> dict[str, An
     return {"result": result, "journal_range": observed, "receipt": receipt}
 
 
+def latest_native_transition_result(run_dir: Path) -> NativeTransitionResultView:
+    """Derived convenience only; consumers should persist and request explicit IDs."""
+    index = load_json(run_dir.resolve() / RESULT_INDEX_NAME)
+    result_ids = index.get("result_ids")
+    if not isinstance(result_ids, list) or not result_ids:
+        raise ValueError("Native result index contains no published result")
+    return read_native_transition_result(run_dir, result_ids[-1])
+
+
 __all__ = [
     "EXECUTION_RESULT_SCHEMA", "JOURNAL_RECORD_SCHEMA", "append_transition_record",
     "checkpoint_basis", "journal_range", "mint_invocation_id",
-    "publish_native_execution_result", "read_native_transition_result", "validate_transition_journal",
+    "NativeTransitionResultView", "latest_native_transition_result",
+    "publish_native_execution_result", "read_native_transition_result",
+    "validate_transition_journal",
     "sync_provider_transition_journal", "write_immutable_execution_result",
 ]

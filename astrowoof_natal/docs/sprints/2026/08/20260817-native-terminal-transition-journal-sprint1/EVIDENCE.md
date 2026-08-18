@@ -173,3 +173,35 @@ Provider operations remain 0 and paid spend remains `$0`.
   seconds.
 - Broad compatibility and recovery gate: 197 passed in 204.543 seconds.
 - Provider operations: 0. Paid spend: `$0`.
+
+## Slice 5 consumer surface and fixture evidence
+
+- Public Python: `NativeTransitionResultView`,
+  `read_native_transition_result(run_dir, result_id)`, and explicitly derived
+  `latest_native_transition_result(run_dir)`.
+- Public CLI: `astrowoof-native-transition --run-dir ... --result-id ...`; accepts
+  no provider, retrieval adapter, authorization, or mutation operation.
+- CLI explicit/latest parity and byte-for-byte nonmutation passed with a patched
+  network/provider call sentinel.
+- API-requested output-boundary hardening rejects `--output` equal to or beneath
+  the resolved run directory before any read or write. An external consumer-owned
+  export remains supported. Tests compare every native workspace byte after the
+  allowed export and both refusal forms.
+- Packaged strict fixture catalog contains eight accepted/refused/replay cases for
+  exact Response, exact Batch, and bounded Response routes. Canonical record,
+  result, and receipt hashes validate; the malformed result intentionally does not.
+- Consumer handoff documents atomic PostgreSQL ingestion, exact replay key and
+  cursor rules, R2 receipt-namespace retention, route/outcome/cost mapping,
+  backwards refusal, redaction, and provider atomicity limitations.
+- `native.result_published` is closed, redacted, failure-isolated, and explicitly
+  non-authoritative.
+- Focused post-correction suite: 33 passed in 4.654 seconds.
+- Source contract/route/consumer suite: 101 passed in 44.459 seconds.
+- Source lifecycle smoke: pass.
+- Draft 2020-12 contract meta-schema and strict consumer fixture validation: pass.
+- Candidate wheel SHA-256:
+  `baca8ae1cedb050d15ba2240406b34acd83707e857e31b8e5f03c8a2fc58b2dc`.
+- Installed path was outside checkout under `C:\tmp`; installed lifecycle smoke,
+  packaged resource assertions, `py.typed`, console entry point, and read-only CLI
+  round trip all passed.
+- Isolated qualification tree removed. Provider operations: 0. Paid spend: `$0`.

@@ -1,0 +1,677 @@
+{
+  "cases": [
+    {
+      "case_id": "exact_response_delivery",
+      "expected_disposition": "accepted",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "430beca662f917fb1a79b981eb5a4e52cc57b7ba335338b6106f42ee00746f17",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_a852404c45186b7c9f334521",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "delivery_complete",
+                "outcome": "delivery_complete"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_655a98e79a38c96b180c4a8b",
+              "record_kind": "native.transitioned",
+              "record_sha256": "655a98e79a38c96b180c4a8b0c9f978ac7eee45b7ca63948f9b1168f68f5483e",
+              "route_binding": {
+                "native_operation_ref": "exact_response_delivery",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_exact_response_delivery",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "d4962dee4cc7d2c1303dd9369a0df4ed37aa87c249fcd24d0a31b0a947fa339f",
+          "invocation_id": "ninv_a852404c45186b7c9f334521",
+          "journal_range_sha256": "430beca662f917fb1a79b981eb5a4e52cc57b7ba335338b6106f42ee00746f17",
+          "logical_workspace_root": "/work/fixture/exact_response_delivery",
+          "receipt_id": "nreceipt_1a2ac359e79366e3625d4bae",
+          "receipt_sha256": "1a2ac359e79366e3625d4baeadfbdca1ab86edfe77ae3c5160ada266d4e3fcd0",
+          "result_id": "nres_804914ba022ebdeb44f0f4ef",
+          "result_sha256": "804914ba022ebdeb44f0f4ef579f155905b3c84682a38e879528942b007e18f9",
+          "run_id": "fixture_exact_response_delivery",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "0a29aed97d7414c88f78df522ef414c75d5c590082cf4498db5b20cb9cf6e472"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "delivery_complete",
+          "command_kind": "ordinary_authoring",
+          "invocation_id": "ninv_a852404c45186b7c9f334521",
+          "journal_range": {
+            "closing_record_id": "ntr_655a98e79a38c96b180c4a8b",
+            "end_sequence": 1,
+            "range_sha256": "430beca662f917fb1a79b981eb5a4e52cc57b7ba335338b6106f42ee00746f17",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "delivery_complete",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "d4962dee4cc7d2c1303dd9369a0df4ed37aa87c249fcd24d0a31b0a947fa339f",
+            "logical_workspace_root": "/work/fixture/exact_response_delivery",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_804914ba022ebdeb44f0f4ef",
+          "result_sha256": "804914ba022ebdeb44f0f4ef579f155905b3c84682a38e879528942b007e18f9",
+          "route_binding": {
+            "native_operation_ref": "exact_response_delivery",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_exact_response_delivery",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "exact_response_review",
+      "expected_disposition": "accepted",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "6fba3f3f4a9b073757d3d079e546115500c53053e27ceb89d866247bff23a443",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_69f3b9d29dab80dc5b1bbde6",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "final_qa_requires_review",
+                "outcome": "review_required"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_db0f66744b62594df3b0285a",
+              "record_kind": "native.transitioned",
+              "record_sha256": "db0f66744b62594df3b0285aeaedc9f5ab118357590740c2ebe522b924009b60",
+              "route_binding": {
+                "native_operation_ref": "exact_response_review",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_exact_response_review",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "05d0375f14c0d2c9bfdc3819a7dabf5f0285d03b3d4410fc428f4b8e1d8aaad9",
+          "invocation_id": "ninv_69f3b9d29dab80dc5b1bbde6",
+          "journal_range_sha256": "6fba3f3f4a9b073757d3d079e546115500c53053e27ceb89d866247bff23a443",
+          "logical_workspace_root": "/work/fixture/exact_response_review",
+          "receipt_id": "nreceipt_4c5ec0c54c49e66412c19d5d",
+          "receipt_sha256": "4c5ec0c54c49e66412c19d5dfdd1a6f01f363d8b87ae274bcb60a56d89fb2610",
+          "result_id": "nres_bf01246e56f448a574997be9",
+          "result_sha256": "bf01246e56f448a574997be9549d16e0f78e9bcf0f37b1efe6b6936f71dabfb9",
+          "run_id": "fixture_exact_response_review",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "b7dfd2da711a952e82f3e96eade517de737f7beb6708890db63e2846c0e814b3"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "final_qa_requires_review",
+          "command_kind": "ordinary_authoring",
+          "invocation_id": "ninv_69f3b9d29dab80dc5b1bbde6",
+          "journal_range": {
+            "closing_record_id": "ntr_db0f66744b62594df3b0285a",
+            "end_sequence": 1,
+            "range_sha256": "6fba3f3f4a9b073757d3d079e546115500c53053e27ceb89d866247bff23a443",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "review_required",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "05d0375f14c0d2c9bfdc3819a7dabf5f0285d03b3d4410fc428f4b8e1d8aaad9",
+            "logical_workspace_root": "/work/fixture/exact_response_review",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_bf01246e56f448a574997be9",
+          "result_sha256": "bf01246e56f448a574997be9549d16e0f78e9bcf0f37b1efe6b6936f71dabfb9",
+          "route_binding": {
+            "native_operation_ref": "exact_response_review",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_exact_response_review",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "exact_batch_provider_failure",
+      "expected_disposition": "accepted",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "a2729164b56dcc058d9c4f5cf0d1ff85924103145447b21c8458ed8114fcc26f",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_30916800316c2538b395a777",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "provider_terminal_failure",
+                "outcome": "terminal_failure"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_91c5f80293c637ee3cc12797",
+              "record_kind": "native.transitioned",
+              "record_sha256": "91c5f80293c637ee3cc12797551015668e3fe90fe70a5f3b6d832086af74e496",
+              "route_binding": {
+                "native_operation_ref": "exact_batch_provider_failure",
+                "provider_mechanism": "batch",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_exact_batch_provider_failure",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "3d99fc21b33040c2fc48188991927710c6dae168bea12060e2749bbfad7a488e",
+          "invocation_id": "ninv_30916800316c2538b395a777",
+          "journal_range_sha256": "a2729164b56dcc058d9c4f5cf0d1ff85924103145447b21c8458ed8114fcc26f",
+          "logical_workspace_root": "/work/fixture/exact_batch_provider_failure",
+          "receipt_id": "nreceipt_72bd1915d025f28cdbc2f147",
+          "receipt_sha256": "72bd1915d025f28cdbc2f147b47aeaa3565919c369e8037336a32daae38170ef",
+          "result_id": "nres_81c66f1e1a49d52419e2faac",
+          "result_sha256": "81c66f1e1a49d52419e2faacb6c5d95c8276c8f97c48cdc15c4983f88acb819a",
+          "run_id": "fixture_exact_batch_provider_failure",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "fbbf617d2c3ceffde2b80919770e2c71ae318adf6438bdaff0c3c184ad0211ea"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "provider_terminal_failure",
+          "command_kind": "provider_reconciliation",
+          "invocation_id": "ninv_30916800316c2538b395a777",
+          "journal_range": {
+            "closing_record_id": "ntr_91c5f80293c637ee3cc12797",
+            "end_sequence": 1,
+            "range_sha256": "a2729164b56dcc058d9c4f5cf0d1ff85924103145447b21c8458ed8114fcc26f",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "terminal_failure",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "3d99fc21b33040c2fc48188991927710c6dae168bea12060e2749bbfad7a488e",
+            "logical_workspace_root": "/work/fixture/exact_batch_provider_failure",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_81c66f1e1a49d52419e2faac",
+          "result_sha256": "81c66f1e1a49d52419e2faacb6c5d95c8276c8f97c48cdc15c4983f88acb819a",
+          "route_binding": {
+            "native_operation_ref": "exact_batch_provider_failure",
+            "provider_mechanism": "batch",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_exact_batch_provider_failure",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "exact_response_pending",
+      "expected_disposition": "accepted",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "4674302616e2c356d5495b2b82d3e32d2f0daa33517162141ce79a7040492da0",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_bca416555cd575a5a0fa516d",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "provider_operation_pending",
+                "outcome": "provider_pending"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_defb2dec1dc6954d963bf102",
+              "record_kind": "native.transitioned",
+              "record_sha256": "defb2dec1dc6954d963bf102c990abe9fc45505179bd7e3919f74f944aa9d129",
+              "route_binding": {
+                "native_operation_ref": "exact_response_pending",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_exact_response_pending",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "6be75997559ff9502a250670d2b0b4ec7c60ecd93d6b72c6ca1e3c46196cdeda",
+          "invocation_id": "ninv_bca416555cd575a5a0fa516d",
+          "journal_range_sha256": "4674302616e2c356d5495b2b82d3e32d2f0daa33517162141ce79a7040492da0",
+          "logical_workspace_root": "/work/fixture/exact_response_pending",
+          "receipt_id": "nreceipt_8ef3e171067404d2f6e8e3a7",
+          "receipt_sha256": "8ef3e171067404d2f6e8e3a7b06c1c37b53723825623a9f6d6a6c6cb08297e84",
+          "result_id": "nres_b13f0103d2e12c076fd66b71",
+          "result_sha256": "b13f0103d2e12c076fd66b71698540aa75db05740bd9114ed26b46b3e7ed68dc",
+          "run_id": "fixture_exact_response_pending",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "55f9740c571760370e7f35c9c678c9be5e8884df225f74a7d7911da74f2e108e"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "provider_operation_pending",
+          "command_kind": "provider_reconciliation",
+          "invocation_id": "ninv_bca416555cd575a5a0fa516d",
+          "journal_range": {
+            "closing_record_id": "ntr_defb2dec1dc6954d963bf102",
+            "end_sequence": 1,
+            "range_sha256": "4674302616e2c356d5495b2b82d3e32d2f0daa33517162141ce79a7040492da0",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "provider_pending",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "6be75997559ff9502a250670d2b0b4ec7c60ecd93d6b72c6ca1e3c46196cdeda",
+            "logical_workspace_root": "/work/fixture/exact_response_pending",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_b13f0103d2e12c076fd66b71",
+          "result_sha256": "b13f0103d2e12c076fd66b71698540aa75db05740bd9114ed26b46b3e7ed68dc",
+          "route_binding": {
+            "native_operation_ref": "exact_response_pending",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_exact_response_pending",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "bounded_response_ambiguity",
+      "expected_disposition": "accepted",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "4e7f75c8536288088b52fd343633a90aba9396946e5a9b8c994c620dd1a6fdfa",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_b81bc14ad1fffb70c0acc816",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "ambiguous_provider_submission",
+                "outcome": "ambiguous_submission"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_0d52f836cb267a5184b5d3d3",
+              "record_kind": "native.transitioned",
+              "record_sha256": "0d52f836cb267a5184b5d3d30e2c41ecb10d4c908d9ae813ebba4a7ecec4eb5d",
+              "route_binding": {
+                "native_operation_ref": "bounded_response_ambiguity",
+                "provider_mechanism": "response",
+                "route_family": "bounded_natal"
+              },
+              "run_id": "fixture_bounded_response_ambiguity",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "ffa0fcc453291282a503dfded84d9f3ec9e5eafd3c224fa0f2f80ce967866d33",
+          "invocation_id": "ninv_b81bc14ad1fffb70c0acc816",
+          "journal_range_sha256": "4e7f75c8536288088b52fd343633a90aba9396946e5a9b8c994c620dd1a6fdfa",
+          "logical_workspace_root": "/work/fixture/bounded_response_ambiguity",
+          "receipt_id": "nreceipt_5f970ac4db62a3cc307f061f",
+          "receipt_sha256": "5f970ac4db62a3cc307f061ffe37647832b99a0847c0df2b15f3b2c9e63dc75f",
+          "result_id": "nres_77a9613a2a6ca79b630be2fe",
+          "result_sha256": "77a9613a2a6ca79b630be2fe9c2055b5a1154c6ae3b6fc2af9cc0f75895e91c7",
+          "run_id": "fixture_bounded_response_ambiguity",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "5b4e8614a55d059ce5cda4fe78a6b66f3fefb0e06a5f38474f78a4e8948d6402"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "ambiguous_provider_submission",
+          "command_kind": "provider_reconciliation",
+          "invocation_id": "ninv_b81bc14ad1fffb70c0acc816",
+          "journal_range": {
+            "closing_record_id": "ntr_0d52f836cb267a5184b5d3d3",
+            "end_sequence": 1,
+            "range_sha256": "4e7f75c8536288088b52fd343633a90aba9396946e5a9b8c994c620dd1a6fdfa",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "ambiguous_submission",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "ffa0fcc453291282a503dfded84d9f3ec9e5eafd3c224fa0f2f80ce967866d33",
+            "logical_workspace_root": "/work/fixture/bounded_response_ambiguity",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_77a9613a2a6ca79b630be2fe",
+          "result_sha256": "77a9613a2a6ca79b630be2fe9c2055b5a1154c6ae3b6fc2af9cc0f75895e91c7",
+          "route_binding": {
+            "native_operation_ref": "bounded_response_ambiguity",
+            "provider_mechanism": "response",
+            "route_family": "bounded_natal"
+          },
+          "run_id": "fixture_bounded_response_ambiguity",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "conflicting_second_operation_refusal",
+      "expected_disposition": "accepted_review",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "92ef87637155e963f49d982ed7cc452aeabd491f4cb433f20283145abcbc6aa0",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_12ba8f05219a8a64de28b0d0",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "provider_identity_conflict",
+                "outcome": "ambiguous_submission"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_ee77e1fe18804a508443b78f",
+              "record_kind": "native.transitioned",
+              "record_sha256": "ee77e1fe18804a508443b78fe2f3dc2636d88aa66f9f13dccbb79d5b315761eb",
+              "route_binding": {
+                "native_operation_ref": "conflicting_second_operation_refusal",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_conflicting_second_operation_refusal",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "c385c9f50154127f8ea47ebcc930dd66a82e06a2cd96d1a1fa2f2dded5641388",
+          "invocation_id": "ninv_12ba8f05219a8a64de28b0d0",
+          "journal_range_sha256": "92ef87637155e963f49d982ed7cc452aeabd491f4cb433f20283145abcbc6aa0",
+          "logical_workspace_root": "/work/fixture/conflicting_second_operation_refusal",
+          "receipt_id": "nreceipt_614cec8509a12a9d4d39fc24",
+          "receipt_sha256": "614cec8509a12a9d4d39fc24bce158ff3732513d3abca2bc2bb0007d94a7b051",
+          "result_id": "nres_d02e022055fdc336104c0ca9",
+          "result_sha256": "d02e022055fdc336104c0ca96f584917a84dd883d944877b93072a93fca17b0b",
+          "run_id": "fixture_conflicting_second_operation_refusal",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "1e917597e615d8849e5d80f4036ea1db0a4f56eb506aa9ed1167071b6abba0e4"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "provider_identity_conflict",
+          "command_kind": "provider_reconciliation",
+          "invocation_id": "ninv_12ba8f05219a8a64de28b0d0",
+          "journal_range": {
+            "closing_record_id": "ntr_ee77e1fe18804a508443b78f",
+            "end_sequence": 1,
+            "range_sha256": "92ef87637155e963f49d982ed7cc452aeabd491f4cb433f20283145abcbc6aa0",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "ambiguous_submission",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "c385c9f50154127f8ea47ebcc930dd66a82e06a2cd96d1a1fa2f2dded5641388",
+            "logical_workspace_root": "/work/fixture/conflicting_second_operation_refusal",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_d02e022055fdc336104c0ca9",
+          "result_sha256": "d02e022055fdc336104c0ca96f584917a84dd883d944877b93072a93fca17b0b",
+          "route_binding": {
+            "native_operation_ref": "conflicting_second_operation_refusal",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_conflicting_second_operation_refusal",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "exact_replay",
+      "expected_disposition": "idempotent_replay",
+      "expected_refusal_reason": null,
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "cb7026e791b6defcc52935f8809240317b2b7ed8412bf12c6c116140d42dbb1e",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_59b04a14b59f247a67575512",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "delivery_complete",
+                "outcome": "delivery_complete"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_72c337b5306e3d1fb1771099",
+              "record_kind": "native.transitioned",
+              "record_sha256": "72c337b5306e3d1fb1771099db0074b37b32455982de9c0273fdbed4ba544221",
+              "route_binding": {
+                "native_operation_ref": "exact_replay",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_exact_replay",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "1ac1946a0488388c5531c802b415f80e01c25ed770d9e25ee97375d05471c636",
+          "invocation_id": "ninv_59b04a14b59f247a67575512",
+          "journal_range_sha256": "cb7026e791b6defcc52935f8809240317b2b7ed8412bf12c6c116140d42dbb1e",
+          "logical_workspace_root": "/work/fixture/exact_replay",
+          "receipt_id": "nreceipt_57f8bd29af1823ddebfb5c50",
+          "receipt_sha256": "57f8bd29af1823ddebfb5c5075737a2ef11f1e9184d266f2091acd422c41bd1d",
+          "result_id": "nres_71389c773cefd0147b9b73af",
+          "result_sha256": "71389c773cefd0147b9b73af2d6d205ddc9bd843d3ba6de82f1e6fcba4e0f6f6",
+          "run_id": "fixture_exact_replay",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "08f88693d8352238403b84ac8a29d2cf41ee18e3c5190ff20ac914003d378f09"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "delivery_complete",
+          "command_kind": "ordinary_authoring",
+          "invocation_id": "ninv_59b04a14b59f247a67575512",
+          "journal_range": {
+            "closing_record_id": "ntr_72c337b5306e3d1fb1771099",
+            "end_sequence": 1,
+            "range_sha256": "cb7026e791b6defcc52935f8809240317b2b7ed8412bf12c6c116140d42dbb1e",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "delivery_complete",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "1ac1946a0488388c5531c802b415f80e01c25ed770d9e25ee97375d05471c636",
+            "logical_workspace_root": "/work/fixture/exact_replay",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_71389c773cefd0147b9b73af",
+          "result_sha256": "71389c773cefd0147b9b73af2d6d205ddc9bd843d3ba6de82f1e6fcba4e0f6f6",
+          "route_binding": {
+            "native_operation_ref": "exact_replay",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_exact_replay",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    },
+    {
+      "case_id": "malformed_result_refusal",
+      "expected_disposition": "refused",
+      "expected_refusal_reason": "result_hash_mismatch",
+      "view": {
+        "journal_range": {
+          "end_sequence": 1,
+          "range_sha256": "ea79bc8fe02976f9c9cef8acc6f43399443cfebdf79b6b220c49550e8f0f2eef",
+          "record_count": 1,
+          "records": [
+            {
+              "action_binding": null,
+              "invocation_id": "ninv_6e03899838fdd5a644d6c274",
+              "native_state_revision": 1,
+              "native_transition": {
+                "cause_code": "delivery_complete",
+                "outcome": "delivery_complete"
+              },
+              "observed_at": "2026-08-17T00:00:00Z",
+              "previous_record_sha256": null,
+              "provider_observation": null,
+              "record_id": "ntr_00543d0738e39199999f4443",
+              "record_kind": "native.transitioned",
+              "record_sha256": "00543d0738e39199999f444390742985533f8685fea9c45b0377510850ec9957",
+              "route_binding": {
+                "native_operation_ref": "malformed_result_refusal",
+                "provider_mechanism": "response",
+                "route_family": "exact_natal"
+              },
+              "run_id": "fixture_malformed_result_refusal",
+              "schema_version": "astrowoof.native_transition_journal_record.v0.1",
+              "sequence": 1
+            }
+          ],
+          "start_sequence": 1
+        },
+        "receipt": {
+          "checkpoint_basis_sha256": "e1e42ba3f422fbaf06a6dd0c9c8dcb42656d915448e57e18f48460f369c6a23c",
+          "invocation_id": "ninv_6e03899838fdd5a644d6c274",
+          "journal_range_sha256": "ea79bc8fe02976f9c9cef8acc6f43399443cfebdf79b6b220c49550e8f0f2eef",
+          "logical_workspace_root": "/work/fixture/malformed_result_refusal",
+          "receipt_id": "nreceipt_1b4f731f1249179fe80d08b2",
+          "receipt_sha256": "1b4f731f1249179fe80d08b291395796e8999e7bf7657bb9ec292e0482b73fb3",
+          "result_id": "nres_19b8cd17a45d34e917ce8356",
+          "result_sha256": "19b8cd17a45d34e917ce8356c95c301036af350a746abe918034128f23995225",
+          "run_id": "fixture_malformed_result_refusal",
+          "schema_version": "astrowoof.native_publication_receipt.v0.1",
+          "snapshot_sha256": "2655cbd72bcb843e2ff3c87cfaa5ef4d569e3f3368c3158e4947e390d79b6116"
+        },
+        "result": {
+          "action_ids": [],
+          "cause_code": "delivery_complete",
+          "command_kind": "ordinary_authoring",
+          "invocation_id": "ninv_6e03899838fdd5a644d6c274",
+          "journal_range": {
+            "closing_record_id": "ntr_00543d0738e39199999f4443",
+            "end_sequence": 1,
+            "range_sha256": "ea79bc8fe02976f9c9cef8acc6f43399443cfebdf79b6b220c49550e8f0f2eef",
+            "record_count": 1,
+            "start_sequence": 1
+          },
+          "outcome": "delivery_complete",
+          "post_checkpoint": {
+            "checkpoint_basis_sha256": "e1e42ba3f422fbaf06a6dd0c9c8dcb42656d915448e57e18f48460f369c6a23c",
+            "logical_workspace_root": "/work/fixture/malformed_result_refusal",
+            "native_state_revision": 1
+          },
+          "pre_checkpoint": null,
+          "projection_refs": {},
+          "provider_operations": [],
+          "published_at": "2026-08-17T00:00:01Z",
+          "result_id": "nres_19b8cd17a45d34e917ce8356",
+          "result_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "route_binding": {
+            "native_operation_ref": "malformed_result_refusal",
+            "provider_mechanism": "response",
+            "route_family": "exact_natal"
+          },
+          "run_id": "fixture_malformed_result_refusal",
+          "sbe_release": "0.4.4",
+          "schema_version": "astrowoof.native_execution_result.v0.1"
+        }
+      }
+    }
+  ],
+  "schema_version": "astrowoof.native_transition_consumer_fixtures.v0.1"
+}
