@@ -205,3 +205,32 @@ Provider operations remain 0 and paid spend remains `$0`.
   packaged resource assertions, `py.typed`, console entry point, and read-only CLI
   round trip all passed.
 - Isolated qualification tree removed. Provider operations: 0. Paid spend: `$0`.
+
+## Slice 6 SBE-native and cross-repository qualification
+
+- Initial complete-suite result: 383 tests reached; one error in a legacy
+  checkpoint-repair fixture whose short placeholder request/profile digests were
+  incompatible with strict native-journal validation.
+- Resolution: fixture-only correction to canonical SHA-256 values. Production
+  journal validation was not relaxed.
+- Focused checkpoint-repair result: 8 passed in 1.101 seconds.
+- Corrected complete suite: 383 passed in 247.272 seconds; 4 expected skips.
+- Build source commit: `c25f47e`.
+- `SOURCE_DATE_EPOCH`: `1787031309`.
+- Two candidate wheels were byte-identical; SHA-256:
+  `1fa992b07cef80725829137c4d6f1871f65d0b01e1f53b69d9bf4eaa78c05b26`.
+- Wheel inventory: 98 members; `py.typed`, native transition contracts, and the
+  eight-case consumer fixture present; source tests absent.
+- Exact published SPC 0.11.0 SHA-256:
+  `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d`.
+- Windows CPython 3.11 isolated install: `pip check` and installed lifecycle smoke
+  passed from external `site-packages`.
+- Linux `python:3.11-slim` isolated install: `pip check` and installed lifecycle
+  smoke passed from `/usr/local/lib/python3.11/site-packages`.
+- API Sprint 26 focused ingestion tests: 6 passed in 0.57 seconds.
+- Packaged matrix through the real API validator: seven non-malformed cases
+  accepted with their delivery/review/failure/pending/ambiguity/replay outcomes;
+  malformed-result case refused for invalid result identity.
+- API worker/PostgreSQL/R2 terminal-first qualification remains API-owned and is
+  not yet represented by a completed API trace.
+- Provider operations: 0. Paid spend: `$0`.

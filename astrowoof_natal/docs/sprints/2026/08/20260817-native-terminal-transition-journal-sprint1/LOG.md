@@ -191,3 +191,27 @@ Status: planned; implementation has not started.
   `baca8ae1cedb050d15ba2240406b34acd83707e857e31b8e5f03c8a2fc58b2dc`;
   isolated installed-package resource/type/entry-point checks passed.
 - Slice 5 is API-approved and complete; Slice 6 joint qualification has not begun.
+- Committed and pushed the API agent's final Slice 5 approval as `c25f47e`; Slice 6
+  qualification began.
+- The first complete-suite run reached all 383 tests and exposed one incompatible
+  legacy checkpoint-repair fixture: its paid-action binding used short placeholder
+  digest strings that the native journal correctly rejects. Runtime validation
+  remains strict; the fixture now uses canonical SHA-256 identities before the
+  complete-suite rerun.
+- The corrected checkpoint-repair module passed all 8 focused tests; the complete
+  suite then passed all 383 tests in 247.272 seconds with four expected skips.
+- Two fixed-epoch builds from `c25f47e` used `SOURCE_DATE_EPOCH=1787031309` and
+  were byte-identical at SHA-256
+  `1fa992b07cef80725829137c4d6f1871f65d0b01e1f53b69d9bf4eaa78c05b26`.
+  Both contained the native contracts, consumer fixture, and `py.typed`; neither
+  contained source tests.
+- Downloaded and verified the exact published SPC 0.11.0 wheel at SHA-256
+  `82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d`.
+  Clean Windows CPython 3.11 and Linux `python:3.11-slim` installations passed
+  `pip check` and installed lifecycle smoke against that exact dependency.
+- The API Sprint 26 validator passed its six focused ingestion tests. A direct
+  provider-free check of the packaged SBE matrix through the real API validator
+  accepted all seven valid/replay/review cases and rejected the intentionally
+  malformed result for invalid native identity.
+- SBE-native Slice 6 qualification is complete. The real API worker/PostgreSQL/R2
+  terminal-first trace remains API-owned and pending; no SBE claim is made for it.

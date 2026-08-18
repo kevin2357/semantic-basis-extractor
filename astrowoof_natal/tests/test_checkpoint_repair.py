@@ -98,9 +98,10 @@ class CheckpointRepairTests(unittest.TestCase):
         request2 = {"model": "gpt-test", "input": "exact prepared request"}
         write_json_atomic(attempt2 / "openai-request.json", request2)
         binding1 = {
-            "run_id": "run-test", "profile_sha256": "profile", "prepared_state_revision": 5,
+            "run_id": "run-test", "profile_sha256": digest({"profile": "test"}),
+            "prepared_state_revision": 5,
             "stage": "polish", "route": f"{subject}:polish:001",
-            "request_sha256": "request-1", "model": "gpt-test",
+            "request_sha256": digest({"request": 1}), "model": "gpt-test",
             "service_level": "interactive", "maximum_output_tokens": 100,
             "commitment_micro_usd": 20000, "price_book_version": "prices-test",
         }
