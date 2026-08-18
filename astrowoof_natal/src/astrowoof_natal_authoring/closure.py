@@ -2256,6 +2256,10 @@ def update_run_status(state: dict[str, Any]) -> None:
     terminal_transition = state.get("terminal_transition") or {}
     if terminal_transition.get("outcome") == "terminalized":
         state["status"] = terminal_transition["resulting_status"]
+    elif state.get("status") in {"FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW"}:
+        # Final-deck QA is stronger than pass-derived authoring completeness.
+        # Once reached, ordinary persistence must not reopen optional stages.
+        pass
     elif "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
         state["status"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
     elif "BUDGET_EXHAUSTED" in spend_states:

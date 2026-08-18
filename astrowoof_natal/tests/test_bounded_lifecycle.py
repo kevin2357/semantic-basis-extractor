@@ -4,6 +4,7 @@ import json
 import hashlib
 import sys
 import tempfile
+import threading
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
@@ -56,6 +57,10 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
     PRICE_BOOK_VERSION,
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
+)
+from astrowoof_natal_authoring.initial_wave import build_wave_authorization  # noqa: E402
+from astrowoof_natal_authoring.native_transitions import (  # noqa: E402
+    publish_native_execution_result,
 )
 from test_bounded_authoring import compiled  # noqa: E402
 import test_provider_pending_capacity as provider_pending_fixtures  # noqa: E402
@@ -149,6 +154,18 @@ class PaidScriptedProvider:
     def resume(self, *, stage, route, provider_operation_id, payload):
         self.polls += 1
         return fake_author_bounded(payload["authoring_packet"]), self.metadata(provider_operation_id)
+
+
+class InitialWaveTransport:
+    def __init__(self) -> None:
+        self.calls = []
+        self.lock = threading.Lock()
+
+    def request_json(self, **kwargs):
+        with self.lock:
+            number = len(self.calls) + 1
+            self.calls.append(kwargs)
+        return {"id": f"resp-bounded-wave-{number}", "status": "in_progress"}
 
 
 class RetryFakeProvider(FakeBoundedLifecycleProvider):
@@ -371,6 +388,92 @@ class TestBoundedLifecycle(unittest.TestCase):
                         f"{reference}:{len(state['spend_ledger']['actions'])}"
                     ),
                 }]
+
+    def test_openai_interactive_prepares_and_creates_one_six_member_wave(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            transport = InitialWaveTransport()
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", model="gpt-5.6-luna",
+                maximum_output_tokens=1000, transport=transport,
+                max_transport_retries=0,
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={
+                    "spend_policy": spend_policy(),
+                    "optional_stages": {
+                        "polish": False, "qualitative_critic": False,
+                        "qualitative_candidate": False,
+                    },
+                },
+            )
+            prepared_state = resume_bounded_run(run_dir, provider=provider)
+            stored = prepared_state["initial_authoring_wave"]
+            self.assertEqual("AWAITING_SPEND_AUTHORIZATION", stored["state"])
+            self.assertEqual(6, stored["member_count"])
+            self.assertEqual(0, len(transport.calls))
+            wave = {key: value for key, value in stored.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    action["binding"]
+                    for action in prepared_state["spend_ledger"]["actions"]
+                    if action["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"bounded-reservation-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="bounded-set-1",
+                issuer="api-test", authorized_at="2026-08-18T14:00:00Z",
+            )
+            detached = resume_bounded_run(
+                run_dir, provider=provider, authorizations=documents,
+                initial_wave_authorization=envelope,
+            )
+            self.assertEqual("DETACHED", detached["initial_authoring_wave"]["state"])
+            self.assertEqual(6, len(transport.calls))
+            self.assertEqual(
+                {"WAITING_FOR_RESPONSE"},
+                {record["state"] for record in detached["passes"].values()},
+            )
+            self.assertEqual(
+                {f"resp-bounded-wave-{number}" for number in range(1, 7)},
+                {action["provider"]["id"]
+                 for action in detached["spend_ledger"]["actions"]},
+            )
+
+    def test_final_qa_review_status_survives_generic_persistence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            state = create_bounded_run(run_dir, self.artifacts)
+            for record in state["passes"].values():
+                record["state"] = "PASS_QA_ACCEPTED"
+            state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+            save_state(run_dir / "run.json", state)
+            self.assertEqual(
+                "FINAL_QA_REQUIRES_REVIEW",
+                load_json(run_dir / "run.json")["status"],
+            )
+            self.assertEqual(
+                "FINAL_QA_REQUIRES_REVIEW",
+                load_json(run_dir / "public-run.json")["status"],
+            )
+            result = publish_native_execution_result(
+                run_dir, command_kind="ordinary_authoring",
+                sbe_release="test", published_at="2026-08-18T14:30:00Z",
+            )
+            self.assertEqual("review_required", result["result"]["outcome"])
+            self.assertEqual(
+                result["result"]["result_sha256"],
+                result["receipt"]["result_sha256"],
+            )
+            inspection = inspect_lifecycle(
+                run_dir, native_exclusive_access="declared",
+            )
+            self.assertEqual("review_required", inspection["terminal"]["outcome"])
 
     def test_fake_route_completes_shared_lifecycle_and_closeout(self) -> None:
         events = []

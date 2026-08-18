@@ -950,6 +950,48 @@ def validate_bounded_claim_deck(deck: Mapping[str, Any]) -> None:
             raise BoundedAuthoringError("bounded_editorial_tier", "unknown editorial tier")
         if not set(authority.get("dependency_claim_ids") or []) <= id_set:
             raise BoundedAuthoringError("bounded_claim_dependency_missing", "claim deck is not closed")
+    node_variants: dict[str, list[Mapping[str, Any]]] = {
+        "Mean_Node": [], "True_Node": [],
+    }
+    for claim in claims:
+        sources = (claim.get("authority") or {}).get("source_refs") or []
+        for variant in node_variants:
+            if any(str(source).endswith(f":{variant}") for source in sources):
+                node_variants[variant].append(claim)
+    for mean_claim in node_variants["Mean_Node"]:
+        for true_claim in node_variants["True_Node"]:
+            if (
+                (mean_claim.get("authority") or {}).get("claim_kind")
+                == (true_claim.get("authority") or {}).get("claim_kind")
+                and (mean_claim.get("authority") or {}).get("projected_term_refs")
+                == (true_claim.get("authority") or {}).get("projected_term_refs")
+                and {
+                    (
+                        row.get("name"),
+                        tuple(row.get("operators") or []),
+                        (row.get("attributes") or {}).get("canonical_object_name"),
+                        (row.get("attributes") or {}).get("source_sign"),
+                        (row.get("attributes") or {}).get("projected_mode"),
+                    )
+                    for rows in (mean_claim.get("context_records") or {}).values()
+                    for row in rows
+                }
+                == {
+                    (
+                        row.get("name"),
+                        tuple(row.get("operators") or []),
+                        (row.get("attributes") or {}).get("canonical_object_name"),
+                        (row.get("attributes") or {}).get("source_sign"),
+                        (row.get("attributes") or {}).get("projected_mode"),
+                    )
+                    for rows in (true_claim.get("context_records") or {}).values()
+                    for row in rows
+                }
+            ):
+                raise BoundedAuthoringError(
+                    "bounded_equivalent_node_claims",
+                    "selected Mean Node and True Node claims have equivalent editorial semantics",
+                )
     registry = deck.get("projected_term_registry") or {}
     terms = registry.get("terms") or {}
     referenced = {

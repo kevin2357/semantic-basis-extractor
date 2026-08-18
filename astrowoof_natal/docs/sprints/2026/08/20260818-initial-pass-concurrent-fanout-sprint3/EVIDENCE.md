@@ -141,3 +141,22 @@ Result:
   added all-or-none regression in the focused pass.
 - Compile and `git diff --check`: pass.
 - Provider operations and spend: 0.
+
+## Slice 4
+
+Result:
+[SLICE 4 - Bounded Interactive Concurrent Submission.md](results/SLICE%204%20-%20Bounded%20Interactive%20Concurrent%20Submission.md)
+
+- Bounded interactive now prepares and authorizes one exact six-member wave, creates
+  six Responses concurrently, durably binds IDs immediately, and detaches.
+- Bounded prompts, schemas, provider-minimized packets, immutable hydration, and
+  pass-local authority remain route-specific and unchanged.
+- Create-only and established interactive request objects are equal for one frozen
+  bounded pass; Batch remains a transport-only variation.
+- `FINAL_QA_REQUIRES_REVIEW` survives all generic persistence and public/native
+  projections and cannot be reopened as authoring-complete.
+- Equivalent selected Mean/True Node semantics fail before spend with typed code;
+  a truly distinct nearby Node case passes.
+- Combined bounded/provider-pending/lifecycle suite: 119 passed in 118.177 seconds.
+  Focused expanded assertions: 4 passed in 2.698 seconds.
+- Provider operations and spend: 0.

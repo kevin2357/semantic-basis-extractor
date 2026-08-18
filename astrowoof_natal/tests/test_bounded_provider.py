@@ -151,6 +151,10 @@ class TestBoundedOpenAIProvider(unittest.TestCase):
                 provider_created=lambda *_: None,
             )
             live_body = live_transport.calls[0]["payload"]
+            create_only_body = live_provider.interactive_request_body(
+                stage="authoring_initial", payload=payload, attempt_number=1,
+            )
+            self.assertEqual(live_body, create_only_body)
             self.assertIn("background", live_body)
             live_body.pop("background")
             self.assertEqual(body, live_body)

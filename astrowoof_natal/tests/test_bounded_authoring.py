@@ -146,6 +146,30 @@ class TestBoundedAuthoring(unittest.TestCase):
             )
         )
 
+    def test_equivalent_mean_and_true_node_claims_fail_before_authoring(self) -> None:
+        deck = deepcopy(self.artifacts.claim_deck)
+        mean_claim, true_claim = deck["claims"][:2]
+        true_claim["authority"]["claim_kind"] = mean_claim["authority"]["claim_kind"]
+        true_claim["authority"]["projected_term_refs"] = deepcopy(
+            mean_claim["authority"]["projected_term_refs"]
+        )
+        true_claim["context_records"] = deepcopy(mean_claim["context_records"])
+        mean_claim["authority"]["source_refs"] = ["canonical:subject:Mean_Node"]
+        true_claim["authority"]["source_refs"] = ["canonical:subject:True_Node"]
+        with self.assertRaises(BoundedAuthoringError) as raised:
+            validate_bounded_claim_deck(deck)
+        self.assertEqual("bounded_equivalent_node_claims", raised.exception.code)
+
+        # The guard is semantic rather than a name-only ban: a genuinely distinct
+        # projected mode remains independently admissible.
+        changed = next(
+            row
+            for rows in true_claim["context_records"].values()
+            for row in rows
+        )
+        changed.setdefault("attributes", {})["projected_mode"] = "distinct_mode"
+        validate_bounded_claim_deck(deck)
+
     def test_provider_view_is_allow_listed_and_protected_values_are_absent(self) -> None:
         packet = self.artifacts.authoring_packet
         rendered = json.dumps(packet, sort_keys=True)

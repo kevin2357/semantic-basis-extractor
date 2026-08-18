@@ -265,6 +265,28 @@ class OpenAIBoundedLifecycleProvider:
             body["safety_identifier"] = self.responses.safety_identifier
         return body
 
+    def interactive_request_body(
+        self, *, stage: str, payload: dict[str, Any], attempt_number: int,
+    ) -> dict[str, Any]:
+        """Build the exact bounded interactive payload without provider I/O."""
+        body = self.batch_request_body(
+            stage=stage, payload=payload, attempt_number=attempt_number,
+        )
+        body["background"] = self.responses.background
+        # Match OpenAIResponsesProvider.complete_json's canonical field order only
+        # semantically; JSON request authority is the canonical object digest.
+        return body
+
+    def create_interactive_only(
+        self, *, body: dict[str, Any], idempotency_material: str,
+        timeout_seconds: float,
+    ) -> tuple[dict[str, Any], int]:
+        return self.responses.create_response_only(
+            body,
+            idempotency_key=canonical_sha256({"material": idempotency_material}),
+            timeout_seconds=timeout_seconds,
+        )
+
     def hydrate_batch_member(
         self, editorial: dict[str, Any], packet: dict[str, Any]
     ) -> dict[str, Any]:

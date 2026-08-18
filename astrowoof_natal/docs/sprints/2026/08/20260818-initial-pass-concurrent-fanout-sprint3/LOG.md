@@ -128,3 +128,23 @@
   96 passed before the final all-or-none regression, which passed in focus.
 - Provider operations and spend: zero. Compile and diff hygiene passed.
 - Paused before Slice 4 bounded-interactive adoption.
+
+## 2026-08-18 — Slice 4 complete; awaiting review
+
+- Adopted the reviewed six-member coordinator for fresh bounded interactive runs.
+- Preserved bounded packet/schema bytes, provider minimization, editorial-only
+  response trust, deterministic authority hydration, validation, and provenance.
+- Added complete-wave authorization to the bounded CLI with the same one-envelope,
+  six-ordered-member all-or-none boundary as exact interactive.
+- Added create-only bounded request construction and proved it equals the established
+  bounded interactive payload for the same frozen logical pass.
+- Persisted every returned ID immediately and detached without polling; existing
+  four-at-a-time bounded reconciliation remains unchanged.
+- Fixed final-QA status precedence through native/public/snapshot/lifecycle/result/
+  receipt evidence.
+- Added pre-paid typed rejection of editorially equivalent selected Mean/True Node
+  claims plus a nearby non-equivalent admissibility regression.
+- Combined bounded/provider-pending/lifecycle suite: 119 passed in 118.177
+  seconds. Focused final assertions: 4 passed.
+- Provider operations and spend: zero. Compile and diff hygiene passed.
+- Paused before Slice 5 Batch compatibility/non-regression.

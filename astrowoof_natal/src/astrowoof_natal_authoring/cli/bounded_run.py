@@ -60,6 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--service-level", choices=("interactive", "batch"), default="interactive")
     parser.add_argument("--maximum-output-tokens", type=int, default=100_000)
     parser.add_argument("--spend-authorization", type=Path, action="append", default=[])
+    parser.add_argument("--initial-wave-authorization", type=Path)
     parser.add_argument("--events-jsonl", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--resume", action="store_true")
@@ -81,10 +82,17 @@ def main() -> None:
         parser.error("--provider-reconciliation-cycle requires --resume")
     if args.provider_reconciliation_cycle and args.provider != "openai":
         parser.error("--provider-reconciliation-cycle requires provider=openai")
-    if args.provider_reconciliation_cycle and args.spend_authorization:
+    if args.provider_reconciliation_cycle and (
+        args.spend_authorization or args.initial_wave_authorization
+    ):
         parser.error("provider reconciliation cannot apply spend authorization")
     if args.provider_reconciliation_cycle and not args.observed_at:
         parser.error("--provider-reconciliation-cycle requires --observed-at")
+    if args.initial_wave_authorization and len(args.spend_authorization) != 6:
+        parser.error(
+            "--initial-wave-authorization requires exactly six ordered "
+            "--spend-authorization documents"
+        )
     provider = _provider(args)
     emitter = ExecutionEventEmitter(
         release=__version__,
@@ -142,6 +150,7 @@ def main() -> None:
             args.run_dir,
             provider=provider,
             authorizations=[load_json(path) for path in args.spend_authorization],
+            initial_wave_authorization=_json(args.initial_wave_authorization),
             event_emitter=emitter,
         )
         from ..native_transitions import publish_native_execution_result
@@ -151,10 +160,7 @@ def main() -> None:
             event_emitter=emitter,
         )
         print(json.dumps(public_run_state(state), sort_keys=True))
-        if (
-            args.service_level == "batch"
-            and state.get("status") != "DELIVERY_COMPLETE"
-        ):
+        if state.get("status") != "DELIVERY_COMPLETE":
             raise SystemExit(3)
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
         state = load_json(args.run_dir / "run.json")

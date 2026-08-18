@@ -30,6 +30,7 @@ from .closure import (
     batch_estimated_cost,
     apply_spend_authorizations,
     checkpoint_spend_boundary,
+    estimated_text_tokens,
     load_json,
     normalized_path,
     normalized_usage,
@@ -42,13 +43,32 @@ from .closure import (
     response_output_text,
 )
 from .execution_events import ExecutionEventEmitter
+from .initial_wave import (
+    InitialWaveError,
+    InitialWaveMemberSpec,
+    ProviderCreateResult as InitialWaveProviderCreateResult,
+    build_initial_wave,
+    execute_initial_wave_creates,
+    preflight_wave_authorization,
+)
 from .spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
     BudgetExhausted,
+    PRICE_BOOK_VERSION,
+    action_binding,
+    authorize_action,
+    begin_submission,
+    conservative_commitment_micros,
+    digest as spend_digest,
+    mark_ambiguous,
     new_ledger,
+    prepare_action,
+    profile_digest as spend_profile_digest,
+    record_provider_id,
     validate_policy,
 )
+from .reconciliation import initial_timing
 
 
 BOUNDED_ROUTE = "bounded_natal.v2"
@@ -884,11 +904,224 @@ def _bounded_batch_authoring_cycle(
     )
 
 
+def _prepare_bounded_interactive_initial_wave(
+    state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
+) -> dict[str, Any] | None:
+    stored = state.get("initial_authoring_wave")
+    if isinstance(stored, dict):
+        return stored
+    pass_ids = state["bounded"]["pass_ids"]
+    if len(pass_ids) != 6 or any(state["passes"][item]["attempts"] for item in pass_ids):
+        return None
+    builder = getattr(provider, "interactive_request_body", None)
+    if not callable(builder):
+        raise ValueError("Bounded provider cannot build interactive pass requests")
+    ledger = state.get("spend_ledger")
+    if not isinstance(ledger, dict):
+        raise ValueError("Bounded OpenAI wave requires a spend ledger")
+    basis_revision = int(state.get("state_revision") or 0)
+    profile_sha256 = spend_profile_digest(state.get("authoring_profile"))
+    members: list[InitialWaveMemberSpec] = []
+    requests: dict[str, dict[str, Any]] = {}
+    for pass_number, pass_id in enumerate(pass_ids, 1):
+        payload = _payload(state, run_dir, "authoring_initial", pass_id)
+        body = builder(stage="authoring_initial", payload=payload, attempt_number=1)
+        request_sha256 = spend_digest(body)
+        commitment = conservative_commitment_micros(
+            model=provider.model,
+            input_tokens=estimated_text_tokens(json.dumps(
+                body, ensure_ascii=False, separators=(",", ":"),
+            )), maximum_output_tokens=provider.maximum_output_tokens,
+            service_level="interactive",
+        )
+        binding = action_binding(
+            run_id=state["run_id"], profile_sha256=profile_sha256,
+            prepared_state_revision=basis_revision,
+            stage="authoring_initial",
+            route=f"{BOUNDED_ROUTE}:{pass_id}:attempt-001",
+            request_sha256=request_sha256, model=provider.model,
+            service_level="interactive",
+            maximum_output_tokens=provider.maximum_output_tokens,
+            commitment_micro_usd=commitment,
+            price_book_version=PRICE_BOOK_VERSION,
+        )
+        action = prepare_action(ledger, binding)
+        members.append(InitialWaveMemberSpec(
+            action_id=action["action_id"], binding=binding,
+            pass_id=pass_id, pass_number=pass_number,
+        ))
+        attempt_root = run_dir / "bounded" / "provider" / (
+            f"{BOUNDED_ROUTE}:{pass_id}:attempt-001".replace(":", "_")
+        )
+        request_path = attempt_root / "openai-request.json"
+        write_json_atomic(request_path, body)
+        state["passes"][pass_id]["attempts"].append({
+            "attempt": 1, "state": "AWAITING_SPEND_AUTHORIZATION",
+            "accepted": False, "provider_metadata": None, "qa": None,
+            "paid_action_id": action["action_id"],
+        })
+        state["passes"][pass_id]["state"] = "AWAITING_SPEND_AUTHORIZATION"
+        requests[action["action_id"]] = {
+            "request_path": normalized_path(request_path),
+            "request_sha256": request_sha256, "pass_id": pass_id,
+            "attempt_root": normalized_path(attempt_root),
+        }
+    aggregate = sum(member.binding["commitment_micro_usd"] for member in members)
+    policy = ledger["policy"]
+    if aggregate > policy["run_ceiling_micro_usd"] or aggregate > policy[
+        "stage_ceilings_micro_usd"
+    ]["authoring_initial"]:
+        for member in members:
+            action = next(item for item in ledger["actions"]
+                          if item["action_id"] == member.action_id)
+            action["state"] = "BUDGET_EXHAUSTED"
+            state["passes"][member.pass_id]["state"] = "BUDGET_EXHAUSTED"
+            state["passes"][member.pass_id]["attempts"][-1]["state"] = "BUDGET_EXHAUSTED"
+        persist_state(run_dir / "run.json", state)
+        raise BudgetExhausted(
+            "Complete bounded initial wave exceeds frozen spend ceiling",
+            action=next(item for item in ledger["actions"]
+                        if item["action_id"] == members[0].action_id),
+        )
+    assignment_sha256 = str(state["bounded"]["assignment_sha256"])
+    wave = build_initial_wave(
+        run_id=state["run_id"], route_family="bounded_natal",
+        route_contract=BOUNDED_RUN_CONTRACT,
+        assignment_sha256=assignment_sha256,
+        profile_sha256=profile_sha256,
+        preparation_basis_revision=basis_revision, members=members,
+    )
+    state["initial_authoring_wave"] = {
+        **wave, "state": "AWAITING_SPEND_AUTHORIZATION", "requests": requests,
+    }
+    save_state(run_dir / "run.json", state)
+    return state["initial_authoring_wave"]
+
+
+def _authorize_bounded_interactive_initial_wave(
+    state: dict[str, Any], run_dir: Path, envelope: dict[str, Any],
+    documents: list[dict[str, Any]],
+) -> None:
+    stored = state["initial_authoring_wave"]
+    wave = {key: value for key, value in stored.items()
+            if key not in {"state", "requests"}}
+    preflight_wave_authorization(wave, envelope, documents)
+    candidate = deepcopy(state["spend_ledger"])
+    for document in documents:
+        authorize_action(candidate, document)
+    state["spend_ledger"] = candidate
+    stored["authorization"] = deepcopy(envelope)
+    stored["state"] = "AUTHORIZED"
+    save_state(run_dir / "run.json", state)
+
+
+def _execute_bounded_interactive_initial_wave(
+    state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
+    event_emitter: ExecutionEventEmitter | None,
+) -> dict[str, Any]:
+    stored = state["initial_authoring_wave"]
+    wave = {key: value for key, value in stored.items()
+            if key not in {"state", "requests", "authorization", "result"}}
+    documents = [next(
+        action["authorization"] for action in state["spend_ledger"]["actions"]
+        if action["action_id"] == member["action_id"]
+    ) for member in wave["ordered_members"]]
+    create = getattr(provider, "create_interactive_only", None)
+    if not callable(create):
+        raise ValueError("Bounded provider cannot create interactive Responses")
+    mutation_lock = threading.Lock()
+
+    def action_for(action_id: str) -> dict[str, Any]:
+        return next(item for item in state["spend_ledger"]["actions"]
+                    if item["action_id"] == action_id)
+
+    def submit(member: Mapping[str, Any], timeout: int) -> InitialWaveProviderCreateResult:
+        request = stored["requests"][member["action_id"]]
+        body = load_json(Path(request["request_path"]))
+        if spend_digest(body) != member["request_sha256"]:
+            raise InitialWaveError("request_digest_mismatch", "Bounded request changed")
+        with mutation_lock:
+            action = action_for(member["action_id"])
+            if (action.get("provider") or {}).get("id"):
+                return InitialWaveProviderCreateResult(
+                    provider_id=action["provider"]["id"],
+                    metadata={"resumed_from_durable_identity": True},
+                )
+            if action.get("state") != "AUTHORIZED":
+                raise RuntimeError(
+                    f"bounded wave member is not submit-eligible: {action.get('state')}"
+                )
+            begin_submission(
+                action, consumer_id="bounded-worker",
+                state_revision=int(state.get("state_revision") or 0),
+            )
+            persist_state(run_dir / "run.json", state)
+        response, attempts = create(
+            body=body, idempotency_material=member["action_id"],
+            timeout_seconds=float(timeout),
+        )
+        return InitialWaveProviderCreateResult(
+            provider_id=response["id"], metadata={
+                "status": response.get("status"),
+                "create_transport_attempts": attempts,
+            },
+        )
+
+    def persist(member: Mapping[str, Any], outcome: Mapping[str, Any]) -> None:
+        with mutation_lock:
+            action = action_for(member["action_id"])
+            record = state["passes"][member["pass_id"]]
+            attempt = record["attempts"][-1]
+            if outcome["outcome"] == "provider_bound":
+                provider_id = outcome["provider"]["id"]
+                if not action.get("provider"):
+                    record_provider_id(action, provider_id=provider_id, kind="response")
+                if not isinstance(action.get("provider_reconciliation"), dict):
+                    action["provider_reconciliation"] = initial_timing(
+                        recorded_at=utc_now().replace("+00:00", "Z"),
+                        mechanism="response",
+                    )
+                action["state"] = "WAITING"
+                marker = Path(stored["requests"][member["action_id"]]["attempt_root"])
+                write_json_atomic(marker / "openai-background-response.json", {
+                    "id": provider_id,
+                    "status": (outcome.get("provider_create_metadata") or {}).get("status"),
+                })
+                attempt["state"] = "WAITING_FOR_RESPONSE"
+                attempt["provider_metadata"] = outcome.get("provider_create_metadata")
+                record["state"] = "WAITING_FOR_RESPONSE"
+                if event_emitter:
+                    event_emitter.emit("provider.identity_recorded", data={
+                        "action_id": action["action_id"],
+                        "provider_operation_id": provider_id,
+                    }, correlation={"action_id": action["action_id"]})
+                    event_emitter.emit("provider.waiting", data={
+                        "action_id": action["action_id"],
+                        "provider_operation_id": provider_id,
+                    }, correlation={"action_id": action["action_id"]})
+            elif outcome["outcome"] == "ambiguous_submission":
+                mark_ambiguous(action, reason=outcome.get("reason") or "create ambiguous")
+                attempt["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+                record["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+            persist_state(run_dir / "run.json", state)
+
+    result = execute_initial_wave_creates(
+        wave, authorization=stored["authorization"],
+        member_authorizations=documents, submit=submit,
+        persist_member_outcome=persist,
+    )
+    stored["state"] = "DETACHED" if result["outcome"] == "detached_provider_pending" else "FAILED"
+    stored["result"] = result
+    save_state(run_dir / "run.json", state)
+    return result
+
+
 def resume_bounded_run(
     run_dir: Path,
     *,
     provider: BoundedLifecycleProvider | None = None,
     authorizations: list[dict[str, Any]] | None = None,
+    initial_wave_authorization: dict[str, Any] | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
     consumer_id: str = "bounded-worker",
     reconciliation_only: bool = False,
@@ -919,7 +1152,7 @@ def resume_bounded_run(
         return state
     if state.get("provider") != provider.name:
         raise ValueError("Resume provider does not match the frozen run provider")
-    if authorizations:
+    if authorizations and initial_wave_authorization is None:
         apply_spend_authorizations(state, authorizations)
         save_state(run_json, state)
     if event_emitter:
@@ -959,6 +1192,33 @@ def resume_bounded_run(
                     # A terminal round with rejected members immediately prepares
                     # the next pass-local retry round and reaches its authorization.
             else:
+                wave_state = (state.get("initial_authoring_wave") or {}).get("state")
+                if (
+                    provider.paid
+                    and callable(getattr(provider, "interactive_request_body", None))
+                    and wave_state in {
+                    None, "AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED",
+                    }
+                ):
+                    wave = _prepare_bounded_interactive_initial_wave(
+                        state, run_dir, provider,
+                    )
+                    if wave is not None:
+                        if initial_wave_authorization is not None:
+                            if len(authorizations or []) != 6:
+                                raise InitialWaveError(
+                                    "partial_authorization",
+                                    "Bounded initial wave requires six member authorizations",
+                                )
+                            _authorize_bounded_interactive_initial_wave(
+                                state, run_dir, initial_wave_authorization,
+                                authorizations or [],
+                            )
+                        if state["initial_authoring_wave"]["state"] == "AUTHORIZED":
+                            _execute_bounded_interactive_initial_wave(
+                                state, run_dir, provider, event_emitter,
+                            )
+                        return state
                 for pass_id in bounded["pass_ids"]:
                     pass_record = state["passes"][pass_id]
                     if pass_record["state"] == "PASS_QA_ACCEPTED":
@@ -966,8 +1226,22 @@ def resume_bounded_run(
                     packet = load_json(
                         run_dir / bounded["pass_packets"][pass_id]["path"]
                     )
-                    while len(pass_record["attempts"]) < state["max_attempts"]:
-                        attempt = len(pass_record["attempts"]) + 1
+                    while len(pass_record["attempts"]) < state["max_attempts"] or (
+                        pass_record["attempts"]
+                        and pass_record["attempts"][-1]["state"]
+                        == "WAITING_FOR_RESPONSE"
+                    ):
+                        interrupted = (
+                            pass_record["attempts"][-1]
+                            if pass_record["attempts"]
+                            and pass_record["attempts"][-1]["state"]
+                            == "WAITING_FOR_RESPONSE"
+                            else None
+                        )
+                        attempt = (
+                            interrupted["attempt"] if interrupted
+                            else len(pass_record["attempts"]) + 1
+                        )
                         stage = "authoring_initial" if attempt == 1 else "creative_retry"
                         cards, metadata = _execute_stage(
                             state, run_dir, provider, stage, attempt, controller, pass_id
@@ -983,13 +1257,17 @@ def resume_bounded_run(
                         write_json_atomic(result_path, cards)
                         write_json_atomic(report_path, report)
                         accepted = report["status"] == "pass"
-                        pass_record["attempts"].append({
+                        completed_attempt = {
                             "attempt": attempt,
                             "state": "PASS_QA_ACCEPTED" if accepted else "PASS_QA_REJECTED",
                             "accepted": accepted,
                             "provider_metadata": metadata,
                             "qa": {"accepted": accepted, "report": report},
-                        })
+                        }
+                        if interrupted is not None:
+                            interrupted.update(completed_attempt)
+                        else:
+                            pass_record["attempts"].append(completed_attempt)
                         if accepted:
                             pass_record["state"] = "PASS_QA_ACCEPTED"
                             pass_record["accepted_attempt"] = attempt
