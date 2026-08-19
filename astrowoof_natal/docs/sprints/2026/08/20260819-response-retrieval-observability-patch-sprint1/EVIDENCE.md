@@ -1,6 +1,20 @@
 # Response Retrieval Observability Patch Sprint 1 Evidence
 
-Status: implementation and focused qualification complete; uncommitted.
+Status: exact 0.4.10 artifact qualified for authorized publication.
+
+## Exact 0.4.10 release artifact
+
+- Artifact source commit:
+  `5a3c4354d91134b46847b49c03221356bf97524b`.
+- Wheel: `astrowoof_natal_authoring-0.4.10-py3-none-any.whl`.
+- Bytes / SHA-256: 843,325 /
+  `e27a4ea740f8492672f059209dbd743432cf3fd9bdcbf91e12a17a4be2ff437e`.
+- Two fixed-epoch builds: byte-identical.
+- Wheel boundary: 125 entries / 74 resources / zero tests or bytecode /
+  `py.typed` present.
+- Release-focused source tests: 100 passed in 16.005 seconds.
+- Exact installed Windows CLI/schema and scripted one-GET API probe: pass.
+- Provider GETs / submissions / spend: 0 / 0 / USD 0.
 
 ## Qualification summary
 

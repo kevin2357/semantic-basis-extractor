@@ -1,5 +1,16 @@
 # Response Retrieval Observability Patch Sprint 1 Log
 
+## 2026-08-19 — Exact 0.4.10 artifact qualified
+
+- Artifact source commit: `5a3c4354d91134b46847b49c03221356bf97524b`.
+- Two fixed-epoch builds are byte-identical: 843,325 bytes, SHA-256
+  `e27a4ea740f8492672f059209dbd743432cf3fd9bdcbf91e12a17a4be2ff437e`.
+- Exact release-focused source suite: 100 passed.
+- Exact installed-wheel API, CLI/schema, scripted one-GET probe, and packaged
+  resource inspection: pass.
+- Wheel boundary: 125 entries, 74 resources, no tests/bytecode, `py.typed` present.
+- Provider GETs/submissions/spend: 0 / 0 / USD 0.
+
 ## 2026-08-19 — Commit and 0.4.10 release authorized
 
 - Kevin approved commit, push, tag, and publication through SBE 0.4.10.
