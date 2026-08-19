@@ -29,6 +29,37 @@ from astrowoof_natal_authoring.editorial_lint import (  # noqa: E402
 
 
 class TestReleaseSmokeRuntime(unittest.TestCase):
+    def test_built_wheel_runs_required_installed_smoke(self):
+        wheel_value = os.environ.get("ASTROWOOF_TEST_INSTALLED_WHEEL")
+        if not wheel_value:
+            self.skipTest("set ASTROWOOF_TEST_INSTALLED_WHEEL at the release gate")
+        wheel = Path(wheel_value).resolve()
+        self.assertTrue(wheel.is_file())
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            installed = root / "site-packages"
+            subprocess.run(
+                [
+                    sys.executable, "-m", "pip", "install", "--no-deps",
+                    "--target", str(installed), str(wheel),
+                ],
+                check=True, capture_output=True, text=True,
+            )
+            environment = os.environ.copy()
+            environment["PYTHONPATH"] = str(installed)
+            completed = subprocess.run(
+                [
+                    sys.executable, "-m", "astrowoof_natal_authoring.smoke",
+                    "--work-dir", str(root / "smoke"), "--require-installed",
+                ],
+                cwd=root, env=environment, capture_output=True, text=True,
+                check=False,
+            )
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            report = json.loads(completed.stdout)
+            self.assertEqual("pass", report["status"])
+            self.assertEqual("DELIVERY_COMPLETE", report["checks"]["resume"])
+
     def test_fake_body_identity_survives_production_normalization(self):
         items = []
         normalized_tokens = set()
