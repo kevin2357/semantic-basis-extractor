@@ -500,11 +500,13 @@ class OpenAIServiceError(RuntimeError):
         message: str,
         *,
         status_code: int | None = None,
+        request_id: str | None = None,
         retryable: bool = False,
         fatal: bool = False,
     ) -> None:
         super().__init__(message)
         self.status_code = status_code
+        self.request_id = request_id
         self.retryable = retryable
         self.fatal = fatal
 
@@ -607,6 +609,10 @@ class UrllibJsonTransport:
             raise OpenAIServiceError(
                 f"OpenAI HTTP {exc.code}: {message}",
                 status_code=exc.code,
+                request_id=(
+                    exc.headers.get("x-request-id")
+                    if exc.headers is not None else None
+                ),
                 retryable=exc.code in RETRYABLE_HTTP_STATUSES,
                 fatal=exc.code in {401, 403, 422},
             ) from exc

@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.response_retrieval_diagnostic.v1",
+  "attempt_id": "response-get-0123456789abcdef01234567",
+  "run_id": "run_qa_fixture",
+  "action_id": "paid_0123456789abcdef01234567",
+  "provider_response_id": "resp_qa_fixture",
+  "endpoint": {
+    "method": "GET",
+    "route": "/responses/{response_id}",
+    "configured_host": "https://api.openai.com"
+  },
+  "started_at": "2026-08-19T12:00:00.000Z",
+  "finished_at": "2026-08-19T12:00:00.025Z",
+  "duration_ms": 25,
+  "http_status": 401,
+  "provider_request_id": "req_qa_fixture",
+  "provider_status": null,
+  "exception_class": "OpenAIServiceError",
+  "error_message": "OpenAI HTTP 401: invalid credential [REDACTED]",
+  "error_fingerprint": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "outcome": "transport_warning"
+}

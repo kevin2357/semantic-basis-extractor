@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.response_retrieval_diagnostic.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "attempt_id", "run_id", "action_id", "provider_response_id", "endpoint", "started_at", "finished_at", "duration_ms", "http_status", "provider_request_id", "provider_status", "exception_class", "error_message", "error_fingerprint", "outcome"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.response_retrieval_diagnostic.v1"},
+    "attempt_id": {"type": "string", "pattern": "^response-get-[0-9a-f]{24}$"},
+    "run_id": {"type": ["string", "null"]},
+    "action_id": {"type": ["string", "null"]},
+    "provider_response_id": {"type": "string", "minLength": 1},
+    "endpoint": {
+      "type": "object", "additionalProperties": false,
+      "required": ["method", "route", "configured_host"],
+      "properties": {
+        "method": {"const": "GET"},
+        "route": {"const": "/responses/{response_id}"},
+        "configured_host": {"type": ["string", "null"]}
+      }
+    },
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": "string", "format": "date-time"},
+    "duration_ms": {"type": "integer", "minimum": 0},
+    "http_status": {"type": ["integer", "null"], "minimum": 100, "maximum": 599},
+    "provider_request_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9._:-]{1,200}$"},
+    "provider_status": {"type": ["string", "null"]},
+    "exception_class": {"type": ["string", "null"]},
+    "error_message": {"type": ["string", "null"], "maxLength": 512},
+    "error_fingerprint": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "outcome": {"enum": ["completed", "pending", "transport_warning", "identity_conflict"]}
+  }
+}

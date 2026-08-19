@@ -730,6 +730,24 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 self.assertEqual(old["authorization"], new["authorization"])
                 self.assertEqual(old["consumption"], new["consumption"])
                 self.assertEqual("transport_warning", new["provider_reconciliation"]["last_outcome"])
+            diagnostic_paths = sorted((
+                root / "lifecycle" / "provider-reconciliation"
+            ).glob("*.attempt-0001.json"))
+            self.assertEqual(3, len(diagnostic_paths))
+            diagnostic = json.loads(diagnostic_paths[0].read_text(encoding="utf-8"))
+            self.assertEqual(
+                "astrowoof.response_retrieval_diagnostic.v1",
+                diagnostic["schema_version"],
+            )
+            self.assertEqual("transport_warning", diagnostic["outcome"])
+            self.assertEqual("TimeoutError", diagnostic["exception_class"])
+            self.assertEqual("fixture transport timeout", diagnostic["error_message"])
+            cycle_path = next((
+                root / "lifecycle" / "provider-reconciliation"
+            ).glob("cycle-*.json"))
+            cycle = json.loads(cycle_path.read_text(encoding="utf-8"))
+            self.assertEqual(3, len(cycle["diagnostic_artifacts"]))
+            self.assertTrue(result["inspection"]["observation"]["inventory_valid"])
 
     def test_provider_identity_mismatch_fails_closed_for_review(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -752,6 +770,28 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 item["state"] == "AMBIGUOUS_PROVIDER_SUBMISSION"
                 for item in persisted["spend_ledger"]["actions"]
             ))
+
+    def test_provider_terminal_failure_is_completed_get_with_failed_status(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            result = reconcile_provider_cycle(
+                root,
+                observed_at="2026-08-15T20:18:00Z",
+                retrieve=lambda provider_id, _timeout: {
+                    "id": provider_id, "status": "failed"
+                },
+            )
+            self.assertEqual("review_required", result["outcome"])
+            diagnostics = [
+                json.loads(path.read_text(encoding="utf-8"))
+                for path in sorted((
+                    root / "lifecycle" / "provider-reconciliation"
+                ).glob("*.attempt-0001.json"))
+            ]
+            self.assertEqual(3, len(diagnostics))
+            self.assertTrue(all(item["outcome"] == "completed" for item in diagnostics))
+            self.assertTrue(all(item["provider_status"] == "failed" for item in diagnostics))
 
     def test_four_due_retrievals_run_in_one_parallel_wave(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
