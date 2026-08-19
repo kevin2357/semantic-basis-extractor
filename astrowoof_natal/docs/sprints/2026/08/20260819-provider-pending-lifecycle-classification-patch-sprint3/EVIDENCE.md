@@ -18,7 +18,7 @@ Status: implementation complete; provider-free qualification passing.
   `astrowoof.provider_pending_lifecycle_qualification.v1`.
 - Candidate wheel: `astrowoof_natal_authoring-0.4.13-py3-none-any.whl`.
 - Candidate wheel SHA-256:
-  `0e3ecc41e6752ce050aa55ce2d5fc5b4b8453f19d4e7032e7abadf420f57dcb4`.
+  `4798758f0420d43276efce50c1611db222fba1dc1c2b9446319efe82b089e8f9`.
 - Installed qualification receipt SHA-256:
   `b77614fb4aebe641fc10d347a9ebc1e3d1133a573b51b9dcfc205cf3763e1576`.
 - Provider-free qualification proves six unique creates, not-due release, direct
