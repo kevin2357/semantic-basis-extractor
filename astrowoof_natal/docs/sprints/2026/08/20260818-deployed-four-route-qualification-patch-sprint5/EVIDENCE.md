@@ -1,5 +1,17 @@
 # Deployed Four-Route Qualification Patch Sprint 5 Evidence
 
+## Publication evidence
+
+- Release: https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.9
+- GitHub release ID / published UTC: 372739029 / `2026-08-19T00:58:50Z`.
+- Immutable tag commit / annotated tag object:
+  `f920b71fc48545e8f16f878306366dcaec23f906` /
+  `d5d68f1d6cbe797883d1c26a90e1b8a1bfbf35f2`.
+- Published wheel asset ID / checksum asset ID: 520184930 / 520184932.
+- Freshly downloaded wheel: 836,513 bytes; SHA-256
+  `3b900cc3216dd07e164af1a18a4a607c17e3fa1190711893808ba6527042f83d`.
+- Draft / prerelease: false / false. Independent download verification: pass.
+
 ## Exact 0.4.9 artifact
 
 - Artifact source commit:
