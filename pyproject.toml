@@ -24,6 +24,7 @@ astrowoof-run-bounded-natal = "astrowoof_natal_authoring.cli.bounded_run:main"
 astrowoof-native-transition = "astrowoof_natal_authoring.cli.native_transition:main"
 astrowoof-route-parity-evidence = "astrowoof_natal_authoring.route_parity:main"
 astrowoof-initial-wave-contract = "astrowoof_natal_authoring.initial_wave_contract:main"
+astrowoof-deployed-qa = "astrowoof_natal_authoring.cli.deployed_qa:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}

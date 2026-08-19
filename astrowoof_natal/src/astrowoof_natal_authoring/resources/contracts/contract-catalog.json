@@ -45,6 +45,7 @@
     "initial_authoring_wave_result": "astrowoof.initial_authoring_wave_result.v1",
     "initial_authoring_wave_binding_bundle": "astrowoof.initial_authoring_wave_binding_bundle.v1",
     "initial_authoring_wave_authority_inputs": "astrowoof.initial_authoring_wave_authority_inputs.v1",
+    "deployed_qa_four_route_qualification": "astrowoof.deployed_qa_four_route_qualification.v1",
     "bounded_natal_input_admission": "astrowoof.bounded_natal.input_admission.v1",
     "bounded_natal_candidate_policy": "astrowoof.bounded_natal.candidate_policy.v1",
     "bounded_natal_editorial_utility": "astrowoof.bounded_natal.editorial_utility.v1",

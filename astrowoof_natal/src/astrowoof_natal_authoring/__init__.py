@@ -42,6 +42,11 @@ from .initial_wave_contract import (  # noqa: E402
     validate_initial_wave_fixture,
     validate_initial_wave_authority_inputs,
 )
+from .deployed_qa import (  # noqa: E402
+    read_deployed_qa_schema,
+    run_deployed_qa_qualification,
+    validate_deployed_qa_receipt,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -59,6 +64,8 @@ __all__ = [
     "read_native_transition_result",
     "read_bounded_route_parity_traces",
     "read_route_parity_oracle",
+    "read_deployed_qa_schema",
+    "run_deployed_qa_qualification",
     "reconcile_authoring_provider_cycle",
     "validate_bounded_route_traces",
     "validate_initial_wave",
@@ -69,5 +76,6 @@ __all__ = [
     "validate_initial_wave_result",
     "validate_wave_authorization_document",
     "validate_route_parity_oracle",
+    "validate_deployed_qa_receipt",
     "validate_transition_journal",
 ]

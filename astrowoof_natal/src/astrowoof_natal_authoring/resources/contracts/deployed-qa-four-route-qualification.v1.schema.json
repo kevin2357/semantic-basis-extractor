@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.deployed_qa_four_route_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "network_required", "production_authority", "sbe_version", "routes", "assertions", "provider_operation_count", "provider_spend_usd"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.deployed_qa_four_route_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["pass", "fail"]},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "network_required": {"const": false},
+    "production_authority": {"const": false},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "routes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["exact_interactive", "exact_batch", "bounded_interactive", "bounded_batch"],
+      "properties": {
+        "exact_interactive": {"$ref": "#/$defs/route"},
+        "exact_batch": {"$ref": "#/$defs/route"},
+        "bounded_interactive": {"$ref": "#/$defs/route"},
+        "bounded_batch": {"$ref": "#/$defs/route"}
+      }
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interactive_concurrent_six_member_create_detach", "fresh_worker_fan_in", "batch_one_round_six_member_cardinality", "bounded_final_qa_precedence", "duplicate_claim_refused_before_provider_work"],
+      "properties": {
+        "interactive_concurrent_six_member_create_detach": {"type": "boolean"},
+        "fresh_worker_fan_in": {"type": "boolean"},
+        "batch_one_round_six_member_cardinality": {"type": "boolean"},
+        "bounded_final_qa_precedence": {"type": "boolean"},
+        "duplicate_claim_refused_before_provider_work": {"type": "boolean"}
+      }
+    },
+    "provider_operation_count": {"const": 0},
+    "provider_spend_usd": {"const": 0}
+  },
+  "$defs": {
+    "route": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "provider_mechanism", "status", "member_count", "provider_authority_count", "create_count", "peak_concurrent_creates", "detached_provider_pending", "fresh_worker_fan_in"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_mechanism": {"enum": ["response", "batch"]},
+        "status": {"const": "pass"},
+        "member_count": {"const": 6},
+        "provider_authority_count": {"enum": [1, 6]},
+        "create_count": {"type": "integer", "minimum": 0, "maximum": 6},
+        "peak_concurrent_creates": {"type": "integer", "minimum": 0, "maximum": 6},
+        "detached_provider_pending": {"type": "boolean"},
+        "fresh_worker_fan_in": {"type": "boolean"}
+      }
+    }
+  }
+}

@@ -96,6 +96,7 @@ def run_lifecycle_smoke(work_dir: Path, *, require_installed: bool = False) -> d
         "contracts/initial-wave-result.v1.schema.json",
         "contracts/initial-authoring-wave-binding-bundle.v1.schema.json",
         "contracts/initial-authoring-wave-authority-inputs.v1.schema.json",
+        "contracts/deployed-qa-four-route-qualification.v1.schema.json",
         "fixtures/lifecycle/negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-request.v0.1.json",
         "fixtures/lifecycle/batch-negative-authorization-result.v0.1.json",
