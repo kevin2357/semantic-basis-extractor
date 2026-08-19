@@ -1,5 +1,20 @@
 # Deployed Four-Route Qualification Patch Sprint 5 Evidence
 
+## Exact 0.4.9 artifact
+
+- Artifact source commit:
+  `220aae69badb54ed657f2370167691db0e5be5cf`.
+- Wheel: `astrowoof_natal_authoring-0.4.9-py3-none-any.whl`.
+- Bytes / SHA-256: 836,513 /
+  `3b900cc3216dd07e164af1a18a4a607c17e3fa1190711893808ba6527042f83d`.
+- Wheel boundary: 121 entries / 72 resources / zero tests or bytecode /
+  `py.typed` present.
+- Full source: 454 passed / 20 expected skips / 474 total.
+- Exact installed Windows/Linux lifecycle, release, and four-route gates: pass.
+- Version-bound receipt SHA-256:
+  `104e81d5fc9e6014264c7887e5e1dac626286d29fe732cbb4b07c719497face5`.
+- Provider operations / spend: 0 / USD 0.
+
 ## Final consumer review
 
 - [API Agent V2 Approval.md](API%20Agent%20V2%20Approval.md)

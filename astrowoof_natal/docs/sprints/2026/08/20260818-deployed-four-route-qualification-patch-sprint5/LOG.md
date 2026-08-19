@@ -1,5 +1,19 @@
 # Deployed Four-Route Qualification Patch Sprint 5 Log
 
+## 2026-08-18 — Exact 0.4.9 artifact qualified and authorized
+
+- Kevin explicitly authorized the fresh immutable 0.4.9 release.
+- Full source suite: 474 total, 454 passed, 20 expected skips.
+- Versioned artifact source commit:
+  `220aae69badb54ed657f2370167691db0e5be5cf`.
+- Two fixed-epoch builds were byte-identical: 836,513 bytes, SHA-256
+  `3b900cc3216dd07e164af1a18a4a607c17e3fa1190711893808ba6527042f83d`.
+- Exact Windows and network-isolated Linux wheels passed `pip check`, lifecycle
+  smoke, release smoke, and `astrowoof-deployed-qa`.
+- Exact 0.4.9 receipt digest:
+  `104e81d5fc9e6014264c7887e5e1dac626286d29fe732cbb4b07c719497face5`.
+- Provider operations/spend: 0 / USD 0.
+
 ## 2026-08-18 — V2 API review accepted
 
 - API approved the corrected real-mechanism exact and bounded Batch cells.

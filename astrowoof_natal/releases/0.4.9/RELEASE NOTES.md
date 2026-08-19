@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.9 Release
 
-Status: release candidate; publication pending
+Status: qualified immutable artifact; publication authorized
 
 ## Summary
 
@@ -35,5 +35,11 @@ that it is qualification-only and carries no production authority.
 - `astrowoof.deployed_qa_four_route_qualification.v1`.
 
 The AstroWoof API consumer approved the V2 native Batch mechanism coverage and
-recommended the fresh immutable 0.4.9 release. Exact artifact and publication
-evidence will be recorded after the versioned source boundary is rebuilt.
+recommended the fresh immutable 0.4.9 release.
+
+The final wheel is 836,513 bytes with SHA-256
+`3b900cc3216dd07e164af1a18a4a607c17e3fa1190711893808ba6527042f83d`.
+Two fixed-epoch builds were byte-identical. Full source, installed Windows, and
+network-isolated Linux gates passed without external provider calls or paid spend.
+Post-publication verification will be recorded in `release-manifest.json` without
+moving the immutable tag.

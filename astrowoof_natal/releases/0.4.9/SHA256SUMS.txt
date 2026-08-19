@@ -1,1 +1,1 @@
-pending_exact_build  astrowoof_natal_authoring-0.4.9-py3-none-any.whl
+3b900cc3216dd07e164af1a18a4a607c17e3fa1190711893808ba6527042f83d  astrowoof_natal_authoring-0.4.9-py3-none-any.whl
