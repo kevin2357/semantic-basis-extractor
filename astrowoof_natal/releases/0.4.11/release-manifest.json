@@ -1,0 +1,47 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.11",
+  "status": "qualified_pending_publication",
+  "release_tag": "astrowoof-natal-authoring-v0.4.11",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.11-py3-none-any.whl",
+    "bytes": 852245,
+    "sha256": "a2339d3302fd8dede54be52de948909992ab1db3d0366befbc457d1f8e035fa2",
+    "wheel_entry_count": 126,
+    "resource_count": 74,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "fdf96fa6a18662352253789767435e598939fbd6",
+    "release_record_identity": "tag:astrowoof-natal-authoring-v0.4.11",
+    "byte_reproducible": "not_evaluated_fast_patch"
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "upstream": {
+    "agf": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "qa": {
+    "focused_test_count": 70,
+    "focused_pass_count": 70,
+    "formatter_rerun_count": 3,
+    "formatter_rerun_pass_count": 3,
+    "windows_installed_smoke": "pass",
+    "provider_get_count": 0,
+    "provider_submission_count": 0,
+    "provider_spend_usd": 0,
+    "qualification_scope": "operator_logging_fast_patch"
+  },
+  "publication": {
+    "status": "pending"
+  }
+}
