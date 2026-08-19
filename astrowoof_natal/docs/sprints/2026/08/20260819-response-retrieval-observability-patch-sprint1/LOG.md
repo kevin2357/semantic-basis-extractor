@@ -1,5 +1,16 @@
 # Response Retrieval Observability Patch Sprint 1 Log
 
+## 2026-08-19 — 0.4.10 published and independently verified
+
+- Immutable tag `astrowoof-natal-authoring-v0.4.10` points to commit
+  `4400a314bed02c395533737eeb1e83f8cc988b6b`; annotated tag object is
+  `04590b87e258ed6518f0812393f9506db9d92c83`.
+- GitHub release 372953816 published at `2026-08-19T10:14:48Z`.
+- Freshly downloaded wheel: 843,325 bytes, SHA-256
+  `e27a4ea740f8492672f059209dbd743432cf3fd9bdcbf91e12a17a4be2ff437e`.
+- Wheel/checksum asset IDs: 520690576 / 520690575.
+- Post-publication evidence lands after the tag and does not move it.
+
 ## 2026-08-19 — Exact 0.4.10 artifact qualified
 
 - Artifact source commit: `5a3c4354d91134b46847b49c03221356bf97524b`.

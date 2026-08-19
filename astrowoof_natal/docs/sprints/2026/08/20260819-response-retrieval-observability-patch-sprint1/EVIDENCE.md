@@ -1,6 +1,18 @@
 # Response Retrieval Observability Patch Sprint 1 Evidence
 
-Status: exact 0.4.10 artifact qualified for authorized publication.
+Status: 0.4.10 published and independently verified.
+
+## Publication evidence
+
+- Release: https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.10
+- GitHub release ID / published UTC: 372953816 / `2026-08-19T10:14:48Z`.
+- Immutable tag commit / annotated tag object:
+  `4400a314bed02c395533737eeb1e83f8cc988b6b` /
+  `04590b87e258ed6518f0812393f9506db9d92c83`.
+- Wheel/checksum asset IDs: 520690576 / 520690575.
+- Fresh download: 843,325 bytes; SHA-256
+  `e27a4ea740f8492672f059209dbd743432cf3fd9bdcbf91e12a17a4be2ff437e`.
+- Draft / prerelease: false / false. Independent verification: pass.
 
 ## Exact 0.4.10 release artifact
 

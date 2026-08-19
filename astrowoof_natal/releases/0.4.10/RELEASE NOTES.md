@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.10 Release
 
-Status: qualified immutable artifact; publication authorized
+Status: published and independently verified
 
 ## Summary
 
@@ -39,3 +39,8 @@ authority.
 The wheel is 843,325 bytes with SHA-256
 `e27a4ea740f8492672f059209dbd743432cf3fd9bdcbf91e12a17a4be2ff437e`.
 
+The immutable tag points to commit
+`4400a314bed02c395533737eeb1e83f8cc988b6b`. A fresh GitHub release download
+matched the qualified size and SHA-256 exactly. Full release and asset identities
+are recorded in `release-manifest.json`; this post-publication evidence does not
+move the tag.
