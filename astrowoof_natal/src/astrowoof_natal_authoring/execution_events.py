@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -10,6 +11,9 @@ from typing import Any, Callable
 from pathlib import Path
 import threading
 import sys
+
+
+logger = logging.getLogger(__name__)
 
 from .lifecycle_contracts import (
     EVENT_NAMES,
@@ -177,16 +181,26 @@ class ExecutionEventEmitter:
                 "data": data,
             }
             json.dumps(envelope, ensure_ascii=False)
-        except (TypeError, ValueError):
+        except (TypeError, ValueError) as exc:
             self.stats.dropped += 1
             self.stats.serialization_warnings += 1
+            logger.warning(
+                "execution_event_dropped event_name=%s reason=serialization "
+                "error_class=%s error=%s dropped_count=%s",
+                event_name, type(exc).__name__, exc, self.stats.dropped,
+            )
             return None
         if self.sink is not None:
             try:
                 self.sink(envelope)
-            except Exception:
+            except Exception as exc:
                 self.stats.dropped += 1
                 self.stats.sink_warnings += 1
+                logger.warning(
+                    "execution_event_dropped event_name=%s reason=sink_failure "
+                    "error_class=%s error=%s dropped_count=%s",
+                    event_name, type(exc).__name__, exc, self.stats.dropped,
+                )
                 return None
         self.stats.emitted += 1
         return envelope

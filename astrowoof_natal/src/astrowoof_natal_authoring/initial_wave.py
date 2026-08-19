@@ -8,6 +8,7 @@ performing provider I/O or native persistence during preparation/preflight.
 from __future__ import annotations
 
 import concurrent.futures
+import logging
 import queue
 import time
 from copy import deepcopy
@@ -16,6 +17,11 @@ from typing import Any, Callable, Mapping, Sequence
 
 from .pass_protocol import canonical_sha256
 from .spend import AUTHORIZATION_SCHEMA, PRICE_BOOK_VERSION
+from .application_logging import current_logging_context, logging_context
+from .response_diagnostics import sanitize_error_message
+
+
+logger = logging.getLogger(__name__)
 
 
 WAVE_CONTRACT = "astrowoof.initial_authoring_wave.v1"
@@ -764,16 +770,85 @@ def execute_initial_wave_creates(
     """
     preflight_wave_authorization(wave, authorization, member_authorizations)
     started = monotonic()
+    logger.info(
+        "initial_wave_start wave_id=%s route_family=%s member_count=%s "
+        "maximum_concurrent=%s",
+        wave["wave_id"], wave["route_family"], wave["member_count"],
+        MAXIMUM_CONCURRENT_CREATES,
+    )
+    parent_log_context = current_logging_context()
 
     def create(member: Mapping[str, Any]) -> dict[str, Any]:
-        try:
-            result = submit(member, PROVIDER_CREATE_TIMEOUT_SECONDS)
+        with logging_context(
+            host_id=parent_log_context["host_id"],
+            run_id=str(wave["run_id"]),
+            invocation_id=parent_log_context["invocation_id"],
+            current_state="PROVIDER_CREATE",
+        ):
+            logger.info(
+                "initial_member_create_start wave_id=%s action_id=%s pass_id=%s "
+                "attempt=%s timeout_s=%s",
+                wave["wave_id"], member["action_id"], member["pass_id"],
+                member["attempt"], PROVIDER_CREATE_TIMEOUT_SECONDS,
+            )
+            try:
+                result = submit(member, PROVIDER_CREATE_TIMEOUT_SECONDS)
+            except DefinitelyUnattemptedCreate as exc:
+                logger.warning(
+                    "initial_member_create_unattempted action_id=%s pass_id=%s error=%s",
+                    member["action_id"], member["pass_id"],
+                    sanitize_error_message(exc),
+                )
+                return {
+                    "action_id": member["action_id"], "pass_id": member["pass_id"],
+                    "outcome": "authorized_unstarted", "provider": None,
+                    "provider_create_metadata": None,
+                    "reason": str(exc),
+                }
+            except ProviderCreateRefused as exc:
+                logger.warning(
+                    "initial_member_create_refused action_id=%s pass_id=%s error=%s",
+                    member["action_id"], member["pass_id"],
+                    sanitize_error_message(exc),
+                )
+                return {
+                    "action_id": member["action_id"], "pass_id": member["pass_id"],
+                    "outcome": "create_refused", "provider": None,
+                    "provider_create_metadata": None,
+                    "reason": str(exc),
+                }
+            except Exception as exc:
+                logger.exception(
+                    "initial_member_create_ambiguous action_id=%s pass_id=%s "
+                    "error_class=%s error=%s",
+                    member["action_id"], member["pass_id"], type(exc).__name__,
+                    sanitize_error_message(exc),
+                )
+                return {
+                    "action_id": member["action_id"], "pass_id": member["pass_id"],
+                    "outcome": "ambiguous_submission", "provider": None,
+                    "provider_create_metadata": None,
+                    "reason": str(exc),
+                }
             if (
                 not isinstance(result, ProviderCreateResult)
                 or not result.provider_id
                 or result.provider_kind != "response"
             ):
-                raise RuntimeError("Provider create returned no valid Response identity")
+                logger.error(
+                    "initial_member_create_invalid_identity action_id=%s pass_id=%s",
+                    member["action_id"], member["pass_id"],
+                )
+                return {
+                    "action_id": member["action_id"], "pass_id": member["pass_id"],
+                    "outcome": "ambiguous_submission", "provider": None,
+                    "provider_create_metadata": None,
+                    "reason": "Provider create returned no valid Response identity",
+                }
+            logger.info(
+                "initial_member_create_complete action_id=%s pass_id=%s provider_id=%s",
+                member["action_id"], member["pass_id"], result.provider_id,
+            )
             return {
                 "action_id": member["action_id"],
                 "pass_id": member["pass_id"],
@@ -781,27 +856,6 @@ def execute_initial_wave_creates(
                 "provider": {"kind": "response", "id": result.provider_id},
                 "provider_create_metadata": dict(result.metadata or {}),
                 "reason": None,
-            }
-        except DefinitelyUnattemptedCreate as exc:
-            return {
-                "action_id": member["action_id"], "pass_id": member["pass_id"],
-                "outcome": "authorized_unstarted", "provider": None,
-                "provider_create_metadata": None,
-                "reason": str(exc),
-            }
-        except ProviderCreateRefused as exc:
-            return {
-                "action_id": member["action_id"], "pass_id": member["pass_id"],
-                "outcome": "create_refused", "provider": None,
-                "provider_create_metadata": None,
-                "reason": str(exc),
-            }
-        except Exception as exc:
-            return {
-                "action_id": member["action_id"], "pass_id": member["pass_id"],
-                "outcome": "ambiguous_submission", "provider": None,
-                "provider_create_metadata": None,
-                "reason": str(exc),
             }
 
     outcomes: dict[str, dict[str, Any]] = {}
@@ -846,9 +900,19 @@ def execute_initial_wave_creates(
             # Runtime integrations use it for the immediate serialized ledger and
             # journal durability step.
             persist_member_outcome(member, outcome)
+            logger.info(
+                "initial_member_outcome_persisted wave_id=%s action_id=%s "
+                "pass_id=%s outcome=%s persisted_count=%s",
+                wave["wave_id"], member["action_id"], member["pass_id"],
+                outcome["outcome"], len(outcomes) + 1,
+            )
             outcomes[member["action_id"]] = outcome
         provider_io_finished = monotonic()
-    except InitialWaveError:
+    except InitialWaveError as exc:
+        logger.error(
+            "initial_wave_failed wave_id=%s error_class=%s error=%s",
+            wave["wave_id"], type(exc).__name__, sanitize_error_message(exc),
+        )
         for future in futures:
             future.cancel()
         # Correctness requires all live create tasks to unwind before aggregate
@@ -868,6 +932,14 @@ def execute_initial_wave_creates(
         else "detached_provider_pending"
         if provider_bound
         else "awaiting_external_authority"
+    )
+    logger.info(
+        "initial_wave_complete wave_id=%s outcome=%s duration_ms=%s "
+        "provider_bound=%s ambiguous=%s",
+        wave["wave_id"], aggregate_outcome,
+        round((provider_io_finished - started) * 1000),
+        sum(item["outcome"] == "provider_bound" for item in ordered),
+        sum(item["outcome"] == "ambiguous_submission" for item in ordered),
     )
     return {
         "schema_version": WAVE_RESULT_CONTRACT,

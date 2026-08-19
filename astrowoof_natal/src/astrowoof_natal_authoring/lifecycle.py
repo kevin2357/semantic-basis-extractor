@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 from contextlib import contextmanager
@@ -48,6 +49,10 @@ from .reconciliation import (
     parse_utc_instant,
     validated_timing,
 )
+from .application_logging import bind_logging_context
+
+
+logger = logging.getLogger(__name__)
 
 
 def _utc_now() -> str:
@@ -850,6 +855,13 @@ def inspect_lifecycle(
     """Inspect exact native evidence without mutating any workspace member."""
     run_dir = run_dir.resolve()
     state = load_json(run_dir / "run.json")
+    bind_logging_context(
+        run_id=state.get("run_id"), current_state=state.get("status")
+    )
+    logger.debug(
+        "lifecycle_inspection_start state_revision=%s exclusive_access=%s",
+        state.get("state_revision"), native_exclusive_access,
+    )
     observation, review_reasons = _observation(
         run_dir,
         state,
@@ -940,7 +952,7 @@ def inspect_lifecycle(
     capacity, custody, native_route, consumer_authority = _capacity_and_custody(
         state, observation, dependencies, observed_at=observation["observed_at"],
     )
-    return {
+    result = {
         "schema_version": LIFECYCLE_INSPECTION_SCHEMA,
         "run_id": str(state.get("run_id") or ""),
         "observation": observation,
@@ -954,6 +966,15 @@ def inspect_lifecycle(
         "native_route": native_route,
         "consumer_authority": consumer_authority,
     }
+    logger.info(
+        "lifecycle_inspection_complete status=%s terminal=%s quiescence=%s "
+        "capacity_disposition=%s provider_actions=%s local_dependencies=%s "
+        "review_reason_count=%s",
+        status, terminal_summary["terminal"], quiescence["state"],
+        capacity["disposition"], len(custody["actions"]), len(dependencies),
+        len(result["review_reasons"]),
+    )
+    return result
 
 
 @contextmanager
@@ -1463,10 +1484,20 @@ def deny_providerless_actions(
     _validate_batch_denial_request(request)
     run_dir = run_dir.resolve()
     digest = batch_negative_authorization_request_sha256(request)
+    bind_logging_context(run_id=request.get("run_id"), current_state="DENIAL_PREFLIGHT")
+    logger.info(
+        "providerless_denial_batch_start action_count=%s request_sha256=%s",
+        len(request["actions"]), digest,
+    )
     try:
         lock = _exclusive_lifecycle_lock(run_dir)
         lock.__enter__()
-    except (OSError, BlockingIOError):
+    except (OSError, BlockingIOError) as exc:
+        logger.warning(
+            "providerless_denial_batch_refused reason=exclusivity_not_established "
+            "error_class=%s error=%s",
+            type(exc).__name__, exc,
+        )
         members = [
             _batch_member_refusal(
                 member, "not_evaluated", ["shared_precondition_not_evaluated"]
@@ -1948,13 +1979,21 @@ def closeout_run(
 ) -> dict[str, Any]:
     """Persist and return one idempotent native lifecycle closeout result."""
     run_dir = run_dir.resolve()
+    logger.info("closeout_start run_dir=%s", run_dir)
     try:
         lock = _exclusive_lifecycle_lock(run_dir)
         lock.__enter__()
-    except (OSError, BlockingIOError):
+    except (OSError, BlockingIOError) as exc:
+        logger.error(
+            "closeout_failed reason=exclusivity_not_established error_class=%s error=%s",
+            type(exc).__name__, exc,
+        )
         raise RuntimeError("Closeout could not establish native exclusive access")
     try:
         state = load_json(run_dir / "run.json")
+        bind_logging_context(
+            run_id=state.get("run_id"), current_state=state.get("status")
+        )
         try:
             validate_workspace_snapshot(run_dir, state)
         except ValueError:
@@ -2058,6 +2097,13 @@ def closeout_run(
                 "disposition": result["disposition"],
                 "semantic_result_sha256": result["semantic_result_sha256"],
             })
+        logger.info(
+            "closeout_complete disposition=%s terminal=%s quiescence=%s "
+            "state_revision=%s semantic_result_sha256=%s",
+            result["disposition"], result["terminal"]["terminal"],
+            result["quiescence"]["state"], state.get("state_revision"),
+            semantic_sha256,
+        )
         return result
     finally:
         lock.__exit__(None, None, None)

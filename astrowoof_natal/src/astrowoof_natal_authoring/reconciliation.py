@@ -5,6 +5,7 @@ from __future__ import annotations
 import concurrent.futures
 import hashlib
 import json
+import logging
 import os
 import threading
 import time
@@ -21,7 +22,18 @@ from .lifecycle_contracts import (
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA_V0_1,
 )
-from .response_diagnostics import build_response_retrieval_diagnostic
+from .response_diagnostics import (
+    build_response_retrieval_diagnostic,
+    sanitize_error_message,
+)
+from .application_logging import (
+    bind_logging_context,
+    current_logging_context,
+    logging_context,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 RECONCILIABLE_PROVIDER_STATES = {
@@ -306,6 +318,13 @@ def reconcile_provider_cycle(
     instant = utc_instant(parse_utc_instant(observed_at))
     with _single_writer(run_dir):
         state = load_json(run_dir / "run.json")
+        bind_logging_context(
+            run_id=state.get("run_id"), current_state=state.get("status")
+        )
+        logger.info(
+            "reconciliation_cycle_start state_revision=%s observed_at=%s",
+            state.get("state_revision"), instant,
+        )
         validate_workspace_snapshot(run_dir, state)
         before = inspect_lifecycle(
             run_dir,
@@ -445,29 +464,58 @@ def reconcile_provider_cycle(
             raise ValueError(
                 "No due known interactive provider operation is eligible for retrieval"
             )
+        logger.info(
+            "reconciliation_wave_selected due_count=%s selected_count=%s "
+            "deferred_count=%s action_ids=%s",
+            len(due_ids), len(actions), max(len(due_ids) - len(actions), 0),
+            [item["action_id"] for item in actions],
+        )
+        parent_log_context = current_logging_context()
 
         def get(action: dict[str, Any]) -> tuple[
             str, dict[str, Any] | Exception, str, str, int
         ]:
             action_id = action["action_id"]
             provider_id = action["provider"]["id"]
-            started_at = datetime.now(timezone.utc).isoformat(
-                timespec="milliseconds"
-            ).replace("+00:00", "Z")
-            started = time.monotonic()
-            try:
-                response = retrieve(
-                    provider_id,
-                    float(response_policy["provider_request_timeout_seconds"]),
+            with logging_context(
+                host_id=parent_log_context["host_id"],
+                run_id=state.get("run_id"),
+                invocation_id=parent_log_context["invocation_id"],
+                current_state=action.get("state"),
+            ):
+                logger.info(
+                    "provider_retrieval_start action_id=%s provider_id=%s timeout_s=%s",
+                    action_id, provider_id,
+                    response_policy["provider_request_timeout_seconds"],
                 )
-                value: dict[str, Any] | Exception = response
-            except Exception as exc:
-                value = exc
-            finished_at = datetime.now(timezone.utc).isoformat(
-                timespec="milliseconds"
-            ).replace("+00:00", "Z")
-            duration_ms = round((time.monotonic() - started) * 1000)
-            return action_id, value, started_at, finished_at, duration_ms
+                started_at = datetime.now(timezone.utc).isoformat(
+                    timespec="milliseconds"
+                ).replace("+00:00", "Z")
+                started = time.monotonic()
+                try:
+                    response = retrieve(
+                        provider_id,
+                        float(response_policy["provider_request_timeout_seconds"]),
+                    )
+                    value: dict[str, Any] | Exception = response
+                except Exception as exc:
+                    logger.warning(
+                        "provider_retrieval_exception action_id=%s provider_id=%s "
+                        "error_class=%s error=%s",
+                        action_id, provider_id, type(exc).__name__,
+                        sanitize_error_message(exc, secret=provider_secret),
+                    )
+                    value = exc
+                finished_at = datetime.now(timezone.utc).isoformat(
+                    timespec="milliseconds"
+                ).replace("+00:00", "Z")
+                duration_ms = round((time.monotonic() - started) * 1000)
+                logger.info(
+                    "provider_retrieval_returned action_id=%s provider_id=%s "
+                    "duration_ms=%s result_class=%s",
+                    action_id, provider_id, duration_ms, type(value).__name__,
+                )
+                return action_id, value, started_at, finished_at, duration_ms
 
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=response_policy["maximum_parallel_requests"],
@@ -523,6 +571,12 @@ def reconcile_provider_cycle(
                         "failed_member_count": None,
                     })
                 else:
+                    logger.warning(
+                        "reconciliation_transport_warning action_id=%s "
+                        "provider_id=%s error_class=%s error=%s",
+                        action_id, provider_id, type(value).__name__,
+                        sanitize_error_message(value, secret=provider_secret),
+                    )
                     warnings.append(action_id)
                     record_attempt(
                         timing, attempted_at=instant, outcome="transport_warning"
@@ -539,6 +593,10 @@ def reconcile_provider_cycle(
                         "failed_member_count": None,
                     })
             elif not isinstance(value, dict) or not isinstance(value.get("id"), str):
+                logger.error(
+                    "reconciliation_malformed_response action_id=%s provider_id=%s",
+                    action_id, provider_id,
+                )
                 warnings.append(action_id)
                 diagnostic_error = ValueError(
                     "Provider returned a malformed Response object"
@@ -556,6 +614,11 @@ def reconcile_provider_cycle(
                     "failed_member_count": None,
                 })
             elif value["id"] != provider_id:
+                logger.error(
+                    "reconciliation_identity_conflict action_id=%s expected_id=%s "
+                    "returned_id=%s",
+                    action_id, provider_id, value.get("id"),
+                )
                 diagnostic_error = ProviderRetrievalIdentityMismatch(
                     "Provider retrieval identity mismatch"
                 )
@@ -576,10 +639,18 @@ def reconcile_provider_cycle(
                     "failed_member_count": None,
                 })
             elif provider_status in {"queued", "in_progress"}:
+                logger.info(
+                    "reconciliation_pending action_id=%s provider_id=%s status=%s",
+                    action_id, provider_id, provider_status,
+                )
                 record_attempt(timing, attempted_at=instant, outcome="pending")
                 retrieval_outcome = "pending"
                 cost_disposition = "not_applicable_provider_pending"
             elif provider_status == "completed":
+                logger.info(
+                    "reconciliation_completed action_id=%s provider_id=%s usage=%s",
+                    action_id, provider_id, isinstance(value.get("usage"), dict),
+                )
                 record_attempt(timing, attempted_at=instant, outcome="completed")
                 completed.append(action_id)
                 write_json_atomic(evidence_root / f"{action_id}.response.json", value)
@@ -589,6 +660,11 @@ def reconcile_provider_cycle(
                     else "provider_usage_unavailable_billing_reconciliation_pending"
                 )
             elif provider_status in {"failed", "cancelled", "incomplete"}:
+                logger.error(
+                    "reconciliation_provider_failed action_id=%s provider_id=%s "
+                    "provider_status=%s",
+                    action_id, provider_id, provider_status,
+                )
                 record_attempt(timing, attempted_at=instant, outcome="provider_failed")
                 completed.append(action_id)
                 provider_failures.append(action_id)
@@ -682,6 +758,13 @@ def reconcile_provider_cycle(
             run_dir,
             native_exclusive_access="established",
             observed_at=instant,
+        )
+        logger.info(
+            "reconciliation_cycle_checkpoint state_revision=%s completed=%s "
+            "pending=%s warnings=%s conflicts=%s capacity_disposition=%s",
+            state.get("state_revision"), len(completed),
+            len(cycle["still_pending_action_ids"]), len(warnings),
+            len(identity_conflicts), after["execution_capacity"]["disposition"],
         )
         return {
             "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,

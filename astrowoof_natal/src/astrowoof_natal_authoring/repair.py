@@ -10,6 +10,12 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Iterator
 
+from .application_logging import (
+    add_logging_arguments,
+    bind_logging_context,
+    configure_logging_from_args,
+)
+
 from .closure import (
     SNAPSHOT_NAME,
     lint_finding_count,
@@ -330,7 +336,17 @@ def main() -> None:
     parser.add_argument("--backup-path", type=Path)
     parser.add_argument("--exclusive-owner-reference")
     parser.add_argument("--report", type=Path)
+    add_logging_arguments(parser)
     args = parser.parse_args()
+    configure_logging_from_args(args)
+    run_state_path = args.run_dir / "run.json"
+    if run_state_path.is_file():
+        existing = load_json(run_state_path)
+        bind_logging_context(
+            run_id=existing.get("native_run_id") or existing.get("run_id"),
+            current_state=(existing.get("machine") or {}).get("state")
+            or existing.get("status"),
+        )
     if args.apply:
         if args.backup_path is None or not args.exclusive_owner_reference:
             parser.error(

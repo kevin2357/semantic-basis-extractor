@@ -1,6 +1,12 @@
 """AstroWoof natal semantic-basis extraction and authoring runtime."""
 
 from importlib.metadata import PackageNotFoundError, version
+import logging
+
+
+# Library consumers should not receive surprise stderr output merely by importing
+# SBE.  Command entry points install the operational handler explicitly.
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 try:
     __version__ = version("astrowoof-natal-authoring")

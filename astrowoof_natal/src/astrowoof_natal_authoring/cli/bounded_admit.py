@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from pathlib import Path
 
 from ..bounded_admission import (
@@ -12,6 +13,10 @@ from ..bounded_admission import (
     admit_bounded_family,
     load_bounded_family,
 )
+from ..application_logging import add_logging_arguments, configure_logging_from_args
+
+
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -19,13 +24,20 @@ def main() -> None:
     parser.add_argument("--input-package", type=Path, required=True)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--event-output", type=Path)
+    add_logging_arguments(parser)
     args = parser.parse_args()
+    configure_logging_from_args(args)
+    logger.info("command_start command=bounded_admission")
     try:
         admission = admit_bounded_family(load_bounded_family(args.input_package))
         result = admission.summary
         event = admission.event
         exit_code = 0
     except BoundedAdmissionError as exc:
+        logger.warning(
+            "bounded_admission_rejected code=%s status=%s error=%s",
+            exc.code, exc.status, exc,
+        )
         result = {
             "schema_version": "astrowoof.bounded_natal.input_admission.v1",
             **exc.as_dict(),
@@ -38,6 +50,11 @@ def main() -> None:
             "data": {"code": exc.code},
         }
         exit_code = 2
+    else:
+        logger.info(
+            "bounded_admission_complete admission_id=%s status=%s",
+            result.get("admission_id"), result.get("status"),
+        )
     rendered = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

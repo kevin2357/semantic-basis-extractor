@@ -9,9 +9,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 from copy import deepcopy
 from decimal import Decimal, ROUND_CEILING
 from typing import Any
+
+
+logger = logging.getLogger(__name__)
 
 
 LEDGER_SCHEMA = "astrowoof.provider_spend_ledger.v0.1"
@@ -156,6 +160,10 @@ def prepare_action(ledger: dict[str, Any], binding: dict[str, Any]) -> dict[str,
         if existing["binding"] != binding:
             raise ValueError(f"Paid action identity collision: {action_id}")
         classify_prepared_budget(ledger, existing)
+        logger.debug(
+            "spend_action_reused action_id=%s stage=%s state=%s",
+            action_id, binding.get("stage"), existing.get("state"),
+        )
         return existing
     action = {
         "action_id": action_id,
@@ -168,6 +176,12 @@ def prepare_action(ledger: dict[str, Any], binding: dict[str, Any]) -> dict[str,
     }
     ledger["actions"].append(action)
     classify_prepared_budget(ledger, action)
+    logger.info(
+        "spend_action_prepared action_id=%s stage=%s commitment_micro_usd=%s "
+        "state=%s",
+        action_id, binding.get("stage"), binding.get("commitment_micro_usd"),
+        action.get("state"),
+    )
     return action
 
 
@@ -206,6 +220,11 @@ def classify_prepared_budget(
         action["state"] = (
             "SKIPPED_BUDGET_EXHAUSTED" if optional_skip else "BUDGET_EXHAUSTED"
         )
+        logger.warning(
+            "spend_budget_exhausted action_id=%s stage=%s optional_skip=%s "
+            "run_total_micro_usd=%s stage_total_micro_usd=%s",
+            action.get("action_id"), stage, optional_skip, run_total, stage_total,
+        )
     return action
 
 
@@ -240,12 +259,24 @@ def authorize_action(
             "SKIPPED_BUDGET_EXHAUSTED" if optional_skip else "BUDGET_EXHAUSTED"
         )
         if optional_skip:
+            logger.warning(
+                "spend_authorization_skipped action_id=%s stage=%s reason=budget_exhausted",
+                action_id, stage,
+            )
             return action
+        logger.error(
+            "spend_authorization_refused action_id=%s stage=%s reason=budget_exhausted",
+            action_id, stage,
+        )
         raise BudgetExhausted("Authorization would exceed frozen spend ceiling", action=action)
     if action["state"] not in {"PREPARED", "AUTHORIZED"}:
         raise ValueError(f"Cannot authorize action in state {action['state']}")
     action["authorization"] = deepcopy(authorization)
     action["state"] = "AUTHORIZED"
+    logger.info(
+        "spend_action_authorized action_id=%s stage=%s authorization_reference=%s",
+        action_id, stage, authorization["authorization_reference"],
+    )
     return action
 
 
@@ -257,11 +288,21 @@ def begin_submission(action: dict[str, Any], *, consumer_id: str, state_revision
         "consumer_id": consumer_id,
         "state_revision": state_revision,
     }
+    logger.info(
+        "spend_action_consumed action_id=%s stage=%s consumer_id=%s state_revision=%s",
+        action.get("action_id"), (action.get("binding") or {}).get("stage"),
+        consumer_id, state_revision,
+    )
 
 
 def mark_ambiguous(action: dict[str, Any], *, reason: str) -> None:
+    previous = action.get("state")
     action["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
     action["ambiguity"] = {"reason": reason}
+    logger.error(
+        "spend_action_transition action_id=%s old_state=%s new_state=%s reason=%s",
+        action.get("action_id"), previous, action["state"], reason,
+    )
 
 
 def record_provider_id(action: dict[str, Any], *, provider_id: str, kind: str) -> None:
@@ -272,6 +313,10 @@ def record_provider_id(action: dict[str, Any], *, provider_id: str, kind: str) -
         raise AmbiguousProviderSubmission("Provider returned no operation ID", action=action)
     action["provider"] = {"kind": kind, "id": provider_id}
     action["state"] = "PROVIDER_ID_RECORDED"
+    logger.info(
+        "provider_identity_recorded action_id=%s provider_kind=%s provider_id=%s",
+        action.get("action_id"), kind, provider_id,
+    )
 
 
 def record_reported_cost(
@@ -282,6 +327,11 @@ def record_reported_cost(
         "estimated_micro_usd": estimated_micro_usd,
     }
     action["state"] = "REPORTED"
+    logger.info(
+        "spend_action_reported action_id=%s stage=%s estimated_micro_usd=%s",
+        action.get("action_id"), (action.get("binding") or {}).get("stage"),
+        estimated_micro_usd,
+    )
 
 
 def append_reconciliation_reference(

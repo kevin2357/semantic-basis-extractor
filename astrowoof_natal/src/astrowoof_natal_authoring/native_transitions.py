@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import tempfile
 import uuid
@@ -21,6 +22,10 @@ from .closure import (
     write_json_atomic,
 )
 from .lifecycle import _exclusive_lifecycle_lock
+from .application_logging import bind_logging_context
+
+
+logger = logging.getLogger(__name__)
 
 
 JOURNAL_RECORD_SCHEMA = "astrowoof.native_transition_journal_record.v0.1"
@@ -637,6 +642,13 @@ def publish_native_execution_result(
     run_dir = run_dir.resolve()
     with _exclusive_lifecycle_lock(run_dir):
         state = load_json(run_dir / "run.json")
+        bind_logging_context(
+            run_id=state.get("run_id"), current_state=state.get("status")
+        )
+        logger.info(
+            "native_publication_start command_kind=%s state_revision=%s release=%s",
+            command_kind, state.get("state_revision"), sbe_release,
+        )
         records = validate_transition_journal(run_dir)
         prior_end = 0
         index_path = run_dir / RESULT_INDEX_NAME
@@ -654,6 +666,10 @@ def publish_native_execution_result(
             if len(incomplete) != 1 or incomplete[0] != indexed_results[-1]:
                 raise ValueError("Native result publication history has multiple incomplete seals")
             orphan = incomplete[0]
+            logger.warning(
+                "native_publication_repair result_id=%s reason=incomplete_receipt",
+                orphan.get("result_id"),
+            )
             expected = orphan["journal_range"]
             observed = journal_range(run_dir, expected["start_sequence"], expected["end_sequence"])
             if expected["range_sha256"] != observed["range_sha256"]:
@@ -676,8 +692,17 @@ def publish_native_execution_result(
                     "result_id": orphan["result_id"],
                     "receipt_id": receipt["receipt_id"], "outcome": orphan["outcome"],
                 })
+            logger.info(
+                "native_publication_repaired result_id=%s receipt_id=%s outcome=%s",
+                orphan["result_id"], receipt["receipt_id"], orphan["outcome"],
+            )
             return sealed
         invocation_id = mint_invocation_id()
+        bind_logging_context(invocation_id=invocation_id)
+        logger.info(
+            "native_invocation_started command_kind=%s state_revision=%s",
+            command_kind, state.get("state_revision"),
+        )
         route = _native_route(state)
         outcome, cause = _outcome(state)
         revision = int(state.get("state_revision") or 0)
@@ -728,6 +753,12 @@ def publish_native_execution_result(
                 "result_id": result["result_id"],
                 "receipt_id": receipt["receipt_id"], "outcome": result["outcome"],
             })
+        logger.info(
+            "native_publication_complete invocation_id=%s result_id=%s "
+            "receipt_id=%s outcome=%s journal_records=%s snapshot_sha256=%s",
+            invocation_id, result["result_id"], receipt["receipt_id"],
+            result["outcome"], selected["record_count"], snapshot_sha256,
+        )
         return sealed
 
 

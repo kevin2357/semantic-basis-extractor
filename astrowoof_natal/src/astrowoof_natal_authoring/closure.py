@@ -11,6 +11,7 @@ import argparse
 import concurrent.futures
 import hashlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -35,6 +36,11 @@ from . import __version__
 from . import editorial_lint as editorial_lint_module
 from . import validation as validation_module
 from .assembly import assemble
+from .application_logging import (
+    add_logging_arguments,
+    bind_logging_context,
+    configure_logging_from_args,
+)
 from .basis_policies import AXIS_AWARE_POLICY_ID, LEGACY_ATOMIC_POLICY_ID
 from .contracts import (
     DELIVERY_MANIFEST_SCHEMA,
@@ -68,6 +74,7 @@ from .provenance import (
     refresh_execution_provenance,
 )
 from .reconciliation import initial_timing, record_attempt
+from .response_diagnostics import sanitize_error_message, sanitized_endpoint
 from .spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
@@ -89,6 +96,9 @@ from .spend import (
     record_reported_cost,
     validate_policy,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 SCHEMA_VERSION = "astrowoof.semantic_closure_run.v0.9"
@@ -1170,19 +1180,52 @@ class OpenAIResponsesProvider:
         if idempotency_key:
             headers["Idempotency-Key"] = idempotency_key
         for transport_attempt in range(1, self.max_transport_retries + 2):
+            timeout = (
+                self.http_timeout_seconds
+                if timeout_seconds is None else timeout_seconds
+            )
+            payload_bytes = None
+            if payload is not None and logger.isEnabledFor(logging.DEBUG):
+                payload_bytes = len(json.dumps(
+                    payload, ensure_ascii=False, separators=(",", ":")
+                ).encode("utf-8"))
+            logger.info(
+                "provider_request_start method=%s endpoint=%s attempt=%s timeout_s=%s",
+                method, sanitized_endpoint(url), transport_attempt, timeout,
+            )
+            if payload_bytes is not None:
+                logger.debug(
+                    "provider_request_payload_summary method=%s bytes=%s idempotency=%s",
+                    method, payload_bytes, bool(idempotency_key),
+                )
+            started = time.monotonic()
             try:
                 response = self.transport.request_json(
                     method=method,
                     url=url,
                     headers=headers,
                     payload=payload,
-                    timeout_seconds=(
-                        self.http_timeout_seconds
-                        if timeout_seconds is None else timeout_seconds
-                    ),
+                    timeout_seconds=timeout,
+                )
+                logger.info(
+                    "provider_request_complete method=%s endpoint=%s attempt=%s "
+                    "duration_ms=%s provider_status=%s provider_operation_id=%s",
+                    method, sanitized_endpoint(url), transport_attempt,
+                    round((time.monotonic() - started) * 1000),
+                    response.get("status") if isinstance(response, dict) else None,
+                    response.get("id") if isinstance(response, dict) else None,
                 )
                 return response, transport_attempt
             except OpenAIServiceError as exc:
+                logger.warning(
+                    "provider_request_error method=%s endpoint=%s attempt=%s "
+                    "duration_ms=%s http_status=%s request_id=%s retryable=%s "
+                    "error_class=%s error=%s",
+                    method, sanitized_endpoint(url), transport_attempt,
+                    round((time.monotonic() - started) * 1000), exc.status_code,
+                    exc.request_id, exc.retryable, type(exc).__name__,
+                    sanitize_error_message(exc, secret=self.api_key),
+                )
                 if (
                     method == "POST"
                     and exc.status_code in {400, 404}
@@ -1197,6 +1240,10 @@ class OpenAIResponsesProvider:
                     raise
                 delay = self.transport_backoff_seconds * (
                     2 ** (transport_attempt - 1)
+                )
+                logger.info(
+                    "provider_request_retry_scheduled method=%s attempt=%s delay_s=%s",
+                    method, transport_attempt, delay,
                 )
                 self.sleep(delay)
         raise AssertionError("unreachable")
@@ -1898,20 +1945,54 @@ class UrllibOpenAIBatchTransport:
         self.timeout_seconds = timeout_seconds
 
     def _open(self, request: urllib.request.Request) -> bytes:
+        endpoint = sanitized_endpoint(request.full_url)
+        method = request.get_method()
+        logger.info(
+            "provider_request_start mechanism=batch method=%s endpoint=%s "
+            "timeout_s=%s request_bytes=%s",
+            method, endpoint, self.timeout_seconds,
+            len(request.data) if request.data is not None else 0,
+        )
+        started = time.monotonic()
         try:
             with urllib.request.urlopen(
                 request, timeout=self.timeout_seconds
             ) as response:
-                return response.read()
+                content = response.read()
+                logger.info(
+                    "provider_request_complete mechanism=batch method=%s endpoint=%s "
+                    "http_status=%s request_id=%s duration_ms=%s response_bytes=%s",
+                    method, endpoint, getattr(response, "status", None),
+                    response.headers.get("x-request-id"),
+                    round((time.monotonic() - started) * 1000), len(content),
+                )
+                return content
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")[:2000]
+            request_id = (
+                exc.headers.get("x-request-id") if exc.headers is not None else None
+            )
+            logger.warning(
+                "provider_request_error mechanism=batch method=%s endpoint=%s "
+                "http_status=%s request_id=%s duration_ms=%s error_class=%s error=%s",
+                method, endpoint, exc.code, request_id,
+                round((time.monotonic() - started) * 1000), type(exc).__name__,
+                sanitize_error_message(detail or exc, secret=self.api_key),
+            )
             raise OpenAIServiceError(
                 f"OpenAI HTTP {exc.code}: {detail or exc}",
                 status_code=exc.code,
+                request_id=request_id,
                 retryable=exc.code in RETRYABLE_HTTP_STATUSES,
                 fatal=exc.code in {401, 403, 422},
             ) from exc
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            logger.warning(
+                "provider_request_error mechanism=batch method=%s endpoint=%s "
+                "duration_ms=%s error_class=%s error=%s",
+                method, endpoint, round((time.monotonic() - started) * 1000),
+                type(exc).__name__, sanitize_error_message(exc, secret=self.api_key),
+            )
             raise OpenAIServiceError(
                 f"OpenAI transport error: {exc}", retryable=True
             ) from exc
@@ -2032,11 +2113,20 @@ def run_sbe(
     ])
     if subject:
         command.extend(["--subject", subject])
+    logger.info(
+        "subprocess_start operation=basis_extraction executable=%s argument_count=%s",
+        command[0], len(command) - 1,
+    )
+    started = time.monotonic()
     completed = subprocess.run(
         command,
         capture_output=True,
         text=True,
         check=False,
+    )
+    logger.info(
+        "subprocess_complete operation=basis_extraction returncode=%s duration_ms=%s",
+        completed.returncode, round((time.monotonic() - started) * 1000),
     )
     log = {
         "command": command,
@@ -2496,8 +2586,25 @@ def update_run_status(state: dict[str, Any]) -> None:
 
 def persist_state(run_json: Path, state: dict[str, Any]) -> None:
     """Persist operator/public/authorization state without attesting workspace."""
+    old_revision = int(state.get("state_revision") or 0)
+    old_status = state.get("status")
     state["state_revision"] = int(state.get("state_revision") or 0) + 1
     update_run_status(state)
+    bind_logging_context(
+        run_id=state.get("run_id"), current_state=state.get("status")
+    )
+    if old_status != state.get("status"):
+        logger.info(
+            "run_state_transition old_state=%s new_state=%s old_revision=%s "
+            "new_revision=%s",
+            old_status, state.get("status"), old_revision,
+            state.get("state_revision"),
+        )
+    else:
+        logger.debug(
+            "run_state_persist state=%s old_revision=%s new_revision=%s",
+            state.get("status"), old_revision, state.get("state_revision"),
+        )
     refresh_execution_provenance(state)
     write_json_atomic(run_json, state)
     write_json_atomic(run_json.with_name("public-run.json"), public_run_state(state))
@@ -2522,6 +2629,10 @@ def persist_state(run_json: Path, state: dict[str, Any]) -> None:
     # before an enclosing command publishes its workspace snapshot.
     from .native_transitions import sync_provider_transition_journal
     sync_provider_transition_journal(run_json.parent, state)
+    logger.debug(
+        "run_state_durable state_revision=%s run_path=%s",
+        state.get("state_revision"), run_json,
+    )
 
 
 def save_state(run_json: Path, state: dict[str, Any]) -> None:
@@ -2531,6 +2642,10 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
         return
     persist_state(run_json, state)
     write_workspace_snapshot(run_json.parent)
+    logger.info(
+        "checkpoint_committed state_revision=%s snapshot=%s",
+        state.get("state_revision"), run_json.parent / SNAPSHOT_NAME,
+    )
 
 
 @contextmanager
@@ -2538,7 +2653,12 @@ def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
     """Publish one complete checkpoint after a paid-stage pause unwinds."""
     try:
         yield
-    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
+    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission) as exc:
+        logger.warning(
+            "spend_boundary_handoff error_class=%s error=%s state_revision=%s",
+            type(exc).__name__, sanitize_error_message(exc),
+            state.get("state_revision"),
+        )
         save_state(run_json, state)
         from . import __version__
         from .native_transitions import publish_native_execution_result
@@ -2588,13 +2708,18 @@ def snapshot_inventory(
 
 
 def write_workspace_snapshot(run_dir: Path) -> None:
+    members = snapshot_inventory(run_dir)
     write_json_atomic(
         run_dir / SNAPSHOT_NAME,
         {
             "schema_version": SNAPSHOT_SCHEMA,
             "logical_root": normalized_path(run_dir),
-            "members": snapshot_inventory(run_dir),
+            "members": members,
         },
+    )
+    logger.debug(
+        "workspace_snapshot_written member_count=%s path=%s",
+        len(members), run_dir / SNAPSHOT_NAME,
     )
 
 
@@ -2621,10 +2746,18 @@ def validate_workspace_snapshot(run_dir: Path, state: dict[str, Any]) -> None:
     expected = manifest.get("members")
     actual = snapshot_inventory(run_dir, use_process_cache=False)
     if expected != actual:
+        logger.error(
+            "workspace_snapshot_invalid expected_members=%s actual_members=%s run_dir=%s",
+            len(expected) if isinstance(expected, list) else None,
+            len(actual), run_dir,
+        )
         raise ValueError(
             "Run snapshot is incomplete or changed; restore the complete exact "
             "snapshot before resuming"
         )
+    logger.debug(
+        "workspace_snapshot_valid member_count=%s run_dir=%s", len(actual), run_dir
+    )
 
 
 def save_state_locked(
@@ -3308,6 +3441,11 @@ def run_pass_acceptance(
     checker = workspace / "lint_authoring_pass.py"
     if not checker.is_file():
         raise FileNotFoundError(f"Authored workspace lacks checker: {checker}")
+    logger.info(
+        "subprocess_start operation=pass_acceptance executable=%s workspace=%s",
+        python_executable, workspace.name,
+    )
+    started = time.monotonic()
     completed = subprocess.run(
         [
             str(python_executable),
@@ -3319,6 +3457,12 @@ def run_pass_acceptance(
         capture_output=True,
         text=True,
         check=False,
+    )
+    logger.info(
+        "subprocess_complete operation=pass_acceptance returncode=%s "
+        "duration_ms=%s report=%s",
+        completed.returncode, round((time.monotonic() - started) * 1000),
+        report_path,
     )
     if not report_path.is_file():
         raise RuntimeError(
@@ -3349,6 +3493,12 @@ def author_one_pass(
     state_lock: threading.Lock,
     spend_controller: SpendController | None = None,
 ) -> None:
+    logger.info(
+        "authoring_pass_start pass_id=%s pass_number=%s existing_state=%s "
+        "completed_attempts=%s",
+        spec.pass_id, spec.pass_number, record.get("state"),
+        len(record.get("attempts") or []),
+    )
     if record["state"] == "PASS_QA_ACCEPTED":
         accepted = Path(record["accepted_workspace"])
         if not accepted.is_dir():
@@ -3383,6 +3533,10 @@ def author_one_pass(
         else completed_attempts + 1
     )
     for attempt_number in range(first_attempt_number, max_attempts + 1):
+        logger.info(
+            "authoring_attempt_start pass_id=%s attempt=%s max_attempts=%s",
+            spec.pass_id, attempt_number, max_attempts,
+        )
         feedback = retry_feedback_from_record(record)
         attempt_root = pass_root / f"attempt-{attempt_number:03d}"
         response_workspace = attempt_root / "response" / spec.pass_id
@@ -3481,11 +3635,19 @@ def author_one_pass(
                     )
                     record["accepted_attempt"] = attempt_number
                     save_state(run_json, state)
+                logger.info(
+                    "authoring_attempt_accepted pass_id=%s attempt=%s",
+                    spec.pass_id, attempt_number,
+                )
                 return
             with state_lock:
                 attempt["state"] = "PASS_QA_REJECTED"
                 record["state"] = "PASS_QA_REJECTED"
                 save_state(run_json, state)
+            logger.warning(
+                "authoring_attempt_rejected pass_id=%s attempt=%s",
+                spec.pass_id, attempt_number,
+            )
         except BackgroundResponsePending as exc:
             if spend_controller is not None:
                 spend_controller.mark_active_waiting()
@@ -3495,6 +3657,12 @@ def author_one_pass(
                 attempt["error"] = None
                 record["state"] = "WAITING_FOR_RESPONSE"
                 save_state(run_json, state)
+            logger.info(
+                "authoring_attempt_detached pass_id=%s attempt=%s "
+                "provider_id=%s",
+                spec.pass_id, attempt_number,
+                (exc.metadata or {}).get("response_id"),
+            )
             return
         except (AwaitingSpendAuthorization, BudgetExhausted) as exc:
             with state_lock:
@@ -3505,6 +3673,12 @@ def author_one_pass(
                 attempt["error"] = None
                 record["state"] = exc.state
                 save_state(run_json, state)
+            logger.info(
+                "authoring_attempt_external_authority_handoff pass_id=%s "
+                "attempt=%s outcome=%s action_id=%s",
+                spec.pass_id, attempt_number, exc.state,
+                (exc.action or {}).get("action_id"),
+            )
             return
         except AmbiguousProviderSubmission as exc:
             with state_lock:
@@ -3514,8 +3688,19 @@ def author_one_pass(
                 ).get("action_id")
                 record["state"] = exc.state
                 save_state(run_json, state)
+            logger.error(
+                "authoring_attempt_ambiguous pass_id=%s attempt=%s action_id=%s",
+                spec.pass_id, attempt_number,
+                (exc.action or {}).get("action_id"),
+            )
             return
         except Exception as exc:
+            logger.exception(
+                "authoring_attempt_error pass_id=%s attempt=%s "
+                "error_class=%s error=%s",
+                spec.pass_id, attempt_number, type(exc).__name__,
+                sanitize_error_message(str(exc)),
+            )
             if spend_controller is not None:
                 spend_controller.mark_active_ambiguous(str(exc))
             with state_lock:
@@ -3540,6 +3725,10 @@ def author_one_pass(
     with state_lock:
         record["state"] = "FAILED_REQUIRES_REVIEW"
         save_state(run_json, state)
+    logger.error(
+        "authoring_pass_requires_review pass_id=%s attempts=%s",
+        spec.pass_id, max_attempts,
+    )
 
 
 def author_pending_passes(
@@ -3573,21 +3762,31 @@ def author_pending_passes(
         if state["passes"][spec.pass_id]["state"] not in TERMINAL_STATES
         and (only_pass_ids is None or spec.pass_id in only_pass_ids)
     ]
+    logger.info(
+        "authoring_wave_start mechanism=response pass_count=%s max_workers=%s "
+        "selected_passes=%s",
+        len(specs), max_workers, ",".join(spec.pass_id for spec in specs) or "-",
+    )
 
     def run_spec(spec: PassSpec) -> None:
-        record = state["passes"][spec.pass_id]
-        author_one_pass(
-            spec=spec,
-            record=record,
-            provider=provider,
-            run_dir=run_dir,
-            max_attempts=max_attempts,
-            python_executable=python_executable,
-            run_json=run_json,
-            state=state,
-            state_lock=state_lock,
-            spend_controller=spend_controller,
-        )
+        with logging_context(
+            run_id=state.get("native_run_id") or state.get("run_id"),
+            current_state=(state.get("machine") or {}).get("state")
+            or state.get("status"),
+        ):
+            record = state["passes"][spec.pass_id]
+            author_one_pass(
+                spec=spec,
+                record=record,
+                provider=provider,
+                run_dir=run_dir,
+                max_attempts=max_attempts,
+                python_executable=python_executable,
+                run_json=run_json,
+                state=state,
+                state_lock=state_lock,
+                spend_controller=spend_controller,
+            )
 
     cache_warmer: PassSpec | None = None
     if (
@@ -3641,6 +3840,10 @@ def author_pending_passes(
             for future in concurrent.futures.as_completed(futures):
                 future.result()
     save_state(run_json, state)
+    logger.info(
+        "authoring_wave_complete mechanism=response pass_count=%s",
+        len(specs) + (1 if cache_warmer is not None else 0),
+    )
 
 
 def _batch_jsonl_records(text: str) -> dict[str, dict[str, Any]]:
@@ -3679,6 +3882,11 @@ def author_pending_passes_batch(
         {"service_level": "batch", "rounds": []},
     )
     terminal_batch_states = {"completed", "failed", "expired", "cancelled"}
+    logger.info(
+        "authoring_batch_cycle_start existing_rounds=%s detach=%s "
+        "reconciliation_only=%s",
+        len(service["rounds"]), detach, reconciliation_only,
+    )
 
     while True:
         pending = [
@@ -3782,12 +3990,20 @@ def author_pending_passes_batch(
             }
             service["rounds"].append(resumable)
             save_state(run_json, state)
+            logger.info(
+                "batch_round_prepared round=%s member_count=%s model=%s",
+                round_number, len(requests), first_provider.model,
+            )
             uploaded = transport.upload_jsonl(
                 input_text.encode("utf-8"), input_path.name
             )
             resumable["input_file_id"] = uploaded["id"]
             resumable["state"] = "UPLOADED"
             save_state(run_json, state)
+            logger.info(
+                "batch_input_uploaded round=%s input_file_id=%s",
+                round_number, uploaded.get("id"),
+            )
             batch_payload = {
                 "input_file_id": uploaded["id"],
                 "endpoint": "/v1/responses",
@@ -3825,6 +4041,12 @@ def author_pending_passes_batch(
             resumable["batch_status"] = batch.get("status")
             resumable["state"] = "SUBMITTED"
             save_state(run_json, state)
+            logger.info(
+                "batch_round_submitted round=%s batch_id=%s status=%s "
+                "member_count=%s",
+                round_number, batch.get("id"), batch.get("status"),
+                len(requests),
+            )
         else:
             input_path = Path(resumable["input_path"])
             resume_attempts = [
@@ -3901,6 +4123,11 @@ def author_pending_passes_batch(
         if detach and batch.get("status") not in terminal_batch_states:
             resumable["batch_status"] = batch.get("status")
             save_state(run_json, state)
+            logger.info(
+                "batch_round_detached round=%s batch_id=%s status=%s",
+                resumable["round_number"], resumable.get("batch_id"),
+                batch.get("status"),
+            )
             return False
         while batch.get("status") not in terminal_batch_states:
             sleep(poll_interval_seconds)
@@ -3908,11 +4135,22 @@ def author_pending_passes_batch(
             resumable["batch_status"] = batch.get("status")
             resumable["request_counts"] = batch.get("request_counts")
             save_state(run_json, state)
+            logger.info(
+                "batch_round_pending round=%s batch_id=%s status=%s "
+                "request_counts=%s",
+                resumable["round_number"], resumable.get("batch_id"),
+                batch.get("status"), batch.get("request_counts"),
+            )
         resumable["batch_status"] = batch.get("status")
         write_json_atomic(
             Path(resumable["input_path"]).parent / "batch-object.json", batch
         )
         if batch.get("status") != "completed":
+            logger.error(
+                "batch_round_terminal_failure round=%s batch_id=%s status=%s",
+                resumable["round_number"], resumable.get("batch_id"),
+                batch.get("status"),
+            )
             resumable["state"] = "FAILED"
             resumable["finished_at"] = utc_now()
             for request in resumable["requests"]:
@@ -4036,6 +4274,12 @@ def author_pending_passes_batch(
                     attempt["state"] = "PASS_QA_REJECTED"
                     record["state"] = "PASS_QA_REJECTED"
             except Exception as exc:
+                logger.exception(
+                    "batch_member_ingest_error round=%s custom_id=%s "
+                    "error_class=%s error=%s",
+                    resumable["round_number"], request["custom_id"],
+                    type(exc).__name__, sanitize_error_message(str(exc)),
+                )
                 attempt["state"] = "ATTEMPT_ERROR"
                 attempt["finished_at"] = utc_now()
                 attempt["error"] = {
@@ -4099,6 +4343,12 @@ def author_pending_passes_batch(
                 }
                 action["state"] = "REPORTED"
         save_state(run_json, state)
+        logger.info(
+            "batch_round_ingested round=%s batch_id=%s member_count=%s "
+            "cost_disposition=%s",
+            resumable["round_number"], resumable.get("batch_id"),
+            len(resumable["requests"]), resumable.get("cost_disposition", "-"),
+        )
         if reconciliation_only:
             return False
 
@@ -4119,11 +4369,23 @@ def run_json_command(
     accepted_returncodes: set[int],
 ) -> dict[str, Any]:
     """Run a repository QA command and require its JSON report."""
+    logger.info(
+        "subprocess_start operation=qa_json_command executable=%s "
+        "argument_count=%s report=%s",
+        command[0], len(command) - 1, report_path,
+    )
+    started = time.monotonic()
     completed = subprocess.run(
         command,
         capture_output=True,
         text=True,
         check=False,
+    )
+    logger.info(
+        "subprocess_complete operation=qa_json_command returncode=%s "
+        "duration_ms=%s report=%s",
+        completed.returncode, round((time.monotonic() - started) * 1000),
+        report_path,
     )
     if not report_path.is_file():
         raise RuntimeError(
@@ -4156,6 +4418,7 @@ def assemble_subject(
     run_dir: Path,
     python_executable: Path,
 ) -> dict[str, Any]:
+    logger.info("subject_assembly_start subject=%s", subject)
     """Assemble six accepted passes and run final deterministic QA."""
     records = subject_records(state)[subject]
     if len(records) != PASS_COUNT or any(
@@ -4242,7 +4505,7 @@ def assemble_subject(
         if validation["accepted"]
         else "FINAL_QA_FAILED"
     )
-    return {
+    result = {
         "subject": subject,
         "state": status,
         "packet": normalized_path(packet_path),
@@ -4261,6 +4524,13 @@ def assemble_subject(
         "polish_attempts": [],
         "delivery": None,
     }
+    logger.info(
+        "subject_assembly_complete subject=%s qa_state=%s "
+        "validation_errors=%s lint_findings=%s",
+        subject, status,
+        len(validation["report"].get("errors") or []), warning_count,
+    )
+    return result
 
 
 def package_subject_delivery(
@@ -4269,6 +4539,10 @@ def package_subject_delivery(
     run_dir: Path,
 ) -> Path:
     subject = record["subject"]
+    logger.info(
+        "delivery_packaging_start subject=%s delivery_state=%s",
+        subject, record.get("state"),
+    )
     final_root = run_dir / "final" / subject
     final_root.mkdir(parents=True, exist_ok=True)
     delivery = final_root / f"astrowoof-{subject}-delivery.zip"
@@ -4359,6 +4633,10 @@ def package_subject_delivery(
     record["delivery_artifact"] = artifact_descriptor(
         delivery,
         role="delivery_zip",
+    )
+    logger.info(
+        "delivery_packaging_complete subject=%s artifact=%s sha256=%s",
+        subject, delivery, record["delivery_artifact"].get("sha256"),
     )
     return delivery
 
@@ -5356,6 +5634,10 @@ def polish_subject(
 ) -> None:
     """Try bounded whole-deck polish; retain baseline unless QA improves."""
     subject = record["subject"]
+    logger.info(
+        "polish_start subject=%s max_attempts=%s baseline_state=%s",
+        subject, max_attempts, record.get("state"),
+    )
     baseline_path = Path(record["deck"])
     baseline = load_json(baseline_path)
     current_lint_report = load_json(Path(record["lint_report"]))
@@ -5685,8 +5967,18 @@ def polish_subject(
                 }
             )
             if isinstance(exc, (OSError, RuntimeError)):
+                logger.exception(
+                    "polish_error subject=%s error_class=%s error=%s",
+                    subject, type(exc).__name__,
+                    sanitize_error_message(str(exc)),
+                )
                 raise
             if getattr(exc, "fatal", False):
+                logger.error(
+                    "polish_fatal subject=%s error_class=%s error=%s",
+                    subject, type(exc).__name__,
+                    sanitize_error_message(str(exc)),
+                )
                 break
     record["final_warning_count"] = best_warning_count
     if not best_validation_passed:
@@ -5699,6 +5991,10 @@ def polish_subject(
         )
     if record["state"] == "DELIVERY_COMPLETE":
         package_subject_delivery(record, run_dir=run_dir)
+    logger.info(
+        "polish_complete subject=%s final_state=%s warning_count=%s",
+        subject, record.get("state"), best_warning_count,
+    )
 
 
 def qualitative_whole_deck_context(deck: dict[str, Any]) -> dict[str, Any]:
@@ -5738,6 +6034,10 @@ def run_qualitative_review(
     run_state: dict[str, Any] | None = None,
 ) -> None:
     """Diagnose a complete deck and optionally preserve a sparse candidate."""
+    logger.info(
+        "qualitative_review_start subject=%s candidate_enabled=%s",
+        record.get("subject"), editor_provider is not None,
+    )
     existing = record.get("qualitative_review") or {}
     resume_diagnosis = (
         existing.get("state") == "DIAGNOSIS_COMPLETE"
@@ -6052,6 +6352,11 @@ def run_qualitative_review(
             "message": str(exc),
             "provider_metadata": getattr(exc, "metadata", None),
         }
+        logger.exception(
+            "qualitative_review_error subject=%s error_class=%s error=%s",
+            record.get("subject"), type(exc).__name__,
+            sanitize_error_message(str(exc)),
+        )
         if getattr(exc, "fatal", False):
             raise
 
@@ -6072,7 +6377,12 @@ def finalize_subjects(
         record["state"] != "PASS_QA_ACCEPTED"
         for record in state["passes"].values()
     ):
+        logger.info("finalization_deferred reason=authoring_passes_incomplete")
         return
+    logger.info(
+        "finalization_start subject_count=%s polish=%s allow_lint_warnings=%s",
+        len(subject_records(state)), polish, allow_lint_warnings,
+    )
     finals = state.setdefault("subjects", {})
     for subject in sorted(subject_records(state)):
         record = finals.get(subject)
@@ -6112,6 +6422,10 @@ def finalize_subjects(
             record["state"] = "DELIVERY_COMPLETE_WITH_WARNINGS"
             package_subject_delivery(record, run_dir=run_dir)
         finals[subject] = record
+        logger.info(
+            "subject_finalization_complete subject=%s final_state=%s",
+            subject, record.get("state"),
+        )
 
 
 def create_run(
@@ -6917,7 +7231,10 @@ def main() -> None:
         metavar="PASS_ID:COUNT",
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
+    add_logging_arguments(parser)
     args = parser.parse_args()
+    configure_logging_from_args(args)
+    logger.info("command_start command=semantic_closure")
     if args.events_jsonl is not None and args.events_stdout_jsonl:
         parser.error("choose only one of --events-jsonl and --events-stdout-jsonl")
     if args.events_stdout_jsonl and (args.compare_cost_runs or args.cleanup_completed_run):

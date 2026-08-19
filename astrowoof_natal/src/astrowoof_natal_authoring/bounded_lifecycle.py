@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import threading
 from copy import deepcopy
 from dataclasses import dataclass
@@ -44,6 +45,7 @@ from .closure import (
     response_output_text,
 )
 from .execution_events import ExecutionEventEmitter
+from .application_logging import bind_logging_context, logging_context
 from .initial_wave import (
     INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
     InitialWaveError,
@@ -71,6 +73,10 @@ from .spend import (
     record_provider_id,
     validate_policy,
 )
+from .response_diagnostics import sanitize_error_message
+
+
+logger = logging.getLogger(__name__)
 from .reconciliation import initial_timing
 
 
@@ -189,6 +195,10 @@ def create_bounded_run(
     """Create one complete, resumable bounded workspace before provider work."""
     provider = provider or FakeBoundedLifecycleProvider()
     run_dir = run_dir.resolve()
+    logger.info(
+        "bounded_run_create_start provider=%s service_level=%s run_dir=%s",
+        provider.name, getattr(provider, "service_level", "interactive"), run_dir,
+    )
     if run_dir.exists() and any(run_dir.iterdir()):
         raise ValueError("Bounded run directory must be absent or empty")
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -301,6 +311,12 @@ def create_bounded_run(
         state["spend_ledger"] = new_ledger(validate_policy(profile.get("spend_policy")))
     persist_state(run_dir / "run.json", state)
     save_state(run_dir / "run.json", state)
+    bind_logging_context(run_id=state["run_id"], current_state=state["status"])
+    logger.info(
+        "bounded_run_created state_revision=%s pass_count=%s claim_count=%s",
+        state["state_revision"], len(pass_records),
+        len(artifacts.claim_deck["claims"]),
+    )
     if event_emitter:
         event_emitter.emit("run.started", data={"state_revision": state["state_revision"]})
         event_emitter.emit("bounded.admission.completed", data={
@@ -422,9 +438,17 @@ def _execute_stage(
             payload=_payload(state, run_dir, stage, pass_id),
             before_submit=before, provider_created=created,
         )
-    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
+    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission) as exc:
+        logger.warning(
+            "bounded_provider_stage_handoff stage=%s route=%s error_class=%s error=%s",
+            stage, route, type(exc).__name__, sanitize_error_message(exc),
+        )
         raise
     except Exception as exc:
+        logger.exception(
+            "bounded_provider_stage_failed stage=%s route=%s error_class=%s error=%s",
+            stage, route, type(exc).__name__, sanitize_error_message(exc),
+        )
         if controller:
             controller.mark_active_ambiguous(str(exc))
         raise
@@ -1162,6 +1186,12 @@ def resume_bounded_run(
     run_dir = run_dir.resolve()
     run_json = run_dir / "run.json"
     state = load_json(run_json)
+    bind_logging_context(run_id=state.get("run_id"), current_state=state.get("status"))
+    logger.info(
+        "bounded_run_resume_start state_revision=%s reconciliation_only=%s "
+        "authorization_count=%s",
+        state.get("state_revision"), reconciliation_only, len(authorizations or []),
+    )
     if state.get("route_contract") == LEGACY_BOUNDED_RUN_CONTRACT:
         raise ValueError("legacy_bounded_topology_unsupported")
     if state.get("route_contract") != BOUNDED_RUN_CONTRACT:
@@ -1338,6 +1368,10 @@ def resume_bounded_run(
                 if stage in bounded["completed_stages"] or stage in bounded["skipped_stages"]:
                     continue
                 if not optional[stage]:
+                    logger.info(
+                        "bounded_optional_stage_skipped stage=%s reason=profile_disabled",
+                        stage,
+                    )
                     bounded["skipped_stages"].append(stage)
                     save_state(run_json, state)
                     continue
@@ -1350,6 +1384,10 @@ def resume_bounded_run(
                         exc.action
                         and exc.action.get("state") == "SKIPPED_BUDGET_EXHAUSTED"
                     ):
+                        logger.warning(
+                            "bounded_optional_stage_skipped stage=%s reason=budget_exhausted",
+                            stage,
+                        )
                         bounded["skipped_stages"].append(stage)
                         save_state(run_json, state)
                         continue
@@ -1368,6 +1406,10 @@ def resume_bounded_run(
                     if report["status"] == "pass":
                         write_json_atomic(final_dir / "cards.json", result)
                 bounded["completed_stages"].append(stage)
+                logger.info(
+                    "bounded_optional_stage_complete stage=%s provider_id=%s",
+                    stage, metadata.get("response_id", metadata.get("id")),
+                )
                 bounded.setdefault("stage_metadata", {})[stage] = metadata
                 save_state(run_json, state)
                 if _failure_injector:
@@ -1397,6 +1439,11 @@ def resume_bounded_run(
                 "delivery": normalized_path(final_dir / "delivery.json"),
             }}
             bounded["stage"] = "DELIVERY_COMPLETE"
+            logger.info(
+                "bounded_delivery_complete subject_id=%s completed_stages=%s "
+                "skipped_stages=%s",
+                subject_id, bounded["completed_stages"], bounded["skipped_stages"],
+            )
             save_state(run_json, state)
             if _failure_injector:
                 _failure_injector("after_delivery_checkpoint")
@@ -1406,14 +1453,24 @@ def resume_bounded_run(
                     "outcome": "delivery_complete", "terminal_reason": "delivery_complete",
                 })
             return state
-    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
+    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission) as exc:
+        logger.warning(
+            "bounded_run_detached state_revision=%s status=%s error_class=%s error=%s",
+            state.get("state_revision"), state.get("status"), type(exc).__name__,
+            sanitize_error_message(exc),
+        )
         if event_emitter:
             event_emitter.emit("run.detached", data={
                 "state_revision": state["state_revision"],
                 "reason_code": state.get("status", "provider_boundary").lower(),
             })
         raise
-    except Exception:
+    except Exception as exc:
+        logger.exception(
+            "bounded_run_failed state_revision=%s status=%s error_class=%s error=%s",
+            state.get("state_revision"), state.get("status"), type(exc).__name__,
+            sanitize_error_message(exc),
+        )
         # Provider identity and any completed local mutations must share one
         # restorable checkpoint before the worker exits unexpectedly.
         save_state(run_json, state)

@@ -4,11 +4,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 from pathlib import Path
 from typing import Any
 
 from .. import __version__
+from ..application_logging import (
+    add_logging_arguments,
+    bind_logging_context,
+    configure_logging_from_args,
+)
 from ..bounded_admission import admit_bounded_family, load_bounded_family
 from ..bounded_authoring import compile_bounded_authoring_artifacts
 from ..bounded_basis import build_bounded_basis
@@ -26,6 +32,9 @@ from ..spend import (
     AwaitingSpendAuthorization,
     BudgetExhausted,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def _json(path: Path | None) -> dict[str, Any] | None:
@@ -66,12 +75,24 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--provider-reconciliation-cycle", action="store_true")
     parser.add_argument("--observed-at")
+    add_logging_arguments(parser)
     return parser
 
 
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    configure_logging_from_args(args)
+    if args.resume and (args.run_dir / "run.json").is_file():
+        existing = load_json(args.run_dir / "run.json")
+        bind_logging_context(
+            run_id=existing.get("run_id"), current_state=existing.get("status")
+        )
+    logger.info(
+        "command_start command=bounded_run resume=%s reconciliation=%s "
+        "service_level=%s",
+        args.resume, args.provider_reconciliation_cycle, args.service_level,
+    )
     if args.resume and (args.input_package or args.subject or args.generation_profile):
         parser.error("resume uses the frozen workspace; omit input, subject, and profile")
     if not args.resume and not args.input_package:
@@ -162,7 +183,11 @@ def main() -> None:
         print(json.dumps(public_run_state(state), sort_keys=True))
         if state.get("status") != "DELIVERY_COMPLETE":
             raise SystemExit(3)
-    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission):
+    except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission) as exc:
+        logger.warning(
+            "command_handoff outcome=external_boundary error_class=%s error=%s",
+            type(exc).__name__, exc,
+        )
         state = load_json(args.run_dir / "run.json")
         from ..native_transitions import publish_native_execution_result
         publish_native_execution_result(

@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 from urllib.parse import urlsplit
 
+from .application_logging import add_logging_arguments, configure_logging_from_args
+
 
 RESPONSE_RETRIEVAL_DIAGNOSTIC = "astrowoof.response_retrieval_diagnostic.v1"
 MAX_MESSAGE_CHARS = 512
@@ -51,6 +53,18 @@ def sanitized_host(base_url: str | None) -> str | None:
         return None
     port = f":{parsed_port}" if parsed_port is not None else ""
     return f"{parsed.scheme}://{parsed.hostname.lower()}{port}"
+
+
+def sanitized_endpoint(url: str) -> str:
+    """Return scheme/host/port/path only, excluding userinfo and query data."""
+    try:
+        parsed = urlsplit(url)
+        host = sanitized_host(url)
+    except (TypeError, ValueError):
+        return "[invalid-endpoint]"
+    if host is None:
+        return "[invalid-endpoint]"
+    return f"{host}{parsed.path or '/'}"
 
 
 def sanitize_error_message(value: object, *, secret: str | None = None) -> str:
@@ -281,7 +295,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout-seconds", type=float, default=15.0)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--schema", action="store_true")
+    add_logging_arguments(parser)
     args = parser.parse_args(argv)
+    configure_logging_from_args(args)
     if args.schema:
         value = read_response_retrieval_diagnostic_schema()
     else:

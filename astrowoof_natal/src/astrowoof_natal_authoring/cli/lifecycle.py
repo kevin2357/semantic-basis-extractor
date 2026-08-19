@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -22,6 +23,14 @@ from ..lifecycle import (
 )
 from ..closure import load_json
 from .. import __version__
+from ..application_logging import (
+    add_logging_arguments,
+    bind_logging_context,
+    configure_logging_from_args,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 def _outside_workspace(path: Path, run_dir: Path, parser: argparse.ArgumentParser) -> Path:
@@ -38,6 +47,7 @@ def main() -> None:
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--events-jsonl", type=Path)
     parser.add_argument("--stdout-jsonl", action="store_true")
+    add_logging_arguments(parser)
     subparsers = parser.add_subparsers(dest="operation", required=True)
 
     inspect_parser = subparsers.add_parser("inspect")
@@ -63,6 +73,13 @@ def main() -> None:
     closeout_parser.add_argument("--observed-at")
 
     args = parser.parse_args()
+    configure_logging_from_args(args)
+    if (args.run_dir / "run.json").is_file():
+        existing = load_json(args.run_dir / "run.json")
+        bind_logging_context(
+            run_id=existing.get("run_id"), current_state=existing.get("status")
+        )
+    logger.info("command_start command=lifecycle operation=%s", args.operation)
     if args.events_jsonl and args.stdout_jsonl:
         parser.error("choose only one event transport")
     sink = None
@@ -104,6 +121,10 @@ def main() -> None:
         result = closeout_run(
             args.run_dir, observed_at=args.observed_at, event_emitter=emitter,
         )
+    logger.info(
+        "command_complete command=lifecycle operation=%s outcome=%s",
+        args.operation, result.get("outcome", result.get("disposition", "complete")),
+    )
     if args.stdout_jsonl:
         StdoutJsonlSink()(command_result_envelope(result))
     else:
