@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.13 Release
 
-Status: qualified and authorized for immutable publication
+Status: published and independently verified
 
 ## Summary
 
@@ -28,3 +28,8 @@ provider operation from action IDs.
 
 Wheel SHA-256:
 `4798758f0420d43276efce50c1611db222fba1dc1c2b9446319efe82b089e8f9`.
+
+The immutable tag points to
+`7722077fc015a1f4161ef44c946bffd4a79a84c0`. GitHub's published wheel size,
+digest, and downloaded checksum match the qualified artifact. This
+post-publication record does not move the tag.

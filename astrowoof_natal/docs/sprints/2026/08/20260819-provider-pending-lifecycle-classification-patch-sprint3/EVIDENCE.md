@@ -1,6 +1,19 @@
 # Provider-Pending Lifecycle Classification Patch Sprint 3 Evidence
 
-Status: implementation complete; provider-free qualification passing.
+Status: complete; SBE 0.4.13 published and independently verified.
+
+## Publication evidence
+
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.13`.
+- Release ID / published UTC: 373366994 / `2026-08-19T21:40:42Z`.
+- Immutable tag commit:
+  `7722077fc015a1f4161ef44c946bffd4a79a84c0`.
+- Annotated tag object: `2830a679258bdb04b199b91aabead0e22617a6e2`.
+- Published wheel asset ID / checksum asset ID: 521372731 / 521372730.
+- Published wheel: 858,164 bytes; SHA-256
+  `4798758f0420d43276efce50c1611db222fba1dc1c2b9446319efe82b089e8f9`.
+- Independent download, GitHub asset digest, and `SHA256SUMS.txt`: exact match.
 
 ## Implemented evidence
 

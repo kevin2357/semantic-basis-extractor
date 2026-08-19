@@ -1,5 +1,17 @@
 # Provider-Pending Lifecycle Classification Patch Sprint 3 Log
 
+## 2026-08-19 — 0.4.13 published and independently verified
+
+- Immutable annotated tag `astrowoof-natal-authoring-v0.4.13` points to commit
+  `7722077fc015a1f4161ef44c946bffd4a79a84c0`; tag object is
+  `2830a679258bdb04b199b91aabead0e22617a6e2`.
+- GitHub release 373366994 published at `2026-08-19T21:40:42Z`.
+- Independently downloaded wheel: 858,164 bytes, SHA-256
+  `4798758f0420d43276efce50c1611db222fba1dc1c2b9446319efe82b089e8f9`.
+- Wheel/checksum asset IDs: 521372731 / 521372730.
+- GitHub's asset digest and the downloaded checksum both match the qualified
+  artifact. Post-publication evidence lands after the tag and does not move it.
+
 ## 2026-08-19 — Implementation and provider-free qualification
 
 - Published lifecycle inspection v0.4 with a closed, semantically validated

@@ -1,7 +1,7 @@
 # Provider-Pending Lifecycle Classification Patch Sprint 3 Plan
 
 Date: 2026-08-19  
-Status: implementation and installed-wheel qualification complete; pending commit
+Status: complete; SBE 0.4.13 published and independently verified
 Starting release: SBE 0.4.12  
 Expected release: fresh immutable patch version, provisionally 0.4.13
 
