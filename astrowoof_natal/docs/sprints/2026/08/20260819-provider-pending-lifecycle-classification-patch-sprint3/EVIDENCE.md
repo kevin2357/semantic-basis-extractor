@@ -35,7 +35,7 @@ Status: implementation complete; provider-free qualification passing.
   four). API consumes the branch and invokes the run-level command without member
   selection or reconstruction.
 
-## Current native evidence
+## Pre-patch native incident evidence
 
 - `_local_dependencies()` maps `WAITING_FOR_RESPONSE` to the dependency kind
   `provider_result_reconciliation`.
@@ -49,7 +49,7 @@ Status: implementation complete; provider-free qualification passing.
 - Existing tests freeze the now-problematic provider-only value
   `local_continuation_remains=true` and therefore require intentional revision.
 
-## Current API evidence
+## Pre-patch API incident evidence
 
 - API selection currently enters reconciliation only when its latest persisted
   inspection has `execution_capacity_disposition=release_until_due` and a non-null

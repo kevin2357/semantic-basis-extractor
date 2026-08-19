@@ -1,6 +1,6 @@
 # Lifecycle Classification Contract and API Handoff
 
-Status: API approved; no implementation has begun  
+Status: implemented and installed-wheel qualified; API approved; pending release
 Proposed contract: `astrowoof.authoring_lifecycle_inspection.v0.4`
 
 ## Consumer problem
