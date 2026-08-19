@@ -1,7 +1,7 @@
 # Deployed Four-Route Qualification Patch Sprint 5 Plan
 
 Date: 2026-08-18  
-Status: complete; exact 0.4.9 artifact qualified and publication authorized  
+Status: complete; exact 0.4.9 artifact qualified and publication authorized
 Starting release: SBE 0.4.8  
 Proposed release: SBE 0.4.9
 
