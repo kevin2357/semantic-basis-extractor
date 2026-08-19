@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astrowoof-natal-authoring"
-version = "0.4.9"
+version = "0.4.10"
 description = "AstroWoof semantic-basis extraction and resumable natal-deck authoring runtime"
 readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs for implementation documentation.", content-type = "text/plain"}
 requires-python = ">=3.11"
