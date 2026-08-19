@@ -15,5 +15,8 @@ changes.
 - Focused logging tests: pass.
 - Built-wheel installation plus the exact
   `astrowoof-release-smoke --work-dir ... --require-installed` path: required
-  before publication.
+  before publication: pass.
 - Provider calls/submissions/spend: 0 / 0 / USD 0.
+
+The qualified wheel is 852,249 bytes with SHA-256
+`8a3822a2c76ccf8d436c928a3fc2056388653a046af26292fb2d85dfd9a0492e`.
