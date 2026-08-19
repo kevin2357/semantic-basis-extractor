@@ -46,6 +46,10 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
     "provider.reconciliation_observed": (
         "action_id", "route_family", "provider_operation_kind", "outcome",
     ),
+    "lifecycle.branch_selected": (
+        "native_status", "capacity_disposition", "command", "eligible_now",
+        "reason_code", "provider_action_count", "local_dependency_count",
+    ),
     "qa.started": ("scope", "attempt"),
     "qa.completed": ("scope", "attempt", "outcome"),
     "retry.decided": ("route", "attempt", "decision", "reason_code"),

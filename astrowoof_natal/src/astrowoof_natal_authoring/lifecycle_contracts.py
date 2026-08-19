@@ -39,7 +39,10 @@ BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
-LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.3"
+LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.4"
+LIFECYCLE_INSPECTION_SCHEMA_V0_3 = (
+    "astrowoof.authoring_lifecycle_inspection.v0.3"
+)
 LIFECYCLE_INSPECTION_SCHEMA_V0_2 = (
     "astrowoof.authoring_lifecycle_inspection.v0.2"
 )
@@ -105,6 +108,7 @@ EXECUTION_CAPACITY_DISPOSITIONS = (
 )
 EXECUTION_CAPACITY_REASON_CODES = (
     "local_work_ready",
+    "provider_reconciliation_due",
     "known_provider_work_pending",
     "provider_reconciliation_not_due",
     "spend_authorization_required",
@@ -116,7 +120,21 @@ EXECUTION_CAPACITY_REASON_CODES = (
     "native_review_required",
     "route_or_stage_not_supported",
     "reconciliation_timing_missing",
-    "reconciliation_timing_missing",
+)
+EXECUTION_BRANCH_COMMANDS = (
+    "ordinary_resume",
+    "provider_reconciliation_cycle",
+    "await_external_authority",
+    "none",
+)
+EXECUTION_BRANCH_REASON_CODES = (
+    "ordinary_local_continuation_ready",
+    "provider_reconciliation_not_due",
+    "provider_reconciliation_due",
+    "spend_authorization_required",
+    "terminal_or_no_continuation",
+    "native_review_or_ambiguity",
+    "unsupported_native_evidence",
 )
 PROVIDER_CUSTODY_STATES = (
     "none",
@@ -400,6 +418,7 @@ EVENT_NAMES = (
     "provider.waiting",
     "provider.completed",
     "provider.reconciliation_observed",
+    "lifecycle.branch_selected",
     "native.result_published",
     "qa.started",
     "qa.completed",
@@ -451,6 +470,65 @@ def action_presentation_key(action: dict[str, Any]) -> tuple[Any, ...]:
         ACTION_STATE_PRESENTATION_ORDER.get(str(action.get("state")), 999),
         str(action.get("action_id", "")),
     )
+
+
+def validate_lifecycle_inspection_v04(value: dict[str, Any]) -> None:
+    """Reject contradictory v0.4 branch/capacity/continuation projections."""
+    if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA:
+        raise ValueError("Unsupported lifecycle inspection schema")
+    branch = value.get("execution_branch") or {}
+    capacity = value.get("execution_capacity") or {}
+    custody = value.get("provider_custody") or {}
+    terminal = value.get("terminal") or {}
+    dependencies = value.get("local_dependencies") or []
+    command = branch.get("command")
+    reason = branch.get("reason_code")
+    errors: list[str] = []
+    if command == "provider_reconciliation_cycle":
+        if not terminal.get("provider_continuation_remains"):
+            errors.append("provider_continuation_remains")
+        if terminal.get("local_continuation_remains") or dependencies:
+            errors.append("local_continuation_must_be_false")
+        if reason == "provider_reconciliation_due":
+            if not branch.get("eligible_now"):
+                errors.append("eligible_now")
+            if capacity.get("reason_code") != "provider_reconciliation_due":
+                errors.append("capacity_reason_code")
+            if branch.get("not_before") is not None:
+                errors.append("not_before")
+            if branch.get("action_ids") != custody.get("next_due_action_ids"):
+                errors.append("next_due_action_ids")
+            if not branch.get("action_ids") or len(branch["action_ids"]) > 4:
+                errors.append("bounded_due_subset")
+        elif reason == "provider_reconciliation_not_due":
+            if branch.get("eligible_now"):
+                errors.append("eligible_now")
+            if capacity.get("disposition") != "release_until_due":
+                errors.append("capacity_disposition")
+            if branch.get("not_before") != capacity.get("resume_not_before"):
+                errors.append("resume_not_before")
+            if branch.get("action_ids") != custody.get("action_ids"):
+                errors.append("provider_action_ids")
+        else:
+            errors.append("provider_reconciliation_reason")
+    elif command == "ordinary_resume":
+        if not terminal.get("local_continuation_remains") or not dependencies:
+            errors.append("ordinary_local_continuation")
+        if capacity.get("disposition") != "continue_local_cycle":
+            errors.append("capacity_disposition")
+        if not branch.get("eligible_now") or branch.get("action_ids"):
+            errors.append("ordinary_branch_shape")
+    elif command == "await_external_authority":
+        if capacity.get("disposition") != "await_external_authority":
+            errors.append("capacity_disposition")
+        if branch.get("eligible_now"):
+            errors.append("eligible_now")
+    elif command != "none":
+        errors.append("command")
+    if errors:
+        raise ValueError(
+            "Contradictory lifecycle inspection fields: " + ", ".join(errors)
+        )
 
 
 def canonical_contract_json(value: Any) -> str:

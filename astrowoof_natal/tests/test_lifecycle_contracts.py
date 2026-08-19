@@ -63,6 +63,7 @@ FIXTURE_NAMES = (
     "inspection.v0.1.json",
     "inspection.v0.2.json",
     "inspection.v0.3.json",
+    "inspection.v0.4.json",
     "reconciliation-policy.v0.1.json",
     "reconciliation-policy.v0.2.json",
     "reconciliation-cycle-not-due.v0.1.json",
@@ -276,6 +277,14 @@ class TestLifecycleContracts(unittest.TestCase):
         del missing["native_route"]
         with self.assertRaises(AssertionError):
             validate(missing, self.schema, self.schema)
+
+    def test_inspection_v04_binds_supported_next_command(self) -> None:
+        inspection = self.fixtures["inspection.v0.4.json"]
+        validate(inspection, self.schema, self.schema)
+        self.assertEqual(
+            "provider_reconciliation_cycle",
+            inspection["execution_branch"]["command"],
+        )
 
     def test_cycle_v02_cost_disposition_is_closed_and_explicit(self) -> None:
         inspection = copy.deepcopy(self.fixtures["inspection.v0.3.json"])

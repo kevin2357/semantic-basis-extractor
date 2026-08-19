@@ -191,26 +191,18 @@ native classification, timing, provider custody, snapshots, and command safety.
 
 ## Diagnostic events and logs
 
-Proposed non-authoritative structured events:
+Implemented non-authoritative structured event:
 
-### `lifecycle.classification.selected`
+### `lifecycle.branch_selected`
 
-- native run ID and state revision in correlation;
-- lifecycle schema version;
-- route family and provider mechanism;
+- native run ID in correlation;
+- native status;
 - capacity disposition;
-- recommended command, eligibility, and reason;
-- provider action count, due count, and non-provider local dependency count;
-- resume-not-before when applicable.
+- selected command, eligibility, and reason;
+- provider action count and non-provider local dependency count.
 
-### `execution.branch.invoked`
-
-- actual public command (`ordinary_resume` or `provider_reconciliation_cycle`);
-- recommended command from the immediately validated inspection when available;
-- match/mismatch classification;
-- reason code and bounded action counts.
-
-The ordinary ✨🐶 logs carry the same concise facts for operators. Events/logs are
+The ordinary ✨🐶 lifecycle-completion log carries the same concise facts for
+operators. Events/logs are
 failure-isolated and cannot authorize work. Provider IDs may be omitted or reduced
 to counts in diagnostics; no credentials, request bodies, prompts, outputs, or
 protected subject parameters are allowed.

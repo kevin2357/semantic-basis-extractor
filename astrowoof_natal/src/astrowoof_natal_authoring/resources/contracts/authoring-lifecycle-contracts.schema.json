@@ -13,6 +13,7 @@
     {"$ref": "#/$defs/lifecycleInspection"},
     {"$ref": "#/$defs/lifecycleInspectionV02"},
     {"$ref": "#/$defs/lifecycleInspectionV03"},
+    {"$ref": "#/$defs/lifecycleInspectionV04"},
     {"$ref": "#/$defs/reconciliationPolicy"},
     {"$ref": "#/$defs/reconciliationPolicyV02"},
     {"$ref": "#/$defs/reconciliationCycleResult"},
@@ -375,6 +376,38 @@
       },
       "additionalProperties": false
     },
+    "executionCapacityV04": {
+      "type": "object",
+      "required": [
+        "disposition", "local_work_ready_now",
+        "checkpoint_safe_for_worker_release", "resume_not_before",
+        "reason_code", "policy_version"
+      ],
+      "properties": {
+        "disposition": {"enum": [
+          "continue_local_cycle", "release_until_due",
+          "await_external_authority", "retain_for_review", "terminal",
+          "unsupported_retain_capacity"
+        ]},
+        "local_work_ready_now": {"type": "boolean"},
+        "checkpoint_safe_for_worker_release": {"type": "boolean"},
+        "resume_not_before": {"$ref": "#/$defs/reconciliationInstant"},
+        "reason_code": {"enum": [
+          "local_work_ready", "known_provider_work_pending",
+          "provider_reconciliation_not_due", "provider_reconciliation_due",
+          "spend_authorization_required", "terminal_native_outcome",
+          "snapshot_invalid", "writer_or_lease_not_exclusive",
+          "provider_submission_ambiguous", "provider_identity_conflict",
+          "native_review_required", "route_or_stage_not_supported",
+          "reconciliation_timing_missing"
+        ]},
+        "policy_version": {"enum": [
+          "astrowoof.provider_reconciliation_policy.v0.1",
+          "astrowoof.provider_reconciliation_policy.v0.2"
+        ]}
+      },
+      "additionalProperties": false
+    },
     "providerCustodyAction": {
       "type": "object",
       "required": [
@@ -571,6 +604,54 @@
         "provider_custody": {"$ref": "#/$defs/providerCustodyV03"},
         "native_route": {"$ref": "#/$defs/nativeRouteV03"},
         "consumer_authority": {"$ref": "#/$defs/consumerAuthorityV03"}
+      },
+      "additionalProperties": false
+    },
+    "executionBranchV04": {
+      "type": "object",
+      "required": ["command", "eligible_now", "reason_code", "action_ids", "not_before"],
+      "properties": {
+        "command": {"enum": [
+          "ordinary_resume", "provider_reconciliation_cycle",
+          "await_external_authority", "none"
+        ]},
+        "eligible_now": {"type": "boolean"},
+        "reason_code": {"enum": [
+          "ordinary_local_continuation_ready", "provider_reconciliation_not_due",
+          "provider_reconciliation_due", "spend_authorization_required",
+          "terminal_or_no_continuation", "native_review_or_ambiguity",
+          "unsupported_native_evidence"
+        ]},
+        "action_ids": {
+          "type": "array", "maxItems": 32, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}
+        },
+        "not_before": {"$ref": "#/$defs/reconciliationInstant"}
+      },
+      "additionalProperties": false
+    },
+    "lifecycleInspectionV04": {
+      "type": "object",
+      "required": [
+        "schema_version", "run_id", "observation", "terminal", "quiescence",
+        "local_dependencies", "action_inventory", "review_reasons",
+        "execution_capacity", "provider_custody", "native_route",
+        "consumer_authority", "execution_branch"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.4"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/snapshotObservation"},
+        "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "quiescence": {"$ref": "#/$defs/quiescence"},
+        "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
+        "action_inventory": {"$ref": "#/$defs/actionInventory"},
+        "review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true},
+        "execution_capacity": {"$ref": "#/$defs/executionCapacityV04"},
+        "provider_custody": {"$ref": "#/$defs/providerCustodyV03"},
+        "native_route": {"$ref": "#/$defs/nativeRouteV03"},
+        "consumer_authority": {"$ref": "#/$defs/consumerAuthorityV03"},
+        "execution_branch": {"$ref": "#/$defs/executionBranchV04"}
       },
       "additionalProperties": false
     },
@@ -978,6 +1059,7 @@
           "provider.submission_started",
           "provider.identity_recorded", "provider.waiting", "provider.completed",
           "provider.reconciliation_observed",
+          "lifecycle.branch_selected",
           "native.result_published",
           "qa.started", "qa.completed", "retry.decided", "polish.decided",
           "critic.decided", "checkpoint.committed", "terminal.transitioned",

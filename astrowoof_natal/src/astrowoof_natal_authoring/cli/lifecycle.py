@@ -97,6 +97,7 @@ def main() -> None:
             args.run_dir,
             native_exclusive_access=args.native_exclusive_access,
             observed_at=args.observed_at,
+            event_emitter=emitter,
         )
     elif args.operation == "deny-providerless":
         result = deny_providerless_action(

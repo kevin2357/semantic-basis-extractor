@@ -38,6 +38,9 @@ from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
     run_bounded_authoring_reconciliation,
 )
 from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
+from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
+    validate_lifecycle_inspection_v04,
+)
 
 
 def hashes(root: Path) -> dict[str, str]:
@@ -51,11 +54,11 @@ def hashes(root: Path) -> dict[str, str]:
 class TestProviderPendingCapacityBaseline(unittest.TestCase):
     """Freeze the 0.4.2 projection before adding capacity-release authority."""
 
-    def materialize(self, root: Path) -> dict:
+    def materialize(self, root: Path, *, action_count: int = 3) -> dict:
         run_id = "run_provider_pending_capacity_001"
         actions = []
         passes = {}
-        for index in range(1, 4):
+        for index in range(1, action_count + 1):
             action_id = f"paid_{index:024d}"
             response_id = f"resp_provider_pending_{index}"
             route = f"kevin:authoring_initial:{index:03d}"
@@ -149,22 +152,18 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertTrue(
                 inspection["terminal"]["provider_continuation_remains"]
             )
-            self.assertTrue(inspection["terminal"]["local_continuation_remains"])
+            self.assertFalse(inspection["terminal"]["local_continuation_remains"])
             self.assertEqual(
-                ["provider_continuation_remains", "local_continuation_remains"],
+                ["provider_continuation_remains"],
                 inspection["quiescence"]["reasons"],
             )
             self.assertEqual("not_quiescent", inspection["quiescence"]["state"])
             self.assertEqual(
-                [{
-                    "kind": "provider_result_reconciliation",
-                    "blocking": True,
-                    "reason_code": "provider_result_pending",
-                }],
+                [],
                 inspection["local_dependencies"],
             )
             self.assertEqual(
-                "astrowoof.authoring_lifecycle_inspection.v0.3",
+                "astrowoof.authoring_lifecycle_inspection.v0.4",
                 inspection["schema_version"],
             )
             self.assertEqual(
@@ -183,12 +182,18 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertEqual(3, custody["reservation_retention_action_count"])
             self.assertEqual("2026-08-15T20:15:00Z", custody["earliest_resume_not_before"])
             self.assertEqual(
-                [
-                    "paid_000000000000000000000001",
-                    "paid_000000000000000000000002",
-                    "paid_000000000000000000000003",
-                ],
+                [],
                 custody["next_due_action_ids"],
+            )
+            self.assertEqual(
+                {
+                    "command": "provider_reconciliation_cycle",
+                    "eligible_now": False,
+                    "reason_code": "provider_reconciliation_not_due",
+                    "action_ids": custody["action_ids"],
+                    "not_before": "2026-08-15T20:15:00Z",
+                },
+                inspection["execution_branch"],
             )
             action_ids = inspection["action_inventory"]["actions"]
             self.assertEqual(3, len(action_ids))
@@ -246,7 +251,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertEqual("continuation_required", result["disposition"])
             self.assertFalse(result["terminal"]["terminal"])
             self.assertTrue(result["terminal"]["provider_continuation_remains"])
-            self.assertTrue(result["terminal"]["local_continuation_remains"])
+            self.assertFalse(result["terminal"]["local_continuation_remains"])
             self.assertEqual(
                 [
                     "paid_000000000000000000000001",
@@ -281,9 +286,74 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             self.assertTrue(inspection["execution_capacity"]["local_work_ready_now"])
             self.assertIsNone(inspection["execution_capacity"]["resume_not_before"])
             self.assertEqual(
+                "provider_reconciliation_due",
+                inspection["execution_capacity"]["reason_code"],
+            )
+            self.assertEqual(
+                {
+                    "command": "provider_reconciliation_cycle",
+                    "eligible_now": True,
+                    "reason_code": "provider_reconciliation_due",
+                    "action_ids": ["paid_000000000000000000000001"],
+                    "not_before": None,
+                },
+                inspection["execution_branch"],
+            )
+            self.assertEqual(
                 3,
                 inspection["provider_custody"]["reservation_retention_action_count"],
             )
+
+    def test_due_six_member_wave_names_only_native_bounded_subset(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root, action_count=6)
+            inspection = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T20:30:00Z",
+            )
+            branch = inspection["execution_branch"]
+            self.assertEqual("provider_reconciliation_cycle", branch["command"])
+            self.assertTrue(branch["eligible_now"])
+            self.assertEqual(4, len(branch["action_ids"]))
+            self.assertEqual(
+                inspection["provider_custody"]["next_due_action_ids"],
+                branch["action_ids"],
+            )
+            self.assertEqual(6, inspection["provider_custody"]["provider_action_count"])
+
+    def test_authoring_status_with_six_waiting_passes_is_provider_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root, action_count=6)
+            state = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            state["status"] = "AUTHORING"
+            (root / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            write_workspace_snapshot(root)
+            inspection = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T20:30:00Z",
+            )
+            self.assertEqual([], inspection["local_dependencies"])
+            self.assertFalse(inspection["terminal"]["local_continuation_remains"])
+            self.assertEqual(
+                "provider_reconciliation_cycle",
+                inspection["execution_branch"]["command"],
+            )
+
+    def test_contradictory_provider_branch_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.materialize(root)
+            inspection = inspect_lifecycle(
+                root, native_exclusive_access="declared",
+                observed_at="2026-08-15T20:30:00Z",
+            )
+            inspection["terminal"]["local_continuation_remains"] = True
+            with self.assertRaisesRegex(ValueError, "Contradictory lifecycle"):
+                validate_lifecycle_inspection_v04(inspection)
 
     def test_legacy_pending_action_without_timing_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

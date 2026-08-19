@@ -26,6 +26,8 @@ astrowoof-authoring-lifecycle --run-dir RUN closeout
 
 astrowoof-lifecycle-smoke --require-installed
 
+astrowoof-provider-pending-qa
+
 astrowoof-semantic-closure --run-dir RUN --resume --provider openai \
   --service-level interactive --bounded-provider-reconciliation
 ```
@@ -49,12 +51,22 @@ normal return values and never depend on event delivery.
 
 ## Provider-pending capacity release
 
-Lifecycle inspection v0.2 separates short-lived local execution capacity from
+Lifecycle inspection v0.4 separates short-lived local execution capacity from
 durable provider custody. The API may release its worker claim only when
 `execution_capacity.checkpoint_safe_for_worker_release` is true and the closed
 disposition permits release. It must retain its separately owned reservation and
 financial authority for every `provider_custody.actions` member whose
 `custody_classification` is `retain_consumer_authority`.
+
+The closed `execution_branch` is the command-selection authority. A provider-only
+wait has `provider_continuation_remains=true`,
+`local_continuation_remains=false`, and no `local_dependencies`. Before due, its
+branch names `provider_reconciliation_cycle` with `eligible_now=false` and the
+exact `not_before`. At or after due it names the same command with
+`eligible_now=true`; `action_ids` is SBE's bounded next subset (at most four), not
+permission for the API to choose members or reconstruct a command. Ordinary local
+work alone names `ordinary_resume`. Consumers must reject contradictory branch,
+capacity, custody, and continuation fields.
 
 `resume_not_before` is SBE's durable lower-bound recommendation. The API may
 schedule later. An earlier bounded cycle returns `not_due`, performs no provider
@@ -95,6 +107,9 @@ authority remain retained until native reconciliation or denial resolves it.
 Events remain non-authoritative observations. A bounded CLI checkpoint may emit
 `run.detached` followed by `checkpoint.committed`; HTTP status endpoints must read
 only the API's validated, persisted mapping of the typed result and inspection.
+Lifecycle inspection may additionally emit `lifecycle.branch_selected`, containing
+only the native status, capacity disposition, selected command, eligibility,
+reason, and bounded counts.
 
 ## Required API sequence
 
@@ -141,6 +156,10 @@ resources:
 - `contracts/authoring-lifecycle-contracts.schema.json`;
 - `contracts/execution-event-payload-catalog.v1.json`; and
 - sanitized examples under `fixtures/lifecycle/`.
+
+`fixtures/lifecycle/inspection.v0.4.json` is the provider-only not-due example.
+`astrowoof-provider-pending-qa` is a provider-free, qualification-only installed-
+wheel command; its receipt is diagnostic evidence, never production authority.
 
 The catalog identifies v0.2 as the current single and batch successful
 negative-authorization result and identifies v0.1 explicitly as historical reader

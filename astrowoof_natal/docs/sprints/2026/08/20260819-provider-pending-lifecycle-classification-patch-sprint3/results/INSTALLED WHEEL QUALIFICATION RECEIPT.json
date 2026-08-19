@@ -1,0 +1,43 @@
+{
+  "schema_version": "astrowoof.provider_pending_lifecycle_qualification.v1",
+  "status": "pass",
+  "qualification_only": true,
+  "provider_free": true,
+  "network_required": false,
+  "production_authority": false,
+  "create_count": 6,
+  "retrieve_count": 6,
+  "first_cycle_retrieval_count": 4,
+  "second_cycle_retrieval_count": 2,
+  "not_due_branch": {
+    "command": "provider_reconciliation_cycle",
+    "eligible_now": false,
+    "reason_code": "provider_reconciliation_not_due",
+    "action_ids": [
+      "paid_0abbc5e8583b06a8f33bc94a", "paid_1a220f9ad775d5207b105dd3",
+      "paid_3a8121aed87656511b05ab1a", "paid_3b5875967e5468daf5b92d12",
+      "paid_9e711e04e0239670c49604ca", "paid_df15566980040ceb437defb5"
+    ],
+    "not_before": "1970-01-01T00:00:15Z"
+  },
+  "due_branch": {
+    "command": "provider_reconciliation_cycle",
+    "eligible_now": true,
+    "reason_code": "provider_reconciliation_due",
+    "action_ids": [
+      "paid_0abbc5e8583b06a8f33bc94a", "paid_1a220f9ad775d5207b105dd3",
+      "paid_3a8121aed87656511b05ab1a", "paid_3b5875967e5468daf5b92d12"
+    ],
+    "not_before": null
+  },
+  "assertions": {
+    "six_member_create_detach": true,
+    "not_due_release": true,
+    "direct_due_selection": true,
+    "bounded_four_then_two_retrieval": true,
+    "all_six_durable_fan_in_evidence": true,
+    "no_duplicate_create_or_retrieval": true,
+    "contradictory_projection_refused": true
+  },
+  "receipt_sha256": "b77614fb4aebe641fc10d347a9ebc1e3d1133a573b51b9dcfc205cf3763e1576"
+}

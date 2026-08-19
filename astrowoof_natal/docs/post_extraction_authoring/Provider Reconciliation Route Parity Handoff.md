@@ -12,9 +12,12 @@ Current source baseline: post-0.4.3
 | Bounded Natal | Responses | supported across every bounded stage |
 | Bounded Natal | Batch | rejected; no adapter exists |
 
-The native lifecycle inspection v0.3 is authoritative for route family, provider
+The native lifecycle inspection v0.4 is authoritative for route family, provider
 mechanism, provider operation ID, and native operation/round binding. Consumers
 must not infer these from their product job record.
+
+Inspection v0.4 also publishes the closed `execution_branch`. The API invokes the
+run-level command it names; the API does not select the bounded action subset.
 
 ## Public Python operation
 

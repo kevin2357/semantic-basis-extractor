@@ -58,6 +58,10 @@ from .response_diagnostics import (  # noqa: E402
     read_response_retrieval_diagnostic_schema,
     validate_response_retrieval_diagnostic,
 )
+from .lifecycle_contracts import validate_lifecycle_inspection_v04  # noqa: E402
+from .pending_lifecycle_qa import (  # noqa: E402
+    run_provider_pending_lifecycle_qualification,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -92,4 +96,6 @@ __all__ = [
     "validate_deployed_qa_receipt",
     "validate_response_retrieval_diagnostic",
     "validate_transition_journal",
+    "validate_lifecycle_inspection_v04",
+    "run_provider_pending_lifecycle_qualification",
 ]

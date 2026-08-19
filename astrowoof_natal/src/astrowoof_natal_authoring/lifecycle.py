@@ -40,6 +40,7 @@ from .lifecycle_contracts import (
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     action_presentation_key,
+    validate_lifecycle_inspection_v04,
     batch_negative_authorization_request_sha256,
     observation_transition_errors,
 )
@@ -535,27 +536,27 @@ def reconcile_required_providerless_denial(
 def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         return []
-    if state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v1":
-        bounded_provider_wait = any(
-            action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
-            and (action.get("provider") or {}).get("id")
-            and ((action.get("provider_reconciliation") or {}).get("last_outcome"))
-            != "completed"
-            for action in (state.get("spend_ledger") or {}).get("actions", [])
-        )
-        if bounded_provider_wait:
-            return [{
-                "kind": "provider_result_reconciliation",
-                "blocking": True,
-                "reason_code": "provider_result_pending",
-            }]
+    provider_bound = any(
+        action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+        and (action.get("provider") or {}).get("id")
+        and (action.get("provider_reconciliation") or {}).get("last_outcome")
+        != "completed"
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+    )
+    if provider_bound:
+        # Any assembly/retry/delivery continuation is gated on reconciling the
+        # durable provider operation first. It becomes local work only after the
+        # provider evidence has been ingested into native state.
+        return []
     status = str(state.get("status") or "")
     dependencies: list[dict[str, Any]] = []
     mapping = {
         "AUTHORING": ("retry_preparation", "authoring_continuation"),
         "AUTHORING_COMPLETE": ("local_assembly", "final_assembly_required"),
+        # Pending retrieval returns above. Once every durable provider result is
+        # complete, ingestion/fan-in is ordinary local work again.
         "WAITING_FOR_RESPONSE": (
-            "provider_result_reconciliation", "provider_result_pending"
+            "local_assembly", "provider_evidence_ingestion_required"
         ),
         "AWAITING_SPEND_AUTHORIZATION": (
             "retry_preparation", "prepared_action_authorization_pending"
@@ -680,7 +681,12 @@ def _capacity_and_custody(
     ))
     scheduled = [item for item in projected if item["resume_not_before"] is not None]
     earliest = scheduled[0]["resume_not_before"] if scheduled else None
-    next_ids = [item["action_id"] for item in scheduled[:4]]
+    now = parse_utc_instant(observed_at)
+    due_items = [
+        item for item in scheduled
+        if parse_utc_instant(item["resume_not_before"]) <= now
+    ]
+    next_ids = [item["action_id"] for item in due_items[:4]]
     if unsupported:
         custody_state = "unsupported"
     elif projected and all(
@@ -774,10 +780,7 @@ def _capacity_and_custody(
         "SUBMITTING", "AMBIGUOUS_PROVIDER_SUBMISSION",
     } for item in actions)
     integrity_review = any(item.get("integrity_review") for item in actions)
-    now = parse_utc_instant(observed_at)
-    due = any(
-        parse_utc_instant(item["resume_not_before"]) <= now for item in scheduled
-    )
+    due = bool(due_items)
     completed_evidence = any(
         item["custody_classification"] == "completed_provider_evidence"
         for item in projected
@@ -802,7 +805,7 @@ def _capacity_and_custody(
         )
     elif due:
         disposition, local_ready, reason = (
-            "continue_local_cycle", True, "local_work_ready",
+            "continue_local_cycle", True, "provider_reconciliation_due",
         )
     elif prepared:
         disposition, local_ready, reason = (
@@ -846,11 +849,72 @@ def _capacity_and_custody(
     }, consumer_authority
 
 
+def _execution_branch(
+    capacity: dict[str, Any], custody: dict[str, Any],
+    dependencies: list[dict[str, Any]], review_reasons: list[str],
+) -> dict[str, Any]:
+    """Publish the one supported next command without delegating member choice."""
+    disposition = capacity["disposition"]
+    reason = capacity["reason_code"]
+    if review_reasons or disposition == "retain_for_review":
+        command, eligible, branch_reason = (
+            "none", False, "native_review_or_ambiguity",
+        )
+        action_ids: list[str] = []
+        not_before = None
+    elif disposition == "unsupported_retain_capacity":
+        command, eligible, branch_reason = (
+            "none", False, "unsupported_native_evidence",
+        )
+        action_ids = []
+        not_before = None
+    elif disposition == "await_external_authority":
+        command, eligible, branch_reason = (
+            "await_external_authority", False, "spend_authorization_required",
+        )
+        action_ids = []
+        not_before = None
+    elif reason == "provider_reconciliation_due":
+        command, eligible, branch_reason = (
+            "provider_reconciliation_cycle", True,
+            "provider_reconciliation_due",
+        )
+        action_ids = list(custody["next_due_action_ids"])
+        not_before = None
+    elif disposition == "release_until_due" and custody["action_ids"]:
+        command, eligible, branch_reason = (
+            "provider_reconciliation_cycle", False,
+            "provider_reconciliation_not_due",
+        )
+        action_ids = list(custody["action_ids"])
+        not_before = capacity["resume_not_before"]
+    elif disposition == "continue_local_cycle" and dependencies:
+        command, eligible, branch_reason = (
+            "ordinary_resume", True, "ordinary_local_continuation_ready",
+        )
+        action_ids = []
+        not_before = None
+    else:
+        command, eligible, branch_reason = (
+            "none", False, "terminal_or_no_continuation",
+        )
+        action_ids = []
+        not_before = None
+    return {
+        "command": command,
+        "eligible_now": eligible,
+        "reason_code": branch_reason,
+        "action_ids": action_ids,
+        "not_before": not_before,
+    }
+
+
 def inspect_lifecycle(
     run_dir: Path,
     *,
     native_exclusive_access: str = "not_established",
     observed_at: str | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
 ) -> dict[str, Any]:
     """Inspect exact native evidence without mutating any workspace member."""
     run_dir = run_dir.resolve()
@@ -952,6 +1016,9 @@ def inspect_lifecycle(
     capacity, custody, native_route, consumer_authority = _capacity_and_custody(
         state, observation, dependencies, observed_at=observation["observed_at"],
     )
+    execution_branch = _execution_branch(
+        capacity, custody, dependencies, review_reasons,
+    )
     result = {
         "schema_version": LIFECYCLE_INSPECTION_SCHEMA,
         "run_id": str(state.get("run_id") or ""),
@@ -965,15 +1032,32 @@ def inspect_lifecycle(
         "provider_custody": custody,
         "native_route": native_route,
         "consumer_authority": consumer_authority,
+        "execution_branch": execution_branch,
     }
     logger.info(
         "lifecycle_inspection_complete status=%s terminal=%s quiescence=%s "
         "capacity_disposition=%s provider_actions=%s local_dependencies=%s "
-        "review_reason_count=%s",
+        "review_reason_count=%s execution_branch=%s branch_reason=%s eligible_now=%s",
         status, terminal_summary["terminal"], quiescence["state"],
         capacity["disposition"], len(custody["actions"]), len(dependencies),
-        len(result["review_reasons"]),
+        len(result["review_reasons"]), execution_branch["command"],
+        execution_branch["reason_code"], execution_branch["eligible_now"],
     )
+    validate_lifecycle_inspection_v04(result)
+    if event_emitter is not None:
+        event_emitter.emit(
+            "lifecycle.branch_selected",
+            data={
+                "native_status": status,
+                "capacity_disposition": capacity["disposition"],
+                "command": execution_branch["command"],
+                "eligible_now": execution_branch["eligible_now"],
+                "reason_code": execution_branch["reason_code"],
+                "provider_action_count": custody["provider_action_count"],
+                "local_dependency_count": len(dependencies),
+            },
+            correlation={"native_run_id": result["run_id"]},
+        )
     return result
 
 

@@ -1,6 +1,29 @@
 # Provider-Pending Lifecycle Classification Patch Sprint 3 Evidence
 
-Status: planning/reconnaissance only; no implementation.
+Status: implementation complete; provider-free qualification passing.
+
+## Implemented evidence
+
+- Current schema: `astrowoof.authoring_lifecycle_inspection.v0.4`.
+- Historical v0.3 fixture and schema remain packaged without reinterpretation.
+- Provider-only waiting projects no local dependency and selects the reconciliation
+  branch before and after due time.
+- Due branch action IDs equal SBE's `provider_custody.next_due_action_ids` and are
+  capped at four. They are diagnostic native selection, not API member authority.
+- `validate_lifecycle_inspection_v04()` rejects contradictory continuation,
+  capacity, timing, and action-subset projections.
+- Packaged fixture: `fixtures/lifecycle/inspection.v0.4.json`.
+- Installed command: `astrowoof-provider-pending-qa`.
+- Qualification receipt contract:
+  `astrowoof.provider_pending_lifecycle_qualification.v1`.
+- Candidate wheel: `astrowoof_natal_authoring-0.4.13-py3-none-any.whl`.
+- Candidate wheel SHA-256:
+  `0e3ecc41e6752ce050aa55ce2d5fc5b4b8453f19d4e7032e7abadf420f57dcb4`.
+- Installed qualification receipt SHA-256:
+  `b77614fb4aebe641fc10d347a9ebc1e3d1133a573b51b9dcfc205cf3763e1576`.
+- Provider-free qualification proves six unique creates, not-due release, direct
+  due selection, bounded four-then-two retrieval, six durable response artifacts,
+  no duplicate create/retrieval, and contradiction refusal.
 
 ## API review
 
