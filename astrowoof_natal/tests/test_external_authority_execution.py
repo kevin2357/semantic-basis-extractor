@@ -29,6 +29,8 @@ from astrowoof_natal_authoring.external_authority import (
     read_external_authority_request,
     validate_external_authority_grant,
 )
+from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter
+from astrowoof_natal_authoring.initial_wave import InitialWaveError
 from astrowoof_natal.tests.test_semantic_closure import (
     ScriptedTransport,
     SemanticClosureFixture,
@@ -191,6 +193,130 @@ class TestExternalAuthorityExecution(SemanticClosureFixture):
                 self.assertEqual(before, (run_dir / "run.json").read_bytes())
                 self.assertEqual(snapshot, (run_dir / "workspace-snapshot.json").read_bytes())
                 self.assertEqual(0, len(transport.calls))
+
+    def test_validation_and_pre_intent_failures_mutate_nothing(self) -> None:
+        for point in (
+            "after_request_and_grant_validation",
+            "before_durable_pre_submit_intent",
+        ):
+            with self.subTest(point=point), tempfile.TemporaryDirectory() as temporary:
+                run_dir, request, provider, transport = self.prepared(Path(temporary))
+                grant, documents = authority(request)
+                before = (run_dir / "run.json").read_bytes()
+                snapshot = (run_dir / "workspace-snapshot.json").read_bytes()
+
+                def crash(observed: str) -> None:
+                    if observed == point:
+                        raise RuntimeError(f"injected {point}")
+
+                with self.assertRaisesRegex(RuntimeError, point):
+                    execute_exact_initial_wave_with_external_authority(
+                        run_dir=run_dir, request=request, grant=grant,
+                        member_authorizations=documents, provider=provider,
+                        _failure_injector=crash,
+                    )
+                self.assertEqual(before, (run_dir / "run.json").read_bytes())
+                self.assertEqual(snapshot, (run_dir / "workspace-snapshot.json").read_bytes())
+                self.assertEqual([], transport.calls)
+
+    def test_failure_after_final_snapshot_is_durable_and_not_replayed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, request, provider, transport = self.prepared(Path(temporary))
+            grant, documents = authority(request)
+
+            def crash(point: str) -> None:
+                if point == "after_final_wave_snapshot":
+                    raise RuntimeError("injected final snapshot")
+
+            with self.assertRaisesRegex(RuntimeError, "final snapshot"):
+                execute_exact_initial_wave_with_external_authority(
+                    run_dir=run_dir, request=request, grant=grant,
+                    member_authorizations=documents, provider=provider,
+                    _failure_injector=crash,
+                )
+            self.assertEqual(6, len(transport.calls))
+            state = load_json(run_dir / "run.json")
+            self.assertEqual("DETACHED", state["initial_authoring_wave"]["state"])
+            validate_workspace_snapshot(run_dir, state)
+            with self.assertRaises(Exception):
+                execute_exact_initial_wave_with_external_authority(
+                    run_dir=run_dir, request=request, grant=grant,
+                    member_authorizations=documents, provider=provider,
+                )
+            self.assertEqual(6, len(transport.calls))
+
+    def test_authority_events_are_ordered_redacted_and_refusals_are_typed(self) -> None:
+        sentinel = "PROTECTED_SENTINEL_DO_NOT_EMIT_7d91"
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, request, provider, transport = self.prepared(Path(temporary))
+            grant, documents = authority(request)
+            grant["issuer"] = sentinel
+            grant["grant_sha256"] = digest({
+                key: value for key, value in grant.items() if key != "grant_sha256"
+            })
+            events: list[dict] = []
+            emitter = ExecutionEventEmitter(release="test", sink=events.append)
+            with self.assertLogs(level="INFO") as captured:
+                execute_exact_initial_wave_with_external_authority(
+                    run_dir=run_dir, request=request, grant=grant,
+                    member_authorizations=documents, provider=provider,
+                    event_emitter=emitter,
+                )
+            authority_events = [
+                item for item in events
+                if item["event_name"].startswith("external_authority.")
+            ]
+            self.assertEqual([
+                "external_authority.request_selected",
+                "external_authority.fence_validated",
+                "external_authority.intent_committed",
+                "external_authority.provider_create_permitted",
+            ], [item["event_name"] for item in authority_events])
+            rendered = json.dumps(authority_events) + "\n" + "\n".join(captured.output)
+            self.assertNotIn(sentinel, rendered)
+            self.assertEqual(6, len(transport.calls))
+
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, request, provider, transport = self.prepared(Path(temporary))
+            grant, documents = authority(request)
+            stale = deepcopy(request)
+            stale["observation"]["snapshot_sha256"] = "f" * 64
+            events = []
+            emitter = ExecutionEventEmitter(release="test", sink=events.append)
+            with self.assertRaises(InitialWaveError):
+                execute_exact_initial_wave_with_external_authority(
+                    run_dir=run_dir, request=stale, grant=grant,
+                    member_authorizations=documents, provider=provider,
+                    event_emitter=emitter,
+                )
+            refusal = [
+                item for item in events
+                if item["event_name"] == "external_authority.refused"
+            ]
+            self.assertEqual(1, len(refusal))
+            self.assertEqual("stale_observation", refusal[0]["data"]["reason_code"])
+            self.assertEqual([], transport.calls)
+
+    def test_failing_authority_event_sink_cannot_change_execution(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, request, provider, transport = self.prepared(Path(temporary))
+            grant, documents = authority(request)
+
+            def fail(_event: dict) -> None:
+                raise RuntimeError("event sink unavailable")
+
+            emitter = ExecutionEventEmitter(release="test", sink=fail)
+            result = execute_exact_initial_wave_with_external_authority(
+                run_dir=run_dir, request=request, grant=grant,
+                member_authorizations=documents, provider=provider,
+                event_emitter=emitter,
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(6, len(transport.calls))
+            state = load_json(run_dir / "run.json")
+            self.assertEqual("DETACHED", state["initial_authoring_wave"]["state"])
+            validate_workspace_snapshot(run_dir, state)
+            self.assertGreaterEqual(emitter.stats.sink_warnings, 4)
 
     def test_public_cli_consumes_exact_request_and_grant(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

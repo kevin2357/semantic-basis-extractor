@@ -435,10 +435,14 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual(0, len(transport.calls))
             request = read_external_authority_request(run_dir)
             grant, documents = authority(request)
+            events: list[dict] = []
             detached = resume_bounded_run(
                 run_dir, provider=provider, authorizations=documents,
                 external_authority_request=request,
                 external_authority_grant=grant,
+                event_emitter=ExecutionEventEmitter(
+                    release="test", sink=events.append,
+                ),
             )
             self.assertEqual("DETACHED", detached["initial_authoring_wave"]["state"])
             self.assertEqual(6, len(transport.calls))
@@ -460,6 +464,15 @@ class TestBoundedLifecycle(unittest.TestCase):
             )
             self.assertEqual(6, inspection["provider_custody"]["provider_action_count"])
             self.assertEqual(6, inspection["consumer_authority"]["action_count"])
+            self.assertEqual([
+                "external_authority.request_selected",
+                "external_authority.fence_validated",
+                "external_authority.intent_committed",
+                "external_authority.provider_create_permitted",
+            ], [
+                item["event_name"] for item in events
+                if item["event_name"].startswith("external_authority.")
+            ])
 
     def test_bounded_wave_identity_checkpoint_crash_resumes_without_duplicate_create(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

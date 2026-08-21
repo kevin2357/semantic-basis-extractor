@@ -223,6 +223,8 @@ unfenced generic resume.
 
 ### Slice 6 — Failure atomicity, replay, and observability
 
+Status: complete; awaiting review.
+
 - Inject failures before/after request validation, authorization persistence,
   pre-submit checkpoint, provider return, identity persistence, and final snapshot.
 - Prove exact replay where provider identity is durable and ambiguity where it is

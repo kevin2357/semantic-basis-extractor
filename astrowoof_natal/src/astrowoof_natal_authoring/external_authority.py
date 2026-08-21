@@ -7,12 +7,16 @@ from copy import deepcopy
 from datetime import datetime
 import hashlib
 import json
+import logging
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from .initial_wave import InitialWaveError
 from .initial_wave_contract import read_initial_wave_authority_inputs
 from .resource_access import read_resource_text
+
+
+logger = logging.getLogger(__name__)
 
 
 REQUEST_SCHEMA = "astrowoof.external_authority_request.v1"
@@ -378,6 +382,11 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
     if not run_json.is_file():
         raise InitialWaveError("snapshot_invalid", "Run state is missing")
     state = load_json(run_json)
+    logger.info(
+        "external_authority_request_read_start revision=%s wave_state=%s",
+        state.get("state_revision"),
+        (state.get("initial_authoring_wave") or {}).get("state"),
+    )
     try:
         validate_workspace_snapshot(root, state)
     except ValueError as exc:
@@ -491,6 +500,11 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
         raise InitialWaveError(
             "snapshot_invalid", "Run changed while authority request was being read"
         )
+    logger.info(
+        "external_authority_request_read_complete kind=%s action_count=%s request=%s",
+        request["request_kind"], request["action_count"],
+        request["external_authority_request_sha256"],
+    )
     return request
 
 

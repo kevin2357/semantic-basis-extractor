@@ -1249,6 +1249,7 @@ def _execute_bounded_interactive_initial_wave(
     stored["state"] = "DETACHED" if result["outcome"] == "detached_provider_pending" else "FAILED"
     stored["result"] = result
     save_state(run_dir / "run.json", state)
+    inject("after_final_wave_snapshot")
     return result
 
 
@@ -1297,11 +1298,32 @@ def resume_bounded_run(
     if state.get("provider") != provider.name:
         raise ValueError("Resume provider does not match the frozen run provider")
     if initial_wave_authorization is not None:
+        logger.warning("bounded_external_authority_refused reason=legacy_envelope")
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.refused", data={
+                    "reason_code": "aggregate_grant_required",
+                    "category": "legacy_envelope", "selected_command": "none",
+                    "action_count": len(authorizations or []),
+                }, correlation={"native_run_id": str(state.get("run_id") or "")},
+                severity="warning",
+            )
         raise InitialWaveError(
             "aggregate_grant_required",
             "Legacy bounded initial-wave authority cannot authorize provider create",
         )
     if bool(external_authority_request) != bool(external_authority_grant):
+        logger.warning("bounded_external_authority_refused reason=partial_pair")
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.refused", data={
+                    "reason_code": "partial_authorization",
+                    "category": "partial_request_grant_pair",
+                    "selected_command": "none",
+                    "action_count": len(authorizations or []),
+                }, correlation={"native_run_id": str(state.get("run_id") or "")},
+                severity="warning",
+            )
         raise InitialWaveError(
             "partial_authorization", "External request and grant are required together",
         )
@@ -1317,17 +1339,66 @@ def resume_bounded_run(
                 "partial_authorization", "Bounded initial wave requires six authorizations",
             )
         token = os.urandom(32).hex()
+        logger.info(
+            "bounded_external_authority_fence_start request=%s grant=%s actions=%s",
+            external_authority_request.get("external_authority_request_sha256"),
+            external_authority_grant.get("grant_sha256"), len(authorizations or []),
+        )
         with _exclusive_lifecycle_lock(run_dir):
             state = load_json(run_json)
             validate_workspace_snapshot(run_dir, state)
             current = read_external_authority_request(run_dir)
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.request_selected", data={
+                        "request_sha256": current[
+                            "external_authority_request_sha256"
+                        ], "request_kind": current["request_kind"],
+                        "action_count": current["action_count"],
+                        "selected_command": "bounded_initial_wave_create",
+                    }, correlation={"native_run_id": current["run_id"]},
+                )
             if current != external_authority_request:
+                if event_emitter is not None:
+                    event_emitter.emit(
+                        "external_authority.refused", data={
+                            "reason_code": "stale_observation",
+                            "category": "request_mismatch",
+                            "selected_command": "none",
+                            "action_count": current["action_count"],
+                        }, correlation={"native_run_id": current["run_id"]},
+                        severity="warning",
+                    )
                 raise InitialWaveError(
                     "stale_observation", "External-authority request is not current",
                 )
-            validate_external_authority_grant(
-                current, external_authority_grant, authorizations or [],
-            )
+            try:
+                validate_external_authority_grant(
+                    current, external_authority_grant, authorizations or [],
+                )
+            except InitialWaveError as exc:
+                if event_emitter is not None:
+                    event_emitter.emit(
+                        "external_authority.refused", data={
+                            "reason_code": exc.reason_code,
+                            "category": "grant_validation",
+                            "selected_command": "none",
+                            "action_count": current["action_count"],
+                        }, correlation={"native_run_id": current["run_id"]},
+                        severity="warning",
+                    )
+                raise
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.fence_validated", data={
+                        "request_sha256": current[
+                            "external_authority_request_sha256"
+                        ], "grant_sha256": external_authority_grant["grant_sha256"],
+                        "action_count": current["action_count"],
+                    }, correlation={"native_run_id": current["run_id"]},
+                )
+            if _failure_injector is not None:
+                _failure_injector("after_request_and_grant_validation")
             if (
                 current["request_kind"] != "initial_wave_admission"
                 or (current.get("initial_wave") or {}).get("route_contract")
@@ -1382,9 +1453,39 @@ def resume_bounded_run(
                 "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
                 "created_at": utc_now(),
             }
+            if _failure_injector is not None:
+                _failure_injector("before_durable_pre_submit_intent")
             save_state(run_json, state)
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.intent_committed", data={
+                        "request_sha256": current[
+                            "external_authority_request_sha256"
+                        ], "grant_sha256": external_authority_grant["grant_sha256"],
+                        "action_count": current["action_count"],
+                        "state_revision": state["state_revision"],
+                    }, correlation={"native_run_id": current["run_id"]},
+                )
+            logger.info(
+                "bounded_external_authority_intent_committed request=%s actions=%s revision=%s",
+                current["external_authority_request_sha256"],
+                len(current["ordered_action_ids"]), state.get("state_revision"),
+            )
         if _failure_injector is not None:
             _failure_injector("after_durable_pre_submit_intent")
+        logger.info(
+            "bounded_external_authority_provider_io_start request=%s actions=%s",
+            current["external_authority_request_sha256"],
+            len(current["ordered_action_ids"]),
+        )
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.provider_create_permitted", data={
+                    "request_sha256": current["external_authority_request_sha256"],
+                    "action_count": current["action_count"],
+                    "selected_command": "bounded_initial_wave_create",
+                }, correlation={"native_run_id": current["run_id"]},
+            )
         _execute_bounded_interactive_initial_wave(
             state, run_dir, provider, event_emitter, token, _failure_injector,
         )
@@ -1394,6 +1495,19 @@ def resume_bounded_run(
         and state["initial_authoring_wave"].get("state")
         in {"AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED", "SUBMITTING"}
     ):
+        logger.warning(
+            "bounded_external_authority_refused reason=aggregate_grant_required wave_state=%s",
+            state["initial_authoring_wave"].get("state"),
+        )
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.refused", data={
+                    "reason_code": "aggregate_grant_required",
+                    "category": "generic_resume_forbidden",
+                    "selected_command": "none", "action_count": 6,
+                }, correlation={"native_run_id": str(state.get("run_id") or "")},
+                severity="warning",
+            )
         raise InitialWaveError(
             "aggregate_grant_required",
             "Stored bounded initial wave requires its exact request and aggregate grant",

@@ -221,3 +221,38 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
   publishing an external-authority request.
 - Combined focused suite: 113 passed in 182.399 seconds; four optional JSON Schema
   tests skipped on the lean host interpreter.
+
+## Slice 6 failure and diagnostic evidence
+
+- Exact constrained pre-intent failure matrix: byte-identical `run.json` and
+  snapshot; zero scripted creates.
+- Exact post-intent interruption: durable six-member intent; zero creates.
+- Exact provider-return/identity gap: six durable ambiguity outcomes; replay
+  refused; no seventh create.
+- Exact post-final-snapshot interruption: six durable IDs, detached state, valid
+  snapshot, replay refused.
+- Bounded post-intent second resumer: zero calls and no checkpoint mutation.
+- Bounded identity-checkpoint interruption: existing IDs retained and generic
+  create refused.
+- Focused execution/bounded result before the combined gate: 11 tests passed in
+  28.761 seconds.
+- Combined Slice 6 gate: 122 tests passed in 210.972 seconds with four optional
+  JSON Schema skips on the lean host interpreter.
+- Provider/network calls were scripted only. Spend: USD 0. Retained Aster access:
+  none.
+
+### Slice 6 typed-event completion evidence
+
+- Exact and bounded success order:
+  `request_selected` → `fence_validated` → `intent_committed` →
+  `provider_create_permitted`.
+- Stale request: one typed `external_authority.refused` carrying only closed reason
+  and category fields; zero provider calls.
+- Failing sink: complete detached state, six durable identities, valid snapshot,
+  and accumulated sink warnings without escaped failure.
+- Protected sentinel scan across captured logs and serialized event envelopes:
+  absent.
+- Focused catalog/event regression: 3 tests passed in 11.282 seconds.
+- Final typed-event/exact/bounded gate: 20 tests passed in 53.456 seconds.
+- Lifecycle closed-vocabulary, packaged schema, and payload-catalog gate: 25 tests
+  passed.

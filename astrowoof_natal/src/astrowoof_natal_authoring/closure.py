@@ -3602,6 +3602,7 @@ def execute_exact_interactive_initial_wave(
     stored["state"] = "DETACHED" if result["outcome"] == "detached_provider_pending" else "FAILED"
     stored["result"] = result
     save_state(run_json, state)
+    inject("after_final_wave_snapshot")
     return result
 
 
@@ -3629,13 +3630,64 @@ def execute_exact_initial_wave_with_external_authority(
         state = load_json(run_json)
         validate_workspace_snapshot(root, state)
         current_request = read_external_authority_request(root)
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.request_selected",
+                data={
+                    "request_sha256": current_request[
+                        "external_authority_request_sha256"
+                    ],
+                    "request_kind": current_request["request_kind"],
+                    "action_count": current_request["action_count"],
+                    "selected_command": "exact_initial_wave_create",
+                },
+                correlation={"native_run_id": current_request["run_id"]},
+            )
         if current_request != request:
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.refused",
+                    data={
+                        "reason_code": "stale_observation",
+                        "category": "request_mismatch",
+                        "selected_command": "none",
+                        "action_count": current_request["action_count"],
+                    }, correlation={"native_run_id": current_request["run_id"]},
+                    severity="warning",
+                )
             raise InitialWaveError(
                 "stale_observation", "External-authority request is not current"
             )
-        validate_external_authority_grant(
-            current_request, grant, member_authorizations,
-        )
+        try:
+            validate_external_authority_grant(
+                current_request, grant, member_authorizations,
+            )
+        except InitialWaveError as exc:
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.refused",
+                    data={
+                        "reason_code": exc.reason_code,
+                        "category": "grant_validation",
+                        "selected_command": "none",
+                        "action_count": current_request["action_count"],
+                    }, correlation={"native_run_id": current_request["run_id"]},
+                    severity="warning",
+                )
+            raise
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.fence_validated",
+                data={
+                    "request_sha256": current_request[
+                        "external_authority_request_sha256"
+                    ],
+                    "grant_sha256": grant["grant_sha256"],
+                    "action_count": current_request["action_count"],
+                }, correlation={"native_run_id": current_request["run_id"]},
+            )
+        if _failure_injector is not None:
+            _failure_injector("after_request_and_grant_validation")
         if current_request["request_kind"] != "initial_wave_admission":
             raise InitialWaveError(
                 "unsupported_contract", "This operation requires an initial wave"
@@ -3687,7 +3739,19 @@ def execute_exact_initial_wave_with_external_authority(
             "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
             "created_at": utc_now(),
         }
+        if _failure_injector is not None:
+            _failure_injector("before_durable_pre_submit_intent")
         save_state(run_json, state)
+        if event_emitter is not None:
+            event_emitter.emit(
+                "external_authority.intent_committed",
+                data={
+                    "request_sha256": request["external_authority_request_sha256"],
+                    "grant_sha256": grant["grant_sha256"],
+                    "action_count": len(request["ordered_action_ids"]),
+                    "state_revision": state["state_revision"],
+                }, correlation={"native_run_id": request["run_id"]},
+            )
         logger.info(
             "external_authority_intent_committed request=%s actions=%d revision=%s",
             request["external_authority_request_sha256"],
@@ -3700,6 +3764,15 @@ def execute_exact_initial_wave_with_external_authority(
         request["external_authority_request_sha256"],
         len(request["ordered_action_ids"]),
     )
+    if event_emitter is not None:
+        event_emitter.emit(
+            "external_authority.provider_create_permitted",
+            data={
+                "request_sha256": request["external_authority_request_sha256"],
+                "action_count": len(request["ordered_action_ids"]),
+                "selected_command": "exact_initial_wave_create",
+            }, correlation={"native_run_id": request["run_id"]},
+        )
     return execute_exact_interactive_initial_wave(
         state=state, provider=provider, run_json=run_json,
         event_emitter=event_emitter, constrained_intent_token=token,

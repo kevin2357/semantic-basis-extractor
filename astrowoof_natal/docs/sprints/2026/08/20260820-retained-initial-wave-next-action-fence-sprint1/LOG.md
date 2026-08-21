@@ -234,3 +234,36 @@
 - Combined authority, lifecycle, bounded, lineage, and capacity result: 113 tests
   passed in 182.399s with four optional schema skips. Provider/network calls and
   spend: zero. Retained Aster access: none.
+
+## 2026-08-20 — Slice 6 failure atomicity and observability
+
+- Added injectable boundaries after request/grant validation, immediately before
+  the durable intent, after that intent, after provider return/before identity,
+  after each identity checkpoint, and after the final wave snapshot.
+- Proved pre-intent failures preserve byte-identical state/snapshot and make no
+  provider calls.
+- Proved a final-snapshot interruption leaves a complete detached checkpoint and
+  cannot replay the six provider creates.
+- Retained the explicit provider atomicity limit: identity-less acceptance is
+  ambiguity, never create authorization.
+- Added redacted structured logs for request selection, fence validation, durable
+  intent, provider-I/O permission, and bounded refusal reason.
+- Retained typed lifecycle branch, provider identity, waiting, reconciliation, and
+  checkpoint events as failure-isolated observations rather than authority.
+- Detailed matrix:
+  `results/SLICE 6 - FAILURE ATOMICITY AND OBSERVABILITY.md`.
+- Combined authority, lifecycle, bounded, lineage, capacity, and event gate: 122
+  tests passed in 210.972 seconds with four optional schema skips.
+
+## 2026-08-20 — Slice 6 typed authority-event completion
+
+- Added five closed execution-event names for request selection, validated fence,
+  committed intent, provider-create permission, and typed refusal.
+- Added the exact success-order and stale-refusal regressions, bounded success-order
+  coverage, and a deliberately failing sink qualification.
+- Proved event delivery failure does not alter the completed native checkpoint or
+  six scripted provider creates.
+- Used a unique protected sentinel as grant metadata and proved it appears in
+  neither captured authority event data nor captured logs.
+- Final typed-event/exact/bounded gate: 20 tests passed in 53.456 seconds.
+- Closed-vocabulary/schema/catalog gate: 25 tests passed.

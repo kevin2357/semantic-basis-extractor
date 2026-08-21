@@ -50,6 +50,21 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
         "native_status", "capacity_disposition", "command", "eligible_now",
         "reason_code", "provider_action_count", "local_dependency_count",
     ),
+    "external_authority.request_selected": (
+        "request_sha256", "request_kind", "action_count", "selected_command",
+    ),
+    "external_authority.fence_validated": (
+        "request_sha256", "grant_sha256", "action_count",
+    ),
+    "external_authority.intent_committed": (
+        "request_sha256", "grant_sha256", "action_count", "state_revision",
+    ),
+    "external_authority.provider_create_permitted": (
+        "request_sha256", "action_count", "selected_command",
+    ),
+    "external_authority.refused": (
+        "reason_code", "category", "selected_command", "action_count",
+    ),
     "qa.started": ("scope", "attempt"),
     "qa.completed": ("scope", "attempt", "outcome"),
     "retry.decided": ("route", "attempt", "decision", "reason_code"),
