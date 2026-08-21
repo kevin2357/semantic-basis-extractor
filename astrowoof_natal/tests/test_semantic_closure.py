@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import io
 import re
 import shutil
 import sys
@@ -11,6 +12,7 @@ import time
 import unittest
 import zipfile
 from copy import deepcopy
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -42,6 +44,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     build_interactive_authoring_request,
     build_prompt_layout_report,
     checkpoint_spend_boundary,
+    main as closure_main,
     cleanup_completed_run,
     compare_cost_runs,
     discover_passes,
@@ -516,6 +519,192 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
+    def test_characterizes_public_resume_reentry_before_constrained_grant(self) -> None:
+        """Slice 0: prove the unsafe route through the public resume dispatcher."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            setup_provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                max_output_tokens=30_000, prompt_cache_mode="disabled",
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, setup_provider)
+            original = prepare_exact_interactive_initial_wave(
+                state=state, provider=setup_provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            original_ids = {
+                member["action_id"] for member in original["ordered_members"]
+            }
+            state.pop("initial_authoring_wave")
+            for index, action in enumerate(state["spend_ledger"]["actions"], 1):
+                action["state"] = "PROVIDER_ID_RECORDED"
+                action["provider"] = {
+                    "kind": "response", "id": f"resp_public_historical_{index}",
+                }
+            for record in state["passes"].values():
+                record["attempts"] = []
+                record["state"] = "PENDING"
+            save_state(run_json, state)
+
+            base_args = [
+                "astrowoof-semantic-closure", "--run-dir", str(root / "run"),
+                "--resume", "--provider", "openai", "--service-level",
+                "interactive", "--api-key-env", "SBE_SLICE0_FAKE_KEY",
+                "--model", "gpt-5.6-luna", "--max-output-tokens", "30000",
+                "--prompt-cache-mode", "disabled", "--max-transport-retries", "0",
+            ]
+            with patch.dict("os.environ", {"SBE_SLICE0_FAKE_KEY": "test-key"}), \
+                    patch("sys.argv", base_args), redirect_stdout(io.StringIO()):
+                closure_main()
+
+            prepared_state = load_json(run_json)
+            prepared = prepared_state["initial_authoring_wave"]
+            new_ids = {
+                member["action_id"] for member in prepared["ordered_members"]
+            }
+            self.assertTrue(original_ids.isdisjoint(new_ids))
+            self.assertEqual(12, len(prepared_state["spend_ledger"]["actions"]))
+            bundle = load_json(
+                root / "run" / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
+            )
+            wave = {key: value for key, value in prepared.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    item["binding"] for item in bundle["ordered_members"]
+                    if item["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"public-reentry-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="public-reentry-set",
+                issuer="slice-0-scripted-api",
+                authorized_at="2026-08-20T12:00:00Z",
+            )
+            auth_root = root / "authorizations"
+            auth_root.mkdir()
+            envelope_path = auth_root / "wave.json"
+            write_json_atomic(envelope_path, envelope)
+            document_paths = []
+            for index, document in enumerate(documents, 1):
+                path = auth_root / f"member-{index}.json"
+                write_json_atomic(path, document)
+                document_paths.append(path)
+
+            call_ids: list[str] = []
+            call_lock = threading.Lock()
+
+            def scripted_create(
+                _provider: OpenAIResponsesProvider, _payload: dict,
+                *, idempotency_key: str, timeout_seconds: float,
+            ) -> tuple[dict, int]:
+                del idempotency_key, timeout_seconds
+                with call_lock:
+                    response_id = f"resp_public_reentered_{len(call_ids) + 1}"
+                    call_ids.append(response_id)
+                return {"id": response_id, "status": "in_progress"}, 1
+
+            authorized_args = [
+                *base_args, "--initial-wave-authorization", str(envelope_path),
+            ]
+            for path in document_paths:
+                authorized_args.extend(["--spend-authorization", str(path)])
+            with patch.dict("os.environ", {"SBE_SLICE0_FAKE_KEY": "test-key"}), \
+                    patch("sys.argv", authorized_args), \
+                    patch.object(
+                        OpenAIResponsesProvider, "create_response_only",
+                        new=scripted_create,
+                    ), redirect_stdout(io.StringIO()):
+                closure_main()
+
+            self.assertEqual(6, len(call_ids))
+            persisted = load_json(run_json)
+            self.assertEqual(
+                set(call_ids), {
+                    action["provider"]["id"]
+                    for action in persisted["spend_ledger"]["actions"]
+                    if action["action_id"] in new_ids
+                },
+            )
+
+    def test_characterizes_retained_initial_lineage_reentry_before_fence(self) -> None:
+        """Slice 0: prove retained-lineage re-entry with scripted provider I/O."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ScriptedTransport([
+                {"id": f"resp_reentered_{number}", "status": "in_progress"}
+                for number in range(1, 7)
+            ])
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                transport=transport, max_transport_retries=0,
+                prompt_cache_mode="disabled", require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            original = prepare_exact_interactive_initial_wave(
+                state=state, provider=provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            original_ids = [
+                member["action_id"] for member in original["ordered_members"]
+            ]
+
+            # Model the incident shape: historical initial actions and provider
+            # identities remain, but the current joinable wave and pass attempts
+            # do not. This is generated evidence, not the retained Aster run.
+            state.pop("initial_authoring_wave")
+            for index, action in enumerate(state["spend_ledger"]["actions"], 1):
+                action["state"] = "PROVIDER_ID_RECORDED"
+                action["provider"] = {
+                    "kind": "response", "id": f"resp_historical_{index}",
+                }
+            for record in state["passes"].values():
+                record["attempts"] = []
+                record["state"] = "PENDING"
+            save_state(run_json, state)
+
+            reentered = prepare_exact_interactive_initial_wave(
+                state=state, provider=provider, run_dir=root / "run",
+                run_json=run_json,
+            )
+            reentered_ids = [
+                member["action_id"] for member in reentered["ordered_members"]
+            ]
+            self.assertTrue(set(original_ids).isdisjoint(reentered_ids))
+            self.assertEqual(12, len(state["spend_ledger"]["actions"]))
+
+            bundle = load_json(
+                root / "run" / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
+            )
+            wave = {key: value for key, value in reentered.items()
+                    if key not in {"state", "requests"}}
+            documents = [{
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": member["action_id"],
+                "binding": next(
+                    item["binding"] for item in bundle["ordered_members"]
+                    if item["action_id"] == member["action_id"]
+                ),
+                "authorization_reference": f"reentry-{member['pass_number']}",
+            } for member in wave["ordered_members"]]
+            envelope = build_wave_authorization(
+                wave, documents, reservation_set_reference="reentry-set",
+                issuer="slice-0-scripted-api",
+                authorized_at="2026-08-20T12:00:00Z",
+            )
+            authorize_exact_interactive_initial_wave(
+                state=state, run_json=run_json, envelope=envelope,
+                member_authorizations=documents,
+            )
+            result = execute_exact_interactive_initial_wave(
+                state=state, provider=provider, run_json=run_json,
+            )
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(6, len(transport.calls))
+
     def test_exact_interactive_initial_wave_prepares_authorizes_and_detaches(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

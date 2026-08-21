@@ -36,3 +36,33 @@
   and non-applicable lifecycle states.
 - Kevin and the API agent approved the revised sprint direction.
 - No implementation, retained-workspace access, provider call, or spend occurred.
+
+## 2026-08-20 — Slice 0 reproduction and mutation map
+
+- Added a provider-free characterization using the production exact-wave
+  preparation, authorization, and concurrent create coordinator with a scripted
+  transport.
+- Added the requested public-path control through the actual `closure.main()`
+  resume dispatcher: one generic resume prepares the inferred wave and a second
+  generic resume applies the existing v1 authority documents and performs six
+  scripted creates without the proposed constrained grant.
+- Proved that retained historical initial actions/provider IDs plus empty current
+  pass attempts can produce a distinct second six-member inventory in 0.4.13.
+- Mapped preparation, authorization, durable all-member intent, provider I/O,
+  identity persistence, snapshot, and result-publication boundaries.
+- Located the last safe new fence before preparation mutation under the shared
+  cross-process writer, with writer release only after durable pre-submit intent.
+- Focused controls passed: 3 tests.
+- Provider network calls: 0. Retained Aster access: none. Spend: USD 0.
+- Paused for API review before Slice 1 schema freeze.
+
+## 2026-08-20 — Canonical nomenclature huddle
+
+- Canonicalized `RIWNAFS` as **ree-WOOF-naffs**.
+- Preserved **Native Authority** as the intentional second-layer reading of `NA`,
+  while retaining **Next Action** as the formal sprint expansion.
+- Recorded complete, compact, and angsty-teen emoji forms.
+- Documented the independently verified Norwegian waffle/krumkake and Swedish
+  `nafs` linguistic-pastry adjacency.
+- Confirmed that the tiny Scandinavian dog-waffle guardian is binding for morale
+  and non-authoritative for runtime behavior.

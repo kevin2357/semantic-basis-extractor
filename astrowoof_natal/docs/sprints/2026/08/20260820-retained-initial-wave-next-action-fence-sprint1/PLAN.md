@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Kevin and API approved; ready to begin Slice 0
+Status: Slice 0 complete; paused for API review before Slice 1 schema freeze
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 
@@ -119,6 +119,8 @@ from a null request plus unrelated branch fields.
 ## Slices
 
 ### Slice 0 — Provider-free incident reproduction and mutation map
+
+Status: complete; API review pending.
 
 - Build a sanitized retained exact-Natal workspace with prior initial-wave paid
   actions/provider lineage but no safely reusable current wave object.

@@ -1,6 +1,6 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Evidence
 
-Status: planning and source assessment only.
+Status: Slice 0 complete; API review pending.
 
 ## API evidence reviewed
 
@@ -40,4 +40,24 @@ Status: planning and source assessment only.
 - Retained Aster workspace accessed or mutated: no.
 - Provider creates/retrievals: 0 / 0.
 - Spend: USD 0.
-- Repository changes: sprint documentation only.
+- Repository changes: sprint documentation plus one Slice 0 characterization test.
+
+## Slice 0 generated evidence
+
+- Reproducer:
+  `test_characterizes_retained_initial_lineage_reentry_before_fence`.
+- Public resume/dispatch reproducer:
+  `test_characterizes_public_resume_reentry_before_constrained_grant`.
+- Production surfaces exercised: exact initial-wave preparation, binding-bundle
+  publication, aggregate wave authorization, concurrent create coordinator,
+  durable provider-identity recording, and workspace snapshots.
+- Observed unsafe pre-fence result: 12 ledger actions comprising two disjoint
+  six-member initial inventories; six scripted creates for the second inventory.
+- Fresh-run control:
+  `test_exact_interactive_initial_wave_prepares_authorizes_and_detaches`.
+- Public-path result: 1 test passed in 7.637 seconds.
+- Combined focused result: 3 tests passed.
+- Detailed mutation map:
+  `results/SLICE 0 - REPRODUCTION AND MUTATION MAP.md`.
+- External provider/network calls: 0.
+- Retained Aster access or mutation: none.
