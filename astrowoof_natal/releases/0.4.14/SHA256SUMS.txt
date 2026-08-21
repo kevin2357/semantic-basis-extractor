@@ -1,0 +1,1 @@
+ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93  astrowoof_natal_authoring-0.4.14-py3-none-any.whl

@@ -35,3 +35,18 @@ closed.
 - Lifecycle inspection v0.5: required for the external-authority handoff
 
 Tagging and publication remain pending the explicit Slice 8 release gate.
+
+## Qualification
+
+- Affected authority/lifecycle/event suite: 80 passed; five optional schema skips.
+- Exact constrained execution suite: 11 passed.
+- Bounded constrained fence regressions: 4 passed.
+- Installed external-authority qualification: passed.
+- Installed provider-pending 4+2 qualification: passed.
+- Installed release smoke: passed with 50 cards and four summaries.
+- Fixed-epoch double build: byte-identical.
+- Wheel inventory: 132 entries, 77 resources, `py.typed` present, no bytecode.
+- Provider network calls/spend: 0 / USD 0.
+
+Candidate wheel SHA-256:
+`ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`.

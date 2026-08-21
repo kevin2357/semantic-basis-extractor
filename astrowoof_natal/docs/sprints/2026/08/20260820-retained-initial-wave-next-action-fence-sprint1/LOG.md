@@ -333,3 +333,9 @@ candidate exercised the real workspace/lifecycle/fresh-process/reconciliation pa
 - Added candidate release notes, compatibility, known-limitations, and API handoff
   documents.
 - Tagging and publication remain behind the explicit final Slice 8 gate.
+- Built 0.4.14 twice at fixed source epoch; wheel bytes matched exactly.
+- Installed the candidate into a fresh Python environment and passed the holistic
+  external-authority qualification, provider-pending qualification, release smoke,
+  resource inventory, schema access, and package identity checks.
+- Candidate SHA-256:
+  `ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`.

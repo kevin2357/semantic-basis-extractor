@@ -1,0 +1,51 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.14",
+  "status": "qualified_awaiting_tag_and_publication",
+  "release_tag": "astrowoof-natal-authoring-v0.4.14",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.14-py3-none-any.whl",
+    "bytes": 880610,
+    "sha256": "ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93",
+    "wheel_entry_count": 132,
+    "resource_count": 77,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "7139415d8bf8c0bce1c9a075de6e1fc9df0ada95",
+    "source_date_epoch": 1787295126,
+    "byte_reproducible": true,
+    "artifact_evidence_commit": "pending_evidence_lock_commit"
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "upstream": {
+    "agf": "0.8.1",
+    "agf_wheel_sha256": "860c48793318c82c986b32664cd0f3fe97c4b1e02fb1e489561bc395c8b5a3ed",
+    "spc": "0.11.0",
+    "spc_wheel_sha256": "82290df44fe5697e87df2e27eb0aa4bab3b7954c66ce988efda0962964e1366d"
+  },
+  "qa": {
+    "affected_source_tests": "80 passed; 5 optional schema skips",
+    "exact_constrained_tests": "11 passed",
+    "bounded_constrained_tests": "4 passed",
+    "installed_external_authority_qualification": "pass",
+    "external_authority_receipt_file_sha256": "1d59ba89c65f494cfda33f0109dbbe59c72b14c4712bff984cead6bb5c3f2be4",
+    "external_authority_receipt_sha256": "5cf177ef0e6cca129a4f07327b56628c5632ef78bce116aeb1a11a8246cddda2",
+    "installed_provider_pending_qualification": "pass",
+    "provider_pending_receipt_sha256": "b77614fb4aebe641fc10d347a9ebc1e3d1133a573b51b9dcfc205cf3763e1576",
+    "installed_wheel_release_smoke": "pass",
+    "scripted_provider_create_count": 6,
+    "provider_network_call_count": 0,
+    "provider_spend_usd": 0
+  },
+  "publication": {
+    "status": "pending_explicit_authorization"
+  }
+}

@@ -241,6 +241,27 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
 - Provider/network calls were scripted only. Spend: USD 0. Retained Aster access:
   none.
 
+## Slice 8 release closeout candidate
+
+- Version: 0.4.14; immutable 0.4.13 remains unchanged.
+- Artifact source commit: `7139415d8bf8c0bce1c9a075de6e1fc9df0ada95`.
+- Fixed `SOURCE_DATE_EPOCH`: `1787295126`.
+- Two independent wheel builds were byte-identical at SHA-256
+  `ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`.
+- Candidate size: 880610 bytes; 132 entries; 77 packaged resources; `py.typed`
+  present; zero bytecode/cache entries; contract catalog present.
+- Fresh installed Python 3.12 environment:
+  - holistic external-authority qualification: pass;
+  - provider-pending six-create/4+2-retrieval qualification: pass;
+  - `astrowoof-release-smoke --require-installed`: pass;
+  - installed version and packaged qualification schema: correct.
+- External-authority receipt file SHA-256:
+  `1d59ba89c65f494cfda33f0109dbbe59c72b14c4712bff984cead6bb5c3f2be4`.
+- External-authority receipt contract SHA-256:
+  `5cf177ef0e6cca129a4f07327b56628c5632ef78bce116aeb1a11a8246cddda2`.
+- No provider network calls, credentials, or spend. Retained Aster untouched.
+- Tag/publication: pending explicit Kevin/API authorization.
+
 ### Slice 6 typed-event completion evidence
 
 - Exact and bounded success order:
