@@ -68,3 +68,17 @@
 - Recorded schema/semantic parity, full timing/readiness conditionals, sink-failure
   isolation, incident uncertainty, and packaged-fixture qualification requirements.
 - Slice 2 may proceed.
+
+## 2026-08-21 — Slice 2 native validator and classification hardening
+
+- Tightened lifecycle inspection v0.5 in place in packaged JSON Schema and Python
+  semantic validation.
+- Enforced the full approved request and refusal command-conditional tables,
+  including capacity reason/readiness and both timing fields.
+- Preserved v0.4, valid request/refusal byte shape, public states, and provider/API
+  ownership boundaries.
+- Expanded semantic and schema mutation coverage for every approved predicate.
+- Focused evidence: 94 passed, 5 environment-dependent schema tests skipped;
+  Python compilation and JSON parsing passed.
+- Provider calls: 0. Spend: USD 0. Retained workspace access: none.
+- Slice 2 is complete; structured diagnostic enrichment remains Slice 3.

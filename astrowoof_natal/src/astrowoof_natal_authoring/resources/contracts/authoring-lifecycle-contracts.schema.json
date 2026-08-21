@@ -701,6 +701,81 @@
             },
             "required": ["external_authority_request", "external_authority_refusal"]
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_branch": {
+                "properties": {"command": {"const": "await_external_authority"}},
+                "required": ["command"]
+              }
+            },
+            "required": ["execution_branch"]
+          },
+          "then": {
+            "properties": {
+              "execution_branch": {
+                "properties": {
+                  "eligible_now": {"const": false},
+                  "reason_code": {"const": "spend_authorization_required"},
+                  "action_ids": {"minItems": 1},
+                  "not_before": {"type": "null"}
+                }
+              },
+              "execution_capacity": {
+                "properties": {
+                  "disposition": {"const": "await_external_authority"},
+                  "reason_code": {"const": "spend_authorization_required"},
+                  "local_work_ready_now": {"const": false},
+                  "resume_not_before": {"type": "null"}
+                }
+              },
+              "external_authority_request": {"type": "object"},
+              "external_authority_refusal": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"external_authority_refusal": {"type": "object"}},
+            "required": ["external_authority_refusal"]
+          },
+          "then": {
+            "properties": {
+              "execution_branch": {
+                "properties": {
+                  "command": {"const": "none"},
+                  "eligible_now": {"const": false},
+                  "reason_code": {"const": "native_review_or_ambiguity"},
+                  "action_ids": {"maxItems": 0},
+                  "not_before": {"type": "null"}
+                }
+              },
+              "execution_capacity": {
+                "properties": {
+                  "disposition": {"const": "retain_for_review"},
+                  "reason_code": {"const": "native_review_required"},
+                  "local_work_ready_now": {"const": false},
+                  "resume_not_before": {"type": "null"}
+                }
+              },
+              "external_authority_request": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"external_authority_request": {"type": "object"}},
+            "required": ["external_authority_request"]
+          },
+          "then": {
+            "properties": {
+              "execution_branch": {
+                "properties": {"command": {"const": "await_external_authority"}}
+              },
+              "external_authority_refusal": {"type": "null"}
+            }
+          }
         }
       ],
       "additionalProperties": false

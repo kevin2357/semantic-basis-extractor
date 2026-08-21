@@ -230,6 +230,56 @@ class TestExternalAuthorityContractProposal(unittest.TestCase):
                 validator.validate(load(name))
 
     @unittest.skipUnless(Draft202012Validator, "jsonschema is not installed")
+    def test_lifecycle_v05_schema_rejects_external_authority_conditionals(
+        self,
+    ) -> None:
+        lifecycle = json.loads((
+            CONTRACTS / "authoring-lifecycle-contracts.schema.json"
+        ).read_text(encoding="utf-8"))
+        external = json.loads((
+            CONTRACTS / "external-authority-contracts.v1.schema.json"
+        ).read_text(encoding="utf-8"))
+        resolver = RefResolver.from_schema(lifecycle, store={
+            "external-authority-contracts.v1.schema.json": external,
+            external["$id"]: external,
+        })
+        validator = Draft202012Validator(lifecycle, resolver=resolver)
+        request = load("lifecycle-awaiting-external-authority.v0.5.json")
+        request_mutations = (
+            ("execution_branch", "eligible_now", True),
+            ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+            ("execution_branch", "action_ids", []),
+            ("execution_branch", "not_before", "2026-08-21T12:01:00Z"),
+            ("execution_capacity", "disposition", "continue_local_cycle"),
+            ("execution_capacity", "reason_code", "local_work_ready"),
+            ("execution_capacity", "local_work_ready_now", True),
+            ("execution_capacity", "resume_not_before", "2026-08-21T12:01:00Z"),
+        )
+        refusal = load("lifecycle-native-review-refusal.v0.5.json")
+        refusal_mutations = (
+            ("execution_branch", "command", "ordinary_resume"),
+            ("execution_branch", "eligible_now", True),
+            ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+            ("execution_branch", "action_ids", ["paid_" + "a" * 24]),
+            ("execution_branch", "not_before", "2026-08-21T12:01:00Z"),
+            ("execution_capacity", "disposition", "continue_local_cycle"),
+            ("execution_capacity", "reason_code", "local_work_ready"),
+            ("execution_capacity", "local_work_ready_now", True),
+            ("execution_capacity", "resume_not_before", "2026-08-21T12:01:00Z"),
+        )
+        for canonical, mutations in (
+            (request, request_mutations), (refusal, refusal_mutations),
+        ):
+            for section, field, changed_value in mutations:
+                with self.subTest(
+                    command=canonical["execution_branch"]["command"], field=field,
+                ):
+                    changed = deepcopy(canonical)
+                    changed[section][field] = changed_value
+                    with self.assertRaises(ValidationError):
+                        validator.validate(changed)
+
+    @unittest.skipUnless(Draft202012Validator, "jsonschema is not installed")
     def test_request_requires_valid_snapshot_but_refusal_can_report_invalidity(
         self,
     ) -> None:

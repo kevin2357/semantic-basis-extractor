@@ -60,3 +60,19 @@ record committed as `4b6a60d`.
 - Gate: awaiting joint contract and diagnostic approval
 
 API disposition: approved in `API Agent Slice 1 Review and Response.md`.
+
+## Slice 2 implementation
+
+- Semantic validator:
+  `src/astrowoof_natal_authoring/lifecycle_contracts.py`
+- Packaged schema:
+  `src/astrowoof_natal_authoring/resources/contracts/authoring-lifecycle-contracts.schema.json`
+- Investigation/mutation tests:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Schema mutation tests:
+  `tests/test_external_authority_contract_proposal.py`
+- Result:
+  `results/SLICE 2 - NATIVE VALIDATOR AND CLASSIFICATION HARDENING.md`
+- Focused tests: 94 passed, 5 skipped because host `jsonschema` is unavailable.
+- Python compilation and packaged JSON parsing: passed.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.

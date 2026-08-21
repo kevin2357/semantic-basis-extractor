@@ -121,17 +121,73 @@ class TestExternalAuthorityEmptyInventoryInvestigation(unittest.TestCase):
                     "execution_branch", "not_before", "2026-08-21T12:01:00Z",
                 ),
             }
-            native_validator_gaps = {"branch_reason", "not_before"}
             for expected, (section, field, value) in mutations.items():
                 with self.subTest(predicate=expected):
                     changed = deepcopy(canonical)
                     changed[section][field] = value
                     self.assertEqual([expected], api_external_authority_predicates(changed))
-                    if expected in native_validator_gaps:
+                    with self.assertRaises(ValueError):
                         validate_lifecycle_inspection_v05(changed)
+
+    def test_all_approved_await_conditionals_are_native_invariants(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            canonical = inspect_lifecycle(
+                self.helper.make_wave_run(Path(temporary), "exact_natal"),
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            mutations = (
+                ("execution_branch", "eligible_now", True),
+                ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+                ("execution_branch", "action_ids", []),
+                ("execution_branch", "not_before", "2026-08-21T12:01:00Z"),
+                ("execution_capacity", "disposition", "continue_local_cycle"),
+                ("execution_capacity", "reason_code", "local_work_ready"),
+                ("execution_capacity", "local_work_ready_now", True),
+                ("execution_capacity", "resume_not_before", "2026-08-21T12:01:00Z"),
+                ("document", "external_authority_request", None),
+            )
+            for section, field, value in mutations:
+                with self.subTest(section=section, field=field):
+                    changed = deepcopy(canonical)
+                    if section == "document":
+                        changed[field] = value
                     else:
-                        with self.assertRaises(ValueError):
-                            validate_lifecycle_inspection_v05(changed)
+                        changed[section][field] = value
+                    with self.assertRaises(ValueError):
+                        validate_lifecycle_inspection_v05(changed)
+
+    def test_typed_refusal_requires_none_empty_and_retain_for_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = self.helper.make_wave_run(Path(temporary), "exact_natal")
+            run_json = run_dir / "run.json"
+            state = json.loads(run_json.read_text(encoding="utf-8"))
+            state["spend_ledger"]["actions"][0]["state"] = "AUTHORIZED"
+            run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            write_workspace_snapshot(run_dir)
+            canonical = inspect_lifecycle(
+                run_dir,
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            validate_lifecycle_inspection_v05(canonical)
+            mutations = (
+                ("execution_branch", "command", "ordinary_resume"),
+                ("execution_branch", "eligible_now", True),
+                ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+                ("execution_branch", "action_ids", ["paid_" + "a" * 24]),
+                ("execution_branch", "not_before", "2026-08-21T12:01:00Z"),
+                ("execution_capacity", "disposition", "continue_local_cycle"),
+                ("execution_capacity", "reason_code", "local_work_ready"),
+                ("execution_capacity", "local_work_ready_now", True),
+                ("execution_capacity", "resume_not_before", "2026-08-21T12:01:00Z"),
+            )
+            for section, field, value in mutations:
+                with self.subTest(section=section, field=field):
+                    changed = deepcopy(canonical)
+                    changed[section][field] = value
+                    with self.assertRaises(ValueError):
+                        validate_lifecycle_inspection_v05(changed)
 
 
 if __name__ == "__main__":

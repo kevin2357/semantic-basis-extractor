@@ -554,6 +554,58 @@ def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
     if request is not None and refusal is not None:
         raise ValueError("Lifecycle request and refusal are mutually exclusive")
     branch = value.get("execution_branch") or {}
+    capacity = value.get("execution_capacity") or {}
+    command = branch.get("command")
+    conditional_errors: list[str] = []
+    if command == "await_external_authority":
+        if branch.get("eligible_now") is not False:
+            conditional_errors.append("eligible_now")
+        if branch.get("reason_code") != "spend_authorization_required":
+            conditional_errors.append("branch_reason_code")
+        if capacity.get("disposition") != "await_external_authority":
+            conditional_errors.append("capacity_disposition")
+        if capacity.get("reason_code") != "spend_authorization_required":
+            conditional_errors.append("capacity_reason_code")
+        if capacity.get("local_work_ready_now") is not False:
+            conditional_errors.append("local_work_ready_now")
+        if capacity.get("resume_not_before") is not None:
+            conditional_errors.append("capacity_resume_not_before")
+        if not branch.get("action_ids"):
+            conditional_errors.append("branch_action_inventory")
+        if branch.get("not_before") is not None:
+            conditional_errors.append("branch_not_before")
+        if request is None:
+            conditional_errors.append("request_presence")
+        if refusal is not None:
+            conditional_errors.append("refusal_presence")
+    elif refusal is not None:
+        if command != "none":
+            conditional_errors.append("refusal_presence")
+        if branch.get("eligible_now") is not False:
+            conditional_errors.append("eligible_now")
+        if branch.get("reason_code") != "native_review_or_ambiguity":
+            conditional_errors.append("branch_reason_code")
+        if branch.get("action_ids"):
+            conditional_errors.append("branch_action_inventory")
+        if branch.get("not_before") is not None:
+            conditional_errors.append("branch_not_before")
+        if capacity.get("disposition") != "retain_for_review":
+            conditional_errors.append("capacity_disposition")
+        if capacity.get("reason_code") != "native_review_required":
+            conditional_errors.append("capacity_reason_code")
+        if capacity.get("local_work_ready_now") is not False:
+            conditional_errors.append("local_work_ready_now")
+        if capacity.get("resume_not_before") is not None:
+            conditional_errors.append("capacity_resume_not_before")
+        if request is not None:
+            conditional_errors.append("request_presence")
+    elif request is not None:
+        conditional_errors.append("request_presence")
+    if conditional_errors:
+        raise ValueError(
+            "Contradictory lifecycle external-authority fields: "
+            + ", ".join(sorted(set(conditional_errors)))
+        )
     if request is not None:
         from .external_authority import validate_external_authority_request
 
@@ -577,7 +629,7 @@ def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
             or branch.get("action_ids")
         ):
             raise ValueError("Lifecycle external-authority refusal does not join")
-    if branch.get("command") == "await_external_authority" and request is None:
+    if command == "await_external_authority" and request is None:
         raise ValueError("Await-external-authority branch lacks its exact request")
 
 
