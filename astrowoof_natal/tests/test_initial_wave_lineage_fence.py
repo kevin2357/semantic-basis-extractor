@@ -27,6 +27,8 @@ from astrowoof_natal_authoring.initial_wave import (
 from astrowoof_natal_authoring.external_authority import (
     read_external_authority_request,
 )
+from astrowoof_natal_authoring.lifecycle import inspect_lifecycle
+from astrowoof_natal_authoring.reconciliation import initial_timing
 from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
 
 
@@ -206,6 +208,55 @@ class TestInitialWaveLineageFence(SemanticClosureFixture):
             self.assertEqual(before_run, run_json.read_bytes())
             self.assertEqual(
                 before_snapshot, (run_json.parent / "workspace-snapshot.json").read_bytes(),
+            )
+
+    def test_lifecycle_v05_embeds_exact_initial_wave_request(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json, _provider = self.prepared(root)
+            inspection = inspect_lifecycle(
+                run_json.parent, native_exclusive_access="declared",
+                observed_at="2026-08-20T18:00:00Z",
+            )
+            request = inspection["external_authority_request"]
+            self.assertEqual("astrowoof.authoring_lifecycle_inspection.v0.5", inspection[
+                "schema_version"
+            ])
+            self.assertIsNone(inspection["external_authority_refusal"])
+            self.assertEqual(inspection["run_id"], request["run_id"])
+            self.assertEqual(inspection["observation"], request["observation"])
+            self.assertEqual(
+                request["ordered_action_ids"], inspection["execution_branch"]["action_ids"],
+            )
+            self.assertEqual(
+                "await_external_authority", inspection["execution_branch"]["command"],
+            )
+
+    def test_lifecycle_v05_embeds_orphaned_provider_lineage_refusal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json, _provider = self.prepared(root)
+            state.pop("initial_authoring_wave")
+            action = state["spend_ledger"]["actions"][0]
+            action["state"] = "WAITING"
+            action["provider"] = {"kind": "response", "id": "resp_orphaned"}
+            action["provider_reconciliation"] = initial_timing(
+                recorded_at="2026-08-20T17:00:00Z", mechanism="response",
+            )
+            save_state(run_json, state)
+            inspection = inspect_lifecycle(
+                run_json.parent, native_exclusive_access="declared",
+                observed_at="2026-08-20T18:00:00Z",
+            )
+            refusal = inspection["external_authority_refusal"]
+            self.assertIsNone(inspection["external_authority_request"])
+            self.assertEqual(
+                "initial_wave_lineage_unjoinable", refusal["reason_code"],
+            )
+            self.assertIn("prior_provider_identity", refusal["evidence_categories"])
+            self.assertEqual("none", inspection["execution_branch"]["command"])
+            self.assertEqual(
+                "retain_for_review", inspection["execution_capacity"]["disposition"],
             )
 
 

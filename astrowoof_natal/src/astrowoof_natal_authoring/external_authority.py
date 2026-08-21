@@ -17,6 +17,7 @@ from .resource_access import read_resource_text
 
 REQUEST_SCHEMA = "astrowoof.external_authority_request.v1"
 GRANT_SCHEMA = "astrowoof.external_authority_grant.v1"
+REFUSAL_SCHEMA = "astrowoof.external_authority_refusal.v1"
 CONTRACT_SCHEMA_RESOURCE = "contracts/external-authority-contracts.v1.schema.json"
 SNAPSHOT_FILENAME = "workspace-snapshot.json"
 _REQUEST_KEYS = frozenset({
@@ -53,6 +54,22 @@ _GRANT_MEMBER_KEYS = frozenset({
 })
 _AUTHORIZATION_KEYS = frozenset({
     "schema_version", "action_id", "binding", "authorization_reference",
+})
+_REFUSAL_KEYS = frozenset({
+    "schema_version", "refusal_sha256", "run_id", "observation",
+    "reason_code", "review_required", "provider_create_permitted",
+    "evidence_categories",
+})
+REFUSAL_REASONS = frozenset({
+    "initial_wave_lineage_unjoinable", "snapshot_invalid",
+    "native_state_inconsistent", "provider_submission_ambiguous",
+    "provider_identity_conflict", "unsupported_provider_capable_route",
+})
+REFUSAL_EVIDENCE_CATEGORIES = frozenset({
+    "prior_initial_action", "prior_provider_identity", "prior_consumption",
+    "response_evidence", "ambiguous_lineage", "missing_join_artifact",
+    "snapshot_incomplete_or_invalid", "native_evidence_conflict",
+    "unsupported_route_or_contract",
 })
 
 
@@ -282,6 +299,52 @@ def validate_external_authority_grant(
     return grant
 
 
+def build_external_authority_refusal(
+    *, run_id: str, observation: Mapping[str, Any], reason_code: str,
+    evidence_categories: Sequence[str],
+) -> dict[str, Any]:
+    """Build one closed provider-free native refusal."""
+    categories = sorted(set(evidence_categories))
+    value = {
+        "schema_version": REFUSAL_SCHEMA,
+        "run_id": run_id,
+        "observation": deepcopy(dict(observation)),
+        "reason_code": reason_code,
+        "review_required": True,
+        "provider_create_permitted": False,
+        "evidence_categories": categories,
+    }
+    value["refusal_sha256"] = _canonical_sha256(value)
+    return validate_external_authority_refusal(value)
+
+
+def validate_external_authority_refusal(value: Any) -> dict[str, Any]:
+    """Validate one closed native external-authority refusal."""
+    if not isinstance(value, dict) or set(value) != _REFUSAL_KEYS:
+        raise InitialWaveError("unsupported_contract", "Refusal fields are not exact")
+    if (
+        value.get("schema_version") != REFUSAL_SCHEMA
+        or value.get("reason_code") not in REFUSAL_REASONS
+        or value.get("review_required") is not True
+        or value.get("provider_create_permitted") is not False
+    ):
+        raise InitialWaveError("unsupported_contract", "Refusal vocabulary is invalid")
+    observation = value.get("observation")
+    if not isinstance(observation, dict) or set(observation) != _OBSERVATION_KEYS:
+        raise InitialWaveError("unsupported_contract", "Refusal observation is invalid")
+    categories = value.get("evidence_categories")
+    if (
+        not isinstance(categories, list) or not 1 <= len(categories) <= 16
+        or categories != sorted(set(categories))
+        or any(item not in REFUSAL_EVIDENCE_CATEGORIES for item in categories)
+    ):
+        raise InitialWaveError("unsupported_contract", "Refusal evidence is invalid")
+    body = {key: item for key, item in value.items() if key != "refusal_sha256"}
+    if value.get("refusal_sha256") != _canonical_sha256(body):
+        raise InitialWaveError("digest_mismatch", "Refusal digest is invalid")
+    return value
+
+
 def _snapshot_observation(root: Path, state: Mapping[str, Any]) -> dict[str, Any]:
     from .closure import normalized_path, sha256_file
 
@@ -321,14 +384,16 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
         raise InitialWaveError("snapshot_invalid", str(exc)) from exc
     observation = _snapshot_observation(root, state)
     stored_wave = state.get("initial_authoring_wave")
-    if stored_wave:
-        if not isinstance(stored_wave, Mapping) or stored_wave.get("state") != (
-            "AWAITING_SPEND_AUTHORIZATION"
-        ):
-            raise InitialWaveError(
-                "request_unavailable",
-                "Stored initial wave is not awaiting external authority",
-            )
+    if (
+        isinstance(stored_wave, Mapping)
+        and stored_wave.get("state") == "AWAITING_SPEND_AUTHORIZATION"
+    ):
+        if state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v2":
+            from .bounded_lifecycle import _validate_stored_bounded_initial_wave
+            _validate_stored_bounded_initial_wave(state, root)
+        else:
+            from .closure import _validate_stored_exact_initial_wave
+            _validate_stored_exact_initial_wave(state, root)
         inputs = read_initial_wave_authority_inputs(root)
         wave = inputs["prepared_wave"]
         bundle = inputs["binding_bundle"]
@@ -380,7 +445,14 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
             actions=bundle["ordered_members"], initial_wave=context,
         )
     else:
-        orphaned = _orphaned_initial_lineage_categories(state, root)
+        orphaned = (
+            _orphaned_initial_lineage_categories(state, root)
+            if (
+                not stored_wave
+                and state.get("route_contract")
+                != "astrowoof.bounded_natal.authoring_run.v2"
+            ) else set()
+        )
         if orphaned:
             raise InitialWaveError(
                 "initial_wave_lineage_unjoinable",
@@ -392,6 +464,14 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
             if item.get("state") == "PREPARED"
             and item.get("provider") is None and item.get("consumption") is None
         ]
+        if stored_wave and any(
+            (item.get("binding") or {}).get("stage") == "authoring_initial"
+            for item in actions
+        ):
+            raise InitialWaveError(
+                "request_unavailable",
+                "Stored initial wave is not admissible for a new initial create",
+            )
         if not actions:
             raise InitialWaveError(
                 "request_unavailable", "No exact prepared action set exists"

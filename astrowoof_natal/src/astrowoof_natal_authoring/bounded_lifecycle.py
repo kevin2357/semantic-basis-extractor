@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import threading
 from copy import deepcopy
 from dataclasses import dataclass
@@ -53,8 +54,11 @@ from .initial_wave import (
     ProviderCreateResult as InitialWaveProviderCreateResult,
     build_initial_wave,
     build_initial_wave_binding_bundle,
+    build_wave_authorization,
     execute_initial_wave_creates,
     preflight_wave_authorization,
+    validate_initial_wave,
+    validate_initial_wave_binding_bundle_against_wave,
 )
 from .spend import (
     AmbiguousProviderSubmission,
@@ -1048,14 +1052,88 @@ def _authorize_bounded_interactive_initial_wave(
     save_state(run_dir / "run.json", state)
 
 
+def _validate_stored_bounded_initial_wave(
+    state: dict[str, Any], run_dir: Path,
+) -> dict[str, Any]:
+    """Prove the stored bounded wave, bundle, requests, ledger, and passes join."""
+    stored = state.get("initial_authoring_wave")
+    if not isinstance(stored, dict):
+        raise InitialWaveError("initial_wave_lineage_unjoinable", "Stored wave is absent")
+    try:
+        excluded = {
+            "state", "requests", "authorization", "result",
+            "constrained_submission_intent",
+        }
+        wave = {key: value for key, value in stored.items() if key not in excluded}
+        validate_initial_wave(wave)
+        if wave.get("route_family") != "bounded_natal":
+            raise InitialWaveError("route_mismatch", "Stored wave is not bounded Natal")
+        bundle = load_json(run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME)
+        validate_initial_wave_binding_bundle_against_wave(bundle, wave)
+        member_ids = [item["action_id"] for item in wave["ordered_members"]]
+        requests = stored.get("requests")
+        if not isinstance(requests, dict) or set(requests) != set(member_ids):
+            raise InitialWaveError("member_inventory_mismatch", "Wave requests do not join")
+        ledger = (state.get("spend_ledger") or {}).get("actions", [])
+        for member, bundle_member in zip(
+            wave["ordered_members"], bundle["ordered_members"], strict=True,
+        ):
+            matches = [
+                item for item in ledger
+                if isinstance(item, dict) and item.get("action_id") == member["action_id"]
+            ]
+            if len(matches) != 1 or matches[0].get("binding") != bundle_member["binding"]:
+                raise InitialWaveError("binding_mismatch", "Wave ledger does not join")
+            request = requests[member["action_id"]]
+            request_path = Path(str(request.get("request_path") or ""))
+            if (
+                request.get("request_sha256") != member["request_sha256"]
+                or not request_path.is_file()
+                or spend_digest(load_json(request_path)) != member["request_sha256"]
+            ):
+                raise InitialWaveError("digest_mismatch", "Wave request bytes do not join")
+            pass_record = (state.get("passes") or {}).get(member["pass_id"])
+            attempts = pass_record.get("attempts", []) if isinstance(pass_record, dict) else []
+            if not any(
+                isinstance(attempt, dict)
+                and attempt.get("paid_action_id") == member["action_id"]
+                for attempt in attempts
+            ):
+                raise InitialWaveError(
+                    "member_inventory_mismatch", "Wave pass attempt is absent",
+                )
+        return stored
+    except (InitialWaveError, KeyError, TypeError, ValueError, FileNotFoundError) as exc:
+        raise InitialWaveError(
+            "initial_wave_lineage_unjoinable",
+            "Stored bounded initial-wave evidence cannot prove one exact wave",
+            evidence_categories=("native_evidence_conflict",),
+        ) from exc
+
+
 def _execute_bounded_interactive_initial_wave(
     state: dict[str, Any], run_dir: Path, provider: BoundedLifecycleProvider,
     event_emitter: ExecutionEventEmitter | None,
+    constrained_intent_token: str,
     failure_injector: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     stored = state["initial_authoring_wave"]
+    if stored.get("state") != "SUBMITTING":
+        raise InitialWaveError(
+            "authorization_missing", "Bounded initial wave lacks durable submit intent",
+        )
+    intent = stored.get("constrained_submission_intent") or {}
+    if intent.get("token_sha256") != hashlib.sha256(
+        constrained_intent_token.encode("utf-8")
+    ).hexdigest():
+        raise InitialWaveError(
+            "provider_submission_ambiguous", "Submission intent capability is absent",
+        )
     wave = {key: value for key, value in stored.items()
-            if key not in {"state", "requests", "authorization", "result"}}
+            if key not in {
+                "state", "requests", "authorization", "result",
+                "constrained_submission_intent",
+            }}
     documents = [next(
         action["authorization"] for action in state["spend_ledger"]["actions"]
         if action["action_id"] == member["action_id"]
@@ -1095,15 +1173,10 @@ def _execute_bounded_interactive_initial_wave(
                     provider_id=action["provider"]["id"],
                     metadata={"resumed_from_durable_identity": True},
                 )
-            if action.get("state") != "AUTHORIZED":
+            if action.get("state") != "SUBMITTING":
                 raise RuntimeError(
                     f"bounded wave member is not submit-eligible: {action.get('state')}"
                 )
-            begin_submission(
-                action, consumer_id="bounded-worker",
-                state_revision=int(state.get("state_revision") or 0),
-            )
-            persist_state(run_dir / "run.json", state)
         inject(f"after_submitting:{member['action_id']}")
         pre_post_barrier.wait()
         inject(f"before_provider_create:{member['action_id']}")
@@ -1120,7 +1193,16 @@ def _execute_bounded_interactive_initial_wave(
         )
 
     def persist(member: Mapping[str, Any], outcome: Mapping[str, Any]) -> None:
-        with mutation_lock:
+        from .lifecycle import _exclusive_lifecycle_lock
+        with _exclusive_lifecycle_lock(run_dir), mutation_lock:
+            persisted_revision = int(
+                load_json(run_dir / "run.json").get("state_revision") or 0
+            )
+            if persisted_revision != int(state.get("state_revision") or 0):
+                raise AmbiguousProviderSubmission(
+                    "Bounded initial-wave state changed before identity persistence",
+                    action=action_for(member["action_id"]),
+                )
             action = action_for(member["action_id"])
             record = state["passes"][member["pass_id"]]
             attempt = record["attempts"][-1]
@@ -1176,6 +1258,8 @@ def resume_bounded_run(
     provider: BoundedLifecycleProvider | None = None,
     authorizations: list[dict[str, Any]] | None = None,
     initial_wave_authorization: dict[str, Any] | None = None,
+    external_authority_request: dict[str, Any] | None = None,
+    external_authority_grant: dict[str, Any] | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
     consumer_id: str = "bounded-worker",
     reconciliation_only: bool = False,
@@ -1212,9 +1296,112 @@ def resume_bounded_run(
         return state
     if state.get("provider") != provider.name:
         raise ValueError("Resume provider does not match the frozen run provider")
+    if initial_wave_authorization is not None:
+        raise InitialWaveError(
+            "aggregate_grant_required",
+            "Legacy bounded initial-wave authority cannot authorize provider create",
+        )
+    if bool(external_authority_request) != bool(external_authority_grant):
+        raise InitialWaveError(
+            "partial_authorization", "External request and grant are required together",
+        )
+    if external_authority_request is not None:
+        from .external_authority import (
+            read_external_authority_request,
+            validate_external_authority_grant,
+        )
+        from .lifecycle import _exclusive_lifecycle_lock
+
+        if len(authorizations or []) != 6:
+            raise InitialWaveError(
+                "partial_authorization", "Bounded initial wave requires six authorizations",
+            )
+        token = os.urandom(32).hex()
+        with _exclusive_lifecycle_lock(run_dir):
+            state = load_json(run_json)
+            validate_workspace_snapshot(run_dir, state)
+            current = read_external_authority_request(run_dir)
+            if current != external_authority_request:
+                raise InitialWaveError(
+                    "stale_observation", "External-authority request is not current",
+                )
+            validate_external_authority_grant(
+                current, external_authority_grant, authorizations or [],
+            )
+            if (
+                current["request_kind"] != "initial_wave_admission"
+                or (current.get("initial_wave") or {}).get("route_contract")
+                != BOUNDED_RUN_CONTRACT
+            ):
+                raise InitialWaveError(
+                    "unsupported_contract", "Grant is not for a bounded initial wave",
+                )
+            stored = state.get("initial_authoring_wave")
+            if not isinstance(stored, dict) or stored.get("state") != (
+                "AWAITING_SPEND_AUTHORIZATION"
+            ):
+                raise InitialWaveError(
+                    "request_unavailable", "Bounded initial wave is no longer admissible",
+                )
+            wave = {key: value for key, value in stored.items()
+                    if key not in {
+                        "state", "requests", "authorization", "result",
+                        "constrained_submission_intent",
+                    }}
+            envelope = build_wave_authorization(
+                wave, authorizations or [],
+                reservation_set_reference=external_authority_grant["api_decision_id"],
+                issuer=external_authority_grant["issuer"],
+                authorized_at=external_authority_grant["issued_at"],
+            )
+            preflight_wave_authorization(wave, envelope, authorizations or [])
+            candidate = deepcopy(state["spend_ledger"])
+            for document in authorizations or []:
+                authorize_action(candidate, document)
+            for action_id in current["ordered_action_ids"]:
+                action = next(
+                    item for item in candidate["actions"]
+                    if item["action_id"] == action_id
+                )
+                begin_submission(
+                    action,
+                    consumer_id=(
+                        f"external-grant:{external_authority_grant['api_decision_id']}"
+                    ),
+                    state_revision=int(state.get("state_revision") or 0),
+                )
+            state["spend_ledger"] = candidate
+            stored["authorization"] = envelope
+            stored["state"] = "SUBMITTING"
+            stored["constrained_submission_intent"] = {
+                "external_authority_request_sha256": current[
+                    "external_authority_request_sha256"
+                ],
+                "grant_sha256": external_authority_grant["grant_sha256"],
+                "ordered_action_ids": list(current["ordered_action_ids"]),
+                "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
+                "created_at": utc_now(),
+            }
+            save_state(run_json, state)
+        if _failure_injector is not None:
+            _failure_injector("after_durable_pre_submit_intent")
+        _execute_bounded_interactive_initial_wave(
+            state, run_dir, provider, event_emitter, token, _failure_injector,
+        )
+        return state
+    elif (
+        isinstance(state.get("initial_authoring_wave"), dict)
+        and state["initial_authoring_wave"].get("state")
+        in {"AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED", "SUBMITTING"}
+    ):
+        raise InitialWaveError(
+            "aggregate_grant_required",
+            "Stored bounded initial wave requires its exact request and aggregate grant",
+        )
     if authorizations and initial_wave_authorization is None:
-        apply_spend_authorizations(state, authorizations)
-        save_state(run_json, state)
+        if external_authority_request is None:
+            apply_spend_authorizations(state, authorizations)
+            save_state(run_json, state)
     if event_emitter:
         event_emitter.emit("run.resumed", data={"state_revision": state["state_revision"]})
     state_lock = threading.Lock()
@@ -1256,29 +1443,12 @@ def resume_bounded_run(
                 if (
                     provider.paid
                     and callable(getattr(provider, "interactive_request_body", None))
-                    and wave_state in {
-                    None, "AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED",
-                    }
+                    and wave_state is None
                 ):
                     wave = _prepare_bounded_interactive_initial_wave(
                         state, run_dir, provider,
                     )
                     if wave is not None:
-                        if initial_wave_authorization is not None:
-                            if len(authorizations or []) != 6:
-                                raise InitialWaveError(
-                                    "partial_authorization",
-                                    "Bounded initial wave requires six member authorizations",
-                                )
-                            _authorize_bounded_interactive_initial_wave(
-                                state, run_dir, initial_wave_authorization,
-                                authorizations or [],
-                            )
-                        if state["initial_authoring_wave"]["state"] == "AUTHORIZED":
-                            _execute_bounded_interactive_initial_wave(
-                                state, run_dir, provider, event_emitter,
-                                _failure_injector,
-                            )
                         return state
                 for pass_id in bounded["pass_ids"]:
                     pass_record = state["passes"][pass_id]

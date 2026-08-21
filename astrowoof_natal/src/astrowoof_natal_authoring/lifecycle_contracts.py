@@ -39,7 +39,10 @@ BATCH_NEGATIVE_AUTHORIZATION_MAX_ACTIONS = 32
 OUTSTANDING_ACTION_INVENTORY_SCHEMA = (
     "astrowoof.provider_action_inventory.v0.1"
 )
-LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.4"
+LIFECYCLE_INSPECTION_SCHEMA = "astrowoof.authoring_lifecycle_inspection.v0.5"
+LIFECYCLE_INSPECTION_SCHEMA_V0_4 = (
+    "astrowoof.authoring_lifecycle_inspection.v0.4"
+)
 LIFECYCLE_INSPECTION_SCHEMA_V0_3 = (
     "astrowoof.authoring_lifecycle_inspection.v0.3"
 )
@@ -474,7 +477,7 @@ def action_presentation_key(action: dict[str, Any]) -> tuple[Any, ...]:
 
 def validate_lifecycle_inspection_v04(value: dict[str, Any]) -> None:
     """Reject contradictory v0.4 branch/capacity/continuation projections."""
-    if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA:
+    if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA_V0_4:
         raise ValueError("Unsupported lifecycle inspection schema")
     branch = value.get("execution_branch") or {}
     capacity = value.get("execution_capacity") or {}
@@ -529,6 +532,48 @@ def validate_lifecycle_inspection_v04(value: dict[str, Any]) -> None:
         raise ValueError(
             "Contradictory lifecycle inspection fields: " + ", ".join(errors)
         )
+
+
+def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
+    """Validate v0.5 plus its exact embedded external-authority decision."""
+    if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA:
+        raise ValueError("Unsupported lifecycle inspection schema")
+    base = {
+        key: item for key, item in value.items()
+        if key not in {"external_authority_request", "external_authority_refusal"}
+    }
+    base["schema_version"] = LIFECYCLE_INSPECTION_SCHEMA_V0_4
+    validate_lifecycle_inspection_v04(base)
+    request = value.get("external_authority_request")
+    refusal = value.get("external_authority_refusal")
+    if request is not None and refusal is not None:
+        raise ValueError("Lifecycle request and refusal are mutually exclusive")
+    branch = value.get("execution_branch") or {}
+    if request is not None:
+        from .external_authority import validate_external_authority_request
+
+        validate_external_authority_request(request)
+        if (
+            value.get("run_id") != request.get("run_id")
+            or value.get("observation") != request.get("observation")
+            or branch.get("command") != "await_external_authority"
+            or branch.get("action_ids") != request.get("ordered_action_ids")
+        ):
+            raise ValueError("Lifecycle external-authority request does not join")
+    if refusal is not None:
+        from .external_authority import validate_external_authority_refusal
+
+        validate_external_authority_refusal(refusal)
+        if (
+            value.get("run_id") != refusal.get("run_id")
+            or value.get("observation") != refusal.get("observation")
+            or branch.get("command") != "none"
+            or branch.get("eligible_now")
+            or branch.get("action_ids")
+        ):
+            raise ValueError("Lifecycle external-authority refusal does not join")
+    if branch.get("command") == "await_external_authority" and request is None:
+        raise ValueError("Await-external-authority branch lacks its exact request")
 
 
 def canonical_contract_json(value: Any) -> str:

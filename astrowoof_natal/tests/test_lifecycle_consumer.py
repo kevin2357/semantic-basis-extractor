@@ -66,7 +66,7 @@ class TestLifecycleConsumer(unittest.TestCase):
             self.assertEqual(0, completed.returncode, completed.stderr)
             result = json.loads(completed.stdout)
             self.assertEqual(
-                "astrowoof.authoring_lifecycle_inspection.v0.4",
+                "astrowoof.authoring_lifecycle_inspection.v0.5",
                 result["schema_version"],
             )
             self.assertTrue(result["observation"]["inventory_valid"])
@@ -195,7 +195,7 @@ class TestLifecycleConsumer(unittest.TestCase):
             self.assertEqual("sbe.command_result.v1", envelopes[-1]["schema_version"])
             result = envelopes[-1]["result"]
             self.assertEqual(
-                "astrowoof.authoring_lifecycle_inspection.v0.4",
+                "astrowoof.authoring_lifecycle_inspection.v0.5",
                 result["schema_version"],
             )
             self.assertTrue(result["terminal"]["terminal"])

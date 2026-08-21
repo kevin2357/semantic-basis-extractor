@@ -22,7 +22,7 @@
     "provider_negative_authorization_batch_result": "astrowoof.provider_negative_authorization_batch_result.v0.2",
     "provider_negative_authorization_batch_result_historical": "astrowoof.provider_negative_authorization_batch_result.v0.1",
     "provider_action_inventory": "astrowoof.provider_action_inventory.v0.1",
-    "authoring_lifecycle_inspection": "astrowoof.authoring_lifecycle_inspection.v0.4",
+    "authoring_lifecycle_inspection": "astrowoof.authoring_lifecycle_inspection.v0.5",
     "authoring_lifecycle_inspection_historical_v0_2": "astrowoof.authoring_lifecycle_inspection.v0.2",
     "authoring_lifecycle_inspection_historical": "astrowoof.authoring_lifecycle_inspection.v0.1",
     "provider_reconciliation_policy": "astrowoof.provider_reconciliation_policy.v0.2",

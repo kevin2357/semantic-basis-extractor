@@ -70,6 +70,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--maximum-output-tokens", type=int, default=100_000)
     parser.add_argument("--spend-authorization", type=Path, action="append", default=[])
     parser.add_argument("--initial-wave-authorization", type=Path)
+    parser.add_argument("--external-authority-request", type=Path)
+    parser.add_argument("--external-authority-grant", type=Path)
     parser.add_argument("--events-jsonl", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--resume", action="store_true")
@@ -105,6 +107,7 @@ def main() -> None:
         parser.error("--provider-reconciliation-cycle requires provider=openai")
     if args.provider_reconciliation_cycle and (
         args.spend_authorization or args.initial_wave_authorization
+        or args.external_authority_request or args.external_authority_grant
     ):
         parser.error("provider reconciliation cannot apply spend authorization")
     if args.provider_reconciliation_cycle and not args.observed_at:
@@ -113,6 +116,21 @@ def main() -> None:
         parser.error(
             "--initial-wave-authorization requires exactly six ordered "
             "--spend-authorization documents"
+        )
+    if args.initial_wave_authorization:
+        parser.error(
+            "legacy --initial-wave-authorization cannot authorize provider create"
+        )
+    if bool(args.external_authority_request) != bool(args.external_authority_grant):
+        parser.error("external authority request and grant are required together")
+    if args.external_authority_request and (
+        not args.resume or args.provider != "openai"
+        or args.service_level != "interactive"
+        or len(args.spend_authorization) != 6
+    ):
+        parser.error(
+            "bounded external initial-wave authority requires interactive OpenAI "
+            "resume and exactly six member authorizations"
         )
     provider = _provider(args)
     emitter = ExecutionEventEmitter(
@@ -172,6 +190,8 @@ def main() -> None:
             provider=provider,
             authorizations=[load_json(path) for path in args.spend_authorization],
             initial_wave_authorization=_json(args.initial_wave_authorization),
+            external_authority_request=_json(args.external_authority_request),
+            external_authority_grant=_json(args.external_authority_grant),
             event_emitter=emitter,
         )
         from ..native_transitions import publish_native_execution_result

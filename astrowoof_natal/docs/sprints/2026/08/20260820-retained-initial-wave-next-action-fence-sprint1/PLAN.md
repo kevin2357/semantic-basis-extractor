@@ -207,6 +207,8 @@ either exact/idempotent or refused before provider I/O.
 
 ### Slice 5 — Cross-route and ordinary-action safety matrix
 
+Status: complete; awaiting review.
+
 - Exact interactive fresh initial wave: supported through the constrained request.
 - Exact interactive retained exact wave: exact replay/reconciliation only.
 - Exact Batch, bounded interactive, bounded Batch, retries, polish, critic, and

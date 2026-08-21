@@ -58,15 +58,20 @@ from .response_diagnostics import (  # noqa: E402
     read_response_retrieval_diagnostic_schema,
     validate_response_retrieval_diagnostic,
 )
-from .lifecycle_contracts import validate_lifecycle_inspection_v04  # noqa: E402
+from .lifecycle_contracts import (  # noqa: E402
+    validate_lifecycle_inspection_v04,
+    validate_lifecycle_inspection_v05,
+)
 from .pending_lifecycle_qa import (  # noqa: E402
     run_provider_pending_lifecycle_qualification,
 )
 from .external_authority import (  # noqa: E402
+    build_external_authority_refusal,
     build_external_authority_request,
     read_external_authority_request,
     read_external_authority_schema,
     validate_external_authority_grant,
+    validate_external_authority_refusal,
     validate_external_authority_request,
 )
 
@@ -104,10 +109,13 @@ __all__ = [
     "validate_response_retrieval_diagnostic",
     "validate_transition_journal",
     "validate_lifecycle_inspection_v04",
+    "validate_lifecycle_inspection_v05",
     "run_provider_pending_lifecycle_qualification",
     "build_external_authority_request",
+    "build_external_authority_refusal",
     "read_external_authority_request",
     "read_external_authority_schema",
     "validate_external_authority_grant",
+    "validate_external_authority_refusal",
     "validate_external_authority_request",
 ]

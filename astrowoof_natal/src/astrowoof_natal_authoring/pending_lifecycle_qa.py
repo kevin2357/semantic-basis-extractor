@@ -15,7 +15,7 @@ from .initial_wave import (
     ProviderCreateResult, build_wave_authorization, execute_initial_wave_creates,
 )
 from .lifecycle import inspect_lifecycle
-from .lifecycle_contracts import validate_lifecycle_inspection_v04
+from .lifecycle_contracts import validate_lifecycle_inspection_v05
 from .reconciliation import reconcile_provider_cycle
 
 
@@ -90,6 +90,7 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
                 "logical_root": normalized_path(root),
             },
             "spend_ledger": {"actions": actions}, "passes": passes,
+            "initial_authoring_wave": {"state": "DETACHED"},
             "subjects": {}, "provenance": {},
         }
         (root / "run.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
@@ -110,7 +111,7 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
         contradictory["terminal"]["local_continuation_remains"] = True
         contradiction_refused = False
         try:
-            validate_lifecycle_inspection_v04(contradictory)
+            validate_lifecycle_inspection_v05(contradictory)
         except ValueError:
             contradiction_refused = True
 

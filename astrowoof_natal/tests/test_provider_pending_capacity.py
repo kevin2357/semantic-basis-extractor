@@ -39,7 +39,7 @@ from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
 )
 from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter  # noqa: E402
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
-    validate_lifecycle_inspection_v04,
+    validate_lifecycle_inspection_v05,
 )
 
 
@@ -127,6 +127,11 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             "subjects": {},
             "provenance": {},
         }
+        if action_count == 6:
+            # A production six-member interactive cohort carries its durable wave
+            # join. The reconciliation-focused fixture does not need its full
+            # authoring payload, but must not model orphaned lineage.
+            state["initial_authoring_wave"] = {"state": "DETACHED"}
         (root / "run.json").write_text(
             json.dumps(state, indent=2) + "\n", encoding="utf-8"
         )
@@ -163,7 +168,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 inspection["local_dependencies"],
             )
             self.assertEqual(
-                "astrowoof.authoring_lifecycle_inspection.v0.4",
+                "astrowoof.authoring_lifecycle_inspection.v0.5",
                 inspection["schema_version"],
             )
             self.assertEqual(
@@ -353,7 +358,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
             )
             inspection["terminal"]["local_continuation_remains"] = True
             with self.assertRaisesRegex(ValueError, "Contradictory lifecycle"):
-                validate_lifecycle_inspection_v04(inspection)
+                validate_lifecycle_inspection_v05(inspection)
 
     def test_legacy_pending_action_without_timing_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -758,6 +763,7 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 action["binding"]["route"] = f"kevin:authoring_initial:{index:03d}"
                 action["provider_reconciliation"]["resume_not_before"] = "2026-08-15T20:15:00Z"
                 state["spend_ledger"]["actions"].append(action)
+            state["initial_authoring_wave"] = {"state": "DETACHED"}
             (root / "run.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
             write_workspace_snapshot(root)
             calls: list[str] = []

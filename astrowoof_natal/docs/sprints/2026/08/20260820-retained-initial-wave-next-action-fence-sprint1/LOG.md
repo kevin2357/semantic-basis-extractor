@@ -195,3 +195,42 @@
 - Full semantic-closure suite: 92 tests passed. Focused lineage/public/execution:
   22 passed; combined lineage/execution/initial-wave/spend compatibility: 52
   passed. Network/provider calls and spend: zero.
+
+## 2026-08-20 — Slice 5 cross-route authority matrix
+
+- Activated lifecycle inspection v0.5 with mutually exclusive, snapshot-bound
+  `external_authority_request` and `external_authority_refusal` projections.
+- Kept inspection v0.4 readable but explicitly non-authorizing for constrained
+  continuation.
+- Extended the aggregate initial-wave fence to bounded interactive authoring and
+  removed the legacy bounded initial-wave envelope from provider-create authority.
+- Preserved bounded crash recovery: recorded create outcomes reconcile without a
+  duplicate create; consumed authority without any durable outcome fails closed.
+- Prevented exact historical-lineage detection from misclassifying bounded legacy
+  and ordinary pass-local continuation.
+- Preserved exact/bounded Batch as one paid round, and preserved retries, polish,
+  critic, candidates, optional skipping, and providerless denial under their
+  established ordinary-action boundaries.
+- Published the complete route matrix in
+  `results/SLICE 5 - CROSS-ROUTE AUTHORITY AND SAFETY MATRIX.md`.
+- Focused lifecycle/bounded/lineage/capacity result: 77 tests passed in 137.205s.
+  Provider/network calls and spend: zero. Retained Aster access: none.
+
+## 2026-08-20 — Slice 5 API bounded-fence correction
+
+- Replaced bounded per-member `AUTHORIZED` submission with the exact route's
+  constrained safety shape: all six authorizations and `SUBMITTING` transitions,
+  plus one capability-bound intent, are durable under the lifecycle writer before
+  provider I/O begins.
+- Reacquired the lifecycle writer for every returned provider identity or ambiguity
+  checkpoint and retained the existing provider atomicity caveat.
+- Removed prepared request-map presence as recovery permission. Generic bounded
+  resume now refuses stored awaiting, authorized, and submitting waves.
+- Added a paused-after-intent two-resumer regression proving the generic resumer
+  makes zero provider calls and changes no workspace bytes.
+- Added explicit `AUTHORIZED`-with-prepared-requests/no-provider-ID refusal coverage.
+- Strengthened public request reading to validate the complete route-specific wave
+  join before publishing create-capable authority evidence.
+- Combined authority, lifecycle, bounded, lineage, and capacity result: 113 tests
+  passed in 182.399s with four optional schema skips. Provider/network calls and
+  spend: zero. Retained Aster access: none.

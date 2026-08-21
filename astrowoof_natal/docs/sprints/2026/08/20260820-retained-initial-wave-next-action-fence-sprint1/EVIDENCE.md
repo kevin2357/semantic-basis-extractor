@@ -190,3 +190,34 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
   gated on API approval.
 - Provider creates/retrievals: 0 / 0. Spend: USD 0.
 - Retained Aster workspace accessed or mutated: no.
+
+## Slice 5 cross-route evidence
+
+- Runtime lifecycle contract:
+  `astrowoof.authoring_lifecycle_inspection.v0.5`.
+- Compatibility validator retained:
+  `astrowoof.authoring_lifecycle_inspection.v0.4`.
+- Route matrix:
+  `results/SLICE 5 - CROSS-ROUTE AUTHORITY AND SAFETY MATRIX.md`.
+- Bounded interactive initial-wave grant: exact six-member request/grant/document
+  join passed; six scripted creates detached with six durable provider identities.
+- Bounded first-identity checkpoint interruption: no duplicate create; remaining
+  identity-less submissions became durable ambiguity evidence.
+- Exact orphan lineage and retained exact wave regressions: passed.
+- Provider-pending installed qualification and 4+2 retrieval behavior: passed.
+- Combined lifecycle consumer, installed qualification, bounded lifecycle,
+  lineage, and capacity suite: 77 tests passed in 137.205 seconds.
+- Provider/network calls: 0. Spend: USD 0. Retained Aster access: none.
+
+### Slice 5 API correction evidence
+
+- Durable bounded pre-submit intent: six ledger actions are `SUBMITTING` in one
+  validated snapshot before the scripted transport is reachable.
+- Second generic resumer after the intent checkpoint: typed refusal, zero provider
+  calls, byte-identical workspace checkpoint.
+- Stored `AUTHORIZED` wave with all prepared request files but no provider IDs:
+  typed refusal, zero provider calls, byte-identical workspace checkpoint.
+- Public reader rejects wave/bundle/ledger/request/pass join mutations before
+  publishing an external-authority request.
+- Combined focused suite: 113 passed in 182.399 seconds; four optional JSON Schema
+  tests skipped on the lean host interpreter.

@@ -21,6 +21,12 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     write_workspace_snapshot,
 )
 from astrowoof_natal_authoring.external_authority import main  # noqa: E402
+from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
+    InitialWaveMemberSpec,
+    build_initial_wave,
+    build_initial_wave_binding_bundle,
+    canonical_sha256,
+)
 from astrowoof_natal.tests.test_initial_wave_binding_bundle_contract_proposal import (  # noqa: E402
     fixture as binding_fixture,
 )
@@ -30,7 +36,40 @@ class TestExternalAuthorityPublic(unittest.TestCase):
     def make_wave_run(self, root: Path, route: str) -> Path:
         run_dir = root / route
         run_dir.mkdir(parents=True)
-        wave, bundle = binding_fixture(route)
+        original_wave, original_bundle = binding_fixture(route)
+        specs = []
+        requests = {}
+        passes = {}
+        for number, original in enumerate(original_bundle["ordered_members"], 1):
+            payload = {"fixture": route, "pass_number": number}
+            request_sha256 = canonical_sha256(payload)
+            binding = deepcopy(original["binding"])
+            binding["request_sha256"] = request_sha256
+            action_id = "paid_" + canonical_sha256(binding)[:24]
+            pass_id = original["pass_id"]
+            request_path = run_dir / f"request-{number}.json"
+            request_path.write_text(json.dumps(payload), encoding="utf-8")
+            specs.append(InitialWaveMemberSpec(
+                action_id=action_id, binding=binding, pass_id=pass_id,
+                pass_number=number,
+            ))
+            requests[action_id] = {
+                "request_sha256": request_sha256,
+                ("request_path" if route == "bounded_natal" else "request_payload_path"):
+                    str(request_path),
+            }
+            passes[pass_id] = {"attempts": [{"paid_action_id": action_id}]}
+        wave = build_initial_wave(
+            run_id=original_wave["run_id"], route_family=route,
+            route_contract=original_wave["route_contract"],
+            assignment_sha256=original_wave["assignment_sha256"],
+            profile_sha256=original_wave["profile_sha256"],
+            preparation_basis_revision=original_wave["preparation_basis_revision"],
+            members=specs,
+        )
+        bundle = build_initial_wave_binding_bundle(
+            wave, [spec.binding for spec in specs],
+        )
         state = {
             "schema_version": (
                 "astrowoof.bounded_natal.authoring_run.v2"
@@ -38,6 +77,7 @@ class TestExternalAuthorityPublic(unittest.TestCase):
                 else "astrowoof.semantic_closure_run.v0.9"
             ),
             "run_id": wave["run_id"],
+            "route_contract": wave["route_contract"],
             "state_revision": wave["preparation_basis_revision"] + 1,
             "updated_at": "2026-08-20T14:00:00Z",
             "workspace_contract": {
@@ -45,8 +85,9 @@ class TestExternalAuthorityPublic(unittest.TestCase):
                 "logical_root": normalized_path(run_dir),
             },
             "initial_authoring_wave": {
-                **wave, "state": "AWAITING_SPEND_AUTHORIZATION", "requests": {},
+                **wave, "state": "AWAITING_SPEND_AUTHORIZATION", "requests": requests,
             },
+            "passes": passes,
             "spend_ledger": {
                 "actions": [{
                     "action_id": member["action_id"], "state": "PREPARED",
@@ -181,7 +222,10 @@ class TestExternalAuthorityPublic(unittest.TestCase):
                 write_workspace_snapshot(run_dir)
                 with self.assertRaises(public.InitialWaveError) as caught:
                     public.read_external_authority_request(run_dir)
-                self.assertEqual("request_unavailable", caught.exception.reason_code)
+                self.assertEqual(
+                    "initial_wave_lineage_unjoinable",
+                    caught.exception.reason_code,
+                )
 
     def test_reader_fails_closed_on_coherent_change_during_read(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

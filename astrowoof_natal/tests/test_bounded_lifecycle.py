@@ -38,6 +38,9 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
 from astrowoof_natal_authoring.execution_events import (  # noqa: E402
     ExecutionEventEmitter,
 )
+from astrowoof_natal_authoring.external_authority import (  # noqa: E402
+    read_external_authority_request,
+)
 from astrowoof_natal_authoring.lifecycle import (  # noqa: E402
     closeout_run,
     deny_providerless_action,
@@ -60,6 +63,7 @@ from astrowoof_natal_authoring.spend import (  # noqa: E402
 )
 from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
     INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
+    InitialWaveError,
     build_wave_authorization,
     validate_initial_wave_binding_bundle_against_wave,
 )
@@ -68,6 +72,7 @@ from astrowoof_natal_authoring.native_transitions import (  # noqa: E402
 )
 from test_bounded_authoring import compiled  # noqa: E402
 import test_provider_pending_capacity as provider_pending_fixtures  # noqa: E402
+from test_external_authority_execution import authority  # noqa: E402
 
 
 def workspace_hashes(root: Path) -> dict[str, str]:
@@ -428,24 +433,12 @@ class TestBoundedLifecycle(unittest.TestCase):
             self.assertEqual("AWAITING_SPEND_AUTHORIZATION", stored["state"])
             self.assertEqual(6, stored["member_count"])
             self.assertEqual(0, len(transport.calls))
-            wave = {key: value for key, value in stored.items()
-                    if key not in {"state", "requests"}}
-            documents = [{
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": member["action_id"],
-                "binding": next(
-                    item["binding"] for item in bundle["ordered_members"]
-                    if item["action_id"] == member["action_id"]
-                ),
-                "authorization_reference": f"bounded-reservation-{member['pass_number']}",
-            } for member in wave["ordered_members"]]
-            envelope = build_wave_authorization(
-                wave, documents, reservation_set_reference="bounded-set-1",
-                issuer="api-test", authorized_at="2026-08-18T14:00:00Z",
-            )
+            request = read_external_authority_request(run_dir)
+            grant, documents = authority(request)
             detached = resume_bounded_run(
                 run_dir, provider=provider, authorizations=documents,
-                initial_wave_authorization=envelope,
+                external_authority_request=request,
+                external_authority_grant=grant,
             )
             self.assertEqual("DETACHED", detached["initial_authoring_wave"]["state"])
             self.assertEqual(6, len(transport.calls))
@@ -488,22 +481,8 @@ class TestBoundedLifecycle(unittest.TestCase):
                 },
             )
             prepared = resume_bounded_run(run_dir, provider=provider)
-            stored = prepared["initial_authoring_wave"]
-            wave = {key: value for key, value in stored.items()
-                    if key not in {"state", "requests"}}
-            documents = [{
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": member["action_id"],
-                "binding": next(
-                    action["binding"] for action in prepared["spend_ledger"]["actions"]
-                    if action["action_id"] == member["action_id"]
-                ),
-                "authorization_reference": f"bounded-crash-{member['pass_number']}",
-            } for member in wave["ordered_members"]]
-            envelope = build_wave_authorization(
-                wave, documents, reservation_set_reference="bounded-crash-set",
-                issuer="api-test", authorized_at="2026-08-18T14:00:00Z",
-            )
+            request = read_external_authority_request(run_dir)
+            grant, documents = authority(request)
             injected = False
 
             def fail_after_first_identity(point: str) -> None:
@@ -515,7 +494,8 @@ class TestBoundedLifecycle(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "bounded identity checkpoint crash"):
                 resume_bounded_run(
                     run_dir, provider=provider, authorizations=documents,
-                    initial_wave_authorization=envelope,
+                    external_authority_request=request,
+                    external_authority_grant=grant,
                     _failure_injector=fail_after_first_identity,
                 )
             crashed = load_json(run_dir / "run.json")
@@ -526,13 +506,73 @@ class TestBoundedLifecycle(unittest.TestCase):
                 sum(bool((action.get("provider") or {}).get("id"))
                     for action in crashed["spend_ledger"]["actions"]),
             )
-            resumed = resume_bounded_run(run_dir, provider=provider)
-            self.assertEqual("FAILED", resumed["initial_authoring_wave"]["state"])
-            self.assertEqual(5, len(
-                resumed["initial_authoring_wave"]["result"]["ambiguous_action_ids"]
-            ))
+            before = workspace_hashes(run_dir)
+            with self.assertRaisesRegex(InitialWaveError, "exact request"):
+                resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual(before, workspace_hashes(run_dir))
             self.assertEqual(6, len(transport.calls))
             validate_workspace_snapshot(run_dir, load_json(run_dir / "run.json"))
+
+    def test_bounded_durable_intent_fences_generic_second_resumer(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            transport = InitialWaveTransport()
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", model="gpt-5.6-luna",
+                maximum_output_tokens=1000, transport=transport,
+                max_transport_retries=0,
+            )
+            create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"spend_policy": spend_policy()},
+            )
+            resume_bounded_run(run_dir, provider=provider)
+            request = read_external_authority_request(run_dir)
+            grant, documents = authority(request)
+
+            with self.assertRaisesRegex(RuntimeError, "pause after intent"):
+                resume_bounded_run(
+                    run_dir, provider=provider, authorizations=documents,
+                    external_authority_request=request,
+                    external_authority_grant=grant,
+                    _failure_injector=lambda point: (
+                        (_ for _ in ()).throw(RuntimeError("pause after intent"))
+                        if point == "after_durable_pre_submit_intent" else None
+                    ),
+                )
+            state = load_json(run_dir / "run.json")
+            self.assertEqual("SUBMITTING", state["initial_authoring_wave"]["state"])
+            self.assertEqual(
+                {"SUBMITTING"},
+                {item["state"] for item in state["spend_ledger"]["actions"]},
+            )
+            before = workspace_hashes(run_dir)
+            with self.assertRaisesRegex(InitialWaveError, "exact request"):
+                resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual(before, workspace_hashes(run_dir))
+            self.assertEqual([], transport.calls)
+
+    def test_bounded_authorized_with_prepared_requests_cannot_create(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            transport = InitialWaveTransport()
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=run_dir, api_key="test-key", model="gpt-5.6-luna",
+                maximum_output_tokens=1000, transport=transport,
+                max_transport_retries=0,
+            )
+            state = create_bounded_run(
+                run_dir, self.artifacts, provider=provider,
+                generation_profile={"spend_policy": spend_policy()},
+            )
+            state = resume_bounded_run(run_dir, provider=provider)
+            state["initial_authoring_wave"]["state"] = "AUTHORIZED"
+            save_state(run_dir / "run.json", state)
+            before = workspace_hashes(run_dir)
+            with self.assertRaisesRegex(InitialWaveError, "exact request"):
+                resume_bounded_run(run_dir, provider=provider)
+            self.assertEqual(before, workspace_hashes(run_dir))
+            self.assertEqual([], transport.calls)
 
     def test_final_qa_review_status_survives_generic_persistence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

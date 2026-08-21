@@ -40,7 +40,7 @@ from .lifecycle_contracts import (
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     action_presentation_key,
-    validate_lifecycle_inspection_v04,
+    validate_lifecycle_inspection_v05,
     batch_negative_authorization_request_sha256,
     observation_transition_errors,
 )
@@ -1019,6 +1019,88 @@ def inspect_lifecycle(
     execution_branch = _execution_branch(
         capacity, custody, dependencies, review_reasons,
     )
+    external_authority_request = None
+    external_authority_refusal = None
+    from .external_authority import (
+        build_external_authority_request,
+        build_external_authority_refusal,
+        read_external_authority_request,
+    )
+    from .initial_wave import InitialWaveError
+
+    initial_actions = [
+        action for action in (state.get("spend_ledger") or {}).get("actions", [])
+        if isinstance(action, dict)
+        and (action.get("binding") or {}).get("stage") == "authoring_initial"
+        and (action.get("binding") or {}).get("service_level") == "interactive"
+    ]
+    orphaned_initial_categories: set[str] = set()
+    if (
+        len(initial_actions) >= 6
+        and not isinstance(state.get("initial_authoring_wave"), dict)
+        and state.get("route_contract")
+        != "astrowoof.bounded_natal.authoring_run.v2"
+    ):
+        from .closure import _orphaned_initial_lineage_categories
+
+        orphaned_initial_categories = _orphaned_initial_lineage_categories(
+            state, run_dir,
+        )
+    if orphaned_initial_categories and not terminal:
+        external_authority_refusal = build_external_authority_refusal(
+            run_id=str(state.get("run_id") or ""), observation=observation,
+            reason_code="initial_wave_lineage_unjoinable",
+            evidence_categories=sorted(orphaned_initial_categories),
+        )
+        capacity.update({
+            "disposition": "retain_for_review",
+            "local_work_ready_now": False,
+            "resume_not_before": None,
+            "reason_code": "native_review_required",
+        })
+        execution_branch = {
+            "command": "none", "eligible_now": False,
+            "reason_code": "native_review_or_ambiguity",
+            "action_ids": [], "not_before": None,
+        }
+    elif execution_branch["command"] == "await_external_authority":
+        try:
+            raw_request = read_external_authority_request(run_dir)
+            external_authority_request = build_external_authority_request(
+                run_id=str(state.get("run_id") or ""), observation=observation,
+                actions=raw_request["ordered_actions"],
+                initial_wave=raw_request.get("initial_wave"),
+            )
+            execution_branch["action_ids"] = list(
+                external_authority_request["ordered_action_ids"]
+            )
+        except InitialWaveError as exc:
+            reason = (
+                exc.reason_code if exc.reason_code in {
+                    "initial_wave_lineage_unjoinable", "snapshot_invalid",
+                    "native_state_inconsistent", "provider_submission_ambiguous",
+                    "provider_identity_conflict", "unsupported_provider_capable_route",
+                } else "native_state_inconsistent"
+            )
+            categories = list(exc.evidence_categories) or [
+                "snapshot_incomplete_or_invalid" if reason == "snapshot_invalid"
+                else "native_evidence_conflict"
+            ]
+            external_authority_refusal = build_external_authority_refusal(
+                run_id=str(state.get("run_id") or ""), observation=observation,
+                reason_code=reason, evidence_categories=categories,
+            )
+            capacity.update({
+                "disposition": "retain_for_review",
+                "local_work_ready_now": False,
+                "resume_not_before": None,
+                "reason_code": "native_review_required",
+            })
+            execution_branch = {
+                "command": "none", "eligible_now": False,
+                "reason_code": "native_review_or_ambiguity",
+                "action_ids": [], "not_before": None,
+            }
     result = {
         "schema_version": LIFECYCLE_INSPECTION_SCHEMA,
         "run_id": str(state.get("run_id") or ""),
@@ -1033,6 +1115,8 @@ def inspect_lifecycle(
         "native_route": native_route,
         "consumer_authority": consumer_authority,
         "execution_branch": execution_branch,
+        "external_authority_request": external_authority_request,
+        "external_authority_refusal": external_authority_refusal,
     }
     logger.info(
         "lifecycle_inspection_complete status=%s terminal=%s quiescence=%s "
@@ -1043,7 +1127,7 @@ def inspect_lifecycle(
         len(result["review_reasons"]), execution_branch["command"],
         execution_branch["reason_code"], execution_branch["eligible_now"],
     )
-    validate_lifecycle_inspection_v04(result)
+    validate_lifecycle_inspection_v05(result)
     if event_emitter is not None:
         event_emitter.emit(
             "lifecycle.branch_selected",
