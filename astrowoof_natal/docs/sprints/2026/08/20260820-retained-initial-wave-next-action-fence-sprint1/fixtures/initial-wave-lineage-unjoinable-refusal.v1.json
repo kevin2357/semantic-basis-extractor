@@ -1,0 +1,21 @@
+{
+  "schema_version": "astrowoof.external_authority_refusal.v1",
+  "refusal_sha256": "b1d9cedaa41b5ee39d81b9cfb073bfb19d42472d365b2c337001b76f196f3f98",
+  "run_id": "run_riwnafs_fixture",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-20T12:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "reason_code": "initial_wave_lineage_unjoinable",
+  "review_required": true,
+  "provider_create_permitted": false,
+  "evidence_categories": [
+    "prior_initial_action", "prior_provider_identity", "missing_join_artifact"
+  ]
+}

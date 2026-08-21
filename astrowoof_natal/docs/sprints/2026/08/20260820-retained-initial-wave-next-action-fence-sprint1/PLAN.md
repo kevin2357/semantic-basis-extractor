@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Slice 0 complete; paused for API review before Slice 1 schema freeze
+Status: Slice 1 complete; paused for API contract review before runtime implementation
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 
@@ -133,6 +133,8 @@ Gate: reproduce the unsafe path with no network and identify the last safe nativ
 preflight point. Pause for API review of the reproduction before schema freeze.
 
 ### Slice 1 — External-authority request v1 and lifecycle v0.5 contract
+
+Status: complete; API review pending.
 
 - Freeze exact request fields, vocabularies, ordering, digest construction, and
   cross-field semantic invariants.

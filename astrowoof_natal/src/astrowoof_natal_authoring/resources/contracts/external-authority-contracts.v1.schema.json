@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.external_authority_contracts.v1",
+  "title": "AstroWoof external-authority request, refusal, and grant contracts",
+  "oneOf": [
+    {"$ref": "#/$defs/externalAuthorityRequest"},
+    {"$ref": "#/$defs/externalAuthorityRefusal"},
+    {"$ref": "#/$defs/externalAuthorityGrant"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "actionId": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+    "boundedReference": {
+      "type": "string", "minLength": 1, "maxLength": 512,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "operator_state_revision", "snapshot_sha256", "logical_workspace_root",
+        "snapshot_complete", "inventory_valid", "observed_at",
+        "native_exclusive_access", "writer_race_possible"
+      ],
+      "properties": {
+        "operator_state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "snapshot_complete": {"type": "boolean"},
+        "inventory_valid": {"type": "boolean"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "native_exclusive_access": {"enum": ["established", "declared", "not_established"]},
+        "writer_race_possible": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "validatedObservation": {
+      "allOf": [
+        {"$ref": "#/$defs/observation"},
+        {
+          "properties": {
+            "snapshot_complete": {"const": true},
+            "inventory_valid": {"const": true},
+            "native_exclusive_access": {"enum": ["established", "declared"]},
+            "writer_race_possible": {"const": false}
+          }
+        }
+      ]
+    },
+    "binding": {
+      "type": "object",
+      "required": [
+        "run_id", "profile_sha256", "prepared_state_revision", "stage",
+        "route", "request_sha256", "model", "service_level",
+        "maximum_output_tokens", "commitment_micro_usd", "price_book_version"
+      ],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "profile_sha256": {"$ref": "#/$defs/sha256"},
+        "prepared_state_revision": {"type": "integer", "minimum": 0},
+        "stage": {"enum": [
+          "authoring_initial", "creative_retry", "polish",
+          "qualitative_critic", "qualitative_candidate"
+        ]},
+        "route": {"type": "string", "minLength": 1},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "model": {"type": "string", "minLength": 1},
+        "service_level": {"enum": ["interactive", "batch"]},
+        "maximum_output_tokens": {"type": "integer", "minimum": 1},
+        "commitment_micro_usd": {"type": "integer", "minimum": 0},
+        "price_book_version": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "requestAction": {
+      "type": "object",
+      "required": ["action_id", "binding", "binding_sha256"],
+      "properties": {
+        "action_id": {"$ref": "#/$defs/actionId"},
+        "binding": {"$ref": "#/$defs/binding"},
+        "binding_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "initialWaveContext": {
+      "type": "object",
+      "required": [
+        "wave_id", "wave_sha256", "route_contract", "assignment_sha256",
+        "profile_sha256", "member_count", "ordered_member_binding_sha256s"
+      ],
+      "properties": {
+        "wave_id": {"type": "string", "pattern": "^wave_[0-9a-f]{24}$"},
+        "wave_sha256": {"$ref": "#/$defs/sha256"},
+        "route_contract": {"type": "string", "minLength": 1},
+        "assignment_sha256": {"$ref": "#/$defs/sha256"},
+        "profile_sha256": {"$ref": "#/$defs/sha256"},
+        "member_count": {"const": 6},
+        "ordered_member_binding_sha256s": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalAuthorityRequest": {
+      "type": "object",
+      "required": [
+        "schema_version", "external_authority_request_sha256", "run_id",
+        "observation", "request_kind", "ordering_semantics", "action_count",
+        "ordered_action_ids", "ordered_actions", "initial_wave",
+        "provider_create_permitted_after_authorization"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.external_authority_request.v1"},
+        "external_authority_request_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/validatedObservation"},
+        "request_kind": {"enum": ["ordinary_action_set", "initial_wave_admission"]},
+        "ordering_semantics": {"enum": [
+          "lexical_action_id_canonicalization_only",
+          "prepared_wave_semantic_member_order"
+        ]},
+        "action_count": {"type": "integer", "minimum": 1, "maximum": 32},
+        "ordered_action_ids": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "uniqueItems": true, "items": {"$ref": "#/$defs/actionId"}
+        },
+        "ordered_actions": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "items": {"$ref": "#/$defs/requestAction"}
+        },
+        "initial_wave": {
+          "oneOf": [{"$ref": "#/$defs/initialWaveContext"}, {"type": "null"}]
+        },
+        "provider_create_permitted_after_authorization": {"const": true}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"request_kind": {"const": "initial_wave_admission"}}},
+          "then": {
+            "properties": {
+              "ordering_semantics": {"const": "prepared_wave_semantic_member_order"},
+              "action_count": {"const": 6},
+              "ordered_action_ids": {"minItems": 6, "maxItems": 6},
+              "ordered_actions": {"minItems": 6, "maxItems": 6},
+              "initial_wave": {"$ref": "#/$defs/initialWaveContext"},
+              "provider_create_permitted_after_authorization": {"const": true}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"request_kind": {"const": "ordinary_action_set"}}},
+          "then": {
+            "properties": {
+              "ordering_semantics": {"const": "lexical_action_id_canonicalization_only"},
+              "initial_wave": {"type": "null"}
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "externalAuthorityRefusal": {
+      "type": "object",
+      "required": [
+        "schema_version", "refusal_sha256", "run_id", "observation",
+        "reason_code", "review_required", "provider_create_permitted",
+        "evidence_categories"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.external_authority_refusal.v1"},
+        "refusal_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/observation"},
+        "reason_code": {"enum": [
+          "initial_wave_lineage_unjoinable", "snapshot_invalid",
+          "native_state_inconsistent", "provider_submission_ambiguous",
+          "provider_identity_conflict", "unsupported_provider_capable_route"
+        ]},
+        "review_required": {"const": true},
+        "provider_create_permitted": {"const": false},
+        "evidence_categories": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"enum": [
+            "prior_initial_action", "prior_provider_identity",
+            "prior_consumption", "response_evidence", "ambiguous_lineage",
+            "missing_join_artifact", "snapshot_incomplete_or_invalid",
+            "native_evidence_conflict", "unsupported_route_or_contract"
+          ]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "grantMember": {
+      "type": "object",
+      "required": [
+        "action_id", "binding_sha256", "authorization_document_sha256",
+        "authorization_reference"
+      ],
+      "properties": {
+        "action_id": {"$ref": "#/$defs/actionId"},
+        "binding_sha256": {"$ref": "#/$defs/sha256"},
+        "authorization_document_sha256": {"$ref": "#/$defs/sha256"},
+        "authorization_reference": {"$ref": "#/$defs/boundedReference"}
+      },
+      "additionalProperties": false
+    },
+    "externalAuthorityGrant": {
+      "type": "object",
+      "required": [
+        "schema_version", "grant_sha256", "decision", "api_decision_id",
+        "issuer", "issued_at", "external_authority_request_sha256", "run_id",
+        "inspected_state_revision", "snapshot_sha256", "logical_workspace_root",
+        "request_kind", "action_count", "ordered_action_ids",
+        "ordered_member_authorizations", "initial_wave"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.external_authority_grant.v1"},
+        "grant_sha256": {"$ref": "#/$defs/sha256"},
+        "decision": {"const": "granted"},
+        "api_decision_id": {"$ref": "#/$defs/boundedReference"},
+        "issuer": {"$ref": "#/$defs/boundedReference"},
+        "issued_at": {"type": "string", "format": "date-time"},
+        "external_authority_request_sha256": {"$ref": "#/$defs/sha256"},
+        "run_id": {"type": "string", "minLength": 1},
+        "inspected_state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "request_kind": {"enum": ["ordinary_action_set", "initial_wave_admission"]},
+        "action_count": {"type": "integer", "minimum": 1, "maximum": 32},
+        "ordered_action_ids": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "uniqueItems": true, "items": {"$ref": "#/$defs/actionId"}
+        },
+        "ordered_member_authorizations": {
+          "type": "array", "minItems": 1, "maxItems": 32,
+          "items": {"$ref": "#/$defs/grantMember"}
+        },
+        "initial_wave": {
+          "oneOf": [{"$ref": "#/$defs/initialWaveContext"}, {"type": "null"}]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"request_kind": {"const": "initial_wave_admission"}}},
+          "then": {
+            "properties": {
+              "action_count": {"const": 6},
+              "ordered_action_ids": {"minItems": 6, "maxItems": 6},
+              "ordered_member_authorizations": {"minItems": 6, "maxItems": 6},
+              "initial_wave": {"$ref": "#/$defs/initialWaveContext"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"request_kind": {"const": "ordinary_action_set"}}},
+          "then": {"properties": {"initial_wave": {"type": "null"}}}
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "astrowoof.authoring_lifecycle_inspection.v0.5",
+  "run_id": "run_riwnafs_fixture",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-20T12:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "terminal": {
+    "outcome": "review_required",
+    "terminal": false,
+    "terminal_reason": "review_required",
+    "deck_bytes_exist": false,
+    "native_qa_passed": false,
+    "assembly_lint_validation_accepted": false,
+    "delivery_package_complete": false,
+    "delivery_publishable": false,
+    "provider_continuation_remains": false,
+    "local_continuation_remains": true
+  },
+  "quiescence": {
+    "state": "unknown_review_required",
+    "reasons": [
+      "native_state_inconsistent"
+    ]
+  },
+  "local_dependencies": [
+    {
+      "kind": "native_state_repair_review",
+      "blocking": true,
+      "reason_code": "initial_wave_lineage_unjoinable"
+    }
+  ],
+  "action_inventory": {
+    "schema_version": "astrowoof.provider_action_inventory.v0.1",
+    "run_id": "run_riwnafs_fixture",
+    "observation": {
+      "operator_state_revision": 12,
+      "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "logical_workspace_root": "/work/run",
+      "snapshot_complete": true,
+      "inventory_valid": true,
+      "observed_at": "2026-08-20T12:00:00Z",
+      "native_exclusive_access": "declared",
+      "writer_race_possible": false
+    },
+    "ordering_semantics": "deterministic_presentation_only_not_execution_order",
+    "actions": []
+  },
+  "review_reasons": [
+    "native_state_inconsistent"
+  ],
+  "execution_capacity": {
+    "disposition": "retain_for_review",
+    "local_work_ready_now": false,
+    "checkpoint_safe_for_worker_release": false,
+    "resume_not_before": null,
+    "reason_code": "native_review_required",
+    "policy_version": "astrowoof.provider_reconciliation_policy.v0.2"
+  },
+  "provider_custody": {
+    "state": "none",
+    "provider_action_count": 0,
+    "reservation_retention_action_count": 0,
+    "action_ids": [],
+    "next_due_action_ids": [],
+    "earliest_resume_not_before": null,
+    "actions": []
+  },
+  "native_route": {
+    "route_family": "exact_natal",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9"
+  },
+  "consumer_authority": {
+    "state": "none",
+    "action_count": 0,
+    "action_ids": [],
+    "actions": []
+  },
+  "execution_branch": {
+    "command": "none",
+    "eligible_now": false,
+    "reason_code": "native_review_or_ambiguity",
+    "action_ids": [],
+    "not_before": null
+  },
+  "external_authority_request": null,
+  "external_authority_refusal": {
+    "schema_version": "astrowoof.external_authority_refusal.v1",
+    "refusal_sha256": "b1d9cedaa41b5ee39d81b9cfb073bfb19d42472d365b2c337001b76f196f3f98",
+    "run_id": "run_riwnafs_fixture",
+    "observation": {
+      "operator_state_revision": 12,
+      "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "logical_workspace_root": "/work/run",
+      "snapshot_complete": true,
+      "inventory_valid": true,
+      "observed_at": "2026-08-20T12:00:00Z",
+      "native_exclusive_access": "declared",
+      "writer_race_possible": false
+    },
+    "reason_code": "initial_wave_lineage_unjoinable",
+    "review_required": true,
+    "provider_create_permitted": false,
+    "evidence_categories": [
+      "prior_initial_action",
+      "prior_provider_identity",
+      "missing_join_artifact"
+    ]
+  }
+}

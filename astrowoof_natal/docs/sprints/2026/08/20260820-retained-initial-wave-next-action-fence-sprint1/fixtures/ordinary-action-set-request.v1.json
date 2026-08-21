@@ -1,0 +1,35 @@
+{
+  "schema_version": "astrowoof.external_authority_request.v1",
+  "external_authority_request_sha256": "4743e2575c2ab7140e17bd8fefb7ec1d2b249e9a6533a773ada0426e6282a8a6",
+  "run_id": "run_riwnafs_fixture",
+  "observation": {
+    "operator_state_revision": 21,
+    "snapshot_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-20T13:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "request_kind": "ordinary_action_set",
+  "ordering_semantics": "lexical_action_id_canonicalization_only",
+  "action_count": 2,
+  "ordered_action_ids": [
+    "paid_00000000000000000000000a", "paid_00000000000000000000000b"
+  ],
+  "ordered_actions": [
+    {
+      "action_id": "paid_00000000000000000000000a",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":21,"stage":"polish","route":"polish:attempt-001","request_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","model":"gpt-5.6-luna","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":200000,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "48b6dc16fbdd2b0a8ac39d54c39c482b29c32b7864492ce6247bbccd1a8506ed"
+    },
+    {
+      "action_id": "paid_00000000000000000000000b",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":21,"stage":"qualitative_critic","route":"critic:attempt-001","request_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","model":"gpt-5.6-luna","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":200000,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "ebd538a666a5a74e28386122de0f38660f756e6e15d3fd7098de617342e0c20b"
+    }
+  ],
+  "initial_wave": null,
+  "provider_create_permitted_after_authorization": true
+}

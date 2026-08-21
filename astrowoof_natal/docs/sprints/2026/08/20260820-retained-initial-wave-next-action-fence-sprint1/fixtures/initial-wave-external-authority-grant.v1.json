@@ -1,0 +1,44 @@
+{
+  "schema_version": "astrowoof.external_authority_grant.v1",
+  "grant_sha256": "29c7860f9e83ca25a97cf87032ec404574cb0e089f28bdab9155183ff096d29e",
+  "decision": "granted",
+  "api_decision_id": "api-decision-riwnafs-001",
+  "issuer": "astrowoof-api-fixture",
+  "issued_at": "2026-08-20T12:01:00Z",
+  "external_authority_request_sha256": "94b8bfe3c4c6acc518aab59d73c488678be82977905ebfbce8ac820b072da676",
+  "run_id": "run_riwnafs_fixture",
+  "inspected_state_revision": 12,
+  "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "logical_workspace_root": "/work/run",
+  "request_kind": "initial_wave_admission",
+  "action_count": 6,
+  "ordered_action_ids": [
+    "paid_000000000000000000000001", "paid_000000000000000000000002",
+    "paid_000000000000000000000003", "paid_000000000000000000000004",
+    "paid_000000000000000000000005", "paid_000000000000000000000006"
+  ],
+  "ordered_member_authorizations": [
+    {"action_id":"paid_000000000000000000000001","binding_sha256":"75a8dd0e016ea1097f1460968c5817037bec4aa36626955b3591b6f3a9fa15d3","authorization_document_sha256":"1fff236dd838f75cd91baf91ce2725e48871c8c783cb71f1e156c53bcd5a7eb7","authorization_reference":"reservation-1"},
+    {"action_id":"paid_000000000000000000000002","binding_sha256":"4802e5b64f2a82a3afdda624bdb3d8f8a8eb2cee48c2442eafdc2b5af90ed17a","authorization_document_sha256":"1327feed49ae3bcdd91fd9505a67c231fcd8e91cadff6d1fcb6130fa4cf51ea5","authorization_reference":"reservation-2"},
+    {"action_id":"paid_000000000000000000000003","binding_sha256":"3d21d66a2a693a39fafbec191ae146679a42333fc79f862f347821715cb6eb00","authorization_document_sha256":"0423704540266289ec57a8ec19e6cb38bab404233cd0f7477af3853f582e6140","authorization_reference":"reservation-3"},
+    {"action_id":"paid_000000000000000000000004","binding_sha256":"39e0bf8e9bae50e8f8488f524ee418a1408c79621f2a76a7c69c26f85bac24ac","authorization_document_sha256":"91517b4c7dc57ae5da38eaed9226b702f21b63d95f2213fdb6ddb898ff29a290","authorization_reference":"reservation-4"},
+    {"action_id":"paid_000000000000000000000005","binding_sha256":"f44f65a32ef903ec3cca98a66f0d8e494492b0b2fbfb04a3ead15dbfdfa8e6bd","authorization_document_sha256":"f0f7c7c1f09a4e1b9574f23c5d922b9b6969e8f59bea1f6d30842a781161592c","authorization_reference":"reservation-5"},
+    {"action_id":"paid_000000000000000000000006","binding_sha256":"fd10e654a0a3fdeffe91a60ea4fa7d8d2439df1a59865e17acc094db41864e6f","authorization_document_sha256":"3a700648122266db1e9e645d3de487c381265e1d70ee81f8bbc2c2e1d086a4e8","authorization_reference":"reservation-6"}
+  ],
+  "initial_wave": {
+    "wave_id": "wave_777777777777777777777777",
+    "wave_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9",
+    "assignment_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+    "profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "member_count": 6,
+    "ordered_member_binding_sha256s": [
+      "75a8dd0e016ea1097f1460968c5817037bec4aa36626955b3591b6f3a9fa15d3",
+      "4802e5b64f2a82a3afdda624bdb3d8f8a8eb2cee48c2442eafdc2b5af90ed17a",
+      "3d21d66a2a693a39fafbec191ae146679a42333fc79f862f347821715cb6eb00",
+      "39e0bf8e9bae50e8f8488f524ee418a1408c79621f2a76a7c69c26f85bac24ac",
+      "f44f65a32ef903ec3cca98a66f0d8e494492b0b2fbfb04a3ead15dbfdfa8e6bd",
+      "fd10e654a0a3fdeffe91a60ea4fa7d8d2439df1a59865e17acc094db41864e6f"
+    ]
+  }
+}

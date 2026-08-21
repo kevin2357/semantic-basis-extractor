@@ -14,6 +14,7 @@
     {"$ref": "#/$defs/lifecycleInspectionV02"},
     {"$ref": "#/$defs/lifecycleInspectionV03"},
     {"$ref": "#/$defs/lifecycleInspectionV04"},
+    {"$ref": "#/$defs/lifecycleInspectionV05"},
     {"$ref": "#/$defs/reconciliationPolicy"},
     {"$ref": "#/$defs/reconciliationPolicyV02"},
     {"$ref": "#/$defs/reconciliationCycleResult"},
@@ -653,6 +654,55 @@
         "consumer_authority": {"$ref": "#/$defs/consumerAuthorityV03"},
         "execution_branch": {"$ref": "#/$defs/executionBranchV04"}
       },
+      "additionalProperties": false
+    },
+    "lifecycleInspectionV05": {
+      "type": "object",
+      "required": [
+        "schema_version", "run_id", "observation", "terminal", "quiescence",
+        "local_dependencies", "action_inventory", "review_reasons",
+        "execution_capacity", "provider_custody", "native_route",
+        "consumer_authority", "execution_branch",
+        "external_authority_request", "external_authority_refusal"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.5"},
+        "run_id": {"type": "string", "minLength": 1},
+        "observation": {"$ref": "#/$defs/snapshotObservation"},
+        "terminal": {"$ref": "#/$defs/terminalSummary"},
+        "quiescence": {"$ref": "#/$defs/quiescence"},
+        "local_dependencies": {"type": "array", "items": {"$ref": "#/$defs/localDependency"}},
+        "action_inventory": {"$ref": "#/$defs/actionInventory"},
+        "review_reasons": {"type": "array", "items": {"$ref": "#/$defs/ambiguityReviewReason"}, "uniqueItems": true},
+        "execution_capacity": {"$ref": "#/$defs/executionCapacityV04"},
+        "provider_custody": {"$ref": "#/$defs/providerCustodyV03"},
+        "native_route": {"$ref": "#/$defs/nativeRouteV03"},
+        "consumer_authority": {"$ref": "#/$defs/consumerAuthorityV03"},
+        "execution_branch": {"$ref": "#/$defs/executionBranchV04"},
+        "external_authority_request": {
+          "oneOf": [
+            {"$ref": "external-authority-contracts.v1.schema.json#/$defs/externalAuthorityRequest"},
+            {"type": "null"}
+          ]
+        },
+        "external_authority_refusal": {
+          "oneOf": [
+            {"$ref": "external-authority-contracts.v1.schema.json#/$defs/externalAuthorityRefusal"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "not": {
+            "properties": {
+              "external_authority_request": {"type": "object"},
+              "external_authority_refusal": {"type": "object"}
+            },
+            "required": ["external_authority_request", "external_authority_refusal"]
+          }
+        }
+      ],
       "additionalProperties": false
     },
     "reconciliationCycle": {

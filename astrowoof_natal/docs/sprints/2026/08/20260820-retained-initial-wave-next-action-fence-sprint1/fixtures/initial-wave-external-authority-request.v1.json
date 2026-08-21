@@ -1,0 +1,72 @@
+{
+  "schema_version": "astrowoof.external_authority_request.v1",
+  "external_authority_request_sha256": "94b8bfe3c4c6acc518aab59d73c488678be82977905ebfbce8ac820b072da676",
+  "run_id": "run_riwnafs_fixture",
+  "observation": {
+    "operator_state_revision": 12,
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "logical_workspace_root": "/work/run",
+    "snapshot_complete": true,
+    "inventory_valid": true,
+    "observed_at": "2026-08-20T12:00:00Z",
+    "native_exclusive_access": "declared",
+    "writer_race_possible": false
+  },
+  "request_kind": "initial_wave_admission",
+  "ordering_semantics": "prepared_wave_semantic_member_order",
+  "action_count": 6,
+  "ordered_action_ids": [
+    "paid_000000000000000000000001", "paid_000000000000000000000002",
+    "paid_000000000000000000000003", "paid_000000000000000000000004",
+    "paid_000000000000000000000005", "paid_000000000000000000000006"
+  ],
+  "ordered_actions": [
+    {
+      "action_id": "paid_000000000000000000000001",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_1:attempt-001","request_sha256":"1111111111111111111111111111111111111111111111111111111111111111","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700001,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "75a8dd0e016ea1097f1460968c5817037bec4aa36626955b3591b6f3a9fa15d3"
+    },
+    {
+      "action_id": "paid_000000000000000000000002",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_2:attempt-001","request_sha256":"2222222222222222222222222222222222222222222222222222222222222222","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700002,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "4802e5b64f2a82a3afdda624bdb3d8f8a8eb2cee48c2442eafdc2b5af90ed17a"
+    },
+    {
+      "action_id": "paid_000000000000000000000003",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_3:attempt-001","request_sha256":"3333333333333333333333333333333333333333333333333333333333333333","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700003,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "3d21d66a2a693a39fafbec191ae146679a42333fc79f862f347821715cb6eb00"
+    },
+    {
+      "action_id": "paid_000000000000000000000004",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_4:attempt-001","request_sha256":"4444444444444444444444444444444444444444444444444444444444444444","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700004,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "39e0bf8e9bae50e8f8488f524ee418a1408c79621f2a76a7c69c26f85bac24ac"
+    },
+    {
+      "action_id": "paid_000000000000000000000005",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_5:attempt-001","request_sha256":"5555555555555555555555555555555555555555555555555555555555555555","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700005,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "f44f65a32ef903ec3cca98a66f0d8e494492b0b2fbfb04a3ead15dbfdfa8e6bd"
+    },
+    {
+      "action_id": "paid_000000000000000000000006",
+      "binding": {"run_id":"run_riwnafs_fixture","profile_sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","prepared_state_revision":12,"stage":"authoring_initial","route":"bre_6:attempt-001","request_sha256":"6666666666666666666666666666666666666666666666666666666666666666","model":"gpt-5.6-terra","service_level":"interactive","maximum_output_tokens":30000,"commitment_micro_usd":700006,"price_book_version":"openai-public-2026-08-07.v1"},
+      "binding_sha256": "fd10e654a0a3fdeffe91a60ea4fa7d8d2439df1a59865e17acc094db41864e6f"
+    }
+  ],
+  "initial_wave": {
+    "wave_id": "wave_777777777777777777777777",
+    "wave_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9",
+    "assignment_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+    "profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "member_count": 6,
+    "ordered_member_binding_sha256s": [
+      "75a8dd0e016ea1097f1460968c5817037bec4aa36626955b3591b6f3a9fa15d3",
+      "4802e5b64f2a82a3afdda624bdb3d8f8a8eb2cee48c2442eafdc2b5af90ed17a",
+      "3d21d66a2a693a39fafbec191ae146679a42333fc79f862f347821715cb6eb00",
+      "39e0bf8e9bae50e8f8488f524ee418a1408c79621f2a76a7c69c26f85bac24ac",
+      "f44f65a32ef903ec3cca98a66f0d8e494492b0b2fbfb04a3ead15dbfdfa8e6bd",
+      "fd10e654a0a3fdeffe91a60ea4fa7d8d2439df1a59865e17acc094db41864e6f"
+    ]
+  },
+  "provider_create_permitted_after_authorization": true
+}

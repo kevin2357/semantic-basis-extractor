@@ -66,3 +66,41 @@
   `nafs` linguistic-pastry adjacency.
 - Confirmed that the tiny Scandinavian dog-waffle guardian is binding for morale
   and non-authoritative for runtime behavior.
+
+## 2026-08-20 — Slice 1 external-authority contract proposal
+
+- Added the packaged closed-world request/refusal/grant schema and declared
+  lifecycle inspection v0.5 without changing the implemented catalog default.
+- Froze complete binding disclosure, route-sensitive canonical ordering, canonical
+  SHA-256 construction, exact all-or-none grant membership, and initial-wave
+  context repetition.
+- Froze the lifecycle request/refusal/null branch matrix and separated a native
+  inability to publish one exact request from execution-time stale/grant refusals.
+- Clarified that requests require a complete valid snapshot while a no-create
+  refusal may truthfully report snapshot invalidity or absent exclusivity.
+- Kept the six ordinary per-action spend authorization documents as member
+  authorities; proposed the new grant as their observation-bound invocation
+  envelope on the v0.5 constrained path.
+- Documented positive grant versus withheld authority/providerless denial and the
+  irreducible post-intent/pre-provider-ID ambiguity boundary.
+- Added sanitized initial-wave request/grant/refusal and ordinary-action fixtures
+  plus digest, ordering, all-or-none, closed-schema, and observation tests.
+- Focused installed-environment result: 9 tests passed with real Draft 2020-12
+  schema validation. Provider/network calls: 0. Spend: USD 0.
+- Paused for the required API contract review before Slice 2/runtime work.
+
+## 2026-08-20 — Slice 1 API review corrections
+
+- Added full lifecycle-level request and native-refusal fixtures rather than
+  relying only on standalone authority objects.
+- Added semantic validation for exact outer lifecycle/request/refusal run,
+  observation revision, snapshot, logical-root, and execution-branch joins.
+- Added mutations for every cross-boundary identity, branch action inventory, and
+  invalid request/refusal combinations.
+- Strengthened aggregate-grant validation to validate each complete ordinary
+  authorization document's closed shape, schema, action ID, exact binding, digest,
+  and reference.
+- Added digest-consistent wrong-action and wrong-binding attacks to prove that a
+  self-consistent grant cannot bless a mismatched member authorization.
+- Focused Linux QA result: 16 tests passed. Provider/network calls and spend: zero.
+- Slice 1 remains paused for final API contract approval.

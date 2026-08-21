@@ -1,6 +1,6 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Evidence
 
-Status: Slice 0 complete; API review pending.
+Status: Slice 1 complete; API contract review pending.
 
 ## API evidence reviewed
 
@@ -61,3 +61,36 @@ Status: Slice 0 complete; API review pending.
   `results/SLICE 0 - REPRODUCTION AND MUTATION MAP.md`.
 - External provider/network calls: 0.
 - Retained Aster access or mutation: none.
+
+## Slice 1 contract evidence
+
+- Contract proposal:
+  `EXTERNAL AUTHORITY REQUEST AND GRANT CONTRACT PROPOSAL.md`.
+- Packaged schema:
+  `external-authority-contracts.v1.schema.json`.
+- Lifecycle schema proposal declares strict
+  `astrowoof.authoring_lifecycle_inspection.v0.5` with required mutually exclusive
+  request/refusal fields. The implemented catalog remains v0.4 until runtime work.
+- Sanitized fixtures:
+  - `initial-wave-external-authority-request.v1.json`;
+  - `initial-wave-external-authority-grant.v1.json`;
+  - `initial-wave-lineage-unjoinable-refusal.v1.json`;
+  - `ordinary-action-set-request.v1.json`;
+  - `lifecycle-awaiting-external-authority.v0.5.json`;
+  - `lifecycle-native-review-refusal.v0.5.json`.
+- Test module: `test_external_authority_contract_proposal.py`.
+- Host lean-runtime result: 16 tests passed with 4 schema-dependent tests skipped
+  because that development interpreter does not contain `jsonschema`.
+- Existing Linux QA-image result: 16 tests passed, including actual Draft 2020-12
+  schema and fixture validation.
+- Validated properties include canonical digests, complete public bindings,
+  ordinary lexical order, wave semantic order, exact six-member grant join,
+  rejection of reordering/partial grants/binding mutation/unknown properties,
+  valid-snapshot requirement for requests, and diagnostic invalid observations for
+  no-create refusals. Lifecycle-level tests additionally prove the exact outer
+  run/observation/branch joins and request/refusal exclusivity. Grant tests reject
+  digest-consistent authorization documents carrying the wrong action or binding.
+- Runtime request builders/readers/commands do not exist yet and are deliberately
+  gated on API approval.
+- Provider creates/retrievals: 0 / 0. Spend: USD 0.
+- Retained Aster workspace accessed or mutated: no.
