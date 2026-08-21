@@ -172,3 +172,26 @@
 - Added a public CLI regression proving byte-identical `run.json` and workspace
   snapshot, no changed/native-result publication artifacts, and zero provider calls.
 - Updated focused authority result: 34 passed with four optional schema skips.
+
+## 2026-08-20 — Slice 4 one-wave lineage fence
+
+- Replaced the old “all pass attempts empty” inference with a complete native
+  admission check before exact-interactive wave preparation.
+- Refused orphaned `authoring_initial` ledger actions, pass attempts, binding/join
+  artifacts, provider identities, consumption/reporting, response evidence, and
+  ambiguity as typed `initial_wave_lineage_unjoinable` evidence.
+- Validated a stored exact wave against its contract, six-member binding bundle,
+  unique ledger bindings, complete request inventory and bytes, and matching pass
+  attempts before treating it as reusable.
+- Added the same orphan-lineage fence before generic interactive dispatch so a
+  partially retained run cannot bypass wave preparation and enter ordinary pass
+  continuation.
+- Prevented the public authority reader from relabeling orphaned prepared initial
+  actions as an ordinary action set.
+- Preserved a valid stored wave—including six durable provider identities—without
+  changing its inventory or creating provider work.
+- Converted the Slice 0 unsafe-path characterizations into positive refusal
+  regressions with byte-identical state and zero provider creates.
+- Full semantic-closure suite: 92 tests passed. Focused lineage/public/execution:
+  22 passed; combined lineage/execution/initial-wave/spend compatibility: 52
+  passed. Network/provider calls and spend: zero.

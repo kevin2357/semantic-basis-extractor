@@ -68,6 +68,8 @@ from .initial_wave import (
     build_wave_authorization,
     execute_initial_wave_creates,
     preflight_wave_authorization,
+    validate_initial_wave,
+    validate_initial_wave_binding_bundle_against_wave,
 )
 from .provenance import (
     artifact_descriptor,
@@ -3131,13 +3133,160 @@ def prepare_source_workspace(spec: PassSpec, pass_root: Path) -> Path:
     return find_workspace_root(source_root, spec.pass_id)
 
 
+_INITIAL_WAVE_NATIVE_KEYS = (
+    "schema_version", "wave_id", "wave_sha256", "run_id", "route_family",
+    "route_contract", "assignment_sha256", "profile_sha256",
+    "preparation_basis_revision", "price_book_version", "member_count",
+    "ordered_members", "aggregate_maximum_commitment_micro_usd", "timing",
+)
+
+
+def _initial_lineage_refusal(categories: set[str], message: str) -> InitialWaveError:
+    return InitialWaveError(
+        "initial_wave_lineage_unjoinable", message,
+        evidence_categories=tuple(sorted(categories or {"native_evidence_conflict"})),
+    )
+
+
+def _orphaned_initial_lineage_categories(
+    state: dict[str, Any], run_dir: Path,
+) -> set[str]:
+    """Return closed redacted evidence categories when no stored wave exists."""
+    categories: set[str] = set()
+    actions = [
+        action for action in (state.get("spend_ledger") or {}).get("actions", [])
+        if isinstance(action, dict)
+        and (action.get("binding") or {}).get("stage") == "authoring_initial"
+    ]
+    if actions:
+        categories.add("prior_initial_action")
+    if any((action.get("provider") or {}).get("id") for action in actions):
+        categories.add("prior_provider_identity")
+    if any(
+        action.get("consumption") is not None or action.get("reported") is not None
+        for action in actions
+    ):
+        categories.add("prior_consumption")
+    if any(action.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION" for action in actions):
+        categories.add("ambiguous_lineage")
+    attempts = [
+        attempt
+        for record in (state.get("passes") or {}).values()
+        if isinstance(record, dict)
+        for attempt in record.get("attempts", [])
+        if isinstance(attempt, dict)
+    ]
+    if attempts:
+        categories.add("native_evidence_conflict")
+    if any(
+        attempt.get("provider_metadata") is not None
+        or attempt.get("state") in {
+            "WAITING_FOR_RESPONSE", "AMBIGUOUS_PROVIDER_SUBMISSION", "COMPLETED",
+        }
+        for attempt in attempts
+    ):
+        categories.add("response_evidence")
+    if (run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME).exists():
+        categories.add("missing_join_artifact")
+    attempt_artifacts = [
+        path for path in (run_dir / "passes").rglob("*")
+        if path.is_file() and any(
+            part.startswith("attempt-") for part in path.relative_to(run_dir).parts
+        )
+    ]
+    if attempt_artifacts:
+        categories.add("missing_join_artifact")
+    if any(
+        path.name in {"openai-background-response.json", "openai-response.json"}
+        for path in attempt_artifacts
+    ):
+        categories.add("response_evidence")
+    return categories
+
+
+def _validate_stored_exact_initial_wave(
+    state: dict[str, Any], run_dir: Path,
+) -> dict[str, Any]:
+    """Prove that stored native evidence joins to exactly one reusable wave."""
+    stored = state.get("initial_authoring_wave")
+    if not isinstance(stored, dict):
+        raise _initial_lineage_refusal(
+            {"missing_join_artifact"}, "Stored initial wave is absent",
+        )
+    try:
+        wave = {key: stored[key] for key in _INITIAL_WAVE_NATIVE_KEYS}
+        validate_initial_wave(wave)
+        if wave["route_family"] != "exact_natal":
+            raise InitialWaveError("route_mismatch", "Stored wave is not exact Natal")
+        bundle_path = run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
+        if not bundle_path.is_file():
+            raise InitialWaveError("binding_mismatch", "Binding bundle is absent")
+        bundle = load_json(bundle_path)
+        validate_initial_wave_binding_bundle_against_wave(bundle, wave)
+        members = wave["ordered_members"]
+        member_ids = [member["action_id"] for member in members]
+        ledger_actions = (state.get("spend_ledger") or {}).get("actions", [])
+        requests = stored.get("requests")
+        if not isinstance(requests, dict) or set(requests) != set(member_ids):
+            raise InitialWaveError("member_inventory_mismatch", "Wave requests do not join")
+        for member, bundle_member in zip(
+            members, bundle["ordered_members"], strict=True,
+        ):
+            matches = [
+                action for action in ledger_actions
+                if isinstance(action, dict) and action.get("action_id") == member["action_id"]
+            ]
+            if len(matches) != 1 or matches[0].get("binding") != bundle_member["binding"]:
+                raise InitialWaveError("binding_mismatch", "Wave ledger does not join")
+            request = requests[member["action_id"]]
+            payload_path = Path(str(request.get("request_payload_path") or ""))
+            if (
+                request.get("request_sha256") != member["request_sha256"]
+                or not payload_path.is_file()
+                or spend_digest(load_json(payload_path)) != member["request_sha256"]
+            ):
+                raise InitialWaveError("digest_mismatch", "Wave request bytes do not join")
+            pass_record = (state.get("passes") or {}).get(member["pass_id"])
+            attempts = pass_record.get("attempts", []) if isinstance(pass_record, dict) else []
+            if not any(
+                isinstance(attempt, dict)
+                and attempt.get("paid_action_id") == member["action_id"]
+                for attempt in attempts
+            ):
+                raise InitialWaveError("member_inventory_mismatch", "Wave pass attempt is absent")
+        return stored
+    except (InitialWaveError, KeyError, TypeError, ValueError) as exc:
+        categories = {"native_evidence_conflict"}
+        if not (run_dir / INITIAL_WAVE_BINDING_BUNDLE_FILENAME).is_file():
+            categories.add("missing_join_artifact")
+        actions = (state.get("spend_ledger") or {}).get("actions", [])
+        if any((action.get("provider") or {}).get("id") for action in actions):
+            categories.add("prior_provider_identity")
+        if any(
+            action.get("consumption") is not None or action.get("reported") is not None
+            for action in actions
+        ):
+            categories.add("prior_consumption")
+        if any(action.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION" for action in actions):
+            categories.add("ambiguous_lineage")
+        raise _initial_lineage_refusal(
+            categories, "Stored initial-wave evidence cannot prove one exact reusable wave",
+        ) from exc
+
+
 def prepare_exact_interactive_initial_wave(
     *, state: dict[str, Any], provider: AuthoringProvider,
     run_dir: Path, run_json: Path,
 ) -> dict[str, Any] | None:
     """Prepare all six fresh exact-interactive actions at one state basis."""
     if state.get("initial_authoring_wave"):
-        return state["initial_authoring_wave"]
+        return _validate_stored_exact_initial_wave(state, run_dir)
+    orphaned = _orphaned_initial_lineage_categories(state, run_dir)
+    if orphaned:
+        raise _initial_lineage_refusal(
+            orphaned,
+            "Historical initial-authoring evidence cannot be joined to one exact wave",
+        )
     specs = specs_from_state(state)
     if len(specs) != PASS_COUNT or any(
         state["passes"][spec.pass_id].get("attempts") for spec in specs
@@ -7702,6 +7851,19 @@ def main() -> None:
         )
         output_result(state)
         return
+    if (
+        args.provider == "openai"
+        and args.service_level == "interactive"
+        and not isinstance(state.get("initial_authoring_wave"), dict)
+    ):
+        orphaned_initial_lineage = _orphaned_initial_lineage_categories(
+            state, args.run_dir,
+        )
+        if orphaned_initial_lineage:
+            raise _initial_lineage_refusal(
+                orphaned_initial_lineage,
+                "Historical initial-authoring evidence cannot be joined to one exact wave",
+            )
     if args.spend_authorization and not (
         args.initial_wave_authorization or args.external_authority_grant
     ):

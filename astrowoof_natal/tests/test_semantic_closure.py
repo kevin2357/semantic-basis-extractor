@@ -520,7 +520,7 @@ class SemanticClosureFixture(unittest.TestCase):
 
 class TestSemanticClosure(SemanticClosureFixture):
     def test_public_reentry_preparation_cannot_use_legacy_create_authority(self) -> None:
-        """The historical re-entry shape cannot cross the new create fence."""
+        """The generic dispatcher refuses historical lineage before mutation."""
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             setup_provider = OpenAIResponsesProvider(
@@ -529,13 +529,10 @@ class TestSemanticClosure(SemanticClosureFixture):
                 require_spend_authorization=True,
             )
             state, run_json = self.make_state(root, setup_provider)
-            original = prepare_exact_interactive_initial_wave(
+            prepare_exact_interactive_initial_wave(
                 state=state, provider=setup_provider, run_dir=root / "run",
                 run_json=run_json,
             )
-            original_ids = {
-                member["action_id"] for member in original["ordered_members"]
-            }
             state.pop("initial_authoring_wave")
             for index, action in enumerate(state["spend_ledger"]["actions"], 1):
                 action["state"] = "PROVIDER_ID_RECORDED"
@@ -546,6 +543,8 @@ class TestSemanticClosure(SemanticClosureFixture):
                 record["attempts"] = []
                 record["state"] = "PENDING"
             save_state(run_json, state)
+            before_run = run_json.read_bytes()
+            before_snapshot = (root / "run" / "workspace-snapshot.json").read_bytes()
 
             base_args = [
                 "astrowoof-semantic-closure", "--run-dir", str(root / "run"),
@@ -555,75 +554,20 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "--prompt-cache-mode", "disabled", "--max-transport-retries", "0",
             ]
             with patch.dict("os.environ", {"SBE_SLICE0_FAKE_KEY": "test-key"}), \
-                    patch("sys.argv", base_args), redirect_stdout(io.StringIO()):
+                    patch("sys.argv", base_args), redirect_stdout(io.StringIO()), \
+                    self.assertRaises(InitialWaveError) as raised:
                 closure_main()
-
-            prepared_state = load_json(run_json)
-            prepared = prepared_state["initial_authoring_wave"]
-            new_ids = {
-                member["action_id"] for member in prepared["ordered_members"]
-            }
-            self.assertTrue(original_ids.isdisjoint(new_ids))
-            self.assertEqual(12, len(prepared_state["spend_ledger"]["actions"]))
-            bundle = load_json(
-                root / "run" / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
+            self.assertEqual("initial_wave_lineage_unjoinable", raised.exception.reason_code)
+            self.assertIn("prior_initial_action", raised.exception.evidence_categories)
+            self.assertIn("prior_provider_identity", raised.exception.evidence_categories)
+            self.assertEqual(before_run, run_json.read_bytes())
+            self.assertEqual(
+                before_snapshot,
+                (root / "run" / "workspace-snapshot.json").read_bytes(),
             )
-            wave = {key: value for key, value in prepared.items()
-                    if key not in {"state", "requests"}}
-            documents = [{
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": member["action_id"],
-                "binding": next(
-                    item["binding"] for item in bundle["ordered_members"]
-                    if item["action_id"] == member["action_id"]
-                ),
-                "authorization_reference": f"public-reentry-{member['pass_number']}",
-            } for member in wave["ordered_members"]]
-            envelope = build_wave_authorization(
-                wave, documents, reservation_set_reference="public-reentry-set",
-                issuer="slice-0-scripted-api",
-                authorized_at="2026-08-20T12:00:00Z",
-            )
-            auth_root = root / "authorizations"
-            auth_root.mkdir()
-            envelope_path = auth_root / "wave.json"
-            write_json_atomic(envelope_path, envelope)
-            document_paths = []
-            for index, document in enumerate(documents, 1):
-                path = auth_root / f"member-{index}.json"
-                write_json_atomic(path, document)
-                document_paths.append(path)
-
-            call_ids: list[str] = []
-            call_lock = threading.Lock()
-
-            def scripted_create(
-                _provider: OpenAIResponsesProvider, _payload: dict,
-                *, idempotency_key: str, timeout_seconds: float,
-            ) -> tuple[dict, int]:
-                del idempotency_key, timeout_seconds
-                with call_lock:
-                    response_id = f"resp_public_reentered_{len(call_ids) + 1}"
-                    call_ids.append(response_id)
-                return {"id": response_id, "status": "in_progress"}, 1
-
-            authorized_args = [
-                *base_args, "--initial-wave-authorization", str(envelope_path),
-            ]
-            for path in document_paths:
-                authorized_args.extend(["--spend-authorization", str(path)])
-            with patch.dict("os.environ", {"SBE_SLICE0_FAKE_KEY": "test-key"}), \
-                    patch("sys.argv", authorized_args), \
-                    patch.object(
-                        OpenAIResponsesProvider, "create_response_only",
-                        new=scripted_create,
-                    ), redirect_stdout(io.StringIO()), self.assertRaises(SystemExit):
-                closure_main()
-
-            self.assertEqual(0, len(call_ids))
 
     def test_characterizes_retained_initial_lineage_reentry_before_fence(self) -> None:
-        """Slice 0: prove retained-lineage re-entry with scripted provider I/O."""
+        """Slice 4: retained lineage cannot prepare a second inventory."""
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             transport = ScriptedTransport([
@@ -658,44 +602,18 @@ class TestSemanticClosure(SemanticClosureFixture):
                 record["state"] = "PENDING"
             save_state(run_json, state)
 
-            reentered = prepare_exact_interactive_initial_wave(
-                state=state, provider=provider, run_dir=root / "run",
-                run_json=run_json,
-            )
-            reentered_ids = [
-                member["action_id"] for member in reentered["ordered_members"]
-            ]
-            self.assertTrue(set(original_ids).isdisjoint(reentered_ids))
-            self.assertEqual(12, len(state["spend_ledger"]["actions"]))
-
-            bundle = load_json(
-                root / "run" / INITIAL_WAVE_BINDING_BUNDLE_FILENAME
-            )
-            wave = {key: value for key, value in reentered.items()
-                    if key not in {"state", "requests"}}
-            documents = [{
-                "schema_version": AUTHORIZATION_SCHEMA,
-                "action_id": member["action_id"],
-                "binding": next(
-                    item["binding"] for item in bundle["ordered_members"]
-                    if item["action_id"] == member["action_id"]
-                ),
-                "authorization_reference": f"reentry-{member['pass_number']}",
-            } for member in wave["ordered_members"]]
-            envelope = build_wave_authorization(
-                wave, documents, reservation_set_reference="reentry-set",
-                issuer="slice-0-scripted-api",
-                authorized_at="2026-08-20T12:00:00Z",
-            )
-            authorize_exact_interactive_initial_wave(
-                state=state, run_json=run_json, envelope=envelope,
-                member_authorizations=documents,
-            )
-            result = execute_exact_interactive_initial_wave(
-                state=state, provider=provider, run_json=run_json,
-            )
-            self.assertEqual("detached_provider_pending", result["outcome"])
-            self.assertEqual(6, len(transport.calls))
+            before = run_json.read_bytes()
+            with self.assertRaises(InitialWaveError) as raised:
+                prepare_exact_interactive_initial_wave(
+                    state=state, provider=provider, run_dir=root / "run",
+                    run_json=run_json,
+                )
+            self.assertEqual("initial_wave_lineage_unjoinable", raised.exception.reason_code)
+            self.assertEqual(original_ids, [
+                action["action_id"] for action in state["spend_ledger"]["actions"]
+            ])
+            self.assertEqual(before, run_json.read_bytes())
+            self.assertEqual(0, len(transport.calls))
 
     def test_exact_interactive_initial_wave_prepares_authorizes_and_detaches(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

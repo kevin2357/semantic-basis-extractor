@@ -98,9 +98,13 @@ _BINDING_KEYS = frozenset({
 class InitialWaveError(ValueError):
     """The initial wave or its authority failed closed."""
 
-    def __init__(self, reason_code: str, message: str):
+    def __init__(
+        self, reason_code: str, message: str,
+        *, evidence_categories: Sequence[str] = (),
+    ):
         super().__init__(message)
         self.reason_code = reason_code
+        self.evidence_categories = tuple(evidence_categories)
 
 
 class DefinitelyUnattemptedCreate(RuntimeError):

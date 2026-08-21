@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Slice 3 complete; awaiting review before initial-wave anti-reentry work
+Status: Slice 4 complete; awaiting review before cross-route classification
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 
@@ -190,6 +190,8 @@ Gate: stale or mismatched requests cause zero state mutation, zero authorization
 consumption, and zero provider calls.
 
 ### Slice 4 — Initial-wave anti-reentry and lineage policy
+
+Status: complete; awaiting review.
 
 - Replace the current “all pass attempts are empty” fresh-wave inference with the
   complete native admission rule above.

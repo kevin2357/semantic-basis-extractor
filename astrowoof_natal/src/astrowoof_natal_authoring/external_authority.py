@@ -304,7 +304,11 @@ def _snapshot_observation(root: Path, state: Mapping[str, Any]) -> dict[str, Any
 
 def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
     """Read one exact request only after complete snapshot validation."""
-    from .closure import load_json, validate_workspace_snapshot
+    from .closure import (
+        _orphaned_initial_lineage_categories,
+        load_json,
+        validate_workspace_snapshot,
+    )
 
     root = Path(run_dir).resolve()
     run_json = root / "run.json"
@@ -376,6 +380,13 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
             actions=bundle["ordered_members"], initial_wave=context,
         )
     else:
+        orphaned = _orphaned_initial_lineage_categories(state, root)
+        if orphaned:
+            raise InitialWaveError(
+                "initial_wave_lineage_unjoinable",
+                "Historical initial-authoring evidence cannot be joined to one exact wave",
+                evidence_categories=tuple(sorted(orphaned)),
+            )
         actions = [
             item for item in (state.get("spend_ledger") or {}).get("actions", [])
             if item.get("state") == "PREPARED"

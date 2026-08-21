@@ -74,6 +74,35 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
 - Detailed implementation handoff:
   `results/SLICE 3 - SINGLE-WRITER CONSTRAINED CONTINUATION.md`.
 
+## Slice 4 initial-wave lineage evidence
+
+- Fresh exact-interactive state with no historical lineage still prepares exactly
+  one six-member initial wave.
+- A valid stored wave is contract/bundle/ledger/request/pass validated and returned
+  exactly; a fixture with six durable provider IDs preserved the same action IDs and
+  produced zero new creates.
+- Orphaned historical cases refused with
+  `initial_wave_lineage_unjoinable` and closed redacted categories:
+  provider identity, consumption, reported cost, ambiguity, and prior initial
+  action evidence.
+- Stored-wave join failures refused before provider I/O: missing binding bundle,
+  changed request payload bytes, duplicate ledger action, and missing pass attempt.
+- Generic public resume with orphaned attempts refused before ordinary dispatch;
+  `run.json` and snapshot remained byte-identical and provider creates remained zero.
+- Public request reading cannot reinterpret orphaned `authoring_initial` actions as
+  `ordinary_action_set`.
+- Updated former Slice 0 reproducer now proves six historical actions remain the
+  only inventory, with no second six-member wave and no provider calls.
+- Test results:
+  - full `test_semantic_closure`: 92 passed;
+  - lineage + external public/execution: 22 passed;
+  - lineage + constrained execution + existing initial-wave/spend compatibility:
+    52 passed.
+- `git diff --check`: passed with line-ending notices only.
+- External provider/network use: none. Spend: USD 0. Retained Aster access: none.
+- Detailed handoff:
+  `results/SLICE 4 - INITIAL-WAVE LINEAGE FENCE.md`.
+
 ## Slice 2 public-reader evidence
 
 - Public module: `astrowoof_natal_authoring.external_authority`.
