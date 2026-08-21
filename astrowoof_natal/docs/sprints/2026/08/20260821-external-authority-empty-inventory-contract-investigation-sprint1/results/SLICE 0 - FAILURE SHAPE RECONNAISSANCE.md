@@ -1,7 +1,7 @@
 # Slice 0 — Failure-Shape Reconnaissance
 
 Date: 2026-08-21
-Status: complete; awaiting API review
+Status: complete; subsequently API-approved
 
 ## Result
 
@@ -97,4 +97,3 @@ incident root cause as unresolved unless the exact rejected inspection is recove
 
 PASS for reproduction and gap discovery. Pause for API review before freezing the
 Slice 1 contract and diagnostic vocabulary.
-

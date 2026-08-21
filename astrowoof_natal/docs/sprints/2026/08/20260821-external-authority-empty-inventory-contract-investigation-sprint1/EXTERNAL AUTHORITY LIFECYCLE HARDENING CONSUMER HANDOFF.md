@@ -1,6 +1,6 @@
 # External Authority Lifecycle Hardening — Consumer Handoff
 
-Status: release preparation complete; owner authorization received for `0.4.15`.
+Status: released in immutable SBE `0.4.15`.
 
 ## Consumer boundary
 

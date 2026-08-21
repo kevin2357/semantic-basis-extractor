@@ -1,7 +1,6 @@
 # Slice 6 — Closeout and Release Decision
 
-Status: release preparation complete; explicit owner authorization required before
-version bump, tag, or publication.
+Status: complete; released as immutable SBE 0.4.15.
 
 ## Classification
 
@@ -62,5 +61,5 @@ From an isolated Python 3.11 installation and outside the source package path:
 
 ## Decision gate
 
-Native and API consumer gates are green. Recommend `0.4.15`, but do not bump,
-tag, or publish without explicit owner authorization.
+Native and API consumer gates passed. SBE 0.4.15 was tagged, published, and
+independently verified without moving the immutable tag.

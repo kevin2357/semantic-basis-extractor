@@ -168,3 +168,13 @@
   `4ccf3813aa1010500298af9e68e4f3351b5a1ea0`.
 - Qualified wheel SHA-256:
   `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+
+## 2026-08-21 — 0.4.15 tagged and published
+
+- Created annotated tag `astrowoof-natal-authoring-v0.4.15` at exact qualified
+  release-record commit `807f9377fe54239d9311026835e38941fa22f898`.
+- Published the locked wheel and `SHA256SUMS.txt` in GitHub release `374487583`.
+- Independently downloaded the published wheel and verified 883238 bytes and
+  SHA-256 `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+- GitHub's asset digest matches the local qualification evidence.
+- Added this post-publication record without moving the immutable tag.

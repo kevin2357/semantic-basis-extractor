@@ -1,7 +1,7 @@
 # Slice 1 — Contract and Diagnostic Proposal
 
 Date: 2026-08-21
-Status: complete; awaiting joint SBE/API approval
+Status: complete; subsequently jointly approved and implemented
 
 ## Decision summary
 
@@ -24,4 +24,3 @@ The complete proposal and API questions are recorded in
 
 Slice 1 implementation is intentionally limited to documentation and contract
 design. Schema/runtime changes remain withheld pending API approval.
-

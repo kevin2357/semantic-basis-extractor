@@ -1,6 +1,6 @@
 # External-Authority Empty-Inventory Contract Investigation — Sprint 1 Evidence
 
-Status: Slice 6 release preparation complete; owner release authorization required
+Status: complete; 0.4.15 tagged, published, and independently verified
 
 - Provider calls: 0
 - Spend: USD 0
@@ -57,7 +57,7 @@ record committed as `4b6a60d`.
 - `LIFECYCLE EXTERNAL AUTHORITY INVARIANT PROPOSAL.md`
 - `results/SLICE 1 - CONTRACT AND DIAGNOSTIC PROPOSAL.md`
 - Source/schema/runtime changes: none
-- Gate: awaiting joint contract and diagnostic approval
+- Gate: jointly approved; implemented in Slices 2–3
 
 API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 
@@ -135,7 +135,7 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
   `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`.
 - Python compilation, packaged JSON parsing, privacy scan, and diff check: pass.
 - Provider calls/retrievals/spend/retained workspace access: 0 / 0 / USD 0 / none.
-- Release recommendation: fresh immutable `0.4.15`; owner authorization pending.
+- Release outcome: immutable `0.4.15` tagged, published, and verified.
 
 ## 0.4.15 artifact lock
 
@@ -147,3 +147,15 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Wheel bytes/entries/resources: 883238 / 133 / 78.
 - Double-build reproducibility, installed smoke, external-authority v2,
   provider-pending 4+2, `py.typed`, and bytecode exclusion: pass.
+
+## 0.4.15 publication evidence
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.15`.
+- Tag commit: `807f9377fe54239d9311026835e38941fa22f898`.
+- Annotated tag object: `87c8c64315b471406f64c04f2412de487a1d17d1`.
+- GitHub release ID: `374487583`.
+- Wheel/checksum asset IDs: `523887333` / `523887332`.
+- Published bytes/SHA-256: 883238 /
+  `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+- GitHub asset digest and independently downloaded bytes match the locked artifact.
+- Publication is final; this record does not move the immutable tag.

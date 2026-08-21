@@ -11,5 +11,5 @@
 - [Slice 6 closeout and release decision](SLICE%206%20-%20CLOSEOUT%20AND%20RELEASE%20DECISION.md)
 - [Installed release smoke receipt](release-preparation-smoke.json)
 
-API consumer review and release preparation are complete. Version bump, tag, and
-publication remain pending explicit owner authorization.
+API consumer review and release qualification are complete. Immutable SBE 0.4.15
+was tagged, published, and independently verified.

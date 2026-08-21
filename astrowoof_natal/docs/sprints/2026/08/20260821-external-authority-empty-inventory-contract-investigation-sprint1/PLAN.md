@@ -1,7 +1,7 @@
 # External-Authority Empty-Inventory Contract Investigation — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: draft; awaiting approval
+Status: complete; 0.4.15 tagged, published, and independently verified
 Mode: provider-free, retained-workspace read prohibition, contract-first
 
 ## Objective
@@ -159,4 +159,3 @@ derive authority from private state after public validation fails.
 3. Joint schema/semantics approval after Slice 1.
 4. API fixture review after Slice 5.
 5. Final consumer review before any release recommendation.
-
