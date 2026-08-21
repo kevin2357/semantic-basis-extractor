@@ -46,3 +46,25 @@
 - Accepted conditional branch semantics: empty IDs remain correct for `command=none`
   refusal, but are forbidden for `await_external_authority`.
 - No API-side change was requested. Slice 1 may proceed.
+
+## 2026-08-21 — Slice 1 contract and diagnostic proposal
+
+- Proposed correcting lifecycle inspection v0.5 in place because the tightened
+  combinations were already invalid by handoff semantics and are refused by API.
+- Defined complete conditional invariants for `await_external_authority` and
+  `command=none` typed refusal.
+- Kept external request, typed refusal, and constructed-document failure distinct.
+- Proposed conditional v0.5 JSON Schema constraints plus exact semantic joins.
+- Proposed enriching existing typed events rather than expanding the closed event
+  name vocabulary.
+- Defined a redacted failed-predicate vocabulary and text-log fields.
+- Froze no schema/runtime behavior; paused for joint approval.
+
+## 2026-08-21 — Slice 1 API approval
+
+- API approved in-place v0.5 tightening and both conditional command tables.
+- API approved event reuse, counts/digests in typed events, the closed predicate
+  vocabulary, and raising for constructed contradictions.
+- Recorded schema/semantic parity, full timing/readiness conditionals, sink-failure
+  isolation, incident uncertainty, and packaged-fixture qualification requirements.
+- Slice 2 may proceed.

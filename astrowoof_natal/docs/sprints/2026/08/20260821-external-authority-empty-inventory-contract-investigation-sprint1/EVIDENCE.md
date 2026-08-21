@@ -51,3 +51,12 @@ Proven facts:
 
 API review: approved in `API Agent Slice 0 Review and Response.md`; API planning
 record committed as `4b6a60d`.
+
+## Slice 1 proposal
+
+- `LIFECYCLE EXTERNAL AUTHORITY INVARIANT PROPOSAL.md`
+- `results/SLICE 1 - CONTRACT AND DIAGNOSTIC PROPOSAL.md`
+- Source/schema/runtime changes: none
+- Gate: awaiting joint contract and diagnostic approval
+
+API disposition: approved in `API Agent Slice 1 Review and Response.md`.
