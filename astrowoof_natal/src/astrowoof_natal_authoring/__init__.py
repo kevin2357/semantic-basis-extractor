@@ -62,6 +62,12 @@ from .lifecycle_contracts import validate_lifecycle_inspection_v04  # noqa: E402
 from .pending_lifecycle_qa import (  # noqa: E402
     run_provider_pending_lifecycle_qualification,
 )
+from .external_authority import (  # noqa: E402
+    build_external_authority_request,
+    read_external_authority_request,
+    read_external_authority_schema,
+    validate_external_authority_request,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -98,4 +104,8 @@ __all__ = [
     "validate_transition_journal",
     "validate_lifecycle_inspection_v04",
     "run_provider_pending_lifecycle_qualification",
+    "build_external_authority_request",
+    "read_external_authority_request",
+    "read_external_authority_schema",
+    "validate_external_authority_request",
 ]

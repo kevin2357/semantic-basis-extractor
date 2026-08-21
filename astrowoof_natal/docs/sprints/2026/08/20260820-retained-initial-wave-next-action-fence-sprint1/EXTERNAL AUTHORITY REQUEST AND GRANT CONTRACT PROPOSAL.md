@@ -1,6 +1,6 @@
 # External Authority Request and Grant Contract Proposal
 
-Date: 2026-08-20  
+Date: 2026-08-20
 Status: Slice 1 proposal; API schema review required before runtime implementation
 
 ## Decision
@@ -78,6 +78,13 @@ That transitively binds stage, route, request bytes, model, service level, maxim
 output, maximum commitment, profile, state revision, and versioned price book.
 Provider payloads, prompts, protected subject data, credentials, and provider
 responses are excluded.
+
+The binding's `prepared_state_revision` is its immutable preparation basis and may
+precede the request observation revision because persisting the prepared inventory
+advances native state. It must never be newer than the observation. The equality
+required at the lifecycle boundary is between the outer lifecycle observation and
+the embedded request observation; consumers must not conflate those two revision
+roles.
 
 ## Canonical digests
 

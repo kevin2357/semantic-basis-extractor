@@ -1,6 +1,6 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Evidence
 
-Status: Slice 1 complete; API contract review pending.
+Status: Slice 2 complete; constrained-continuation implementation has not begun.
 
 ## API evidence reviewed
 
@@ -38,6 +38,38 @@ Status: Slice 1 complete; API contract review pending.
 ## Safety record
 
 - Retained Aster workspace accessed or mutated: no.
+
+## Slice 2 public-reader evidence
+
+- Public module: `astrowoof_natal_authoring.external_authority`.
+- Packaged command: `astrowoof-external-authority`.
+- Root exports: builder, validator, snapshot reader, and schema reader.
+- Focused test module: `test_external_authority_public.py`.
+- Exact and bounded initial-wave snapshot readers: passed.
+- Ordinary prepared-action lexical reader: passed.
+- Production-shaped revision relationship (`prepared=N`, persisted observation
+  `N+1`): passed; future preparation revisions are refused.
+- Repeated unchanged-checkpoint determinism: passed.
+- Changed member and coherent mid-read checkpoint refusal: passed.
+- External output plus in-workspace output refusal: passed.
+- Combined request/public/legacy-wave result: 36 tests passed; four schema-only
+  proposal tests skipped in the lean interpreter.
+- Linux QA result: all 36 tests passed with Draft 2020-12 validation active.
+- Offline wheel: `astrowoof_natal_authoring-0.4.13-py3-none-any.whl`.
+- Qualification wheel SHA-256:
+  `26edc7ec6118bec38ab8374cd34326075cae87db158d2ad660d76b9666839fc5`.
+- Isolated Python 3.11 installation: passed.
+- Installed `astrowoof-external-authority --schema`: passed and returned
+  `astrowoof.external_authority_contracts.v1`.
+- Provider creates/retrievals: 0 / 0. Spend: USD 0.
+- Retained Aster workspace accessed or mutated: no.
+- Detailed handoff: `results/SLICE 2 - PUBLIC REQUEST READER AND CLI.md`.
+- Initial-wave request-admission regressions:
+  - stored wave not awaiting authority: refused;
+  - one provider-recorded/consumed member under a stale wave label: refused;
+  - one binding-mismatched ledger member: refused;
+  - duplicate ledger resolution for one wave member: refused;
+  - exact six `PREPARED`, providerless, unconsumed members: admitted.
 - Provider creates/retrievals: 0 / 0.
 - Spend: USD 0.
 - Repository changes: sprint documentation plus one Slice 0 characterization test.

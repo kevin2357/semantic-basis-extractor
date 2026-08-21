@@ -56,10 +56,9 @@ def validate_request_semantics(request: dict) -> None:
     for action in actions:
         if action["binding"]["run_id"] != request["run_id"]:
             raise ValueError("binding run mismatch")
-        if action["binding"]["prepared_state_revision"] != request[
-            "observation"
-        ]["operator_state_revision"]:
-            raise ValueError("binding revision mismatch")
+        prepared_revision = action["binding"]["prepared_state_revision"]
+        if prepared_revision > request["observation"]["operator_state_revision"]:
+            raise ValueError("binding revision is newer than observation")
         if digest(action["binding"]) != action["binding_sha256"]:
             raise ValueError("binding digest mismatch")
     if request["request_kind"] == "ordinary_action_set":

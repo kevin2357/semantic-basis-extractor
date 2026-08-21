@@ -27,6 +27,7 @@ astrowoof-initial-wave-contract = "astrowoof_natal_authoring.initial_wave_contra
 astrowoof-deployed-qa = "astrowoof_natal_authoring.cli.deployed_qa:main"
 astrowoof-provider-pending-qa = "astrowoof_natal_authoring.pending_lifecycle_qa:main"
 astrowoof-inspect-response = "astrowoof_natal_authoring.cli.inspect_response:main"
+astrowoof-external-authority = "astrowoof_natal_authoring.external_authority:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}

@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Slice 1 complete; paused for API contract review before runtime implementation
+Status: Slice 2 complete; awaiting review before constrained-continuation implementation
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 
@@ -153,6 +153,8 @@ Gate: explicit API review confirms it can validate, reserve, persist, and respon
 using only public artifacts. No runtime implementation before approval.
 
 ### Slice 2 — Snapshot-validating reader and provider-free CLI
+
+Status: complete.
 
 - Build the request only from validated native state under a complete workspace
   snapshot.

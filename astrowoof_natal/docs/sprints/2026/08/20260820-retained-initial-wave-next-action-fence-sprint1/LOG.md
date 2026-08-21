@@ -104,3 +104,37 @@
   self-consistent grant cannot bless a mismatched member authorization.
 - Focused Linux QA result: 16 tests passed. Provider/network calls and spend: zero.
 - Slice 1 remains paused for final API contract approval.
+
+## 2026-08-20 — Slice 1 approved and Slice 2 completed
+
+- Committed and pushed the approved Slice 1 contract as `01b8aee`.
+- Added a provider-free root-level Python builder, semantic validator,
+  snapshot-validating reader, schema reader, and `astrowoof-external-authority` CLI.
+- Joined exact and bounded initial waves through the existing public prepared-wave
+  and binding-bundle validators; ordinary actions use lexical action-ID order.
+- Made unchanged-checkpoint exports deterministic by using the snapshot-bound native
+  update time rather than reader wall-clock time.
+- Revalidated complete workspace state after request construction and refused a
+  simulated coherent writer update during the read.
+- Rejected CLI output under the native run directory and kept all reader/validation
+  operations free of provider access and state mutation.
+- Focused suite: 33 tests passed on the lean host, with four optional JSON Schema
+  tests skipped consistently with Slice 1. Offline wheel build and isolated Python
+  3.11 install succeeded; the installed CLI read the packaged v1 schema.
+- Provider/network calls: 0. Spend: USD 0. Retained Aster access: none.
+- Corrected an implementation-shape ambiguity before handoff: action preparation
+  revision may precede the later lifecycle observation revision after persistence.
+  Tests now use `prepared=N`, `observed=N+1`; only a future action revision fails.
+
+## 2026-08-20 — Slice 2 API fail-closed correction
+
+- Restricted initial-wave request publication to a stored wave whose state is
+  exactly `AWAITING_SPEND_AUTHORIZATION`.
+- Resolved all six semantic wave members against the durable ledger and required
+  exactly one matching `PREPARED`, providerless, unconsumed, binding-identical
+  action for every member.
+- Added production-shaped ledger fixtures and refusal coverage for authorized
+  waves, stale wave labels with provider identity/consumption, changed bindings,
+  and duplicate action records.
+- Focused host result: 36 tests passed with four optional schema tests skipped;
+  Linux QA result: all 36 passed with Draft 2020-12 validation active.
