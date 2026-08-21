@@ -22,3 +22,27 @@
 - Created the pre-sprint huddle and draft sliced plan. No source, schema, native
   state, provider, API, database, or release behavior changed.
 
+## 2026-08-21 — Slice 0 failure-shape reconnaissance
+
+- Added a provider-free production-shaped reproducer through real
+  `inspect_lifecycle()` for exact and bounded initial-wave workspaces.
+- Proved both normal routes publish six exact action IDs and satisfy all five API
+  external-authority predicates without mutating run state or snapshot bytes.
+- Proved an inadmissible stored-wave member becomes a typed
+  `native_state_inconsistent` refusal rather than an empty request.
+- Mutated each API predicate independently. Native v0.5 validation rejects wrong
+  eligibility, capacity, and empty action IDs, but currently accepts a wrong branch
+  reason and non-null `not_before`.
+- Recorded the exact retained predicate as unresolved because its raw rejected
+  inspection is unavailable; no longer treats empty inventory as proven.
+- Provider calls: 0. Spend: USD 0. Retained workspace access: none.
+- Slice 0 is complete and paused for API review.
+
+## 2026-08-21 — Slice 0 API review
+
+- API approved the revised evidence boundary and the two proven v0.5 gaps.
+- Accepted the requirement that installed-wheel qualification use packaged/public
+  fixtures rather than importing source-tree test helpers.
+- Accepted conditional branch semantics: empty IDs remain correct for `command=none`
+  refusal, but are forbidden for `await_external_authority`.
+- No API-side change was requested. Slice 1 may proceed.

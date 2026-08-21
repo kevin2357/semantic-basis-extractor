@@ -1,6 +1,6 @@
 # External-Authority Empty-Inventory Contract Investigation — Sprint 1 Evidence
 
-Status: planning and provider-free reconnaissance only
+Status: Slice 0 complete; awaiting API review
 
 - Provider calls: 0
 - Spend: USD 0
@@ -29,3 +29,25 @@ the retained QA failure.
 
 Primary analysis: `SBE Agent Pre-Sprint Huddle.md`.
 
+## Slice 0 reproducer
+
+Implementation:
+
+- `tests/test_external_authority_empty_inventory_investigation.py`
+
+Result report:
+
+- `results/SLICE 0 - FAILURE SHAPE RECONNAISSANCE.md`
+
+Proven facts:
+
+- normal exact and bounded inspection paths publish coherent nonempty six-member
+  external-authority requests;
+- representative inadmissible stored-wave evidence becomes typed refusal;
+- API-equivalent predicate checks distinguish all five collapsed conditions;
+- native v0.5 validation has gaps for wrong branch reason and non-null
+  `not_before`; and
+- exact retained-incident predicate remains unknown without its rejected document.
+
+API review: approved in `API Agent Slice 0 Review and Response.md`; API planning
+record committed as `4b6a60d`.
