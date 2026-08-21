@@ -1,6 +1,6 @@
 # External Authority Lifecycle Hardening — Consumer Handoff
 
-Status: Slice 5 API-approved; release preparation pending.
+Status: release preparation complete; owner authorization received for `0.4.15`.
 
 ## Consumer boundary
 

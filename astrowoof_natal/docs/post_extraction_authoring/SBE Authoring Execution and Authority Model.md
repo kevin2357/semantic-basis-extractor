@@ -1,6 +1,6 @@
 # SBE Authoring Execution and Authority Model
 
-Status: canonical conceptual model for SBE 0.4.14 and compatible consumers
+Status: canonical conceptual model for SBE 0.4.15 and compatible consumers
 
 ## Purpose
 

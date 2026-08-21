@@ -152,3 +152,12 @@
   whitespace checks passed.
 - Recommend fresh immutable patch `0.4.15`; no version bump, tag, or publication has
   occurred pending explicit owner authorization.
+
+## 2026-08-21 — 0.4.15 release closeout begins
+
+- Kevin explicitly authorized version bump, tag, and publication after final API
+  approval.
+- Selected fresh immutable patch `0.4.15`; preserved `0.4.14` unchanged.
+- Reconciled the consumer handoff opening status before release finalization.
+- Tagging and publication remain pending deterministic artifact qualification and
+  release-evidence lock.
