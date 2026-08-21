@@ -1,5 +1,9 @@
 # Authoring Lifecycle Consumer Handoff
 
+For the route-neutral conceptual model that connects lifecycle, external authority,
+provider custody, capacity, spend, persistence, and terminal outcomes, start with
+[SBE Authoring Execution and Authority Model](SBE%20Authoring%20Execution%20and%20Authority%20Model.md).
+
 For route-neutral scheduling of exact Responses, exact Batch, and bounded-Natal
 Responses, see [Provider Reconciliation Route Parity Handoff](Provider%20Reconciliation%20Route%20Parity%20Handoff.md).
 

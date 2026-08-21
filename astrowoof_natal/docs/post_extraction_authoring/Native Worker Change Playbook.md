@@ -28,13 +28,14 @@ truth and API orchestration authority.
 
 For any non-trivial native change, read these first:
 
-1. [Runtime Contracts](Runtime%20Contracts.md)
-2. [Semantic Closure Runner](Semantic%20Closure%20Runner.md)
-3. [Authoring Lifecycle Consumer Handoff](Authoring%20Lifecycle%20Consumer%20Handoff.md)
-4. [Provider Spend Enforcement](Provider%20Spend%20Enforcement.md)
-5. [Spend Authorization Consumer Handoff](Spend%20Authorization%20Consumer%20Handoff.md)
-6. [Provider Disclosure and Durable Workspace Contract](Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
-7. [Maintainer Release Playbook](Maintainer%20Release%20Playbook.md)
+1. [SBE Authoring Execution and Authority Model](SBE%20Authoring%20Execution%20and%20Authority%20Model.md)
+2. [Runtime Contracts](Runtime%20Contracts.md)
+3. [Semantic Closure Runner](Semantic%20Closure%20Runner.md)
+4. [Authoring Lifecycle Consumer Handoff](Authoring%20Lifecycle%20Consumer%20Handoff.md)
+5. [Provider Spend Enforcement](Provider%20Spend%20Enforcement.md)
+6. [Spend Authorization Consumer Handoff](Spend%20Authorization%20Consumer%20Handoff.md)
+7. [Provider Disclosure and Durable Workspace Contract](Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
+8. [Maintainer Release Playbook](Maintainer%20Release%20Playbook.md)
 
 Also read the current release notes, compatibility statement, API handoff, known
 limitations, manifest, and packaged contract catalog. For a shared boundary, read
