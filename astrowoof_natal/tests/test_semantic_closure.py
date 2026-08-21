@@ -519,8 +519,8 @@ class SemanticClosureFixture(unittest.TestCase):
 
 
 class TestSemanticClosure(SemanticClosureFixture):
-    def test_characterizes_public_resume_reentry_before_constrained_grant(self) -> None:
-        """Slice 0: prove the unsafe route through the public resume dispatcher."""
+    def test_public_reentry_preparation_cannot_use_legacy_create_authority(self) -> None:
+        """The historical re-entry shape cannot cross the new create fence."""
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             setup_provider = OpenAIResponsesProvider(
@@ -617,18 +617,10 @@ class TestSemanticClosure(SemanticClosureFixture):
                     patch.object(
                         OpenAIResponsesProvider, "create_response_only",
                         new=scripted_create,
-                    ), redirect_stdout(io.StringIO()):
+                    ), redirect_stdout(io.StringIO()), self.assertRaises(SystemExit):
                 closure_main()
 
-            self.assertEqual(6, len(call_ids))
-            persisted = load_json(run_json)
-            self.assertEqual(
-                set(call_ids), {
-                    action["provider"]["id"]
-                    for action in persisted["spend_ledger"]["actions"]
-                    if action["action_id"] in new_ids
-                },
-            )
+            self.assertEqual(0, len(call_ids))
 
     def test_characterizes_retained_initial_lineage_reentry_before_fence(self) -> None:
         """Slice 0: prove retained-lineage re-entry with scripted provider I/O."""

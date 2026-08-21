@@ -16,6 +16,7 @@ from .resource_access import read_resource_text
 
 
 REQUEST_SCHEMA = "astrowoof.external_authority_request.v1"
+GRANT_SCHEMA = "astrowoof.external_authority_grant.v1"
 CONTRACT_SCHEMA_RESOURCE = "contracts/external-authority-contracts.v1.schema.json"
 SNAPSHOT_FILENAME = "workspace-snapshot.json"
 _REQUEST_KEYS = frozenset({
@@ -38,6 +39,20 @@ _OBSERVATION_KEYS = frozenset({
 _WAVE_KEYS = frozenset({
     "wave_id", "wave_sha256", "route_contract", "assignment_sha256",
     "profile_sha256", "member_count", "ordered_member_binding_sha256s",
+})
+_GRANT_KEYS = frozenset({
+    "schema_version", "grant_sha256", "decision", "api_decision_id", "issuer",
+    "issued_at", "external_authority_request_sha256", "run_id",
+    "inspected_state_revision", "snapshot_sha256", "logical_workspace_root",
+    "request_kind", "action_count", "ordered_action_ids",
+    "ordered_member_authorizations", "initial_wave",
+})
+_GRANT_MEMBER_KEYS = frozenset({
+    "action_id", "binding_sha256", "authorization_document_sha256",
+    "authorization_reference",
+})
+_AUTHORIZATION_KEYS = frozenset({
+    "schema_version", "action_id", "binding", "authorization_reference",
 })
 
 
@@ -200,6 +215,71 @@ def build_external_authority_request(
     }
     value["external_authority_request_sha256"] = _canonical_sha256(value)
     return validate_external_authority_request(value)
+
+
+def validate_external_authority_grant(
+    request: Mapping[str, Any], grant: Any,
+    member_authorizations: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Validate one all-or-none API grant and every complete member document."""
+    validate_external_authority_request(dict(request))
+    if not isinstance(grant, dict) or set(grant) != _GRANT_KEYS:
+        raise InitialWaveError("unsupported_contract", "Grant fields are not exact")
+    if grant.get("schema_version") != GRANT_SCHEMA or grant.get("decision") != "granted":
+        raise InitialWaveError("unsupported_contract", "Unsupported grant decision")
+    expected = {
+        "external_authority_request_sha256": request[
+            "external_authority_request_sha256"
+        ],
+        "run_id": request["run_id"],
+        "inspected_state_revision": request["observation"][
+            "operator_state_revision"
+        ],
+        "snapshot_sha256": request["observation"]["snapshot_sha256"],
+        "logical_workspace_root": request["observation"]["logical_workspace_root"],
+        "request_kind": request["request_kind"],
+        "action_count": request["action_count"],
+        "ordered_action_ids": request["ordered_action_ids"],
+        "initial_wave": request["initial_wave"],
+    }
+    if any(grant.get(key) != value for key, value in expected.items()):
+        raise InitialWaveError("authorization_mismatch", "Grant request basis is stale")
+    members = grant.get("ordered_member_authorizations")
+    if (
+        not isinstance(members, list)
+        or len(members) != request["action_count"]
+        or len(member_authorizations) != request["action_count"]
+    ):
+        raise InitialWaveError("partial_authorization", "Grant is not all-or-none")
+    for action, member, document in zip(
+        request["ordered_actions"], members, member_authorizations, strict=True,
+    ):
+        if not isinstance(member, Mapping) or set(member) != _GRANT_MEMBER_KEYS:
+            raise InitialWaveError("unsupported_contract", "Grant member fields are not exact")
+        if not isinstance(document, Mapping) or set(document) != _AUTHORIZATION_KEYS:
+            raise InitialWaveError(
+                "unsupported_contract", "Authorization document fields are not exact"
+            )
+        if (
+            document.get("schema_version") != "astrowoof.provider_spend_authorization.v0.1"
+            or document.get("action_id") != action["action_id"]
+            or document.get("binding") != action["binding"]
+            or not isinstance(document.get("authorization_reference"), str)
+            or not document["authorization_reference"]
+            or member.get("action_id") != action["action_id"]
+            or member.get("binding_sha256") != action["binding_sha256"]
+            or member.get("authorization_document_sha256") != _canonical_sha256(document)
+            or member.get("authorization_reference") != document[
+                "authorization_reference"
+            ]
+        ):
+            raise InitialWaveError(
+                "authorization_mismatch", "Grant member authorization is not exact"
+            )
+    body = {key: item for key, item in grant.items() if key != "grant_sha256"}
+    if grant.get("grant_sha256") != _canonical_sha256(body):
+        raise InitialWaveError("digest_mismatch", "Grant digest is invalid")
+    return grant
 
 
 def _snapshot_observation(root: Path, state: Mapping[str, Any]) -> dict[str, Any]:

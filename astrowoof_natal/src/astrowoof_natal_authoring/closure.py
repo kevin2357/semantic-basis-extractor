@@ -65,6 +65,7 @@ from .initial_wave import (
     ProviderCreateResult as InitialWaveProviderCreateResult,
     build_initial_wave,
     build_initial_wave_binding_bundle,
+    build_wave_authorization,
     execute_initial_wave_creates,
     preflight_wave_authorization,
 )
@@ -3284,14 +3285,27 @@ def authorize_exact_interactive_initial_wave(
 def execute_exact_interactive_initial_wave(
     *, state: dict[str, Any], provider: AuthoringProvider,
     run_json: Path, event_emitter: ExecutionEventEmitter | None = None,
+    constrained_intent_token: str | None = None,
     _failure_injector: Any | None = None,
 ) -> dict[str, Any]:
     """Create six exact Responses concurrently and durably bind each identity."""
     stored = state.get("initial_authoring_wave")
-    if not isinstance(stored, dict) or stored.get("state") != "AUTHORIZED":
+    constrained = constrained_intent_token is not None
+    if not isinstance(stored, dict) or stored.get("state") != (
+        "SUBMITTING" if constrained else "AUTHORIZED"
+    ):
         raise InitialWaveError("authorization_missing", "Initial wave is not authorized")
+    if constrained:
+        intent = stored.get("constrained_submission_intent") or {}
+        if intent.get("token_sha256") != hashlib.sha256(
+            constrained_intent_token.encode("utf-8")
+        ).hexdigest():
+            raise InitialWaveError(
+                "provider_submission_ambiguous", "Submission intent capability is absent"
+            )
     wave = {key: value for key, value in stored.items() if key not in {
         "state", "requests", "authorization", "result",
+        "constrained_submission_intent",
     }}
     documents = [
         next(action["authorization"] for action in state["spend_ledger"]["actions"]
@@ -3339,19 +3353,22 @@ def execute_exact_interactive_initial_wave(
                     provider_id=str(recorded["id"]),
                     metadata={"resumed_from_durable_identity": True},
                 )
-            if action.get("state") == "SUBMITTING":
+            if action.get("state") == "SUBMITTING" and not constrained:
                 raise RuntimeError(
                     "submission resumed without a durable provider identity"
                 )
-            if action.get("state") != "AUTHORIZED":
+            if action.get("state") not in (
+                {"SUBMITTING"} if constrained else {"AUTHORIZED"}
+            ):
                 raise RuntimeError(
                     f"initial-wave action is not submit-eligible: {action.get('state')}"
                 )
-            begin_submission(
-                action, consumer_id=f"pid:{os.getpid()}",
-                state_revision=int(state.get("state_revision") or 0),
-            )
-            persist_state(run_json, state)
+            if not constrained:
+                begin_submission(
+                    action, consumer_id=f"pid:{os.getpid()}",
+                    state_revision=int(state.get("state_revision") or 0),
+                )
+                persist_state(run_json, state)
         inject(f"after_submitting:{action_id}")
         pre_post_barrier.wait()
         inject(f"before_provider_create:{action_id}")
@@ -3373,7 +3390,16 @@ def execute_exact_interactive_initial_wave(
     def persist_outcome(member: dict[str, Any], outcome: dict[str, Any]) -> None:
         # Other create workers may still be crossing their pre-submit boundary.
         # Serialize this immediate ID commit with those ledger mutations.
-        with mutation_lock:
+        from .lifecycle import _exclusive_lifecycle_lock
+        with _exclusive_lifecycle_lock(run_json.parent), mutation_lock:
+            persisted_revision = int(
+                load_json(run_json).get("state_revision") or 0
+            )
+            if persisted_revision != int(state.get("state_revision") or 0):
+                raise AmbiguousProviderSubmission(
+                    "Initial-wave state changed before provider identity persistence",
+                    action=action_for(member["action_id"]),
+                )
             action = action_for(member["action_id"])
             request = stored["requests"][member["action_id"]]
             attempt = state["passes"][member["pass_id"]]["attempts"][-1]
@@ -3428,6 +3454,108 @@ def execute_exact_interactive_initial_wave(
     stored["result"] = result
     save_state(run_json, state)
     return result
+
+
+def execute_exact_initial_wave_with_external_authority(
+    *, run_dir: Path, request: dict[str, Any], grant: dict[str, Any],
+    member_authorizations: list[dict[str, Any]], provider: AuthoringProvider,
+    event_emitter: ExecutionEventEmitter | None = None,
+    _failure_injector: Any | None = None,
+) -> dict[str, Any]:
+    """Fence one exact initial wave through durable intent before provider I/O."""
+    from .external_authority import (
+        read_external_authority_request,
+        validate_external_authority_grant,
+    )
+    from .lifecycle import _exclusive_lifecycle_lock
+
+    root = Path(run_dir).resolve()
+    run_json = root / "run.json"
+    token = os.urandom(32).hex()
+    logger.info(
+        "external_authority_fence_start request=%s grant=%s",
+        request.get("external_authority_request_sha256"), grant.get("grant_sha256"),
+    )
+    with _exclusive_lifecycle_lock(root):
+        state = load_json(run_json)
+        validate_workspace_snapshot(root, state)
+        current_request = read_external_authority_request(root)
+        if current_request != request:
+            raise InitialWaveError(
+                "stale_observation", "External-authority request is not current"
+            )
+        validate_external_authority_grant(
+            current_request, grant, member_authorizations,
+        )
+        if current_request["request_kind"] != "initial_wave_admission":
+            raise InitialWaveError(
+                "unsupported_contract", "This operation requires an initial wave"
+            )
+        stored = state.get("initial_authoring_wave")
+        if not isinstance(stored, dict) or stored.get("state") != (
+            "AWAITING_SPEND_AUTHORIZATION"
+        ):
+            raise InitialWaveError(
+                "request_unavailable", "Initial wave is no longer admissible"
+            )
+        wave = {key: value for key, value in stored.items() if key not in {
+            "state", "requests", "authorization", "result",
+            "constrained_submission_intent",
+        }}
+        if wave.get("route_family") != "exact_natal":
+            raise InitialWaveError(
+                "unsupported_contract", "Bounded constrained execution is deferred"
+            )
+        legacy_envelope = build_wave_authorization(
+            wave, member_authorizations,
+            reservation_set_reference=grant["api_decision_id"],
+            issuer=grant["issuer"], authorized_at=grant["issued_at"],
+        )
+        preflight_wave_authorization(
+            wave, legacy_envelope, member_authorizations,
+        )
+        candidate = deepcopy(state["spend_ledger"])
+        for document in member_authorizations:
+            authorize_action(candidate, document)
+        for action_id in current_request["ordered_action_ids"]:
+            action = next(
+                item for item in candidate["actions"]
+                if item["action_id"] == action_id
+            )
+            begin_submission(
+                action, consumer_id=f"external-grant:{grant['api_decision_id']}",
+                state_revision=int(state.get("state_revision") or 0),
+            )
+        state["spend_ledger"] = candidate
+        stored["state"] = "SUBMITTING"
+        stored["authorization"] = legacy_envelope
+        stored["constrained_submission_intent"] = {
+            "external_authority_request_sha256": request[
+                "external_authority_request_sha256"
+            ],
+            "grant_sha256": grant["grant_sha256"],
+            "ordered_action_ids": list(request["ordered_action_ids"]),
+            "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
+            "created_at": utc_now(),
+        }
+        save_state(run_json, state)
+        logger.info(
+            "external_authority_intent_committed request=%s actions=%d revision=%s",
+            request["external_authority_request_sha256"],
+            len(request["ordered_action_ids"]), state.get("state_revision"),
+        )
+    if _failure_injector is not None:
+        _failure_injector("after_durable_pre_submit_intent")
+    logger.info(
+        "external_authority_provider_io_start request=%s actions=%d",
+        request["external_authority_request_sha256"],
+        len(request["ordered_action_ids"]),
+    )
+    return execute_exact_interactive_initial_wave(
+        state=state, provider=provider, run_json=run_json,
+        event_emitter=event_emitter, constrained_intent_token=token,
+        _failure_injector=_failure_injector,
+    )
 
 
 def run_pass_acceptance(
@@ -7002,6 +7130,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--external-authority-request", type=Path,
+        help="Exact snapshot-bound request for constrained provider-capable resume.",
+    )
+    parser.add_argument(
+        "--external-authority-grant", type=Path,
+        help="All-or-none API grant bound to --external-authority-request.",
+    )
+    parser.add_argument(
         "--spend-reconciliation",
         action="append",
         type=Path,
@@ -7320,7 +7456,8 @@ def main() -> None:
         )
     if reconciliation_cycle and (
         args.spend_authorization or args.spend_reconciliation
-        or args.initial_wave_authorization
+        or args.initial_wave_authorization or args.external_authority_request
+        or args.external_authority_grant
     ):
         parser.error(
             "provider reconciliation cannot apply spend authorization or reconciliation"
@@ -7330,6 +7467,27 @@ def main() -> None:
             "--initial-wave-authorization requires exactly six ordered "
             "--spend-authorization documents"
         )
+    if args.initial_wave_authorization:
+        parser.error(
+            "legacy --initial-wave-authorization cannot authorize provider create; "
+            "use the snapshot-bound external authority request and grant"
+        )
+    if bool(args.external_authority_request) != bool(args.external_authority_grant):
+        parser.error(
+            "--external-authority-request and --external-authority-grant are required together"
+        )
+    if args.external_authority_request:
+        if args.initial_wave_authorization:
+            parser.error("external authority cannot be combined with legacy wave authority")
+        if len(args.spend_authorization) != PASS_COUNT:
+            parser.error(
+                "external initial-wave authority requires exactly six ordered "
+                "--spend-authorization documents"
+            )
+        if not args.resume or args.provider != "openai" or args.service_level != "interactive":
+            parser.error(
+                "external initial-wave authority requires exact interactive OpenAI resume"
+            )
     if args.provider_reconciliation_cycle and not args.observed_at:
         parser.error("--provider-reconciliation-cycle requires --observed-at")
     if args.batch_poll_interval_seconds <= 0:
@@ -7544,7 +7702,15 @@ def main() -> None:
         )
         output_result(state)
         return
-    if args.spend_authorization and not args.initial_wave_authorization:
+    if args.spend_authorization and not (
+        args.initial_wave_authorization or args.external_authority_grant
+    ):
+        if isinstance(state.get("initial_authoring_wave"), dict):
+            raise InitialWaveError(
+                "aggregate_grant_required",
+                "Initial-wave member authorizations require the exact "
+                "snapshot-bound external-authority request and aggregate grant",
+            )
         documents = [load_json(path) for path in args.spend_authorization]
         try:
             apply_spend_authorizations(state, documents)
@@ -7588,6 +7754,35 @@ def main() -> None:
         )
     )
     if exact_initial_wave_mode:
+        if args.external_authority_request:
+            execute_exact_initial_wave_with_external_authority(
+                run_dir=args.run_dir,
+                request=load_json(args.external_authority_request),
+                grant=load_json(args.external_authority_grant),
+                member_authorizations=[
+                    load_json(path) for path in args.spend_authorization
+                ],
+                provider=provider, event_emitter=event_emitter,
+            )
+            state = load_json(run_json)
+            from .native_transitions import publish_native_execution_result
+            publish_native_execution_result(
+                args.run_dir, command_kind="ordinary_authoring",
+                sbe_release=__version__, published_at=utc_now(),
+                event_emitter=event_emitter,
+            )
+            output_result(state)
+            return
+        stored_initial_wave = state.get("initial_authoring_wave")
+        if (
+            isinstance(stored_initial_wave, dict)
+            and stored_initial_wave.get("state") == "AWAITING_SPEND_AUTHORIZATION"
+        ):
+            raise InitialWaveError(
+                "aggregate_grant_required",
+                "A stored initial wave awaiting external authority requires the "
+                "exact snapshot-bound request and aggregate grant",
+            )
         wave = prepare_exact_interactive_initial_wave(
             state=state, provider=provider, run_dir=args.run_dir,
             run_json=run_json,

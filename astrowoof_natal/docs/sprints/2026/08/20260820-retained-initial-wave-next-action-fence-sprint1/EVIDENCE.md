@@ -39,6 +39,41 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
 
 - Retained Aster workspace accessed or mutated: no.
 
+## Slice 3 constrained-execution evidence
+
+- Public runtime validator:
+  `validate_external_authority_grant(request, grant, member_authorizations)`.
+- Constrained native operation:
+  `execute_exact_initial_wave_with_external_authority(...)`.
+- Public CLI inputs: exact request, aggregate grant, and six ordered ordinary member
+  authorization documents. Legacy `--initial-wave-authorization` is refused.
+- Before provider I/O, one single-writer transaction revalidates the complete
+  snapshot/current request, validates every binding/reference/digest, applies all
+  six authorizations to a candidate ledger, marks all six actions `SUBMITTING`, and
+  publishes the durable intent checkpoint.
+- During provider I/O, native mutation remains serialized but the cross-process
+  writer is not held. Every returned provider identity is individually checkpointed
+  under the writer before it is treated as durable.
+- Exact refusal cases proved byte-identical `run.json` and snapshot with zero
+  provider calls: stale request, partial grant, and loose member authorizations
+  without an aggregate grant.
+- Interruption after durable intent: zero provider calls; all six actions remain
+  `SUBMITTING`; exact replay refused before provider I/O.
+- Provider returned before identity durability: six scripted creates; all six
+  actions become `AMBIGUOUS_PROVIDER_SUBMISSION`; replay adds zero creates.
+- Successful public CLI path: six distinct scripted creates; six durable `WAITING`
+  actions and a valid complete workspace snapshot.
+- Focused suite: 34 authority tests passed (4 optional schema skips), 40 existing
+  initial-wave/spend tests passed, and 2 targeted closure tests passed.
+- Generic resume of a stored awaiting-authority wave: typed
+  `aggregate_grant_required`; byte-identical run/snapshot, unchanged result artifact
+  inventory, and zero provider creates.
+- `git diff --check`: passed (only repository line-ending notices).
+- External network/provider use: none. Spend: USD 0.
+- Retained Aster workspace accessed or mutated: no.
+- Detailed implementation handoff:
+  `results/SLICE 3 - SINGLE-WRITER CONSTRAINED CONTINUATION.md`.
+
 ## Slice 2 public-reader evidence
 
 - Public module: `astrowoof_natal_authoring.external_authority`.

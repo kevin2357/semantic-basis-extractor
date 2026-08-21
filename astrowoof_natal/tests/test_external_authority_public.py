@@ -285,6 +285,7 @@ class TestExternalAuthorityPublic(unittest.TestCase):
         expected = {
             "build_external_authority_request", "read_external_authority_request",
             "read_external_authority_schema", "validate_external_authority_request",
+            "validate_external_authority_grant",
         }
         self.assertTrue(expected <= set(public.__all__))
         schema = public.read_external_authority_schema()

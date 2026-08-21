@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Slice 2 complete; awaiting review before constrained-continuation implementation
+Status: Slice 3 complete; awaiting review before initial-wave anti-reentry work
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 
@@ -169,6 +169,8 @@ Gate: installed-style consumer tests obtain the exact request without reading
 `run.json`, logs, packet files, or snapshots directly.
 
 ### Slice 3 — Single-writer constrained continuation fence
+
+Status: complete; awaiting review.
 
 - Add the public continuation argument/operation selected in Slice 1.
 - Acquire native single-writer control, revalidate the complete snapshot and exact

@@ -66,6 +66,7 @@ from .external_authority import (  # noqa: E402
     build_external_authority_request,
     read_external_authority_request,
     read_external_authority_schema,
+    validate_external_authority_grant,
     validate_external_authority_request,
 )
 
@@ -107,5 +108,6 @@ __all__ = [
     "build_external_authority_request",
     "read_external_authority_request",
     "read_external_authority_schema",
+    "validate_external_authority_grant",
     "validate_external_authority_request",
 ]

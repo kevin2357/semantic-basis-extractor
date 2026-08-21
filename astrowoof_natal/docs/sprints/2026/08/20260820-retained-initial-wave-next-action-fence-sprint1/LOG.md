@@ -138,3 +138,37 @@
   and duplicate action records.
 - Focused host result: 36 tests passed with four optional schema tests skipped;
   Linux QA result: all 36 passed with Draft 2020-12 validation active.
+
+## 2026-08-20 — Slice 3 constrained continuation fence
+
+- Added strict runtime validation of the closed aggregate grant and all six complete
+  member authorization documents against the current snapshot-bound request.
+- Added the supported exact-interactive constrained execution path and CLI inputs:
+  `--external-authority-request`, `--external-authority-grant`, and the six existing
+  ordered `--spend-authorization` documents.
+- Held native single-writer control through current-request reconstruction, exact
+  grant validation, all-or-none ledger authorization, and one durable all-member
+  `SUBMITTING` intent checkpoint; released it before slow provider creates.
+- Reacquired cross-process single-writer control for every returned identity or
+  ambiguity outcome and published a complete workspace snapshot after each.
+- Removed the legacy public initial-wave authorization route and rejected loose
+  initial-wave member authorizations without the snapshot-bound aggregate grant.
+- Proved that interruption after durable intent makes replay fail closed before any
+  create, while an injected provider-return/identity-persistence gap becomes six
+  durable ambiguous submissions and never creates again.
+- Focused results: 33 authority tests passed with four optional schema tests skipped
+  on the lean interpreter; 40 existing initial-wave/spend tests passed; two targeted
+  semantic-closure compatibility tests passed.
+- Provider/network calls were scripted only. Spend: USD 0. Retained Aster access:
+  none.
+
+## 2026-08-20 — Slice 3 API review correction
+
+- Added an explicit `aggregate_grant_required` refusal when generic exact
+  interactive resume encounters a stored initial wave in
+  `AWAITING_SPEND_AUTHORIZATION` without the exact external request/grant pair.
+- Placed the refusal before wave preparation, state/snapshot persistence, and native
+  result publication; fresh initial preparation remains supported.
+- Added a public CLI regression proving byte-identical `run.json` and workspace
+  snapshot, no changed/native-result publication artifacts, and zero provider calls.
+- Updated focused authority result: 34 passed with four optional schema skips.
