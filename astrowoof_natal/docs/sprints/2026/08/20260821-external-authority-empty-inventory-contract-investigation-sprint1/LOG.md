@@ -109,3 +109,30 @@
 - Focused evidence: 105 passed, 5 environment-dependent schema checks skipped.
 - Provider calls: 0. Spend: USD 0. Retained workspace access: none.
 - Slice 4 gate passed.
+
+## 2026-08-21 — Slice 5 installed-wheel qualification and handoff
+
+- Versioned the qualification receipt forward to v2 while preserving the published
+  closed v1 contract.
+- Added request/refusal lifecycle-conditional assertions to the holistic public
+  runtime qualification.
+- Built and isolated-installed the 0.4.14 candidate wheel; its SHA-256 is
+  `798381344ea728e851663db3ca2afc5a968205ddce951aea7efce0200398b8e3`.
+- Produced a passing v2 receipt plus sanitized request, grant, refusal, and ordinary
+  action fixtures from the installed artifact.
+- Published exact API selection requirements, compatibility guidance, and retained
+  workspace handling in the consumer handoff.
+- Combined lifecycle/external-authority verification: 97 tests run, 6 existing
+  environment-dependent schema checks skipped, all remaining tests passed.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+- Slice 5 is complete and paused for API fixture/consumer review before Slice 6.
+
+## 2026-08-21 — Slice 5 API approval
+
+- API approved the fixtures, installed-wheel qualification, lifecycle contract, and
+  consumer handoff conditional on one prose-only correction.
+- Corrected both handoff reason-code literals from the descriptive
+  `external_authority_required` to the actual validated contract value
+  `spend_authorization_required`.
+- No source, schema, fixture, qualification, or runtime behavior changed in response
+  to review. Slice 5 is approved for commit and release preparation.

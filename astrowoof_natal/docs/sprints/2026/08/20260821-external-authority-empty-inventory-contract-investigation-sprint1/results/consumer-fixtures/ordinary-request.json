@@ -1,0 +1,42 @@
+{
+  "action_count": 1,
+  "external_authority_request_sha256": "8a4508c2cd8a88c73559afcecb8e12290635ffdd55bfd60b3ed431d6eec6a6d5",
+  "initial_wave": null,
+  "observation": {
+    "inventory_valid": true,
+    "logical_workspace_root": "/qualification/sbe-run",
+    "native_exclusive_access": "declared",
+    "observed_at": "1970-01-01T00:00:00Z",
+    "operator_state_revision": 3,
+    "snapshot_complete": true,
+    "snapshot_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "writer_race_possible": false
+  },
+  "ordered_action_ids": [
+    "paid_9e711e04e0239670c49604ca"
+  ],
+  "ordered_actions": [
+    {
+      "action_id": "paid_9e711e04e0239670c49604ca",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "32ee0124871dedbe9f8621c22256cb43ea160f215f78aadf345307b0c0fd6ce9",
+        "route": "exact_natal:qualification-pass-01:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "9e711e04e0239670c49604ca5698691549c14068a45448e8a82c2ad444794d92"
+    }
+  ],
+  "ordering_semantics": "lexical_action_id_canonicalization_only",
+  "provider_create_permitted_after_authorization": true,
+  "request_kind": "ordinary_action_set",
+  "run_id": "deployed-qa-exact_natal",
+  "schema_version": "astrowoof.external_authority_request.v1"
+}

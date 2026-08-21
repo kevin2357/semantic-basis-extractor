@@ -26,17 +26,19 @@ from .external_authority import (
 )
 from .initial_wave import InitialWaveError
 from .lifecycle import inspect_lifecycle
+from .lifecycle_contracts import validate_lifecycle_inspection_v05
 from .pass_protocol import canonical_sha256
 from .reconciliation import ProviderReconciliationAdapters, reconcile_authoring_provider_cycle
 from .resource_access import read_resource_text
 from .spend import prepare_action
 
-RECEIPT_CONTRACT = "astrowoof.external_authority_qualification.v1"
-SCHEMA_RESOURCE = "contracts/external-authority-qualification.v1.schema.json"
+RECEIPT_CONTRACT = "astrowoof.external_authority_qualification.v2"
+SCHEMA_RESOURCE = "contracts/external-authority-qualification.v2.schema.json"
 ASSERTIONS = (
     "fresh_initial_admission", "fresh_worker_restore", "retained_exact_replay",
     "conflicting_lineage_refusal", "stale_request_refusal",
     "ordinary_action_authorization", "reconciliation_separated_from_create",
+    "lifecycle_conditionals_enforced", "typed_refusal_conditionals_enforced",
 )
 
 
@@ -146,11 +148,22 @@ def _prepare_exact_workspace(run_dir: Path) -> None:
 
 
 def _run_child(*args: str) -> dict[str, Any]:
-    completed = subprocess.run(
-        [sys.executable, "-m", "astrowoof_natal_authoring.external_authority_qa",
-         "--internal-step", *args],
-        check=True, capture_output=True, text=True, env=dict(os.environ),
+    command = [sys.executable, "-m", "astrowoof_natal_authoring.external_authority_qa",
+               "--internal-step", *args]
+    child_env = dict(os.environ)
+    package_root = str(Path(__file__).resolve().parents[1])
+    child_env["PYTHONPATH"] = os.pathsep.join(
+        value for value in (package_root, child_env.get("PYTHONPATH", "")) if value
     )
+    completed = subprocess.run(
+        command, capture_output=True, text=True, env=child_env,
+    )
+    if completed.returncode != 0:
+        detail = (completed.stderr or completed.stdout).strip()
+        raise RuntimeError(
+            f"Qualification child step {args[0]!r} failed with exit "
+            f"{completed.returncode}: {detail}"
+        )
     return json.loads(completed.stdout)
 
 
@@ -275,6 +288,21 @@ def _contract_fixtures() -> dict[str, dict[str, Any]]:
             "lineage_refusal": refusal, "ordinary_request": ordinary}
 
 
+def _conditionals_refuse_mutations(
+    inspection: dict[str, Any],
+    mutations: tuple[tuple[str, str, Any], ...],
+) -> bool:
+    for section, field, changed_value in mutations:
+        changed = deepcopy(inspection)
+        changed[section][field] = changed_value
+        try:
+            validate_lifecycle_inspection_v05(changed)
+        except ValueError:
+            continue
+        return False
+    return True
+
+
 def run_external_authority_qualification(*, fixture_dir: Path | None = None) -> dict[str, Any]:
     fixtures = _contract_fixtures()
     with tempfile.TemporaryDirectory(prefix="sbe-external-authority-qa-") as temporary:
@@ -317,6 +345,28 @@ def run_external_authority_qualification(*, fixture_dir: Path | None = None) -> 
             observed_at="2026-01-01T00:00:00Z",
         )
         lineage_refusal = lineage_inspection["external_authority_refusal"]
+
+        request_conditionals = _conditionals_refuse_mutations(inspection, (
+            ("execution_branch", "eligible_now", True),
+            ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+            ("execution_branch", "action_ids", []),
+            ("execution_branch", "not_before", "2099-01-01T00:00:00Z"),
+            ("execution_capacity", "disposition", "continue_local_cycle"),
+            ("execution_capacity", "reason_code", "local_work_ready"),
+            ("execution_capacity", "local_work_ready_now", True),
+            ("execution_capacity", "resume_not_before", "2099-01-01T00:00:00Z"),
+        ))
+        refusal_conditionals = _conditionals_refuse_mutations(lineage_inspection, (
+            ("execution_branch", "command", "ordinary_resume"),
+            ("execution_branch", "eligible_now", True),
+            ("execution_branch", "reason_code", "terminal_or_no_continuation"),
+            ("execution_branch", "action_ids", ["paid_" + "a" * 24]),
+            ("execution_branch", "not_before", "2099-01-01T00:00:00Z"),
+            ("execution_capacity", "disposition", "continue_local_cycle"),
+            ("execution_capacity", "reason_code", "local_work_ready"),
+            ("execution_capacity", "local_work_ready_now", True),
+            ("execution_capacity", "resume_not_before", "2099-01-01T00:00:00Z"),
+        ))
 
         ordinary_dir = root / "ordinary"
         ordinary_dir.mkdir()
@@ -363,6 +413,8 @@ def run_external_authority_qualification(*, fixture_dir: Path | None = None) -> 
                 and reconciled["retrieved_action_count"] == reconciled["selected_action_count"]
                 and len(counter["retrievals"]) == reconciled["retrieved_action_count"]
                 and len(counter["creates"]) == 6,
+            "lifecycle_conditionals_enforced": request_conditionals,
+            "typed_refusal_conditionals_enforced": refusal_conditionals,
         }
 
     if fixture_dir is not None:

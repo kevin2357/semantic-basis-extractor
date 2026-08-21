@@ -1,6 +1,6 @@
 # External-Authority Empty-Inventory Contract Investigation — Sprint 1 Evidence
 
-Status: Slice 0 complete; awaiting API review
+Status: Slice 5 complete and API-approved; Slice 6 release preparation pending
 
 - Provider calls: 0
 - Spend: USD 0
@@ -76,6 +76,8 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Focused tests: 94 passed, 5 skipped because host `jsonschema` is unavailable.
 - Python compilation and packaged JSON parsing: passed.
 - Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+- API fixture/consumer review: approved after correcting two documentation-only
+  reason-code literals to `spend_authorization_required`.
 
 ## Slice 4 regression matrix
 
@@ -99,4 +101,24 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Result:
   `results/SLICE 3 - STRUCTURED OBSERVABILITY.md`
 - Focused tests: 118 passed, 5 skipped because host `jsonschema` is unavailable.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 5 installed-wheel qualification
+
+- Public command: `astrowoof-external-authority-qa`
+- Packaged receipt schema:
+  `src/astrowoof_natal_authoring/resources/contracts/external-authority-qualification.v2.schema.json`
+- Receipt:
+  `results/external-authority-qualification-receipt.v2.json`
+- Sanitized fixtures: `results/consumer-fixtures/`
+- Consumer handoff: `EXTERNAL AUTHORITY LIFECYCLE HARDENING CONSUMER HANDOFF.md`
+- Result: `results/SLICE 5 - INSTALLED WHEEL QUALIFICATION AND HANDOFF.md`
+- Candidate wheel SHA-256:
+  `798381344ea728e851663db3ca2afc5a968205ddce951aea7efce0200398b8e3`
+- Receipt status/hash: pass /
+  `969867611a7fab84514cf252c552118a5896f3429b356a773b04ed82f0dbdd37`
+- Source qualification tests: 2 passed, 1 skipped because host `jsonschema` is
+  unavailable.
+- Combined lifecycle/external-authority matrix: 97 tests run, 6 skipped because
+  host `jsonschema` is unavailable, all remaining tests passed.
 - Provider calls/spend/retained workspace access: 0 / USD 0 / none.

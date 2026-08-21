@@ -5,6 +5,9 @@
 - [Slice 2 native validator and classification hardening](SLICE%202%20-%20NATIVE%20VALIDATOR%20AND%20CLASSIFICATION%20HARDENING.md)
 - [Slice 3 structured observability](SLICE%203%20-%20STRUCTURED%20OBSERVABILITY.md)
 - [Slice 4 provider-free regression matrix](SLICE%204%20-%20PROVIDER-FREE%20REGRESSION%20MATRIX.md)
+- [Slice 5 installed-wheel qualification and handoff](SLICE%205%20-%20INSTALLED%20WHEEL%20QUALIFICATION%20AND%20HANDOFF.md)
+- [Qualification receipt v2](external-authority-qualification-receipt.v2.json)
+- [Sanitized consumer fixtures](consumer-fixtures/)
 
-Later sanitized fixtures, mutation evidence, qualification receipts, and consumer
-review records will be added as the sprint proceeds.
+The installed-wheel receipt and sanitized fixtures are ready for API consumer
+review. A consumer review record and final closeout evidence remain pending.
