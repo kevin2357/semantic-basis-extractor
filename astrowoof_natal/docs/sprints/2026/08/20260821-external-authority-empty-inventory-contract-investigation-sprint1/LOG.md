@@ -82,3 +82,17 @@
   Python compilation and JSON parsing passed.
 - Provider calls: 0. Spend: USD 0. Retained workspace access: none.
 - Slice 2 is complete; structured diagnostic enrichment remains Slice 3.
+
+## 2026-08-21 — Slice 3 structured observability
+
+- Added one deterministic closed predicate projection shared by validation, typed
+  diagnostics, and text logs.
+- Enriched existing request-selected, refusal, branch-selected, and execution-failed
+  events without adding an event name/schema version.
+- Added safe lifecycle completion/failure logging with action counts, digests,
+  presence flags, refusal reasons, and sorted predicate names.
+- Proved success/refusal event order, contradiction diagnostics, sink-failure
+  isolation, byte-identical state/snapshot, and protected-sentinel absence.
+- Focused evidence: 118 passed, 5 environment-dependent schema checks skipped.
+- Provider calls: 0. Spend: USD 0. Retained workspace access: none.
+- Slice 3 is complete.

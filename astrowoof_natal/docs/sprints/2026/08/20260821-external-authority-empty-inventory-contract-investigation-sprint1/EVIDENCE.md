@@ -76,3 +76,16 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Focused tests: 94 passed, 5 skipped because host `jsonschema` is unavailable.
 - Python compilation and packaged JSON parsing: passed.
 - Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 3 implementation
+
+- Lifecycle diagnostics:
+  `src/astrowoof_natal_authoring/lifecycle.py`
+- Shared closed predicate projection:
+  `src/astrowoof_natal_authoring/lifecycle_contracts.py`
+- Failure-isolation/privacy tests:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Result:
+  `results/SLICE 3 - STRUCTURED OBSERVABILITY.md`
+- Focused tests: 118 passed, 5 skipped because host `jsonschema` is unavailable.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
