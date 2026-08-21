@@ -107,6 +107,12 @@ yet an explicit cohort key.
 
 ## Proposed storage direction
 
+Implementation of the durable fine-grained cost/usage/timing observation has moved
+to `20260821-silly-owner-wants-accounting-and-performance-visibility-sprint1`.
+This calibration
+sprint may consume that observation dataset later, but no longer owns its public
+contract or ingestion implementation.
+
 Keep native evidence and API billing reconciliation authoritative. Add, if the
 discovery proves it useful, an API-owned append-only calibration projection with
 one observation per settled paid action. This could be a narrowly scoped new table
@@ -178,6 +184,10 @@ not be double-counted if a total already contains reasoning tokens.
 ## Possible adoption sequence
 
 The working starting point is:
+
+The accounting-visibility sprint now owns steps 1–4 as a general evidence product.
+This calibration sprint resumes at cohort analysis and conservative estimation only
+after that handoff exists.
 
 1. Export/query existing settled operations and measure how many observations have
    sufficient usage and identity evidence.

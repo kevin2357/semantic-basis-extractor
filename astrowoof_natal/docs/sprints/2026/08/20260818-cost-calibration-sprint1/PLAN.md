@@ -14,6 +14,13 @@ parallelism.
 The current findings, storage inventory, candidate cohort identity, and open design
 questions are recorded in [BACKGROUND.md](BACKGROUND.md).
 
+The versioned fine-grained realized cost/usage/timing observation and API ingestion
+handoff are now planned separately in
+`../20260821-silly-owner-wants-accounting-and-performance-visibility-sprint1/PLAN.md`.
+This sprint
+retains future ownership of estimate calibration, percentile/margin policy, and any
+proposal to change commitments.
+
 ## Current direction
 
 - Reuse native paid-action/provider evidence and existing API persistence rather

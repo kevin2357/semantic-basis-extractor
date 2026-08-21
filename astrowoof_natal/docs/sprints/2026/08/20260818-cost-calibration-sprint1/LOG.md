@@ -26,3 +26,11 @@
   `20260818-initial-pass-concurrent-fanout-sprint3`.
 - Retained only the token/cost observation and non-delivery classification needed
   by this sprint's future calibration analysis.
+
+## 2026-08-21 - Accounting visibility separated
+
+- Moved implementation ownership for a durable, fine-grained realized
+  cost/usage/timing observation to
+  `20260821-silly-owner-wants-accounting-and-performance-visibility-sprint1`.
+- This sprint remains a discovery placeholder for later commitment-estimate
+  calibration and may consume the new observation dataset when available.
