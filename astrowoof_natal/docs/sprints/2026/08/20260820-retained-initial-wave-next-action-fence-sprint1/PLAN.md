@@ -253,6 +253,8 @@ version bump, tag, or release recommendation.
 
 ### Slice 8 — Release closeout
 
+Status: in progress; 0.4.14 candidate preparation authorized, tag/publication gated.
+
 - Run the affected native suites, installed-wheel qualification, release smoke,
   fixed-epoch reproducible build, resource/catalog checks, and checksum validation.
 - Record exact compatibility and retained-workspace limits.

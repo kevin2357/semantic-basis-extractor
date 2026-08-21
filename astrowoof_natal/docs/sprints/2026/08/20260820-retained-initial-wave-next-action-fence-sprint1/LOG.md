@@ -324,3 +324,12 @@ later holistic candidate SHA-256
 `32f6572ae26af19ebd687548a87dbd8bfc4ac8d1a81ee1408c1377440a52057b`.
 Both candidates emitted the same stable sanitized receipt bytes, but only the later
 candidate exercised the real workspace/lifecycle/fresh-process/reconciliation path.
+
+## 2026-08-21 — Slice 8 release closeout begins
+
+- API and Kevin approved the holistic Slice 7 contract, fixtures, handoff, and
+  installed qualification.
+- Selected fresh immutable patch version 0.4.14; preserved 0.4.13 unchanged.
+- Added candidate release notes, compatibility, known-limitations, and API handoff
+  documents.
+- Tagging and publication remain behind the explicit final Slice 8 gate.
