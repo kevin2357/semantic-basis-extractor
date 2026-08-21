@@ -90,3 +90,16 @@ is verified but not installed or consumed; after repair the worker must still
 return the same prepared action to API authority. Store the repair report in
 API-owned durable state or another path outside the SBE workspace. Never use
 repair as authorization to resume provider-connected work.
+## Aggregate initial-wave grants
+
+The six independently paid interactive initial-wave actions retain their complete
+ordinary authorization documents, but provider create additionally requires one
+all-or-none `astrowoof.external_authority_grant.v1`. The grant binds the exact
+request digest, run and observation identities, logical workspace root, ordered
+actions and bindings, wave identity, API decision identity, and all six document
+digests/references.
+
+This aggregate grant does not replace Batch's one-round authority model or the
+existing per-action authorization boundary for retry, polish, critic, and candidate
+stages. SBE's per-run ledger remains native authority; API reservations, global
+ceilings, quotas, and account billing remain API authority.

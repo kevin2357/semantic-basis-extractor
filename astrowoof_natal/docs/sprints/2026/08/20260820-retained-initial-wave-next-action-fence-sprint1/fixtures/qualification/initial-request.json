@@ -1,0 +1,147 @@
+{
+  "action_count": 6,
+  "external_authority_request_sha256": "629f56c715abb9f04de5812496133d4e025a14bf24a94e860039ca0ee5af5c6c",
+  "initial_wave": {
+    "assignment_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "member_count": 6,
+    "ordered_member_binding_sha256s": [
+      "9e711e04e0239670c49604ca5698691549c14068a45448e8a82c2ad444794d92",
+      "3a8121aed87656511b05ab1a93f142272d0415447e2258825715d7ad44f45f82",
+      "1a220f9ad775d5207b105dd398d925079bd0e392d4502485ff13b80d8ecb5a10",
+      "0abbc5e8583b06a8f33bc94a5e72b3dd52ccc424979b42278fce852e113b1ea5",
+      "3b5875967e5468daf5b92d12634985d1f86b1ffbdc6e41d950618843bbefb4e7",
+      "df15566980040ceb437defb56edbf973f702ebc30b5e04cf2642497a64f7adb7"
+    ],
+    "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9",
+    "wave_id": "wave_c4d3c96e0734fc8aba390308",
+    "wave_sha256": "c4d3c96e0734fc8aba3903081dc668f79c6690ef9d1458b4e9c93853159c86a0"
+  },
+  "observation": {
+    "inventory_valid": true,
+    "logical_workspace_root": "/qualification/sbe-run",
+    "native_exclusive_access": "declared",
+    "observed_at": "1970-01-01T00:00:00Z",
+    "operator_state_revision": 2,
+    "snapshot_complete": true,
+    "snapshot_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "writer_race_possible": false
+  },
+  "ordered_action_ids": [
+    "paid_9e711e04e0239670c49604ca",
+    "paid_3a8121aed87656511b05ab1a",
+    "paid_1a220f9ad775d5207b105dd3",
+    "paid_0abbc5e8583b06a8f33bc94a",
+    "paid_3b5875967e5468daf5b92d12",
+    "paid_df15566980040ceb437defb5"
+  ],
+  "ordered_actions": [
+    {
+      "action_id": "paid_9e711e04e0239670c49604ca",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "32ee0124871dedbe9f8621c22256cb43ea160f215f78aadf345307b0c0fd6ce9",
+        "route": "exact_natal:qualification-pass-01:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "9e711e04e0239670c49604ca5698691549c14068a45448e8a82c2ad444794d92"
+    },
+    {
+      "action_id": "paid_3a8121aed87656511b05ab1a",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "0a118bc2df9dea53c24c7f42b10a589def5e12266941794441b2e0bd67cab2e0",
+        "route": "exact_natal:qualification-pass-02:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "3a8121aed87656511b05ab1a93f142272d0415447e2258825715d7ad44f45f82"
+    },
+    {
+      "action_id": "paid_1a220f9ad775d5207b105dd3",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "3bc12c02e0f87c0afdd3b43f830c871b0d586931a0cc0cc2f224a90d25399589",
+        "route": "exact_natal:qualification-pass-03:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "1a220f9ad775d5207b105dd398d925079bd0e392d4502485ff13b80d8ecb5a10"
+    },
+    {
+      "action_id": "paid_0abbc5e8583b06a8f33bc94a",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "bd1e9cf77d56bca2d33cd6fa6805652cfa72e30e46ad4a68381203ff8ee26276",
+        "route": "exact_natal:qualification-pass-04:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "0abbc5e8583b06a8f33bc94a5e72b3dd52ccc424979b42278fce852e113b1ea5"
+    },
+    {
+      "action_id": "paid_3b5875967e5468daf5b92d12",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "ce422ec87388fabcb5beed19aa1cfdb415892222a89919677ed8abc5f69c30c1",
+        "route": "exact_natal:qualification-pass-05:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "3b5875967e5468daf5b92d12634985d1f86b1ffbdc6e41d950618843bbefb4e7"
+    },
+    {
+      "action_id": "paid_df15566980040ceb437defb5",
+      "binding": {
+        "commitment_micro_usd": 1,
+        "maximum_output_tokens": 1000,
+        "model": "scripted-provider",
+        "prepared_state_revision": 1,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "93d22233d9d3be3dff47afd18479c1f0a27f742d12a9b45c5e7f8f685d3907ae",
+        "route": "exact_natal:qualification-pass-06:attempt-001",
+        "run_id": "deployed-qa-exact_natal",
+        "service_level": "interactive",
+        "stage": "authoring_initial"
+      },
+      "binding_sha256": "df15566980040ceb437defb56edbf973f702ebc30b5e04cf2642497a64f7adb7"
+    }
+  ],
+  "ordering_semantics": "prepared_wave_semantic_member_order",
+  "provider_create_permitted_after_authorization": true,
+  "request_kind": "initial_wave_admission",
+  "run_id": "deployed-qa-exact_natal",
+  "schema_version": "astrowoof.external_authority_request.v1"
+}

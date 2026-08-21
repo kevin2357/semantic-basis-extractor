@@ -3629,7 +3629,23 @@ def execute_exact_initial_wave_with_external_authority(
     with _exclusive_lifecycle_lock(root):
         state = load_json(run_json)
         validate_workspace_snapshot(root, state)
-        current_request = read_external_authority_request(root)
+        try:
+            current_request = read_external_authority_request(
+                root, observation=request.get("observation"),
+            )
+        except InitialWaveError as exc:
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.refused",
+                    data={
+                        "reason_code": exc.reason_code,
+                        "category": "request_mismatch",
+                        "selected_command": "none",
+                        "action_count": len(request.get("ordered_action_ids") or []),
+                    }, correlation={"native_run_id": request.get("run_id")},
+                    severity="warning",
+                )
+            raise
         if event_emitter is not None:
             event_emitter.emit(
                 "external_authority.request_selected",

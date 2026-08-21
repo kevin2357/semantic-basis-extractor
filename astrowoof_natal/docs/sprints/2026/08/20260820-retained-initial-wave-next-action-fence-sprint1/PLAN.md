@@ -238,6 +238,8 @@ work, and diagnostics explain every refusal without leaking protected bytes.
 
 ### Slice 7 — Installed-wheel joint handoff qualification
 
+Status: complete; awaiting API fixture/adoption review.
+
 - Add a self-contained provider-free installed-wheel command/API covering fresh
   admission, retained exact replay, retained conflicting-lineage refusal, stale
   request refusal, ordinary action authorization, and reconciliation separation.

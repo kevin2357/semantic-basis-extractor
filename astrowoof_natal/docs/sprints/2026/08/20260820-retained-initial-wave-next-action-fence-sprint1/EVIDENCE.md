@@ -256,3 +256,61 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
 - Final typed-event/exact/bounded gate: 20 tests passed in 53.456 seconds.
 - Lifecycle closed-vocabulary, packaged schema, and payload-catalog gate: 25 tests
   passed.
+
+## Slice 7 installed-wheel evidence
+
+The first candidate evidence below was contract-object qualification only and is
+superseded by the 2026-08-21 holistic runtime correction. Fresh wheel and receipt
+hashes replace these provisional values before API review.
+
+- Public command: `astrowoof-external-authority-qa`.
+- Closed receipt: `astrowoof.external_authority_qualification.v1`.
+- Packaged schema:
+  `contracts/external-authority-qualification.v1.schema.json`.
+- Source suite: 72 passed in 45.321 seconds; five optional schema skips.
+- Disposable Python 3.11 installed-wheel console: passed from `C:\tmp`.
+- Installed root-level API invocation and receipt validation: passed.
+- Installed `--schema` resource read: passed.
+- Candidate wheel SHA-256:
+  `1e8c405df44ed31ed49c71a765c278100d2e35f8e70cada7fab77aedca26b5ef`.
+- Receipt:
+  `results/external-authority-qualification-receipt.v1.json`.
+- Consumer manifest: `results/slice7-consumer-fixture-manifest.json`.
+- Fixture directory: `fixtures/qualification/`.
+- Public handoff: `EXTERNAL AUTHORITY CONSUMER HANDOFF.md`.
+- Receipt declarations: qualification-only true; provider-free true; network false;
+  production authority false; provider creates 6 scripted; spend USD 0.
+- Source-tree and installed-wheel receipt bytes matched at SHA-256
+  `dee698e4d3663a66b07a0dbcad59f1c11ce43695b5768a4a6260a8d9dd7756a2`.
+- Retained Aster workspace accessed or mutated: no.
+
+### Slice 7 holistic runtime correction
+
+- Real runtime workspace preparation: exact interactive, six production-shaped
+  pass archives, complete native snapshot, and lifecycle inspection v0.5.
+- Authority export: exact embedded request plus aggregate grant and six complete
+  member documents persisted outside native workspace.
+- Fresh-process constrained continuation: exactly six scripted Responses creates
+  and six durable provider IDs.
+- Fresh-process retained replay: typed refusal and no seventh create.
+- Fresh-process reconciliation: actual route-neutral provider reconciliation entry
+  point, SBE-selected due subset of at most four, GET-only scripted retrievals.
+- Independent real workspaces: lifecycle-level typed unjoinable-lineage refusal and
+  public-reader ordinary-action request.
+- Observation join hardening: supplied lifecycle time is accepted only when all
+  safety-bearing current snapshot identities match; changed snapshot digest is a
+  typed stale refusal.
+- Focused public/qualification suite: 15 tests passed, one optional JSON Schema
+  test skipped on the lean interpreter.
+- Exact constrained execution suite: 11 tests passed.
+- Bounded constrained initial-wave regressions: 4 tests passed.
+- Combined authority/lineage/lifecycle/event gate: 80 tests passed in 76.954
+  seconds with five optional JSON Schema skips.
+- Fresh disposable Python 3.11 installed-wheel command and root-level receipt
+  validator passed from outside the repository.
+- Holistic candidate wheel SHA-256:
+  `32f6572ae26af19ebd687548a87dbd8bfc4ac8d1a81ee1408c1377440a52057b`.
+- Installed/source receipt bytes remain identical at SHA-256
+  `dee698e4d3663a66b07a0dbcad59f1c11ce43695b5768a4a6260a8d9dd7756a2`.
+- Provider/network calls were scripted only. Spend: USD 0. Retained Aster access:
+  none.

@@ -170,3 +170,17 @@ used to reconstruct missing native facts.
 - Do not parse private `run.json`, subprocess log text, packet directories, or event
   order as a substitute for public contracts.
 - Legacy serial/timing-free workspaces are not silently reinterpreted as v1 waves.
+## External authority continuation fence
+
+For current interactive initial-wave admission, consumers must use lifecycle
+inspection v0.5's embedded `external_authority_request` and provide one exact
+`astrowoof.external_authority_grant.v1` plus the six complete ordered ordinary
+authorization documents. A prepared wave is not create permission. Generic resume
+against an awaiting, authorized, or submitting wave fails closed.
+
+SBE commits all six `SUBMITTING` actions and one constrained submission intent
+under native single-writer ownership before provider I/O. Provider-return/identity
+persistence remains an irreducible provider atomicity gap and becomes ambiguity,
+not replay permission. See the current sprint's
+`EXTERNAL AUTHORITY CONSUMER HANDOFF.md` and run the installed, provider-free
+`astrowoof-external-authority-qa` command when qualifying a worker image.

@@ -1,0 +1,36 @@
+{
+  "schema_version": "astrowoof.external_authority_consumer_fixture_manifest.v1",
+  "status": "awaiting_api_review",
+  "qualification_receipt": {
+    "path": "external-authority-qualification-receipt.v1.json",
+    "file_sha256": "dee698e4d3663a66b07a0dbcad59f1c11ce43695b5768a4a6260a8d9dd7756a2",
+    "receipt_sha256": "85a73dff33efe99350e5c9bba9f753481ecd60c50f9e6afc40f6b6e143c6d5bd"
+  },
+  "fixtures": [
+    {
+      "path": "../fixtures/qualification/aggregate-grant.json",
+      "file_sha256": "641e48e24113f4932a1900b5f9cf8b7c344592b1b3dfd2d4c0dd58216cb610a8",
+      "canonical_sha256": "0553fb4f4bc22b8c2ee69d169d7bbd028d0deeb9cacc4ec761dd739a52e38819"
+    },
+    {
+      "path": "../fixtures/qualification/initial-request.json",
+      "file_sha256": "5dcdca125d5da8d466fed89a7e752bcbe669880e25ab54a1270793bed53bb303",
+      "canonical_sha256": "5e06b3cda31141df70e2126502e5b5ae08dce7db4283ff44b7c4e1d825b083f0"
+    },
+    {
+      "path": "../fixtures/qualification/lineage-refusal.json",
+      "file_sha256": "dced9a54a83a897671a0199f8c7ec63417aa16ebb118ce65c2263c8c3c47bb60",
+      "canonical_sha256": "040b6799c2a4a3916c33cb1225d8ed0197893f1c84507e844081ade3d4660472"
+    },
+    {
+      "path": "../fixtures/qualification/ordinary-request.json",
+      "file_sha256": "f602e3c615a423797cd0ed6e762312ab103b0784abb369abee56460578672e88",
+      "canonical_sha256": "ee00025797c28a5f346abb1a214d713319b57a8f759f6047e6430450f0336d81"
+    }
+  ],
+  "candidate_wheel": {
+    "filename": "astrowoof_natal_authoring-0.4.13-py3-none-any.whl",
+    "sha256": "32f6572ae26af19ebd687548a87dbd8bfc4ac8d1a81ee1408c1377440a52057b",
+    "qualification_only_not_release_artifact": true
+  }
+}

@@ -74,6 +74,11 @@ from .external_authority import (  # noqa: E402
     validate_external_authority_refusal,
     validate_external_authority_request,
 )
+from .external_authority_qa import (  # noqa: E402
+    read_external_authority_qualification_schema,
+    run_external_authority_qualification,
+    validate_external_authority_qualification_receipt,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -118,4 +123,7 @@ __all__ = [
     "validate_external_authority_grant",
     "validate_external_authority_refusal",
     "validate_external_authority_request",
+    "read_external_authority_qualification_schema",
+    "run_external_authority_qualification",
+    "validate_external_authority_qualification_receipt",
 ]

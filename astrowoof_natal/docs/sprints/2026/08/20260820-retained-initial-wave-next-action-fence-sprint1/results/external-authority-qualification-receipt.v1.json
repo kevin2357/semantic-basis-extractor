@@ -1,0 +1,27 @@
+{
+  "assertions": {
+    "conflicting_lineage_refusal": true,
+    "fresh_initial_admission": true,
+    "fresh_worker_restore": true,
+    "ordinary_action_authorization": true,
+    "reconciliation_separated_from_create": true,
+    "retained_exact_replay": true,
+    "stale_request_refusal": true
+  },
+  "fixture_hashes": {
+    "aggregate_grant": "0553fb4f4bc22b8c2ee69d169d7bbd028d0deeb9cacc4ec761dd739a52e38819",
+    "initial_request": "5e06b3cda31141df70e2126502e5b5ae08dce7db4283ff44b7c4e1d825b083f0",
+    "lineage_refusal": "040b6799c2a4a3916c33cb1225d8ed0197893f1c84507e844081ade3d4660472",
+    "ordinary_request": "ee00025797c28a5f346abb1a214d713319b57a8f759f6047e6430450f0336d81"
+  },
+  "network_required": false,
+  "production_authority": false,
+  "provider_create_count": 6,
+  "provider_free": true,
+  "provider_spend_usd": 0,
+  "qualification_only": true,
+  "receipt_sha256": "85a73dff33efe99350e5c9bba9f753481ecd60c50f9e6afc40f6b6e143c6d5bd",
+  "sbe_version": "0.4.13",
+  "schema_version": "astrowoof.external_authority_qualification.v1",
+  "status": "pass"
+}

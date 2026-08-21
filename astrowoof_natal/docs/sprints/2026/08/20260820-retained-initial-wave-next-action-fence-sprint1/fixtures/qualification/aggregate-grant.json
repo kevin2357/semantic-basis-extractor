@@ -1,0 +1,77 @@
+{
+  "action_count": 6,
+  "api_decision_id": "qualification-only:no-reservation",
+  "decision": "granted",
+  "external_authority_request_sha256": "629f56c715abb9f04de5812496133d4e025a14bf24a94e860039ca0ee5af5c6c",
+  "grant_sha256": "33a8db86b3b28d55a378f4eaf732e7b8dac6888fd16dbf3a73d753f1232d54f5",
+  "initial_wave": {
+    "assignment_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "member_count": 6,
+    "ordered_member_binding_sha256s": [
+      "9e711e04e0239670c49604ca5698691549c14068a45448e8a82c2ad444794d92",
+      "3a8121aed87656511b05ab1a93f142272d0415447e2258825715d7ad44f45f82",
+      "1a220f9ad775d5207b105dd398d925079bd0e392d4502485ff13b80d8ecb5a10",
+      "0abbc5e8583b06a8f33bc94a5e72b3dd52ccc424979b42278fce852e113b1ea5",
+      "3b5875967e5468daf5b92d12634985d1f86b1ffbdc6e41d950618843bbefb4e7",
+      "df15566980040ceb437defb56edbf973f702ebc30b5e04cf2642497a64f7adb7"
+    ],
+    "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9",
+    "wave_id": "wave_c4d3c96e0734fc8aba390308",
+    "wave_sha256": "c4d3c96e0734fc8aba3903081dc668f79c6690ef9d1458b4e9c93853159c86a0"
+  },
+  "inspected_state_revision": 2,
+  "issued_at": "1970-01-01T00:00:00Z",
+  "issuer": "sbe-installed-qualification",
+  "logical_workspace_root": "/qualification/sbe-run",
+  "ordered_action_ids": [
+    "paid_9e711e04e0239670c49604ca",
+    "paid_3a8121aed87656511b05ab1a",
+    "paid_1a220f9ad775d5207b105dd3",
+    "paid_0abbc5e8583b06a8f33bc94a",
+    "paid_3b5875967e5468daf5b92d12",
+    "paid_df15566980040ceb437defb5"
+  ],
+  "ordered_member_authorizations": [
+    {
+      "action_id": "paid_9e711e04e0239670c49604ca",
+      "authorization_document_sha256": "16d2bddadd84ff8c52a9ffa78db03c97841515fdc2142c7add8c5f45745da630",
+      "authorization_reference": "qualification:1",
+      "binding_sha256": "9e711e04e0239670c49604ca5698691549c14068a45448e8a82c2ad444794d92"
+    },
+    {
+      "action_id": "paid_3a8121aed87656511b05ab1a",
+      "authorization_document_sha256": "5a9c9a49a3c899e743e4bb3f630ae4e47bf3a6e69778a3ea34349476799a57bd",
+      "authorization_reference": "qualification:2",
+      "binding_sha256": "3a8121aed87656511b05ab1a93f142272d0415447e2258825715d7ad44f45f82"
+    },
+    {
+      "action_id": "paid_1a220f9ad775d5207b105dd3",
+      "authorization_document_sha256": "bc3fdc12e3ee4fac42913dd81b4802cd13a1e29d9128eaa2ab39c2fbdb97d300",
+      "authorization_reference": "qualification:3",
+      "binding_sha256": "1a220f9ad775d5207b105dd398d925079bd0e392d4502485ff13b80d8ecb5a10"
+    },
+    {
+      "action_id": "paid_0abbc5e8583b06a8f33bc94a",
+      "authorization_document_sha256": "b10ae09e35c998bf730f266e1f83c09d52a5629a69fb9fef2285af497de25821",
+      "authorization_reference": "qualification:4",
+      "binding_sha256": "0abbc5e8583b06a8f33bc94a5e72b3dd52ccc424979b42278fce852e113b1ea5"
+    },
+    {
+      "action_id": "paid_3b5875967e5468daf5b92d12",
+      "authorization_document_sha256": "7163d59218c7e363b2f240dd3103f853ab4ebfc81f34a582061ec8a3b71b94c7",
+      "authorization_reference": "qualification:5",
+      "binding_sha256": "3b5875967e5468daf5b92d12634985d1f86b1ffbdc6e41d950618843bbefb4e7"
+    },
+    {
+      "action_id": "paid_df15566980040ceb437defb5",
+      "authorization_document_sha256": "622a65890c283cc21dad3ba343d90cb3cf49f3aa07b4a222bc311177bcaef246",
+      "authorization_reference": "qualification:6",
+      "binding_sha256": "df15566980040ceb437defb56edbf973f702ebc30b5e04cf2642497a64f7adb7"
+    }
+  ],
+  "request_kind": "initial_wave_admission",
+  "run_id": "deployed-qa-exact_natal",
+  "schema_version": "astrowoof.external_authority_grant.v1",
+  "snapshot_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+}

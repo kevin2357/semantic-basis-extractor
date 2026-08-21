@@ -122,6 +122,29 @@
   tests skipped consistently with Slice 1. Offline wheel build and isolated Python
   3.11 install succeeded; the installed CLI read the packaged v1 schema.
 - Provider/network calls: 0. Spend: USD 0. Retained Aster access: none.
+
+## 2026-08-21 — Slice 7 holistic runtime correction
+
+- Replaced the in-memory coordinator qualification with a real snapshot-valid
+  exact-Natal run prepared through supported runtime code.
+- Read the exact authority through lifecycle inspection v0.5 and the public reader,
+  persisted request/grant/member documents outside the workspace, then invoked the
+  constrained continuation in a fresh Python process with the scripted production
+  Responses transport.
+- Reopened the workspace again for retained replay and the real route-neutral
+  reconciliation entry point; proved six POSTs total and a bounded GET-only due
+  subset with no seventh create.
+- Exercised typed unjoinable lineage through lifecycle inspection and an ordinary
+  prepared action through the actual snapshot-validating reader.
+- The holistic test exposed and corrected a lifecycle-observation join gap:
+  constrained execution now rebinds the public reader to the supplied observation
+  only after every safety-bearing snapshot field matches current native truth.
+- The earlier Slice 7 wheel/hash evidence is superseded pending a fresh build.
+- Combined authority/lineage/lifecycle/event gate: 80 tests passed in 76.954
+  seconds with five optional schema skips.
+- Fresh Python 3.11 installed-wheel holistic command and public receipt validator
+  passed from outside the repository; candidate SHA-256
+  `32f6572ae26af19ebd687548a87dbd8bfc4ac8d1a81ee1408c1377440a52057b`.
 - Corrected an implementation-shape ambiguity before handoff: action preparation
   revision may precede the later lifecycle observation revision after persistence.
   Tests now use `prepared=N`, `observed=N+1`; only a future action revision fails.
@@ -267,3 +290,37 @@
   neither captured authority event data nor captured logs.
 - Final typed-event/exact/bounded gate: 20 tests passed in 53.456 seconds.
 - Closed-vocabulary/schema/catalog gate: 25 tests passed.
+
+## 2026-08-20 — Slice 7 installed-wheel and consumer handoff
+
+- Added public `astrowoof-external-authority-qa`, accepting no credential,
+  endpoint, production workspace, input package, or spend authority.
+- Added a closed qualification receipt/schema and root-level Python builders,
+  readers, and validators.
+- Exercised six scripted initial creates, durable fresh-reader restore, retained
+  replay without a seventh create, conflicting-lineage refusal, stale request
+  refusal, ordinary action grant validation, and reconciliation/create separation.
+- Generated four sanitized consumer fixtures, a receipt, and a manifest carrying
+  both exact file hashes and canonical contract hashes.
+- Published `EXTERNAL AUTHORITY CONSUMER HANDOFF.md` with exact API sequencing,
+  authority ownership, compatibility, refusal, Batch/ordinary action, and review
+  guidance.
+- Source contract/authority/event gate: 72 passed in 45.321 seconds with five
+  optional JSON Schema skips.
+- Built and installed the first, contract-object-only candidate wheel in a clean
+  disposable Python 3.11 venv; console command and root-level Python API both passed
+  from outside the repository. This build was superseded by the holistic runtime
+  candidate recorded above and is not the Slice 7 consumer-manifest candidate.
+- Superseded contract-object-only wheel SHA-256:
+  `1e8c405df44ed31ed49c71a765c278100d2e35f8e70cada7fab77aedca26b5ef`.
+- Source-tree and installed-wheel receipt bytes matched at SHA-256
+  `dee698e4d3663a66b07a0dbcad59f1c11ce43695b5768a4a6260a8d9dd7756a2`.
+- Installed `--schema` returned the packaged
+  `astrowoof.external_authority_qualification.v1` Draft 2020-12 schema.
+- Provider/network calls: 0. Spend: USD 0. Retained Aster access: none.
+
+The authoritative installed-wheel qualification and consumer manifest use the
+later holistic candidate SHA-256
+`32f6572ae26af19ebd687548a87dbd8bfc4ac8d1a81ee1408c1377440a52057b`.
+Both candidates emitted the same stable sanitized receipt bytes, but only the later
+candidate exercised the real workspace/lifecycle/fresh-process/reconciliation path.

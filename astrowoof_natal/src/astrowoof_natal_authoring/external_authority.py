@@ -369,7 +369,11 @@ def _snapshot_observation(root: Path, state: Mapping[str, Any]) -> dict[str, Any
     }
 
 
-def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
+def read_external_authority_request(
+    run_dir: Path | str,
+    *,
+    observation: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Read one exact request only after complete snapshot validation."""
     from .closure import (
         _orphaned_initial_lineage_categories,
@@ -391,7 +395,25 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
         validate_workspace_snapshot(root, state)
     except ValueError as exc:
         raise InitialWaveError("snapshot_invalid", str(exc)) from exc
-    observation = _snapshot_observation(root, state)
+    snapshot_observation = _snapshot_observation(root, state)
+    if observation is None:
+        selected_observation = snapshot_observation
+    else:
+        selected_observation = deepcopy(dict(observation))
+        stable_fields = set(snapshot_observation) - {"observed_at"}
+        if (
+            set(selected_observation) != set(snapshot_observation)
+            or any(
+                selected_observation.get(field) != snapshot_observation.get(field)
+                for field in stable_fields
+            )
+            or not isinstance(selected_observation.get("observed_at"), str)
+            or not selected_observation["observed_at"]
+        ):
+            raise InitialWaveError(
+                "stale_observation",
+                "Requested lifecycle observation does not match the current snapshot",
+            )
     stored_wave = state.get("initial_authoring_wave")
     if (
         isinstance(stored_wave, Mapping)
@@ -450,7 +472,7 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
             ],
         }
         request = build_external_authority_request(
-            run_id=state["run_id"], observation=observation,
+            run_id=state["run_id"], observation=selected_observation,
             actions=bundle["ordered_members"], initial_wave=context,
         )
     else:
@@ -486,7 +508,7 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
                 "request_unavailable", "No exact prepared action set exists"
             )
         request = build_external_authority_request(
-            run_id=state["run_id"], observation=observation, actions=actions,
+            run_id=state["run_id"], observation=selected_observation, actions=actions,
         )
     try:
         final_state = load_json(run_json)
@@ -495,7 +517,7 @@ def read_external_authority_request(run_dir: Path | str) -> dict[str, Any]:
         raise InitialWaveError("snapshot_invalid", str(exc)) from exc
     if (
         final_state != state
-        or _snapshot_observation(root, final_state) != observation
+        or _snapshot_observation(root, final_state) != snapshot_observation
     ):
         raise InitialWaveError(
             "snapshot_invalid", "Run changed while authority request was being read"

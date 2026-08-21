@@ -1347,7 +1347,28 @@ def resume_bounded_run(
         with _exclusive_lifecycle_lock(run_dir):
             state = load_json(run_json)
             validate_workspace_snapshot(run_dir, state)
-            current = read_external_authority_request(run_dir)
+            try:
+                current = read_external_authority_request(
+                    run_dir,
+                    observation=external_authority_request.get("observation"),
+                )
+            except InitialWaveError as exc:
+                if event_emitter is not None:
+                    event_emitter.emit(
+                        "external_authority.refused", data={
+                            "reason_code": exc.reason_code,
+                            "category": "request_mismatch",
+                            "selected_command": "none",
+                            "action_count": len(
+                                external_authority_request.get(
+                                    "ordered_action_ids"
+                                ) or []
+                            ),
+                        }, correlation={
+                            "native_run_id": external_authority_request.get("run_id")
+                        }, severity="warning",
+                    )
+                raise
             if event_emitter is not None:
                 event_emitter.emit(
                     "external_authority.request_selected", data={

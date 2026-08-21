@@ -311,3 +311,14 @@ provider work is never providerlessly released or resubmitted by lifecycle close
   source-tree integration is not supported.
 - Unknown-time suppression, variable basis sizes, Quick/Complete policy, hierarchy
   redesign, and critic product policy remain outside this sprint.
+## Lifecycle v0.5 external-authority projection
+
+Inspection v0.5 adds mutually exclusive, snapshot-bound
+`external_authority_request` and `external_authority_refusal` fields. When the
+selected branch is `await_external_authority`, the request's run, observation,
+ordered action IDs, and logical root exactly join the outer inspection. Native
+review instead carries a closed refusal and no request. Inspection v0.4 remains
+readable but cannot authorize the constrained continuation.
+
+The API selects the supported run-level command from the validated inspection; it
+must not reconstruct action membership from private state or provider IDs.

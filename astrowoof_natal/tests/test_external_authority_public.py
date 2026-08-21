@@ -153,6 +153,23 @@ class TestExternalAuthorityPublic(unittest.TestCase):
                     )
                     public.validate_external_authority_request(first)
 
+    def test_reader_rebinds_only_observation_time_for_lifecycle_request(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = self.make_wave_run(Path(temporary), "exact_natal")
+            native = public.read_external_authority_request(run_dir)
+            lifecycle_observation = deepcopy(native["observation"])
+            lifecycle_observation["observed_at"] = "2026-08-20T15:00:00Z"
+            rebound = public.read_external_authority_request(
+                run_dir, observation=lifecycle_observation,
+            )
+            self.assertEqual(lifecycle_observation, rebound["observation"])
+            self.assertEqual(native["ordered_actions"], rebound["ordered_actions"])
+            stale = deepcopy(lifecycle_observation)
+            stale["snapshot_sha256"] = "f" * 64
+            with self.assertRaises(public.InitialWaveError) as caught:
+                public.read_external_authority_request(run_dir, observation=stale)
+            self.assertEqual("stale_observation", caught.exception.reason_code)
+
     def test_ordinary_reader_uses_lexical_order_and_complete_bindings(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             value = public.read_external_authority_request(
