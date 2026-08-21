@@ -25,8 +25,16 @@ class TestExternalAuthorityQualification(unittest.TestCase):
             receipt = run_external_authority_qualification(fixture_dir=fixtures)
             validate_external_authority_qualification_receipt(receipt)
             self.assertEqual("pass", receipt["status"])
+            self.assertEqual(
+                "astrowoof.external_authority_qualification.v2",
+                receipt["schema_version"],
+            )
             self.assertEqual(6, receipt["provider_create_count"])
             self.assertEqual(4, len(list(fixtures.glob("*.json"))))
+            self.assertTrue(receipt["assertions"]["lifecycle_conditionals_enforced"])
+            self.assertTrue(receipt["assertions"][
+                "typed_refusal_conditionals_enforced"
+            ])
 
     def test_packaged_schema_validates_receipt_when_jsonschema_is_available(self) -> None:
         try:

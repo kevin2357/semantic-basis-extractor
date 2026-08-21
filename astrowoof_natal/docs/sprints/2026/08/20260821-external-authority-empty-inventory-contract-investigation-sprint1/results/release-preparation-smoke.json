@@ -1,0 +1,48 @@
+{
+  "schema_version": "astrowoof.natal_authoring.release_smoke.v0.1",
+  "status": "pass",
+  "errors": [],
+  "runtime_module": "C:\\dev\\github\\semantic-basis-extractor\\.qualification-temp\\venv\\Lib\\site-packages\\astrowoof_natal_authoring",
+  "require_installed": true,
+  "checks": {
+    "fixture_hashes": {
+      "natal.bre.woof.general.json": "f359e5d3f1262e1cabc04275ad4e0d21affc91ecdd05f04b1e179e7ee63dd7a3",
+      "natal.bre.woof.d2d.json": "6af0489fdba8f1cca9bc98cbda35b19bf7d4b35facf64b052e74c1efb3e106ee",
+      "natal.bre.woof.handler.json": "4ea0ce9ba28df558b3bcb7fb4098eeaf46a882ac6473b510fafd9823daebdd49",
+      "natal.bre.woof.hybrid.json": "890ebc8b0964bb4be747d14c6e5c17bac111f7fcf75f9c1a58112e104a5c6b51"
+    },
+    "fixture_derivation": {
+      "mode": "identity_contract_substitution",
+      "original_source_chart_id": "natal:bre",
+      "source_chart_id": "550e8400-e29b-41d4-a716-446655440000",
+      "agf_0_6_wheel_sha256": "d1b357b1ec0e40faf7070b29e5c25d18e54c9507406518f26587aac46300aa95",
+      "spc_0_10_wheel_sha256": "60bd0f18d3b183d2f4c6375447f90881ab6c22c6138b8f9b8ffe69a246015150"
+    },
+    "initial_state": "AUTHORING",
+    "resume": "DELIVERY_COMPLETE",
+    "forced_retry_attempt_count": 2,
+    "card_count": 50,
+    "summary_count": 4,
+    "delivery_members": [
+      "natal.bre.assembly-report.json",
+      "natal.bre.cards.json",
+      "natal.bre.delivery-manifest.json",
+      "natal.bre.lint-report.json",
+      "natal.bre.validation-report.json"
+    ],
+    "manifest_hashes_match": true,
+    "final_qa": {
+      "subject_state": "DELIVERY_COMPLETE",
+      "validation_status": "pass",
+      "lint_status": "pass",
+      "authoring_acceptance_status": "accept",
+      "rejection_reasons": []
+    },
+    "resource_count": 78,
+    "resource_set_sha256": "920fae613dcfa1b2cdca18c849787735df3f0ade714311fb03a0255445a3005b",
+    "cleanup_target_count": 20,
+    "cleanup_reclaimed_bytes": 4625968,
+    "cleanup_status": "complete",
+    "cleanup_skip_reason": null
+  }
+}

@@ -40,6 +40,7 @@ from .lifecycle_contracts import (
     OUTSTANDING_ACTION_INVENTORY_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
     action_presentation_key,
+    external_authority_branch_predicate_failures,
     validate_lifecycle_inspection_v05,
     batch_negative_authorization_request_sha256,
     observation_transition_errors,
@@ -1074,6 +1075,19 @@ def inspect_lifecycle(
             execution_branch["action_ids"] = list(
                 external_authority_request["ordered_action_ids"]
             )
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.request_selected",
+                    data={
+                        "request_sha256": external_authority_request[
+                            "external_authority_request_sha256"
+                        ],
+                        "request_kind": external_authority_request["request_kind"],
+                        "action_count": external_authority_request["action_count"],
+                        "selected_command": "await_external_authority",
+                    },
+                    correlation={"native_run_id": str(state.get("run_id") or "")},
+                )
         except InitialWaveError as exc:
             reason = (
                 exc.reason_code if exc.reason_code in {
@@ -1101,6 +1115,23 @@ def inspect_lifecycle(
                 "reason_code": "native_review_or_ambiguity",
                 "action_ids": [], "not_before": None,
             }
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "external_authority.refused",
+                    data={
+                        "reason_code": reason,
+                        "category": "request_construction",
+                        "selected_command": "none",
+                        "action_count": 0,
+                        "request_present": False,
+                        "refusal_present": True,
+                        "refusal_sha256": external_authority_refusal["refusal_sha256"],
+                        "evidence_category_count": len(categories),
+                        "classification_phase": "request_construction",
+                    },
+                    severity="warning",
+                    correlation={"native_run_id": str(state.get("run_id") or "")},
+                )
     result = {
         "schema_version": LIFECYCLE_INSPECTION_SCHEMA,
         "run_id": str(state.get("run_id") or ""),
@@ -1118,16 +1149,53 @@ def inspect_lifecycle(
         "external_authority_request": external_authority_request,
         "external_authority_refusal": external_authority_refusal,
     }
+    predicate_failures = external_authority_branch_predicate_failures(result)
     logger.info(
         "lifecycle_inspection_complete status=%s terminal=%s quiescence=%s "
         "capacity_disposition=%s provider_actions=%s local_dependencies=%s "
-        "review_reason_count=%s execution_branch=%s branch_reason=%s eligible_now=%s",
+        "review_reason_count=%s execution_branch=%s branch_reason=%s eligible_now=%s "
+        "branch_action_count=%s request_present=%s refusal_present=%s "
+        "request_sha256=%s refusal_reason=%s failed_predicates=%s",
         status, terminal_summary["terminal"], quiescence["state"],
         capacity["disposition"], len(custody["actions"]), len(dependencies),
         len(result["review_reasons"]), execution_branch["command"],
         execution_branch["reason_code"], execution_branch["eligible_now"],
+        len(execution_branch["action_ids"]), external_authority_request is not None,
+        external_authority_refusal is not None,
+        (external_authority_request or {}).get(
+            "external_authority_request_sha256", "-"
+        ),
+        (external_authority_refusal or {}).get("reason_code", "-"),
+        ",".join(predicate_failures) or "-",
     )
-    validate_lifecycle_inspection_v05(result)
+    try:
+        validate_lifecycle_inspection_v05(result)
+    except ValueError:
+        logger.error(
+            "lifecycle_branch_contract_invalid command=%s action_count=%s "
+            "request_present=%s refusal_present=%s failed_predicates=%s",
+            execution_branch["command"], len(execution_branch["action_ids"]),
+            external_authority_request is not None,
+            external_authority_refusal is not None,
+            ",".join(predicate_failures) or "-",
+        )
+        if event_emitter is not None:
+            event_emitter.emit(
+                "execution.failed",
+                data={
+                    "reason_code": "lifecycle_branch_contract_invalid",
+                    "failure_class": "lifecycle_contract_validation",
+                    "selected_command": execution_branch["command"],
+                    "failed_predicate_count": len(predicate_failures),
+                    "failed_predicates": predicate_failures,
+                    "branch_action_count": len(execution_branch["action_ids"]),
+                    "request_present": external_authority_request is not None,
+                    "refusal_present": external_authority_refusal is not None,
+                },
+                severity="error",
+                correlation={"native_run_id": result["run_id"]},
+            )
+        raise
     if event_emitter is not None:
         event_emitter.emit(
             "lifecycle.branch_selected",
@@ -1139,6 +1207,16 @@ def inspect_lifecycle(
                 "reason_code": execution_branch["reason_code"],
                 "provider_action_count": custody["provider_action_count"],
                 "local_dependency_count": len(dependencies),
+                "branch_action_count": len(execution_branch["action_ids"]),
+                "request_present": external_authority_request is not None,
+                "refusal_present": external_authority_refusal is not None,
+                "request_sha256": (external_authority_request or {}).get(
+                    "external_authority_request_sha256"
+                ),
+                "refusal_reason_code": (external_authority_refusal or {}).get(
+                    "reason_code"
+                ),
+                "failed_predicate_count": 0,
             },
             correlation={"native_run_id": result["run_id"]},
         )

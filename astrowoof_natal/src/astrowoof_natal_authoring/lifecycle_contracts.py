@@ -539,6 +539,76 @@ def validate_lifecycle_inspection_v04(value: dict[str, Any]) -> None:
         )
 
 
+def external_authority_branch_predicate_failures(
+    value: dict[str, Any],
+) -> list[str]:
+    """Return deterministic safe names for violated v0.5 authority predicates."""
+    request = value.get("external_authority_request")
+    refusal = value.get("external_authority_refusal")
+    branch = value.get("execution_branch") or {}
+    capacity = value.get("execution_capacity") or {}
+    command = branch.get("command")
+    errors: list[str] = []
+    if request is not None and refusal is not None:
+        errors.extend(("request_presence", "refusal_presence"))
+    if command == "await_external_authority":
+        if branch.get("eligible_now") is not False:
+            errors.append("eligible_now")
+        if branch.get("reason_code") != "spend_authorization_required":
+            errors.append("branch_reason_code")
+        if capacity.get("disposition") != "await_external_authority":
+            errors.append("capacity_disposition")
+        if capacity.get("reason_code") != "spend_authorization_required":
+            errors.append("capacity_reason_code")
+        if capacity.get("local_work_ready_now") is not False:
+            errors.append("local_work_ready_now")
+        if capacity.get("resume_not_before") is not None:
+            errors.append("capacity_resume_not_before")
+        if not branch.get("action_ids"):
+            errors.append("branch_action_inventory")
+        if branch.get("not_before") is not None:
+            errors.append("branch_not_before")
+        if request is None:
+            errors.append("request_presence")
+        if refusal is not None:
+            errors.append("refusal_presence")
+        if isinstance(request, dict) and (
+            value.get("run_id") != request.get("run_id")
+            or value.get("observation") != request.get("observation")
+            or branch.get("action_ids") != request.get("ordered_action_ids")
+        ):
+            errors.append("outer_request_join")
+    elif refusal is not None:
+        if command != "none":
+            errors.append("refusal_presence")
+        if branch.get("eligible_now") is not False:
+            errors.append("eligible_now")
+        if branch.get("reason_code") != "native_review_or_ambiguity":
+            errors.append("branch_reason_code")
+        if branch.get("action_ids"):
+            errors.append("branch_action_inventory")
+        if branch.get("not_before") is not None:
+            errors.append("branch_not_before")
+        if capacity.get("disposition") != "retain_for_review":
+            errors.append("capacity_disposition")
+        if capacity.get("reason_code") != "native_review_required":
+            errors.append("capacity_reason_code")
+        if capacity.get("local_work_ready_now") is not False:
+            errors.append("local_work_ready_now")
+        if capacity.get("resume_not_before") is not None:
+            errors.append("capacity_resume_not_before")
+        if request is not None:
+            errors.append("request_presence")
+        if isinstance(refusal, dict) and (
+            value.get("run_id") != refusal.get("run_id")
+            or value.get("observation") != refusal.get("observation")
+        ):
+            errors.append("outer_refusal_join")
+    elif request is not None:
+        errors.append("request_presence")
+    return sorted(set(errors))
+
+
 def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
     """Validate v0.5 plus its exact embedded external-authority decision."""
     if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA:
@@ -554,6 +624,13 @@ def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
     if request is not None and refusal is not None:
         raise ValueError("Lifecycle request and refusal are mutually exclusive")
     branch = value.get("execution_branch") or {}
+    command = branch.get("command")
+    conditional_errors = external_authority_branch_predicate_failures(value)
+    if conditional_errors:
+        raise ValueError(
+            "Contradictory lifecycle external-authority fields: "
+            + ", ".join(conditional_errors)
+        )
     if request is not None:
         from .external_authority import validate_external_authority_request
 
@@ -577,7 +654,7 @@ def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
             or branch.get("action_ids")
         ):
             raise ValueError("Lifecycle external-authority refusal does not join")
-    if branch.get("command") == "await_external_authority" and request is None:
+    if command == "await_external_authority" and request is None:
         raise ValueError("Await-external-authority branch lacks its exact request")
 
 

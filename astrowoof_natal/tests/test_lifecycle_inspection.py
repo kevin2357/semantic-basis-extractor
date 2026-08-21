@@ -211,7 +211,7 @@ class TestLifecycleInspection(unittest.TestCase):
                 self.assertEqual(outcome, result["terminal"]["outcome"])
                 self.assertEqual(reason, result["terminal"]["terminal_reason"])
 
-    def test_observation_time_is_only_documented_volatile_field(self) -> None:
+    def test_observation_time_changes_only_documented_observation_bound_fields(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             self.materialize(root, self.state(root))
@@ -227,6 +227,15 @@ class TestLifecycleInspection(unittest.TestCase):
             first["action_inventory"]["observation"]["observed_at"] = "volatile"
             second["observation"]["observed_at"] = "volatile"
             second["action_inventory"]["observation"]["observed_at"] = "volatile"
+            for inspection in (first, second):
+                for field, digest_field in (
+                    ("external_authority_request", "external_authority_request_sha256"),
+                    ("external_authority_refusal", "refusal_sha256"),
+                ):
+                    projection = inspection.get(field)
+                    if projection is not None:
+                        projection["observation"]["observed_at"] = "volatile"
+                        projection[digest_field] = "observation-bound"
             self.assertEqual(first, second)
 
 

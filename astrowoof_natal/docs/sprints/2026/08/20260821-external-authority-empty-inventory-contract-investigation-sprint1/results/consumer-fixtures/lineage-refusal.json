@@ -1,0 +1,22 @@
+{
+  "evidence_categories": [
+    "native_evidence_conflict",
+    "prior_initial_action"
+  ],
+  "observation": {
+    "inventory_valid": true,
+    "logical_workspace_root": "/qualification/sbe-run",
+    "native_exclusive_access": "declared",
+    "observed_at": "1970-01-01T00:00:00Z",
+    "operator_state_revision": 2,
+    "snapshot_complete": true,
+    "snapshot_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "writer_race_possible": false
+  },
+  "provider_create_permitted": false,
+  "reason_code": "initial_wave_lineage_unjoinable",
+  "refusal_sha256": "5e1ef86642969cdb8d20f9ef7d6716462c969bf65771fd99875e5895bd0c21db",
+  "review_required": true,
+  "run_id": "deployed-qa-exact_natal",
+  "schema_version": "astrowoof.external_authority_refusal.v1"
+}

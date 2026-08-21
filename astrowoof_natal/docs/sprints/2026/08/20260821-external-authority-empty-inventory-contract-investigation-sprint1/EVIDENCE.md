@@ -1,0 +1,161 @@
+# External-Authority Empty-Inventory Contract Investigation — Sprint 1 Evidence
+
+Status: complete; 0.4.15 tagged, published, and independently verified
+
+- Provider calls: 0
+- Spend: USD 0
+- Retained QA workspace access: none
+- Runtime/source/schema changes: none
+- API/database changes: none
+- Release changes: none
+
+Focused tests:
+
+```text
+Ran 59 tests in 22.660s
+OK (skipped=4)
+```
+
+Suites:
+
+- `test_external_authority_public`
+- `test_external_authority_contract_proposal`
+- `test_initial_wave_lineage_fence`
+- `test_lifecycle_contracts`
+
+The four skips are existing JSON Schema checks unavailable in the lean host
+interpreter. This evidence establishes a green baseline only; it does not reproduce
+the retained QA failure.
+
+Primary analysis: `SBE Agent Pre-Sprint Huddle.md`.
+
+## Slice 0 reproducer
+
+Implementation:
+
+- `tests/test_external_authority_empty_inventory_investigation.py`
+
+Result report:
+
+- `results/SLICE 0 - FAILURE SHAPE RECONNAISSANCE.md`
+
+Proven facts:
+
+- normal exact and bounded inspection paths publish coherent nonempty six-member
+  external-authority requests;
+- representative inadmissible stored-wave evidence becomes typed refusal;
+- API-equivalent predicate checks distinguish all five collapsed conditions;
+- native v0.5 validation has gaps for wrong branch reason and non-null
+  `not_before`; and
+- exact retained-incident predicate remains unknown without its rejected document.
+
+API review: approved in `API Agent Slice 0 Review and Response.md`; API planning
+record committed as `4b6a60d`.
+
+## Slice 1 proposal
+
+- `LIFECYCLE EXTERNAL AUTHORITY INVARIANT PROPOSAL.md`
+- `results/SLICE 1 - CONTRACT AND DIAGNOSTIC PROPOSAL.md`
+- Source/schema/runtime changes: none
+- Gate: jointly approved; implemented in Slices 2–3
+
+API disposition: approved in `API Agent Slice 1 Review and Response.md`.
+
+## Slice 2 implementation
+
+- Semantic validator:
+  `src/astrowoof_natal_authoring/lifecycle_contracts.py`
+- Packaged schema:
+  `src/astrowoof_natal_authoring/resources/contracts/authoring-lifecycle-contracts.schema.json`
+- Investigation/mutation tests:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Schema mutation tests:
+  `tests/test_external_authority_contract_proposal.py`
+- Result:
+  `results/SLICE 2 - NATIVE VALIDATOR AND CLASSIFICATION HARDENING.md`
+- Focused tests: 94 passed, 5 skipped because host `jsonschema` is unavailable.
+- Python compilation and packaged JSON parsing: passed.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+- API fixture/consumer review: approved after correcting two documentation-only
+  reason-code literals to `spend_authorization_required`.
+
+## Slice 4 regression matrix
+
+- Expanded matrix implementation:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Existing public, contract, lineage, execution, lifecycle consumer, closeout, and
+  event suites provide the remaining matrix cells.
+- Result:
+  `results/SLICE 4 - PROVIDER-FREE REGRESSION MATRIX.md`
+- Focused tests: 105 passed, 5 skipped because host `jsonschema` is unavailable.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 3 implementation
+
+- Lifecycle diagnostics:
+  `src/astrowoof_natal_authoring/lifecycle.py`
+- Shared closed predicate projection:
+  `src/astrowoof_natal_authoring/lifecycle_contracts.py`
+- Failure-isolation/privacy tests:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Result:
+  `results/SLICE 3 - STRUCTURED OBSERVABILITY.md`
+- Focused tests: 118 passed, 5 skipped because host `jsonschema` is unavailable.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 5 installed-wheel qualification
+
+- Public command: `astrowoof-external-authority-qa`
+- Packaged receipt schema:
+  `src/astrowoof_natal_authoring/resources/contracts/external-authority-qualification.v2.schema.json`
+- Receipt:
+  `results/external-authority-qualification-receipt.v2.json`
+- Sanitized fixtures: `results/consumer-fixtures/`
+- Consumer handoff: `EXTERNAL AUTHORITY LIFECYCLE HARDENING CONSUMER HANDOFF.md`
+- Result: `results/SLICE 5 - INSTALLED WHEEL QUALIFICATION AND HANDOFF.md`
+- Candidate wheel SHA-256:
+  `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`
+- Receipt status/hash: pass /
+  `969867611a7fab84514cf252c552118a5896f3429b356a773b04ed82f0dbdd37`
+- Source qualification tests: 2 passed, 1 skipped because host `jsonschema` is
+  unavailable.
+- Combined lifecycle/external-authority matrix: 97 tests run, 6 skipped because
+  host `jsonschema` is unavailable, all remaining tests passed.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 6 closeout
+
+- Full suite: 558 tests run; 531 passed and 27 existing environment-dependent
+  checks skipped.
+- Installed release smoke: pass; receipt at
+  `results/release-preparation-smoke.json`.
+- Installed external-authority qualification: pass; all v2 assertions true.
+- Candidate wheel source commit: `063dc0d`.
+- Candidate wheel SHA-256:
+  `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`.
+- Python compilation, packaged JSON parsing, privacy scan, and diff check: pass.
+- Provider calls/retrievals/spend/retained workspace access: 0 / 0 / USD 0 / none.
+- Release outcome: immutable `0.4.15` tagged, published, and verified.
+
+## 0.4.15 artifact lock
+
+- Artifact source commit: `b3f73eddf63b223de8c8875a4a4dbf448b9ce258`.
+- Fixed source epoch: `1787324603`.
+- Artifact evidence commit: `4ccf3813aa1010500298af9e68e4f3351b5a1ea0`.
+- Wheel SHA-256:
+  `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+- Wheel bytes/entries/resources: 883238 / 133 / 78.
+- Double-build reproducibility, installed smoke, external-authority v2,
+  provider-pending 4+2, `py.typed`, and bytecode exclusion: pass.
+
+## 0.4.15 publication evidence
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.15`.
+- Tag commit: `807f9377fe54239d9311026835e38941fa22f898`.
+- Annotated tag object: `87c8c64315b471406f64c04f2412de487a1d17d1`.
+- GitHub release ID: `374487583`.
+- Wheel/checksum asset IDs: `523887333` / `523887332`.
+- Published bytes/SHA-256: 883238 /
+  `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+- GitHub asset digest and independently downloaded bytes match the locked artifact.
+- Publication is final; this record does not move the immutable tag.

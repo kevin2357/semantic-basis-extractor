@@ -74,7 +74,7 @@ FIXTURE_NAMES = (
 
 def _resolve(schema_root: dict[str, Any], reference: str) -> dict[str, Any]:
     if not reference.startswith("#/"):
-        raise AssertionError(f"Test validator only accepts local refs: {reference}")
+        raise AssertionError(f"Test resolver requires a local reference: {reference}")
     value: Any = schema_root
     for component in reference[2:].split("/"):
         value = value[component.replace("~1", "/").replace("~0", "~")]
@@ -95,7 +95,17 @@ def _type_matches(value: Any, expected: str) -> bool:
 
 def validate(value: Any, schema: dict[str, Any], root: dict[str, Any], path: str = "$") -> None:
     if "$ref" in schema:
-        validate(value, _resolve(root, schema["$ref"]), root, path)
+        reference = schema["$ref"]
+        if reference.startswith("#/"):
+            validate(value, _resolve(root, reference), root, path)
+        else:
+            resource, separator, fragment = reference.partition("#")
+            if not separator or not fragment.startswith("/"):
+                raise AssertionError(f"Unsupported test schema reference: {reference}")
+            external_root = json.loads(read_resource_text(f"contracts/{resource}"))
+            validate(
+                value, _resolve(external_root, f"#{fragment}"), external_root, path,
+            )
         return
     if "oneOf" in schema:
         matches = 0
