@@ -18,9 +18,10 @@ from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter
 from astrowoof_natal_authoring.lifecycle_contracts import (
     validate_lifecycle_inspection_v05,
 )
-from astrowoof_natal.tests.test_external_authority_public import (  # noqa: E402
-    TestExternalAuthorityPublic as _ExternalAuthorityFixture,
+from astrowoof_natal_authoring.external_authority import (
+    validate_external_authority_request,
 )
+from astrowoof_natal.tests import test_external_authority_public as fixture_module  # noqa: E402
 
 
 def api_external_authority_predicates(inspection: dict) -> list[str]:
@@ -44,7 +45,7 @@ def api_external_authority_predicates(inspection: dict) -> list[str]:
 class TestExternalAuthorityEmptyInventoryInvestigation(unittest.TestCase):
     """Provider-free Slice 0 evidence; never opens the retained QA workspace."""
 
-    helper = _ExternalAuthorityFixture()
+    helper = fixture_module.TestExternalAuthorityPublic()
 
     def test_real_inspection_satisfies_all_api_predicates_for_both_routes(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -317,6 +318,128 @@ class TestExternalAuthorityEmptyInventoryInvestigation(unittest.TestCase):
             self.assertEqual(
                 before_snapshot, (run_dir / "workspace-snapshot.json").read_bytes(),
             )
+
+    def test_ordinary_action_set_is_nonempty_lexical_and_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = self.helper.make_ordinary_run(Path(temporary))
+            before_run = (run_dir / "run.json").read_bytes()
+            before_snapshot = (run_dir / "workspace-snapshot.json").read_bytes()
+            inspection = inspect_lifecycle(
+                run_dir,
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            request = inspection["external_authority_request"]
+            self.assertEqual("ordinary_action_set", request["request_kind"])
+            self.assertEqual(2, request["action_count"])
+            self.assertEqual(
+                sorted(request["ordered_action_ids"]), request["ordered_action_ids"],
+            )
+            self.assertEqual(
+                request["ordered_action_ids"], inspection["execution_branch"]["action_ids"],
+            )
+            self.assertEqual(before_run, (run_dir / "run.json").read_bytes())
+            self.assertEqual(
+                before_snapshot, (run_dir / "workspace-snapshot.json").read_bytes(),
+            )
+
+    def test_no_prepared_actions_never_selects_external_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = self.helper.make_ordinary_run(Path(temporary))
+            run_json = run_dir / "run.json"
+            state = json.loads(run_json.read_text(encoding="utf-8"))
+            for action in state["spend_ledger"]["actions"]:
+                action["state"] = "DENIED_PROVIDERLESS"
+            run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            write_workspace_snapshot(run_dir)
+            inspection = inspect_lifecycle(
+                run_dir,
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            self.assertNotEqual(
+                "await_external_authority", inspection["execution_branch"]["command"],
+            )
+            self.assertIsNone(inspection["external_authority_request"])
+
+    def test_public_request_validator_refuses_inventory_and_binding_mutations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            canonical = inspect_lifecycle(
+                self.helper.make_wave_run(Path(temporary), "exact_natal"),
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )["external_authority_request"]
+            mutations = []
+            empty = deepcopy(canonical)
+            empty["ordered_actions"] = []
+            empty["ordered_action_ids"] = []
+            empty["action_count"] = 0
+            mutations.append(empty)
+            duplicate = deepcopy(canonical)
+            duplicate["ordered_actions"][1] = deepcopy(duplicate["ordered_actions"][0])
+            duplicate["ordered_action_ids"][1] = duplicate["ordered_action_ids"][0]
+            mutations.append(duplicate)
+            unknown = deepcopy(canonical)
+            unknown["ordered_action_ids"][0] = "paid_" + "f" * 24
+            mutations.append(unknown)
+            binding = deepcopy(canonical)
+            binding["ordered_actions"][0]["binding"]["maximum_output_tokens"] += 1
+            mutations.append(binding)
+            for changed in mutations:
+                with self.assertRaises(ValueError):
+                    validate_external_authority_request(changed)
+
+    def test_outer_request_identity_mutations_fail_native_join(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            canonical = inspect_lifecycle(
+                self.helper.make_wave_run(Path(temporary), "exact_natal"),
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            mutations = []
+            run_id = deepcopy(canonical)
+            run_id["run_id"] = "different-native-run"
+            mutations.append(run_id)
+            observation = deepcopy(canonical)
+            observation["observation"]["operator_state_revision"] += 1
+            mutations.append(observation)
+            ordered = deepcopy(canonical)
+            ordered["execution_branch"]["action_ids"] = list(reversed(
+                ordered["execution_branch"]["action_ids"]
+            ))
+            mutations.append(ordered)
+            digest = deepcopy(canonical)
+            digest["external_authority_request"][
+                "external_authority_request_sha256"
+            ] = "f" * 64
+            mutations.append(digest)
+            for changed in mutations:
+                with self.assertRaises(ValueError):
+                    validate_lifecycle_inspection_v05(changed)
+
+    def test_incomplete_snapshot_and_writer_race_never_publish_request(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            incomplete_dir = self.helper.make_wave_run(root, "exact_natal")
+            (incomplete_dir / "request-1.json").unlink()
+            incomplete = inspect_lifecycle(
+                incomplete_dir,
+                native_exclusive_access="declared",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            self.assertEqual("none", incomplete["execution_branch"]["command"])
+            self.assertIsNone(incomplete["external_authority_request"])
+            self.assertIn("snapshot_incomplete_or_invalid", incomplete["review_reasons"])
+
+            race_dir = self.helper.make_wave_run(root, "bounded_natal")
+            raced = inspect_lifecycle(
+                race_dir,
+                native_exclusive_access="not_established",
+                observed_at="2026-08-21T12:00:00Z",
+            )
+            self.assertEqual("none", raced["execution_branch"]["command"])
+            self.assertIsNone(raced["external_authority_request"])
+            self.assertIn("writer_race_possible", raced["review_reasons"])
 
 
 if __name__ == "__main__":

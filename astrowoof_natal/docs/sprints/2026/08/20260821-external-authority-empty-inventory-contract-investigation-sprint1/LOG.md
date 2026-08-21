@@ -96,3 +96,16 @@
 - Focused evidence: 118 passed, 5 environment-dependent schema checks skipped.
 - Provider calls: 0. Spend: USD 0. Retained workspace access: none.
 - Slice 3 is complete.
+
+## 2026-08-21 — Slice 4 provider-free regression matrix
+
+- Added real public inspection coverage for ordinary action sets, absent prepared
+  inventory, exact/bounded initial waves, incomplete snapshots, and writer races.
+- Added request inventory/binding and outer lifecycle identity mutation coverage.
+- Re-ran lineage, constrained execution, lifecycle consumer/closeout, and typed
+  event suites.
+- Confirmed source-tree helper reuse remains test-only and will not enter the
+  installed-wheel qualification.
+- Focused evidence: 105 passed, 5 environment-dependent schema checks skipped.
+- Provider calls: 0. Spend: USD 0. Retained workspace access: none.
+- Slice 4 gate passed.

@@ -77,6 +77,17 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Python compilation and packaged JSON parsing: passed.
 - Provider calls/spend/retained workspace access: 0 / USD 0 / none.
 
+## Slice 4 regression matrix
+
+- Expanded matrix implementation:
+  `tests/test_external_authority_empty_inventory_investigation.py`
+- Existing public, contract, lineage, execution, lifecycle consumer, closeout, and
+  event suites provide the remaining matrix cells.
+- Result:
+  `results/SLICE 4 - PROVIDER-FREE REGRESSION MATRIX.md`
+- Focused tests: 105 passed, 5 skipped because host `jsonschema` is unavailable.
+- Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
 ## Slice 3 implementation
 
 - Lifecycle diagnostics:
