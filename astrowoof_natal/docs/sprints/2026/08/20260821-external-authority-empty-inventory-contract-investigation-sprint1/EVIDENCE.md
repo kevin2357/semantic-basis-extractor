@@ -1,6 +1,6 @@
 # External-Authority Empty-Inventory Contract Investigation — Sprint 1 Evidence
 
-Status: Slice 5 complete and API-approved; Slice 6 release preparation pending
+Status: Slice 6 release preparation complete; owner release authorization required
 
 - Provider calls: 0
 - Spend: USD 0
@@ -114,7 +114,7 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Consumer handoff: `EXTERNAL AUTHORITY LIFECYCLE HARDENING CONSUMER HANDOFF.md`
 - Result: `results/SLICE 5 - INSTALLED WHEEL QUALIFICATION AND HANDOFF.md`
 - Candidate wheel SHA-256:
-  `798381344ea728e851663db3ca2afc5a968205ddce951aea7efce0200398b8e3`
+  `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`
 - Receipt status/hash: pass /
   `969867611a7fab84514cf252c552118a5896f3429b356a773b04ed82f0dbdd37`
 - Source qualification tests: 2 passed, 1 skipped because host `jsonschema` is
@@ -122,3 +122,17 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Combined lifecycle/external-authority matrix: 97 tests run, 6 skipped because
   host `jsonschema` is unavailable, all remaining tests passed.
 - Provider calls/spend/retained workspace access: 0 / USD 0 / none.
+
+## Slice 6 closeout
+
+- Full suite: 558 tests run; 531 passed and 27 existing environment-dependent
+  checks skipped.
+- Installed release smoke: pass; receipt at
+  `results/release-preparation-smoke.json`.
+- Installed external-authority qualification: pass; all v2 assertions true.
+- Candidate wheel source commit: `063dc0d`.
+- Candidate wheel SHA-256:
+  `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`.
+- Python compilation, packaged JSON parsing, privacy scan, and diff check: pass.
+- Provider calls/retrievals/spend/retained workspace access: 0 / 0 / USD 0 / none.
+- Release recommendation: fresh immutable `0.4.15`; owner authorization pending.

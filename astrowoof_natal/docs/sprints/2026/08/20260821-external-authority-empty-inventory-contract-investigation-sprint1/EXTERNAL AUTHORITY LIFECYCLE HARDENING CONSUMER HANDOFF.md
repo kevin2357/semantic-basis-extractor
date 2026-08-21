@@ -72,7 +72,7 @@ mutations.
 
 The receipt and fixtures in `results/` were produced from an isolated installation
 of the candidate 0.4.14 wheel with SHA-256
-`798381344ea728e851663db3ca2afc5a968205ddce951aea7efce0200398b8e3`.
+`59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`.
 The receipt is qualification evidence only and is never native execution authority.
 
 ## Diagnostics

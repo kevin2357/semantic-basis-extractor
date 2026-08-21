@@ -8,6 +8,8 @@
 - [Slice 5 installed-wheel qualification and handoff](SLICE%205%20-%20INSTALLED%20WHEEL%20QUALIFICATION%20AND%20HANDOFF.md)
 - [Qualification receipt v2](external-authority-qualification-receipt.v2.json)
 - [Sanitized consumer fixtures](consumer-fixtures/)
+- [Slice 6 closeout and release decision](SLICE%206%20-%20CLOSEOUT%20AND%20RELEASE%20DECISION.md)
+- [Installed release smoke receipt](release-preparation-smoke.json)
 
-The installed-wheel receipt and sanitized fixtures are ready for API consumer
-review. A consumer review record and final closeout evidence remain pending.
+API consumer review and release preparation are complete. Version bump, tag, and
+publication remain pending explicit owner authorization.

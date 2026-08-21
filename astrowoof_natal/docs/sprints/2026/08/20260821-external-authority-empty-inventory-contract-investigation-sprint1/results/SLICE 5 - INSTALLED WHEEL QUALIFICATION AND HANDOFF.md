@@ -20,7 +20,7 @@ Status: complete and API-approved.
 
 ```text
 astrowoof_natal_authoring-0.4.14-py3-none-any.whl
-SHA-256 798381344ea728e851663db3ca2afc5a968205ddce951aea7efce0200398b8e3
+SHA-256 59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b
 ```
 
 The wheel was installed in an isolated Python 3.11 environment and the advertised

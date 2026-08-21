@@ -136,3 +136,19 @@
   `spend_authorization_required`.
 - No source, schema, fixture, qualification, or runtime behavior changed in response
   to review. Slice 5 is approved for commit and release preparation.
+
+## 2026-08-21 — Slice 6 closeout and release decision
+
+- The first complete-suite pass exposed two stale test-integration assumptions in
+  cross-file schema resolution and observation-bound digest normalization; neither
+  represented a runtime defect.
+- Corrected those assumptions and reran all 558 tests successfully with 27 existing
+  environment-dependent skips.
+- Built and isolated-installed the post-Slice-5 0.4.14 candidate wheel, SHA-256
+  `59053ac273d21f6d7b252d34b23a0757bacf1420baa855aee2b7612676d3f12b`.
+- Installed release smoke and external-authority qualification both passed through
+  advertised console commands outside the source package path.
+- Privacy/integrity scans, Python compilation, packaged JSON parsing, and diff
+  whitespace checks passed.
+- Recommend fresh immutable patch `0.4.15`; no version bump, tag, or publication has
+  occurred pending explicit owner authorization.
