@@ -264,6 +264,19 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
 - Artifact evidence lock commit:
   `a330760992c7af1e615b19c7c3f6ba78d7fa2e1e`.
 
+### 0.4.14 publication evidence
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.14`.
+- Immutable tag commit: `481b7e693ee4270ca8614868adbcedab7472da0e`.
+- Annotated tag object: `9299d314b101864a78845656e4ee48a6f752e095`.
+- GitHub release ID: `374224236`; published `2026-08-21T07:11:46Z`.
+- Wheel asset ID: `523379437`; checksum asset ID: `523379436`.
+- GitHub wheel size/digest: 880610 bytes / SHA-256
+  `ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`.
+- Remote asset digest exactly matches the qualified reproducible artifact.
+- Release is neither draft nor prerelease.
+- Post-publication evidence is committed after release without moving the tag.
+
 ### Slice 6 typed-event completion evidence
 
 - Exact and bounded success order:

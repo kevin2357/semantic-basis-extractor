@@ -253,7 +253,7 @@ version bump, tag, or release recommendation.
 
 ### Slice 8 — Release closeout
 
-Status: complete; 0.4.14 qualified and awaiting explicit tag/publication approval.
+Status: complete; 0.4.14 tagged, published, and independently verified.
 
 - Run the affected native suites, installed-wheel qualification, release smoke,
   fixed-epoch reproducible build, resource/catalog checks, and checksum validation.

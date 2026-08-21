@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.14 Release Candidate
 
-Status: qualified candidate; tagging and publication require explicit approval
+Status: published and independently verified
 
 ## Summary
 
@@ -34,7 +34,11 @@ closed.
 - Lifecycle inspection v0.4: readable but non-authorizing for this continuation
 - Lifecycle inspection v0.5: required for the external-authority handoff
 
-Tagging and publication remain pending the explicit Slice 8 release gate.
+The immutable annotated tag points to
+`481b7e693ee4270ca8614868adbcedab7472da0e`. GitHub reports the published wheel at
+880610 bytes with SHA-256
+`ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`, matching
+the qualified artifact exactly. This post-publication record does not move the tag.
 
 ## Qualification
 

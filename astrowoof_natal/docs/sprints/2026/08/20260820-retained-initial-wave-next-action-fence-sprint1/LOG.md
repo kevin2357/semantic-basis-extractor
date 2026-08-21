@@ -343,3 +343,13 @@ candidate exercised the real workspace/lifecycle/fresh-process/reconciliation pa
   `a330760992c7af1e615b19c7c3f6ba78d7fa2e1e`; final release record now names that
   commit explicitly.
 - Slice 8 is complete. Tagging/publication still require explicit authorization.
+
+## 2026-08-21 — 0.4.14 tagged and published
+
+- Kevin explicitly authorized tag and publication.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.14` at the exact qualified
+  release-record commit `481b7e693ee4270ca8614868adbcedab7472da0e`.
+- Published the locked wheel and `SHA256SUMS.txt` in GitHub release `374224236`.
+- Verified GitHub's wheel size and SHA-256 against local qualification evidence;
+  both match exactly.
+- Added this post-publication record without moving the immutable tag.
