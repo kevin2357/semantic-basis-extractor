@@ -1,11 +1,9 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 0 complete; awaiting API review
+Status: Slice 0 complete and API-reviewed; Slice 1 contract proposal next
 
 - Provider calls: 0
 - Spend: USD 0
-- Runtime/source changes: none
-- API migration changes: none
 - Runtime/source/schema changes: none
 - API migration changes: none
 - Audit result:
@@ -20,4 +18,6 @@ Status: Slice 0 complete; awaiting API review
   - native transition journal/result/publication receipt;
   - API paid actions, provider operations and append-only observations; and
   - API native execution receipts and billing reconciliation fields.
-- Gate result: native discovery PASS; contract freeze withheld pending API review.
+- API review: `API Agent Slice 0 Review and Suggestions.md`.
+- Gate result: Slice 0 PASS; transaction-grained append-only revision direction
+  approved for Slice 1 proposal. No schema is frozen yet.

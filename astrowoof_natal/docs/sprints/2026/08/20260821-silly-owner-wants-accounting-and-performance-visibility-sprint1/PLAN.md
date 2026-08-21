@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: loose planning draft; implementation not started
+Status: Slice 0 complete and API-reviewed; Slice 1 contract proposal next
 
 ## Objective
 
@@ -31,6 +31,12 @@ Gate: API review of what already exists before introducing a new schema.
 ### Slice 1 — Observation contract
 
 - Freeze a closed versioned provider-economics observation.
+- Make the native surface transaction-grained: one exact paid action or Batch round
+  per observation, never a pre-aggregated deck/stage/model/cohort summary.
+- Define a stable transaction identity plus append-only revision identity so later
+  editorial outcome facts can join already-durable provider settlement evidence.
+- Require revisions to preserve monotonic accepted identity, usage, cost, timing,
+  and provenance evidence; contradiction or predecessor gaps fail closed.
 - Define action/round/member cardinality, cohort identity, cost basis, timing basis,
   outcome vocabulary, and provenance references.
 - Keep API-reconciled billing out of native truth while leaving an exact join seam.
@@ -72,8 +78,9 @@ Gate: clock/failure injection proves no fabricated or negative durations.
 - Expose snapshot/result-validating Python and CLI readers or include observations
   in the native terminal-transition publication protocol.
 - Produce route/stage fixtures and an installed-wheel provider-free qualification.
-- Document the API ingestion transaction, idempotency key, reconciliation join, and
-  recommended normalized storage choices without implementing API-owned policy.
+- Document the API ingestion transaction, transaction/revision idempotency keys,
+  monotonic merge rules, reconciliation join, immutable revision retention, and
+  recommended current-state projection without implementing API-owned policy.
 
 Gate: API fixture adoption review before release qualification.
 
@@ -99,6 +106,8 @@ The minimum matrix should cover:
 - fresh execution, detach/reconcile, replay, and restored workspace;
 - open/null timestamps and polling-delayed terminal observation;
 - mutation of cohort, cost basis, usage reference, timing basis, and provenance;
+- initial provider-settlement revision followed by editorial-finalization revision,
+  exact replay, skipped predecessor, stale revision, and contradictory revision;
 - event/log sink failure with unchanged authoritative evidence; and
 - protected subject/prompt sentinel absence.
 
@@ -113,6 +122,7 @@ cannot authorize, settle, deny, resubmit, or release anything.
 - public reader/export surface;
 - installed-wheel qualification receipt;
 - API consumer handoff with storage/query recommendations;
+- explicit transaction-tape and append-only revision semantics;
 - compatibility and privacy inventory; and
 - sprint log/evidence and release recommendation.
 

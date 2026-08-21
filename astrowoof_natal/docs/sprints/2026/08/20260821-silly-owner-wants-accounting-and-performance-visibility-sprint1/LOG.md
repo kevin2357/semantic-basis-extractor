@@ -25,3 +25,17 @@
   candidate contract fixtures.
 - Provider calls: 0. Spend: USD 0. Runtime/source/database changes: none.
 - Slice 0 is complete and paused at its planned API review gate.
+
+## 2026-08-21 — Slice 0 API review incorporated
+
+- Moved the API review from the superseded calibration location into this sprint
+  and accepted it as Slice 0 input.
+- Froze the guiding direction that SBE publishes individual transaction facts, not
+  pre-aggregated analytics summaries.
+- Selected append-only observation revisions to bridge provider settlement and
+  later editorial finalization under one stable transaction identity.
+- Required monotonic evidence preservation, exact replay, predecessor validation,
+  transactional API ingestion, immutable revision retention, and an API-owned
+  current-state projection in the Slice 1/5 gates.
+- Reconciled sprint status and evidence bookkeeping. No runtime, schema, provider,
+  spend, or API database behavior changed.

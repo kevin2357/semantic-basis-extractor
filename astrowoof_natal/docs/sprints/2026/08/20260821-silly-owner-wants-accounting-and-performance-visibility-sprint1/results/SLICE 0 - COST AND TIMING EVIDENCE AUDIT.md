@@ -1,7 +1,7 @@
 # Slice 0 — Cost and Timing Evidence Audit
 
 Date: 2026-08-21
-Status: complete; awaiting API review before contract design
+Status: complete and API-reviewed; Slice 1 contract design may proceed
 
 ## Conclusion
 
@@ -114,13 +114,23 @@ The lowest-risk option is an append-only observation referenced by a validated
 native invocation result and its journal range. A consumer must validate the full
 result/journal/snapshot/publication-receipt chain before accepting it.
 
-Recommended replay identity:
+Recommended transaction and revision identities:
 
-`(native_run_id, native_action_id, observation_id, observation_sha256)`
+```text
+transaction: (native_run_id, native_action_id)
+revision:    (native_run_id, native_action_id, revision_number, observation_sha256)
+```
+
+For Batch, `native_action_id` identifies the paid round authority; members remain
+ordered evidence beneath that transaction. An exact replay is idempotent. A new
+revision must name its predecessor and add only newly durable facts. A skipped,
+stale, or contradictory revision fails closed.
 
 The API should preserve the complete canonical observation JSON before or alongside
-any normalized projection. Analytics projection failure must not reinterpret SBE
-state, authorize provider work, or invalidate already-ingested native authority.
+any normalized projection. PostgreSQL may merge an accepted revision into a current
+transaction row or view for easy queries, but it must retain immutable revision
+history. Analytics projection failure must not reinterpret SBE state, authorize
+provider work, or invalidate already-ingested native authority.
 
 ## Privacy boundary
 
@@ -139,12 +149,12 @@ complete action bindings. Fixtures use synthetic IDs and values only.
 3. Does billing reconciliation append a separate joined fact (recommended), or
    update a convenience projection while preserving immutable history?
 4. Which cohort dimensions need indexed columns on day one?
-5. Should observations publish at every durable provider update or only when the
-   action becomes terminally classified? The audit recommends append-only updates
-   with a terminal action summary, avoiding delayed loss of retrieval timings.
+5. API review selected append-only revisions under one stable transaction identity.
+   Provider settlement may publish before editorial finalization; later revisions
+   add acceptance, retry, final-QA, or delivery facts monotonically.
 
 ## Slice 0 gate
 
-PASS for native discovery. No contract or implementation should be frozen until the
-API reviews this matrix and the representative fixtures.
+PASS for native discovery and API review. Slice 1 may propose the closed
+transaction-grained, append-only revision contract. No schema is frozen yet.
 

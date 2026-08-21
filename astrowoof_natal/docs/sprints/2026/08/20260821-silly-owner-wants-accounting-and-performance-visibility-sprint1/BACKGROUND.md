@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Background
 
 Date: 2026-08-21
-Status: discovery and planning input; no implementation approved
+Status: Slice 0 discovery complete and API-reviewed; no schema frozen
 
 ## Why this sprint exists
 
@@ -100,10 +100,18 @@ exact provider completion time.
 
 ## Proposed evidence product
 
-Define one versioned, closed, append-only **provider economics observation** per
-settled or terminally classified native paid action. It should be derived from
-immutable native evidence and expose no prompts, subject data, credentials, or
-provider response content.
+Define a versioned, closed, append-only **provider economics observation** for one
+exact native paid action or one exact Batch round. The public surface should look
+like a transaction tape, not a grouped report: SBE exports individual facts and the
+API derives summaries by stage, deck, route, model, profile, cohort, or time window.
+Observations must be derived from immutable native evidence and expose no prompts,
+subject data, credentials, or provider response content.
+
+Provider settlement may precede editorial acceptance, retry disposition, final QA,
+or delivery. One stable transaction may therefore acquire append-only revisions as
+those later facts become durable. Each revision must identify its predecessor and
+preserve all previously accepted provider identity, usage, cost-basis, timing, and
+provenance facts. A revision adds knowledge; it never rewrites history.
 
 Candidate dimensions:
 
@@ -114,7 +122,7 @@ Candidate dimensions:
 | Provider | mechanism, model, reasoning, service level, price book |
 | Authority | commitment, maximum output, authorization and external-decision refs |
 | Usage | input, cached input, cache write, output, reasoning, total tokens |
-| Cost | SBE estimate, provider-reported cost if available, API-reconciled cost |
+| Cost | SBE estimate, explicit provider monetary amount if available, API billing join reference—not reconciled value |
 | Basis | reported, estimated, unavailable pending reconciliation, or no work consumed |
 | Outcome | accepted, rejected/retried, failed, truncated, skipped, ambiguity/review |
 | Timing | create HTTP, retrieval attempts, observed pending span, native action span |
@@ -131,11 +139,13 @@ The likely ownership split is:
 1. SBE publishes a compact versioned observation or sufficient typed facts from
    native evidence.
 2. The API validates and ingests it transactionally with the native result.
-3. The API owns the durable normalized analytics projection and joins later billing
+3. The API retains immutable revisions and may merge them into a query-friendly
+   current transaction row or view using stable transaction/revision keys.
+4. The API owns the durable normalized analytics projection and joins later billing
    reconciliation.
-4. Immutable native/provider references remain the audit source; the analytics row
+5. Immutable native/provider references remain the audit source; the analytics row
    does not replace them.
-5. Percentiles, dashboards, exports, and future estimate recommendations derive
+6. Percentiles, dashboards, exports, and future estimate recommendations derive
    from append-only observations rather than mutable running averages.
 
 Whether the API needs a new table, an extension of provider-operation observations,
@@ -185,4 +195,8 @@ This sprint does not:
 - What retention/privacy policy applies to provider IDs and timing diagnostics?
 - Which cohort identity should SBE declare and which aggregation dimensions should
   remain API-owned?
+- Should API retain one immutable revision table plus a current-state projection,
+  or can its existing append-only observation table provide the revision history?
+- Which native editorial milestones warrant a new revision, and what predecessor
+  rule should API enforce transactionally?
 

@@ -21,6 +21,10 @@ This sprint
 retains future ownership of estimate calibration, percentile/margin policy, and any
 proposal to change commitments.
 
+API review guidance covering cohort discipline, statistical guardrails, and
+decision-support questions moved with that implementation work to
+`../20260821-silly-owner-wants-accounting-and-performance-visibility-sprint1/API Agent Slice 0 Review and Suggestions.md`.
+
 ## Current direction
 
 - Reuse native paid-action/provider evidence and existing API persistence rather
