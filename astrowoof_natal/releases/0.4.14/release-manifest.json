@@ -18,7 +18,7 @@
     "artifact_source_commit": "7139415d8bf8c0bce1c9a075de6e1fc9df0ada95",
     "source_date_epoch": 1787295126,
     "byte_reproducible": true,
-    "artifact_evidence_commit": "pending_evidence_lock_commit"
+    "artifact_evidence_commit": "a330760992c7af1e615b19c7c3f6ba78d7fa2e1e"
   },
   "runtime": {
     "requires_python": ">=3.11",

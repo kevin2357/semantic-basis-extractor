@@ -261,6 +261,8 @@ Status: Slice 2 complete; constrained-continuation implementation has not begun.
   `5cf177ef0e6cca129a4f07327b56628c5632ef78bce116aeb1a11a8246cddda2`.
 - No provider network calls, credentials, or spend. Retained Aster untouched.
 - Tag/publication: pending explicit Kevin/API authorization.
+- Artifact evidence lock commit:
+  `a330760992c7af1e615b19c7c3f6ba78d7fa2e1e`.
 
 ### Slice 6 typed-event completion evidence
 

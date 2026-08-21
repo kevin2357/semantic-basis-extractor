@@ -339,3 +339,7 @@ candidate exercised the real workspace/lifecycle/fresh-process/reconciliation pa
   resource inventory, schema access, and package identity checks.
 - Candidate SHA-256:
   `ac660e367a6fd9a49c08fbf7e3f195089342c005117b08090114c864ca5b1d93`.
+- Locked the artifact and qualification evidence in commit
+  `a330760992c7af1e615b19c7c3f6ba78d7fa2e1e`; final release record now names that
+  commit explicitly.
+- Slice 8 is complete. Tagging/publication still require explicit authorization.
