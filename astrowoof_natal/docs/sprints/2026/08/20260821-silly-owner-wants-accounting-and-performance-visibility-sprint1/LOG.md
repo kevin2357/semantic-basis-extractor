@@ -11,3 +11,17 @@
 - Drafted proposed slices, testing matrix, ownership boundary, and review gates.
 - No source, schema, migration, runtime, provider, spend, or release behavior changed.
 
+## 2026-08-21 — Slice 0 evidence and gap audit
+
+- Audited native ledger, attempt metadata, run accounting, Batch rounds/members,
+  reconciliation diagnostics, transition journal, and publication receipts.
+- Audited API paid-action, provider-operation, provider-observation, execution-
+  receipt, and reconciliation persistence.
+- Confirmed the missing product is a normalized native observation, not another
+  spend-authority or billing ledger.
+- Froze no schema. Recorded cost/timing semantic distinctions, route/stage
+  cardinality, cohort-identity gap, privacy boundary, and API design questions.
+- Added two synthetic shape examples for API review. They are discovery aids, not
+  candidate contract fixtures.
+- Provider calls: 0. Spend: USD 0. Runtime/source/database changes: none.
+- Slice 0 is complete and paused at its planned API review gate.

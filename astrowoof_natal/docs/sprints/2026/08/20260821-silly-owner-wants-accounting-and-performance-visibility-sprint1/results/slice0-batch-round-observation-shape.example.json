@@ -1,0 +1,33 @@
+{
+  "example_only": true,
+  "native_action": {
+    "action_id": "paid_example_batch_round_01",
+    "route_family": "bounded_natal",
+    "stage": "initial",
+    "provider_mechanism": "batch",
+    "round_id": "round-01"
+  },
+  "authority_cardinality": {
+    "paid_action_count": 1,
+    "provider_operation_count": 1,
+    "member_count": 6
+  },
+  "cost": {
+    "disposition": "provider_usage_unavailable_billing_reconciliation_pending",
+    "sbe_estimated_micro_usd": null,
+    "api_reconciled_micro_usd": null
+  },
+  "members": [
+    {
+      "member_id": "pass-01-attempt-01",
+      "provider_status": "completed",
+      "usage_complete": true
+    },
+    {
+      "member_id": "pass-02-attempt-01",
+      "provider_status": "failed",
+      "usage_complete": false
+    }
+  ],
+  "note": "A partial member total never settles the one round authority as reported usage."
+}

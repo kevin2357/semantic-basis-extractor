@@ -1,0 +1,44 @@
+{
+  "example_only": true,
+  "native_action": {
+    "action_id": "paid_example_initial_pass_01",
+    "route_family": "exact_natal",
+    "stage": "initial",
+    "pass_id": "pass-01",
+    "attempt": 1,
+    "provider_mechanism": "response"
+  },
+  "configuration": {
+    "model": "example-model",
+    "reasoning": "example-reasoning",
+    "service_level": "interactive",
+    "maximum_output_tokens": 12000,
+    "price_book_version": "example-price-book",
+    "prompt_geometry_identity": "sha256:example"
+  },
+  "usage": {
+    "input_tokens": 10000,
+    "cached_input_tokens": 8000,
+    "cache_write_tokens": 0,
+    "output_tokens": 2500,
+    "reasoning_tokens": 500,
+    "total_tokens": 12500
+  },
+  "cost": {
+    "disposition": "provider_usage_reported",
+    "sbe_estimated_micro_usd": 123456,
+    "api_reconciled_micro_usd": null
+  },
+  "timing": {
+    "create_http_duration_ms": 850,
+    "retrieval_attempt_durations_ms": [310, 295],
+    "observed_provider_pending_duration_ms": 30750,
+    "provider_processing_duration_ms": null
+  },
+  "outcome": "accepted",
+  "provenance": {
+    "native_result_id": "nresult_example",
+    "journal_range_sha256": "example",
+    "usage_evidence_ref": "native-ledger:reported.usage"
+  }
+}
