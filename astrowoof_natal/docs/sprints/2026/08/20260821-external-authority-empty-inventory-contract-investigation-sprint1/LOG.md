@@ -161,3 +161,10 @@
 - Reconciled the consumer handoff opening status before release finalization.
 - Tagging and publication remain pending deterministic artifact qualification and
   release-evidence lock.
+- Built 0.4.15 twice at fixed source epoch `1787324603`; wheel bytes matched.
+- Installed release smoke, external-authority v2 qualification, provider-pending
+  qualification, resource inventory, and package identity checks passed.
+- Locked the exact wheel and initial release evidence in commit
+  `4ccf3813aa1010500298af9e68e4f3351b5a1ea0`.
+- Qualified wheel SHA-256:
+  `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.

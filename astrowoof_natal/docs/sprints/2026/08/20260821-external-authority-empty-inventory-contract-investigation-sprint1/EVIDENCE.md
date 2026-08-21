@@ -136,3 +136,14 @@ API disposition: approved in `API Agent Slice 1 Review and Response.md`.
 - Python compilation, packaged JSON parsing, privacy scan, and diff check: pass.
 - Provider calls/retrievals/spend/retained workspace access: 0 / 0 / USD 0 / none.
 - Release recommendation: fresh immutable `0.4.15`; owner authorization pending.
+
+## 0.4.15 artifact lock
+
+- Artifact source commit: `b3f73eddf63b223de8c8875a4a4dbf448b9ce258`.
+- Fixed source epoch: `1787324603`.
+- Artifact evidence commit: `4ccf3813aa1010500298af9e68e4f3351b5a1ea0`.
+- Wheel SHA-256:
+  `f557b439fa3096bb1c33f020adc4be40fb3bb749857bc8c3c7a4715cc131a052`.
+- Wheel bytes/entries/resources: 883238 / 133 / 78.
+- Double-build reproducibility, installed smoke, external-authority v2,
+  provider-pending 4+2, `py.typed`, and bytecode exclusion: pass.
