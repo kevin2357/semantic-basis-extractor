@@ -26,4 +26,3 @@ inspection versions into v0.6 semantics.
 
 Full details and examples are in the sprint's
 `TEMPORAL LIFECYCLE API CONSUMER HANDOFF.md`.
-

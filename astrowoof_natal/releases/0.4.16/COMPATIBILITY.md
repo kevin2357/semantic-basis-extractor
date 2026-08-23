@@ -12,4 +12,3 @@
 
 The API must deploy and attest the exact SBE wheel, worker image, compatibility
 identities, and selected immutable generation profile before admitting new runs.
-

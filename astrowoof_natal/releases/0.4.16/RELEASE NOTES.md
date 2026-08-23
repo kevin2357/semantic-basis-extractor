@@ -47,4 +47,3 @@ consumers but must not be silently reinterpreted as v0.6.
 
 Candidate wheel SHA-256:
 `56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339`.
-

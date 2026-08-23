@@ -11,4 +11,3 @@
   reinterpreted.
 - The installed qualification is provider-free and qualification-only. It does not
   confer production authority or exercise live OpenAI traffic.
-
