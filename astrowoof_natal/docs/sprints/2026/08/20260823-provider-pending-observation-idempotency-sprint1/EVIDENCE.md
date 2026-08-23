@@ -143,3 +143,17 @@ Status: all slices complete; API and owner approved immutable 0.4.16 release
   distinct pre/post checkpoint bases, singular installed public readers.
 - Prior candidate wheel/receipt identities are superseded by the replacement
   candidate recorded above.
+
+## Exact 0.4.16 release qualification
+
+- Artifact source commit:
+  `9591385fccfcf635d8371b12135a4d25c654166a`.
+- Wheel SHA-256:
+  `56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339`.
+- Fixed-epoch rebuild: byte-identical.
+- Complete source suite: 583 passed; 28 existing environment-dependent skips.
+- Installed release smoke: pass; 50 cards, four summaries, delivery complete.
+- Installed provider-pending qualification: pass; six creates, six retrievals,
+  bounded 4+2 reconciliation, no duplicates, and distinct post-retrieval basis.
+- Wheel inventory: 136 entries, 80 resources, `py.typed` present, no bytecode.
+- Provider network calls/spend: 0 / USD 0.

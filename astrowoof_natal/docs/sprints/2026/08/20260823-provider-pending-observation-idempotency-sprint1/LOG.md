@@ -160,3 +160,16 @@
   passed with six creates, six retrievals, distinct pre/post bases, and singular
   installed reader definitions.
 - Gate: ready for version bump/release recommendation after owner authorization.
+
+## 2026-08-23 — 0.4.16 immutable artifact qualification
+
+- API and owner approved the fresh patch release.
+- Bumped distribution version to `0.4.16` and committed artifact source as
+  `9591385fccfcf635d8371b12135a4d25c654166a`.
+- Complete source suite passed: 583 tests with 28 existing environment-dependent
+  skips.
+- Built the exact wheel twice with the source commit epoch; both builds produced
+  SHA-256 `56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339`.
+- Fresh-venv installed release smoke and provider-pending qualification passed.
+- No provider network call, credential, paid work, or retained QA workspace was
+  used.
