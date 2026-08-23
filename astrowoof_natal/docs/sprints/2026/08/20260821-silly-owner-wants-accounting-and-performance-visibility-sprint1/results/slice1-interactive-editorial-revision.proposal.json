@@ -1,0 +1,19 @@
+{
+  "schema_version": "astrowoof.provider_economics_transaction_revision.v1",
+  "transaction_id": "pe_txn_0123456789abcdef01234567",
+  "native_run_id": "native_run_example",
+  "native_action_id": "paid_0123456789abcdef01234567",
+  "revision_number": 2,
+  "previous_revision_id": "pe_rev_aaaaaaaaaaaaaaaaaaaaaaaa",
+  "revision_id": "pe_rev_bbbbbbbbbbbbbbbbbbbbbbbb",
+  "observed_at": "2026-08-21T12:00:10Z",
+  "revision_semantics": "All identity, cohort, authority, provider, usage, timing, and provenance sections are byte-identical to revision 1; the complete contract repeats them here. This abbreviated proposal file shows only the changed cumulative outcome fields.",
+  "editorial_outcome": {
+    "status": "accepted",
+    "retry_reason_category": null
+  },
+  "native_outcome": {
+    "status": "in_progress",
+    "delivery_publishable": false
+  }
+}

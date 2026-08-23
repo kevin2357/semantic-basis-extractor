@@ -1,0 +1,96 @@
+{
+  "schema_version": "astrowoof.provider_economics_transaction_revision.v1",
+  "transaction_id": "pe_txn_0123456789abcdef01234567",
+  "native_run_id": "native_run_example",
+  "native_action_id": "paid_0123456789abcdef01234567",
+  "revision_number": 1,
+  "previous_revision_id": null,
+  "revision_id": "pe_rev_aaaaaaaaaaaaaaaaaaaaaaaa",
+  "observed_at": "2026-08-21T12:00:00Z",
+  "transaction_identity": {
+    "route_family": "exact_natal",
+    "paid_stage": "authoring_initial",
+    "provider_mechanism": "response",
+    "native_operation_ref": "exact_natal.initial.pass-01.attempt-01",
+    "pass_id": "initial-pass-01",
+    "attempt_number": 1,
+    "round_id": null,
+    "cardinality_kind": "single_action",
+    "members": []
+  },
+  "cohort_identity": {
+    "cohort_completeness": "complete",
+    "sbe_release": "proposal",
+    "route_contract": "astrowoof.semantic_closure_run.v0.9",
+    "generation_profile_id": "profile_example",
+    "profile_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "resource_bundle_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "request_geometry_version": "exact-authoring-packet.v1",
+    "request_geometry_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "model": "gpt-5.6",
+    "reasoning_effort": "medium",
+    "service_level": "default",
+    "maximum_output_tokens": 12000,
+    "price_book_version": "openai-public-2026-08-07.v1"
+  },
+  "authority_and_commitment": {
+    "commitment_micro_usd": 19000000,
+    "authorization_reference": "api_auth_example",
+    "consumption_reference": "native-consumption:paid_0123456789abcdef01234567"
+  },
+  "provider_operation": {
+    "provider": "openai",
+    "operation_kind": "response",
+    "operation_id": "resp_example",
+    "status": "completed"
+  },
+  "usage_and_cost": {
+    "settlement_disposition": "provider_usage_reported",
+    "usage": {
+      "input_tokens": 10000,
+      "cached_input_tokens": 8000,
+      "output_tokens": 2000,
+      "reasoning_tokens": 500
+    },
+    "sbe_estimated_micro_usd": 114000,
+    "sbe_estimate_price_book_version": "openai-public-2026-08-07.v1",
+    "provider_reported_micro_usd": null
+  },
+  "timing": {
+    "prepared_at": "2026-08-21T11:58:00Z",
+    "authorized_at": "2026-08-21T11:58:05Z",
+    "submission_intent_at": "2026-08-21T11:58:06Z",
+    "provider_identity_durable_at": "2026-08-21T11:58:07Z",
+    "provider_terminal_observed_at": "2026-08-21T12:00:00Z",
+    "reconciliation_completed_at": "2026-08-21T12:00:01Z",
+    "native_settled_at": "2026-08-21T12:00:01Z",
+    "create_http_duration_ms": 850,
+    "observed_provider_pending_ms": 113000,
+    "native_action_span_ms": 121000,
+    "provider_reported_duration_ms": null,
+    "retrieval_attempt_refs": ["response-diagnostics/paid_example.attempt-0001.json"]
+  },
+  "editorial_outcome": {
+    "status": "not_yet_evaluated",
+    "retry_reason_category": null
+  },
+  "native_outcome": {
+    "status": "in_progress",
+    "delivery_publishable": false
+  },
+  "provenance": {
+    "action_binding_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "request_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "native_result_id": "nres_example",
+    "native_result_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "journal_range_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "snapshot_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "publication_receipt_id": "nreceipt_example",
+    "publication_receipt_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "usage_evidence_ref": "spend-ledger:paid_0123456789abcdef01234567:reported.usage",
+    "api_reconciliation_join": {
+      "native_run_id": "native_run_example",
+      "native_action_id": "paid_0123456789abcdef01234567"
+    }
+  }
+}

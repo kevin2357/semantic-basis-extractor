@@ -39,3 +39,19 @@
   current-state projection in the Slice 1/5 gates.
 - Reconciled sprint status and evidence bookkeeping. No runtime, schema, provider,
   spend, or API database behavior changed.
+
+## 2026-08-21 — Slice 1 observation contract proposal
+
+- Proposed `astrowoof.provider_economics_transaction_revision.v1` as a closed,
+  transaction-grained, cumulative append-only revision contract.
+- Kept native run/action identity authoritative: one interactive paid action or one
+  Batch round per transaction, with ordered Batch members beneath one authority.
+- Defined distinct provider, editorial, and native outcomes; explicit missing,
+  partial, estimated, provider-reported, and API-reconciled monetary semantics; and
+  multiple named timing bases.
+- Proposed exact predecessor/idempotency and monotonic sequence rules plus an API-
+  owned immutable revision store/current projection ingestion pattern.
+- Added three proposal examples. They are review aids, not packaged schemas or
+  accepted fixtures.
+- Provider calls: 0. Spend: USD 0. Runtime/source/schema changes: none.
+- Paused at the planned joint SBE/API schema and ownership review gate.

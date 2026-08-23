@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 0 complete and API-reviewed; Slice 1 contract proposal next
+Status: Slice 1 contract proposal complete; awaiting joint SBE/API review
 
 ## Objective
 

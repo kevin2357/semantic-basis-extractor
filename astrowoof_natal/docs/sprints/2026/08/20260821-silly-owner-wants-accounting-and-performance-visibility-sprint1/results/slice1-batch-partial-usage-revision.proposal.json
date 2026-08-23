@@ -1,0 +1,42 @@
+{
+  "schema_version": "astrowoof.provider_economics_transaction_revision.v1",
+  "transaction_id": "pe_txn_batch0123456789abcdef0123",
+  "native_run_id": "native_run_batch_example",
+  "native_action_id": "paid_batch0123456789abcdef0123",
+  "revision_number": 1,
+  "previous_revision_id": null,
+  "revision_id": "pe_rev_batchaaaaaaaaaaaaaaaa",
+  "observed_at": "2026-08-21T12:00:00Z",
+  "transaction_identity": {
+    "route_family": "bounded_natal",
+    "paid_stage": "authoring_initial",
+    "provider_mechanism": "batch",
+    "native_operation_ref": "bounded_natal.initial.round-01",
+    "pass_id": null,
+    "attempt_number": 1,
+    "round_id": "batch-round-01",
+    "cardinality_kind": "batch_round",
+    "members": [
+      {"member_id": "pass-01", "ordinal": 1, "status": "completed", "usage_disposition": "reported"},
+      {"member_id": "pass-02", "ordinal": 2, "status": "completed", "usage_disposition": "reported"},
+      {"member_id": "pass-03", "ordinal": 3, "status": "completed", "usage_disposition": "unavailable"},
+      {"member_id": "pass-04", "ordinal": 4, "status": "completed", "usage_disposition": "reported"},
+      {"member_id": "pass-05", "ordinal": 5, "status": "failed", "usage_disposition": "unavailable"},
+      {"member_id": "pass-06", "ordinal": 6, "status": "completed", "usage_disposition": "reported"}
+    ]
+  },
+  "usage_and_cost": {
+    "settlement_disposition": "provider_usage_unavailable_billing_reconciliation_pending",
+    "usage": null,
+    "sbe_estimated_micro_usd": null,
+    "sbe_estimate_price_book_version": null,
+    "provider_reported_micro_usd": null
+  },
+  "cardinality_assertion": {
+    "paid_transaction_count": 1,
+    "provider_operation_count": 1,
+    "global_reservation_count": 1,
+    "member_count": 6
+  },
+  "proposal_note": "The full closed fixture will repeat cohort, authority, provider, timing, outcome, and provenance sections after schema approval. Partial member usage cannot settle the round as a reported-cost transaction."
+}

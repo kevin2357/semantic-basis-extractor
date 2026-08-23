@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 0 complete and API-reviewed; Slice 1 contract proposal next
+Status: Slice 1 contract proposal complete; awaiting joint SBE/API review
 
 - Provider calls: 0
 - Spend: USD 0
@@ -21,3 +21,12 @@ Status: Slice 0 complete and API-reviewed; Slice 1 contract proposal next
 - API review: `API Agent Slice 0 Review and Suggestions.md`.
 - Gate result: Slice 0 PASS; transaction-grained append-only revision direction
   approved for Slice 1 proposal. No schema is frozen yet.
+- Slice 1 proposal:
+  `PROVIDER ECONOMICS OBSERVATION CONTRACT PROPOSAL.md`.
+- Proposal examples:
+  - `results/slice1-interactive-settlement-revision.proposal.json`;
+  - `results/slice1-interactive-editorial-revision.proposal.json`; and
+  - `results/slice1-batch-partial-usage-revision.proposal.json`.
+- Slice 1 checks: JSON examples parse; documentation whitespace check passes.
+- Slice 1 gate: PAUSED. No runtime schema or validator will be frozen until joint
+  SBE/API approval.
