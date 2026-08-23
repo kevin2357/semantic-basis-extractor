@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.16
 
-Status: qualified artifact; immutable tag and publication pending
+Status: published and independently verified
 
 ## Summary
 
@@ -47,3 +47,8 @@ consumers but must not be silently reinterpreted as v0.6.
 
 Candidate wheel SHA-256:
 `56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339`.
+
+The immutable annotated tag points to
+`21705500a3aa6c5f3310a0aaee8aee8a71e4bdac`. GitHub reports the published wheel
+at 893028 bytes with the same SHA-256 as the qualified local artifact. This
+post-publication record does not move the tag.

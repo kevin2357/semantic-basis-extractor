@@ -173,3 +173,13 @@
 - Fresh-venv installed release smoke and provider-pending qualification passed.
 - No provider network call, credential, paid work, or retained QA workspace was
   used.
+
+## 2026-08-23 — 0.4.16 publication
+
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.16` at
+  `21705500a3aa6c5f3310a0aaee8aee8a71e4bdac`.
+- Published GitHub release `375150470` with the qualified wheel and checksums.
+- GitHub reports wheel asset `525987851` at 893028 bytes with SHA-256
+  `56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339`.
+- Published digest matches the local qualified artifact exactly.
+- This post-publication documentation commit does not move the immutable tag.

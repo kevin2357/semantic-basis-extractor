@@ -1,7 +1,7 @@
 # Temporal Lifecycle API Consumer Handoff
 
 Date: 2026-08-23
-Status: implementation and installed-wheel qualification complete; API and owner approved 0.4.16 release
+Status: released in immutable SBE 0.4.16; publication independently verified
 
 ## Supported read boundary
 

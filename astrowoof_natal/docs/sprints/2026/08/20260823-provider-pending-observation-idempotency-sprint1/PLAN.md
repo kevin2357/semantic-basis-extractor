@@ -1,7 +1,7 @@
 # Provider-Pending Observation Idempotency Sprint 1 Plan
 
 Date: 2026-08-23
-Status: all slices complete; API and owner approved immutable 0.4.16 release
+Status: complete; SBE 0.4.16 tagged, published, and independently verified
 Mode: provider-free reproduction and contract work first
 
 ## Purpose

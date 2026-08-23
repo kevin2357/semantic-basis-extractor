@@ -1,6 +1,6 @@
 # Sprint 1 Evidence
 
-Status: all slices complete; API and owner approved immutable 0.4.16 release
+Status: complete; SBE 0.4.16 tagged, published, and independently verified
 
 - Provider calls/retrievals: 0
 - Spend: USD 0
@@ -157,3 +157,12 @@ Status: all slices complete; API and owner approved immutable 0.4.16 release
   bounded 4+2 reconciliation, no duplicates, and distinct post-retrieval basis.
 - Wheel inventory: 136 entries, 80 resources, `py.typed` present, no bytecode.
 - Provider network calls/spend: 0 / USD 0.
+
+## Publication evidence
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.16`.
+- Tag target: `21705500a3aa6c5f3310a0aaee8aee8a71e4bdac`.
+- GitHub release ID: `375150470`; published at `2026-08-23T08:03:34Z`.
+- Published wheel asset ID: `525987851`; bytes: 893028.
+- GitHub asset digest exactly matches the qualified local wheel SHA-256.
+- Post-publication evidence is recorded after the tag and does not move it.
