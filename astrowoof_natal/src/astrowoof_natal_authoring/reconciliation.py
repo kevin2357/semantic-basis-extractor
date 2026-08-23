@@ -123,6 +123,7 @@ def native_provider_route_identity(
     elif (
         route_family == "bounded_natal" and kind == "batch"
         and service == "batch"
+        and contract == BOUNDED_RUN_CONTRACT
         and stage in {"authoring_initial", "creative_retry"}
         and native_ref.startswith("bounded_natal.v2:batch-round-")
     ):

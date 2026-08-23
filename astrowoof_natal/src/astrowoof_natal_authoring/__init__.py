@@ -62,6 +62,19 @@ from .lifecycle_contracts import (  # noqa: E402
     validate_lifecycle_inspection_v04,
     validate_lifecycle_inspection_v05,
 )
+from .temporal_lifecycle import (  # noqa: E402
+    build_external_authority_request_v2,
+    build_lifecycle_inspection_v06,
+    canonical_utc_instant,
+    inspect_temporal_lifecycle,
+    read_temporal_external_authority_schema,
+    read_temporal_lifecycle_schema,
+    temporal_transition_errors,
+    validate_external_authority_request_v2,
+    validate_external_authority_request_v2_against_inspection,
+    validate_lifecycle_inspection_v06,
+    validate_temporal_transition,
+)
 from .pending_lifecycle_qa import (  # noqa: E402
     run_provider_pending_lifecycle_qualification,
 )
@@ -115,6 +128,17 @@ __all__ = [
     "validate_transition_journal",
     "validate_lifecycle_inspection_v04",
     "validate_lifecycle_inspection_v05",
+    "build_lifecycle_inspection_v06",
+    "build_external_authority_request_v2",
+    "canonical_utc_instant",
+    "inspect_temporal_lifecycle",
+    "read_temporal_external_authority_schema",
+    "read_temporal_lifecycle_schema",
+    "temporal_transition_errors",
+    "validate_lifecycle_inspection_v06",
+    "validate_external_authority_request_v2",
+    "validate_external_authority_request_v2_against_inspection",
+    "validate_temporal_transition",
     "run_provider_pending_lifecycle_qualification",
     "build_external_authority_request",
     "build_external_authority_refusal",
