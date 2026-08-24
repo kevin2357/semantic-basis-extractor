@@ -103,3 +103,18 @@
   0.
 - Gate: API/owner review before committing release source or producing the final
   source-commit-bound reproducible wheel.
+
+## 2026-08-24 — Final 0.4.17 release qualification
+
+- Owner and API approved immutable 0.4.17 publication.
+- Committed and pushed artifact source as
+  `6da874eb52934ad259048c1ca8abb90238df828d`.
+- Built the wheel twice with source epoch `1787589134`; both builds produced
+  SHA-256 `54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d`.
+- Complete committed-source suite: 593 passed, 30 existing environment/opt-in
+  skips.
+- Exact final-wheel bridge qualification: 10 passed.
+- Exact final-wheel generic installed release smoke: pass.
+- External provider calls/creates/spend and retained Aster access: 0.
+- Gate: release record lock, immutable tag, publication, and remote digest
+  verification authorized.

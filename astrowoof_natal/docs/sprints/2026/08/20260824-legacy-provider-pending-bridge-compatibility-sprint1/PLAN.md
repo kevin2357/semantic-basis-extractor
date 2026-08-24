@@ -1,8 +1,8 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Plan
 
 Date: 2026-08-24
-Status: Slices 0–4 complete; 0.4.17 patch candidate installed-wheel qualified and
-awaiting API/owner release authorization
+Status: Slices 0–4 complete; 0.4.17 final artifact qualified and publication in
+progress under owner/API authorization
 
 ## Objective
 

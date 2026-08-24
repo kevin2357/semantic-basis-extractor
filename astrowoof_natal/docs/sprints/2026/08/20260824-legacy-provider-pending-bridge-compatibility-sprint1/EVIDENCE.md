@@ -1,7 +1,7 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Evidence
 
-Status: Slices 0–4 complete; 0.4.17 installed patch candidate qualified; final
-immutable release authorization pending
+Status: Slices 0–4 complete; final 0.4.17 artifact qualified; immutable publication
+in progress under owner/API authorization
 
 - External OpenAI/network calls: 0
 - Local scripted retrieval GETs: 6 during installed Slice 1 qualification
@@ -107,3 +107,18 @@ immutable release authorization pending
 - Spend: USD 0. Retained Aster access: 0.
 - The candidate is not the final immutable artifact: final wheel bytes must be
   rebuilt reproducibly from the committed release-source identity.
+
+## Final release artifact evidence
+
+- Artifact source commit: `6da874eb52934ad259048c1ca8abb90238df828d`.
+- Source date epoch: `1787589134`.
+- Two byte-identical builds: pass.
+- Final wheel SHA-256:
+  `54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d`.
+- Final wheel bytes: 893739; entries: 136; packaged resources: 80;
+  `py.typed`: present; bytecode/cache entries: 0.
+- Complete source suite: 593 passed, 30 existing environment/opt-in skips.
+- Installed bridge qualification: 10 passed.
+- Installed release smoke: pass.
+- External OpenAI/network calls: 0. Provider POST/create/submit/retry: 0.
+- Spend: USD 0. Retained Aster access: 0.
