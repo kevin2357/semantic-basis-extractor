@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.operator_retirement_consumer_fixture_manifest.v1",
+  "candidate_only_not_release_authority": true,
+  "candidate_wheel": {
+    "filename": "astrowoof_natal_authoring-0.4.18-py3-none-any.whl",
+    "sha256": "e084e085bf090a5358d934e37bc6aea435ae3448f96bc625e3746f5e77d6e2bc"
+  },
+  "artifacts": {
+    "operator_retirement_contract_schema_sha256": "7ae51b5a85d2787861c28b033cab35bdf1201b656795a86674d8cdca73deb866",
+    "qualification_schema_sha256": "97e4d84894e171204cc9aeb9a7a006cd98410bd9347d4338b2276500afb9fc7d",
+    "eligible_request_fixture_sha256": "744cce7f2e41636b4c1e9761b971b9ee833ef839c11d58a49377192d7b00635d",
+    "eligible_assessment_fixture_sha256": "95ab1e7191b6949919b70db8b16cdc1cf584e3721e17c03976a34a198606ef17",
+    "qualification_receipt_internal_sha256": "e247fbb47f66a3a5876d500bb7bd0c41e82cbc42a0f214034193c61022903240",
+    "qualification_receipt_file_sha256": "11d21558e908b4661250e3764e033ce720c51272f136c91ac09b6cef35a29a2b"
+  },
+  "provider_io_performed_count": 0,
+  "retained_qa_workspace_access_count": 0
+}

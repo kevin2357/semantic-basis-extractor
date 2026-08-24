@@ -8,7 +8,7 @@ import logging
 import os
 import tempfile
 import uuid
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, TypedDict
@@ -72,6 +72,7 @@ CAUSE_CODES = {
     "external_spend_reservation_unavailable", "external_product_policy_denied",
     "run_cancelled_before_submission", "ambiguous_provider_submission",
     "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence",
+    "operator_retired",
 }
 COST_DISPOSITIONS = {
     "provider_usage_reported",
@@ -636,11 +637,13 @@ def _publish_receipt(
 
 def publish_native_execution_result(
     run_dir: Path, *, command_kind: str, sbe_release: str, published_at: str,
-    event_emitter: Any = None,
+    event_emitter: Any = None, projection_refs: dict[str, Any] | None = None,
+    _writer_held: bool = False,
 ) -> dict[str, Any]:
     """Seal current native meaning as result + full snapshot + immutable receipt."""
     run_dir = run_dir.resolve()
-    with _exclusive_lifecycle_lock(run_dir):
+    lock = nullcontext() if _writer_held else _exclusive_lifecycle_lock(run_dir)
+    with lock:
         state = load_json(run_dir / "run.json")
         bind_logging_context(
             run_id=state.get("run_id"), current_state=state.get("status")
@@ -738,7 +741,7 @@ def publish_native_execution_result(
             "outcome": outcome, "cause_code": cause,
             "action_ids": [item["action_id"] for item in (state.get("spend_ledger") or {}).get("actions", [])],
             "provider_operations": [deepcopy(item.get("provider")) for item in (state.get("spend_ledger") or {}).get("actions", []) if item.get("provider")],
-            "projection_refs": {},
+            "projection_refs": deepcopy(projection_refs or {}),
         })
         from .closure import write_workspace_snapshot, sha256_file
         write_workspace_snapshot(run_dir)

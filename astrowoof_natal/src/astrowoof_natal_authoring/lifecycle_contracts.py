@@ -206,6 +206,7 @@ TERMINAL_REASONS = (
     "external_spend_reservation_unavailable",
     "external_product_policy_denied",
     "run_cancelled_before_submission",
+    "operator_retired",
 )
 
 DENIAL_TERMINAL_REASONS = (

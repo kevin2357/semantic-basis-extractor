@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.operator_retirement_request.v1",
+  "run_id": "run_retirement_fixture_001",
+  "route_family": "exact_natal",
+  "route_contract": "astrowoof.semantic_closure_run.v0.9",
+  "logical_workspace_root": "/work/run/retirement-fixture",
+  "expected_status": "AWAITING_SPEND_AUTHORIZATION",
+  "expected_state_revision": 9,
+  "expected_snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "checkpoint_basis_sha256": "2718891ceb172e11ee116e229817af4ece8a066af427a033847ee5b41787c799",
+  "terminal_action_closure_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "requested_terminal_status": "POLICY_STOPPED",
+  "requested_terminal_cause": "operator_retired",
+  "reason_code": "operator_abandoned_quiescent_run",
+  "operator_audit_reference": "api:operator-retirement:fixture-001",
+  "human_reason": "Sanitized contract fixture",
+  "request_sha256": "4c697b03e668b83adf09384626addb5ff36cb912bbed077a52c3e1c604f1e3f0"
+}

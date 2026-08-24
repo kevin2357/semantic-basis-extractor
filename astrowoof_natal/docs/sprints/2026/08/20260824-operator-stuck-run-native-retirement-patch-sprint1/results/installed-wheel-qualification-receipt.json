@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.operator_retirement_qualification.v1",
+  "qualification_mode": "installed_wheel_provider_free",
+  "sbe_release": "0.4.18",
+  "outcome": "passed",
+  "checks": {
+    "public_contract": true,
+    "eligible_dry_run": true,
+    "applied_terminal_transition": true,
+    "sealed_native_reader": true,
+    "exact_replay": true,
+    "compatible_already_retired": true,
+    "stale_refusal": true,
+    "provider_ambiguity_refusal": true,
+    "providerless_unresolved_refusal": true,
+    "unsupported_route_refusal": true,
+    "zero_provider_io": true
+  },
+  "provider_io_performed_count": 0,
+  "fixture_contract_sha256": "7ae51b5a85d2787861c28b033cab35bdf1201b656795a86674d8cdca73deb866",
+  "receipt_sha256": "e247fbb47f66a3a5876d500bb7bd0c41e82cbc42a0f214034193c61022903240"
+}

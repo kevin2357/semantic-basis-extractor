@@ -1,0 +1,19 @@
+{
+  "contract": "astrowoof.api_operator_retirement_fence_expectation.v1",
+  "before_sbe_invocation": {
+    "api_job_custody": "operator_retirement_pending",
+    "ordinary_worker_continuation_blocked": true,
+    "api_resources_released": false
+  },
+  "sbe_authority": {
+    "may_assert_api_state": false,
+    "may_release_api_resources": false
+  },
+  "after_validated_sbe_success": {
+    "api_ingests_result_transactionally": true,
+    "api_may_release_only_matching_resources": true
+  },
+  "interrupted_api_finalization": {
+    "recovery": "exact_replay_of_sealed_sbe_result"
+  }
+}

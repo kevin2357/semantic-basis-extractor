@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.operator_retirement_assessment.v1",
+  "mode": "dry_run",
+  "outcome": "eligible",
+  "request_sha256": "4c697b03e668b83adf09384626addb5ff36cb912bbed077a52c3e1c604f1e3f0",
+  "run_id": "run_retirement_fixture_001",
+  "route_family": "exact_natal",
+  "logical_workspace_root": "/work/run/retirement-fixture",
+  "state_revision": 9,
+  "snapshot_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "checkpoint_basis_sha256": "2718891ceb172e11ee116e229817af4ece8a066af427a033847ee5b41787c799",
+  "terminal_action_closure_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "retirement_quiescent": true,
+  "failed_predicates": [],
+  "mutation_performed": false,
+  "native_result_published": false,
+  "provider_io_performed_count": 0
+}

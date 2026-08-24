@@ -92,6 +92,20 @@ from .external_authority_qa import (  # noqa: E402
     run_external_authority_qualification,
     validate_external_authority_qualification_receipt,
 )
+from .operator_retirement import (  # noqa: E402
+    assess_operator_retirement,
+    build_operator_retirement_request,
+    execute_operator_retirement,
+    read_operator_retirement_schema,
+    validate_operator_retirement_assessment,
+    validate_operator_retirement_request,
+    validate_operator_retirement_result,
+)
+from .operator_retirement_qa import (  # noqa: E402
+    read_operator_retirement_qualification_schema,
+    run_operator_retirement_qualification,
+    validate_operator_retirement_qualification,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -150,4 +164,14 @@ __all__ = [
     "read_external_authority_qualification_schema",
     "run_external_authority_qualification",
     "validate_external_authority_qualification_receipt",
+    "assess_operator_retirement",
+    "build_operator_retirement_request",
+    "execute_operator_retirement",
+    "read_operator_retirement_schema",
+    "validate_operator_retirement_assessment",
+    "validate_operator_retirement_request",
+    "validate_operator_retirement_result",
+    "read_operator_retirement_qualification_schema",
+    "run_operator_retirement_qualification",
+    "validate_operator_retirement_qualification",
 ]
