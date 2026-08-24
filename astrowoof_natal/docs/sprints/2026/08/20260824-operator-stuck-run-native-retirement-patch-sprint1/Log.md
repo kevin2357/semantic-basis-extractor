@@ -145,3 +145,10 @@
 - Began the complete source-suite gate. Tagging and publication remain pending the
   final evidence and explicit owner authorization.
 - Complete source suite passed: 623 tests; 33 environment/opt-in skips.
+- Created artifact-source commit `3151c4fc15d1436e0c250228c2069e4771be30da`.
+- Built twice at epoch `1787615331`; both 909960-byte wheels have SHA-256
+  `6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79`.
+- Generic installed release smoke passed against the isolated final wheel.
+- Installed operator-retirement qualification passed with receipt SHA-256
+  `37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f`.
+- Final tag/publication remains behind explicit owner authorization.

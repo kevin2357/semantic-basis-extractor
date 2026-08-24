@@ -22,9 +22,15 @@ remain API-owned.
 ## Qualification
 
 - Complete source suite: 623 passed; 33 environment/opt-in skips.
+- Artifact source commit: `3151c4fc15d1436e0c250228c2069e4771be30da`.
+- Fixed build epoch: `1787615331`.
+- Two byte-identical wheel builds; SHA-256
+  `6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79`.
+- Generic installed release smoke: pass.
+- Installed operator-retirement qualification: pass; receipt SHA-256
+  `37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f`.
 - External provider/network calls: 0.
 - Provider POST/create/submit/retry calls: 0.
 - Spend: USD 0.
 
-The committed-source artifact identity, reproducible-build hash, and installed-wheel
-receipts are recorded after the artifact-source commit is created.
+Tagging and publication remain pending explicit owner authorization.

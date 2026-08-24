@@ -104,12 +104,18 @@ and the API handoff here.
   expected optional-schema skips.
 - Release version: 0.4.19 (fresh immutable patch candidate).
 - Complete source suite: 623 passed; 33 environment/opt-in skips.
-- Committed-source build identity, double-build equality, generic installed smoke,
-  retirement qualification, and final wheel hashes: pending completion of the
-  remaining Slice 5 gate.
+- Artifact-source commit:
+  `3151c4fc15d1436e0c250228c2069e4771be30da`.
+- Fixed build epoch: `1787615331`.
+- Two byte-identical 909960-byte wheels; SHA-256:
+  `6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79`.
+- Generic installed release smoke: pass.
+- Installed operator-retirement qualification: pass; receipt SHA-256:
+  `37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f`.
 - Provider I/O/network/credentials/spend: 0.
 - Retained QA workspace access/mutation: 0.
-- Tag/publication: not authorized yet.
+- Tag/publication: not authorized yet; Slice 5 release candidate is ready for the
+  final owner/API go.
 - Status: Slice 0 contract candidate complete; API review required before Slice 1.
 
 ## Slice 0 evidence
