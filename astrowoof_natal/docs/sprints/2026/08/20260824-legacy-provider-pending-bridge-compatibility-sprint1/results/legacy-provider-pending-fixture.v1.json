@@ -1,0 +1,75 @@
+{
+  "schema_version": "astrowoof.legacy_provider_pending_fixture.v1",
+  "qualification_only": true,
+  "sanitized": true,
+  "historical_contract": "lifecycle_v0.5_provider_pending",
+  "run": {
+    "run_id": "run_legacy_provider_pending_bridge_001",
+    "state_revision": 12,
+    "status": "WAITING_FOR_RESPONSE",
+    "run_schema_version": "astrowoof.semantic_closure_run.v0.9",
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "service_level": "interactive",
+    "initial_wave_state": "DETACHED"
+  },
+  "binding_defaults": {
+    "profile_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "stage": "authoring_initial",
+    "model": "gpt-5.6-terra",
+    "service_level": "interactive",
+    "maximum_output_tokens": 4000,
+    "commitment_micro_usd": 50000,
+    "price_book_version": "openai-public-2026-08-07.v1"
+  },
+  "reconciliation": {
+    "policy_version": "astrowoof.provider_reconciliation_policy.v0.2",
+    "not_due_observed_at": "2026-08-24T14:59:59Z",
+    "due_observed_at": "2026-08-24T15:00:00Z",
+    "maximum_due_actions_per_cycle": 4
+  },
+  "actions": [
+    {
+      "action_id": "paid_000000000000000000000001",
+      "pass_id": "bridge-pass-1",
+      "provider_response_id": "resp_legacy_bridge_01",
+      "route": "fixture-dog:authoring_initial:001",
+      "request_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "action_id": "paid_000000000000000000000002",
+      "pass_id": "bridge-pass-2",
+      "provider_response_id": "resp_legacy_bridge_02",
+      "route": "fixture-dog:authoring_initial:002",
+      "request_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "action_id": "paid_000000000000000000000003",
+      "pass_id": "bridge-pass-3",
+      "provider_response_id": "resp_legacy_bridge_03",
+      "route": "fixture-dog:authoring_initial:003",
+      "request_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    {
+      "action_id": "paid_000000000000000000000004",
+      "pass_id": "bridge-pass-4",
+      "provider_response_id": "resp_legacy_bridge_04",
+      "route": "fixture-dog:authoring_initial:004",
+      "request_sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "action_id": "paid_000000000000000000000005",
+      "pass_id": "bridge-pass-5",
+      "provider_response_id": "resp_legacy_bridge_05",
+      "route": "fixture-dog:authoring_initial:005",
+      "request_sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    {
+      "action_id": "paid_000000000000000000000006",
+      "pass_id": "bridge-pass-6",
+      "provider_response_id": "resp_legacy_bridge_06",
+      "route": "fixture-dog:authoring_initial:006",
+      "request_sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+    }
+  ]
+}

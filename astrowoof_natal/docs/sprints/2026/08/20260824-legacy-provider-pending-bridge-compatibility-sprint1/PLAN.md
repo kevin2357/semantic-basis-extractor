@@ -1,7 +1,7 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Plan
 
-Date: 2026-08-24  
-Status: planning complete; paused for owner and API review before Slice 0
+Date: 2026-08-24
+Status: Slice 0 complete and API-approved; Slice 1 in progress
 
 ## Objective
 
@@ -70,6 +70,8 @@ invent external authority, authorize new paid work, or mutate private native sta
    supported reconciliation command.
 
 ## Slice 0 — Freeze the historical fixture and command contract
+
+Status: complete; paused at the planned owner/API review gate.
 
 Create a sanitized, production-shaped exact-interactive workspace using supported
 SBE fixture/runtime builders. Freeze:
@@ -185,4 +187,3 @@ Stop and return for review if:
 - the command cannot publish API-ingestible evidence;
 - the bridge would require reinterpreting v0.5 as v0.6; or
 - qualification suggests touching the retained QA workspace.
-

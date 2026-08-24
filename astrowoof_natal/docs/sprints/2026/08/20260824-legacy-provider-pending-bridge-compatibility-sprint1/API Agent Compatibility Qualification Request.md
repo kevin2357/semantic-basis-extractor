@@ -1,6 +1,6 @@
 # API Agent Compatibility Qualification Request — Legacy Provider-Pending Bridge
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: request only; no implementation or provider activity
 
 ## Target historical shape
@@ -65,4 +65,3 @@ Please respond with one of:
 fixture required.
 3. **Unsupported/review-only:** explain the conflicting frozen invariants so
 the API can terminally retain Aster without inventing recovery authority.
-
