@@ -29,3 +29,23 @@
 - Provider calls, credentials, network, spend, retained-run access, and runtime
   source changes: 0.
 - Gate: paused for owner/API review before Slice 1 installed-wheel qualification.
+
+## 2026-08-24 — Slice 1 installed-wheel retrieval-only qualification
+
+- Incorporated API review by binding both the frozen recipe and command-contract
+  hashes in the manifest regression.
+- Committed and pushed API-approved Slice 0 as `0803e7b`.
+- Installed the immutable 0.4.16 wheel into a fresh virtual environment.
+- Invoked the real installed `astrowoof-semantic-closure` command against the
+  disposable frozen workspace and a scripted loopback Responses endpoint.
+- First cycle performed four unique GETs; second performed the remaining two;
+  neither performed POST/create/submit/retry.
+- Installed native-transition reader validated the sealed reconciliation result,
+  journal range, checkpoint basis, complete snapshot, and publication receipt.
+- Third immediate cycle returned nonmutating `not_due` with zero new retrievals or
+  native publication.
+- Spend authorization, reconciliation, legacy wave authority, and external grant
+  inputs were all rejected before file loading/provider activity.
+- Installed qualification result: 4 tests passed.
+- External provider network/spend and retained-run access: 0.
+- Gate: paused before Slice 2 replay/refusal/temporal matrix.

@@ -1,7 +1,7 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Plan
 
 Date: 2026-08-24
-Status: Slice 0 complete and API-approved; Slice 1 in progress
+Status: Slices 0–1 complete; Slice 2 pending owner/API review
 
 ## Objective
 
@@ -91,6 +91,8 @@ Gate: owner and API review of the frozen fixture semantics, command spelling,
 receipt shape, and API ingestion expectations before qualification execution.
 
 ## Slice 1 — Installed-wheel retrieval-only qualification
+
+Status: complete; installed 0.4.16 wheel passed the real public command gate.
 
 Install the exact published 0.4.16 wheel in an isolated environment. Drive the
 real public semantic-closure CLI/dispatcher against a disposable copy of the

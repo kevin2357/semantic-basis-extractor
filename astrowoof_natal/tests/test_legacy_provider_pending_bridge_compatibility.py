@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import hashlib
+import http.server
 import json
+import os
+import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 
@@ -154,7 +158,7 @@ class TestLegacyProviderPendingBridgeSlice0(unittest.TestCase):
             "astrowoof.legacy_provider_pending_fixture_manifest.v1",
             manifest["schema_version"],
         )
-        self.assertEqual("frozen_for_api_review", manifest["status"])
+        self.assertEqual("api_approved_and_installed_qualified", manifest["status"])
         self.assertEqual(6, manifest["fixture"]["action_count"])
         self.assertEqual(6, manifest["fixture"]["provider_identity_count"])
         self.assertEqual(
@@ -203,6 +207,231 @@ class TestLegacyProviderPendingBridgeSlice0(unittest.TestCase):
             )
             self.assertIsNone(due["external_authority_request"])
             self.assertIsNone(due["external_authority_refusal"])
+
+
+@unittest.skipUnless(
+    os.environ.get("SBE_RUN_INSTALLED_BRIDGE_QUALIFICATION") == "1",
+    "installed 0.4.16 bridge qualification is opt-in",
+)
+class TestInstalledLegacyProviderPendingBridgeSlice1(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.temporary = tempfile.TemporaryDirectory(
+            prefix="sbe-legacy-bridge-installed-"
+        )
+        cls.root = Path(cls.temporary.name).resolve()
+        cls.venv = cls.root / "venv"
+        cls.wheel = (
+            ROOT / "releases" / "0.4.16"
+            / "astrowoof_natal_authoring-0.4.16-py3-none-any.whl"
+        )
+        subprocess.run(
+            [sys.executable, "-m", "venv", str(cls.venv)],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        cls.python = cls.venv / "Scripts" / "python.exe"
+        cls.semantic_closure = cls.venv / "Scripts" / "astrowoof-semantic-closure.exe"
+        cls.native_transition = cls.venv / "Scripts" / "astrowoof-native-transition.exe"
+        subprocess.run(
+            [
+                str(cls.python), "-m", "pip", "install", "--no-deps",
+                str(cls.wheel),
+            ],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temporary.cleanup()
+
+    def test_real_installed_command_is_bounded_get_only_and_sealed(self) -> None:
+        run_dir = self.root / "pending-run"
+        run_dir.mkdir()
+        recipe, _state = materialize_legacy_fixture(run_dir)
+        requests: list[tuple[str, str]] = []
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(handler) -> None:  # noqa: N802
+                requests.append(("GET", handler.path))
+                response_id = handler.path.rsplit("/", 1)[-1]
+                body = json.dumps({
+                    "id": response_id,
+                    "status": "in_progress",
+                }).encode("utf-8")
+                handler.send_response(200)
+                handler.send_header("Content-Type", "application/json")
+                handler.send_header("Content-Length", str(len(body)))
+                handler.end_headers()
+                handler.wfile.write(body)
+
+            def do_POST(handler) -> None:  # noqa: N802
+                requests.append(("POST", handler.path))
+                handler.send_error(500, "POST is forbidden in bridge qualification")
+
+            def log_message(self, _format: str, *_args: object) -> None:
+                return
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        base_url = f"http://127.0.0.1:{server.server_port}/v1"
+        environment = {**os.environ, "OPENAI_API_KEY": "qualification-only-sentinel"}
+        command = [
+            str(self.semantic_closure),
+            "--run-dir", str(run_dir),
+            "--resume",
+            "--provider", "openai",
+            "--provider-reconciliation-cycle",
+            "--observed-at", recipe["reconciliation"]["due_observed_at"],
+            "--openai-base-url", base_url,
+            "--http-timeout-seconds", "2",
+            "--max-transport-retries", "0",
+        ]
+        try:
+            completed = subprocess.run(
+                command,
+                text=True,
+                capture_output=True,
+                check=False,
+                env=environment,
+                cwd=self.root,
+            )
+            self.assertEqual(3, completed.returncode, completed.stderr)
+            result = json.loads(completed.stdout)
+            self.assertEqual("detached_provider_pending", result["outcome"])
+            self.assertEqual(4, result["cycle"]["provider_retrieval_count"])
+            self.assertEqual(4, len(requests))
+            self.assertTrue(all(method == "GET" for method, _path in requests))
+            self.assertEqual(
+                set(result["cycle"]["retrieved_action_ids"]),
+                {
+                    item["action_id"]
+                    for item in recipe["actions"][:4]
+                },
+            )
+            self.assertTrue(all(
+                path.startswith("/v1/responses/resp_legacy_bridge_")
+                for _method, path in requests
+            ))
+            first_requested_ids = {
+                path.rsplit("/", 1)[-1] for _method, path in requests
+            }
+            self.assertEqual(
+                {
+                    item["provider_response_id"]
+                    for item in recipe["actions"][:4]
+                },
+                first_requested_ids,
+            )
+            checkpoint = result["result_checkpoint"]
+            artifact = run_dir / checkpoint["result_artifact"]["logical_path"]
+            self.assertTrue(artifact.is_file())
+            self.assertEqual(
+                checkpoint["result_artifact"]["sha256"],
+                hashlib.sha256(artifact.read_bytes()).hexdigest(),
+            )
+            native = subprocess.run(
+                [str(self.native_transition), "--run-dir", str(run_dir), "--latest"],
+                text=True,
+                capture_output=True,
+                check=False,
+                cwd=self.root,
+            )
+            self.assertEqual(0, native.returncode, native.stderr)
+            native_view = json.loads(native.stdout)
+            native_result = native_view["result"]
+            self.assertEqual("provider_reconciliation", native_result["command_kind"])
+            self.assertEqual("0.4.16", native_result["sbe_release"])
+            self.assertIsInstance(native_view.get("receipt"), dict)
+            self.assertEqual(
+                native_result["result_id"], native_view["receipt"]["result_id"]
+            )
+
+            after_due = workspace_hashes(run_dir)
+            request_count = len(requests)
+            second_wave = subprocess.run(
+                command,
+                text=True,
+                capture_output=True,
+                check=False,
+                env=environment,
+                cwd=self.root,
+            )
+            self.assertEqual(3, second_wave.returncode, second_wave.stderr)
+            second_result = json.loads(second_wave.stdout)
+            self.assertEqual("detached_provider_pending", second_result["outcome"])
+            self.assertEqual(2, second_result["cycle"]["provider_retrieval_count"])
+            self.assertEqual(request_count + 2, len(requests))
+            self.assertTrue(all(method == "GET" for method, _path in requests))
+            second_requested_ids = {
+                path.rsplit("/", 1)[-1]
+                for _method, path in requests[request_count:]
+            }
+            self.assertEqual(
+                {
+                    item["provider_response_id"]
+                    for item in recipe["actions"][4:]
+                },
+                second_requested_ids,
+            )
+            self.assertEqual(
+                {item["provider_response_id"] for item in recipe["actions"]},
+                first_requested_ids | second_requested_ids,
+            )
+            self.assertNotEqual(after_due, workspace_hashes(run_dir))
+
+            after_second_wave = workspace_hashes(run_dir)
+            request_count = len(requests)
+            not_due = subprocess.run(
+                command,
+                text=True,
+                capture_output=True,
+                check=False,
+                env=environment,
+                cwd=self.root,
+            )
+            self.assertEqual(3, not_due.returncode, not_due.stderr)
+            not_due_result = json.loads(not_due.stdout)
+            self.assertEqual("not_due", not_due_result["outcome"])
+            self.assertEqual(0, not_due_result["cycle"]["provider_retrieval_count"])
+            self.assertEqual(request_count, len(requests))
+            self.assertEqual(after_second_wave, workspace_hashes(run_dir))
+
+            forbidden_inputs = (
+                ["--spend-authorization", str(self.root / "authorization.json")],
+                ["--spend-reconciliation", str(self.root / "settlement.json")],
+                ["--initial-wave-authorization", str(self.root / "wave.json")],
+                [
+                    "--external-authority-request", str(self.root / "request.json"),
+                    "--external-authority-grant", str(self.root / "grant.json"),
+                ],
+            )
+            for forbidden_flags in forbidden_inputs:
+                with self.subTest(forbidden_flags=forbidden_flags):
+                    refused = subprocess.run(
+                        command + forbidden_flags,
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                        env=environment,
+                        cwd=self.root,
+                    )
+                    self.assertEqual(2, refused.returncode)
+                    self.assertIn(
+                        "provider reconciliation cannot apply spend authorization",
+                        refused.stderr,
+                    )
+                    self.assertEqual(request_count, len(requests))
+                    self.assertEqual(after_second_wave, workspace_hashes(run_dir))
+            self.assertEqual(6, len({path for _method, path in requests}))
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+            server.server_close()
 
 
 if __name__ == "__main__":
