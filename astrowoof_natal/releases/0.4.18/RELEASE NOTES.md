@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.18
 
-Status: qualified release candidate
+Status: published and independently digest-verified
 
 SBE 0.4.18 is a narrow temporal-lifecycle compatibility patch over 0.4.17.
 
@@ -28,5 +28,7 @@ and continued through their already-authorized native path.
 - Provider POST/create/submit/retry calls: 0.
 - Spend: USD 0.
 
-The immutable tag is `astrowoof-natal-authoring-v0.4.18`. Publication details
-and independent downloaded-asset verification are recorded in the manifest.
+The immutable tag is `astrowoof-natal-authoring-v0.4.18`. GitHub reports the
+published wheel at 893881 bytes with SHA-256
+`23322ab8fae2301c1266c526853df8b4fdecbf8eed96b60d6746eec42c81f08e`,
+exactly matching the qualified local artifact.
