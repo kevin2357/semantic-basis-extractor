@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.17
 
-Status: qualified for immutable publication
+Status: published and independently digest-verified
 
 SBE 0.4.17 is a narrow provider-reconciliation integrity patch over 0.4.16.
 
@@ -31,3 +31,7 @@ public lifecycle-state behavior changed.
 - Spend: USD 0.
 - Retained Aster workspace access: 0.
 
+The immutable tag is `astrowoof-natal-authoring-v0.4.17`. GitHub reports the
+published wheel at 893739 bytes with SHA-256
+`54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d`,
+exactly matching the qualified local artifact.

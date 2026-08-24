@@ -1,7 +1,6 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Evidence
 
-Status: Slices 0–4 complete; final 0.4.17 artifact qualified; immutable publication
-in progress under owner/API authorization
+Status: complete; SBE 0.4.17 tagged, published, and remotely digest-verified
 
 - External OpenAI/network calls: 0
 - Local scripted retrieval GETs: 6 during installed Slice 1 qualification
@@ -87,6 +86,20 @@ in progress under owner/API authorization
 - Complete repository result: 592 passed, 29 existing environment/opt-in skips.
 - External OpenAI/network calls: 0. Provider create/POST/submit/retry: 0.
 - Spend: USD 0. Retained Aster access: 0.
+
+## Immutable publication evidence
+
+- Tag: `astrowoof-natal-authoring-v0.4.17`.
+- Tag commit: `d61d871b0e00412b55cf9da5b9beea8016dd2513`.
+- Annotated tag object: `0133a077c01ba98992f92f49f8018b8388240cc5`.
+- GitHub release ID: 375849069.
+- Wheel asset ID: 527887616; checksum asset ID: 527887619.
+- Published wheel bytes: 893739.
+- Published wheel SHA-256:
+  `54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d`.
+- Local-qualified/published digest match: pass.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.17`.
 - Source change is limited to reconciliation preflight plus focused regression and
   sprint evidence.
 - Gate: build a fresh immutable patch candidate, rerun the installed-wheel bridge

@@ -1,0 +1,20 @@
+{
+  "schema_version": "astrowoof.sbe_legacy_provider_pending_bridge_release.v1",
+  "version": "0.4.17",
+  "decision": "supported_after_narrow_patch",
+  "artifact_source_commit": "6da874eb52934ad259048c1ca8abb90238df828d",
+  "tag_commit": "d61d871b0e00412b55cf9da5b9beea8016dd2513",
+  "tag": "astrowoof-natal-authoring-v0.4.17",
+  "release_id": 375849069,
+  "wheel_asset_id": 527887616,
+  "wheel_bytes": 893739,
+  "wheel_sha256": "54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d",
+  "published_digest_match": true,
+  "full_source_tests_passed": 593,
+  "installed_bridge_tests_passed": 10,
+  "installed_release_smoke": "pass",
+  "external_openai_network_calls": 0,
+  "provider_create_calls": 0,
+  "provider_spend_usd": 0,
+  "retained_aster_access_count": 0
+}

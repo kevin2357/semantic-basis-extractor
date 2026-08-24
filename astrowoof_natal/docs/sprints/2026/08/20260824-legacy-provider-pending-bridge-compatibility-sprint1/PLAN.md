@@ -1,8 +1,7 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Plan
 
 Date: 2026-08-24
-Status: Slices 0–4 complete; 0.4.17 final artifact qualified and publication in
-progress under owner/API authorization
+Status: complete; SBE 0.4.17 tagged, published, and remotely digest-verified
 
 ## Objective
 

@@ -118,3 +118,14 @@
 - External provider calls/creates/spend and retained Aster access: 0.
 - Gate: release record lock, immutable tag, publication, and remote digest
   verification authorized.
+
+## 2026-08-24 — Immutable 0.4.17 publication
+
+- Locked release record at commit `d61d871b0e00412b55cf9da5b9beea8016dd2513`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.17`.
+- Published GitHub release 375849069 with wheel asset 527887616 and checksum asset
+  527887619.
+- GitHub-reported wheel SHA-256 exactly matches the qualified artifact:
+  `54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d`.
+- Sprint complete. This post-publication evidence commit does not move the immutable
+  tag.
