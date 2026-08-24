@@ -586,6 +586,41 @@ class TestLegacyProviderPendingBridgeSlice2(unittest.TestCase):
                 after["checkpoint_basis_sha256"],
             )
 
+    def test_temporal_projection_accepts_resolved_independent_action(self) -> None:
+        """A v0.5-valid resolved action remains inspectable under v0.6.
+
+        ``independent`` is the ordinary lifecycle vocabulary for an action
+        which no longer blocks the run.  This is the retained-workspace shape
+        reached after provider reconciliation, before a distinct external
+        authority request is admitted.
+        """
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            recipe, _state = materialize_legacy_fixture(root)
+            inspection = inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at=recipe["reconciliation"]["due_observed_at"],
+            )
+            action = inspection["action_inventory"]["actions"][0]
+            action.update({
+                "necessary": False,
+                "relationship": "independent",
+                "providerless_denial_eligible": False,
+                "eligibility_reason": "provider_identity_present",
+            })
+            validate_lifecycle_inspection_v05(inspection)
+
+            projected = build_lifecycle_inspection_v06(inspection)
+
+            self.assertEqual(
+                "independent",
+                projected["checkpoint_basis"]["action_inventory"]["actions"][0][
+                    "relationship"
+                ],
+            )
+            validate_lifecycle_inspection_v06(projected)
+
     def test_identity_conflict_is_review_only_and_never_retargets(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

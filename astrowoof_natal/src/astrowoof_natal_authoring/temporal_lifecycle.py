@@ -381,7 +381,13 @@ def _validate_checkpoint_basis(value: dict[str, Any], *, run_id: str) -> None:
             action["binding"]["stage"] not in PROVIDER_CUSTODY_STAGES
             or not isinstance(action["attempt"], int) or action["attempt"] < 1
             or action["state"] not in PROVIDER_ACTION_STATES
-            or action["relationship"] not in {"blocking", "nonblocking"}
+            # This is the closed v0.5 action-inventory vocabulary.  A resolved
+            # provider action is normally ``independent``; treating it as an
+            # invented ``nonblocking`` value made valid retained checkpoints
+            # impossible to project through temporal v0.6 inspection.
+            or action["relationship"] not in {
+                "blocking", "independent", "superseded"
+            }
             or not isinstance(action["route"], str) or not action["route"]
             or not all(isinstance(action[key], bool) for key in (
                 "necessary", "providerless_denial_eligible",
