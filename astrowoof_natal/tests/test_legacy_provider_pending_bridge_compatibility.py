@@ -25,6 +25,16 @@ from astrowoof_natal_authoring.lifecycle import inspect_lifecycle  # noqa: E402
 from astrowoof_natal_authoring.lifecycle_contracts import (  # noqa: E402
     validate_lifecycle_inspection_v05,
 )
+from astrowoof_natal_authoring.execution_events import (  # noqa: E402
+    ExecutionEventEmitter,
+)
+from astrowoof_natal_authoring.reconciliation import (  # noqa: E402
+    reconcile_provider_cycle,
+)
+from astrowoof_natal_authoring.temporal_lifecycle import (  # noqa: E402
+    build_lifecycle_inspection_v06,
+    validate_lifecycle_inspection_v06,
+)
 
 
 SPRINT = (
@@ -211,7 +221,7 @@ class TestLegacyProviderPendingBridgeSlice0(unittest.TestCase):
 
 @unittest.skipUnless(
     os.environ.get("SBE_RUN_INSTALLED_BRIDGE_QUALIFICATION") == "1",
-    "installed 0.4.16 bridge qualification is opt-in",
+    "installed bridge qualification is opt-in",
 )
 class TestInstalledLegacyProviderPendingBridgeSlice1(unittest.TestCase):
     @classmethod
@@ -221,9 +231,15 @@ class TestInstalledLegacyProviderPendingBridgeSlice1(unittest.TestCase):
         )
         cls.root = Path(cls.temporary.name).resolve()
         cls.venv = cls.root / "venv"
-        cls.wheel = (
-            ROOT / "releases" / "0.4.16"
-            / "astrowoof_natal_authoring-0.4.16-py3-none-any.whl"
+        cls.wheel = Path(os.environ.get(
+            "SBE_BRIDGE_QUALIFICATION_WHEEL",
+            str(
+                ROOT / "releases" / "0.4.16"
+                / "astrowoof_natal_authoring-0.4.16-py3-none-any.whl"
+            ),
+        )).resolve()
+        cls.expected_version = os.environ.get(
+            "SBE_BRIDGE_QUALIFICATION_VERSION", "0.4.16"
         )
         subprocess.run(
             [sys.executable, "-m", "venv", str(cls.venv)],
@@ -345,7 +361,7 @@ class TestInstalledLegacyProviderPendingBridgeSlice1(unittest.TestCase):
             native_view = json.loads(native.stdout)
             native_result = native_view["result"]
             self.assertEqual("provider_reconciliation", native_result["command_kind"])
-            self.assertEqual("0.4.16", native_result["sbe_release"])
+            self.assertEqual(self.expected_version, native_result["sbe_release"])
             self.assertIsInstance(native_view.get("receipt"), dict)
             self.assertEqual(
                 native_result["result_id"], native_view["receipt"]["result_id"]
@@ -432,6 +448,251 @@ class TestInstalledLegacyProviderPendingBridgeSlice1(unittest.TestCase):
             server.shutdown()
             thread.join(timeout=5)
             server.server_close()
+
+    def test_installed_binding_fence_refuses_first_or_deferred_member(self) -> None:
+        requests: list[tuple[str, str]] = []
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(handler) -> None:  # noqa: N802
+                requests.append(("GET", handler.path))
+                handler.send_error(500, "GET is forbidden for malformed inventory")
+
+            def do_POST(handler) -> None:  # noqa: N802
+                requests.append(("POST", handler.path))
+                handler.send_error(500, "POST is forbidden in bridge qualification")
+
+            def log_message(self, _format: str, *_args: object) -> None:
+                return
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        base_url = f"http://127.0.0.1:{server.server_port}/v1"
+        environment = {**os.environ, "OPENAI_API_KEY": "qualification-only-sentinel"}
+        try:
+            for malformed_index in (0, 4):
+                with self.subTest(malformed_index=malformed_index):
+                    run_dir = self.root / f"malformed-{malformed_index}"
+                    run_dir.mkdir()
+                    recipe, state = materialize_legacy_fixture(run_dir)
+                    state["spend_ledger"]["actions"][malformed_index]["binding"][
+                        "run_id"
+                    ] = "wrong-run"
+                    TestLegacyProviderPendingBridgeSlice2.rewrite(run_dir, state)
+                    before = workspace_hashes(run_dir)
+                    events_path = self.root / f"malformed-{malformed_index}.events.jsonl"
+                    completed = subprocess.run(
+                        [
+                            str(self.semantic_closure),
+                            "--run-dir", str(run_dir),
+                            "--resume", "--provider", "openai",
+                            "--provider-reconciliation-cycle",
+                            "--observed-at", recipe["reconciliation"]["due_observed_at"],
+                            "--openai-base-url", base_url,
+                            "--events-jsonl", str(events_path),
+                            "--http-timeout-seconds", "2",
+                            "--max-transport-retries", "0",
+                        ],
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                        env=environment,
+                        cwd=self.root,
+                    )
+                    self.assertEqual(3, completed.returncode, completed.stderr)
+                    result = json.loads(completed.stdout)
+                    self.assertEqual("review_required", result["outcome"])
+                    self.assertEqual(0, result["cycle"]["provider_retrieval_count"])
+                    self.assertNotIn("result_checkpoint", result)
+                    self.assertEqual([], requests)
+                    self.assertEqual(before, workspace_hashes(run_dir))
+                    events = [
+                        json.loads(line) for line in events_path.read_text(
+                            encoding="utf-8"
+                        ).splitlines()
+                    ]
+                    failures = [
+                        event for event in events
+                        if event["event_name"] == "execution.failed"
+                    ]
+                    self.assertEqual(1, len(failures))
+                    self.assertEqual(
+                        "provider_binding_integrity_mismatch",
+                        failures[0]["data"]["reason_code"],
+                    )
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+            server.server_close()
+
+
+class TestLegacyProviderPendingBridgeSlice2(unittest.TestCase):
+    @staticmethod
+    def rewrite(root: Path, state: dict) -> None:
+        (root / "run.json").write_text(
+            json.dumps(state, indent=2) + "\n", encoding="utf-8"
+        )
+        (root / "public-run.json").write_text(
+            json.dumps(public_run_state(state), indent=2) + "\n", encoding="utf-8"
+        )
+        write_workspace_snapshot(root)
+
+    def test_completed_retrieval_is_durable_and_creates_new_temporal_basis(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            recipe, _state = materialize_legacy_fixture(root)
+            before = build_lifecycle_inspection_v06(inspect_lifecycle(
+                root,
+                native_exclusive_access="declared",
+                observed_at=recipe["reconciliation"]["due_observed_at"],
+            ))
+            calls: list[str] = []
+
+            def retrieve(provider_id: str, _timeout: float) -> dict:
+                calls.append(provider_id)
+                return {
+                    "id": provider_id,
+                    "status": "completed",
+                    "output": [],
+                    "usage": {
+                        "input_tokens": 10,
+                        "output_tokens": 5,
+                        "total_tokens": 15,
+                    },
+                }
+
+            result = reconcile_provider_cycle(
+                root,
+                observed_at=recipe["reconciliation"]["due_observed_at"],
+                retrieve=retrieve,
+            )
+            self.assertEqual("progressed_local", result["outcome"])
+            self.assertEqual(4, len(calls))
+            self.assertEqual(4, len(set(calls)))
+            self.assertEqual(4, len(result["cycle"]["completed_action_ids"]))
+            for action_id in result["cycle"]["completed_action_ids"]:
+                evidence = (
+                    root / "lifecycle" / "provider-reconciliation"
+                    / f"{action_id}.response.json"
+                )
+                self.assertTrue(evidence.is_file())
+            validate_workspace_snapshot(
+                root, json.loads((root / "run.json").read_text(encoding="utf-8"))
+            )
+            after = build_lifecycle_inspection_v06(result["inspection"])
+            validate_lifecycle_inspection_v06(after)
+            self.assertNotEqual(
+                before["checkpoint_basis_sha256"],
+                after["checkpoint_basis_sha256"],
+            )
+
+    def test_identity_conflict_is_review_only_and_never_retargets(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            recipe, _state = materialize_legacy_fixture(root)
+            requested: list[str] = []
+
+            def wrong_identity(provider_id: str, _timeout: float) -> dict:
+                requested.append(provider_id)
+                return {"id": f"wrong_{provider_id}", "status": "in_progress"}
+
+            result = reconcile_provider_cycle(
+                root,
+                observed_at=recipe["reconciliation"]["due_observed_at"],
+                retrieve=wrong_identity,
+            )
+            self.assertEqual("review_required", result["outcome"])
+            self.assertEqual(4, len(requested))
+            persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
+            conflicted = [
+                item for item in persisted["spend_ledger"]["actions"]
+                if item["action_id"] in result["cycle"]["retrieved_action_ids"]
+            ]
+            self.assertTrue(all(
+                item["state"] == "AMBIGUOUS_PROVIDER_SUBMISSION"
+                and item["provider"]["id"] in requested
+                for item in conflicted
+            ))
+
+    def test_incomplete_snapshot_refuses_before_retrieval(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            recipe, _state = materialize_legacy_fixture(root)
+            (root / "unexpected-authoritative-byte.txt").write_text(
+                "not in snapshot\n", encoding="utf-8"
+            )
+            calls: list[str] = []
+            with self.assertRaisesRegex(ValueError, "snapshot is incomplete or changed"):
+                reconcile_provider_cycle(
+                    root,
+                    observed_at=recipe["reconciliation"]["due_observed_at"],
+                    retrieve=lambda provider_id, _timeout: calls.append(provider_id) or {},
+                )
+            self.assertEqual([], calls)
+
+    def test_missing_timing_or_provider_identity_never_retrieves_that_action(self) -> None:
+        cases = {
+            "timing": lambda action: action.pop("provider_reconciliation"),
+            "provider": lambda action: action.pop("provider"),
+        }
+        for name, mutate in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                recipe, state = materialize_legacy_fixture(root)
+                malformed = state["spend_ledger"]["actions"][0]
+                malformed_provider_id = malformed.get("provider", {}).get("id")
+                mutate(malformed)
+                self.rewrite(root, state)
+                calls: list[str] = []
+                try:
+                    result = reconcile_provider_cycle(
+                        root,
+                        observed_at=recipe["reconciliation"]["due_observed_at"],
+                        retrieve=lambda provider_id, _timeout: calls.append(provider_id) or {},
+                    )
+                except ValueError:
+                    result = None
+                self.assertNotIn(malformed_provider_id, calls)
+                if result is not None:
+                    self.assertLessEqual(len(calls), 4)
+
+    def test_binding_mismatch_anywhere_refuses_whole_cycle_without_mutation(self) -> None:
+        for malformed_index in (0, 4):
+            with (
+                self.subTest(malformed_index=malformed_index),
+                tempfile.TemporaryDirectory() as temporary,
+            ):
+                root = Path(temporary).resolve()
+                recipe, state = materialize_legacy_fixture(root)
+                malformed = state["spend_ledger"]["actions"][malformed_index]
+                malformed["binding"]["run_id"] = "wrong-run"
+                self.rewrite(root, state)
+                before = workspace_hashes(root)
+                calls: list[str] = []
+                events: list[dict] = []
+                emitter = ExecutionEventEmitter(release="test", sink=events.append)
+
+                result = reconcile_provider_cycle(
+                    root,
+                    observed_at=recipe["reconciliation"]["due_observed_at"],
+                    retrieve=lambda provider_id, _timeout: (
+                        calls.append(provider_id)
+                        or {"id": provider_id, "status": "in_progress"}
+                    ),
+                    event_emitter=emitter,
+                )
+
+                self.assertEqual("review_required", result["outcome"])
+                self.assertEqual([], calls)
+                self.assertEqual(0, result["cycle"]["provider_retrieval_count"])
+                self.assertNotIn("result_checkpoint", result)
+                self.assertEqual(before, workspace_hashes(root))
+                self.assertEqual(1, len(events))
+                self.assertEqual("execution.failed", events[0]["event_name"])
+                self.assertEqual(
+                    "provider_binding_integrity_mismatch",
+                    events[0]["data"]["reason_code"],
+                )
 
 
 if __name__ == "__main__":

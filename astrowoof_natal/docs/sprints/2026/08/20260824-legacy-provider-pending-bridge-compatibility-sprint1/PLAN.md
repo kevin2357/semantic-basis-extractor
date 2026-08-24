@@ -1,7 +1,8 @@
 # Legacy Provider-Pending Bridge Compatibility — Sprint 1 Plan
 
 Date: 2026-08-24
-Status: Slices 0–1 complete; Slice 2 pending owner/API review
+Status: Slices 0–4 complete; 0.4.17 patch candidate installed-wheel qualified and
+awaiting API/owner release authorization
 
 ## Objective
 
@@ -116,6 +117,8 @@ installed 0.4.16 wheel.
 
 ## Slice 2 — Replay, refusal, and temporal bridge matrix
 
+Status: complete; one narrow 0.4.16 binding-validation gap found
+
 Against fresh disposable fixture copies, prove:
 
 - immediate replay before due is typed `not_due`, byte-identical, and performs no
@@ -132,7 +135,13 @@ Against fresh disposable fixture copies, prove:
 Gate: the compatibility bridge never converts uncertainty or malformed historical
 evidence into create or recovery authority.
 
+Result: create authority remained impossible, but a binding/run-identity mismatch
+did not refuse the affected provider GET. The conditional patch gate is therefore
+active; runtime changes remain paused for owner/API review.
+
 ## Slice 3 — Decision receipt and API handoff
+
+Status: candidate receipt published; final immutable artifact coordinates pending
 
 Publish a concise closed qualification receipt containing:
 
@@ -156,10 +165,17 @@ without reading private SBE state or broadening provider authority.
 
 ## Slice 4 — Conditional patch decision only
 
+Status: activated and source-qualified
+
 This slice is entered only if Slices 0–3 expose a concrete 0.4.16 incompatibility.
 Record the smallest public correction, its safety contract, regression boundary,
 and whether a fresh immutable patch release is necessary. Return to owner/API
 review before changing runtime source.
+
+Decision: API selected whole-cycle refusal. The implementation validates the full
+provider-backed inventory before due-subset selection and returns nonmutating typed
+review with zero GETs for any binding/native-run contradiction. A fresh immutable
+patch is required after installed-wheel qualification.
 
 If qualification succeeds, close this slice as `not_needed`; do not rebuild or
 republish SBE.

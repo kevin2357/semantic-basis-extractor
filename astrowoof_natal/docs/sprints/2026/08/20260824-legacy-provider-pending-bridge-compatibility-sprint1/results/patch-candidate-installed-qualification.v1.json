@@ -1,0 +1,23 @@
+{
+  "schema_version": "astrowoof.sbe_legacy_provider_pending_bridge_qualification.v1",
+  "candidate_version": "0.4.17",
+  "candidate_wheel": "astrowoof_natal_authoring-0.4.17-py3-none-any.whl",
+  "candidate_wheel_sha256": "49ba8ddfb73d8f58786ceabe1d0bdbea49aaab39914a4336dbad73a70b783923",
+  "candidate_wheel_bytes": 893739,
+  "fixture_sha256": "e004817f68cc7f5a6572e56f1a019e742dd190ecd11e7a02b553cf540e551b33",
+  "command_contract_sha256": "fc2fb04cda55174fbc829666f275d342e8fee4022f80761c79b77d98a0e5974d",
+  "installed_test_count": 10,
+  "external_openai_network_calls": 0,
+  "local_scripted_retrieval_gets": 6,
+  "provider_post_create_submit_retry_calls": 0,
+  "malformed_binding_positions": [1, 5],
+  "malformed_binding_get_count": 0,
+  "malformed_binding_outcome": "review_required",
+  "malformed_binding_reason_event": "provider_binding_integrity_mismatch",
+  "malformed_binding_native_publication_count": 0,
+  "authoritative_workspace_unchanged_on_refusal": true,
+  "consistent_inventory_retrieval_cardinality": [4, 2],
+  "immediate_not_due_retrieval_count": 0,
+  "decision": "narrow_patch_required",
+  "release_status": "candidate_qualified_not_published"
+}
