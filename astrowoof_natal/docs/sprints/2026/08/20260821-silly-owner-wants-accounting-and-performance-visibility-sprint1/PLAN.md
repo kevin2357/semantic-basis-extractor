@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 1 implementation complete; awaiting API consumer review before Slice 2
+Status: Slice 2 implementation complete; ready for review before bounded-route parity
 
 ## Objective
 
@@ -53,6 +53,10 @@ Gate: joint SBE/API schema and ownership approval.
 - Emit only after the referenced ledger/result evidence is durable.
 
 Gate: no projection may change native execution, settlement, or provider behavior.
+
+Result: complete. Exact interactive actions and exact Batch rounds now project
+read-only transaction revisions from durable native state. Publication time alone
+does not mint a revision; provider settlement or later editorial/native facts do.
 
 ### Slice 3 — Bounded-route parity
 

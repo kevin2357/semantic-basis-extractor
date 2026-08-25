@@ -115,4 +115,22 @@
 - Published the API consumer handoff and fixture hash manifest.
 - Provider/network calls, credentials, workspace mutation, API database changes,
   and spend: 0.
-- Slice 1 is complete and paused for API consumer review before Slice 2 projection.
+- Slice 1 was approved by the API consumer and Slice 2 proceeded.
+
+## 2026-08-24 — Slice 2 exact-route projection
+
+- Added the read-only `project_exact_provider_economics_revision()` public Python
+  surface for exact-Natal v0.9 native actions.
+- Projected all five paid-stage classifications: initial authoring, creative retry,
+  polish, qualitative critic, and qualitative candidate.
+- Preserved one transaction per interactive paid action and one transaction per
+  Batch round; ordered Batch members remain evidence beneath round authority.
+- Preserved provider-pending, provider usage reported, usage unavailable pending
+  reconciliation, providerless no-work, and ambiguous submission as distinct
+  settlement dispositions.
+- Bound transaction identity to native run/action identity and rejected actions
+  whose complete binding does not join the run.
+- Made projection cumulative and revision-aware. A later observation timestamp
+  with byte-identical consumer facts returns no new revision.
+- Added focused exact interactive/Batch, five-stage, replay, settlement, ambiguity,
+  no-work, and binding-refusal regressions. No provider transport is reachable.

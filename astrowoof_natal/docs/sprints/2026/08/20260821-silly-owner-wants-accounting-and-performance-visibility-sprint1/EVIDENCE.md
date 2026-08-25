@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 1 implementation complete; awaiting API consumer review before Slice 2
+Status: Slice 2 implementation complete; ready for review before Slice 3
 
 - Provider calls: 0
 - Spend: USD 0
@@ -50,4 +50,25 @@ Status: Slice 1 implementation complete; awaiting API consumer review before Sli
   `results/slice1-consumer-fixture-manifest.json`.
 - Consumer handoff:
   `SLICE 1 - PROVIDER ECONOMICS CONSUMER HANDOFF.md`.
-- Slice 1 gate: PASS; API consumer review required before Slice 2 projection work.
+- Slice 1 gate: PASS; API consumer approved the transaction/revision contract.
+
+## Slice 2 — exact native projection
+
+- Public projector:
+  `project_exact_provider_economics_revision(state, action, observed_at,
+  previous_revision=None)`.
+- Input boundary: exact-Natal `astrowoof.semantic_closure_run.v0.9` plus one exact
+  spend-ledger action whose binding joins the native run.
+- Output boundary: one validated
+  `astrowoof.provider_economics_transaction_revision.v1`, or `None` when no newly
+  durable consumer fact exists relative to the supplied predecessor.
+- Exact interactive cardinality: one native paid action per transaction.
+- Exact Batch cardinality: one paid Batch round per transaction, with ordered
+  logical members retained only as member-level evidence.
+- Provider calls/submissions/retrievals: **0**.
+- Native mutations/snapshot writes: **0**; projection operates on supplied values.
+- Focused contract and projection suite: **16 passed** with schema validation
+  available in the isolated release virtual environment.
+- Public-package imports are exercised by the focused projection suite; the broad
+  closure suite remains a later release gate because this slice adds no execution
+  call site.

@@ -5,7 +5,7 @@ import re
 from copy import deepcopy
 from datetime import datetime, timezone
 from hashlib import sha256
-from importlib import resources
+from importlib import metadata, resources
 from typing import Any, Iterable, Mapping
 
 
@@ -109,6 +109,15 @@ PROVENANCE_KEYS = {
 }
 JOIN_KEYS = {"native_run_id", "native_action_id"}
 
+_EXACT_RUN_SCHEMA = "astrowoof.semantic_closure_run.v0.9"
+_ACTION_STAGE = {
+    "authoring_initial": "authoring_initial",
+    "creative_retry": "creative_retry",
+    "polish": "polish",
+    "qualitative_critic": "qualitative_critic",
+    "qualitative_candidate": "qualitative_candidate",
+}
+
 
 def _canonical_bytes(value: Any) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -134,6 +143,225 @@ def derive_revision_id(revision: Mapping[str, Any]) -> str:
     body = deepcopy(dict(revision))
     body.pop("revision_id", None)
     return "pe_rev_" + canonical_sha256(body)[:24]
+
+
+def _canonical_timestamp(value: Any, fallback: str) -> str:
+    candidate = value if isinstance(value, str) else fallback
+    parsed = datetime.fromisoformat(candidate.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def _usage(raw: Any) -> dict[str, int] | None:
+    if not isinstance(raw, Mapping):
+        return None
+    aliases = {
+        "input_tokens": ("input_tokens",),
+        "cached_input_tokens": ("cached_input_tokens", "input_cached_tokens"),
+        "output_tokens": ("output_tokens",),
+        "reasoning_tokens": ("reasoning_tokens", "output_reasoning_tokens"),
+    }
+    result: dict[str, int] = {}
+    for target, names in aliases.items():
+        found = next((raw[name] for name in names if isinstance(raw.get(name), int)), 0)
+        result[target] = max(0, found)
+    return result if any(result.values()) else None
+
+
+def _native_status(state: Mapping[str, Any]) -> tuple[str, bool]:
+    status = str(state.get("status") or "")
+    mapping = {
+        "DELIVERY_COMPLETE": ("delivery_complete", True),
+        "DELIVERY_WITH_WARNING": ("delivery_with_warning", True),
+        "FINAL_QA_REQUIRES_REVIEW": ("review_held", False),
+        "AMBIGUOUS_PROVIDER_SUBMISSION": ("review_held", False),
+        "BUDGET_EXHAUSTED": ("budget_exhausted", False),
+        "POLICY_STOPPED": ("policy_stopped", False),
+        "FAILED": ("failed", False),
+    }
+    return mapping.get(status, ("in_progress", False))
+
+
+def _provider_status(action: Mapping[str, Any]) -> str:
+    state = action.get("state")
+    provider = action.get("provider") if isinstance(action.get("provider"), Mapping) else {}
+    explicit = str(provider.get("status") or "").lower()
+    if explicit in PROVIDER_STATUSES:
+        return explicit
+    if state == "AMBIGUOUS_PROVIDER_SUBMISSION":
+        return "ambiguous"
+    if state in {"REPORTED", "COMPLETED"}:
+        return "completed"
+    if provider.get("id"):
+        return "pending"
+    return "not_created"
+
+
+def _settlement(action: Mapping[str, Any], provider_status: str) -> tuple[str, dict[str, int] | None, int | None, str | None]:
+    reported = action.get("reported") if isinstance(action.get("reported"), Mapping) else {}
+    usage = _usage(reported.get("usage"))
+    estimated = reported.get("estimated_micro_usd")
+    price_book = reported.get("price_book_version")
+    disposition = reported.get("cost_disposition")
+    if action.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION":
+        return "submission_ambiguous", None, None, None
+    if action.get("state") in {"DENIED_PROVIDERLESS", "SKIPPED_OPTIONAL", "BUDGET_EXHAUSTED"} and not (action.get("provider") or {}).get("id"):
+        return "no_provider_work_consumed", None, None, None
+    if disposition == "provider_usage_unavailable_billing_reconciliation_pending":
+        return disposition, None, None, None
+    if usage is not None and isinstance(estimated, int):
+        return "provider_usage_reported", usage, estimated, price_book if isinstance(price_book, str) else None
+    if provider_status in {"completed", "failed", "cancelled", "expired", "identity_conflict"}:
+        return "provider_usage_unavailable_billing_reconciliation_pending", None, None, None
+    return "provider_pending", None, None, None
+
+
+def _exact_pass_attempt(state: Mapping[str, Any], action: Mapping[str, Any]) -> tuple[str | None, int | None, Mapping[str, Any] | None]:
+    provider_id = ((action.get("provider") or {}).get("id") if isinstance(action.get("provider"), Mapping) else None)
+    request_sha = ((action.get("binding") or {}).get("request_sha256") if isinstance(action.get("binding"), Mapping) else None)
+    for pass_id, record in (state.get("passes") or {}).items():
+        for number, attempt in enumerate(record.get("attempts") or [], 1):
+            metadata = attempt.get("provider_metadata") if isinstance(attempt.get("provider_metadata"), Mapping) else {}
+            if provider_id and provider_id in {metadata.get("response_id"), metadata.get("batch_id")}:
+                return pass_id, number, attempt
+            if request_sha and request_sha in {attempt.get("prompt_sha256"), metadata.get("prompt_sha256")}:
+                return pass_id, number, attempt
+    return None, None, None
+
+
+def _batch_round(state: Mapping[str, Any], action: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    provider_id = ((action.get("provider") or {}).get("id") if isinstance(action.get("provider"), Mapping) else None)
+    for round_record in ((state.get("authoring_service") or {}).get("rounds") or []):
+        if provider_id and round_record.get("batch_id") == provider_id:
+            return round_record
+        if (action.get("binding") or {}).get("route") == f"batch-round-{int(round_record.get('round_number', 0)):03d}":
+            return round_record
+    return None
+
+
+def _cohort(state: Mapping[str, Any], action: Mapping[str, Any], *, mechanism: str) -> dict[str, Any]:
+    binding = action.get("binding") if isinstance(action.get("binding"), Mapping) else {}
+    profile = state.get("authoring_profile") if isinstance(state.get("authoring_profile"), Mapping) else {}
+    config = state.get("provider_configuration") if isinstance(state.get("provider_configuration"), Mapping) else {}
+    manifest = profile.get("manifest_sha256")
+    resource = profile.get("resource_bundle_sha256")
+    completeness = "complete" if all(isinstance(v, str) and _HEX64.fullmatch(v) for v in (manifest, resource)) else "legacy_unknown"
+    geometry = {
+        "route": binding.get("route"), "stage": binding.get("stage"),
+        "request_sha256": binding.get("request_sha256"), "mechanism": mechanism,
+    }
+    topology = {"mechanism": mechanism, "initial_wave_members": len((state.get("initial_authoring_wave") or {}).get("members") or [])}
+    return {
+        "cohort_completeness": completeness, "sbe_release": metadata.version("astrowoof-natal-authoring"),
+        "route_contract": _EXACT_RUN_SCHEMA,
+        "generation_profile_id": profile.get("generation_profile_id"),
+        "profile_manifest_sha256": manifest if completeness == "complete" else None,
+        "resource_bundle_sha256": resource if completeness == "complete" else None,
+        "request_geometry_version": "exact-provider-action.v1",
+        "request_geometry_sha256": canonical_sha256(geometry),
+        "execution_topology_version": "six-pass-wave.v1" if binding.get("stage") == "authoring_initial" else "stage-action.v1",
+        "execution_topology_sha256": canonical_sha256(topology),
+        "model": str(binding.get("model") or config.get("model") or "unknown"),
+        "reasoning_effort": str(config.get("reasoning_effort") or "unknown"),
+        "service_level": "batch" if mechanism == "batch" else "default",
+        "maximum_output_tokens": int(binding.get("maximum_output_tokens") or config.get("max_output_tokens") or 0),
+        "price_book_version": str(binding.get("price_book_version") or "unknown"),
+        "cohort_identity_sha256": "pending",
+    }
+
+
+def project_exact_provider_economics_revision(
+    state: Mapping[str, Any], action: Mapping[str, Any], *, observed_at: str,
+    previous_revision: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Project one exact-Natal paid action without mutating native state.
+
+    Returns ``None`` when the durable consumer facts are unchanged from the supplied
+    predecessor. Publication observation time alone never creates a revision.
+    """
+    if state.get("schema_version") != _EXACT_RUN_SCHEMA or state.get("route_contract"):
+        raise ValueError("exact provider economics projection requires an exact v0.9 run")
+    run_id = state.get("run_id")
+    action_id = action.get("action_id")
+    if not isinstance(run_id, str) or not isinstance(action_id, str) or not _ACTION_ID.fullmatch(action_id):
+        raise ValueError("native run/action identity is invalid")
+    binding = action.get("binding") if isinstance(action.get("binding"), Mapping) else {}
+    if binding.get("run_id") != run_id:
+        raise ValueError("action binding does not join the native run")
+    stage = _ACTION_STAGE.get(binding.get("stage"))
+    if stage is None:
+        raise ValueError("unsupported exact paid stage")
+    mechanism = "batch" if binding.get("service_level") == "batch" or str(binding.get("route", "")).startswith("batch-round-") else "response"
+    pass_id, attempt_number, attempt = _exact_pass_attempt(state, action)
+    round_record = _batch_round(state, action) if mechanism == "batch" else None
+    provider_status = _provider_status(action)
+    disposition, usage, estimate, estimate_book = _settlement(action, provider_status)
+    provider = action.get("provider") if isinstance(action.get("provider"), Mapping) else {}
+    members = []
+    if mechanism == "batch":
+        for ordinal, request in enumerate((round_record or {}).get("requests") or [], 1):
+            member_attempt = None
+            record = (state.get("passes") or {}).get(request.get("pass_id"), {})
+            for candidate in record.get("attempts") or []:
+                metadata = candidate.get("provider_metadata") or {}
+                if metadata.get("custom_id") == request.get("custom_id"):
+                    member_attempt = candidate; break
+            metadata = (member_attempt or {}).get("provider_metadata") or {}
+            member_usage = _usage(metadata.get("usage"))
+            members.append({
+                "member_id": str(request.get("custom_id") or f"member-{ordinal}"), "ordinal": ordinal,
+                "pass_id": request.get("pass_id"), "attempt_number": request.get("attempt_number"),
+                "paid_stage": stage, "request_sha256": request.get("prompt_sha256") or binding.get("request_sha256"),
+                "provider_member_id": metadata.get("response_id") or request.get("custom_id"),
+                "provider_status": str(metadata.get("response_status") or ("completed" if member_usage else "pending")),
+                "usage_disposition": "reported" if member_usage else "unavailable",
+                "usage": member_usage, "provider_reported_micro_usd": None,
+            })
+    native_status, publishable = _native_status(state)
+    auth = action.get("authorization") if isinstance(action.get("authorization"), Mapping) else {}
+    consumption = action.get("consumption") if isinstance(action.get("consumption"), Mapping) else {}
+    observed = _canonical_timestamp(observed_at, str(observed_at))
+    timing_source = attempt.get("provider_metadata", {}) if isinstance(attempt, Mapping) else {}
+    value = {
+        "schema_version": SCHEMA_VERSION, "transaction_id": "pending", "native_run_id": run_id,
+        "native_action_id": action_id, "revision_number": 1 if previous_revision is None else previous_revision["revision_number"] + 1,
+        "previous_revision_id": None if previous_revision is None else previous_revision["revision_id"], "revision_id": "pending", "observed_at": observed,
+        "transaction_identity": {"route_family": "exact_natal", "paid_stage": stage, "provider_mechanism": mechanism,
+            "native_operation_ref": str((round_record or {}).get("round_id") or binding.get("route") or action_id),
+            "pass_id": pass_id if mechanism == "response" else None, "attempt_number": attempt_number,
+            "round_id": str((round_record or {}).get("round_id") or binding.get("route")) if mechanism == "batch" else None,
+            "cardinality_kind": "batch_round" if mechanism == "batch" else "single_action", "members": members},
+        "cohort_identity": _cohort(state, action, mechanism=mechanism),
+        "authority_and_commitment": {"commitment_micro_usd": int(binding.get("commitment_micro_usd") or 0),
+            "authorization_reference": auth.get("authorization_reference"), "consumption_reference": consumption.get("consumer_id")},
+        "provider_operation": {"provider": "openai", "operation_kind": mechanism, "operation_id": provider.get("id"), "status": provider_status},
+        "usage_and_cost": {"settlement_disposition": disposition, "usage": usage, "sbe_estimated_micro_usd": estimate,
+            "sbe_estimate_price_book_version": estimate_book, "provider_reported_micro_usd": None},
+        "timing": {"prepared_at": None, "authorized_at": None, "submission_intent_at": None, "provider_identity_durable_at": None,
+            "provider_terminal_observed_at": None, "reconciliation_completed_at": None, "native_settled_at": None,
+            "create_http_duration_ms": timing_source.get("create_http_duration_ms"), "observed_provider_pending_ms": None,
+            "native_action_span_ms": None, "provider_reported_duration_ms": timing_source.get("provider_reported_duration_ms"),
+            "retrieval_attempt_count": 0, "first_retrieval_observed_at": None, "last_retrieval_observed_at": None,
+            "retrieval_http_duration_total_ms": None, "retrieval_attempt_refs": [], "retrieval_attempt_ref_overflow_count": 0},
+        "editorial_outcome": {"status": "accepted" if isinstance(attempt, Mapping) and attempt.get("state") == "ACCEPTED" else "not_yet_evaluated", "retry_reason_category": None},
+        "native_outcome": {"status": native_status, "delivery_publishable": publishable},
+        "provenance": {"action_binding_sha256": canonical_sha256(binding), "request_sha256": binding.get("request_sha256"),
+            "native_result_id": None, "native_result_sha256": None, "journal_range_sha256": None, "snapshot_sha256": None,
+            "publication_receipt_id": None, "publication_receipt_sha256": None,
+            "usage_evidence_ref": f"spend-ledger:{action_id}:reported" if action.get("reported") else None,
+            "batch_round_manifest_sha256": canonical_sha256(round_record) if mechanism == "batch" and round_record else (canonical_sha256({"route": binding.get("route"), "request_sha256": binding.get("request_sha256")}) if mechanism == "batch" else None),
+            "api_reconciliation_join": {"native_run_id": run_id, "native_action_id": action_id}},
+    }
+    candidate = finalize_provider_economics_revision(value)
+    if previous_revision is not None:
+        validate_provider_economics_revision_sequence([previous_revision, candidate])
+        old = deepcopy(dict(previous_revision)); new = deepcopy(candidate)
+        for item in (old, new):
+            item.pop("revision_id", None); item.pop("observed_at", None); item.pop("revision_number", None); item.pop("previous_revision_id", None)
+        if old == new:
+            return None
+    return candidate
 
 
 def finalize_provider_economics_revision(revision: Mapping[str, Any]) -> dict[str, Any]:
