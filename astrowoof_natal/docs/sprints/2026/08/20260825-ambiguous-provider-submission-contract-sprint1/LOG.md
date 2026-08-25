@@ -30,3 +30,29 @@ Owner and API approved the saunter direction. API decisions incorporated:
 
 Scenic Waypoint 0 is authorized to begin provider-free boundary tracing and
 failure injection. No retained QA or real provider work is authorized.
+
+## 2026-08-25 — Scenic Waypoint 0 initial reproduction
+
+Added a production-shaped provider-free regression that separates entry into the
+dispatch callback from entry into the scripted provider transport. Removing the
+exact prepared payload causes local request materialization to fail after the
+current durable `CALL_ENTERED` checkpoint. The transport call count remains zero,
+but 0.4.22 returns `ambiguous_submission`, persists
+`AMBIGUOUS_PROVIDER_SUBMISSION`, and reports provider I/O as performed.
+
+The companion before-entry test proves the immediately preceding failure point
+remains replayable and makes zero callback/provider calls. The full boundary
+inventory remains in progress before Waffle Checkpoint 0.
+
+## 2026-08-25 — Scenic Waypoint 0 complete
+
+Completed the boundary inventory and froze the public CLI reproduction. The
+recommended correction is a prepared-create value built before the fence plus a
+transport-only operation after it. Classification is thereby determined by the
+durable execution phase, never by exception class.
+
+Recommended versioning is provider dispatch result v3 embedded by command result
+v2. Historical v2 ambiguity remains review-only.
+
+Focused provider-free gate: 25 tests passed. No source/runtime behavior changed.
+Paused at Waffle Checkpoint 0 for API review before schemas or implementation.
