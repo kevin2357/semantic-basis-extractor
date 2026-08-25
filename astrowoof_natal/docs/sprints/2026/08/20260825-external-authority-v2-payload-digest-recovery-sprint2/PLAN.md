@@ -1,7 +1,7 @@
 # External-Authority v2 Payload-Digest Recovery — Patch Sprint 2
 
 Date: 2026-08-25
-Status: Slices 0–3 complete; final release review pending
+Status: complete; SBE 0.4.24 published and independently verified
 Starting release: SBE 0.4.23
 Expected release: fresh immutable patch version
 

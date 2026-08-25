@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.24
 
-Status: release-qualified; immutable publication pending
+Status: published and independently digest-verified
 
 SBE 0.4.24 corrects the external-authority v2 payload-resolution boundary for
 ordinary exact-Natal creative retries. New work persists one binding-owned private
@@ -31,4 +31,7 @@ replay path. The command is qualification only and carries no execution authorit
 - External provider/network calls and spend: 0.
 - Retained QA cohort access/mutation: 0.
 
-The intended immutable tag is `astrowoof-natal-authoring-v0.4.24`.
+The immutable tag is `astrowoof-natal-authoring-v0.4.24`. GitHub reports the
+published 988,390-byte wheel with SHA-256
+`eae1206e54e83e4f874de0595a8d2c616fc11a3980ba91f228d34e3186a27404`;
+an independent post-publication download reproduced that digest exactly.

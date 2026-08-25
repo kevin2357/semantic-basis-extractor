@@ -113,3 +113,15 @@ consumer-handoff work.
 
 Next action: final owner/API release review before source commit, final source-bound
 rebuild, tag, or publication.
+
+## 2026-08-25 — SBE 0.4.24 published and verified
+
+- Committed and pushed implementation/source identity `00351b0`.
+- Full committed-source suite passed: 730 tests with 37 expected skips.
+- Rebuilt twice with the frozen epoch; both wheels matched SHA-256
+  `eae1206e54e83e4f874de0595a8d2c616fc11a3980ba91f228d34e3186a27404`.
+- Reinstalled the final wheel and reran generic smoke and payload-recovery QA;
+  both passed.
+- Published immutable tag `astrowoof-natal-authoring-v0.4.24` and wheel/checksum
+  assets. GitHub's asset digest and an independent download both match.
+- No provider, spend, or retained-QA activity occurred.

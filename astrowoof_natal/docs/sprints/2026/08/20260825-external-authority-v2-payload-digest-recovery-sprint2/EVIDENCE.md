@@ -82,4 +82,16 @@ Retained QA access/mutation: 0.
   `eae1206e54e83e4f874de0595a8d2c616fc11a3980ba91f228d34e3186a27404`.
 - `git diff --check`: clean apart from informational Windows line-ending notices.
 
-Status: Slices 0–3 complete; final release review pending.
+## Final release evidence
+
+- Artifact source commit: `00351b0d426d8aa0ea08635feae2c3b73db2d354`.
+- Release-record/tag commit: `4612a0bdc308aa3e8a0ae75996bb156cffdffc26`.
+- Full committed-source suite: 730 passed; 37 expected skips.
+- Final deterministic wheel SHA-256:
+  `eae1206e54e83e4f874de0595a8d2c616fc11a3980ba91f228d34e3186a27404`.
+- Final installed generic smoke and payload-recovery qualification: pass.
+- GitHub asset digest and independently downloaded wheel digest: exact match.
+- Immutable tag: `astrowoof-natal-authoring-v0.4.24`.
+- External provider/network calls, spend, and retained-QA access: 0.
+
+Status: complete; SBE 0.4.24 published and independently verified.
