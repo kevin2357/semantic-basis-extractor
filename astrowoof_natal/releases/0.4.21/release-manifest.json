@@ -7,16 +7,16 @@
   "repository": "https://github.com/kevin2357/semantic-basis-extractor",
   "artifact": {
     "filename": "astrowoof_natal_authoring-0.4.21-py3-none-any.whl",
-    "bytes": 969947,
-    "sha256": "7edf771ab16a6d3acc64c4da085799811a2fe3c01d29794be6eb75f622e01f63",
+    "bytes": 969901,
+    "sha256": "44928211effd3ef6593d729ebe70ad74ea5ac0c603e100e815588d3f4d27ade2",
     "wheel_entry_count": 169,
     "resource_count": 102,
-    "packaged_resources_sha256": "e868e1f463d2385045ffb7fb0cf5df8f6c1ae7081354ec20233222c9d22719c1",
+    "packaged_resources_sha256": "0513d8712d2dd56e7344926ec7f2de1455a50dbda6267464c6f312ff103cb351",
     "bytecode_or_cache_entries": 0,
     "py_typed": true
   },
   "build": {
-    "artifact_source_commit": "fa7f79ec6483c5a4610c9e3703fbe501326ff4d9",
+    "artifact_source_commit": "7fae397da025fb2da8919c2d73072c34ed63c222",
     "source_date_epoch": 1787638617,
     "byte_reproducible": true,
     "release_record_commit": "recorded_by_immutable_tag"

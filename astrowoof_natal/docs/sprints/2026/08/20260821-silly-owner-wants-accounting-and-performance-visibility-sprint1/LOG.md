@@ -207,10 +207,10 @@
 
 ## 2026-08-25 — Slice 6 candidate qualification
 
-- Committed release-candidate source at `fa7f79e` and bumped to fresh 0.4.21.
+- Committed the pre-mainline release-candidate source at `fa7f79e` and bumped to
+  fresh 0.4.21.
 - Full suite: 683 passed; 36 expected environment/opt-in skips.
-- Two builds at fixed epoch `1787638617` were byte-identical: 969947 bytes,
-  SHA-256 `7edf771a...e01f63`.
+- Two pre-mainline builds at fixed epoch `1787638617` were byte-identical.
 - Installed provider-economics qualification passed with receipt
   `d2cbcdf6...40b8b0` and zero provider I/O.
 - Generic installed release smoke passed with 50 cards and four summaries.
@@ -226,3 +226,13 @@
 - Product owner authorized tagging and publication.
 - API worker pin/deployment remains deferred until its separate ingestion sprint
   qualifies fixture, replay, predecessor, and privacy behavior.
+
+## 2026-08-25 — Final mainline artifact lock
+
+- Fast-forwarded the approved branch into `main` before release tagging.
+- Rebuilt from final authorized mainline source `7fae397` with the frozen epoch.
+- Two final builds were byte-identical: 969901 bytes, SHA-256
+  `44928211...27ade2`.
+- Re-ran `pip check`, installed provider-economics qualification, and generic
+  installed release smoke against the exact final upload artifact; all passed.
+- Final provider-economics receipt remained `d2cbcdf6...40b8b0`.

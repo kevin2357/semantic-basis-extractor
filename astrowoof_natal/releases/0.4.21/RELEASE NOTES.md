@@ -18,11 +18,11 @@ lifecycle, spend, custody, settlement, or delivery behavior.
 
 ## Qualification
 
-- Artifact source commit: `fa7f79ec6483c5a4610c9e3703fbe501326ff4d9`.
+- Artifact source commit: `7fae397da025fb2da8919c2d73072c34ed63c222`.
 - Fixed build epoch: `1787638617`.
 - Full source suite: 683 passed; 36 expected environment/opt-in skips.
 - Two byte-identical candidate wheels; SHA-256
-  `7edf771ab16a6d3acc64c4da085799811a2fe3c01d29794be6eb75f622e01f63`.
+  `44928211effd3ef6593d729ebe70ad74ea5ac0c603e100e815588d3f4d27ade2`.
 - Generic installed release smoke: pass with 50 cards and four summaries.
 - Installed provider-economics qualification: pass; receipt SHA-256
   `d2cbcdf6eb6dd98b1a124f5e5c21ea58a969f73212c5ccdc74c8c0e60440b8b0`.

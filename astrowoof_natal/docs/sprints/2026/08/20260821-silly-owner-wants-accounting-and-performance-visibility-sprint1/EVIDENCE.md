@@ -143,13 +143,13 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
 ## Slice 6 — release qualification
 
 - Candidate version: **0.4.21**.
-- Artifact source commit: `fa7f79ec6483c5a4610c9e3703fbe501326ff4d9`.
+- Final artifact source commit: `7fae397da025fb2da8919c2d73072c34ed63c222`.
 - Full source suite: **683 passed; 36 expected skips**.
-- Reproducible wheel: **PASS**, two byte-identical 969947-byte builds.
+- Reproducible final wheel: **PASS**, two byte-identical 969901-byte builds.
 - Wheel SHA-256:
-  `7edf771ab16a6d3acc64c4da085799811a2fe3c01d29794be6eb75f622e01f63`.
+  `44928211effd3ef6593d729ebe70ad74ea5ac0c603e100e815588d3f4d27ade2`.
 - Packaged resource count/digest: 102 /
-  `e868e1f463d2385045ffb7fb0cf5df8f6c1ae7081354ec20233222c9d22719c1`.
+  `0513d8712d2dd56e7344926ec7f2de1455a50dbda6267464c6f312ff103cb351`.
 - Installed generic release smoke: **PASS** (50 cards, four summaries).
 - Installed provider-economics qualification: **PASS**; receipt
   `d2cbcdf6eb6dd98b1a124f5e5c21ea58a969f73212c5ccdc74c8c0e60440b8b0`.
