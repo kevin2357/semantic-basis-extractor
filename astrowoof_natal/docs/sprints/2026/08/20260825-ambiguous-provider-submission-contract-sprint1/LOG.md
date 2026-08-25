@@ -138,3 +138,19 @@ regressions for empty and extra-key bundles.
 
 Focused correction gate: 16 tests passed. Waffle Checkpoint 3's conditional
 approval is satisfied; Scenic Waypoint 4 release qualification may begin.
+
+## 2026-08-25 — Scenic Waypoint 4 release candidate qualified
+
+Committed candidate source at
+`9f3e3874aee74099b7c1a43b5094fe55c8426fb3`, bumped to fresh version 0.4.23,
+and built twice with `SOURCE_DATE_EPOCH=1787666725`. Both 980,621-byte wheels
+are byte-identical at SHA-256
+`adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`.
+
+The installed wheel passed exact SPC 0.11.1 dependency validation, `pip check`,
+provider-free packaged fixture validation/export, and the generic installed
+release smoke through `DELIVERY_COMPLETE`. The one broad source suite completed
+with 719 passed and 3 expected skips.
+
+No provider/network call, credential, spend, or frozen-QA access occurred.
+Paused at final Waffle Checkpoint 4; tag and publication are not authorized yet.

@@ -1,0 +1,35 @@
+{
+  "schema_version": "astrowoof.ambiguous_provider_submission_release_candidate.v1",
+  "version": "0.4.23",
+  "status": "qualified_pending_final_review",
+  "artifact_source_commit": "9f3e3874aee74099b7c1a43b5094fe55c8426fb3",
+  "source_date_epoch": 1787666725,
+  "wheel": {
+    "filename": "astrowoof_natal_authoring-0.4.23-py3-none-any.whl",
+    "bytes": 980621,
+    "sha256": "adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de",
+    "byte_reproducible": true,
+    "entry_count": 173,
+    "resource_count": 105,
+    "packaged_resources_sha256": "f8cdbe7c621dc3ac47ffe1d1f2fbbd042e065b28ce4da67e85089a56e36dfd18",
+    "py_typed": true,
+    "bytecode_or_cache_entries": 0
+  },
+  "dependency": {
+    "semantic_projection_core_version": "0.11.1",
+    "pip_check": "pass"
+  },
+  "qualification": {
+    "focused_waypoint_2": "35 passed",
+    "focused_waypoint_3": "17 passed",
+    "strict_fixture_correction": "16 passed",
+    "full_source_suite": "719 passed; 3 expected skips",
+    "installed_release_smoke": "pass",
+    "installed_fixture_export": "pass",
+    "fixture_export_sha256": "c8034eb067ca60f3984aabade8879635c37d81aedc957eb8cc8426feec378a17",
+    "external_provider_network_calls": 0,
+    "provider_spend_usd": 0,
+    "frozen_qa_workspace_accesses": 0
+  },
+  "publication": "not_authorized"
+}

@@ -142,6 +142,32 @@ three-member case and observed 34 tests with one optional-schema skip in its
 lean environment. The candidate environment above includes `jsonschema`, so
 the same gate plus the new test completed with no skip.
 
+## Scenic Waypoint 4 release qualification
+
+- Version: 0.4.23.
+- Artifact source commit:
+  `9f3e3874aee74099b7c1a43b5094fe55c8426fb3`.
+- `SOURCE_DATE_EPOCH`: `1787666725`.
+- Two independent wheels: byte-identical.
+- Wheel bytes: 980,621.
+- Wheel SHA-256:
+  `adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`.
+- Wheel entries/resources: 173 / 105.
+- Packaged-resource SHA-256:
+  `f8cdbe7c621dc3ac47ffe1d1f2fbbd042e065b28ce4da67e85089a56e36dfd18`.
+- `py.typed`: present; bytecode/cache entries: zero.
+- Exact SPC 0.11.1 plus `pip check`: pass.
+- Installed provider-free fixture export: pass; SHA-256
+  `c8034eb067ca60f3984aabade8879635c37d81aedc957eb8cc8426feec378a17`.
+- Generic installed release smoke: pass; 50 cards, four summaries,
+  `DELIVERY_COMPLETE`.
+- Full source suite: 719 passed, 3 expected skips, 758.569 seconds.
+- External provider/network calls: zero.
+- Provider spend: $0.
+- Frozen QA workspace access/mutation: zero.
+
+Tagging and publication remain pending final owner/API authorization.
+
 Stress repetition identified and corrected stale process-cache reuse during
 authoritative snapshot publication when Windows recycled a temporary path.
 Both snapshot writing and validation now hash current bytes directly at the

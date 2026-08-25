@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.23
 
-Status: release candidate qualification in progress
+Status: release candidate qualified; tag/publication pending owner and API review
 
 SBE 0.4.23 makes the external-authority v2 provider-create boundary
 machine-distinguishable. Deterministic payload/configuration preparation now
@@ -16,5 +16,17 @@ Historical ambiguity is not reclassified. The provider API's irreducible
 submission/identity-persistence gap remains explicit. No result authorizes the
 API to infer global reservation, capacity, billing, or product state.
 
-Qualification evidence and immutable artifact identity remain pending final
-Waypoint 4 review.
+## Qualification
+
+- Artifact source commit: `9f3e3874aee74099b7c1a43b5094fe55c8426fb3`.
+- Fixed build epoch: `1787666725`.
+- Full source suite: 719 passed; 3 expected environment/opt-in skips.
+- Two byte-identical candidate wheels; SHA-256
+  `adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`.
+- Generic installed release smoke: pass with 50 cards and four summaries.
+- Installed provider-free fixture validation/export: pass.
+- Exact installed dependency: `semantic-projection-core==0.11.1`; `pip check` pass.
+- External provider/network calls and spend: 0.
+- Frozen QA cohort access/mutation: 0.
+
+Tagging and publication remain pending final Waypoint 4 authorization.
