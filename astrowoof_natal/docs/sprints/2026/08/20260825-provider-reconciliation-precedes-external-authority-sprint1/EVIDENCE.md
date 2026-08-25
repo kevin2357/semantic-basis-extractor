@@ -38,4 +38,24 @@ authority.
 - Existing lifecycle v0.5/temporal v0.6 are the preferred compatibility target.
 - No API code/schema change is expected if corrected inspection preserves existing
   command and `not_before` semantics.
-- Runtime implementation remains unstarted pending owner authorization.
+- Runtime implementation remains unstarted pending Slice 0 API review.
+
+## Slice 0 evidence
+
+- Result: `results/SLICE 0 - PUBLIC SELECTOR AUDIT AND PRECEDENCE CONTRACT.md`.
+- Reproducer:
+  `astrowoof_natal/tests/test_provider_reconciliation_precedes_authority_slice0.py`.
+- Focused result: 4 tests passed.
+- Routes: exact Natal interactive and bounded Natal interactive.
+- Public readers: lifecycle inspection v0.5 and temporal lifecycle v0.6.
+- Observed current defect:
+  - due provider custody + prepared → reconciliation (correct baseline);
+  - not-due provider custody + prepared → authority (incorrect);
+  - completed provider evidence + prepared → authority (incorrect).
+- Secondary symptom: time-only not-due → due currently changes the v0.6 basis
+  because the not-due branch embeds authority inventory and the due branch does not.
+- Authoritative workspace hashes remained unchanged across every inspection.
+- Provider POST/create/submit/retry/GET calls: 0.
+- Authorization/grant consumption: 0.
+- Frozen QA cohort access/mutation: 0.
+- Source/schema/runtime changes: none.

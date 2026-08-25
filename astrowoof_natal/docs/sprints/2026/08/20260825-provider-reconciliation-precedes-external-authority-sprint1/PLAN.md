@@ -1,7 +1,7 @@
 # Provider Reconciliation Precedes External Authority — Sprint 1 Plan
 
 Date: 2026-08-25  
-Status: API-approved for Slice 0; awaiting owner authorization to begin
+Status: Slice 0 complete; paused at voof-paw 1 for API review
 
 ## Objective
 
@@ -107,6 +107,9 @@ starve safe authority publication.
 ## Slice plan
 
 ### Slice 0 — Public-path reproduction and selector audit
+
+**Status: complete.** See
+`results/SLICE 0 - PUBLIC SELECTOR AUDIT AND PRECEDENCE CONTRACT.md`.
 
 Build a sanitized provider-free fixture matching the observed mixed state:
 

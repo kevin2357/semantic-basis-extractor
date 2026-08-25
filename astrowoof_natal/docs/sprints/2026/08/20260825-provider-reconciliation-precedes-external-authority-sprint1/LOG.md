@@ -38,3 +38,16 @@
   time-only request identity, and new-basis-after-fan-in assertions.
 - Frozen cohort recovery remains separate.
 - Owner authorization to begin remains pending.
+
+## 2026-08-25 — Slice 0 public selector audit
+
+- Owner authorized execution through the next API review pause.
+- Added a provider-free public-path fixture for exact and bounded routes with six
+  retained provider identities plus one later prepared action.
+- Proved the precise ordering defect: due reconciliation wins, but prepared
+  authority masks not-due custody and completed-evidence fan-in.
+- Proved the incorrect branch projection also changes temporal v0.6 checkpoint
+  basis identity across a time-only not-due → due observation.
+- Verified all inspection calls were byte-level nonmutating and performed no
+  provider I/O or authorization mutation.
+- Runtime and schema behavior remain unchanged; paused at voof-paw 1.
