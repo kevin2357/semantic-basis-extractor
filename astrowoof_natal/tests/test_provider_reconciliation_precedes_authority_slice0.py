@@ -215,6 +215,66 @@ class TestProviderReconciliationPrecedesAuthoritySlice0(unittest.TestCase):
             self.assertEqual(4, len(due["temporal_decision"]["due_action_ids"]))
             self.assertEqual("paid_ffffffffffffffffffffffff", prepared_id)
 
+    def test_exact_and_bounded_batch_custody_precedes_prepared_authority(self) -> None:
+        for route_family in ("exact_natal", "bounded_natal"):
+            with self.subTest(route_family=route_family), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary).resolve()
+                prepared_id = self.materialize(root, route_family)
+                state = load_json(root / "run.json")
+                provider_action = next(
+                    item for item in state["spend_ledger"]["actions"]
+                    if item["action_id"] != prepared_id
+                )
+                batch_id = f"batch_{route_family}_001"
+                route = (
+                    "batch-round-001" if route_family == "exact_natal"
+                    else "bounded_natal.v2:batch-round-001"
+                )
+                provider_action["binding"].update({
+                    "service_level": "batch", "stage": "authoring_initial",
+                    "route": route,
+                })
+                provider_action["provider"] = {"id": batch_id, "kind": "batch"}
+                state["spend_ledger"]["actions"] = [provider_action] + [
+                    item for item in state["spend_ledger"]["actions"]
+                    if item["action_id"] == prepared_id
+                ]
+                state["service_level"] = "batch"
+                state["batch_service"] = {"rounds": [{
+                    "round_number": 1, "batch_id": batch_id,
+                    "state": "SUBMITTED", "requests": [],
+                }]}
+                (root / "run.json").write_text(
+                    json.dumps(state, indent=2) + "\n", encoding="utf-8"
+                )
+                (root / "public-run.json").write_text(
+                    json.dumps(public_run_state(state), indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                write_workspace_snapshot(root)
+                before = _workspace_hashes(root)
+
+                not_due = inspect_lifecycle(
+                    root, native_exclusive_access="declared",
+                    observed_at="1970-01-01T00:00:10Z",
+                )
+                due = inspect_lifecycle(
+                    root, native_exclusive_access="declared",
+                    observed_at="1970-01-01T00:00:15Z",
+                )
+
+                self.assertEqual(before, _workspace_hashes(root))
+                self.assertEqual(
+                    "provider_reconciliation_cycle",
+                    not_due["execution_branch"]["command"],
+                )
+                self.assertFalse(not_due["execution_branch"]["eligible_now"])
+                self.assertEqual(
+                    "provider_reconciliation_cycle", due["execution_branch"]["command"]
+                )
+                self.assertEqual([provider_action["action_id"]], due["execution_branch"]["action_ids"])
+                self.assertNotIn(prepared_id, due["execution_branch"]["action_ids"])
+
 
 if __name__ == "__main__":
     unittest.main()

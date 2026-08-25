@@ -100,3 +100,17 @@ authority.
 - Post-fan-in branch: `await_external_authority`, containing only the prepared ID.
 - Provider transport is scripted and local; external network/spend: 0.
 - Focused result: 34 tests passed.
+
+## Slice 4 evidence
+
+- Route matrix:
+  - exact Natal interactive Response: pass;
+  - bounded Natal interactive Response: pass;
+  - exact Natal Batch: pass;
+  - bounded Natal Batch: pass.
+- Batch authority remains one provider action/round; no member-level reservation
+  authority was introduced.
+- Supported interactive stage matrix: initial, retry, polish, critic, candidate.
+- Ordinary optional-stage Batch dispatch remains explicitly unsupported/refused.
+- Focused result: 13 tests passed.
+- Provider/network/spend and frozen-QA access: 0.

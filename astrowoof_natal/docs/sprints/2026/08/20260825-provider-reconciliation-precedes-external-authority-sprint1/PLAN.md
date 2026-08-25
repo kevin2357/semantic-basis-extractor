@@ -210,6 +210,9 @@ no API-global fact is asserted.
 
 ### Slice 4 — Four-route and stage parity
 
+**Status: complete.** Exact/bounded Response and Batch custody cells plus supported
+interactive stage matrix are green; deferred Batch optional stages remain refused.
+
 Exercise exact/bounded × interactive/Batch across initial authoring, creative
 retry, polish, critic, candidate, restored workspaces, partial provider failure,
 usage unavailable, and nonblocking critic custody after delivery.

@@ -100,3 +100,15 @@
 - Refined causal-local-work classification: authorization-pending bookkeeping is
   not runnable local work and cannot force an ordinary-resume loop.
 - Focused qualification/capacity suite passed: 34 tests.
+
+## 2026-08-25 — Slice 4 route/stage parity
+
+- Added exact- and bounded-Natal Batch mixed-custody regressions using one native
+  Batch authority plus one later prepared action.
+- Proved not-due and due Batch custody outranks prepared authority without changing
+  one-round/one-authority cardinality.
+- Requalified exact/bounded interactive Response paths and all supported ordinary
+  stages: retry, polish, critic, and candidate.
+- Preserved explicit ordinary-Batch optional-stage refusal and bounded/exact route
+  identity.
+- Focused route/stage suite passed: 13 tests.
