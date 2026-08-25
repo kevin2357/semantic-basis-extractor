@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.21
 
-Status: authorized release candidate
+Status: published and independently digest-verified
 
 SBE 0.4.21 adds a privacy-minimized provider-economics transaction tape for
 long-term accounting and performance analysis. Exact and bounded interactive
@@ -32,3 +32,8 @@ lifecycle, spend, custody, settlement, or delivery behavior.
 API consumer review and product-owner authorization approve immutable 0.4.21
 tagging and publication. API worker pinning/deployment remains deferred until the
 separate ingestion sprint qualifies fixture, replay, and privacy behavior.
+
+The immutable tag is `astrowoof-natal-authoring-v0.4.21`. GitHub reports the
+published 969901-byte wheel with SHA-256
+`44928211effd3ef6593d729ebe70ad74ea5ac0c603e100e815588d3f4d27ade2`;
+an independent post-publication download reproduced that digest exactly.

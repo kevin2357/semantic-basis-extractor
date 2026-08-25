@@ -165,3 +165,14 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
 - Deployment posture: published artifact may exist, but API workers must not pin it
   until the API ingestion sprint proves immutable predecessor/replay/privacy
   behavior against the packaged qualification evidence.
+
+## Publication evidence
+
+- Immutable tag: `astrowoof-natal-authoring-v0.4.21`.
+- Tag commit: `1ac7f2935fe2d3fd3c67836aa8925d1b10d9bc39`.
+- Annotated tag object: `c2daab95beba73064f73ee9907f5a25bfa2c4876`.
+- GitHub release: 376194730, published 2026-08-25T06:44:51Z.
+- Wheel asset: 528771537; 969901 bytes.
+- GitHub-reported and independently downloaded SHA-256:
+  `44928211effd3ef6593d729ebe70ad74ea5ac0c603e100e815588d3f4d27ade2`.
+- Digest verification: **PASS**.

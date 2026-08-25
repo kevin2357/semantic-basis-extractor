@@ -236,3 +236,14 @@
 - Re-ran `pip check`, installed provider-economics qualification, and generic
   installed release smoke against the exact final upload artifact; all passed.
 - Final provider-economics receipt remained `d2cbcdf6...40b8b0`.
+
+## 2026-08-25 — Tag and publication
+
+- Tagged release lock `1ac7f29` as
+  `astrowoof-natal-authoring-v0.4.21` and pushed the annotated tag.
+- Published the exact final wheel and checksum file to GitHub release 376194730.
+- GitHub asset metadata reports the expected 969901 bytes and SHA-256
+  `44928211...27ade2`.
+- Independently downloaded the published wheel and reproduced the same digest.
+- Sprint complete. API worker pin/deployment remains intentionally deferred to its
+  provider-economics ingestion qualification sprint.

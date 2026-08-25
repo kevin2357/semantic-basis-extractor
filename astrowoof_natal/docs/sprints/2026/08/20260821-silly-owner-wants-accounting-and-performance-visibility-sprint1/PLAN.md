@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Sprint complete; 0.4.21 publication authorized
+Status: Sprint complete; SBE 0.4.21 published and verified
 
 ## Objective
 
