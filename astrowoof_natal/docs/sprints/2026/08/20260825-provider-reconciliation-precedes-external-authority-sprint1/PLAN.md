@@ -1,7 +1,7 @@
 # Provider Reconciliation Precedes External Authority — Sprint 1 Plan
 
 Date: 2026-08-25  
-Status: Slice 6 release preparation in progress after API approval
+Status: Slice 6 complete; final API/owner tag-publication approval pending
 
 ## Objective
 
@@ -246,6 +246,9 @@ routing requires no inference from logs, private `run.json`, provider IDs, or
 dashboard state.
 
 ### Slice 6 — Closeout and patch release preparation
+
+**Status: complete.** 0.4.22 deterministic artifact and installed/broad-suite
+qualification are recorded; tag/publication remain unperformed.
 
 - Run focused lifecycle/temporal/reconciliation/authority suites.
 - Run installed qualification and generic release smoke.

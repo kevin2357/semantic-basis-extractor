@@ -128,3 +128,21 @@ authority.
 - Receipt status: pass; create count 6; retrieval count 6; retrieval waves 4+2.
 - Post-fan-in authority inventory: exactly one later prepared action.
 - External network/provider/spend/frozen-QA activity: 0.
+
+## Slice 6 evidence
+
+- Artifact source commit: `f68c7ac0d161f8bac81a72e01824d18d7627a88f`.
+- Full source suite: 700 passed; 36 expected skips.
+- Reproducible build epoch: `1787649544`.
+- Candidate A/B wheel bytes: 970685 each.
+- Candidate A/B SHA-256:
+  `5ead8d317d81bbcc5c38132c3b81d2ca380911088f4b8c6866dc3f333003f47d`.
+- Exact installed SPC: 0.11.1; qualified local wheel SHA-256
+  `fd8b9be60c91f7f102164c45fcf2f89c814f808b334b3c08136f683f1c2b8b5b`.
+- Installed `pip check`: pass.
+- Installed `astrowoof-provider-pending-qa`: pass.
+- Installed `astrowoof-release-smoke --require-installed`: pass.
+- Resource count: 102; resource-set SHA-256
+  `7bb74f04a466cfa5d28c248e3c411f97c61221770a3eba1556544710d6c0775c`.
+- External provider/network calls, spend, and frozen-QA access/mutation: 0.
+- Fresh API/worker release-pair qualification remains required before paid QA.

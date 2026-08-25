@@ -135,3 +135,15 @@
   installed and broad-suite evidence, zero frozen-QA access, and fresh API/worker
   release-pair qualification before paid QA.
 - Bumped the unreleased candidate to 0.4.22 for Slice 6 qualification.
+
+## 2026-08-25 — Slice 6 release qualification
+
+- Full source suite passed: 700 tests; 36 expected skips.
+- Built two 970685-byte wheels from source commit `f68c7ac` at fixed epoch
+  `1787649544`; both have SHA-256 `5ead8d31...3003f47d`.
+- Installed candidate with exact SPC 0.11.1 and its declared dependencies;
+  `pip check` passed.
+- Installed provider-pending qualification and generic release smoke passed.
+- Recorded exact artifact/SPC compatibility, zero provider/spend/frozen-QA access,
+  limitations, consumer handoff, and release-pair qualification caveat.
+- Tag/publication remain pending final API review and owner authorization.
