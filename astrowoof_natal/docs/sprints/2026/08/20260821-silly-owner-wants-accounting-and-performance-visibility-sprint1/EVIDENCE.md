@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 2 implementation complete; ready for review before Slice 3
+Status: Slice 3 implementation complete; API consumer review requested
 
 - Provider calls: 0
 - Spend: USD 0
@@ -72,3 +72,14 @@ Status: Slice 2 implementation complete; ready for review before Slice 3
 - Public-package imports are exercised by the focused projection suite; the broad
   closure suite remains a later release gate because this slice adds no execution
   call site.
+
+## Slice 3 — bounded parity
+
+- Bounded interactive: six independently identified pass/attempt transactions.
+- Bounded Batch: one round transaction with six ordered member evidence records.
+- Exact/bounded shared settlement semantics: verified.
+- Exact/bounded route and cohort identities: verified distinct.
+- Legacy bounded v1: typed Python refusal before projection.
+- Provider-economics contract + exact + bounded projection suite: **20 passed**.
+- Provider calls, retrievals, submissions, and spend: **0**.
+- Native writes or snapshot changes: **0**.

@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 2 implementation complete; ready for review before bounded-route parity
+Status: Slice 3 implementation complete; consumer review requested before timing/publication work
 
 ## Objective
 
@@ -66,6 +66,10 @@ does not mint a revision; provider settlement or later editorial/native facts do
 - Prove route-specific payload differences do not alter shared accounting semantics.
 
 Gate: four-route parity matrix and consumer review.
+
+Result: complete. Bounded interactive and Batch use the same revision semantics as
+exact while preserving route-specific cohort identity and the bounded v2 contract.
+Legacy bounded v1 workspaces fail closed.
 
 ### Slice 4 — Timing semantics
 

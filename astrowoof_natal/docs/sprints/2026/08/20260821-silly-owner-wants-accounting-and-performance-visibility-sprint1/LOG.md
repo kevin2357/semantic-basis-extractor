@@ -134,3 +134,17 @@
   with byte-identical consumer facts returns no new revision.
 - Added focused exact interactive/Batch, five-stage, replay, settlement, ambiguity,
   no-work, and binding-refusal regressions. No provider transport is reachable.
+
+## 2026-08-24 — Slice 3 bounded-route parity
+
+- Added `project_bounded_provider_economics_revision()` over the same closed
+  transaction/revision contract and monotonic comparison as exact-Natal.
+- Preserved bounded interactive cardinality as one transaction per pass/attempt.
+- Preserved bounded Batch cardinality as one transaction/global authority per
+  round, with six ordered members as audit evidence only.
+- Kept exact and bounded cohort/route identities distinct even when their durable
+  settlement facts are otherwise identical.
+- Required the current bounded v2 topology contract. Historical bounded v1 state
+  is refused rather than guessed into six-pass accounting.
+- Added the four-route parity regressions; all provider economics tests pass with
+  no provider transport or state mutation.

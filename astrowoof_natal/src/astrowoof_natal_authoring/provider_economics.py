@@ -110,6 +110,7 @@ PROVENANCE_KEYS = {
 JOIN_KEYS = {"native_run_id", "native_action_id"}
 
 _EXACT_RUN_SCHEMA = "astrowoof.semantic_closure_run.v0.9"
+_BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v2"
 _ACTION_STAGE = {
     "authoring_initial": "authoring_initial",
     "creative_retry": "creative_retry",
@@ -198,6 +199,15 @@ def _provider_status(action: Mapping[str, Any]) -> str:
     return "not_created"
 
 
+def _normalized_provider_status(value: Any, *, usage_present: bool = False) -> str:
+    text = str(value or "").lower()
+    aliases = {"in_progress": "pending", "queued": "pending", "succeeded": "completed"}
+    text = aliases.get(text, text)
+    if text in PROVIDER_STATUSES:
+        return text
+    return "completed" if usage_present else "pending"
+
+
 def _settlement(action: Mapping[str, Any], provider_status: str) -> tuple[str, dict[str, int] | None, int | None, str | None]:
     reported = action.get("reported") if isinstance(action.get("reported"), Mapping) else {}
     usage = _usage(reported.get("usage"))
@@ -224,7 +234,7 @@ def _exact_pass_attempt(state: Mapping[str, Any], action: Mapping[str, Any]) -> 
         for number, attempt in enumerate(record.get("attempts") or [], 1):
             metadata = attempt.get("provider_metadata") if isinstance(attempt.get("provider_metadata"), Mapping) else {}
             if provider_id and provider_id in {metadata.get("response_id"), metadata.get("batch_id")}:
-                return pass_id, number, attempt
+                return pass_id, int(attempt.get("attempt") or attempt.get("attempt_number") or number), attempt
             if request_sha and request_sha in {attempt.get("prompt_sha256"), metadata.get("prompt_sha256")}:
                 return pass_id, number, attempt
     return None, None, None
@@ -232,7 +242,8 @@ def _exact_pass_attempt(state: Mapping[str, Any], action: Mapping[str, Any]) -> 
 
 def _batch_round(state: Mapping[str, Any], action: Mapping[str, Any]) -> Mapping[str, Any] | None:
     provider_id = ((action.get("provider") or {}).get("id") if isinstance(action.get("provider"), Mapping) else None)
-    for round_record in ((state.get("authoring_service") or {}).get("rounds") or []):
+    service = state.get("batch_service") or state.get("authoring_service") or {}
+    for round_record in (service.get("rounds") or []):
         if provider_id and round_record.get("batch_id") == provider_id:
             return round_record
         if (action.get("binding") or {}).get("route") == f"batch-round-{int(round_record.get('round_number', 0)):03d}":
@@ -240,7 +251,7 @@ def _batch_round(state: Mapping[str, Any], action: Mapping[str, Any]) -> Mapping
     return None
 
 
-def _cohort(state: Mapping[str, Any], action: Mapping[str, Any], *, mechanism: str) -> dict[str, Any]:
+def _cohort(state: Mapping[str, Any], action: Mapping[str, Any], *, mechanism: str, route_family: str) -> dict[str, Any]:
     binding = action.get("binding") if isinstance(action.get("binding"), Mapping) else {}
     profile = state.get("authoring_profile") if isinstance(state.get("authoring_profile"), Mapping) else {}
     config = state.get("provider_configuration") if isinstance(state.get("provider_configuration"), Mapping) else {}
@@ -254,7 +265,7 @@ def _cohort(state: Mapping[str, Any], action: Mapping[str, Any], *, mechanism: s
     topology = {"mechanism": mechanism, "initial_wave_members": len((state.get("initial_authoring_wave") or {}).get("members") or [])}
     return {
         "cohort_completeness": completeness, "sbe_release": metadata.version("astrowoof-natal-authoring"),
-        "route_contract": _EXACT_RUN_SCHEMA,
+        "route_contract": _BOUNDED_RUN_CONTRACT if route_family == "bounded_natal" else _EXACT_RUN_SCHEMA,
         "generation_profile_id": profile.get("generation_profile_id"),
         "profile_manifest_sha256": manifest if completeness == "complete" else None,
         "resource_bundle_sha256": resource if completeness == "complete" else None,
@@ -271,17 +282,20 @@ def _cohort(state: Mapping[str, Any], action: Mapping[str, Any], *, mechanism: s
     }
 
 
-def project_exact_provider_economics_revision(
+def _project_provider_economics_revision(
     state: Mapping[str, Any], action: Mapping[str, Any], *, observed_at: str,
-    previous_revision: Mapping[str, Any] | None = None,
+    previous_revision: Mapping[str, Any] | None = None, route_family: str,
 ) -> dict[str, Any] | None:
     """Project one exact-Natal paid action without mutating native state.
 
     Returns ``None`` when the durable consumer facts are unchanged from the supplied
     predecessor. Publication observation time alone never creates a revision.
     """
-    if state.get("schema_version") != _EXACT_RUN_SCHEMA or state.get("route_contract"):
-        raise ValueError("exact provider economics projection requires an exact v0.9 run")
+    if route_family == "exact_natal":
+        if state.get("schema_version") != _EXACT_RUN_SCHEMA or state.get("route_contract"):
+            raise ValueError("exact provider economics projection requires an exact v0.9 run")
+    elif state.get("route_contract") != _BOUNDED_RUN_CONTRACT:
+        raise ValueError("bounded provider economics projection requires a bounded v2 run")
     run_id = state.get("run_id")
     action_id = action.get("action_id")
     if not isinstance(run_id, str) or not isinstance(action_id, str) or not _ACTION_ID.fullmatch(action_id):
@@ -291,7 +305,7 @@ def project_exact_provider_economics_revision(
         raise ValueError("action binding does not join the native run")
     stage = _ACTION_STAGE.get(binding.get("stage"))
     if stage is None:
-        raise ValueError("unsupported exact paid stage")
+        raise ValueError("unsupported paid stage")
     mechanism = "batch" if binding.get("service_level") == "batch" or str(binding.get("route", "")).startswith("batch-round-") else "response"
     pass_id, attempt_number, attempt = _exact_pass_attempt(state, action)
     round_record = _batch_round(state, action) if mechanism == "batch" else None
@@ -312,9 +326,9 @@ def project_exact_provider_economics_revision(
             members.append({
                 "member_id": str(request.get("custom_id") or f"member-{ordinal}"), "ordinal": ordinal,
                 "pass_id": request.get("pass_id"), "attempt_number": request.get("attempt_number"),
-                "paid_stage": stage, "request_sha256": request.get("prompt_sha256") or binding.get("request_sha256"),
+                "paid_stage": stage, "request_sha256": request.get("prompt_sha256") or request.get("request_sha256") or binding.get("request_sha256"),
                 "provider_member_id": metadata.get("response_id") or request.get("custom_id"),
-                "provider_status": str(metadata.get("response_status") or ("completed" if member_usage else "pending")),
+                "provider_status": _normalized_provider_status(metadata.get("response_status"), usage_present=member_usage is not None),
                 "usage_disposition": "reported" if member_usage else "unavailable",
                 "usage": member_usage, "provider_reported_micro_usd": None,
             })
@@ -327,12 +341,12 @@ def project_exact_provider_economics_revision(
         "schema_version": SCHEMA_VERSION, "transaction_id": "pending", "native_run_id": run_id,
         "native_action_id": action_id, "revision_number": 1 if previous_revision is None else previous_revision["revision_number"] + 1,
         "previous_revision_id": None if previous_revision is None else previous_revision["revision_id"], "revision_id": "pending", "observed_at": observed,
-        "transaction_identity": {"route_family": "exact_natal", "paid_stage": stage, "provider_mechanism": mechanism,
+        "transaction_identity": {"route_family": route_family, "paid_stage": stage, "provider_mechanism": mechanism,
             "native_operation_ref": str((round_record or {}).get("round_id") or binding.get("route") or action_id),
             "pass_id": pass_id if mechanism == "response" else None, "attempt_number": attempt_number,
             "round_id": str((round_record or {}).get("round_id") or binding.get("route")) if mechanism == "batch" else None,
             "cardinality_kind": "batch_round" if mechanism == "batch" else "single_action", "members": members},
-        "cohort_identity": _cohort(state, action, mechanism=mechanism),
+        "cohort_identity": _cohort(state, action, mechanism=mechanism, route_family=route_family),
         "authority_and_commitment": {"commitment_micro_usd": int(binding.get("commitment_micro_usd") or 0),
             "authorization_reference": auth.get("authorization_reference"), "consumption_reference": consumption.get("consumer_id")},
         "provider_operation": {"provider": "openai", "operation_kind": mechanism, "operation_id": provider.get("id"), "status": provider_status},
@@ -362,6 +376,27 @@ def project_exact_provider_economics_revision(
         if old == new:
             return None
     return candidate
+
+
+def project_exact_provider_economics_revision(
+    state: Mapping[str, Any], action: Mapping[str, Any], *, observed_at: str,
+    previous_revision: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    return _project_provider_economics_revision(
+        state, action, observed_at=observed_at,
+        previous_revision=previous_revision, route_family="exact_natal",
+    )
+
+
+def project_bounded_provider_economics_revision(
+    state: Mapping[str, Any], action: Mapping[str, Any], *, observed_at: str,
+    previous_revision: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Project one bounded-Natal paid action or Batch round read-only."""
+    return _project_provider_economics_revision(
+        state, action, observed_at=observed_at,
+        previous_revision=previous_revision, route_family="bounded_natal",
+    )
 
 
 def finalize_provider_economics_revision(revision: Mapping[str, Any]) -> dict[str, Any]:
