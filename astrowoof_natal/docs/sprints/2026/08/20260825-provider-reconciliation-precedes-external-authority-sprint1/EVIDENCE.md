@@ -77,3 +77,15 @@ authority.
   0.
 - Runtime selector change: none; current contradictory mixed branches fail closed
   pending Slice 2.
+
+## Slice 2 evidence
+
+- Shared selector now orders retained provider truth before prepared authority.
+- Exact and bounded not-due mixed states select ineligible
+  `provider_reconciliation_cycle` with native `not_before`.
+- Exact and bounded due mixed states select only the first four native due members.
+- Completed-provider evidence selects `ordinary_resume` before authority.
+- Time-only not-due → due keeps one v0.6 checkpoint basis and absent authority
+  inventory.
+- Focused result: 70 tests passed; 1 optional schema check skipped.
+- Provider create/retrieval, authorization consumption, and frozen-QA access: 0.

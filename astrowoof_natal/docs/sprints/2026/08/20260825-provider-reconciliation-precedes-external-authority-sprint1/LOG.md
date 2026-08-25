@@ -70,3 +70,19 @@
 - Focused contract suite passed: 28 tests, 1 optional `jsonschema` skip.
 - Selector implementation remains unchanged and therefore fails closed at the new
   validator until Slice 2; paused at voof-paw 2.
+
+## 2026-08-25 — Slice 1 API approval
+
+- API approved the in-place v0.5/v0.6 hardening and authorized selector work.
+- Reconfirmed SBE-owned subset order/cap, nonmutating not-due behavior, and no
+  provider-create or authority-consumption expansion.
+
+## 2026-08-25 — Slice 2 selector correction
+
+- Reordered shared lifecycle classification so due retrieval, completed-evidence
+  fan-in, scheduled custody, and causal local work precede prepared authority.
+- Preserved the existing four-action due subset and native `not_before` behavior.
+- Converted the Slice 0 reproducer into positive exact/bounded regression coverage.
+- Proved time-only not-due → due now retains one checkpoint basis with no authority
+  inventory in either observation.
+- Focused lifecycle/capacity/temporal suite passed: 70 tests, 1 optional schema skip.

@@ -169,6 +169,8 @@ semantic predicates, and diagnostic vocabulary.
 
 ### Slice 2 — Reconciliation-priority implementation
 
+**Status: complete.** Shared selector order corrected; focused qualification green.
+
 Implement one shared route-neutral classification rule where feasible. It must
 classify the complete retained provider inventory before prepared authority,
 prioritize due reconciliation, prioritize not-due detach scheduling, prioritize

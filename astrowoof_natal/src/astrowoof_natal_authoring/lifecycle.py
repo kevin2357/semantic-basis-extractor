@@ -808,10 +808,6 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "provider_reconciliation_due",
         )
-    elif prepared:
-        disposition, local_ready, reason = (
-            "await_external_authority", False, "spend_authorization_required",
-        )
     elif completed_evidence:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",
@@ -823,6 +819,10 @@ def _capacity_and_custody(
     elif non_provider_local:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",
+        )
+    elif prepared:
+        disposition, local_ready, reason = (
+            "await_external_authority", False, "spend_authorization_required",
         )
     elif projected:
         disposition, local_ready, reason = (
