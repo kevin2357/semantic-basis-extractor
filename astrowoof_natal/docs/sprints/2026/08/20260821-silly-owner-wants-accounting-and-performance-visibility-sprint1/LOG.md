@@ -217,3 +217,12 @@
 - Exact SPC 0.11.0 plus schema dependency environment passed `pip check`.
 - No provider/network/spend/retained-run activity occurred.
 - Paused for API fixture/receipt ingestion and final release authorization.
+
+## 2026-08-25 — Final release approval
+
+- API approved immediate 0.4.21 publication as an additive, opt-in native release.
+- Existing execution/lifecycle/spend/custody/authority contracts remain unchanged;
+  bounded retrieval timing is the only native-state addition.
+- Product owner authorized tagging and publication.
+- API worker pin/deployment remains deferred until its separate ingestion sprint
+  qualifies fixture, replay, predecessor, and privacy behavior.

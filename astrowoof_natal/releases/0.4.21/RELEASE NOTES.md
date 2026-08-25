@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.21
 
-Status: qualified release candidate; API adoption review and owner authorization pending
+Status: authorized release candidate
 
 SBE 0.4.21 adds a privacy-minimized provider-economics transaction tape for
 long-term accounting and performance analysis. Exact and bounded interactive
@@ -29,5 +29,6 @@ lifecycle, spend, custody, settlement, or delivery behavior.
 - Exact pinned SPC 0.11.0 environment: `pip check` pass.
 - External provider/network calls and spend: 0.
 
-Tagging and publication require explicit owner authorization after API ingests the
-packaged four-route fixture/qualification evidence.
+API consumer review and product-owner authorization approve immutable 0.4.21
+tagging and publication. API worker pinning/deployment remains deferred until the
+separate ingestion sprint qualifies fixture, replay, and privacy behavior.

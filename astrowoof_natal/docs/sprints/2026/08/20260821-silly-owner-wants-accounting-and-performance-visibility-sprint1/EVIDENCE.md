@@ -128,7 +128,8 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
   route/mechanism cells: verified.
 - External provider I/O, provider creates/retrievals, credentials, spend, API
   database writes, and retained QA access: **0**.
-- Gate: awaiting API adoption of packaged fixtures/receipt before Slice 6.
+- Historical Slice 5 gate: API fixture review was required before Slice 6 and was
+  satisfied by the approval below.
 
 ## Slice 5 API review
 
@@ -136,8 +137,8 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
 - API confirmed the export provides the raw transaction-level evidence needed for
   later Batch savings and latency analysis without making logs or dashboards
   authoritative.
-- Release pin remains conditional on API ingestion of the packaged four-route
-  fixtures/qualification receipt.
+- API worker pin/deployment remains conditional on ingestion of the packaged
+  four-route fixtures/qualification receipt; publication is independently allowed.
 
 ## Slice 6 — release qualification
 
@@ -154,5 +155,13 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
   `d2cbcdf6eb6dd98b1a124f5e5c21ea58a969f73212c5ccdc74c8c0e60440b8b0`.
 - Exact pinned dependency `pip check`: **PASS**.
 - Provider/network calls, spend, credentials, API writes, retained-run access: 0.
-- Final gate: API ingestion/final review plus explicit owner tag/publication
-  authorization.
+- Final candidate gate was API review plus explicit owner tag/publication
+  authorization; both are now satisfied below.
+
+## Final consumer and owner decision
+
+- API release review: approved; no contract correction requested.
+- Owner authorization: approved for 0.4.21 tag/publication.
+- Deployment posture: published artifact may exist, but API workers must not pin it
+  until the API ingestion sprint proves immutable predecessor/replay/privacy
+  behavior against the packaged qualification evidence.

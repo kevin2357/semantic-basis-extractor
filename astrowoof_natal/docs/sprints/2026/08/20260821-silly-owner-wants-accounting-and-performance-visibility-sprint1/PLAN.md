@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 6 qualified candidate complete; API adoption/final release review pending
+Status: Sprint complete; 0.4.21 publication authorized
 
 ## Objective
 
@@ -133,8 +133,12 @@ Gate: explicit authorization before tag or publication.
 Result: qualification complete. SBE 0.4.21 has a committed source identity, a
 passing 683-test full suite, two byte-identical wheels, passing generic installed
 smoke, passing installed provider-economics qualification, and a clean exact-pinned
-dependency check. API fixture/receipt ingestion and explicit owner authorization
-remain required before immutable tagging/publication.
+dependency check. API fixture/receipt ingestion remains a deployment/pinning gate,
+not an artifact-publication gate.
+
+Final gate: API approved publication as an additive opt-in release, and the owner
+authorized tagging/publication. API worker pinning remains deferred to its separate
+ingestion qualification sprint.
 
 ## Testing strategy
 
