@@ -204,3 +204,16 @@
 - The remaining consumer condition is API ingestion of the packaged four-route
   fixture/qualification receipt before the resulting release is pinned.
 - Opened release qualification and selected fresh immutable version 0.4.21.
+
+## 2026-08-25 — Slice 6 candidate qualification
+
+- Committed release-candidate source at `fa7f79e` and bumped to fresh 0.4.21.
+- Full suite: 683 passed; 36 expected environment/opt-in skips.
+- Two builds at fixed epoch `1787638617` were byte-identical: 969947 bytes,
+  SHA-256 `7edf771a...e01f63`.
+- Installed provider-economics qualification passed with receipt
+  `d2cbcdf6...40b8b0` and zero provider I/O.
+- Generic installed release smoke passed with 50 cards and four summaries.
+- Exact SPC 0.11.0 plus schema dependency environment passed `pip check`.
+- No provider/network/spend/retained-run activity occurred.
+- Paused for API fixture/receipt ingestion and final release authorization.

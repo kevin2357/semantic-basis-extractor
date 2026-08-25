@@ -138,3 +138,21 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
   authoritative.
 - Release pin remains conditional on API ingestion of the packaged four-route
   fixtures/qualification receipt.
+
+## Slice 6 — release qualification
+
+- Candidate version: **0.4.21**.
+- Artifact source commit: `fa7f79ec6483c5a4610c9e3703fbe501326ff4d9`.
+- Full source suite: **683 passed; 36 expected skips**.
+- Reproducible wheel: **PASS**, two byte-identical 969947-byte builds.
+- Wheel SHA-256:
+  `7edf771ab16a6d3acc64c4da085799811a2fe3c01d29794be6eb75f622e01f63`.
+- Packaged resource count/digest: 102 /
+  `e868e1f463d2385045ffb7fb0cf5df8f6c1ae7081354ec20233222c9d22719c1`.
+- Installed generic release smoke: **PASS** (50 cards, four summaries).
+- Installed provider-economics qualification: **PASS**; receipt
+  `d2cbcdf6eb6dd98b1a124f5e5c21ea58a969f73212c5ccdc74c8c0e60440b8b0`.
+- Exact pinned dependency `pip check`: **PASS**.
+- Provider/network calls, spend, credentials, API writes, retained-run access: 0.
+- Final gate: API ingestion/final review plus explicit owner tag/publication
+  authorization.
