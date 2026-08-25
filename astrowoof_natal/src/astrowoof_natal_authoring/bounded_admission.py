@@ -14,7 +14,7 @@ ADMISSION_CONTRACT = "astrowoof.bounded_natal.input_admission.v1"
 ADMISSION_EVENT_CONTRACT = "astrowoof.bounded_natal.admission_event.v1"
 OUTPUT_CONTRACT = "projected_bounded_semantic_graph.v1"
 OUTPUT_CONTRACT_VERSION = "1.0.0"
-SUPPORTED_SPC_VERSION = "0.11.0"
+SUPPORTED_SPC_VERSION = "0.11.1"
 SUPPORTED_PROFILE = ("woofmapped_bounded_astrology.v0", "0.1.0")
 SUPPORTED_TARGET_ONTOLOGY = "woofmapped_astrology.v0"
 REQUIRED_CONTEXTS = {
@@ -94,7 +94,7 @@ def _default_validator(
     except importlib.metadata.PackageNotFoundError as exc:
         raise BoundedAdmissionError(
             "spc_runtime_missing",
-            "semantic-projection-core 0.11.0 is required for bounded admission",
+            "semantic-projection-core 0.11.1 is required for bounded admission",
             status="unsupported",
         ) from exc
     if installed_version != SUPPORTED_SPC_VERSION:

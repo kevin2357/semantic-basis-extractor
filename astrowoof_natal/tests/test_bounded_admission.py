@@ -33,7 +33,7 @@ def family() -> list[dict]:
                 "metadata": {
                     "output_contract": "projected_bounded_semantic_graph.v1",
                     "contract_version": "1.0.0",
-                    "engine_version": "0.11.0",
+                    "engine_version": "0.11.1",
                     "profile_id": "woofmapped_bounded_astrology.v0",
                     "profile_version": "0.1.0",
                     "context_id": context_id,
@@ -42,7 +42,7 @@ def family() -> list[dict]:
                     "runtime_identity": {
                         "distribution": {
                             "name": "semantic-projection-core",
-                            "version": "0.11.0",
+                            "version": "0.11.1",
                         },
                         "route": "bounded_natal_projection",
                         "output_contract": "projected_bounded_semantic_graph.v1",

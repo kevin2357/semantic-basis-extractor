@@ -95,7 +95,7 @@ def admission() -> BoundedAdmission:
             "source_artifact_sha256": "a" * 64,
             "output_contract": "projected_bounded_semantic_graph.v1",
             "contract_version": "1.0.0",
-            "spc_version": "0.11.0",
+            "spc_version": "0.11.1",
             "profile_id": "woofmapped_bounded_astrology.v0",
             "profile_version": "0.1.0",
             "projected_term_registry_sha256": "b" * 64,

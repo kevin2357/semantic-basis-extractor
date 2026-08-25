@@ -10,7 +10,7 @@ readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs fo
 requires-python = ">=3.11"
 license = {text = "Proprietary"}
 authors = [{name = "AstroWoof"}]
-dependencies = ["semantic-projection-core==0.11.0"]
+dependencies = ["semantic-projection-core==0.11.1"]
 
 [project.scripts]
 astrowoof-semantic-closure = "astrowoof_natal_authoring.cli.closure:main"
