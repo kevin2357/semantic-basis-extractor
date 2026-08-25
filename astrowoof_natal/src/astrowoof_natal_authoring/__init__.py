@@ -106,6 +106,17 @@ from .operator_retirement_qa import (  # noqa: E402
     run_operator_retirement_qualification,
     validate_operator_retirement_qualification,
 )
+from .provider_economics import (  # noqa: E402
+    MAX_RETRIEVAL_REFERENCES,
+    SCHEMA_VERSION as PROVIDER_ECONOMICS_SCHEMA_VERSION,
+    derive_cohort_identity_sha256,
+    derive_revision_id,
+    derive_transaction_id,
+    finalize_provider_economics_revision,
+    read_provider_economics_schema,
+    validate_provider_economics_revision,
+    validate_provider_economics_revision_sequence,
+)
 
 __all__ = [
     "NativeTransitionResultView",
@@ -174,4 +185,13 @@ __all__ = [
     "read_operator_retirement_qualification_schema",
     "run_operator_retirement_qualification",
     "validate_operator_retirement_qualification",
+    "MAX_RETRIEVAL_REFERENCES",
+    "PROVIDER_ECONOMICS_SCHEMA_VERSION",
+    "derive_cohort_identity_sha256",
+    "derive_revision_id",
+    "derive_transaction_id",
+    "finalize_provider_economics_revision",
+    "read_provider_economics_schema",
+    "validate_provider_economics_revision",
+    "validate_provider_economics_revision_sequence",
 ]

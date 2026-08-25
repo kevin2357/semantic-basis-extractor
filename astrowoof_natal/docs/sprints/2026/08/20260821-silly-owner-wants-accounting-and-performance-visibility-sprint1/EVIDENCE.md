@@ -34,3 +34,16 @@ Status: Slice 1 contract approved with API conditions; implementation in progres
 - Slice 1 checks: JSON examples parse; documentation whitespace check passes.
 - Slice 1 gate: PAUSED. No runtime schema or validator will be frozen until joint
   SBE/API approval.
+
+## Slice 1 implementation evidence in progress
+
+- Joint SBE/API/owner contract gate: approved with API conditions.
+- Packaged schema:
+  `provider-economics-transaction-revision.v1.schema.json`.
+- Public Python surface: transaction/cohort/revision identity derivation, revision
+  finalization, strict revision validation, and cumulative sequence validation.
+- Initial focused result: 7 passed; one optional-schema skip.
+- Existing contract/publication regressions: 128 passed.
+- Provider calls, retrievals, credentials, spend, and API database changes: 0.
+- Remaining gate work: packaged fixtures, mutation corpus, schema-enabled run, and
+  final Slice 1 consumer review packet.

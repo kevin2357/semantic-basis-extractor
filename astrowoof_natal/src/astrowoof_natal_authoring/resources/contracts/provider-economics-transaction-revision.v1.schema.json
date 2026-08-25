@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/provider-economics-transaction-revision.v1.schema.json",
+  "title": "AstroWoof provider economics transaction revision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "transaction_id", "native_run_id", "native_action_id",
+    "revision_number", "previous_revision_id", "revision_id", "observed_at",
+    "transaction_identity", "cohort_identity", "authority_and_commitment",
+    "provider_operation", "usage_and_cost", "timing", "editorial_outcome",
+    "native_outcome", "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.provider_economics_transaction_revision.v1"},
+    "transaction_id": {"type": "string", "pattern": "^pe_txn_[0-9a-f]{24}$"},
+    "native_run_id": {"type": "string", "minLength": 1},
+    "native_action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+    "revision_number": {"type": "integer", "minimum": 1},
+    "previous_revision_id": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^pe_rev_[0-9a-f]{24}$"}]},
+    "revision_id": {"type": "string", "pattern": "^pe_rev_[0-9a-f]{24}$"},
+    "observed_at": {"$ref": "#/$defs/timestamp"},
+    "transaction_identity": {"$ref": "#/$defs/transaction_identity"},
+    "cohort_identity": {"$ref": "#/$defs/cohort_identity"},
+    "authority_and_commitment": {"$ref": "#/$defs/authority"},
+    "provider_operation": {"$ref": "#/$defs/provider_operation"},
+    "usage_and_cost": {"$ref": "#/$defs/usage_and_cost"},
+    "timing": {"$ref": "#/$defs/timing"},
+    "editorial_outcome": {"$ref": "#/$defs/editorial_outcome"},
+    "native_outcome": {"$ref": "#/$defs/native_outcome"},
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "nullable_string": {"type": ["string", "null"], "minLength": 1},
+    "nullable_nonnegative_integer": {"type": ["integer", "null"], "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nullable_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+    "timestamp": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "nullable_timestamp": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/timestamp"}]},
+    "usage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens"],
+      "properties": {
+        "input_tokens": {"type": "integer", "minimum": 0},
+        "cached_input_tokens": {"type": "integer", "minimum": 0},
+        "output_tokens": {"type": "integer", "minimum": 0},
+        "reasoning_tokens": {"type": "integer", "minimum": 0}
+      }
+    },
+    "member": {
+      "type": "object", "additionalProperties": false,
+      "required": ["member_id", "ordinal", "pass_id", "attempt_number", "paid_stage", "request_sha256", "provider_member_id", "provider_status", "usage_disposition", "usage", "provider_reported_micro_usd"],
+      "properties": {
+        "member_id": {"type": "string", "minLength": 1},
+        "ordinal": {"type": "integer", "minimum": 1},
+        "pass_id": {"$ref": "#/$defs/nullable_string"},
+        "attempt_number": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "paid_stage": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "provider_member_id": {"$ref": "#/$defs/nullable_string"},
+        "provider_status": {"enum": ["not_created", "pending", "completed", "failed", "cancelled", "expired", "ambiguous", "identity_conflict"]},
+        "usage_disposition": {"enum": ["reported", "unavailable"]},
+        "usage": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/usage"}]},
+        "provider_reported_micro_usd": {"$ref": "#/$defs/nullable_nonnegative_integer"}
+      }
+    },
+    "transaction_identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "paid_stage", "provider_mechanism", "native_operation_ref", "pass_id", "attempt_number", "round_id", "cardinality_kind", "members"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "paid_stage": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]},
+        "provider_mechanism": {"enum": ["response", "batch"]},
+        "native_operation_ref": {"type": "string", "minLength": 1},
+        "pass_id": {"$ref": "#/$defs/nullable_string"},
+        "attempt_number": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "round_id": {"$ref": "#/$defs/nullable_string"},
+        "cardinality_kind": {"enum": ["single_action", "batch_round"]},
+        "members": {"type": "array", "items": {"$ref": "#/$defs/member"}}
+      }
+    },
+    "cohort_identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cohort_completeness", "sbe_release", "route_contract", "generation_profile_id", "profile_manifest_sha256", "resource_bundle_sha256", "request_geometry_version", "request_geometry_sha256", "execution_topology_version", "execution_topology_sha256", "model", "reasoning_effort", "service_level", "maximum_output_tokens", "price_book_version", "cohort_identity_sha256"],
+      "properties": {
+        "cohort_completeness": {"enum": ["complete", "legacy_unknown"]},
+        "sbe_release": {"type": "string", "minLength": 1},
+        "route_contract": {"type": "string", "minLength": 1},
+        "generation_profile_id": {"$ref": "#/$defs/nullable_string"},
+        "profile_manifest_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "resource_bundle_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "request_geometry_version": {"type": "string", "minLength": 1},
+        "request_geometry_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "execution_topology_version": {"type": "string", "minLength": 1},
+        "execution_topology_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "model": {"type": "string", "minLength": 1},
+        "reasoning_effort": {"type": "string", "minLength": 1},
+        "service_level": {"type": "string", "minLength": 1},
+        "maximum_output_tokens": {"type": "integer", "minimum": 0},
+        "price_book_version": {"type": "string", "minLength": 1},
+        "cohort_identity_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commitment_micro_usd", "authorization_reference", "consumption_reference"],
+      "properties": {
+        "commitment_micro_usd": {"type": "integer", "minimum": 0},
+        "authorization_reference": {"$ref": "#/$defs/nullable_string"},
+        "consumption_reference": {"$ref": "#/$defs/nullable_string"}
+      }
+    },
+    "provider_operation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider", "operation_kind", "operation_id", "status"],
+      "properties": {
+        "provider": {"const": "openai"},
+        "operation_kind": {"enum": ["response", "batch"]},
+        "operation_id": {"$ref": "#/$defs/nullable_string"},
+        "status": {"enum": ["not_created", "pending", "completed", "failed", "cancelled", "expired", "ambiguous", "identity_conflict"]}
+      }
+    },
+    "usage_and_cost": {
+      "type": "object", "additionalProperties": false,
+      "required": ["settlement_disposition", "usage", "sbe_estimated_micro_usd", "sbe_estimate_price_book_version", "provider_reported_micro_usd"],
+      "properties": {
+        "settlement_disposition": {"enum": ["provider_pending", "provider_usage_reported", "provider_usage_unavailable_billing_reconciliation_pending", "no_provider_work_consumed", "submission_ambiguous"]},
+        "usage": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/usage"}]},
+        "sbe_estimated_micro_usd": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "sbe_estimate_price_book_version": {"$ref": "#/$defs/nullable_string"},
+        "provider_reported_micro_usd": {"$ref": "#/$defs/nullable_nonnegative_integer"}
+      }
+    },
+    "timing": {
+      "type": "object", "additionalProperties": false,
+      "required": ["prepared_at", "authorized_at", "submission_intent_at", "provider_identity_durable_at", "provider_terminal_observed_at", "reconciliation_completed_at", "native_settled_at", "create_http_duration_ms", "observed_provider_pending_ms", "native_action_span_ms", "provider_reported_duration_ms", "retrieval_attempt_count", "first_retrieval_observed_at", "last_retrieval_observed_at", "retrieval_http_duration_total_ms", "retrieval_attempt_refs", "retrieval_attempt_ref_overflow_count"],
+      "properties": {
+        "prepared_at": {"$ref": "#/$defs/nullable_timestamp"}, "authorized_at": {"$ref": "#/$defs/nullable_timestamp"},
+        "submission_intent_at": {"$ref": "#/$defs/nullable_timestamp"}, "provider_identity_durable_at": {"$ref": "#/$defs/nullable_timestamp"},
+        "provider_terminal_observed_at": {"$ref": "#/$defs/nullable_timestamp"}, "reconciliation_completed_at": {"$ref": "#/$defs/nullable_timestamp"},
+        "native_settled_at": {"$ref": "#/$defs/nullable_timestamp"}, "create_http_duration_ms": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "observed_provider_pending_ms": {"$ref": "#/$defs/nullable_nonnegative_integer"}, "native_action_span_ms": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "provider_reported_duration_ms": {"$ref": "#/$defs/nullable_nonnegative_integer"}, "retrieval_attempt_count": {"type": "integer", "minimum": 0},
+        "first_retrieval_observed_at": {"$ref": "#/$defs/nullable_timestamp"}, "last_retrieval_observed_at": {"$ref": "#/$defs/nullable_timestamp"},
+        "retrieval_http_duration_total_ms": {"$ref": "#/$defs/nullable_nonnegative_integer"},
+        "retrieval_attempt_refs": {"type": "array", "maxItems": 16, "items": {"type": "string", "minLength": 1}},
+        "retrieval_attempt_ref_overflow_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "editorial_outcome": {
+      "type": "object", "additionalProperties": false, "required": ["status", "retry_reason_category"],
+      "properties": {"status": {"enum": ["not_yet_evaluated", "accepted", "rejected_invalid", "retry_prepared", "advisory_only", "skipped"]}, "retry_reason_category": {"$ref": "#/$defs/nullable_string"}}
+    },
+    "native_outcome": {
+      "type": "object", "additionalProperties": false, "required": ["status", "delivery_publishable"],
+      "properties": {"status": {"enum": ["in_progress", "delivery_complete", "delivery_with_warning", "review_held", "budget_exhausted", "policy_stopped", "failed"]}, "delivery_publishable": {"type": "boolean"}}
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["action_binding_sha256", "request_sha256", "native_result_id", "native_result_sha256", "journal_range_sha256", "snapshot_sha256", "publication_receipt_id", "publication_receipt_sha256", "usage_evidence_ref", "batch_round_manifest_sha256", "api_reconciliation_join"],
+      "properties": {
+        "action_binding_sha256": {"$ref": "#/$defs/nullable_sha256"}, "request_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "native_result_id": {"$ref": "#/$defs/nullable_string"}, "native_result_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "journal_range_sha256": {"$ref": "#/$defs/nullable_sha256"}, "snapshot_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "publication_receipt_id": {"$ref": "#/$defs/nullable_string"}, "publication_receipt_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "usage_evidence_ref": {"$ref": "#/$defs/nullable_string"}, "batch_round_manifest_sha256": {"$ref": "#/$defs/nullable_sha256"},
+        "api_reconciliation_join": {
+          "type": "object", "additionalProperties": false, "required": ["native_run_id", "native_action_id"],
+          "properties": {"native_run_id": {"type": "string", "minLength": 1}, "native_action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}}
+        }
+      }
+    }
+  }
+}

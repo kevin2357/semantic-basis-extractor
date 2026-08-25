@@ -79,3 +79,23 @@
 - Reaffirmed distinct unknown/zero, estimated/provider/API money, publication time,
   provider completion, and provider-pending wall-time semantics.
 - Opened the Slice 1 implementation gate for schema, validators, and fixtures.
+
+## 2026-08-24 — Slice 1 contract implementation started
+
+- Added the packaged Draft 2020-12 transaction-revision schema and registered its
+  identity in the public contract catalog.
+- Added strict Python validation independent of optional `jsonschema`.
+- Added canonical native transaction, cohort, and revision identities.
+- Enforced interactive-versus-Batch cardinality, conservative partial Batch usage,
+  and the prohibition on invented member allocations.
+- Added bounded retrieval summaries with 16-reference cap and explicit overflow.
+- Added cumulative sequence validation for exact replay, contiguous predecessor
+  chains, immutable identities, monotonic settlement/timing evidence, and closed
+  provider/editorial/native progressions.
+- Added focused contract tests for settlement-to-editorial/native revisions, replay,
+  predecessor gaps, contradictions, partial Batch usage, retrieval overflow,
+  topology cohort identity, and privacy sentinel absence.
+- Initial focused contract result: 7 passed, one optional `jsonschema` check skipped.
+- Existing bounded-authoring, native-transition, and semantic-closure regression
+  set: 128 passed.
+- Static packaged fixture corpus and mutation corpus remain before Slice 1 closeout.
