@@ -36,6 +36,7 @@ from astrowoof_natal_authoring.temporal_lifecycle import (  # noqa: E402
     read_temporal_lifecycle_schema,
 )
 import test_provider_pending_capacity as _fixture  # noqa: E402
+from test_external_authority_public import TestExternalAuthorityPublic  # noqa: E402
 
 
 def changed_paths(left: object, right: object, prefix: str = "") -> list[str]:
@@ -183,6 +184,12 @@ class TestTemporalLifecycleContractSlice1(unittest.TestCase):
             root, action_count=6
         )
 
+    def authority_inspection(self, root: Path, observed_at: str) -> dict:
+        run_dir = TestExternalAuthorityPublic().make_ordinary_run(root)
+        return inspect_temporal_lifecycle(
+            run_dir, native_exclusive_access="declared", observed_at=observed_at,
+        )
+
     def inspections(self, root: Path) -> tuple[dict, dict]:
         not_due = inspect_lifecycle(
             root, native_exclusive_access="declared",
@@ -291,19 +298,13 @@ class TestTemporalLifecycleContractSlice1(unittest.TestCase):
     def test_authority_request_digest_is_stable_across_observation_time(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
-            self.materialize(root)
-            not_due, due = self.inspections(root)
-            action_ids = not_due["checkpoint_basis"]["provider_custody"]["action_ids"]
-            for value in (not_due, due):
-                value["checkpoint_basis"]["external_authority_state"] = {
-                    "kind": "request",
-                    "request_kind": "initial_wave_admission",
-                    "ordered_action_ids": action_ids,
-                    "refusal_reason": None,
-                    "evidence_categories": [],
-                }
-                self.rehash_all(value)
-                validate_lifecycle_inspection_v06(value)
+            not_due = self.authority_inspection(root, "2026-08-20T14:01:00Z")
+            due = inspect_temporal_lifecycle(
+                root / "ordinary", native_exclusive_access="declared",
+                observed_at="2026-08-20T14:02:00Z",
+            )
+            validate_lifecycle_inspection_v06(not_due)
+            validate_lifecycle_inspection_v06(due)
             self.assertEqual(
                 build_external_authority_request_v2(not_due),
                 build_external_authority_request_v2(due),
@@ -359,17 +360,7 @@ class TestTemporalLifecycleContractSlice1(unittest.TestCase):
     def test_v2_request_must_join_strict_inspection_and_bindings(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
-            self.materialize(root)
-            _, due = self.inspections(root)
-            action_ids = due["checkpoint_basis"]["provider_custody"]["action_ids"]
-            due["checkpoint_basis"]["external_authority_state"] = {
-                "kind": "request",
-                "request_kind": "initial_wave_admission",
-                "ordered_action_ids": action_ids,
-                "refusal_reason": None,
-                "evidence_categories": [],
-            }
-            self.rehash_all(due)
+            due = self.authority_inspection(root, "2026-08-20T14:01:00Z")
             request = build_external_authority_request_v2(due)
             validate_external_authority_request_v2_against_inspection(request, due)
 
@@ -391,17 +382,7 @@ class TestTemporalLifecycleContractSlice1(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
-            self.materialize(root)
-            _, due = self.inspections(root)
-            action_ids = due["checkpoint_basis"]["provider_custody"]["action_ids"]
-            due["checkpoint_basis"]["external_authority_state"] = {
-                "kind": "request",
-                "request_kind": "initial_wave_admission",
-                "ordered_action_ids": action_ids,
-                "refusal_reason": None,
-                "evidence_categories": [],
-            }
-            self.rehash_all(due)
+            due = self.authority_inspection(root, "2026-08-20T14:01:00Z")
             request = build_external_authority_request_v2(due)
 
             for field, bad_value, message in (

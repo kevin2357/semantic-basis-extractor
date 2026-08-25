@@ -610,6 +610,21 @@ def external_authority_branch_predicate_failures(
     return sorted(set(errors))
 
 
+def provider_precedence_predicate_failures(value: dict[str, Any]) -> list[str]:
+    """Return closed failures when retained provider truth is masked by authority."""
+    branch = value.get("execution_branch") or {}
+    custody = value.get("provider_custody") or {}
+    if branch.get("command") != "await_external_authority":
+        return []
+    action_ids = custody.get("action_ids") or []
+    if not action_ids:
+        return []
+    errors = ["retained_provider_custody_precedes_authority"]
+    if custody.get("state") == "completed_evidence_pending_local_work":
+        errors.append("provider_fan_in_precedes_authority")
+    return sorted(errors)
+
+
 def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
     """Validate v0.5 plus its exact embedded external-authority decision."""
     if value.get("schema_version") != LIFECYCLE_INSPECTION_SCHEMA:
@@ -627,6 +642,8 @@ def validate_lifecycle_inspection_v05(value: dict[str, Any]) -> None:
     branch = value.get("execution_branch") or {}
     command = branch.get("command")
     conditional_errors = external_authority_branch_predicate_failures(value)
+    conditional_errors.extend(provider_precedence_predicate_failures(value))
+    conditional_errors = sorted(set(conditional_errors))
     if conditional_errors:
         raise ValueError(
             "Contradictory lifecycle external-authority fields: "

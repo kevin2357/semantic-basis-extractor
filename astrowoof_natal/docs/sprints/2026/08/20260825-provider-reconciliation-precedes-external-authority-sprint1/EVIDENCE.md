@@ -59,3 +59,21 @@ authority.
 - Authorization/grant consumption: 0.
 - Frozen QA cohort access/mutation: 0.
 - Source/schema/runtime changes: none.
+
+## Slice 1 evidence
+
+- API approval: `API AGENT SLICE 0 REVIEW.md`.
+- Contract:
+  `results/SLICE 1 - PRECEDENCE CONTRACT AND SEMANTIC VALIDATION.md`.
+- Lifecycle v0.5 closed failures:
+  - `retained_provider_custody_precedes_authority`;
+  - `provider_fan_in_precedes_authority`.
+- Temporal v0.6 independently refuses an authority request over retained custody,
+  even when all digests are recomputed.
+- Genuine authority-only observations retain a stable request digest across trusted
+  observation time.
+- Focused result: 28 tests passed; 1 optional `jsonschema` check skipped.
+- Provider I/O, create, retrieval, authorization consumption, and frozen-QA access:
+  0.
+- Runtime selector change: none; current contradictory mixed branches fail closed
+  pending Slice 2.

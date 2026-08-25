@@ -117,45 +117,25 @@ class TestProviderReconciliationPrecedesAuthoritySlice0(unittest.TestCase):
                 self.assertEqual(4, len(lifecycle["execution_branch"]["action_ids"]))
                 self.assertNotIn(prepared_id, lifecycle["execution_branch"]["action_ids"])
 
-    def test_not_due_provider_custody_is_currently_misclassified_as_authority(self) -> None:
+    def test_not_due_provider_custody_contradiction_is_now_rejected(self) -> None:
         for route_family in ("exact_natal", "bounded_natal"):
             with self.subTest(route_family=route_family), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary).resolve()
                 prepared_id = self.materialize(root, route_family)
                 before = _workspace_hashes(root)
 
-                lifecycle = inspect_lifecycle(
-                    root,
-                    native_exclusive_access="declared",
-                    observed_at="1970-01-01T00:00:10Z",
-                )
-                temporal = inspect_temporal_lifecycle(
-                    root,
-                    native_exclusive_access="declared",
-                    observed_at="1970-01-01T00:00:10Z",
-                )
-
+                with self.assertRaisesRegex(
+                    ValueError, "retained_provider_custody_precedes_authority"
+                ):
+                    inspect_lifecycle(
+                        root,
+                        native_exclusive_access="declared",
+                        observed_at="1970-01-01T00:00:10Z",
+                    )
                 self.assertEqual(before, _workspace_hashes(root))
-                self.assertEqual(
-                    "await_external_authority",
-                    lifecycle["execution_capacity"]["disposition"],
-                )
-                self.assertEqual(
-                    "await_external_authority",
-                    lifecycle["execution_branch"]["command"],
-                )
-                self.assertEqual([prepared_id], lifecycle["execution_branch"]["action_ids"])
-                self.assertEqual(
-                    "await_external_authority",
-                    temporal["temporal_decision"]["selected_command"],
-                )
-                self.assertEqual(
-                    "known_operations_pending",
-                    lifecycle["provider_custody"]["state"],
-                )
-                self.assertEqual(6, lifecycle["provider_custody"]["provider_action_count"])
+                self.assertEqual("paid_ffffffffffffffffffffffff", prepared_id)
 
-    def test_completed_provider_evidence_is_currently_misclassified_as_authority(self) -> None:
+    def test_completed_provider_evidence_contradiction_is_now_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             prepared_id = self.materialize(root, "exact_natal")
@@ -176,33 +156,21 @@ class TestProviderReconciliationPrecedesAuthoritySlice0(unittest.TestCase):
             write_workspace_snapshot(root)
             before = _workspace_hashes(root)
 
-            lifecycle = inspect_lifecycle(
-                root,
-                native_exclusive_access="declared",
-                observed_at="1970-01-01T00:00:10Z",
-            )
-
+            with self.assertRaisesRegex(
+                ValueError, "provider_fan_in_precedes_authority"
+            ):
+                inspect_lifecycle(
+                    root,
+                    native_exclusive_access="declared",
+                    observed_at="1970-01-01T00:00:10Z",
+                )
             self.assertEqual(before, _workspace_hashes(root))
-            self.assertEqual(
-                "completed_evidence_pending_local_work",
-                lifecycle["provider_custody"]["state"],
-            )
-            self.assertEqual(
-                "await_external_authority",
-                lifecycle["execution_branch"]["command"],
-            )
-            self.assertEqual([prepared_id], lifecycle["execution_branch"]["action_ids"])
 
-    def test_current_time_only_observation_also_changes_authority_basis(self) -> None:
+    def test_time_only_authority_basis_change_is_rejected_before_projection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             prepared_id = self.materialize(root, "exact_natal")
             before = _workspace_hashes(root)
-            not_due = inspect_temporal_lifecycle(
-                root,
-                native_exclusive_access="declared",
-                observed_at="1970-01-01T00:00:10Z",
-            )
             due = inspect_temporal_lifecycle(
                 root,
                 native_exclusive_access="declared",
@@ -210,28 +178,24 @@ class TestProviderReconciliationPrecedesAuthoritySlice0(unittest.TestCase):
             )
 
             self.assertEqual(before, _workspace_hashes(root))
-            self.assertNotEqual(
-                not_due["checkpoint_basis_sha256"], due["checkpoint_basis_sha256"]
-            )
-            self.assertEqual(
-                [prepared_id],
-                not_due["checkpoint_basis"]["external_authority_state"]["ordered_action_ids"],
-            )
-            self.assertEqual(
-                [], due["checkpoint_basis"]["external_authority_state"]["ordered_action_ids"]
-            )
+            with self.assertRaisesRegex(
+                ValueError, "retained_provider_custody_precedes_authority"
+            ):
+                inspect_temporal_lifecycle(
+                    root,
+                    native_exclusive_access="declared",
+                    observed_at="1970-01-01T00:00:10Z",
+                )
+            self.assertEqual(before, _workspace_hashes(root))
             self.assertEqual(
                 "none", due["checkpoint_basis"]["external_authority_state"]["kind"]
-            )
-            self.assertEqual(
-                "await_external_authority",
-                not_due["temporal_decision"]["selected_command"],
             )
             self.assertEqual(
                 "provider_reconciliation_cycle",
                 due["temporal_decision"]["selected_command"],
             )
             self.assertEqual(4, len(due["temporal_decision"]["due_action_ids"]))
+            self.assertEqual("paid_ffffffffffffffffffffffff", prepared_id)
 
 
 if __name__ == "__main__":

@@ -51,3 +51,22 @@
 - Verified all inspection calls were byte-level nonmutating and performed no
   provider I/O or authorization mutation.
 - Runtime and schema behavior remain unchanged; paused at voof-paw 1.
+
+## 2026-08-25 — Slice 0 API approval
+
+- API approved the public reproduction and existing-field compatibility decision.
+- Confirmed due/not-due/fan-in precedence and unchanged-basis authority suppression.
+- Authorized semantic-contract work only; no provider I/O or frozen-QA access.
+
+## 2026-08-25 — Slice 1 precedence contract
+
+- Tightened lifecycle v0.5 semantic validation in place.
+- Added closed failures for retained provider custody and required provider fan-in
+  masked by external authority.
+- Tightened temporal v0.6 semantic validation against a rehashed basis carrying
+  both provider custody and an authority request.
+- Corrected authority-digest tests to use a real authority-only workspace rather
+  than a synthetic authority-over-custody combination.
+- Focused contract suite passed: 28 tests, 1 optional `jsonschema` skip.
+- Selector implementation remains unchanged and therefore fails closed at the new
+  validator until Slice 2; paused at voof-paw 2.

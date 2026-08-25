@@ -561,6 +561,10 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
             for action_id in authority["ordered_action_ids"]
         ):
             raise ValueError("Checkpoint external-authority inventory does not join")
+        if custody.get("action_ids"):
+            raise ValueError(
+                "Checkpoint external authority is masked by retained provider custody"
+            )
     elif authority.get("kind") == "refusal":
         if (
             authority.get("request_kind") is not None

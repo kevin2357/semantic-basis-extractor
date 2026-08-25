@@ -1,7 +1,7 @@
 # Provider Reconciliation Precedes External Authority — Sprint 1 Plan
 
 Date: 2026-08-25  
-Status: Slice 0 complete; paused at voof-paw 1 for API review
+Status: Slice 1 complete; paused at voof-paw 2 for API review
 
 ## Objective
 
@@ -143,6 +143,9 @@ predicate, precedence table, v0.5/v0.6 impact, and local-continuation decision. 
 runtime patch before this gate.
 
 ### Slice 1 — Contract freeze and semantic validation
+
+**Status: complete.** See
+`results/SLICE 1 - PRECEDENCE CONTRACT AND SEMANTIC VALIDATION.md`.
 
 Prefer tightening lifecycle v0.5 and temporal v0.6 in place if the defect is an
 already-contradictory combination. Add no public state/command unless unavoidable.
