@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/provider-economics-qualification.v1.schema.json",
+  "title": "AstroWoof Provider Economics Qualification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "qualification_mode", "sbe_release", "outcome", "checks", "external_provider_io_count", "fixture_count", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.provider_economics_qualification.v1"},
+    "qualification_mode": {"const": "installed_wheel_provider_free"},
+    "sbe_release": {"type": "string", "minLength": 1},
+    "outcome": {"const": "passed"},
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exact_interactive", "exact_batch", "bounded_interactive", "bounded_batch", "snapshot_validation", "exact_replay", "privacy_minimized"],
+      "properties": {
+        "exact_interactive": {"const": true},
+        "exact_batch": {"const": true},
+        "bounded_interactive": {"const": true},
+        "bounded_batch": {"const": true},
+        "snapshot_validation": {"const": true},
+        "exact_replay": {"const": true},
+        "privacy_minimized": {"const": true}
+      }
+    },
+    "external_provider_io_count": {"const": 0},
+    "fixture_count": {"const": 4},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 3 approved; intentionally paused before Slice 4
+Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
 
 - Provider calls: 0
 - Spend: USD 0
@@ -107,3 +107,25 @@ Status: Slice 3 approved; intentionally paused before Slice 4
 - Provider-pending/temporal/v2 regression: **57 passed; 1 optional-schema skip**.
 - Provider calls, spend, credentials, API writes, retained-run access: **0**.
 - Slice 4 gate: PASS; Slice 5 public export is next.
+
+## Slice 5 — public export and ingestion handoff
+
+- Public Python seam: `read_provider_economics_export()`.
+- Public CLI: `astrowoof-provider-economics-export`.
+- Provider-free qualification: `astrowoof-provider-economics-qa`.
+- Packaged contracts:
+  - `provider-economics-export.v1.schema.json`;
+  - `provider-economics-qualification.v1.schema.json`; and
+  - existing `provider-economics-transaction-revision.v1.schema.json`.
+- Consumer handoff:
+  `SLICE 5 - PUBLIC EXPORT AND API INGESTION HANDOFF.md`.
+- Focused source result: **28 passed; 1 optional-schema skip**.
+- Isolated installed-wheel provider-free qualification: **PASS**.
+- Development wheel SHA-256: `5cdc8df44312b21ac228772be6a1d805cd883102b82da8576c29852861b72f22`.
+- Qualification receipt SHA-256: `642e48ddd860d7bdf9ba38be62fa4942fae2161c7a31e6f1ddadd1611c1a7ecc`.
+- Snapshot-change refusal, canonical-time refusal, output-inside-workspace refusal,
+  exact replay, contiguous later revision, predecessor-gap refusal, and all four
+  route/mechanism cells: verified.
+- External provider I/O, provider creates/retrievals, credentials, spend, API
+  database writes, and retained QA access: **0**.
+- Gate: awaiting API adoption of packaged fixtures/receipt before Slice 6.

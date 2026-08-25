@@ -72,7 +72,9 @@
     "bounded_natal_authoring_run": "astrowoof.bounded_natal.authoring_run.v2",
     "bounded_natal_delivery": "astrowoof.bounded_natal.delivery.v1",
     "bounded_natal_critic": "astrowoof.bounded_natal.critic.v1",
-    "provider_economics_transaction_revision": "astrowoof.provider_economics_transaction_revision.v1"
+    "provider_economics_transaction_revision": "astrowoof.provider_economics_transaction_revision.v1",
+    "provider_economics_export": "astrowoof.provider_economics_export.v1",
+    "provider_economics_qualification": "astrowoof.provider_economics_qualification.v1"
   },
   "compatibility": {
     "legacy_projected_directory": "normalized_to_projected_input_v0.1",

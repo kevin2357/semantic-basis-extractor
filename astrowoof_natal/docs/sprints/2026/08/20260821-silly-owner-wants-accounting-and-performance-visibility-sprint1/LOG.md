@@ -175,3 +175,23 @@
 - Provider-pending/temporal/v2 regression: 57 passed; 1 optional-schema skip.
 - Provider/network/spend/retained-run activity: 0.
 - Slice 4 gate passed; continuing to Slice 5 public export.
+
+## 2026-08-25 — Slice 5 public export and handoff
+
+- Added a packaged, snapshot-validating Python export that returns only newly
+  durable transaction revisions from exact v0.9 or bounded v2 workspaces.
+- Added a read-only CLI with canonical observation time, predecessor input, stdout
+  support, and refusal to write inside the native workspace.
+- Added closed export and qualification schemas and public contract-catalog entries.
+- Added a self-contained provider-free four-route qualification receipt suitable
+  for installed-wheel/API QA.
+- Added snapshot-integrity, replay, predecessor-gap, settlement-revision, CLI
+  mutation-safety, four-route cardinality, and privacy checks.
+- Published the transaction-tape/API ingestion handoff.
+- Focused provider-economics/export/qualification suite: 28 passed; 1 optional
+  schema skip on the lean interpreter.
+- Isolated installed-wheel qualification passed against the 0.4.20 development
+  wheel (`5cdc8df4...b72f22`); its closed receipt was
+  `642e48dd...a7ecc`.
+- Provider/network/spend/API database/retained-run activity: 0.
+- Paused at the planned API fixture-adoption review before Slice 6.

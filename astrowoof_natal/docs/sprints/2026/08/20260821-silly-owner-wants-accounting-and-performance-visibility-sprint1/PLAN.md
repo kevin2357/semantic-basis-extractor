@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 4 complete; Slice 5 public export and ingestion handoff in progress
+Status: Slice 5 complete; paused for API fixture-adoption review before Slice 6
 
 ## Objective
 
@@ -113,6 +113,13 @@ durations fail closed, and accepted timing/settlement evidence is monotonic.
   separately typed facts.
 
 Gate: API fixture adoption review before release qualification.
+
+Result: complete. A snapshot-validating packaged Python reader and read-only CLI
+export newly durable transaction revisions from exact/bounded interactive/Batch
+state. A provider-free installed-wheel command emits a closed four-route receipt.
+The API handoff freezes immutable predecessor-checked ingestion, semantic nulls,
+Batch-round authority, privacy exclusions, and the separation of SBE estimates,
+provider reports, and API-reconciled billing.
 
 ### Slice 6 — Closeout and pinnable artifact
 

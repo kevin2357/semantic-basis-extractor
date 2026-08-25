@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/provider-economics-export.v1.schema.json",
+  "title": "AstroWoof Provider Economics Export v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "export_sha256", "native_run_id", "route_family", "snapshot_sha256", "observed_at", "revision_count", "revisions"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.provider_economics_export.v1"},
+    "export_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "native_run_id": {"type": "string", "minLength": 1},
+    "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+    "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "revision_count": {"type": "integer", "minimum": 0},
+    "revisions": {
+      "type": "array",
+      "items": {"$ref": "provider-economics-transaction-revision.v1.schema.json"}
+    }
+  }
+}
