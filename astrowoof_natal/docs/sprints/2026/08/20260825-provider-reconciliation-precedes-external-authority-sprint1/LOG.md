@@ -125,3 +125,13 @@
 - Receipt SHA-256: `27174390...bfc63741`.
 - Added the route-neutral API consumer handoff.
 - Paused at voof-paw 3 before version bump/release preparation.
+
+## 2026-08-25 — Slice 5 API approval
+
+- API approved the selector, 4+2/fan-in qualification, route/stage matrix,
+  installed-wheel handoff, and unchanged v0.5/v0.6 consumer boundary.
+- Removed the handoff trailing blank-line hygiene issue.
+- Froze final evidence requirements: exact artifact/SPC identities, provider-free
+  installed and broad-suite evidence, zero frozen-QA access, and fresh API/worker
+  release-pair qualification before paid QA.
+- Bumped the unreleased candidate to 0.4.22 for Slice 6 qualification.

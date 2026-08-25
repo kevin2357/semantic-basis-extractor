@@ -107,4 +107,3 @@ This patch does not repair or resume the frozen QA cohort. After a fresh immutab
 release, any retained-run bridge/recovery remains separately reviewed and authorized.
 The API must validate the current native snapshot and lifecycle evidence rather than
 infer safety from historical dashboard completion.
-
