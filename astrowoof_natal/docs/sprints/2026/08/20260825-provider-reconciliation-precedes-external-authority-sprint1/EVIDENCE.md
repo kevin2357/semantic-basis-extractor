@@ -114,3 +114,17 @@ authority.
 - Ordinary optional-stage Batch dispatch remains explicitly unsupported/refused.
 - Focused result: 13 tests passed.
 - Provider/network/spend and frozen-QA access: 0.
+
+## Slice 5 evidence
+
+- Handoff: `PROVIDER CUSTODY PRECEDENCE API HANDOFF.md`.
+- Installed command: `astrowoof-provider-pending-qa`.
+- Candidate wheel SHA-256:
+  `730315cbbd4cd78fbc592c74e3d7021c8aad7b0cddf8d0ee07fa03418a9b55fb`.
+- SPC 0.11.1 wheel SHA-256:
+  `fd8b9be60c91f7f102164c45fcf2f89c814f808b334b3c08136f683f1c2b8b5b`.
+- Receipt SHA-256:
+  `271743902a49eb16ea1be23c3d44f86dc9b15cb877fb6f30e2ca7a61bfc63741`.
+- Receipt status: pass; create count 6; retrieval count 6; retrieval waves 4+2.
+- Post-fan-in authority inventory: exactly one later prepared action.
+- External network/provider/spend/frozen-QA activity: 0.

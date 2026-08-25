@@ -112,3 +112,16 @@
 - Preserved explicit ordinary-Batch optional-stage refusal and bounded/exact route
   identity.
 - Focused route/stage suite passed: 13 tests.
+
+## 2026-08-25 — Slice 5 installed-wheel qualification
+
+- Built the current candidate wheel and SPC 0.11.1 wheel without dependency/network
+  resolution, installed both into an isolated environment, and invoked the packaged
+  `astrowoof-provider-pending-qa` command.
+- Closed receipt passed every custody, 4+2, fan-in, authority, replay, basis, and
+  contradiction assertion.
+- Candidate wheel SHA-256: `730315cb...a9b55fb`.
+- Installed SPC 0.11.1 wheel SHA-256: `fd8b9be6...1c2b8b5b`.
+- Receipt SHA-256: `27174390...bfc63741`.
+- Added the route-neutral API consumer handoff.
+- Paused at voof-paw 3 before version bump/release preparation.

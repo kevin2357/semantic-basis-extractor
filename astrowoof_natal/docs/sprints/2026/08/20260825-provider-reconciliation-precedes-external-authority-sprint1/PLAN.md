@@ -1,7 +1,7 @@
 # Provider Reconciliation Precedes External Authority — Sprint 1 Plan
 
 Date: 2026-08-25  
-Status: Slice 1 complete; paused at voof-paw 2 for API review
+Status: Slice 5 complete; paused at voof-paw 3 for API review
 
 ## Objective
 
@@ -225,6 +225,9 @@ cell rather than implying parity.
 invented usage/cost, or authority mutation.
 
 ### Slice 5 — Public installed-wheel qualification and API handoff
+
+**Status: complete.** Installed candidate and exact SPC 0.11.1 qualification pass;
+consumer handoff published for API review.
 
 Add or extend one self-contained provider-free installed-wheel command using real
 workspace/snapshot/lifecycle readers, real command selection/reconciliation entry
