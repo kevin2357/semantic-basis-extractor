@@ -1,7 +1,7 @@
 # Temporal Lifecycle Vocabulary Compatibility — Patch Sprint 1
 
 Date: 2026-08-24
-Status: implementation complete; awaiting release qualification
+Status: complete; SBE 0.4.18 tagged, published, and verified
 
 ## Objective
 

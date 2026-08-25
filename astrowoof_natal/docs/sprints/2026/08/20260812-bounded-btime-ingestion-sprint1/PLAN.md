@@ -1,7 +1,7 @@
 # Bounded Birth-Time Natal Ingestion Sprint 1 Plan
 
 ```yaml
-status: proposed-awaiting-review
+status: complete; 0.4.0 tagged, published, and verified
 created: 2026-08-12
 reconciled: 2026-08-14
 owner: semantic-basis-extractor
@@ -12,7 +12,7 @@ qualified_upstream_candidates:
   agf: astrology-graph-foundry 0.8.1
   spc: semantic-projection-core 0.11.0
 target_input_contract: projected_bounded_semantic_graph.v1
-implementation_authorized: false
+implementation_authorized: true
 ```
 
 ## 1. Outcome

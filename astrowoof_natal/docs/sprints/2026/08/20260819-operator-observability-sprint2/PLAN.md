@@ -1,7 +1,8 @@
 # Practical Application Logging Sprint 2 Plan
 
 Date: 2026-08-19  
-Status: implementation complete; awaiting final commit approval  
+Status: complete; released in SBE 0.4.11
+
 Starting release: SBE 0.4.10
 
 ## Purpose

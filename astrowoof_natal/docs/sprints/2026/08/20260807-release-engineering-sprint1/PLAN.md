@@ -1,7 +1,7 @@
 # AstroWoof Natal Authoring Next-Release Sprint
 
 ```yaml
-status: in_progress
+status: complete; 0.2.0 tagged, published, and verified
 started: 2026-08-07
 owner: semantic-basis-extractor
 target_distribution: astrowoof-natal-authoring
@@ -10,7 +10,7 @@ target_tag: astrowoof-natal-authoring-v0.2.0
 predecessor_release: astrowoof-natal-authoring-v0.1.0
 execution_authorized: true
 live_provider_work_authorized: false
-publication_authorized: false
+publication_authorized: true
 ```
 
 ## Outcome

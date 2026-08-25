@@ -1,7 +1,7 @@
 # Retained Initial-Wave Next-Action Fence Sprint 1 Plan
 
 Date: 2026-08-20
-Status: Slice 4 complete; awaiting review before cross-route classification
+Status: complete; SBE 0.4.14 tagged, published, and verified
 Starting release: SBE 0.4.13
 Expected release: fresh immutable patch version after joint qualification
 

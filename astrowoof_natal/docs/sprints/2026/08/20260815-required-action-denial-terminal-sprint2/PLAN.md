@@ -7,7 +7,7 @@ owner: semantic-basis-extractor
 consumer: astrowoof-api
 scope: native terminalization after providerless denial of required actions
 implementation_started: true
-release_status: not_authorized
+release_status: 0.4.2 tagged and published
 ```
 
 ## Purpose

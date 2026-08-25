@@ -2,7 +2,7 @@
 
 Date: 2026-08-24
 
-Status: Slices 0-4 complete; paused for final API review before release preparation
+Status: complete; SBE 0.4.19 tagged, published, and verified
 
 ## Objective
 
