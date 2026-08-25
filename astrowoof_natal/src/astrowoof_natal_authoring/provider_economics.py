@@ -11,6 +11,15 @@ from typing import Any, Iterable, Mapping
 
 SCHEMA_VERSION = "astrowoof.provider_economics_transaction_revision.v1"
 MAX_RETRIEVAL_REFERENCES = 16
+PROVIDER_ECONOMICS_FIXTURE_NAMES = {
+    "interactive-settlement.v1.json",
+    "interactive-editorial-finalization.v1.json",
+    "interactive-native-finalization.v1.json",
+    "batch-partial-usage.v1.json",
+    "providerless-no-work.v1.json",
+    "ambiguous-submission.v1.json",
+    "legacy-unknown.v1.json",
+}
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _ACTION_ID = re.compile(r"^paid_[0-9a-f]{24}$")
 _TRANSACTION_ID = re.compile(r"^pe_txn_[0-9a-f]{24}$")
@@ -145,6 +154,31 @@ def read_provider_economics_schema() -> dict[str, Any]:
         "provider-economics-transaction-revision.v1.schema.json"
     )
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_provider_economics_fixture(name: str) -> dict[str, Any]:
+    if name not in PROVIDER_ECONOMICS_FIXTURE_NAMES:
+        raise ValueError(f"unsupported provider economics fixture: {name}")
+    path = resources.files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+        "provider-economics", name
+    )
+    value = json.loads(path.read_text(encoding="utf-8"))
+    return validate_provider_economics_revision(value)
+
+
+def read_provider_economics_mutation_corpus() -> dict[str, Any]:
+    path = resources.files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+        "provider-economics", "mutation-corpus.v1.json"
+    )
+    value = json.loads(path.read_text(encoding="utf-8"))
+    expected = {"schema_version", "mutations"}
+    if not isinstance(value, dict) or set(value) != expected:
+        raise ValueError("provider economics mutation corpus has an invalid shape")
+    if value["schema_version"] != "astrowoof.provider_economics_mutation_corpus.v1":
+        raise ValueError("unsupported provider economics mutation corpus")
+    if not isinstance(value["mutations"], list) or not value["mutations"]:
+        raise ValueError("provider economics mutation corpus is empty")
+    return value
 
 
 def _fail(message: str) -> None:
@@ -438,8 +472,13 @@ def validate_provider_economics_revision_sequence(revisions: Iterable[Mapping[st
             new_settlement = current["usage_and_cost"]["settlement_disposition"]
             if old_settlement != "provider_pending" and old_settlement != new_settlement:
                 _fail("settlement disposition contradicted")
-            for key in TIMING_KEYS - {"retrieval_attempt_count", "retrieval_http_duration_total_ms", "retrieval_attempt_refs", "retrieval_attempt_ref_overflow_count", "last_retrieval_observed_at"}:
+            cumulative_durations = {"observed_provider_pending_ms", "native_action_span_ms"}
+            for key in TIMING_KEYS - {"retrieval_attempt_count", "retrieval_http_duration_total_ms", "retrieval_attempt_refs", "retrieval_attempt_ref_overflow_count", "last_retrieval_observed_at"} - cumulative_durations:
                 monotonic(previous["timing"][key], current["timing"][key], f"timing.{key}")
+            for key in cumulative_durations:
+                old, new = previous["timing"][key], current["timing"][key]
+                if old is not None and (new is None or new < old):
+                    _fail(f"cumulative timing regressed: timing.{key}")
             if current["timing"]["retrieval_attempt_count"] < previous["timing"]["retrieval_attempt_count"]:
                 _fail("retrieval attempt count regressed")
             if (current["timing"]["retrieval_http_duration_total_ms"] or 0) < (previous["timing"]["retrieval_http_duration_total_ms"] or 0):
@@ -447,6 +486,10 @@ def validate_provider_economics_revision_sequence(revisions: Iterable[Mapping[st
             old_refs, new_refs = previous["timing"]["retrieval_attempt_refs"], current["timing"]["retrieval_attempt_refs"]
             if new_refs[:len(old_refs)] != old_refs:
                 _fail("retrieval reference inventory contradicted")
+            old_last = _timestamp(previous["timing"]["last_retrieval_observed_at"], "last_retrieval_observed_at")
+            new_last = _timestamp(current["timing"]["last_retrieval_observed_at"], "last_retrieval_observed_at")
+            if old_last is not None and (new_last is None or new_last < old_last):
+                _fail("last retrieval observation regressed")
             if current["editorial_outcome"]["status"] not in editorial_progress[previous["editorial_outcome"]["status"]]:
                 _fail("editorial outcome regressed")
             monotonic(previous["editorial_outcome"]["retry_reason_category"], current["editorial_outcome"]["retry_reason_category"], "editorial_outcome.retry_reason_category")

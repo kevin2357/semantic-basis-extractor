@@ -1,0 +1,100 @@
+{
+  "authority_and_commitment": {
+    "authorization_reference": "auth-1",
+    "commitment_micro_usd": 1000000,
+    "consumption_reference": "consume-1"
+  },
+  "cohort_identity": {
+    "cohort_completeness": "complete",
+    "cohort_identity_sha256": "8d64e7242842b9a9f49f68c6f87e73b61433b9d8321b6cdd522055fb9b84b065",
+    "execution_topology_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "execution_topology_version": "six-pass-wave.v1",
+    "generation_profile_id": "profile-1",
+    "maximum_output_tokens": 12000,
+    "model": "gpt-test",
+    "price_book_version": "prices.v1",
+    "profile_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "reasoning_effort": "medium",
+    "request_geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "request_geometry_version": "geometry.v1",
+    "resource_bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "route_contract": "route.v1",
+    "sbe_release": "0.4.19",
+    "service_level": "default"
+  },
+  "editorial_outcome": {
+    "retry_reason_category": null,
+    "status": "not_yet_evaluated"
+  },
+  "native_action_id": "paid_0123456789abcdef01234567",
+  "native_outcome": {
+    "delivery_publishable": false,
+    "status": "in_progress"
+  },
+  "native_run_id": "native-run-1",
+  "observed_at": "2026-08-24T12:00:00Z",
+  "previous_revision_id": null,
+  "provenance": {
+    "action_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "api_reconciliation_join": {
+      "native_action_id": "paid_0123456789abcdef01234567",
+      "native_run_id": "native-run-1"
+    },
+    "batch_round_manifest_sha256": null,
+    "journal_range_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "native_result_id": null,
+    "native_result_sha256": null,
+    "publication_receipt_id": null,
+    "publication_receipt_sha256": null,
+    "request_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "usage_evidence_ref": null
+  },
+  "provider_operation": {
+    "operation_id": null,
+    "operation_kind": "response",
+    "provider": "openai",
+    "status": "ambiguous"
+  },
+  "revision_id": "pe_rev_a4d8333a086c18f71dcab1b9",
+  "revision_number": 1,
+  "schema_version": "astrowoof.provider_economics_transaction_revision.v1",
+  "timing": {
+    "authorized_at": "2026-08-24T11:58:01Z",
+    "create_http_duration_ms": null,
+    "first_retrieval_observed_at": null,
+    "last_retrieval_observed_at": null,
+    "native_action_span_ms": null,
+    "native_settled_at": null,
+    "observed_provider_pending_ms": null,
+    "prepared_at": "2026-08-24T11:58:00Z",
+    "provider_identity_durable_at": null,
+    "provider_reported_duration_ms": null,
+    "provider_terminal_observed_at": null,
+    "reconciliation_completed_at": null,
+    "retrieval_attempt_count": 0,
+    "retrieval_attempt_ref_overflow_count": 0,
+    "retrieval_attempt_refs": [],
+    "retrieval_http_duration_total_ms": null,
+    "submission_intent_at": "2026-08-24T11:58:02Z"
+  },
+  "transaction_id": "pe_txn_5daab5ef4837a267ef1218a4",
+  "transaction_identity": {
+    "attempt_number": 1,
+    "cardinality_kind": "single_action",
+    "members": [],
+    "native_operation_ref": "pass-1-attempt-1",
+    "paid_stage": "authoring_initial",
+    "pass_id": "pass-1",
+    "provider_mechanism": "response",
+    "round_id": null,
+    "route_family": "exact_natal"
+  },
+  "usage_and_cost": {
+    "provider_reported_micro_usd": null,
+    "sbe_estimate_price_book_version": null,
+    "sbe_estimated_micro_usd": null,
+    "settlement_disposition": "submission_ambiguous",
+    "usage": null
+  }
+}

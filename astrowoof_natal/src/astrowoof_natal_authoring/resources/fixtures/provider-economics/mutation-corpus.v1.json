@@ -1,0 +1,54 @@
+{
+  "mutations": [
+    {
+      "expected_error": "exact keys",
+      "fixture": "interactive-settlement.v1.json",
+      "id": "unknown_top_level",
+      "path": "/birth_datetime",
+      "value": "PROTECTED_BIRTH_LOCATION_SENTINEL"
+    },
+    {
+      "expected_error": "transaction_id",
+      "fixture": "interactive-settlement.v1.json",
+      "id": "action_identity",
+      "path": "/native_action_id",
+      "value": "paid_ffffffffffffffffffffffff"
+    },
+    {
+      "expected_error": "cohort_identity_sha256",
+      "fixture": "interactive-settlement.v1.json",
+      "id": "cohort_digest",
+      "path": "/cohort_identity/execution_topology_version",
+      "value": "serial.v1"
+    },
+    {
+      "expected_error": "allocation is forbidden",
+      "fixture": "batch-partial-usage.v1.json",
+      "id": "batch_member_allocation",
+      "path": "/transaction_identity/members/4/provider_reported_micro_usd",
+      "value": 1
+    },
+    {
+      "expected_error": "requires usage",
+      "fixture": "batch-partial-usage.v1.json",
+      "id": "batch_false_settlement",
+      "path": "/usage_and_cost/settlement_disposition",
+      "value": "provider_usage_reported"
+    },
+    {
+      "expected_error": "count must equal",
+      "fixture": "interactive-settlement.v1.json",
+      "id": "retrieval_overflow",
+      "path": "/timing/retrieval_attempt_ref_overflow_count",
+      "value": 1
+    },
+    {
+      "expected_error": "canonical UTC",
+      "fixture": "interactive-settlement.v1.json",
+      "id": "noncanonical_observation_time",
+      "path": "/observed_at",
+      "value": "2026-08-24T12:00:00+00:00"
+    }
+  ],
+  "schema_version": "astrowoof.provider_economics_mutation_corpus.v1"
+}

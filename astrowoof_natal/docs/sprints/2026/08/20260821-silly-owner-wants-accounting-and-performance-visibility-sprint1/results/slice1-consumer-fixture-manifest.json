@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.provider_economics_consumer_fixture_manifest.v1",
+  "contract_identity": "astrowoof.provider_economics_transaction_revision.v1",
+  "schema_sha256": "45617d724d86070bb50092e00a2fa332da9fbff0c37a94f1944f28fe1af6c1a5",
+  "fixtures": {
+    "ambiguous-submission.v1.json": "0ae2a45674f712bd88fea17ac0194fefc511ade74b41dbfa4f7af320fd44ceff",
+    "batch-partial-usage.v1.json": "314cd15611260ac064b8163c19c3f7a474ac9b267b18c96d1722b0acd713ccd6",
+    "interactive-editorial-finalization.v1.json": "1332f06602632a477644c6a30d69fd08122ac8b231bd6a48773eee525d7c1620",
+    "interactive-native-finalization.v1.json": "bfbd478704f11cf2f5873a9500112066ad1940d01d0431c5e028f79136b00b44",
+    "interactive-settlement.v1.json": "ef63836f08c853de2cd64c3436b36fe61c9cb64a2143ee090123dc02a10e4dbd",
+    "legacy-unknown.v1.json": "4db3f938262625a7afa231eafb4ffd5dc27d57855d598034c167315a990ba1f8",
+    "mutation-corpus.v1.json": "5149b0707452b84cf1161d12b6b0403b30d5ecd70d0c18495bfc8f8e0141303b",
+    "providerless-no-work.v1.json": "5e3cfcad7ecad7726d4e9e19780fa38e01b59f15c04b913dabb1f106ebcdcf63"
+  },
+  "provider_calls": 0,
+  "provider_spend_usd": 0,
+  "runtime_projection_enabled": false
+}

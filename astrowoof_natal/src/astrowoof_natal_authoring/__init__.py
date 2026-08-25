@@ -108,12 +108,15 @@ from .operator_retirement_qa import (  # noqa: E402
 )
 from .provider_economics import (  # noqa: E402
     MAX_RETRIEVAL_REFERENCES,
+    PROVIDER_ECONOMICS_FIXTURE_NAMES,
     SCHEMA_VERSION as PROVIDER_ECONOMICS_SCHEMA_VERSION,
     derive_cohort_identity_sha256,
     derive_revision_id,
     derive_transaction_id,
     finalize_provider_economics_revision,
     read_provider_economics_schema,
+    read_provider_economics_fixture,
+    read_provider_economics_mutation_corpus,
     validate_provider_economics_revision,
     validate_provider_economics_revision_sequence,
 )
@@ -186,12 +189,15 @@ __all__ = [
     "run_operator_retirement_qualification",
     "validate_operator_retirement_qualification",
     "MAX_RETRIEVAL_REFERENCES",
+    "PROVIDER_ECONOMICS_FIXTURE_NAMES",
     "PROVIDER_ECONOMICS_SCHEMA_VERSION",
     "derive_cohort_identity_sha256",
     "derive_revision_id",
     "derive_transaction_id",
     "finalize_provider_economics_revision",
     "read_provider_economics_schema",
+    "read_provider_economics_fixture",
+    "read_provider_economics_mutation_corpus",
     "validate_provider_economics_revision",
     "validate_provider_economics_revision_sequence",
 ]

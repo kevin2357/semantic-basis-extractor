@@ -1,0 +1,206 @@
+{
+  "authority_and_commitment": {
+    "authorization_reference": "auth-1",
+    "commitment_micro_usd": 1000000,
+    "consumption_reference": "consume-1"
+  },
+  "cohort_identity": {
+    "cohort_completeness": "complete",
+    "cohort_identity_sha256": "8d64e7242842b9a9f49f68c6f87e73b61433b9d8321b6cdd522055fb9b84b065",
+    "execution_topology_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "execution_topology_version": "six-pass-wave.v1",
+    "generation_profile_id": "profile-1",
+    "maximum_output_tokens": 12000,
+    "model": "gpt-test",
+    "price_book_version": "prices.v1",
+    "profile_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "reasoning_effort": "medium",
+    "request_geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "request_geometry_version": "geometry.v1",
+    "resource_bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "route_contract": "route.v1",
+    "sbe_release": "0.4.19",
+    "service_level": "default"
+  },
+  "editorial_outcome": {
+    "retry_reason_category": null,
+    "status": "not_yet_evaluated"
+  },
+  "native_action_id": "paid_0123456789abcdef01234567",
+  "native_outcome": {
+    "delivery_publishable": false,
+    "status": "in_progress"
+  },
+  "native_run_id": "native-run-1",
+  "observed_at": "2026-08-24T12:00:00Z",
+  "previous_revision_id": null,
+  "provenance": {
+    "action_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "api_reconciliation_join": {
+      "native_action_id": "paid_0123456789abcdef01234567",
+      "native_run_id": "native-run-1"
+    },
+    "batch_round_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "journal_range_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "native_result_id": null,
+    "native_result_sha256": null,
+    "publication_receipt_id": null,
+    "publication_receipt_sha256": null,
+    "request_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "snapshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "usage_evidence_ref": "ledger:reported-usage"
+  },
+  "provider_operation": {
+    "operation_id": "batch-1",
+    "operation_kind": "batch",
+    "provider": "openai",
+    "status": "completed"
+  },
+  "revision_id": "pe_rev_787c9f9cdafc2c3a11cd9715",
+  "revision_number": 1,
+  "schema_version": "astrowoof.provider_economics_transaction_revision.v1",
+  "timing": {
+    "authorized_at": "2026-08-24T11:58:01Z",
+    "create_http_duration_ms": 500,
+    "first_retrieval_observed_at": "2026-08-24T12:00:00Z",
+    "last_retrieval_observed_at": "2026-08-24T12:00:00Z",
+    "native_action_span_ms": 121000,
+    "native_settled_at": "2026-08-24T12:00:01Z",
+    "observed_provider_pending_ms": 117000,
+    "prepared_at": "2026-08-24T11:58:00Z",
+    "provider_identity_durable_at": "2026-08-24T11:58:03Z",
+    "provider_reported_duration_ms": null,
+    "provider_terminal_observed_at": "2026-08-24T12:00:00Z",
+    "reconciliation_completed_at": "2026-08-24T12:00:01Z",
+    "retrieval_attempt_count": 1,
+    "retrieval_attempt_ref_overflow_count": 0,
+    "retrieval_attempt_refs": [
+      "diag/1.json"
+    ],
+    "retrieval_http_duration_total_ms": 120,
+    "submission_intent_at": "2026-08-24T11:58:02Z"
+  },
+  "transaction_id": "pe_txn_5daab5ef4837a267ef1218a4",
+  "transaction_identity": {
+    "attempt_number": 1,
+    "cardinality_kind": "batch_round",
+    "members": [
+      {
+        "attempt_number": 1,
+        "member_id": "member-1",
+        "ordinal": 1,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-1",
+        "provider_member_id": "custom-1",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "usage": {
+          "cached_input_tokens": 40,
+          "input_tokens": 100,
+          "output_tokens": 20,
+          "reasoning_tokens": 10
+        },
+        "usage_disposition": "reported"
+      },
+      {
+        "attempt_number": 1,
+        "member_id": "member-2",
+        "ordinal": 2,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-2",
+        "provider_member_id": "custom-2",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "usage": {
+          "cached_input_tokens": 40,
+          "input_tokens": 100,
+          "output_tokens": 20,
+          "reasoning_tokens": 10
+        },
+        "usage_disposition": "reported"
+      },
+      {
+        "attempt_number": 1,
+        "member_id": "member-3",
+        "ordinal": 3,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-3",
+        "provider_member_id": "custom-3",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "usage": {
+          "cached_input_tokens": 40,
+          "input_tokens": 100,
+          "output_tokens": 20,
+          "reasoning_tokens": 10
+        },
+        "usage_disposition": "reported"
+      },
+      {
+        "attempt_number": 1,
+        "member_id": "member-4",
+        "ordinal": 4,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-4",
+        "provider_member_id": "custom-4",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "usage": {
+          "cached_input_tokens": 40,
+          "input_tokens": 100,
+          "output_tokens": 20,
+          "reasoning_tokens": 10
+        },
+        "usage_disposition": "reported"
+      },
+      {
+        "attempt_number": 1,
+        "member_id": "member-5",
+        "ordinal": 5,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-5",
+        "provider_member_id": "custom-5",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+        "usage": null,
+        "usage_disposition": "unavailable"
+      },
+      {
+        "attempt_number": 1,
+        "member_id": "member-6",
+        "ordinal": 6,
+        "paid_stage": "authoring_initial",
+        "pass_id": "pass-6",
+        "provider_member_id": "custom-6",
+        "provider_reported_micro_usd": null,
+        "provider_status": "completed",
+        "request_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "usage": {
+          "cached_input_tokens": 40,
+          "input_tokens": 100,
+          "output_tokens": 20,
+          "reasoning_tokens": 10
+        },
+        "usage_disposition": "reported"
+      }
+    ],
+    "native_operation_ref": "round-1",
+    "paid_stage": "authoring_initial",
+    "pass_id": null,
+    "provider_mechanism": "batch",
+    "round_id": "round-1",
+    "route_family": "bounded_natal"
+  },
+  "usage_and_cost": {
+    "provider_reported_micro_usd": null,
+    "sbe_estimate_price_book_version": null,
+    "sbe_estimated_micro_usd": null,
+    "settlement_disposition": "provider_usage_unavailable_billing_reconciliation_pending",
+    "usage": null
+  }
+}

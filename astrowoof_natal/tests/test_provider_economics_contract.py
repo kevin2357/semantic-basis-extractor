@@ -6,9 +6,12 @@ import unittest
 
 from astrowoof_natal_authoring.provider_economics import (
     MAX_RETRIEVAL_REFERENCES,
+    PROVIDER_ECONOMICS_FIXTURE_NAMES,
     SCHEMA_VERSION,
     finalize_provider_economics_revision,
     read_provider_economics_schema,
+    read_provider_economics_fixture,
+    read_provider_economics_mutation_corpus,
     validate_provider_economics_revision,
     validate_provider_economics_revision_sequence,
 )
@@ -100,6 +103,40 @@ def revise(previous, **sections):
 
 
 class ProviderEconomicsContractTests(unittest.TestCase):
+    def test_packaged_positive_fixtures_and_sequences(self):
+        loaded = {name: read_provider_economics_fixture(name) for name in PROVIDER_ECONOMICS_FIXTURE_NAMES}
+        self.assertEqual(set(loaded), PROVIDER_ECONOMICS_FIXTURE_NAMES)
+        validate_provider_economics_revision_sequence([
+            loaded["interactive-settlement.v1.json"],
+            loaded["interactive-editorial-finalization.v1.json"],
+            loaded["interactive-native-finalization.v1.json"],
+        ])
+        self.assertEqual(
+            loaded["batch-partial-usage.v1.json"]["usage_and_cost"]["settlement_disposition"],
+            "provider_usage_unavailable_billing_reconciliation_pending",
+        )
+
+    def test_packaged_mutation_corpus_refuses(self):
+        corpus = read_provider_economics_mutation_corpus()
+        for mutation in corpus["mutations"]:
+            with self.subTest(mutation=mutation["id"]):
+                value = copy.deepcopy(read_provider_economics_fixture(mutation["fixture"]))
+                target = value
+                parts = mutation["path"].strip("/").split("/")
+                for part in parts[:-1]:
+                    target = target[int(part)] if isinstance(target, list) else target[part]
+                leaf = parts[-1]
+                if isinstance(target, list):
+                    target[int(leaf)] = mutation["value"]
+                else:
+                    target[leaf] = mutation["value"]
+                with self.assertRaisesRegex(ValueError, mutation["expected_error"]):
+                    validate_provider_economics_revision(value)
+
+    def test_fixture_reader_is_closed(self):
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            read_provider_economics_fixture("../../run.json")
+
     def test_schema_and_python_validation(self):
         schema = read_provider_economics_schema()
         self.assertFalse(schema["additionalProperties"])
@@ -116,6 +153,25 @@ class ProviderEconomicsContractTests(unittest.TestCase):
         second = revise(first, editorial_outcome={"status": "accepted", "retry_reason_category": None})
         third = revise(second, native_outcome={"status": "delivery_complete", "delivery_publishable": True})
         self.assertEqual(len(validate_provider_economics_revision_sequence([first, second, third])), 3)
+
+    def test_pending_revision_may_gain_settlement_and_cumulative_time(self):
+        settled = make_revision()
+        pending = copy.deepcopy(settled)
+        pending["provider_operation"]["status"] = "pending"
+        pending["usage_and_cost"].update({"settlement_disposition": "provider_pending", "usage": None, "sbe_estimated_micro_usd": None, "sbe_estimate_price_book_version": None})
+        pending["timing"].update({
+            "provider_terminal_observed_at": None, "reconciliation_completed_at": None,
+            "native_settled_at": None, "observed_provider_pending_ms": 10000,
+            "native_action_span_ms": 12000,
+        })
+        pending["revision_id"] = "pending"
+        pending = finalize_provider_economics_revision(pending)
+        settled["revision_number"] = 2
+        settled["previous_revision_id"] = pending["revision_id"]
+        settled["observed_at"] = "2026-08-24T12:00:10Z"
+        settled["revision_id"] = "pending"
+        settled = finalize_provider_economics_revision(settled)
+        validate_provider_economics_revision_sequence([pending, settled])
 
     def test_replay_gap_and_contradiction(self):
         first = make_revision()

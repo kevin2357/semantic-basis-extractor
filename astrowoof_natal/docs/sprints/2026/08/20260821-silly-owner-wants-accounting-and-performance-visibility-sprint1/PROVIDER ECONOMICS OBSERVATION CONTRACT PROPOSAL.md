@@ -1,7 +1,7 @@
 # Provider Economics Transaction Revision Contract Proposal
 
 Date: 2026-08-21
-Status: Slice 1 contract approved; implementation in progress
+Status: Slice 1 contract implemented; consumer review pending
 
 ## Decision summary
 

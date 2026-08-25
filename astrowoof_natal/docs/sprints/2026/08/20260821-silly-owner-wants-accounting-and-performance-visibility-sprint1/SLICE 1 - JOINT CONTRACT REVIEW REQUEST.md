@@ -1,7 +1,7 @@
 # Slice 1 — Joint Provider-Economics Contract Review Request
 
 Date: 2026-08-24
-Status: API approved with conditions; SBE implementation in progress
+Status: API conditions implemented; superseded by the Slice 1 consumer handoff
 
 ## Review boundary
 

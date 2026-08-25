@@ -99,3 +99,20 @@
 - Existing bounded-authoring, native-transition, and semantic-closure regression
   set: 128 passed.
 - Static packaged fixture corpus and mutation corpus remain before Slice 1 closeout.
+
+## 2026-08-24 — Slice 1 fixture and closeout completion
+
+- Added seven packaged positive fixtures: settlement, editorial finalization,
+  native finalization, partial Batch usage, providerless no-work, ambiguity, and
+  legacy-unknown cohort.
+- Added a seven-case mutation corpus covering protected/unknown fields, native
+  identity, cohort topology digest, invented member cost, false Batch settlement,
+  retrieval overflow accounting, and canonical observation time.
+- Added closed public fixture/corpus readers and traversal refusal.
+- Added pending-to-settled sequence coverage with increasing cumulative timing.
+- Schema-enabled focused suite: 11 passed with Draft 2020-12 validation active.
+- Existing contract/publication regression suite remains green: 128 passed.
+- Published the API consumer handoff and fixture hash manifest.
+- Provider/network calls, credentials, workspace mutation, API database changes,
+  and spend: 0.
+- Slice 1 is complete and paused for API consumer review before Slice 2 projection.

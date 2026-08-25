@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 1 contract approved with API conditions; implementation in progress
+Status: Slice 1 implementation complete; awaiting API consumer review before Slice 2
 
 - Provider calls: 0
 - Spend: USD 0
@@ -32,8 +32,7 @@ Status: Slice 1 contract approved with API conditions; implementation in progres
   - `results/slice1-interactive-editorial-revision.proposal.json`; and
   - `results/slice1-batch-partial-usage-revision.proposal.json`.
 - Slice 1 checks: JSON examples parse; documentation whitespace check passes.
-- Slice 1 gate: PAUSED. No runtime schema or validator will be frozen until joint
-  SBE/API approval.
+- Original proposal gate: passed through joint SBE/API/owner approval.
 
 ## Slice 1 implementation evidence in progress
 
@@ -42,8 +41,13 @@ Status: Slice 1 contract approved with API conditions; implementation in progres
   `provider-economics-transaction-revision.v1.schema.json`.
 - Public Python surface: transaction/cohort/revision identity derivation, revision
   finalization, strict revision validation, and cumulative sequence validation.
-- Initial focused result: 7 passed; one optional-schema skip.
+- Lean focused result: 10 passed; one optional-schema skip.
+- Schema-enabled focused result: 11 passed.
 - Existing contract/publication regressions: 128 passed.
 - Provider calls, retrievals, credentials, spend, and API database changes: 0.
-- Remaining gate work: packaged fixtures, mutation corpus, schema-enabled run, and
-  final Slice 1 consumer review packet.
+- Packaged positive fixtures: 7; closed refusal mutations: 7.
+- Fixture manifest:
+  `results/slice1-consumer-fixture-manifest.json`.
+- Consumer handoff:
+  `SLICE 1 - PROVIDER ECONOMICS CONSUMER HANDOFF.md`.
+- Slice 1 gate: PASS; API consumer review required before Slice 2 projection work.
