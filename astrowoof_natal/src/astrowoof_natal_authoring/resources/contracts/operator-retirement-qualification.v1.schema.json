@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/operator-retirement-qualification.v1.schema.json",
+  "title": "AstroWoof operator retirement provider-free qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "qualification_mode", "sbe_release", "outcome", "checks", "provider_io_performed_count", "fixture_contract_sha256", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.operator_retirement_qualification.v1"},
+    "qualification_mode": {"const": "installed_wheel_provider_free"},
+    "sbe_release": {"type": "string", "minLength": 1},
+    "outcome": {"const": "passed"},
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_contract", "eligible_dry_run", "applied_terminal_transition", "sealed_native_reader", "exact_replay", "compatible_already_retired", "stale_refusal", "provider_ambiguity_refusal", "providerless_unresolved_refusal", "unsupported_route_refusal", "zero_provider_io"],
+      "properties": {
+        "public_contract": {"const": true},
+        "eligible_dry_run": {"const": true},
+        "applied_terminal_transition": {"const": true},
+        "sealed_native_reader": {"const": true},
+        "exact_replay": {"const": true},
+        "compatible_already_retired": {"const": true},
+        "stale_refusal": {"const": true},
+        "provider_ambiguity_refusal": {"const": true},
+        "providerless_unresolved_refusal": {"const": true},
+        "unsupported_route_refusal": {"const": true},
+        "zero_provider_io": {"const": true}
+      }
+    },
+    "provider_io_performed_count": {"const": 0},
+    "fixture_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

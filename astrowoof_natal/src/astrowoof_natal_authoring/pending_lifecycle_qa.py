@@ -17,6 +17,10 @@ from .initial_wave import (
 from .lifecycle import inspect_lifecycle
 from .lifecycle_contracts import validate_lifecycle_inspection_v05
 from .reconciliation import reconcile_provider_cycle
+from .temporal_lifecycle import (
+    build_lifecycle_inspection_v06,
+    validate_temporal_transition,
+)
 
 
 RECEIPT_SCHEMA = "astrowoof.provider_pending_lifecycle_qualification.v1"
@@ -107,6 +111,9 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
             root, native_exclusive_access="declared",
             observed_at="1970-01-01T00:00:15Z",
         )
+        not_due_v06 = build_lifecycle_inspection_v06(not_due)
+        due_v06 = build_lifecycle_inspection_v06(due)
+        validate_temporal_transition(not_due_v06, due_v06)
         contradictory = copy.deepcopy(due)
         contradictory["terminal"]["local_continuation_remains"] = True
         contradiction_refused = False
@@ -124,6 +131,7 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
         first = reconcile_provider_cycle(
             root, observed_at="1970-01-01T00:00:15Z", retrieve=retrieve,
         )
+        after_first_v06 = build_lifecycle_inspection_v06(first["inspection"])
         # The production command performs deterministic local ingestion/fan-in
         # between bounded retrieval waves. Model that provider-free checkpoint
         # from the exact durable completed-action evidence before restoring a
@@ -170,6 +178,14 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
                 len(creates) == len(set(creates)) == 6
                 and len(retrieves) == len(set(retrieves)) == 6
             ),
+            "same_basis_not_due_to_due": (
+                not_due_v06["checkpoint_basis_sha256"]
+                == due_v06["checkpoint_basis_sha256"]
+            ),
+            "retrieval_creates_new_basis": (
+                due_v06["checkpoint_basis_sha256"]
+                != after_first_v06["checkpoint_basis_sha256"]
+            ),
             "contradictory_projection_refused": contradiction_refused,
         }
         receipt = {
@@ -182,6 +198,12 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
             "second_cycle_retrieval_count": second["cycle"]["provider_retrieval_count"],
             "not_due_branch": not_due["execution_branch"],
             "due_branch": due["execution_branch"], "assertions": assertions,
+            "pre_reconciliation_basis_sha256": due_v06[
+                "checkpoint_basis_sha256"
+            ],
+            "post_reconciliation_basis_sha256": after_first_v06[
+                "checkpoint_basis_sha256"
+            ],
         }
         receipt["receipt_sha256"] = _sha(receipt)
         if receipt["status"] != "pass":

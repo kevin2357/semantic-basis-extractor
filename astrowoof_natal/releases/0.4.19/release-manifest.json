@@ -1,0 +1,57 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.19",
+  "status": "published_and_verified",
+  "release_tag": "astrowoof-natal-authoring-v0.4.19",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.19-py3-none-any.whl",
+    "bytes": 909960,
+    "sha256": "6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79",
+    "wheel_entry_count": 143,
+    "resource_count": 84,
+    "packaged_resources_sha256": "747bd06b2dafe251b19a271df746c61feba6a1a3f31eaa5a3404889a0cf01a55",
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "3151c4fc15d1436e0c250228c2069e4771be30da",
+    "source_date_epoch": 1787615331,
+    "byte_reproducible": true,
+    "release_record_commit": "recorded_by_immutable_tag"
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "qa": {
+    "full_source_suite": "623 passed; 33 environment/opt-in skips",
+    "focused_operator_retirement_suite": "82 passed; 3 optional-schema skips",
+    "installed_release_smoke": "pass",
+    "installed_operator_retirement_qualification": "pass",
+    "operator_retirement_qualification_receipt_sha256": "37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f",
+    "external_provider_network_call_count": 0,
+    "provider_create_call_count": 0,
+    "provider_retrieval_call_count": 0,
+    "provider_spend_usd": 0,
+    "retained_workspace_access_count": 0
+  },
+  "publication": {
+    "status": "published_and_verified",
+    "release_id": 376056805,
+    "published_at": "2026-08-24T23:59:08Z",
+    "url": "https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.19",
+    "tag_commit": "10dadc5e4d4f259a07643c2ccea869239a9902b7",
+    "annotated_tag_object": "9e7104cc87b030fb9e6f8fa3fcb92229af1aaa6e",
+    "draft": false,
+    "prerelease": false,
+    "wheel_asset_id": 528362336,
+    "checksums_asset_id": 528362335,
+    "published_wheel_bytes": 909960,
+    "published_wheel_sha256": "6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79",
+    "github_asset_digest_match": true,
+    "downloaded_asset_digest_match": true
+  }
+}

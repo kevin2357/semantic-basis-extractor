@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/operator-retirement-contracts.v1.schema.json",
+  "title": "AstroWoof operator retirement contracts v1",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "request_sha256", "run_id", "route_family", "route_contract", "logical_workspace_root", "expected_status", "expected_state_revision", "expected_snapshot_sha256", "checkpoint_basis_sha256", "terminal_action_closure_sha256", "requested_terminal_status", "requested_terminal_cause", "reason_code", "operator_audit_reference", "human_reason"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.operator_retirement_request.v1"},
+        "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "run_id": {"type": "string", "minLength": 1},
+        "route_family": {"const": "exact_natal"},
+        "route_contract": {"const": "astrowoof.semantic_closure_run.v0.9"},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "expected_status": {"enum": ["AUTHORING", "AUTHORING_COMPLETE", "WAITING_FOR_RESPONSE", "AWAITING_SPEND_AUTHORIZATION"]},
+        "expected_state_revision": {"type": "integer", "minimum": 0},
+        "expected_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "terminal_action_closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "requested_terminal_status": {"const": "POLICY_STOPPED"},
+        "requested_terminal_cause": {"const": "operator_retired"},
+        "reason_code": {"const": "operator_abandoned_quiescent_run"},
+        "operator_audit_reference": {"type": "string", "minLength": 1, "maxLength": 256},
+        "human_reason": {"type": ["string", "null"], "maxLength": 500}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "mode", "outcome", "request_sha256", "run_id", "route_family", "logical_workspace_root", "state_revision", "snapshot_sha256", "checkpoint_basis_sha256", "terminal_action_closure_sha256", "retirement_quiescent", "failed_predicates", "mutation_performed", "native_result_published", "provider_io_performed_count"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.operator_retirement_assessment.v1"},
+        "mode": {"const": "dry_run"},
+        "outcome": {"enum": ["eligible", "refused"]},
+        "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "run_id": {"type": "string", "minLength": 1},
+        "route_family": {"type": ["string", "null"]},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "terminal_action_closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "retirement_quiescent": {"type": "boolean"},
+        "failed_predicates": {"type": "array", "uniqueItems": true, "items": {"enum": ["binding_mismatch", "delivery_or_terminal_conflict", "not_retirement_quiescent", "provider_ambiguity_present", "provider_custody_present", "providerless_action_unresolved", "snapshot_invalid", "stale_observation", "unsupported_contract"]}},
+        "mutation_performed": {"const": false},
+        "native_result_published": {"const": false},
+        "provider_io_performed_count": {"const": 0}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "outcome", "applied", "request_sha256", "original_request_sha256", "run_id", "route_family", "logical_workspace_root", "pre_state_revision", "post_state_revision", "pre_snapshot_sha256", "post_snapshot_sha256", "terminal_status", "terminal_cause", "terminal_action_closure_sha256", "continuation_assertions", "native_result", "publication_receipt", "failed_predicates", "provider_io_performed_count"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.operator_retirement_result.v1"},
+        "outcome": {"enum": ["applied", "exact_replay", "already_retired", "binding_mismatch", "delivery_or_terminal_conflict", "not_retirement_quiescent", "provider_ambiguity_present", "provider_custody_present", "providerless_action_unresolved", "snapshot_invalid", "stale_observation", "unsupported_contract"]},
+        "applied": {"type": "boolean"},
+        "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "original_request_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "run_id": {"type": "string", "minLength": 1},
+        "route_family": {"type": ["string", "null"], "enum": ["exact_natal", null]},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "pre_state_revision": {"type": "integer", "minimum": 0},
+        "post_state_revision": {"type": "integer", "minimum": 0},
+        "pre_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "post_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "terminal_status": {"type": ["string", "null"], "enum": ["POLICY_STOPPED", null]},
+        "terminal_cause": {"type": ["string", "null"], "enum": ["operator_retired", null]},
+        "terminal_action_closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "continuation_assertions": {
+          "type": "object", "additionalProperties": false,
+          "required": ["provider_pending", "provider_custody", "local_continuation"],
+          "properties": {
+            "provider_pending": {"type": "boolean"},
+            "provider_custody": {"type": "boolean"},
+            "local_continuation": {"type": "boolean"}
+          }
+        },
+        "native_result": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "object", "additionalProperties": false, "required": ["result_id", "result_sha256"], "properties": {"result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"}, "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
+          ]
+        },
+        "publication_receipt": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "object", "additionalProperties": false, "required": ["receipt_id", "receipt_sha256"], "properties": {"receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"}, "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
+          ]
+        },
+        "failed_predicates": {"type": "array", "uniqueItems": true, "items": {"enum": ["binding_mismatch", "delivery_or_terminal_conflict", "not_retirement_quiescent", "provider_ambiguity_present", "provider_custody_present", "providerless_action_unresolved", "snapshot_invalid", "stale_observation", "unsupported_contract"]}},
+        "provider_io_performed_count": {"const": 0}
+      }
+    }
+  }
+}

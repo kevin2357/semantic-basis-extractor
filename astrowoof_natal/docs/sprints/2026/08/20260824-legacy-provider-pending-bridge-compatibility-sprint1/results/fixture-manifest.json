@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.legacy_provider_pending_fixture_manifest.v1",
+  "status": "api_approved_and_installed_qualified",
+  "qualification_only": true,
+  "fixture": {
+    "path": "results/legacy-provider-pending-fixture.v1.json",
+    "sha256": "e004817f68cc7f5a6572e56f1a019e742dd190ecd11e7a02b553cf540e551b33",
+    "historical_contract": "lifecycle_v0.5_provider_pending",
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "action_count": 6,
+    "provider_identity_count": 6
+  },
+  "command_contract": {
+    "path": "SLICE 0 - FROZEN FIXTURE AND COMMAND CONTRACT.md",
+    "sha256": "fc2fb04cda55174fbc829666f275d342e8fee4022f80761c79b77d98a0e5974d"
+  },
+  "external_openai_network_calls": 0,
+  "local_scripted_retrieval_gets": 6,
+  "provider_post_create_submit_retry_calls": 0,
+  "retained_workspace_access": false
+}

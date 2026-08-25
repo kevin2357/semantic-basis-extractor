@@ -1,0 +1,22 @@
+{
+  "contract": "astrowoof.operator_retirement_slice0_characterization.v1",
+  "native_status": "AWAITING_SPEND_AUTHORIZATION",
+  "action_inventory_count": 0,
+  "provider_identity_count": 0,
+  "provider_ambiguity_count": 0,
+  "snapshot_complete": true,
+  "ordinary_lifecycle_projection": {
+    "terminal": false,
+    "local_continuation_remains": true,
+    "dependency_kind": "retry_preparation",
+    "dependency_reason_code": "prepared_action_authorization_pending",
+    "capacity_disposition": "continue_local_cycle",
+    "capacity_reason_code": "local_work_ready",
+    "selected_command": "ordinary_resume"
+  },
+  "operator_retirement_interpretation": {
+    "retirement_quiescent": true,
+    "status_derived_future_local_continuation_may_be_abandoned": true,
+    "post_transition_local_continuation_must_be_false": true
+  }
+}

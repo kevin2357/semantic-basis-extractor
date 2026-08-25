@@ -7,6 +7,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import threading
 import time
 from contextlib import contextmanager
@@ -17,6 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .lifecycle_contracts import (
+    PROVIDER_CUSTODY_STAGES,
     PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
     PROVIDER_RECONCILIATION_POLICY,
     PROVIDER_RECONCILIATION_POLICY_SCHEMA,
@@ -42,6 +44,12 @@ RECONCILIABLE_PROVIDER_STATES = {
 EXACT_RUN_CONTRACT = "astrowoof.semantic_closure_run.v0.9"
 BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v2"
 LEGACY_BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
+_PUBLIC_BINDING_KEYS = {
+    "run_id", "profile_sha256", "prepared_state_revision", "stage", "route",
+    "request_sha256", "model", "service_level", "maximum_output_tokens",
+    "commitment_micro_usd", "price_book_version",
+}
+_SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 
 @dataclass(frozen=True)
@@ -123,6 +131,7 @@ def native_provider_route_identity(
     elif (
         route_family == "bounded_natal" and kind == "batch"
         and service == "batch"
+        and contract == BOUNDED_RUN_CONTRACT
         and stage in {"authoring_initial", "creative_retry"}
         and native_ref.startswith("bounded_natal.v2:batch-round-")
     ):
@@ -151,6 +160,50 @@ def native_provider_route_identity(
 
 class ProviderRetrievalIdentityMismatch(ValueError):
     """A GET response did not match the already durable provider identity."""
+
+
+def _provider_binding_inventory_errors(state: dict[str, Any]) -> list[str]:
+    """Validate every retained provider-backed action before subset selection."""
+    run_id = state.get("run_id")
+    state_revision = state.get("state_revision")
+    errors: list[str] = []
+    for action in (state.get("spend_ledger") or {}).get("actions", []):
+        if not isinstance(action, dict):
+            continue
+        if action.get("state") not in RECONCILIABLE_PROVIDER_STATES:
+            continue
+        provider = action.get("provider")
+        if not isinstance(provider, dict) or not provider.get("id"):
+            continue
+        action_id = str(action.get("action_id") or "")
+        binding = action.get("binding")
+        invalid = not isinstance(binding, dict) or set(binding) != _PUBLIC_BINDING_KEYS
+        if not invalid:
+            invalid = bool(
+                binding["run_id"] != run_id
+                or _SHA256_PATTERN.fullmatch(str(binding["profile_sha256"])) is None
+                or not isinstance(binding["prepared_state_revision"], int)
+                or isinstance(binding["prepared_state_revision"], bool)
+                or binding["prepared_state_revision"] < 0
+                or not isinstance(state_revision, int)
+                or binding["prepared_state_revision"] > state_revision
+                or binding["stage"] not in PROVIDER_CUSTODY_STAGES
+                or not isinstance(binding["route"], str) or not binding["route"]
+                or _SHA256_PATTERN.fullmatch(str(binding["request_sha256"])) is None
+                or not isinstance(binding["model"], str) or not binding["model"]
+                or binding["service_level"] not in {"interactive", "batch"}
+                or not isinstance(binding["maximum_output_tokens"], int)
+                or isinstance(binding["maximum_output_tokens"], bool)
+                or binding["maximum_output_tokens"] < 1
+                or not isinstance(binding["commitment_micro_usd"], int)
+                or isinstance(binding["commitment_micro_usd"], bool)
+                or binding["commitment_micro_usd"] < 0
+                or not isinstance(binding["price_book_version"], str)
+                or not binding["price_book_version"]
+            )
+        if invalid:
+            errors.append(action_id)
+    return sorted(errors)
 
 
 def parse_utc_instant(value: str) -> datetime:
@@ -297,6 +350,7 @@ def reconcile_provider_cycle(
     observed_at: str,
     endpoint_base_url: str | None = None,
     provider_secret: str | None = None,
+    event_emitter: Any = None,
 ) -> dict[str, Any]:
     """Poll one bounded wave of due known interactive provider operations.
 
@@ -331,6 +385,41 @@ def reconcile_provider_cycle(
             native_exclusive_access="established",
             observed_at=instant,
         )
+        binding_errors = _provider_binding_inventory_errors(state)
+        if binding_errors:
+            logger.warning(
+                "provider_reconciliation_refused reason=provider_binding_integrity_mismatch "
+                "invalid_action_count=%s",
+                len(binding_errors),
+            )
+            if event_emitter is not None:
+                event_emitter.emit(
+                    "execution.failed",
+                    data={
+                        "reason_code": "provider_binding_integrity_mismatch",
+                        "failure_class": "native_workspace_integrity",
+                        "invalid_action_count": len(binding_errors),
+                    },
+                    severity="warning",
+                )
+            return {
+                "schema_version": PROVIDER_RECONCILIATION_CYCLE_RESULT_SCHEMA,
+                "run_id": state["run_id"],
+                "outcome": "review_required",
+                "decision_basis": before["observation"],
+                "cycle": {
+                    "started_at": instant,
+                    "finished_at": instant,
+                    "wall_clock_limit_seconds": 20,
+                    "provider_retrieval_count": 0,
+                    "retrieved_action_ids": [],
+                    "completed_action_ids": [],
+                    "still_pending_action_ids": before["provider_custody"]["action_ids"],
+                    "transport_warning_action_ids": [],
+                },
+                "inspection": before,
+                "provider_operations": [],
+            }
         capacity = before["execution_capacity"]
         completed_evidence = [
             item for item in before["provider_custody"]["actions"]
@@ -1451,6 +1540,7 @@ def run_bounded_authoring_reconciliation(
             run_dir, retrieve=retrieve, observed_at=observed_at,
             endpoint_base_url=getattr(retrieval_provider, "base_url", None),
             provider_secret=getattr(retrieval_provider, "api_key", None),
+            event_emitter=event_emitter,
         )
     finally:
         retrieval_provider.http_timeout_seconds = original_timeout
@@ -1812,7 +1902,10 @@ def reconcile_authoring_provider_cycle(
         critic_provider=provider_adapters.critic_provider,
         qualitative_editor_provider=provider_adapters.qualitative_editor_provider,
     )
-    if result["outcome"] != "not_due":
+    if (
+        result["outcome"] != "not_due"
+        and isinstance(result.get("result_checkpoint"), dict)
+    ):
         from . import __version__
         from .native_transitions import publish_native_execution_result
         publish_native_execution_result(

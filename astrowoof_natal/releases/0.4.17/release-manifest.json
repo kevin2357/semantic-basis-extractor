@@ -1,0 +1,56 @@
+{
+  "schema_version": "astrowoof.natal_authoring_release.v0.1",
+  "distribution": "astrowoof-natal-authoring",
+  "version": "0.4.17",
+  "status": "published_and_verified",
+  "release_tag": "astrowoof-natal-authoring-v0.4.17",
+  "repository": "https://github.com/kevin2357/semantic-basis-extractor",
+  "artifact": {
+    "filename": "astrowoof_natal_authoring-0.4.17-py3-none-any.whl",
+    "bytes": 893739,
+    "sha256": "54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d",
+    "wheel_entry_count": 136,
+    "resource_count": 80,
+    "bytecode_or_cache_entries": 0,
+    "py_typed": true
+  },
+  "build": {
+    "artifact_source_commit": "6da874eb52934ad259048c1ca8abb90238df828d",
+    "source_date_epoch": 1787589134,
+    "byte_reproducible": true,
+    "release_record_commit": "recorded_by_immutable_tag"
+  },
+  "runtime": {
+    "requires_python": ">=3.11",
+    "verified_python": ["CPython 3.12 Windows"],
+    "direct_dependencies": ["semantic-projection-core==0.11.0"]
+  },
+  "qa": {
+    "full_source_suite": "593 passed; 30 existing environment/opt-in skips",
+    "installed_bridge_qualification": "10 passed",
+    "installed_release_smoke": "pass",
+    "consistent_inventory_get_cardinality": [4, 2, 0],
+    "malformed_binding_positions": [1, 5],
+    "malformed_binding_get_count": 0,
+    "malformed_binding_publication_count": 0,
+    "external_provider_network_call_count": 0,
+    "provider_create_call_count": 0,
+    "provider_spend_usd": 0,
+    "retained_aster_access_count": 0
+  },
+  "publication": {
+    "status": "published_and_verified",
+    "release_id": 375849069,
+    "published_at": "2026-08-24T16:44:49Z",
+    "url": "https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.17",
+    "tag_commit": "d61d871b0e00412b55cf9da5b9beea8016dd2513",
+    "annotated_tag_object": "0133a077c01ba98992f92f49f8018b8388240cc5",
+    "draft": false,
+    "prerelease": false,
+    "wheel_asset_id": 527887616,
+    "checksums_asset_id": 527887619,
+    "published_wheel_bytes": 893739,
+    "published_wheel_sha256": "54a91e9ab52e0076d23637900354f75848b2477736dea839f8e0ab0f0e21344d",
+    "github_asset_digest_match": true
+  }
+}

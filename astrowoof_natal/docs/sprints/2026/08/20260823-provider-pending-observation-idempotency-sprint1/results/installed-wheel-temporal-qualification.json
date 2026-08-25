@@ -1,0 +1,24 @@
+{
+  "schema_version": "astrowoof.temporal_lifecycle_installed_qualification.v1",
+  "status": "pass",
+  "qualification_only": true,
+  "provider_free": true,
+  "network_required": false,
+  "candidate_version": "0.4.16",
+  "candidate_wheel_sha256": "56e26d82bb4689907dc830903721acf34a4c385557c7825c3ece19297f48d339",
+  "artifact_source_commit": "9591385fccfcf635d8371b12135a4d25c654166a",
+  "lifecycle_schema_id": "astrowoof.temporal_lifecycle_contracts.v1",
+  "create_count": 6,
+  "retrieve_count": 6,
+  "pre_reconciliation_basis_sha256": "1d95fabfd28e775ebcce5ca7597b3922caab211af1b379b5910b01eee7af05a3",
+  "post_reconciliation_basis_sha256": "048715e08427b6ec51d4f02a571cd0884c2d8d03a9f700739b64f818cec64e48",
+  "receipt_sha256": "b3d3ea92a064b652682e9d5502b47a2ed72fe461fe96d010c75571965fe3daab",
+  "assertions": {
+    "six_unique_creates": true,
+    "bounded_four_plus_two_unique_retrievals": true,
+    "same_basis_not_due_to_due": true,
+    "retrieval_creates_new_basis": true,
+    "packaged_schema_readable": true,
+    "public_reader_definitions_singular": true
+  }
+}
