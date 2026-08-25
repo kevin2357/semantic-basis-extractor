@@ -1,7 +1,7 @@
 # Slice 1 — Joint Provider-Economics Contract Review Request
 
 Date: 2026-08-24
-Status: ready for API review; no runtime schema frozen
+Status: API approved with conditions; SBE implementation in progress
 
 ## Review boundary
 
@@ -71,3 +71,20 @@ usage/cost/timing facts, outcome classifications, and immutable evidence referen
 
 The implementation gate remains closed until SBE, API, and owner agree on the
 contract and ownership decisions above.
+
+## Review disposition
+
+API approved all seven decisions with these binding refinements:
+
+- retrieval diagnostics expose count, first/last observation, bounded aggregate
+  HTTP duration, up to 16 ordered references, and explicit overflow;
+- Batch members retain provider-supplied usage/cost only when genuinely available;
+  v1 performs no proportional allocation;
+- cohort identity explicitly commits to execution topology and carries a canonical
+  digest of the complete cohort section;
+- publication time, provider settlement time, provider completion time, and
+  provider-pending wall time remain semantically distinct; and
+- fixtures must prove editorial/native follow-up revisions, replay, predecessor
+  gaps, contradictions, partial Batch usage, and privacy-sentinel exclusion.
+
+The joint gate is therefore open for the Slice 1 schema, validators, and fixtures.

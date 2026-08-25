@@ -1,7 +1,7 @@
 # Provider Economics Transaction Revision Contract Proposal
 
 Date: 2026-08-21
-Status: Slice 1 proposal; awaiting joint SBE/API schema and ownership review
+Status: Slice 1 contract approved; implementation in progress
 
 ## Decision summary
 
@@ -105,6 +105,10 @@ or authorization document.
 - prompt/request-geometry contract version and digest;
 - model, reasoning configuration, service level, and maximum-output policy;
 - price-book version; and
+- execution-topology contract identity/digest covering initial-wave fan-out or
+  Batch shape and other cost/latency/quality-relevant orchestration geometry;
+- `cohort_identity_sha256`, derived canonically from the complete cohort section
+  with that field omitted; and
 - `cohort_completeness`: `complete` or `legacy_unknown`.
 
 The subject-specific request digest remains provenance, not a default aggregation
@@ -153,7 +157,9 @@ Proposed fields include:
 - native prepared, authorized, submission-intent, provider-ID-durable, provider-
   terminal-observed, reconciliation-complete, and native-settled timestamps;
 - create HTTP attempt duration;
-- an ordered inventory of retrieval-attempt diagnostic references and durations;
+- retrieval attempt count, first/last retrieval observation timestamps, bounded
+  aggregate retrieval HTTP duration, and an ordered reference inventory capped at
+  16 entries with an explicit overflow count;
 - observed provider-pending interval;
 - native action span; and
 - provider-reported duration only when supplied by the provider.
@@ -188,6 +194,8 @@ Semantic validation across revisions requires:
 - provider, editorial, and native states follow their documented partial orders;
 - Batch member inventory/order is immutable and member facts only become more
   complete;
+- provider-supplied member usage/cost is preserved when available; otherwise it is
+  explicitly unavailable, and v1 never invents proportional member allocations;
 - a contradiction produces review/refusal evidence rather than silently minting a
   corrected history; and
 - API billing corrections remain API-owned reconciliation revisions joined to the

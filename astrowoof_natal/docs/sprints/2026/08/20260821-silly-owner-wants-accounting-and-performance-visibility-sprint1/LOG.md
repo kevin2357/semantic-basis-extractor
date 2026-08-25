@@ -67,3 +67,15 @@
   before packaging a schema and validator.
 - No runtime, schema, provider, spend, or API database behavior changed.
 - Gate remains intentionally paused for SBE/API/owner contract approval.
+
+## 2026-08-24 — Slice 1 joint approval received
+
+- API approved the contract name, cumulative transaction-revision tape, native
+  run/action authority, milestone-only emission, Batch-round cardinality,
+  `legacy_unknown`, and cohort boundary.
+- Added bounded retrieval-summary requirements with explicit reference overflow.
+- Added the no-invented-member-allocation rule for Batch.
+- Required execution topology in cohort identity and a canonical cohort digest.
+- Reaffirmed distinct unknown/zero, estimated/provider/API money, publication time,
+  provider completion, and provider-pending wall-time semantics.
+- Opened the Slice 1 implementation gate for schema, validators, and fixtures.
