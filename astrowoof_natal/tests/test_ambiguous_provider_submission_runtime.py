@@ -354,10 +354,14 @@ class AmbiguousProviderSubmissionRuntimeWaypoint2(unittest.TestCase):
                     basis=basis, transport_context={"scripted": True},
                 )
             calls: list[str] = []
+            class FailingSink:
+                def emit(self, *_args, **_kwargs):
+                    raise RuntimeError("scripted diagnostic sink failure")
             result = dispatch_external_authority_v2_intent(
                 run_dir, request_sha256=request["external_authority_request_sha256"],
                 grant_sha256=grant["grant_sha256"], prepare=prepare,
                 create=lambda _prepared: calls.append("POST"),
+                event_emitter=FailingSink(),
             )
             self.assertEqual([], calls)
             self.assertEqual("pre_provider_refusal", result["outcome"])

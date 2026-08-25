@@ -111,3 +111,19 @@ same size and coarse modification timestamp. Snapshot validation correctly
 bypassed the cache and therefore intermittently refused the newly written
 manifest. Snapshot publication now also hashes current bytes without the process
 cache; the cache remains available only for non-authoritative inventory callers.
+
+## 2026-08-25 — Scenic Waypoint 3 consumer surfaces complete
+
+Added the provider-free `astrowoof-provider-dispatch-result` command for strict
+validation/export of dispatch v3, command result v2, and the packaged sanitized
+fixture bundle. The command accepts no workspace, provider, credential, grant,
+response ID, or submission option. Added the contract identities to the packaged
+catalog, a consumer handoff and hash manifest, and command-level tests.
+
+The phase boundary now emits the existing closed, redacted
+`external_authority.refused` event for pre-provider refusal and concise text
+classification logging. Diagnostic sink failure is isolated from snapshot,
+action, authority, provider-call, and result behavior.
+
+Focused Waypoint 3 gate: 17 tests passed. Paused for Waffle Checkpoint 3 API
+fixture/adoption review before installed-wheel and release qualification.

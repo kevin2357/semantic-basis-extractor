@@ -6,6 +6,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
 import json
+import logging
 from importlib.resources import files
 from pathlib import Path
 import re
@@ -16,6 +17,9 @@ from .temporal_lifecycle import (
     inspect_temporal_lifecycle,
     validate_external_authority_request_v2_against_inspection,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 INTENT_SCHEMA_V2 = "astrowoof.external_authority_dispatch_intent.v2"
@@ -759,6 +763,20 @@ def dispatch_external_authority_v2_intent(
     run_json = root / "run.json"
     phase_aware = prepare is not None
 
+    def emit(name: str, *, data: dict[str, Any], action_id: str | None = None) -> None:
+        if event_emitter is None:
+            return
+        correlation = {"native_run_id": str(state.get("run_id") or "")}
+        if action_id is not None:
+            correlation["action_id"] = action_id
+        try:
+            event_emitter.emit(name, data=data, correlation=correlation)
+        except Exception as exc:
+            logger.warning(
+                "provider_dispatch_diagnostic_sink_failed event=%s error_class=%s",
+                name, type(exc).__name__,
+            )
+
     def now() -> str:
         return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -931,12 +949,12 @@ def dispatch_external_authority_v2_intent(
                 "a provider create boundary was entered without a durable identity",
             )
 
-    if event_emitter is not None and not replay:
-        event_emitter.emit("external_authority.provider_create_permitted", data={
+    if not replay:
+        emit("external_authority.provider_create_permitted", data={
             "request_sha256": request_sha256,
             "action_count": len(ordered_ids) - cursor,
             "selected_command": "external_authority_v2_dispatch",
-        }, correlation={"native_run_id": str(state.get("run_id") or "")})
+        })
 
     bound_ids: list[str] = deepcopy(intent.get("provider_bound_action_ids") or [])
     provider_ids: list[str] = deepcopy(intent.get("provider_operation_ids") or [])
@@ -1060,6 +1078,17 @@ def dispatch_external_authority_v2_intent(
                 persist_state(run_json, state)
                 write_workspace_snapshot(root)
                 validate_workspace_snapshot(root, state)
+                emit("external_authority.refused", data={
+                    "reason_code": result_reason,
+                    "category": "pre_provider_refusal",
+                    "selected_command": "external_authority_v2_dispatch",
+                    "action_count": len(unentered_ids),
+                }, action_id=action_id)
+                logger.info(
+                    "provider_dispatch_classified outcome=pre_provider_refusal "
+                    "reason=%s action_id=%s provider_io=not_attempted",
+                    result_reason, action_id,
+                )
                 return build_external_authority_provider_dispatch_result_v3(
                     outcome="pre_provider_refusal",
                     reason_code=result_reason,
@@ -1208,14 +1237,14 @@ def dispatch_external_authority_v2_intent(
             write_workspace_snapshot(root)
             validate_workspace_snapshot(root, state)
             if event_emitter is not None:
-                event_emitter.emit("provider.identity_recorded", data={
+                emit("provider.identity_recorded", data={
                     "action_id": action_id,
                     "provider_operation_id": provider_id,
-                }, correlation={"native_run_id": str(state.get("run_id") or ""), "action_id": action_id})
-                event_emitter.emit("provider.waiting", data={
+                }, action_id=action_id)
+                emit("provider.waiting", data={
                     "action_id": action_id,
                     "provider_operation_id": provider_id,
-                }, correlation={"native_run_id": str(state.get("run_id") or ""), "action_id": action_id})
+                }, action_id=action_id)
             _inject(failure_injector, f"after_identity_checkpoint:{action_id}")
 
     with _exclusive_lifecycle_lock(root):

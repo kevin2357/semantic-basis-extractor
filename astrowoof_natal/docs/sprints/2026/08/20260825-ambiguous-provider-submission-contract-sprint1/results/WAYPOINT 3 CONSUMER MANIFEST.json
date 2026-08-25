@@ -1,0 +1,28 @@
+{
+  "schema_version": "astrowoof.ambiguous_provider_submission_consumer_manifest.v1",
+  "status": "api_review_pending",
+  "provider_activity": false,
+  "artifacts": [
+    {
+      "contract_id": "astrowoof.external_authority_provider_dispatch_result.v3",
+      "path": "resources/contracts/external-authority-provider-dispatch-result.v3.schema.json",
+      "sha256": "28e91e0b8fa1bd6cf790024058f5e2e3d0edbeaadca9d45a5cdd5db54b7b0a1b"
+    },
+    {
+      "contract_id": "astrowoof.external_authority_v2_command_result.v2",
+      "path": "resources/contracts/external-authority-v2-command-result.v2.schema.json",
+      "sha256": "71d6f07d43196a69273a73917892c1b10b70d8d1fe37d29c2c376e65606690af"
+    },
+    {
+      "contract_id": "astrowoof.ambiguous_provider_submission_fixtures.v1",
+      "path": "resources/fixtures/external-authority-v2/ambiguous-provider-submission.v1.json",
+      "sha256": "2e2d5de510f4141d30309b0a35082eda27a7fd3c0477f976c3eca351c5ad1395"
+    }
+  ],
+  "public_python_validators": [
+    "validate_external_authority_provider_dispatch_result_v3",
+    "validate_external_authority_v2_command_result_v2",
+    "read_ambiguous_provider_submission_fixture_v1"
+  ],
+  "provider_free_cli": "astrowoof-provider-dispatch-result"
+}

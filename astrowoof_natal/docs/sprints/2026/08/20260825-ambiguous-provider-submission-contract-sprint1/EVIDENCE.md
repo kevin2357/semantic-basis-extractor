@@ -146,3 +146,29 @@ Stress repetition identified and corrected stale process-cache reuse during
 authoritative snapshot publication when Windows recycled a temporary path.
 Both snapshot writing and validation now hash current bytes directly at the
 integrity boundary.
+
+## Scenic Waypoint 3 consumer evidence
+
+- Public Python validators/readers are exported from the package root.
+- `astrowoof-provider-dispatch-result` validates dispatch v3, command result v2,
+  or the packaged fixture bundle without provider-capable arguments.
+- The packaged contract catalog names both new schema identities.
+- The consumer handoff defines API capacity/custody mapping, aggregate-refusal
+  suffix semantics, fresh-authority behavior, and the SBE/API ownership split.
+- The consumer manifest binds the two schema files and fixture bundle by exact
+  SHA-256.
+- A deliberately failing event sink cannot alter the checkpoint-drift refusal
+  or cause provider I/O.
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_provider_dispatch_result_cli \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_runtime \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_contract \
+  astrowoof_natal.tests.test_external_authority_v2_cli
+```
+
+Result: 17 tests passed in 5.643 seconds. Provider credentials, network, spend,
+and retained-QA access remained zero.
