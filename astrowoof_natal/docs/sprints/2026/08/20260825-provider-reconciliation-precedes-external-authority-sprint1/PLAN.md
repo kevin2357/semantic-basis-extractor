@@ -1,7 +1,7 @@
 # Provider Reconciliation Precedes External Authority — Sprint 1 Plan
 
 Date: 2026-08-25  
-Status: Slice 6 complete; final API/owner tag-publication approval pending
+Status: complete; SBE 0.4.22 published and independently verified
 
 ## Objective
 
@@ -248,7 +248,7 @@ dashboard state.
 ### Slice 6 — Closeout and patch release preparation
 
 **Status: complete.** 0.4.22 deterministic artifact and installed/broad-suite
-qualification are recorded; tag/publication remain unperformed.
+qualification are recorded; immutable tag/publication are verified.
 
 - Run focused lifecycle/temporal/reconciliation/authority suites.
 - Run installed qualification and generic release smoke.

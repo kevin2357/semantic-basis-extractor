@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.22
 
-Status: release candidate qualified; tag/publication pending owner authorization
+Status: published and independently digest-verified
 
 SBE 0.4.22 corrects lifecycle next-command precedence when one workspace contains
 both retained provider work and a later prepared paid action.
@@ -31,3 +31,8 @@ claim is introduced.
 Before a new paid QA cohort, AstroWoof API and its worker image must pin this fresh
 artifact together, deploy/attest the matching runtime and profile configuration,
 and complete the separate release-pair qualification.
+
+The immutable tag is `astrowoof-natal-authoring-v0.4.22`. GitHub reports the
+published 970685-byte wheel with SHA-256
+`5ead8d317d81bbcc5c38132c3b81d2ca380911088f4b8c6866dc3f333003f47d`;
+an independent post-publication download reproduced that digest exactly.

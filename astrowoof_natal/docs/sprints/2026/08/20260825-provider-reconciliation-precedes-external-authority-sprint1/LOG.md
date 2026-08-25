@@ -147,3 +147,15 @@
 - Recorded exact artifact/SPC compatibility, zero provider/spend/frozen-QA access,
   limitations, consumer handoff, and release-pair qualification caveat.
 - Tag/publication remain pending final API review and owner authorization.
+
+## 2026-08-25 — 0.4.22 publication
+
+- API and owner approved immutable publication.
+- Tagged release-record commit `de28857` as
+  `astrowoof-natal-authoring-v0.4.22`.
+- Published the exact 970685-byte qualified wheel and SHA256SUMS asset.
+- GitHub asset digest and independent post-publication download both match
+  `5ead8d31...3003f47d`.
+- Release ID: 376291418; draft/prerelease: false/false.
+- Sprint closed; API/worker release-pair qualification remains the next consumer
+  gate before paid QA.

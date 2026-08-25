@@ -146,3 +146,15 @@ authority.
   `7bb74f04a466cfa5d28c248e3c411f97c61221770a3eba1556544710d6c0775c`.
 - External provider/network calls, spend, and frozen-QA access/mutation: 0.
 - Fresh API/worker release-pair qualification remains required before paid QA.
+
+## Publication evidence
+
+- Immutable tag: `astrowoof-natal-authoring-v0.4.22`.
+- Tag commit: `de28857172fb7c0b981ff716b34eaade80c5ba70`.
+- Annotated tag object: `0ce01c82173b5ee7ddfd8c9a9c4f52cb75f7a6dd`.
+- GitHub release ID: 376291418.
+- Published at: `2026-08-25T09:37:57Z`.
+- Wheel asset ID: 528966202; checksum asset ID: 528966203.
+- GitHub-reported and independently downloaded wheel SHA-256:
+  `5ead8d317d81bbcc5c38132c3b81d2ca380911088f4b8c6866dc3f333003f47d`.
+- Published bytes: 970685; draft: false; prerelease: false.
