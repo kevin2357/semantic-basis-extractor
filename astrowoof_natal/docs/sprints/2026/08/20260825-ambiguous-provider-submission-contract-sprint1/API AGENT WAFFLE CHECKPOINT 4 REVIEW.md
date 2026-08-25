@@ -1,7 +1,7 @@
 # API Agent Waffle Checkpoint 4 Review
 
-Date: 2026-08-25  
-Reviewer: AstroWoof API agent  
+Date: 2026-08-25
+Reviewer: AstroWoof API agent
 Scope: final release-candidate review for `astrowoof-natal-authoring` 0.4.23
 
 ## Verdict
