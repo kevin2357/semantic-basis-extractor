@@ -1,6 +1,6 @@
 # Slice 0 — Contract, Lineage, and Applicability Audit
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: implementation evidence complete; API review requested before Slice 1
 
 ## Confirmed gap

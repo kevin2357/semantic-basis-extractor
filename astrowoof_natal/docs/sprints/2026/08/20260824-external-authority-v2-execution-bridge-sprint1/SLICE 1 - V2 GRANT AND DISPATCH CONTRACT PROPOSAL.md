@@ -1,6 +1,6 @@
 # Slice 1 — V2 Grant and Dispatch Contract Proposal
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: implemented as provider-free contract; API schema review requested
 
 ## Contract identities

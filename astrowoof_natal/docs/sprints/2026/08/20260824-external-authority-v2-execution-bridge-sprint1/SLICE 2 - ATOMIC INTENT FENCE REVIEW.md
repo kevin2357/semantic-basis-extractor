@@ -1,6 +1,6 @@
 # Slice 2 — Atomic Intent Fence Review
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: implementation complete; API review requested before Slice 3 provider dispatch
 
 ## Outcome
@@ -101,4 +101,3 @@ workspace access: **0**.
 3. Is provider-safety precedence over stale/replay classification correct?
 4. May Slice 3 proceed with provider dispatch outside the writer and per-identity
    durability/reconciliation-only result handling?
-

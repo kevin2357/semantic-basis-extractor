@@ -1,6 +1,6 @@
 # Slice 5 — Packaging and Release Readiness Review
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: final API/owner review approved; 0.4.20 publication in progress
 
 ## Packaged public surfaces

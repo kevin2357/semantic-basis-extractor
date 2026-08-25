@@ -1,6 +1,6 @@
 # API Agent V2 External Authority Execution Gap Review
 
-Date: 2026-08-24  
+Date: 2026-08-24
 Status: implementation follow-up requested; no provider operation is authorized by this document
 
 ## What the fresh QA cohort proved
