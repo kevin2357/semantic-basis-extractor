@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 3 implementation complete; API consumer review requested
+Status: Slice 3 approved; intentionally paused before Slice 4
 
 - Provider calls: 0
 - Spend: USD 0
@@ -83,3 +83,15 @@ Status: Slice 3 implementation complete; API consumer review requested
 - Provider-economics contract + exact + bounded projection suite: **20 passed**.
 - Provider calls, retrievals, submissions, and spend: **0**.
 - Native writes or snapshot changes: **0**.
+
+## Slice 3 consumer approval
+
+- Review artifact: `API Agent Slice 3 Review and Publication Suggestions.md`.
+- Decision: approved to proceed later with timing semantics and public export.
+- Frozen Batch rule: one transaction/authority per round; ordered members are
+  evidence only and null member usage is never allocated or inferred.
+- Frozen legacy rule: bounded v1 fails closed rather than reconstructing topology.
+- Remaining release requirements are recorded in PLAN.md, including packaged
+  Python and provider-free CLI surfaces, predecessor-checked ingestion, privacy
+  scans, member-order refusal, and later-revision monotonicity.
+- Resume point: **start of Slice 4 — Timing semantics**.

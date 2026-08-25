@@ -148,3 +148,15 @@
   is refused rather than guessed into six-pass accounting.
 - Added the four-route parity regressions; all provider economics tests pass with
   no provider transport or state mutation.
+
+## 2026-08-24 — Slice 3 API approval and intentional pause
+
+- Added and reviewed `API Agent Slice 3 Review and Publication Suggestions.md`.
+- API approved one transaction/accounting authority per Batch round, ordered
+  members as evidence only, null rather than inferred member attribution, bounded
+  v1 fail-closed behavior, and the four-route parity boundary.
+- Carried immutable-revision ingestion, predecessor/replay, semantic-null, privacy,
+  member-order, settlement-monotonicity, packaged Python reader, and provider-free
+  CLI requirements into Slices 4–6 and the qualification matrix.
+- Sprint is intentionally paused immediately before Slice 4. Resume on branch
+  `codex/accounting-performance-visibility` after refreshing it from mainline.

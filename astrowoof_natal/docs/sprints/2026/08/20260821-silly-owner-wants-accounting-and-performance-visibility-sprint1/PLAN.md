@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 3 implementation complete; consumer review requested before timing/publication work
+Status: Slice 3 approved; intentionally paused before Slice 4 while operations work continues on `main`
 
 ## Objective
 
@@ -71,6 +71,10 @@ Result: complete. Bounded interactive and Batch use the same revision semantics 
 exact while preserving route-specific cohort identity and the bounded v2 contract.
 Legacy bounded v1 workspaces fail closed.
 
+API review: approved. Batch-round authority, evidence-only ordered members,
+non-inferred null member usage, bounded-v1 refusal, and the four-route matrix are
+frozen for the remaining work.
+
 ### Slice 4 — Timing semantics
 
 - Normalize only durable, semantically named timing facts:
@@ -78,6 +82,10 @@ Legacy bounded v1 workspaces fail closed.
   native action span, and provider-reported duration when actually available.
 - Preserve null/open boundaries and polling-delay caveats.
 - Ensure logs can aid diagnosis without becoming the only timing source.
+- Preserve unknown/partial provider usage and timing as null through later
+  editorial/native revisions unless genuinely new native evidence becomes durable.
+- Prevent later revisions from altering accepted provider settlement identity,
+  usage, cost basis, member order, or timing evidence.
 
 Gate: clock/failure injection proves no fabricated or negative durations.
 
@@ -89,6 +97,15 @@ Gate: clock/failure injection proves no fabricated or negative durations.
 - Document the API ingestion transaction, transaction/revision idempotency keys,
   monotonic merge rules, reconciliation join, immutable revision retention, and
   recommended current-state projection without implementing API-owned policy.
+- Provide both a packaged snapshot-validating Python reader/validator and a
+  provider-free CLI validation/export path. Python is the primary ingestion seam;
+  CLI output supports installed-wheel qualification and operator diagnostics.
+- Require append-only API ingestion keyed by `(transaction_id, revision_number)`,
+  exact predecessor continuity, byte-identical replay idempotency, and refusal of
+  skipped/conflicting/identity-changing revisions.
+- Keep immutable revision history distinct from any API-owned current projection,
+  and keep SBE estimate, provider-reported money, and API-reconciled billing as
+  separately typed facts.
 
 Gate: API fixture adoption review before release qualification.
 
@@ -117,7 +134,11 @@ The minimum matrix should cover:
 - initial provider-settlement revision followed by editorial-finalization revision,
   exact replay, skipped predecessor, stale revision, and contradictory revision;
 - event/log sink failure with unchanged authoritative evidence; and
-- protected subject/prompt sentinel absence.
+- protected subject/prompt sentinel absence;
+- Batch member-order mutation with unchanged round identity refusal;
+- missing/partial usage remaining null through later editorial revisions; and
+- public export exclusion of prompts, response text, subject/location data,
+  headers, credentials, full authority bindings, and provider payloads.
 
 Tests must prove the observation path is read-only with respect to provider work and
 cannot authorize, settle, deny, resubmit, or release anything.
