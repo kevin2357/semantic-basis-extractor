@@ -1315,41 +1315,249 @@ def dispatch_external_authority_v2_intent(
 def resolve_external_authority_v2_request_payload(
     run_dir: Path | str, action: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Resolve one exact snapshot-bound prepared payload without private inference."""
-    from .closure import load_json
-    from .spend import digest as spend_digest
+    """Resolve one exact snapshot-bound prepared payload without recursive discovery."""
+    from .closure import (
+        OpenAIResponsesProvider, PassSpec, build_interactive_authoring_request,
+        find_workspace_root, load_json, normalized_path,
+        retry_feedback_from_record, sha256_file, validate_workspace_snapshot,
+    )
+    from .provenance import resource_set_provenance
+    from .spend import digest as spend_digest, profile_digest
 
     root = Path(run_dir).resolve()
+    state = load_json(root / "run.json")
+    validate_workspace_snapshot(root, state)
+    action_id = action.get("action_id")
+    ledger_actions = (state.get("spend_ledger") or {}).get("actions") or []
+    matches = [
+        item for item in ledger_actions
+        if isinstance(item, dict) and item.get("action_id") == action_id
+    ]
+    if len(matches) != 1 or matches[0].get("binding") != action.get("binding"):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "the action does not join one snapshot-bound ledger member",
+        )
+    native_action = matches[0]
     expected = str((action.get("binding") or {}).get("request_sha256") or "")
     if len(expected) != 64:
         raise ExternalAuthorityV2ExecutionError(
             "request_payload_mismatch", "action request digest is invalid",
         )
-    discovered: list[dict[str, Any]] = []
-    candidates: list[dict[str, Any]] = []
-    for name in ("openai-request.json", "openai-request-payload.private.json"):
-        for path in root.rglob(name):
-            try:
-                payload = load_json(path)
-            except (OSError, ValueError, json.JSONDecodeError):
-                continue
-            if isinstance(payload, dict):
-                discovered.append(payload)
-                if spend_digest(payload) == expected:
-                    candidates.append(payload)
-    if not discovered:
+    artifact = native_action.get("request_payload_artifact")
+    if artifact is not None:
+        required = {
+            "schema_version", "logical_path", "file_sha256",
+            "canonical_request_sha256", "representation",
+        }
+        if (
+            not isinstance(artifact, dict) or set(artifact) != required
+            or artifact.get("schema_version")
+            != "astrowoof.provider_request_payload_artifact.v1"
+            or artifact.get("representation") != "canonical_json_object"
+            or artifact.get("canonical_request_sha256") != expected
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "request_payload_digest_mismatch",
+                "the binding-owned request payload reference is invalid",
+            )
+        payload_path = Path(str(artifact.get("logical_path") or "")).resolve()
+        try:
+            payload_path.relative_to(root)
+        except ValueError as exc:
+            raise ExternalAuthorityV2ExecutionError(
+                "request_payload_digest_mismatch",
+                "the binding-owned request payload path escapes the workspace",
+            ) from exc
+        if (
+            normalized_path(payload_path) != artifact["logical_path"]
+            or not payload_path.is_file()
+            or sha256_file(payload_path) != artifact.get("file_sha256")
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "request_payload_digest_mismatch",
+                "the binding-owned request payload artifact changed",
+            )
+        payload = load_json(payload_path)
+        if not isinstance(payload, dict) or spend_digest(payload) != expected:
+            raise ExternalAuthorityV2ExecutionError(
+                "request_payload_digest_mismatch",
+                "the direct request payload does not match the action binding",
+            )
+        return deepcopy(payload)
+
+    binding = native_action.get("binding") or {}
+    if binding.get("stage") != "creative_retry":
         raise ExternalAuthorityV2ExecutionError(
             "request_payload_unavailable",
-            "a snapshot-bound prepared provider request payload is unavailable",
+            "this historical action has no binding-owned request payload",
         )
-    if not candidates:
+    refusal_history = native_action.get("external_authority_v2_refused_invocations")
+    if not isinstance(refusal_history, list) or not any(
+        isinstance(item, dict)
+        and item.get("schema_version")
+        == "astrowoof.external_authority_v2_refused_invocation.v1"
+        and item.get("outcome") == "pre_provider_refusal"
+        and item.get("reason_code") == "request_payload_digest_mismatch"
+        and item.get("refused_action_id") == action_id
+        for item in refusal_history
+    ):
         raise ExternalAuthorityV2ExecutionError(
             "request_payload_digest_mismatch",
-            "no prepared provider request payload matches the action binding",
+            "the lossy historical exact artifact cannot satisfy this invocation",
         )
-    if len(candidates) != 1:
+    route_match = re.fullmatch(r"([^:]+):attempt-(\d{3})", str(binding.get("route") or ""))
+    if route_match is None:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "the historical exact route cannot be rebuilt",
+        )
+    pass_id, attempt_text = route_match.groups()
+    attempt_number = int(attempt_text)
+    if attempt_number < 2:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical rebuild is limited to ordinary creative retries",
+        )
+    runtime = ((state.get("provenance") or {}).get("runtime") or {})
+    if (
+        runtime.get("distribution") != "astrowoof-natal-authoring"
+        or runtime.get("version") != "0.4.23"
+        or state.get("schema_version") != "astrowoof.semantic_closure_run.v0.9"
+        or (state.get("provenance") or {}).get("resources")
+        != resource_set_provenance()
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "no compatible historical exact request builder is available",
+        )
+    if profile_digest(state.get("authoring_profile")) != binding.get("profile_sha256"):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "the retained authoring profile does not match the action binding",
+        )
+    record = (state.get("passes") or {}).get(pass_id)
+    if not isinstance(record, dict):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable", "the retained pass record is unavailable",
+        )
+    attempts = record.get("attempts") or []
+    positions = [
+        index for index, item in enumerate(attempts)
+        if isinstance(item, dict)
+        and item.get("attempt_number") == attempt_number
+        and item.get("paid_action_id") == action_id
+    ]
+    if len(positions) != 1:
         raise ExternalAuthorityV2ExecutionError(
             "request_payload_ambiguous",
-            "more than one prepared provider request payload matches the action binding",
+            "the historical action does not join one retained pass attempt",
         )
-    return deepcopy(candidates[0])
+    position = positions[0]
+    attempt_root = root / "passes" / pass_id / f"attempt-{attempt_number:03d}"
+    redacted_path = attempt_root / "openai-request.json"
+    prompt_path = attempt_root / "openai-workspace-prompt.txt"
+    if not redacted_path.is_file() or not prompt_path.is_file():
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical exact request evidence is incomplete",
+        )
+    try:
+        prompt = prompt_path.read_text(encoding="utf-8")
+    except UnicodeError as exc:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "historical exact prompt is not valid UTF-8",
+        ) from exc
+    redacted = load_json(redacted_path)
+    placeholder = "[workspace prompt persisted separately as openai-workspace-prompt.txt]"
+    if (
+        not isinstance(redacted, dict)
+        or not isinstance(redacted.get("input"), list)
+        or len(redacted["input"]) != 2
+        or not isinstance(redacted["input"][1], dict)
+        or redacted["input"][1].get("content") != placeholder
+        or json.dumps(redacted, ensure_ascii=False).count(placeholder) != 1
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "historical exact redaction shape is invalid",
+        )
+    source_zip = Path(str(record.get("source_zip") or "")).resolve()
+    source_root = root / "passes" / pass_id / "source"
+    try:
+        source_zip.relative_to(root)
+    except ValueError as exc:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical exact source archive escapes the restored workspace",
+        ) from exc
+    if (
+        not source_zip.is_file()
+        or sha256_file(source_zip) != record.get("source_sha256")
+        or not source_root.is_dir()
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical exact source evidence is incomplete",
+        )
+    source_workspace = find_workspace_root(source_root, pass_id)
+    config = state.get("provider_configuration") or {}
+    if "creative_retry" in config:
+        config = config.get("creative_retry") or {}
+    allowed_config = {
+        "model", "reasoning_effort", "background", "base_url",
+        "max_output_tokens", "prompt_cache_mode", "prompt_cache_ttl",
+        "require_spend_authorization",
+    }
+    if not isinstance(config, dict) or any(key not in allowed_config for key in config):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical provider configuration is incompatible",
+        )
+    try:
+        provider = OpenAIResponsesProvider(api_key="snapshot-bound-rebuild", **config)
+    except (TypeError, ValueError) as exc:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "historical provider configuration cannot be rebuilt",
+        ) from exc
+    if (
+        provider.model != binding.get("model")
+        or provider.max_output_tokens != binding.get("maximum_output_tokens")
+        or binding.get("service_level") != "interactive"
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "historical provider configuration does not match the action binding",
+        )
+    prior_record = deepcopy(record)
+    prior_record["attempts"] = deepcopy(attempts[:position])
+    feedback = retry_feedback_from_record(prior_record)
+    spec = PassSpec(
+        pass_id=pass_id,
+        subject=str(record.get("subject") or ""),
+        pass_number=int(record.get("pass_number")),
+        source_zip=source_zip,
+        source_sha256=str(record.get("source_sha256") or ""),
+    )
+    rebuilt, _layout, segments = build_interactive_authoring_request(
+        provider, spec=spec, workspace=source_workspace,
+        feedback=feedback, attempt_number=attempt_number,
+    )
+    if "\n\n".join(segments.values()) != prompt:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "rebuilt historical prompt does not match persisted prompt evidence",
+        )
+    expected_redacted = deepcopy(rebuilt)
+    expected_redacted["input"] = [
+        rebuilt["input"][0],
+        {"role": "user", "content": placeholder},
+    ]
+    if expected_redacted != redacted or spend_digest(rebuilt) != expected:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "rebuilt historical request does not match retained binding evidence",
+        )
+    return rebuilt

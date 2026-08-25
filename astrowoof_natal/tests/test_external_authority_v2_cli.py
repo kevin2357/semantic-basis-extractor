@@ -16,7 +16,9 @@ from astrowoof_natal_authoring import (
     validate_external_authority_v2_command_result_v2,
 )
 from astrowoof_natal_authoring.cli.external_authority_v2 import main
-from astrowoof_natal_authoring.closure import load_json, write_workspace_snapshot
+from astrowoof_natal_authoring.closure import (
+    load_json, provider_request_payload_artifact, write_workspace_snapshot,
+)
 from astrowoof_natal_authoring.spend import digest as spend_digest
 
 
@@ -33,6 +35,9 @@ def _inputs(root: Path):
         target = run_dir / "prepared" / action["action_id"] / "openai-request.json"
         target.parent.mkdir(parents=True)
         target.write_text(json.dumps(payload), encoding="utf-8")
+        action["request_payload_artifact"] = provider_request_payload_artifact(
+            target, payload,
+        )
     (run_dir / "run.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
     write_workspace_snapshot(run_dir)
     inspection = inspect_temporal_lifecycle(

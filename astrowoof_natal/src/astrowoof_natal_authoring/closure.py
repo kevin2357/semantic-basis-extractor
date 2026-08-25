@@ -201,6 +201,27 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def provider_request_payload_artifact(
+    path: Path, payload: dict[str, Any],
+) -> dict[str, Any]:
+    """Describe one exact private request body through its sole native reference."""
+    return {
+        "schema_version": "astrowoof.provider_request_payload_artifact.v1",
+        "logical_path": normalized_path(path),
+        "file_sha256": sha256_file(path),
+        "canonical_request_sha256": spend_digest(payload),
+        "representation": "canonical_json_object",
+    }
+
+
+def persist_provider_request_payload(
+    path: Path, payload: dict[str, Any],
+) -> dict[str, Any]:
+    """Persist and describe an exact provider request before authorization."""
+    write_json_atomic(path, payload)
+    return provider_request_payload_artifact(path, payload)
+
+
 def normalized_path(path: Path) -> str:
     return str(path.resolve())
 
@@ -1399,6 +1420,10 @@ class OpenAIResponsesProvider:
             )
         )
         attempt_root = response_workspace.parents[1]
+        request_payload_path = attempt_root / "openai-request-payload.private.json"
+        request_payload_artifact = persist_provider_request_payload(
+            request_payload_path, request_payload,
+        )
         write_json_atomic(
             attempt_root / "openai-request.json",
             {
@@ -1453,7 +1478,13 @@ class OpenAIResponsesProvider:
             if self.require_spend_authorization and before_submit is None:
                 raise ValueError("Paid Responses creation requires spend authorization")
             if before_submit is not None:
-                before_submit(request_payload)
+                if getattr(before_submit, "accepts_request_payload_artifact", False):
+                    before_submit(
+                        request_payload,
+                        request_payload_artifact=request_payload_artifact,
+                    )
+                else:
+                    before_submit(request_payload)
             response, create_transport_attempts = self._request_with_retry(
                 method="POST",
                 url=f"{self.base_url}/responses",
@@ -1628,6 +1659,10 @@ class OpenAIResponsesProvider:
             payload["safety_identifier"] = self.safety_identifier
         attempt_root.mkdir(parents=True, exist_ok=True)
         write_json_atomic(attempt_root / "openai-request.json", payload)
+        request_payload_path = attempt_root / "openai-request.json"
+        request_payload_artifact = provider_request_payload_artifact(
+            request_payload_path, payload,
+        )
         key = hashlib.sha256(idempotency_material.encode("utf-8")).hexdigest()
         background_path = attempt_root / "openai-background-response.json"
         started = time.monotonic()
@@ -1654,7 +1689,13 @@ class OpenAIResponsesProvider:
             if self.require_spend_authorization and before_submit is None:
                 raise ValueError("Paid Responses creation requires spend authorization")
             if before_submit is not None:
-                before_submit(payload)
+                if getattr(before_submit, "accepts_request_payload_artifact", False):
+                    before_submit(
+                        payload,
+                        request_payload_artifact=request_payload_artifact,
+                    )
+                else:
+                    before_submit(payload)
             response, create_attempts = self._request_with_retry(
                 method="POST",
                 url=f"{self.base_url}/responses",
@@ -2863,7 +2904,10 @@ class SpendController:
                     correlation={"action_id": str(action_id)} if action_id else None,
                 )
 
-        def before_submit(payload: dict[str, Any]) -> None:
+        def before_submit(
+            payload: dict[str, Any], *,
+            request_payload_artifact: dict[str, Any] | None = None,
+        ) -> None:
             request_sha256 = spend_digest(payload)
             with self._consumption_lock(), self.state_lock:
                 existing = next(
@@ -2907,6 +2951,34 @@ class SpendController:
                         price_book_version=PRICE_BOOK_VERSION,
                     )
                     existing = prepare_action(self.ledger, binding)
+                    persist_state(self.run_json, self.state)
+                if request_payload_artifact is not None:
+                    expected_keys = {
+                        "schema_version", "logical_path", "file_sha256",
+                        "canonical_request_sha256", "representation",
+                    }
+                    if (
+                        not isinstance(request_payload_artifact, dict)
+                        or set(request_payload_artifact) != expected_keys
+                        or request_payload_artifact.get("schema_version")
+                        != "astrowoof.provider_request_payload_artifact.v1"
+                        or request_payload_artifact.get("representation")
+                        != "canonical_json_object"
+                        or request_payload_artifact.get("canonical_request_sha256")
+                        != request_sha256
+                        or not isinstance(request_payload_artifact.get("logical_path"), str)
+                        or not isinstance(request_payload_artifact.get("file_sha256"), str)
+                        or not re.fullmatch(
+                            r"[0-9a-f]{64}", request_payload_artifact["file_sha256"]
+                        )
+                    ):
+                        raise ValueError("Prepared provider payload artifact is invalid")
+                    prior_artifact = existing.get("request_payload_artifact")
+                    if prior_artifact is not None and prior_artifact != request_payload_artifact:
+                        raise ValueError("Prepared provider payload artifact changed")
+                    existing["request_payload_artifact"] = deepcopy(
+                        request_payload_artifact
+                    )
                     persist_state(self.run_json, self.state)
                 if existing["state"] == "DENIED_PROVIDERLESS":
                     transition = (existing.get("negative_authorization") or {}).get(
@@ -2992,6 +3064,8 @@ class SpendController:
                     "action_id": existing["action_id"], "stage": stage,
                     "attempt": int(route.split(":")[-1]) if route.split(":")[-1].isdigit() else 1,
                 })
+
+        before_submit.accepts_request_payload_artifact = True  # type: ignore[attr-defined]
 
         def provider_created(provider_id: str | None, kind: str) -> None:
             with self.state_lock:

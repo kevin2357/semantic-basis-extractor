@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astrowoof-natal-authoring"
-version = "0.4.23"
+version = "0.4.24"
 description = "AstroWoof semantic-basis extraction and resumable natal-deck authoring runtime"
 readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs for implementation documentation.", content-type = "text/plain"}
 requires-python = ">=3.11"
@@ -31,6 +31,7 @@ astrowoof-external-authority = "astrowoof_natal_authoring.external_authority:mai
 astrowoof-external-authority-qa = "astrowoof_natal_authoring.external_authority_qa:main"
 astrowoof-external-authority-v2 = "astrowoof_natal_authoring.cli.external_authority_v2:main"
 astrowoof-external-authority-v2-qa = "astrowoof_natal_authoring.external_authority_v2_qa:main"
+astrowoof-payload-recovery-qa = "astrowoof_natal_authoring.payload_recovery_qa:main"
 astrowoof-provider-dispatch-result = "astrowoof_natal_authoring.cli.provider_dispatch_result:main"
 astrowoof-operator-retirement = "astrowoof_natal_authoring.cli.operator_retirement:main"
 astrowoof-operator-retirement-qa = "astrowoof_natal_authoring.operator_retirement_qa:main"

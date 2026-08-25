@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.external_authority_v2_payload_recovery_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_sha256", "status", "qualification_only",
+    "provider_free", "external_network_call_count", "provider_create_count",
+    "provider_spend_usd", "sbe_version", "old_refusal_reason",
+    "old_provider_io_disposition", "fresh_request_distinct",
+    "fresh_dispatch_outcome", "replay_outcome", "refusal_history_preserved"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.external_authority_v2_payload_recovery_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 1},
+    "provider_spend_usd": {"const": 0},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "old_refusal_reason": {"const": "request_payload_digest_mismatch"},
+    "old_provider_io_disposition": {"const": "not_attempted"},
+    "fresh_request_distinct": {"const": true},
+    "fresh_dispatch_outcome": {"const": "detached_provider_pending"},
+    "replay_outcome": {"const": "exact_replay"},
+    "refusal_history_preserved": {"const": true}
+  }
+}

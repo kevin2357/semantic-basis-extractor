@@ -1,0 +1,17 @@
+{
+  "external_network_call_count": 0,
+  "fresh_dispatch_outcome": "detached_provider_pending",
+  "fresh_request_distinct": true,
+  "old_provider_io_disposition": "not_attempted",
+  "old_refusal_reason": "request_payload_digest_mismatch",
+  "provider_create_count": 1,
+  "provider_free": true,
+  "provider_spend_usd": 0,
+  "qualification_only": true,
+  "receipt_sha256": "3a20631cbab82b24503c87345c47bba9cb7c7f96efb7dc2bb782e0f1dcd8ca4e",
+  "refusal_history_preserved": true,
+  "replay_outcome": "exact_replay",
+  "sbe_version": "0.4.24",
+  "schema_version": "astrowoof.external_authority_v2_payload_recovery_qualification.v1",
+  "status": "pass"
+}
