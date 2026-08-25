@@ -1,6 +1,6 @@
 # Ambiguous Provider Submission Contract Proposal
 
-Status: Scenic Waypoint 1 candidate; pending joint API review
+Status: Contract approved through final Waypoint 4 release review
 
 ## Decision
 
@@ -240,7 +240,10 @@ prepared-create digest remains bound to the actual preparation snapshot, the
 second writer observes that the snapshot changed, and no call fence or provider
 I/O occurs.
 
-## Questions for Waffle Checkpoint 1
+## Resolved Waypoint 1 decision history
+
+The questions below are retained only as design history. They were resolved by
+the API reviews recorded in this sprint and are not open consumer questions.
 
 1. Approve the dispatch v3 and command-result v2 field/vocabulary set?
 2. Approve the distinction between provider-I/O disposition and exact grant

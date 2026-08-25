@@ -1,6 +1,7 @@
 # Ambiguous Provider Submission — API Consumer Handoff
 
-Status: Scenic Waypoint 3 candidate; API fixture review pending
+Status: Waypoint 3 API fixture review complete; Waypoint 4 qualified and
+approved for immutable 0.4.23 publication
 
 ## Supported public pair
 

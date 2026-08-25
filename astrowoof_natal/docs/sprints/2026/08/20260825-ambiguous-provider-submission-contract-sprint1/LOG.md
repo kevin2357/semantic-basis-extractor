@@ -154,3 +154,12 @@ with 719 passed and 3 expected skips.
 
 No provider/network call, credential, spend, or frozen-QA access occurred.
 Paused at final Waffle Checkpoint 4; tag and publication are not authorized yet.
+
+## 2026-08-25 — Final Waffle Checkpoint 4 approved
+
+API independently reviewed the candidate and reran the focused consumer/runtime
+gate: 18 passed with one expected optional-schema skip. Final approval required
+only correcting stale candidate/pending wording in the normative handoff and
+labelling the old Waypoint 1 questions as resolved decision history. Those prose
+corrections are complete. Owner and API authorized immutable 0.4.23 tagging and
+publication; no runtime or artifact rebuild is required.

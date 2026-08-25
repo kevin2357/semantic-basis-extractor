@@ -168,6 +168,11 @@ the same gate plus the new test completed with no skip.
 
 Tagging and publication remain pending final owner/API authorization.
 
+Final API review approved the qualified candidate after an independent focused
+run of 18 passing tests with one expected optional-schema skip. Its sole
+condition was documentation status cleanup; the candidate wheel bytes remain
+unchanged.
+
 Stress repetition identified and corrected stale process-cache reuse during
 authoritative snapshot publication when Windows recycled a temporary path.
 Both snapshot writing and validation now hash current bytes directly at the
