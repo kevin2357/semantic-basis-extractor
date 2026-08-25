@@ -195,3 +195,12 @@
   `642e48dd...a7ecc`.
 - Provider/network/spend/API database/retained-run activity: 0.
 - Paused at the planned API fixture-adoption review before Slice 6.
+
+## 2026-08-25 — Slice 5 API adoption approval and Slice 6 start
+
+- API approved the snapshot-validating append-only transaction tape, cardinality,
+  predecessor/replay, semantic-null, cost-authority, and privacy boundaries without
+  contract correction.
+- The remaining consumer condition is API ingestion of the packaged four-route
+  fixture/qualification receipt before the resulting release is pinned.
+- Opened release qualification and selected fresh immutable version 0.4.21.

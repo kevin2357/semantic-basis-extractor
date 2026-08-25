@@ -129,3 +129,12 @@ Status: Slice 5 complete; API fixture-adoption review pending before Slice 6
 - External provider I/O, provider creates/retrievals, credentials, spend, API
   database writes, and retained QA access: **0**.
 - Gate: awaiting API adoption of packaged fixtures/receipt before Slice 6.
+
+## Slice 5 API review
+
+- Result: approved without contract correction.
+- API confirmed the export provides the raw transaction-level evidence needed for
+  later Batch savings and latency analysis without making logs or dashboards
+  authoritative.
+- Release pin remains conditional on API ingestion of the packaged four-route
+  fixtures/qualification receipt.
