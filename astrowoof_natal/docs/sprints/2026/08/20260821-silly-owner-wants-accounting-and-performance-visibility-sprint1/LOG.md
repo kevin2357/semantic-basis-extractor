@@ -55,3 +55,15 @@
   accepted fixtures.
 - Provider calls: 0. Spend: USD 0. Runtime/source/schema changes: none.
 - Paused at the planned joint SBE/API schema and ownership review gate.
+
+## 2026-08-24 — Branch refresh and Slice 1 review packet
+
+- Merged released `main` through SBE 0.4.19 into the accounting/performance branch.
+- Rechecked the proposal against the newer lifecycle v0.6, native publication,
+  external-authority, provider-reconciliation, and operator-retirement contracts.
+- The ownership model still composes: economics revisions observe durable native
+  facts but create no execution, spend, custody, scheduling, or billing authority.
+- Added a concise joint-review request that freezes the seven decisions needed
+  before packaging a schema and validator.
+- No runtime, schema, provider, spend, or API database behavior changed.
+- Gate remains intentionally paused for SBE/API/owner contract approval.

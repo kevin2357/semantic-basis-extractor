@@ -1,6 +1,6 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Evidence
 
-Status: Slice 1 contract proposal complete; awaiting joint SBE/API review
+Status: Slice 1 contract proposal and review packet complete; awaiting joint SBE/API review
 
 - Provider calls: 0
 - Spend: USD 0
@@ -23,6 +23,10 @@ Status: Slice 1 contract proposal complete; awaiting joint SBE/API review
   approved for Slice 1 proposal. No schema is frozen yet.
 - Slice 1 proposal:
   `PROVIDER ECONOMICS OBSERVATION CONTRACT PROPOSAL.md`.
+- Joint review packet:
+  `SLICE 1 - JOINT CONTRACT REVIEW REQUEST.md`.
+- Branch basis refreshed through published SBE 0.4.19 without changing the proposed
+  evidence/authority boundary.
 - Proposal examples:
   - `results/slice1-interactive-settlement-revision.proposal.json`;
   - `results/slice1-interactive-editorial-revision.proposal.json`; and
