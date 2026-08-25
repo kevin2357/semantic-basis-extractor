@@ -85,6 +85,19 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
                 "pass_id": f"pass-{number}", "state": "WAITING_FOR_RESPONSE",
                 "attempts": [{"attempt": 1, "state": "WAITING_FOR_RESPONSE"}],
             }
+        prepared_action_id = "paid_ffffffffffffffffffffffff"
+        actions.append({
+            "action_id": prepared_action_id,
+            "state": "PREPARED",
+            "binding": {
+                "run_id": wave["run_id"], "profile_sha256": "f" * 64,
+                "prepared_state_revision": 1, "stage": "polish",
+                "route": "polish:attempt-001", "request_sha256": "e" * 64,
+                "model": "scripted-provider", "service_level": "interactive",
+                "maximum_output_tokens": 1000, "commitment_micro_usd": 1,
+                "price_book_version": "openai-public-2026-08-07.v1",
+            },
+        })
         state = {
             "schema_version": "astrowoof.semantic_closure_run.v0.9",
             "run_id": wave["run_id"], "state_revision": 1,
@@ -153,6 +166,29 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
         second = reconcile_provider_cycle(
             root, observed_at="1970-01-01T00:01:00Z", retrieve=retrieve,
         )
+        after_second = load_json(root / "run.json")
+        second_completed = set(second["cycle"]["completed_action_ids"])
+        for action in after_second["spend_ledger"]["actions"]:
+            if action["action_id"] in second_completed:
+                action["state"] = "REPORTED"
+                action["reported"] = {"estimated_micro_usd": 0}
+        # Deterministic fan-in has consumed the six completed initial-pass
+        # results; the later prepared action is now the exact next inventory.
+        after_second["passes"] = {}
+        after_second["status"] = "AWAITING_SPEND_AUTHORIZATION"
+        after_second["state_revision"] += 1
+        (root / "run.json").write_text(
+            json.dumps(after_second, indent=2) + "\n", encoding="utf-8"
+        )
+        (root / "public-run.json").write_text(
+            json.dumps(public_run_state(after_second), indent=2) + "\n",
+            encoding="utf-8",
+        )
+        write_workspace_snapshot(root)
+        after_fan_in = inspect_lifecycle(
+            root, native_exclusive_access="declared",
+            observed_at="1970-01-01T00:01:01Z",
+        )
         evidence = list((root / "lifecycle" / "provider-reconciliation").glob("*.response.json"))
         assertions = {
             "six_member_create_detach": (
@@ -172,6 +208,17 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
             "bounded_four_then_two_retrieval": (
                 first["cycle"]["provider_retrieval_count"] == 4
                 and second["cycle"]["provider_retrieval_count"] == 2
+            ),
+            "prepared_authority_suppressed_until_fan_in": (
+                not_due["execution_branch"]["command"]
+                == due["execution_branch"]["command"]
+                == "provider_reconciliation_cycle"
+                and second["inspection"]["execution_branch"]["command"]
+                == "ordinary_resume"
+                and after_fan_in["execution_branch"]["command"]
+                == "await_external_authority"
+                and after_fan_in["execution_branch"]["action_ids"]
+                == [prepared_action_id]
             ),
             "all_six_durable_fan_in_evidence": len(evidence) == 6,
             "no_duplicate_create_or_retrieval": (
@@ -198,6 +245,7 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
             "second_cycle_retrieval_count": second["cycle"]["provider_retrieval_count"],
             "not_due_branch": not_due["execution_branch"],
             "due_branch": due["execution_branch"], "assertions": assertions,
+            "post_fan_in_branch": after_fan_in["execution_branch"],
             "pre_reconciliation_basis_sha256": due_v06[
                 "checkpoint_basis_sha256"
             ],
@@ -210,6 +258,9 @@ def run_provider_pending_lifecycle_qualification() -> dict[str, Any]:
             raise RuntimeError(
                 "Provider-pending lifecycle qualification failed: "
                 f"{assertions}; first={first['cycle']}; second={second['cycle']}; "
+                f"second_branch={second['inspection']['execution_branch']}; "
+                f"fan_in_branch={after_fan_in['execution_branch']}; "
+                f"fan_in_dependencies={after_fan_in['local_dependencies']}; "
                 f"retrieves={retrieves}; evidence={len(evidence)}"
             )
         return receipt

@@ -774,7 +774,9 @@ def _capacity_and_custody(
         "AMBIGUOUS_PROVIDER_SUBMISSION", "POLICY_STOPPED",
     }
     non_provider_local = any(
-        item["kind"] != "provider_result_reconciliation" for item in dependencies
+        item["kind"] != "provider_result_reconciliation"
+        and item.get("reason_code") != "prepared_action_authorization_pending"
+        for item in dependencies
     )
     prepared = any(item.get("state") == "PREPARED" for item in actions)
     ambiguous = any(item.get("state") in {

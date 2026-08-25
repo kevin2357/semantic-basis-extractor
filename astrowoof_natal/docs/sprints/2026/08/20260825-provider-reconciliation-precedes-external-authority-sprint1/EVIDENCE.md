@@ -89,3 +89,14 @@ authority.
   inventory.
 - Focused result: 70 tests passed; 1 optional schema check skipped.
 - Provider create/retrieval, authorization consumption, and frozen-QA access: 0.
+
+## Slice 3 evidence
+
+- Installed qualification surface: `astrowoof-provider-pending-qa`.
+- One workspace owns six provider identities plus one later prepared action.
+- Retrieval cardinality: first cycle 4; second cycle 2; unique total 6.
+- Prepared authority before completion/fan-in: absent.
+- Second-cycle completed-evidence branch: `ordinary_resume`.
+- Post-fan-in branch: `await_external_authority`, containing only the prepared ID.
+- Provider transport is scripted and local; external network/spend: 0.
+- Focused result: 34 tests passed.

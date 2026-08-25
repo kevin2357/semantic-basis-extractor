@@ -86,3 +86,17 @@
 - Proved time-only not-due → due now retains one checkpoint basis with no authority
   inventory in either observation.
 - Focused lifecycle/capacity/temporal suite passed: 70 tests, 1 optional schema skip.
+
+## 2026-08-25 — Slice 3 multi-cycle qualification
+
+- Extended the installed provider-pending qualification with one later prepared
+  action in the same seven-action ledger.
+- Proved not-due and due inspection suppress the prepared action while retaining
+  one unchanged temporal basis.
+- Proved bounded retrieval remains exactly 4+2 with six unique GET identities and
+  no duplicate create/retrieval.
+- Proved completed evidence selects deterministic fan-in before authority.
+- Proved a new post-fan-in checkpoint exposes exactly the later prepared action.
+- Refined causal-local-work classification: authorization-pending bookkeeping is
+  not runnable local work and cannot force an ordinary-resume loop.
+- Focused qualification/capacity suite passed: 34 tests.

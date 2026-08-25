@@ -186,6 +186,9 @@ authorization consumption, or unrelated lifecycle mutation.
 
 ### Slice 3 — Multi-cycle 4+2 and fresh-worker recovery
 
+**Status: complete.** Provider-free installed qualification now carries a later
+prepared action through custody, 4+2 retrieval, fan-in, and authority exposure.
+
 Prove one six-Response run plus a later prepared action:
 
 1. first due cycle selects/retrieves the first four;
