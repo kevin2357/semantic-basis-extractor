@@ -95,3 +95,15 @@ Status: Slice 3 approved; intentionally paused before Slice 4
   Python and provider-free CLI surfaces, predecessor-checked ingestion, privacy
   scans, member-order refusal, and later-revision monotonicity.
 - Resume point: **start of Slice 4 — Timing semantics**.
+
+## Slice 4 — timing semantics
+
+- Review artifact: `SLICE 4 - TIMING SEMANTICS REVIEW.md`.
+- Reconciliation checkpoints retain exact bounded retrieval summaries.
+- Reference cap: 16 ordered attempt IDs; overflow remains explicit.
+- Unknown create/provider compute duration: null, never inferred from pending time.
+- Negative/backward timing: refused.
+- Provider economics timing suite: **22 passed; 1 optional-schema skip**.
+- Provider-pending/temporal/v2 regression: **57 passed; 1 optional-schema skip**.
+- Provider calls, spend, credentials, API writes, retained-run access: **0**.
+- Slice 4 gate: PASS; Slice 5 public export is next.

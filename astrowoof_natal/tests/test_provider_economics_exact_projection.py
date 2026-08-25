@@ -7,6 +7,9 @@ from astrowoof_natal_authoring.provider_economics import (
     project_exact_provider_economics_revision,
     validate_provider_economics_revision_sequence,
 )
+from astrowoof_natal_authoring.reconciliation import (
+    record_provider_economics_retrieval,
+)
 
 
 ACTION = "paid_0123456789abcdef01234567"
@@ -107,6 +110,56 @@ class ExactProjectionTests(unittest.TestCase):
         broken = copy.deepcopy(ambiguous); broken["binding"]["run_id"] = "other"
         with self.assertRaisesRegex(ValueError, "does not join"):
             project_exact_provider_economics_revision(native_state(broken), broken, observed_at="2026-08-24T12:00:00Z")
+
+    def test_durable_timing_summary_projects_without_compute_inference(self):
+        item = action()
+        item["provider_economics_timing"] = {
+            "prepared_at": "2026-08-24T11:59:00Z",
+            "authorized_at": "2026-08-24T11:59:01Z",
+            "submission_intent_at": "2026-08-24T11:59:02Z",
+            "provider_identity_durable_at": "2026-08-24T11:59:03Z",
+            "provider_terminal_observed_at": "2026-08-24T12:00:00Z",
+            "reconciliation_completed_at": "2026-08-24T12:00:01Z",
+            "native_settled_at": "2026-08-24T12:00:02Z",
+            "create_http_duration_ms": 125,
+            "provider_reported_duration_ms": None,
+            "retrieval_attempt_count": 2,
+            "first_retrieval_observed_at": "2026-08-24T11:59:30Z",
+            "last_retrieval_observed_at": "2026-08-24T12:00:00Z",
+            "retrieval_http_duration_total_ms": 80,
+            "retrieval_attempt_refs": ["attempt-1", "attempt-2"],
+            "retrieval_attempt_ref_overflow_count": 0,
+        }
+        value = project_exact_provider_economics_revision(
+            native_state(item), item, observed_at="2026-08-24T12:00:03Z"
+        )
+        self.assertEqual(57000, value["timing"]["observed_provider_pending_ms"])
+        self.assertEqual(62000, value["timing"]["native_action_span_ms"])
+        self.assertEqual(80, value["timing"]["retrieval_http_duration_total_ms"])
+        self.assertIsNone(value["timing"]["provider_reported_duration_ms"])
+
+    def test_retrieval_summary_is_bounded_and_clock_safe(self):
+        item = action()
+        for ordinal in range(18):
+            record_provider_economics_retrieval(
+                item,
+                attempt_id=f"attempt-{ordinal + 1}",
+                observed_at=f"2026-08-24T12:00:{ordinal:02d}Z",
+                duration_ms=ordinal,
+            )
+        summary = item["provider_economics_timing"]
+        self.assertEqual(18, summary["retrieval_attempt_count"])
+        self.assertEqual(16, len(summary["retrieval_attempt_refs"]))
+        self.assertEqual(2, summary["retrieval_attempt_ref_overflow_count"])
+        self.assertEqual(sum(range(18)), summary["retrieval_http_duration_total_ms"])
+        item["provider_economics_timing"].update({
+            "prepared_at": "2026-08-24T12:00:02Z",
+            "native_settled_at": "2026-08-24T12:00:01Z",
+        })
+        with self.assertRaisesRegex(ValueError, "move backwards"):
+            project_exact_provider_economics_revision(
+                native_state(item), item, observed_at="2026-08-24T12:01:00Z"
+            )
 
 
 if __name__ == "__main__":

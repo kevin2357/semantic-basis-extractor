@@ -314,6 +314,35 @@ def validated_timing(action: dict[str, Any]) -> dict[str, Any] | None:
     return deepcopy(timing)
 
 
+def record_provider_economics_retrieval(
+    action: dict[str, Any], *, attempt_id: str, observed_at: str,
+    duration_ms: int,
+) -> None:
+    """Retain a bounded cumulative retrieval summary for public economics export."""
+    if not isinstance(duration_ms, int) or isinstance(duration_ms, bool) or duration_ms < 0:
+        raise ValueError("Provider retrieval duration must be nonnegative")
+    observed = utc_instant(parse_utc_instant(observed_at))
+    summary = action.setdefault("provider_economics_timing", {})
+    count = int(summary.get("retrieval_attempt_count") or 0) + 1
+    refs = summary.setdefault("retrieval_attempt_refs", [])
+    overflow = int(summary.get("retrieval_attempt_ref_overflow_count") or 0)
+    if len(refs) < 16:
+        refs.append(attempt_id)
+    else:
+        overflow += 1
+    summary.update({
+        "retrieval_attempt_count": count,
+        "first_retrieval_observed_at": (
+            summary.get("first_retrieval_observed_at") or observed
+        ),
+        "last_retrieval_observed_at": observed,
+        "retrieval_http_duration_total_ms": int(
+            summary.get("retrieval_http_duration_total_ms") or 0
+        ) + duration_ms,
+        "retrieval_attempt_ref_overflow_count": overflow,
+    })
+
+
 @contextmanager
 def _single_writer(run_dir: Path):
     """Use the paid-action byte lock for one native reconciliation mutation."""
@@ -811,6 +840,12 @@ def reconcile_provider_cycle(
                 f"{action_id}.attempt-{attempt_ordinal:04d}.json"
             )
             write_json_atomic(diagnostic_path, diagnostic)
+            record_provider_economics_retrieval(
+                action,
+                attempt_id=diagnostic["attempt_id"],
+                observed_at=instant,
+                duration_ms=duration_ms,
+            )
             diagnostic_artifacts.append({
                 "action_id": action_id,
                 "attempt_id": diagnostic["attempt_id"],

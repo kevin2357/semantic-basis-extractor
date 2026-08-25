@@ -154,6 +154,157 @@ def _canonical_timestamp(value: Any, fallback: str) -> str:
     return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _optional_timestamp(value: Any) -> str | None:
+    if value is None:
+        return None
+    return _canonical_timestamp(value, str(value))
+
+
+def _duration_between(start: str | None, finish: str | None) -> int | None:
+    if start is None or finish is None:
+        return None
+    before = datetime.fromisoformat(start.replace("Z", "+00:00"))
+    after = datetime.fromisoformat(finish.replace("Z", "+00:00"))
+    duration = round((after - before).total_seconds() * 1000)
+    if duration < 0:
+        raise ValueError("durable provider economics timestamps move backwards")
+    return duration
+
+
+def _nonnegative_optional_integer(value: Any, label: str) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError(f"{label} must be a nonnegative integer")
+    return value
+
+
+def _project_timing(
+    action: Mapping[str, Any], attempt: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Project only explicit durable timing facts; never infer provider compute."""
+    durable = (
+        action.get("provider_economics_timing")
+        if isinstance(action.get("provider_economics_timing"), Mapping)
+        else {}
+    )
+    reconciliation = (
+        action.get("provider_reconciliation")
+        if isinstance(action.get("provider_reconciliation"), Mapping)
+        else {}
+    )
+    authorization = (
+        action.get("authorization")
+        if isinstance(action.get("authorization"), Mapping)
+        else {}
+    )
+    consumption = (
+        action.get("consumption")
+        if isinstance(action.get("consumption"), Mapping)
+        else {}
+    )
+    reported = (
+        action.get("reported")
+        if isinstance(action.get("reported"), Mapping)
+        else {}
+    )
+    metadata_source = (
+        attempt.get("provider_metadata")
+        if isinstance(attempt, Mapping)
+        and isinstance(attempt.get("provider_metadata"), Mapping)
+        else {}
+    )
+
+    prepared_at = _optional_timestamp(
+        durable.get("prepared_at") or action.get("prepared_at")
+    )
+    authorized_at = _optional_timestamp(
+        durable.get("authorized_at")
+        or authorization.get("authorized_at")
+        or authorization.get("issued_at")
+    )
+    submission_at = _optional_timestamp(
+        durable.get("submission_intent_at") or consumption.get("consumed_at")
+    )
+    identity_at = _optional_timestamp(durable.get("provider_identity_durable_at"))
+    terminal_at = _optional_timestamp(
+        durable.get("provider_terminal_observed_at")
+        or reported.get("reported_at")
+    )
+    reconciled_at = _optional_timestamp(durable.get("reconciliation_completed_at"))
+    settled_at = _optional_timestamp(
+        durable.get("native_settled_at") or reported.get("reported_at")
+    )
+
+    count = durable.get("retrieval_attempt_count")
+    if count is None:
+        count = reconciliation.get("provider_retrieval_attempt_count") or 0
+    if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+        raise ValueError("retrieval_attempt_count must be a nonnegative integer")
+    refs = durable.get("retrieval_attempt_refs") or []
+    if (
+        not isinstance(refs, list)
+        or len(refs) > MAX_RETRIEVAL_REFERENCES
+        or any(not isinstance(item, str) or not item for item in refs)
+    ):
+        raise ValueError("durable retrieval reference inventory is invalid")
+    overflow = durable.get("retrieval_attempt_ref_overflow_count")
+    if overflow is None:
+        overflow = count - len(refs)
+    if (
+        isinstance(overflow, bool) or not isinstance(overflow, int)
+        or overflow < 0 or count != len(refs) + overflow
+    ):
+        raise ValueError("durable retrieval overflow accounting is invalid")
+    first_retrieval = _optional_timestamp(
+        durable.get("first_retrieval_observed_at")
+        or (reconciliation.get("last_attempt_at") if count == 1 else None)
+    )
+    last_retrieval = _optional_timestamp(
+        durable.get("last_retrieval_observed_at")
+        or reconciliation.get("last_attempt_at")
+    )
+    if count and (first_retrieval is None or last_retrieval is None):
+        # Historical actions may expose a count without the first observation.
+        # Preserve the count while refusing to fabricate a time interval.
+        first_retrieval = last_retrieval = None
+    retrieval_duration = _nonnegative_optional_integer(
+        durable.get("retrieval_http_duration_total_ms"),
+        "retrieval_http_duration_total_ms",
+    )
+    create_duration = _nonnegative_optional_integer(
+        durable.get("create_http_duration_ms")
+        if "create_http_duration_ms" in durable
+        else metadata_source.get("create_http_duration_ms"),
+        "create_http_duration_ms",
+    )
+    provider_duration = _nonnegative_optional_integer(
+        durable.get("provider_reported_duration_ms")
+        if "provider_reported_duration_ms" in durable
+        else metadata_source.get("provider_reported_duration_ms"),
+        "provider_reported_duration_ms",
+    )
+    return {
+        "prepared_at": prepared_at,
+        "authorized_at": authorized_at,
+        "submission_intent_at": submission_at,
+        "provider_identity_durable_at": identity_at,
+        "provider_terminal_observed_at": terminal_at,
+        "reconciliation_completed_at": reconciled_at,
+        "native_settled_at": settled_at,
+        "create_http_duration_ms": create_duration,
+        "observed_provider_pending_ms": _duration_between(identity_at, terminal_at),
+        "native_action_span_ms": _duration_between(prepared_at, settled_at),
+        "provider_reported_duration_ms": provider_duration,
+        "retrieval_attempt_count": count,
+        "first_retrieval_observed_at": first_retrieval,
+        "last_retrieval_observed_at": last_retrieval,
+        "retrieval_http_duration_total_ms": retrieval_duration,
+        "retrieval_attempt_refs": list(refs),
+        "retrieval_attempt_ref_overflow_count": overflow,
+    }
+
+
 def _usage(raw: Any) -> dict[str, int] | None:
     if not isinstance(raw, Mapping):
         return None
@@ -336,7 +487,6 @@ def _project_provider_economics_revision(
     auth = action.get("authorization") if isinstance(action.get("authorization"), Mapping) else {}
     consumption = action.get("consumption") if isinstance(action.get("consumption"), Mapping) else {}
     observed = _canonical_timestamp(observed_at, str(observed_at))
-    timing_source = attempt.get("provider_metadata", {}) if isinstance(attempt, Mapping) else {}
     value = {
         "schema_version": SCHEMA_VERSION, "transaction_id": "pending", "native_run_id": run_id,
         "native_action_id": action_id, "revision_number": 1 if previous_revision is None else previous_revision["revision_number"] + 1,
@@ -352,12 +502,7 @@ def _project_provider_economics_revision(
         "provider_operation": {"provider": "openai", "operation_kind": mechanism, "operation_id": provider.get("id"), "status": provider_status},
         "usage_and_cost": {"settlement_disposition": disposition, "usage": usage, "sbe_estimated_micro_usd": estimate,
             "sbe_estimate_price_book_version": estimate_book, "provider_reported_micro_usd": None},
-        "timing": {"prepared_at": None, "authorized_at": None, "submission_intent_at": None, "provider_identity_durable_at": None,
-            "provider_terminal_observed_at": None, "reconciliation_completed_at": None, "native_settled_at": None,
-            "create_http_duration_ms": timing_source.get("create_http_duration_ms"), "observed_provider_pending_ms": None,
-            "native_action_span_ms": None, "provider_reported_duration_ms": timing_source.get("provider_reported_duration_ms"),
-            "retrieval_attempt_count": 0, "first_retrieval_observed_at": None, "last_retrieval_observed_at": None,
-            "retrieval_http_duration_total_ms": None, "retrieval_attempt_refs": [], "retrieval_attempt_ref_overflow_count": 0},
+        "timing": _project_timing(action, attempt),
         "editorial_outcome": {"status": "accepted" if isinstance(attempt, Mapping) and attempt.get("state") == "ACCEPTED" else "not_yet_evaluated", "retry_reason_category": None},
         "native_outcome": {"status": native_status, "delivery_publishable": publishable},
         "provenance": {"action_binding_sha256": canonical_sha256(binding), "request_sha256": binding.get("request_sha256"),

@@ -160,3 +160,18 @@
   CLI requirements into Slices 4–6 and the qualification matrix.
 - Sprint is intentionally paused immediately before Slice 4. Resume on branch
   `codex/accounting-performance-visibility` after refreshing it from mainline.
+
+## 2026-08-25 — Slice 4 timing semantics
+
+- Refreshed the branch through published SBE 0.4.20 before resuming.
+- Added durable, bounded retrieval summaries to native reconciliation checkpoints:
+  attempt count, first/last observation, cumulative HTTP duration, 16 ordered
+  diagnostic references, and explicit overflow.
+- Projected only explicit native timestamps and two accurately named SBE-observed
+  spans; provider-pending wall time is not called provider compute time.
+- Preserved unavailable create/provider durations as null and refused negative or
+  backward timing.
+- Timing-focused economics suite: 22 passed; 1 optional-schema skip.
+- Provider-pending/temporal/v2 regression: 57 passed; 1 optional-schema skip.
+- Provider/network/spend/retained-run activity: 0.
+- Slice 4 gate passed; continuing to Slice 5 public export.

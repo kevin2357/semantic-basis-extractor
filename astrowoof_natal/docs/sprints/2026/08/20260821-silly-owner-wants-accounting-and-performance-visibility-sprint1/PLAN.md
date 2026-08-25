@@ -1,7 +1,7 @@
 # Silly Owner Wants Accounting Visibility — Sprint 1 Plan
 
 Date: 2026-08-21
-Status: Slice 3 approved; intentionally paused before Slice 4 while operations work continues on `main`
+Status: Slice 4 complete; Slice 5 public export and ingestion handoff in progress
 
 ## Objective
 
@@ -88,6 +88,11 @@ frozen for the remaining work.
   usage, cost basis, member order, or timing evidence.
 
 Gate: clock/failure injection proves no fabricated or negative durations.
+
+Result: complete. Reconciliation now persists an exact bounded retrieval summary;
+projection exposes only explicit durable timing facts and derived SBE-observation
+spans. Unknown provider compute/create timing remains null, negative or regressing
+durations fail closed, and accepted timing/settlement evidence is monotonic.
 
 ### Slice 5 — Public export and ingestion handoff
 
