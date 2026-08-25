@@ -114,8 +114,13 @@ and the API handoff here.
   `37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f`.
 - Provider I/O/network/credentials/spend: 0.
 - Retained QA workspace access/mutation: 0.
-- Tag/publication: not authorized yet; Slice 5 release candidate is ready for the
-  final owner/API go.
+- Immutable tag: `astrowoof-natal-authoring-v0.4.19` at
+  `10dadc5e4d4f259a07643c2ccea869239a9902b7`; annotated tag object
+  `9e7104cc87b030fb9e6f8fa3fcb92229af1aaa6e`.
+- GitHub release: 376056805, published `2026-08-24T23:59:08Z`.
+- GitHub-reported and independently downloaded wheel digests both match the
+  qualified SHA-256 exactly.
+- Status: Slice 5 and sprint complete; SBE 0.4.19 published and verified.
 - Status: Slice 0 contract candidate complete; API review required before Slice 1.
 
 ## Slice 0 evidence

@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.19
 
-Status: release candidate; immutable publication requires owner authorization
+Status: published and independently digest-verified
 
 SBE 0.4.19 adds a narrow, provider-free operator-retirement contract for an
 exact-Natal workspace that is internally quiescent but otherwise stranded in an
@@ -33,4 +33,6 @@ remain API-owned.
 - Provider POST/create/submit/retry calls: 0.
 - Spend: USD 0.
 
-Tagging and publication remain pending explicit owner authorization.
+The immutable tag is `astrowoof-natal-authoring-v0.4.19`. GitHub reports the
+published 909960-byte wheel with the same qualified SHA-256, and an independent
+post-publication download reproduced that digest exactly.

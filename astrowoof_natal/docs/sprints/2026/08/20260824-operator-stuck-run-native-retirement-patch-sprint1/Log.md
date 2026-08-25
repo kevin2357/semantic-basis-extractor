@@ -152,3 +152,15 @@
 - Installed operator-retirement qualification passed with receipt SHA-256
   `37ff37dd42a0a5cc593ddf10bf645a456904d0f241ae11d5be74ab904f3c413f`.
 - Final tag/publication remains behind explicit owner authorization.
+
+## 2026-08-24 — SBE 0.4.19 publication
+
+- Owner and API gave final release approval.
+- Pushed artifact source and release-candidate records to `origin/main`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.19` at
+  `10dadc5e4d4f259a07643c2ccea869239a9902b7`.
+- Published GitHub release 376056805 with the qualified wheel and checksum file.
+- GitHub asset metadata and an independent downloaded copy both report wheel
+  SHA-256 `6ccc2a5ba859830e60f9139e4e52e9795602dff30569c1dbb6ba9579b2f38f79`.
+- Slice 5 and the sprint are complete. Historical retained QA remains untouched;
+  API Sprint 38 owns any later paired operator execution.
