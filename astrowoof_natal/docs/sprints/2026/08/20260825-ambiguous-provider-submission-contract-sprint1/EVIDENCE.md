@@ -68,3 +68,33 @@ Result: 25 tests passed in 19.336 seconds.
 The gate covers the new public CLI/local-materialization reproducer plus existing
 intent, replay, concurrency, ambiguity, identity durability, route, and event
 isolation evidence. Runtime source and public schemas remain unchanged.
+
+## Scenic Waypoint 1 contract evidence
+
+Public contract candidates:
+
+- `astrowoof.external_authority_provider_dispatch_result.v3`
+- `astrowoof.external_authority_v2_command_result.v2`
+
+Packaged fixture identity:
+
+- `astrowoof.ambiguous_provider_submission_fixtures.v1`
+
+Focused command used the existing qualified 0.4.22 virtual environment so
+optional Draft 2020-12 schema checks were active:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_contract \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_slice0 \
+  astrowoof_natal.tests.test_external_authority_v2_intent_fence \
+  astrowoof_natal.tests.test_external_authority_v2_cli \
+  astrowoof_natal.tests.test_external_authority_v2_route_qualification
+```
+
+Result: 30 tests passed in 21.737 seconds; zero skips.
+
+The fixture reader validates all positive cases and proves the contradictory
+case fails strict semantic validation. Privacy sentinels, payload fields,
+credentials, authorization headers, prompts, and subject parameters are absent.
+No provider or retained QA workspace was accessed.

@@ -56,3 +56,26 @@ v2. Historical v2 ambiguity remains review-only.
 
 Focused provider-free gate: 25 tests passed. No source/runtime behavior changed.
 Paused at Waffle Checkpoint 0 for API review before schemas or implementation.
+
+## 2026-08-25 — Scenic Waypoint 1 complete
+
+Recorded API's Waffle Checkpoint 0 approval and implemented the proposed public
+contract without changing dispatch runtime behavior:
+
+- provider dispatch result v3;
+- external-authority v2 command result v2;
+- explicit `pre_provider_refusal`;
+- closed provider-I/O and grant-invocation dispositions;
+- closed refusal and ambiguity reasons;
+- ordered prepared-create digest evidence;
+- strict Python validators independent of `jsonschema`;
+- packaged JSON Schemas;
+- public builders/readers/validators; and
+- packaged sanitized positive/negative fixture matrix.
+
+Focused gate using the existing qualified 0.4.22 environment: 30 tests passed,
+including Draft 2020-12 schema validation. Dispatch still emits the historical
+v2/v1 result pair; no production classification changed in this waypoint.
+
+Paused at Waffle Checkpoint 1 for joint schema/authority review before runtime
+execution-path correction.

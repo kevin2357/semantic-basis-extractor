@@ -22,6 +22,8 @@ INTENT_SCHEMA_V2 = "astrowoof.external_authority_dispatch_intent.v2"
 INTENT_RESULT_SCHEMA_V2 = "astrowoof.external_authority_intent_result.v2"
 PROVIDER_DISPATCH_RESULT_SCHEMA_V2 = "astrowoof.external_authority_provider_dispatch_result.v2"
 COMMAND_RESULT_SCHEMA_V1 = "astrowoof.external_authority_v2_command_result.v1"
+PROVIDER_DISPATCH_RESULT_SCHEMA_V3 = "astrowoof.external_authority_provider_dispatch_result.v3"
+COMMAND_RESULT_SCHEMA_V2 = "astrowoof.external_authority_v2_command_result.v2"
 _ACTION_ID = re.compile(r"^paid_[0-9a-f]{24}$")
 _RESULT_KEYS = {
     "schema_version", "result_sha256", "outcome", "run_id", "request_sha256",
@@ -37,6 +39,14 @@ _PROVIDER_RESULT_KEYS = {
 _COMMAND_RESULT_KEYS = {
     "schema_version", "command_result_sha256", "outcome", "intent_result",
     "dispatch_result",
+}
+_PROVIDER_RESULT_V3_KEYS = {
+    "schema_version", "result_sha256", "outcome", "reason_code",
+    "provider_io_disposition", "grant_invocation_disposition", "run_id",
+    "request_sha256", "grant_sha256", "ordered_action_ids",
+    "provider_bound_action_ids", "ambiguous_action_ids", "refused_action_ids",
+    "provider_operation_ids", "prepared_create_records", "post_state_revision",
+    "post_snapshot_sha256",
 }
 
 
@@ -192,6 +202,221 @@ def read_external_authority_v2_command_result_schema() -> dict[str, Any]:
         "external-authority-v2-command-result.v1.schema.json"
     )
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def validate_external_authority_provider_dispatch_result_v3(value: Any) -> dict[str, Any]:
+    """Validate the proposed phase-aware provider dispatch result contract."""
+    if not isinstance(value, dict) or set(value) != _PROVIDER_RESULT_V3_KEYS:
+        raise ValueError("v3 provider dispatch result fields are not exact")
+    if value.get("schema_version") != PROVIDER_DISPATCH_RESULT_SCHEMA_V3:
+        raise ValueError("v3 provider dispatch result schema is invalid")
+    outcome = value.get("outcome")
+    if outcome not in {
+        "pre_provider_refusal", "ambiguous_submission",
+        "detached_provider_pending", "exact_replay",
+    }:
+        raise ValueError("v3 provider dispatch outcome is invalid")
+    if value.get("provider_io_disposition") not in {
+        "not_attempted", "create_entered_unknown", "provider_identity_durable",
+    }:
+        raise ValueError("v3 provider I/O disposition is invalid")
+    if value.get("grant_invocation_disposition") not in {
+        "refused", "create_entered_unknown", "provider_pending", "replayed",
+    }:
+        raise ValueError("v3 grant invocation disposition is invalid")
+    if not isinstance(value.get("run_id"), str) or not value["run_id"]:
+        raise ValueError("v3 provider dispatch run_id is invalid")
+    for key in ("request_sha256", "grant_sha256", "post_snapshot_sha256"):
+        item = value.get(key)
+        if (
+            not isinstance(item, str) or len(item) != 64
+            or any(char not in "0123456789abcdef" for char in item)
+        ):
+            raise ValueError(f"v3 provider dispatch {key} is invalid")
+    ordered = value.get("ordered_action_ids")
+    bound = value.get("provider_bound_action_ids")
+    ambiguous = value.get("ambiguous_action_ids")
+    refused = value.get("refused_action_ids")
+    if (
+        not isinstance(ordered, list) or not ordered or ordered != sorted(ordered)
+        or len(ordered) != len(set(ordered))
+        or any(not isinstance(item, str) or _ACTION_ID.fullmatch(item) is None for item in ordered)
+        or not isinstance(bound, list) or bound != ordered[:len(bound)]
+        or not isinstance(ambiguous, list) or len(ambiguous) > 1
+        or not isinstance(refused, list) or len(refused) > 1
+        or any(item not in ordered for item in bound + ambiguous + refused)
+        or len(set(bound + ambiguous + refused)) != len(bound + ambiguous + refused)
+    ):
+        raise ValueError("v3 provider dispatch action inventory is invalid")
+    operations = value.get("provider_operation_ids")
+    if (
+        not isinstance(operations, list) or len(operations) != len(bound)
+        or len(operations) != len(set(operations))
+        or any(not isinstance(item, str) or not item for item in operations)
+    ):
+        raise ValueError("v3 provider dispatch operation inventory is invalid")
+    prepared = value.get("prepared_create_records")
+    attempted = bound + ambiguous + refused
+    if not isinstance(prepared, list) or len(prepared) != len(attempted):
+        raise ValueError("v3 prepared-create inventory is invalid")
+    for index, record in enumerate(prepared):
+        if not isinstance(record, dict) or set(record) != {
+            "action_id", "prepared_create_sha256",
+        }:
+            raise ValueError("v3 prepared-create record fields are not exact")
+        digest_value = record.get("prepared_create_sha256")
+        if (
+            record.get("action_id") != attempted[index]
+            or not isinstance(digest_value, str) or len(digest_value) != 64
+            or any(char not in "0123456789abcdef" for char in digest_value)
+        ):
+            raise ValueError("v3 prepared-create record is invalid")
+    revision = value.get("post_state_revision")
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+        raise ValueError("v3 provider dispatch revision is invalid")
+    reason = value.get("reason_code")
+    closed_refusals = {
+        "request_payload_unavailable", "request_payload_ambiguous",
+        "request_payload_digest_mismatch", "provider_configuration_invalid",
+    }
+    closed_ambiguities = {
+        "provider_call_interrupted_after_fence",
+        "provider_transport_failed_without_identity",
+        "provider_returned_invalid_identity", "provider_identity_conflict",
+    }
+    io = value["provider_io_disposition"]
+    grant_disposition = value["grant_invocation_disposition"]
+    if outcome == "pre_provider_refusal":
+        if (
+            io != "not_attempted" or grant_disposition != "refused"
+            or reason not in closed_refusals or len(refused) != 1 or ambiguous
+            or refused[0] != ordered[len(bound)]
+        ):
+            raise ValueError("v3 pre-provider refusal semantics are invalid")
+    elif outcome == "ambiguous_submission":
+        if (
+            io != "create_entered_unknown"
+            or grant_disposition != "create_entered_unknown"
+            or reason not in closed_ambiguities or len(ambiguous) != 1 or refused
+            or ambiguous[0] != ordered[len(bound)]
+        ):
+            raise ValueError("v3 ambiguous submission semantics are invalid")
+    elif outcome == "detached_provider_pending":
+        if (
+            io != "provider_identity_durable" or grant_disposition != "provider_pending"
+            or reason is not None or bound != ordered or ambiguous or refused
+        ):
+            raise ValueError("v3 detached provider-pending semantics are invalid")
+    elif (
+        io != "provider_identity_durable" or grant_disposition != "replayed"
+        or reason is not None or bound != ordered or ambiguous or refused
+    ):
+        raise ValueError("v3 exact replay semantics are invalid")
+    body = {key: item for key, item in value.items() if key != "result_sha256"}
+    if value.get("result_sha256") != _digest(body):
+        raise ValueError("v3 provider dispatch result digest mismatch")
+    return deepcopy(value)
+
+
+def build_external_authority_provider_dispatch_result_v3(**fields: Any) -> dict[str, Any]:
+    body = {"schema_version": PROVIDER_DISPATCH_RESULT_SCHEMA_V3, **deepcopy(fields)}
+    return validate_external_authority_provider_dispatch_result_v3({
+        **body, "result_sha256": _digest(body),
+    })
+
+
+def read_external_authority_provider_dispatch_result_v3_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-provider-dispatch-result.v3.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_external_authority_v2_command_result_v2(
+    *, intent_result: dict[str, Any] | None, dispatch_result: dict[str, Any],
+) -> dict[str, Any]:
+    if intent_result is not None:
+        validate_external_authority_intent_result_v2(intent_result)
+    validate_external_authority_provider_dispatch_result_v3(dispatch_result)
+    body = {
+        "schema_version": COMMAND_RESULT_SCHEMA_V2,
+        "outcome": dispatch_result["outcome"],
+        "intent_result": deepcopy(intent_result),
+        "dispatch_result": deepcopy(dispatch_result),
+    }
+    return validate_external_authority_v2_command_result_v2({
+        **body, "command_result_sha256": _digest(body),
+    })
+
+
+def validate_external_authority_v2_command_result_v2(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != _COMMAND_RESULT_KEYS:
+        raise ValueError("v2 command result fields are not exact")
+    if value.get("schema_version") != COMMAND_RESULT_SCHEMA_V2:
+        raise ValueError("v2 command result schema is invalid")
+    dispatch = validate_external_authority_provider_dispatch_result_v3(
+        value.get("dispatch_result")
+    )
+    intent = value.get("intent_result")
+    if intent is not None:
+        validate_external_authority_intent_result_v2(intent)
+        if (
+            intent["request_sha256"] != dispatch["request_sha256"]
+            or intent["grant_sha256"] != dispatch["grant_sha256"]
+            or intent["ordered_action_ids"] != dispatch["ordered_action_ids"]
+        ):
+            raise ValueError("v2 command intent and dispatch do not join")
+    if value.get("outcome") != dispatch["outcome"]:
+        raise ValueError("v2 command outcome does not join dispatch")
+    body = {key: item for key, item in value.items() if key != "command_result_sha256"}
+    if value.get("command_result_sha256") != _digest(body):
+        raise ValueError("v2 command result digest mismatch")
+    return deepcopy(value)
+
+
+def read_external_authority_v2_command_result_v2_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-v2-command-result.v2.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_ambiguous_provider_submission_fixture_v1() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+        "external-authority-v2/ambiguous-provider-submission.v1.json"
+    )
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"schema_version", "cases"}
+        or value.get("schema_version")
+        != "astrowoof.ambiguous_provider_submission_fixtures.v1"
+        or not isinstance(value.get("cases"), list)
+        or not value["cases"]
+    ):
+        raise ValueError("ambiguous provider submission fixture bundle is invalid")
+    names: list[str] = []
+    for case in value["cases"]:
+        if (
+            not isinstance(case, dict)
+            or set(case) != {"name", "expected_valid", "result"}
+            or not isinstance(case.get("name"), str) or not case["name"]
+            or not isinstance(case.get("expected_valid"), bool)
+        ):
+            raise ValueError("ambiguous provider submission fixture case is invalid")
+        names.append(case["name"])
+        if case["expected_valid"]:
+            validate_external_authority_provider_dispatch_result_v3(case["result"])
+        else:
+            try:
+                validate_external_authority_provider_dispatch_result_v3(case["result"])
+            except ValueError:
+                pass
+            else:
+                raise ValueError("negative ambiguous provider fixture unexpectedly validates")
+    if len(names) != len(set(names)):
+        raise ValueError("ambiguous provider fixture names are not unique")
+    return deepcopy(value)
 
 
 class ExternalAuthorityV2ExecutionError(ValueError):

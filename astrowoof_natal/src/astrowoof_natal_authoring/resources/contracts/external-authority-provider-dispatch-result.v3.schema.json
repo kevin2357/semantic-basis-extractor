@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.external_authority_provider_dispatch_result.v3",
+  "type": "object",
+  "required": [
+    "schema_version", "result_sha256", "outcome", "reason_code",
+    "provider_io_disposition", "grant_invocation_disposition", "run_id",
+    "request_sha256", "grant_sha256", "ordered_action_ids",
+    "provider_bound_action_ids", "ambiguous_action_ids", "refused_action_ids",
+    "provider_operation_ids", "prepared_create_records", "post_state_revision",
+    "post_snapshot_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.external_authority_provider_dispatch_result.v3"},
+    "result_sha256": {"$ref": "#/$defs/sha256"},
+    "outcome": {"enum": ["pre_provider_refusal", "ambiguous_submission", "detached_provider_pending", "exact_replay"]},
+    "reason_code": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "request_payload_unavailable", "request_payload_ambiguous",
+        "request_payload_digest_mismatch", "provider_configuration_invalid",
+        "provider_call_interrupted_after_fence",
+        "provider_transport_failed_without_identity",
+        "provider_returned_invalid_identity", "provider_identity_conflict"
+      ]
+    },
+    "provider_io_disposition": {"enum": ["not_attempted", "create_entered_unknown", "provider_identity_durable"]},
+    "grant_invocation_disposition": {"enum": ["refused", "create_entered_unknown", "provider_pending", "replayed"]},
+    "run_id": {"type": "string", "minLength": 1},
+    "request_sha256": {"$ref": "#/$defs/sha256"},
+    "grant_sha256": {"$ref": "#/$defs/sha256"},
+    "ordered_action_ids": {"$ref": "#/$defs/actionIds"},
+    "provider_bound_action_ids": {"type": "array", "items": {"$ref": "#/$defs/actionId"}, "uniqueItems": true},
+    "ambiguous_action_ids": {"type": "array", "maxItems": 1, "items": {"$ref": "#/$defs/actionId"}, "uniqueItems": true},
+    "refused_action_ids": {"type": "array", "maxItems": 1, "items": {"$ref": "#/$defs/actionId"}, "uniqueItems": true},
+    "provider_operation_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "prepared_create_records": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "required": ["action_id", "prepared_create_sha256"],
+        "properties": {
+          "action_id": {"$ref": "#/$defs/actionId"},
+          "prepared_create_sha256": {"$ref": "#/$defs/sha256"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "post_state_revision": {"type": "integer", "minimum": 1},
+    "post_snapshot_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"outcome": {"const": "pre_provider_refusal"}}},
+      "then": {"properties": {
+        "provider_io_disposition": {"const": "not_attempted"},
+        "grant_invocation_disposition": {"const": "refused"},
+        "reason_code": {"enum": ["request_payload_unavailable", "request_payload_ambiguous", "request_payload_digest_mismatch", "provider_configuration_invalid"]},
+        "ambiguous_action_ids": {"maxItems": 0},
+        "refused_action_ids": {"minItems": 1, "maxItems": 1}
+      }}
+    },
+    {
+      "if": {"properties": {"outcome": {"const": "ambiguous_submission"}}},
+      "then": {"properties": {
+        "provider_io_disposition": {"const": "create_entered_unknown"},
+        "grant_invocation_disposition": {"const": "create_entered_unknown"},
+        "reason_code": {"enum": ["provider_call_interrupted_after_fence", "provider_transport_failed_without_identity", "provider_returned_invalid_identity", "provider_identity_conflict"]},
+        "ambiguous_action_ids": {"minItems": 1, "maxItems": 1},
+        "refused_action_ids": {"maxItems": 0}
+      }}
+    },
+    {
+      "if": {"properties": {"outcome": {"const": "detached_provider_pending"}}},
+      "then": {"properties": {
+        "provider_io_disposition": {"const": "provider_identity_durable"},
+        "grant_invocation_disposition": {"const": "provider_pending"},
+        "reason_code": {"type": "null"},
+        "ambiguous_action_ids": {"maxItems": 0},
+        "refused_action_ids": {"maxItems": 0}
+      }}
+    },
+    {
+      "if": {"properties": {"outcome": {"const": "exact_replay"}}},
+      "then": {"properties": {
+        "provider_io_disposition": {"const": "provider_identity_durable"},
+        "grant_invocation_disposition": {"const": "replayed"},
+        "reason_code": {"type": "null"},
+        "ambiguous_action_ids": {"maxItems": 0},
+        "refused_action_ids": {"maxItems": 0}
+      }}
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "actionId": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+    "actionIds": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/actionId"}}
+  }
+}

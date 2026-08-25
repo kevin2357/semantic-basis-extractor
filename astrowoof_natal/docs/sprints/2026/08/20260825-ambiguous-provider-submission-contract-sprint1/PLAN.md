@@ -1,7 +1,7 @@
 # Ambiguous Provider Submission Contract — Saunter 1 Plan
 
 Date: 2026-08-25  
-Status: Scenic Waypoint 0 complete; paused at Waffle Checkpoint 0 for API review
+Status: Scenic Waypoint 1 complete; paused at Waffle Checkpoint 1 for joint schema review
 Working branch: `main`  
 Trigger: API Sprint 45 and the frozen Vafle-hund/Zultan QA cohort
 
