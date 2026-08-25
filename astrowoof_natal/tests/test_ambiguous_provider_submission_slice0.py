@@ -109,7 +109,7 @@ class AmbiguousProviderSubmissionSlice0(unittest.TestCase):
                 state["external_authority_v2_dispatch_intent"]["state"],
             )
 
-    def test_public_cli_maps_local_materialization_failure_to_ambiguity_without_transport(self):
+    def test_public_cli_now_seals_local_materialization_refusal_without_transport(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             run_dir, request, paths = _inputs(root)
@@ -140,10 +140,14 @@ class AmbiguousProviderSubmissionSlice0(unittest.TestCase):
 
             command = json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual([], transport_calls)
-            self.assertEqual("ambiguous_submission", command["outcome"])
+            self.assertEqual("pre_provider_refusal", command["outcome"])
+            self.assertEqual(
+                "not_attempted",
+                command["dispatch_result"]["provider_io_disposition"],
+            )
             self.assertEqual(
                 [request["ordered_action_ids"][0]],
-                command["dispatch_result"]["ambiguous_action_ids"],
+                command["dispatch_result"]["refused_action_ids"],
             )
 
 

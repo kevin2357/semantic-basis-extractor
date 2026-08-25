@@ -2712,7 +2712,10 @@ def snapshot_inventory(
 
 
 def write_workspace_snapshot(run_dir: Path) -> None:
-    members = snapshot_inventory(run_dir)
+    # Snapshot publication is an integrity boundary. A process-cache entry can
+    # outlive a removed/recreated path (notably reused Windows temp paths), so
+    # authoritative manifests must always hash the current bytes directly.
+    members = snapshot_inventory(run_dir, use_process_cache=False)
     write_json_atomic(
         run_dir / SNAPSHOT_NAME,
         {

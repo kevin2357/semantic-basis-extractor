@@ -79,3 +79,35 @@ v2/v1 result pair; no production classification changed in this waypoint.
 
 Paused at Waffle Checkpoint 1 for joint schema/authority review before runtime
 execution-path correction.
+
+## 2026-08-25 — Scenic Waypoint 2 corrected after API review
+
+Implemented phase-aware provider dispatch: deterministic payload/provider
+preparation occurs before the durable call fence, the prepared-create digest is
+revalidated against the unchanged snapshot under the writer, provider I/O runs
+outside the writer, and returned identity or ambiguity is checkpointed before
+the next member.
+
+The first review run found two real gaps. A refusal reset only its causal member,
+leaving the untouched suffix under the sealed aggregate grant, and the CLI
+converted a missing returned provider ID into a generic transport exception.
+The correction now seals the complete invocation, archives and restores every
+provably unentered suffix member, preserves any provider-bound prefix, enables a
+fresh inspection/request/grant path, and lets the dispatcher classify malformed
+returned identity explicitly.
+
+Checkpoint drift between preparation and call-fence persistence is now the
+closed pre-provider refusal `checkpoint_changed_before_create`. The old grant is
+sealed, no provider call occurs, and replay is exact.
+
+Focused provider-free gate after the requested non-vacuous three-member
+prefix/refusal/suffix addition: 35 tests passed. Paused at Waffle Checkpoint 2 for
+re-review before consumer surfaces.
+
+Repeated focused execution also exposed a pre-existing Windows fixture/runtime
+integrity race: authoritative snapshot publication could reuse a process hash
+cache entry after a temporary absolute path was removed and recycled with the
+same size and coarse modification timestamp. Snapshot validation correctly
+bypassed the cache and therefore intermittently refused the newly written
+manifest. Snapshot publication now also hashes current bytes without the process
+cache; the cache remains available only for non-authoritative inventory callers.

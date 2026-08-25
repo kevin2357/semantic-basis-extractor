@@ -20,6 +20,7 @@
         null,
         "request_payload_unavailable", "request_payload_ambiguous",
         "request_payload_digest_mismatch", "provider_configuration_invalid",
+        "checkpoint_changed_before_create",
         "provider_call_interrupted_after_fence",
         "provider_transport_failed_without_identity",
         "provider_returned_invalid_identity", "provider_identity_conflict"
@@ -57,7 +58,7 @@
       "then": {"properties": {
         "provider_io_disposition": {"const": "not_attempted"},
         "grant_invocation_disposition": {"const": "refused"},
-        "reason_code": {"enum": ["request_payload_unavailable", "request_payload_ambiguous", "request_payload_digest_mismatch", "provider_configuration_invalid"]},
+        "reason_code": {"enum": ["request_payload_unavailable", "request_payload_ambiguous", "request_payload_digest_mismatch", "provider_configuration_invalid", "checkpoint_changed_before_create"]},
         "ambiguous_action_ids": {"maxItems": 0},
         "refused_action_ids": {"minItems": 1, "maxItems": 1}
       }}

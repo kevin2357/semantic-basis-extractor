@@ -13,7 +13,9 @@ from ..closure import OpenAIResponsesProvider
 from ..external_authority_v2 import build_no_grant_dispatch_result_v2
 from ..external_authority_v2_execution import (
     ExternalAuthorityV2ExecutionError,
-    build_external_authority_v2_command_result,
+    build_external_authority_prepared_create,
+    build_external_authority_prepared_create_basis,
+    build_external_authority_v2_command_result_v2,
     commit_external_authority_v2_dispatch_intent,
     dispatch_external_authority_v2_intent,
     resolve_external_authority_v2_request_payload,
@@ -85,34 +87,87 @@ def main(argv: list[str] | None = None) -> int:
     except ExternalAuthorityV2ExecutionError as exc:
         if exc.reason_code not in {
             "provider_evidence_present", "provider_submission_ambiguous",
-            "action_state_or_custody_mismatch",
+            "action_state_or_custody_mismatch", "stale_checkpoint_basis",
+            "exact_replay",
         }:
             raise
         intent_result = None
 
-    def create(action: dict[str, Any]) -> dict[str, Any]:
+    def prepare(action: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
         binding = action["binding"]
-        payload = resolve_external_authority_v2_request_payload(run_dir, action)
-        provider = OpenAIResponsesProvider(
-            api_key=api_key, model=binding["model"],
-            max_output_tokens=binding["maximum_output_tokens"],
-            base_url=args.base_url, http_timeout_seconds=args.http_timeout_seconds,
-            max_transport_retries=0, require_spend_authorization=False,
+        request_key = hashlib.sha256(
+            f"{request['external_authority_request_sha256']}:{grant['grant_sha256']}:{action['action_id']}".encode()
+        ).hexdigest()
+        provider_config = {
+            "provider_kind": "openai_responses",
+            "model": binding["model"],
+            "maximum_output_tokens": binding["maximum_output_tokens"],
+            "base_url": args.base_url.rstrip("/"),
+            "http_timeout_seconds": float(args.http_timeout_seconds),
+            "max_transport_retries": 0,
+        }
+        provider_config_sha256 = hashlib.sha256(json.dumps(
+            provider_config, sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")).hexdigest()
+        reason_code = None
+        payload = None
+        provider = None
+        try:
+            payload = resolve_external_authority_v2_request_payload(run_dir, action)
+            provider = OpenAIResponsesProvider(
+                api_key=api_key, model=binding["model"],
+                max_output_tokens=binding["maximum_output_tokens"],
+                base_url=args.base_url, http_timeout_seconds=args.http_timeout_seconds,
+                max_transport_retries=0, require_spend_authorization=False,
+            )
+        except ExternalAuthorityV2ExecutionError as exc:
+            if exc.reason_code not in {
+                "request_payload_unavailable", "request_payload_ambiguous",
+                "request_payload_digest_mismatch",
+            }:
+                raise
+            reason_code = exc.reason_code
+        except ValueError:
+            reason_code = "provider_configuration_invalid"
+        basis = build_external_authority_prepared_create_basis(
+            action,
+            run_id=context["run_id"],
+            request_sha256=context["request_sha256"],
+            grant_sha256=context["grant_sha256"],
+            checkpoint_snapshot_sha256=context["checkpoint_snapshot_sha256"],
+            local_request_key_sha256=request_key,
+            provider_configuration_sha256=provider_config_sha256,
+            outcome="refused" if reason_code else "ready",
+            reason_code=reason_code,
         )
-        response, attempts = provider.create_response_only(
-            payload,
-            idempotency_key=hashlib.sha256(
-                f"{request['external_authority_request_sha256']}:{grant['grant_sha256']}:{action['action_id']}".encode()
-            ).hexdigest(),
-            timeout_seconds=args.http_timeout_seconds,
+        return build_external_authority_prepared_create(
+            basis=basis,
+            transport_context=(None if reason_code else {
+                "provider": provider,
+                "payload": payload,
+                "idempotency_key": request_key,
+                "timeout_seconds": args.http_timeout_seconds,
+            }),
         )
-        return {"id": response["id"], "kind": "response", "transport_attempts": attempts}
+
+    def create(prepared: dict[str, Any]) -> dict[str, Any]:
+        transport = prepared["transport_context"]
+        response, attempts = transport["provider"].create_response_only(
+            transport["payload"],
+            idempotency_key=transport["idempotency_key"],
+            timeout_seconds=transport["timeout_seconds"],
+        )
+        return {
+            "id": response.get("id") if isinstance(response, dict) else None,
+            "kind": "response",
+            "transport_attempts": attempts,
+        }
 
     dispatch_result = dispatch_external_authority_v2_intent(
         run_dir, request_sha256=request["external_authority_request_sha256"],
-        grant_sha256=grant["grant_sha256"], create=create,
+        grant_sha256=grant["grant_sha256"], prepare=prepare, create=create,
     )
-    _render(build_external_authority_v2_command_result(
+    _render(build_external_authority_v2_command_result_v2(
         intent_result=intent_result, dispatch_result=dispatch_result,
     ), args.output)
     return 0 if dispatch_result["outcome"] in {"detached_provider_pending", "exact_replay"} else 3

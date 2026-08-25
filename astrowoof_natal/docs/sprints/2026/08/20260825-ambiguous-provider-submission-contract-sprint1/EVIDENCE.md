@@ -98,3 +98,51 @@ The fixture reader validates all positive cases and proves the contradictory
 case fails strict semantic validation. Privacy sentinels, payload fields,
 credentials, authorization headers, prompts, and subject parameters are absent.
 No provider or retained QA workspace was accessed.
+
+## Scenic Waypoint 2 runtime evidence
+
+The phase-aware runtime and production CLI now prove:
+
+- all four closed local refusal reasons perform zero scripted provider creates;
+- a refusal seals the exact old aggregate grant invocation;
+- every provably unentered suffix action returns to `PREPARED` with its prior
+  authorization/consumption evidence archived;
+- a fresh inspection emits a distinct request and accepts a fresh aggregate
+  grant/intent;
+- a successfully provider-bound prefix remains in `WAITING` custody when the
+  next member refuses;
+- in a genuine three-member inventory, member one becomes provider-bound,
+  member two refuses during preparation, and member three enters neither
+  preparation nor transport before being restored to `PREPARED` with the
+  archived `not_entered_after_refusal` disposition;
+- checkpoint change after preparation returns the typed
+  `checkpoint_changed_before_create` refusal, performs zero creates, and makes
+  the old invocation replay-only;
+- transport-entered failure, missing/malformed returned identity, and process
+  interruption after `CALL_ENTERED` remain durable ambiguity; and
+- exact replay performs no additional create.
+
+Focused command:
+
+```text
+python -m unittest \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_runtime \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_contract \
+  astrowoof_natal.tests.test_ambiguous_provider_submission_slice0 \
+  astrowoof_natal.tests.test_external_authority_v2_intent_fence \
+  astrowoof_natal.tests.test_external_authority_v2_cli
+```
+
+Result: 35 tests passed in 14.264 seconds. `git diff --check` reported only the
+repository's expected LF-to-CRLF notices and no whitespace errors. Provider
+credentials, network, spend, and retained QA access were all zero.
+
+The API reviewer independently ran the five-module command before the added
+three-member case and observed 34 tests with one optional-schema skip in its
+lean environment. The candidate environment above includes `jsonschema`, so
+the same gate plus the new test completed with no skip.
+
+Stress repetition identified and corrected stale process-cache reuse during
+authoritative snapshot publication when Windows recycled a temporary path.
+Both snapshot writing and validation now hash current bytes directly at the
+integrity boundary.

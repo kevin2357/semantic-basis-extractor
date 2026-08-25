@@ -220,6 +220,26 @@ The packaged provider-free fixture bundle contains:
 The fixtures contain no request payload, prompt, subject parameters, credential,
 authorization header, or protected provenance.
 
+## Aggregate invocation refusal
+
+An ordinary-action-set grant is one ordered invocation. If preparation refuses
+member `i`, the exact old grant invocation is sealed and cannot execute any
+remaining member. The result records the provider-bound prefix and the single
+causal refused action; the untouched suffix is derivable from the ordered
+inventory. SBE preserves the bound prefix in retrieval custody and restores
+every provably unentered suffix member to `PREPARED` only after archiving its
+exact authorization/consumption evidence with the refused invocation.
+
+If a provider-bound prefix exists, its reconciliation has native precedence.
+Once that custody is resolved, a fresh lifecycle inspection may expose a fresh
+ordinary-action request for the eligible suffix. Neither generic resume nor the
+old request/grant can create again.
+
+`checkpoint_changed_before_create` is a closed pre-provider refusal: the
+prepared-create digest remains bound to the actual preparation snapshot, the
+second writer observes that the snapshot changed, and no call fence or provider
+I/O occurs.
+
 ## Questions for Waffle Checkpoint 1
 
 1. Approve the dispatch v3 and command-result v2 field/vocabulary set?

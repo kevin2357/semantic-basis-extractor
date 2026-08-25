@@ -13,7 +13,7 @@ from astrowoof_natal_authoring import (
     build_external_authority_grant_v2,
     build_external_authority_request_v2,
     inspect_temporal_lifecycle,
-    validate_external_authority_v2_command_result,
+    validate_external_authority_v2_command_result_v2,
 )
 from astrowoof_natal_authoring.cli.external_authority_v2 import main
 from astrowoof_natal_authoring.closure import load_json, write_workspace_snapshot
@@ -88,11 +88,11 @@ class ExternalAuthorityV2CliSlice5(unittest.TestCase):
             ):
                 argv.extend(("--api-key-env", "SBE_QA_KEY"))
                 self.assertEqual(0, main(argv))
-                first = validate_external_authority_v2_command_result(load_json(output))
+                first = validate_external_authority_v2_command_result_v2(load_json(output))
                 self.assertEqual("detached_provider_pending", first["outcome"])
                 self.assertEqual(len(request["ordered_action_ids"]), len(calls))
                 self.assertEqual(0, main(argv))
-                replay = validate_external_authority_v2_command_result(load_json(output))
+                replay = validate_external_authority_v2_command_result_v2(load_json(output))
                 self.assertEqual("exact_replay", replay["outcome"])
                 self.assertIsNone(replay["intent_result"])
                 self.assertEqual(len(request["ordered_action_ids"]), len(calls))

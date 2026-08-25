@@ -278,6 +278,7 @@ def validate_external_authority_provider_dispatch_result_v3(value: Any) -> dict[
     closed_refusals = {
         "request_payload_unavailable", "request_payload_ambiguous",
         "request_payload_digest_mismatch", "provider_configuration_invalid",
+        "checkpoint_changed_before_create",
     }
     closed_ambiguities = {
         "provider_call_interrupted_after_fence",
@@ -423,6 +424,99 @@ class ExternalAuthorityV2ExecutionError(ValueError):
     def __init__(self, reason_code: str, message: str):
         super().__init__(message)
         self.reason_code = reason_code
+
+
+_PREPARED_CREATE_KEYS = {
+    "outcome", "reason_code", "prepared_create_sha256", "transport_context",
+}
+_PREPARED_CREATE_BASIS_SCHEMA = "astrowoof.external_authority_prepared_create_basis.v1"
+
+
+def build_external_authority_prepared_create_basis(
+    action: Mapping[str, Any], *, run_id: str, request_sha256: str,
+    grant_sha256: str, checkpoint_snapshot_sha256: str,
+    local_request_key_sha256: str, provider_configuration_sha256: str,
+    outcome: str, reason_code: str | None,
+) -> dict[str, Any]:
+    """Build the safe canonical digest basis shared by ready/refused preparation."""
+    binding = action.get("binding")
+    if not isinstance(binding, Mapping):
+        raise ValueError("prepared-create action binding is unavailable")
+    if outcome not in {"ready", "refused"}:
+        raise ValueError("prepared-create outcome is invalid")
+    closed_refusals = {
+        "request_payload_unavailable", "request_payload_ambiguous",
+        "request_payload_digest_mismatch", "provider_configuration_invalid",
+    }
+    if (outcome == "ready" and reason_code is not None) or (
+        outcome == "refused" and reason_code not in closed_refusals
+    ):
+        raise ValueError("prepared-create reason is invalid")
+    value = {
+        "schema_version": _PREPARED_CREATE_BASIS_SCHEMA,
+        "run_id": run_id,
+        "action_id": action.get("action_id"),
+        "request_sha256": request_sha256,
+        "grant_sha256": grant_sha256,
+        "binding_sha256": _digest(dict(binding)),
+        "checkpoint_snapshot_sha256": checkpoint_snapshot_sha256,
+        "local_request_key_sha256": local_request_key_sha256,
+        "provider_configuration_sha256": provider_configuration_sha256,
+        "outcome": outcome,
+        "reason_code": reason_code,
+    }
+    if (
+        not isinstance(run_id, str) or not run_id
+        or not isinstance(value["action_id"], str)
+        or _ACTION_ID.fullmatch(value["action_id"]) is None
+    ):
+        raise ValueError("prepared-create native identity is invalid")
+    for key in (
+        "request_sha256", "grant_sha256", "binding_sha256",
+        "checkpoint_snapshot_sha256", "local_request_key_sha256",
+        "provider_configuration_sha256",
+    ):
+        item = value[key]
+        if (
+            not isinstance(item, str) or len(item) != 64
+            or any(char not in "0123456789abcdef" for char in item)
+        ):
+            raise ValueError(f"prepared-create {key} is invalid")
+    return value
+
+
+def build_external_authority_prepared_create(
+    *, basis: Mapping[str, Any], transport_context: Any,
+) -> dict[str, Any]:
+    value = {
+        "outcome": basis.get("outcome"),
+        "reason_code": basis.get("reason_code"),
+        "prepared_create_sha256": _digest(dict(basis)),
+        "transport_context": transport_context,
+    }
+    return _validate_prepared_create(value)
+
+
+def _validate_prepared_create(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != _PREPARED_CREATE_KEYS:
+        raise ValueError("prepared-create fields are not exact")
+    if value.get("outcome") not in {"ready", "refused"}:
+        raise ValueError("prepared-create outcome is invalid")
+    reason = value.get("reason_code")
+    if (value["outcome"] == "ready" and reason is not None) or (
+        value["outcome"] == "refused" and reason not in {
+            "request_payload_unavailable", "request_payload_ambiguous",
+            "request_payload_digest_mismatch", "provider_configuration_invalid",
+        }
+    ):
+        raise ValueError("prepared-create reason is invalid")
+    digest_value = value.get("prepared_create_sha256")
+    if (
+        not isinstance(digest_value, str) or len(digest_value) != 64
+        or any(char not in "0123456789abcdef" for char in digest_value)
+    ):
+        raise ValueError("prepared-create digest is invalid")
+    return value
 
 
 def _inject(callback: Callable[[str], None] | None, point: str) -> None:
@@ -603,6 +697,7 @@ def commit_external_authority_v2_dispatch_intent(
             "next_action_index": 0,
             "provider_bound_action_ids": [],
             "provider_operation_ids": [],
+            "prepared_create_records": [],
             "active_action_id": None,
             "active_create_state": None,
             "provider_io_performed": False,
@@ -642,6 +737,7 @@ def commit_external_authority_v2_dispatch_intent(
 def dispatch_external_authority_v2_intent(
     run_dir: Path | str, *, request_sha256: str, grant_sha256: str,
     create: Callable[[dict[str, Any]], Mapping[str, Any]],
+    prepare: Callable[[dict[str, Any], dict[str, Any]], Mapping[str, Any]] | None = None,
     failure_injector: Callable[[str], None] | None = None,
     event_emitter: Any | None = None,
 ) -> dict[str, Any]:
@@ -661,6 +757,7 @@ def dispatch_external_authority_v2_intent(
 
     root = Path(run_dir).resolve()
     run_json = root / "run.json"
+    phase_aware = prepare is not None
 
     def now() -> str:
         return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -690,8 +787,115 @@ def dispatch_external_authority_v2_intent(
             )
         return state, intent, ids
 
+    def replay_refusal(state: dict[str, Any]) -> dict[str, Any] | None:
+        if not phase_aware:
+            return None
+        history = state.get("external_authority_v2_dispatch_history") or []
+        matches = [
+            item for item in history
+            if isinstance(item, dict)
+            and item.get("request_sha256") == request_sha256
+            and item.get("grant_sha256") == grant_sha256
+            and item.get("outcome") == "pre_provider_refusal"
+        ]
+        if not matches:
+            return None
+        if len(matches) != 1:
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid", "refused invocation history is duplicated",
+            )
+        item = matches[0]
+        return build_external_authority_provider_dispatch_result_v3(
+            outcome="pre_provider_refusal",
+            reason_code=item["reason_code"],
+            provider_io_disposition="not_attempted",
+            grant_invocation_disposition="refused",
+            run_id=state["run_id"],
+            request_sha256=request_sha256,
+            grant_sha256=grant_sha256,
+            ordered_action_ids=deepcopy(item["ordered_action_ids"]),
+            provider_bound_action_ids=deepcopy(item["provider_bound_action_ids"]),
+            ambiguous_action_ids=[],
+            refused_action_ids=[item["refused_action_id"]],
+            provider_operation_ids=deepcopy(item["provider_operation_ids"]),
+            prepared_create_records=deepcopy(item["prepared_create_records"]),
+            post_state_revision=int(item["post_state_revision"]),
+            post_snapshot_sha256=sha256_file(root / "workspace-snapshot.json"),
+        )
+
     with _exclusive_lifecycle_lock(root):
+        replay_state = load_json(run_json)
+        validate_workspace_snapshot(root, replay_state)
+        refusal_replay = replay_refusal(replay_state)
+        if refusal_replay is not None:
+            return refusal_replay
         state, intent, ordered_ids = load_intent_state()
+        if phase_aware and (
+            intent.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
+            or intent.get("active_create_state") == "CALL_ENTERED"
+        ):
+            active_id = intent.get("active_action_id")
+            if active_id not in ordered_ids:
+                raise ExternalAuthorityV2ExecutionError(
+                    "native_evidence_invalid", "ambiguous intent action identity is invalid",
+                )
+            if intent.get("active_create_state") == "CALL_ENTERED":
+                action = _current_actions(state, ordered_ids)[ordered_ids.index(active_id)]
+                if action.get("provider") is not None:
+                    raise ExternalAuthorityV2ExecutionError(
+                        "provider_identity_conflict", "entered action now has provider identity",
+                    )
+                if action.get("state") == "SUBMITTING":
+                    mark_ambiguous(
+                        action, reason="durable provider call fence has no durable identity",
+                    )
+                elif action.get("state") != "AMBIGUOUS_PROVIDER_SUBMISSION":
+                    raise ExternalAuthorityV2ExecutionError(
+                        "native_evidence_invalid", "entered action state is contradictory",
+                    )
+                prepared_digest = intent.get("active_prepared_create_sha256")
+                records = deepcopy(intent.get("prepared_create_records") or [])
+                if (
+                    not isinstance(prepared_digest, str)
+                    or len(prepared_digest) != 64
+                    or any(char not in "0123456789abcdef" for char in prepared_digest)
+                ):
+                    raise ExternalAuthorityV2ExecutionError(
+                        "native_evidence_invalid", "entered call lacks prepared-create identity",
+                    )
+                records.append({
+                    "action_id": active_id,
+                    "prepared_create_sha256": prepared_digest,
+                })
+                intent["prepared_create_records"] = records
+                intent["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+                intent["active_create_state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+                intent["ambiguity_reason_code"] = "provider_call_interrupted_after_fence"
+                intent["provider_io_performed"] = True
+                persist_state(run_json, state)
+                write_workspace_snapshot(root)
+                validate_workspace_snapshot(root, state)
+            reason = intent.get("ambiguity_reason_code")
+            bound = deepcopy(intent.get("provider_bound_action_ids") or [])
+            operations = deepcopy(intent.get("provider_operation_ids") or [])
+            records = deepcopy(intent.get("prepared_create_records") or [])
+            return build_external_authority_provider_dispatch_result_v3(
+                outcome="ambiguous_submission",
+                reason_code=reason,
+                provider_io_disposition="create_entered_unknown",
+                grant_invocation_disposition="create_entered_unknown",
+                run_id=state["run_id"],
+                request_sha256=request_sha256,
+                grant_sha256=grant_sha256,
+                ordered_action_ids=deepcopy(ordered_ids),
+                provider_bound_action_ids=bound,
+                ambiguous_action_ids=[active_id],
+                refused_action_ids=[],
+                provider_operation_ids=operations,
+                prepared_create_records=records,
+                post_state_revision=int(state["state_revision"]),
+                post_snapshot_sha256=sha256_file(root / "workspace-snapshot.json"),
+            )
         actions = _current_actions(state, ordered_ids)
         for action in actions:
             mechanism = (action.get("binding") or {}).get("service_level")
@@ -736,11 +940,38 @@ def dispatch_external_authority_v2_intent(
 
     bound_ids: list[str] = deepcopy(intent.get("provider_bound_action_ids") or [])
     provider_ids: list[str] = deepcopy(intent.get("provider_operation_ids") or [])
+    prepared_records: list[dict[str, str]] = deepcopy(
+        intent.get("prepared_create_records") or []
+    )
     ambiguous_ids: list[str] = []
+    refused_ids: list[str] = []
+    result_reason: str | None = None
     provider_io_performed = False
     for action_id in ordered_ids[cursor:]:
         # A failure before this point proves the provider call was not entered.
         _inject(failure_injector, f"before_provider_create:{action_id}")
+        prepared_create: dict[str, Any] | None = None
+        preparation_snapshot_sha256: str | None = None
+        if prepare is not None:
+            with _exclusive_lifecycle_lock(root):
+                state, intent, current_ids = load_intent_state()
+                if intent.get("active_action_id") is not None:
+                    raise ExternalAuthorityV2ExecutionError(
+                        "provider_submission_ambiguous", "another dispatch entered provider create",
+                    )
+                action = _current_actions(state, current_ids)[current_ids.index(action_id)]
+                preparation_snapshot_sha256 = sha256_file(root / "workspace-snapshot.json")
+                preparation_context = {
+                    "run_id": state["run_id"],
+                    "request_sha256": request_sha256,
+                    "grant_sha256": grant_sha256,
+                    "checkpoint_snapshot_sha256": preparation_snapshot_sha256,
+                }
+                action_for_prepare = deepcopy(action)
+            prepared_create = _validate_prepared_create(dict(prepare(
+                action_for_prepare, preparation_context,
+            )))
+            _inject(failure_injector, f"after_provider_prepare:{action_id}")
         with _exclusive_lifecycle_lock(root):
             state, intent, current_ids = load_intent_state()
             if current_ids != ordered_ids:
@@ -759,22 +990,118 @@ def dispatch_external_authority_v2_intent(
                 raise ExternalAuthorityV2ExecutionError(
                     "provider_submission_ambiguous", "another dispatch entered provider create",
                 )
+            checkpoint_changed = bool(
+                phase_aware
+                and sha256_file(root / "workspace-snapshot.json")
+                != preparation_snapshot_sha256
+            )
+            if prepared_create is not None and (
+                prepared_create["outcome"] == "refused" or checkpoint_changed
+            ):
+                record = {
+                    "action_id": action_id,
+                    "prepared_create_sha256": prepared_create["prepared_create_sha256"],
+                }
+                refused_ids.append(action_id)
+                prepared_records.append(record)
+                result_reason = (
+                    "checkpoint_changed_before_create"
+                    if checkpoint_changed else prepared_create["reason_code"]
+                )
+                refusal_index = ordered_ids.index(action_id)
+                unentered_ids = ordered_ids[refusal_index:]
+                current_actions = _current_actions(state, ordered_ids)
+                unentered_evidence = []
+                for unentered_id in unentered_ids:
+                    unentered_action = current_actions[ordered_ids.index(unentered_id)]
+                    if (
+                        unentered_action.get("provider") is not None
+                        or unentered_action.get("state") != "SUBMITTING"
+                    ):
+                        raise ExternalAuthorityV2ExecutionError(
+                            "native_evidence_invalid",
+                            "an unentered refusal-suffix member has provider custody",
+                        )
+                    unentered_evidence.append({
+                        "action_id": unentered_id,
+                        "authorization": deepcopy(unentered_action.get("authorization")),
+                        "consumption": deepcopy(unentered_action.get("consumption")),
+                    })
+                archived = {
+                    "schema_version": "astrowoof.external_authority_v2_refused_invocation.v1",
+                    "outcome": "pre_provider_refusal",
+                    "request_sha256": request_sha256,
+                    "grant_sha256": grant_sha256,
+                    "ordered_action_ids": deepcopy(ordered_ids),
+                    "provider_bound_action_ids": deepcopy(bound_ids),
+                    "provider_operation_ids": deepcopy(provider_ids),
+                    "refused_action_id": action_id,
+                    "unentered_action_ids": deepcopy(unentered_ids),
+                    "reason_code": result_reason,
+                    "prepared_create_records": deepcopy(prepared_records),
+                    "unentered_action_evidence": unentered_evidence,
+                    "post_state_revision": int(state.get("state_revision") or 0) + 1,
+                }
+                state.setdefault("external_authority_v2_dispatch_history", []).append(archived)
+                for unentered_id in unentered_ids:
+                    unentered_action = current_actions[ordered_ids.index(unentered_id)]
+                    member_history = deepcopy(archived)
+                    member_history["member_disposition"] = (
+                        "preparation_refused"
+                        if unentered_id == action_id else "not_entered_after_refusal"
+                    )
+                    unentered_action.setdefault(
+                        "external_authority_v2_refused_invocations", []
+                    ).append(member_history)
+                    unentered_action["state"] = "PREPARED"
+                    unentered_action["authorization"] = None
+                    unentered_action.pop("consumption", None)
+                state.pop("external_authority_v2_dispatch_intent", None)
+                persist_state(run_json, state)
+                write_workspace_snapshot(root)
+                validate_workspace_snapshot(root, state)
+                return build_external_authority_provider_dispatch_result_v3(
+                    outcome="pre_provider_refusal",
+                    reason_code=result_reason,
+                    provider_io_disposition="not_attempted",
+                    grant_invocation_disposition="refused",
+                    run_id=state["run_id"],
+                    request_sha256=request_sha256,
+                    grant_sha256=grant_sha256,
+                    ordered_action_ids=deepcopy(ordered_ids),
+                    provider_bound_action_ids=deepcopy(bound_ids),
+                    ambiguous_action_ids=[],
+                    refused_action_ids=deepcopy(refused_ids),
+                    provider_operation_ids=deepcopy(provider_ids),
+                    prepared_create_records=deepcopy(prepared_records),
+                    post_state_revision=int(state["state_revision"]),
+                    post_snapshot_sha256=sha256_file(root / "workspace-snapshot.json"),
+                )
             intent["active_action_id"] = action_id
             intent["active_create_state"] = "CALL_ENTERED"
+            if prepared_create is not None:
+                intent["active_prepared_create_sha256"] = prepared_create[
+                    "prepared_create_sha256"
+                ]
             persist_state(run_json, state)
             write_workspace_snapshot(root)
             validate_workspace_snapshot(root, state)
-            action_for_create = deepcopy(action)
+            action_for_create = (
+                prepared_create if prepared_create is not None else deepcopy(action)
+            )
 
         provider_io_performed = True
         try:
+            _inject(failure_injector, f"after_call_fence_before_transport:{action_id}")
             provider_result = create(action_for_create)
             _inject(failure_injector, f"after_provider_create_before_identity:{action_id}")
             if not isinstance(provider_result, Mapping):
+                result_reason = "provider_returned_invalid_identity"
                 raise ValueError("provider create did not return an object")
             provider_id = provider_result.get("id")
             provider_kind = provider_result.get("kind", "response")
             if not isinstance(provider_id, str) or not provider_id or provider_kind != "response":
+                result_reason = "provider_returned_invalid_identity"
                 raise ValueError("provider create returned no valid Response identity")
         except Exception as exc:
             # Once create is entered, no local signal proves provider non-acceptance.
@@ -786,10 +1113,30 @@ def dispatch_external_authority_v2_intent(
                     intent["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                     intent["active_create_state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                     intent["provider_io_performed"] = True
+                    intent["ambiguity_reason_code"] = (
+                        result_reason or "provider_transport_failed_without_identity"
+                    )
+                    if prepared_create is not None:
+                        record = {
+                            "action_id": action_id,
+                            "prepared_create_sha256": prepared_create[
+                                "prepared_create_sha256"
+                            ],
+                        }
+                        intent["prepared_create_records"] = [
+                            *deepcopy(intent.get("prepared_create_records") or []),
+                            record,
+                        ]
                     persist_state(run_json, state)
                     write_workspace_snapshot(root)
                     validate_workspace_snapshot(root, state)
             ambiguous_ids.append(action_id)
+            result_reason = result_reason or "provider_transport_failed_without_identity"
+            if prepared_create is not None:
+                prepared_records.append({
+                    "action_id": action_id,
+                    "prepared_create_sha256": prepared_create["prepared_create_sha256"],
+                })
             break
 
         with _exclusive_lifecycle_lock(root):
@@ -816,10 +1163,27 @@ def dispatch_external_authority_v2_intent(
                 intent["state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                 intent["active_create_state"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
                 intent["provider_io_performed"] = True
+                intent["ambiguity_reason_code"] = "provider_identity_conflict"
+                if prepared_create is not None:
+                    intent["prepared_create_records"] = [
+                        *deepcopy(intent.get("prepared_create_records") or []),
+                        {
+                            "action_id": action_id,
+                            "prepared_create_sha256": prepared_create[
+                                "prepared_create_sha256"
+                            ],
+                        },
+                    ]
                 persist_state(run_json, state)
                 write_workspace_snapshot(root)
                 validate_workspace_snapshot(root, state)
                 ambiguous_ids.append(action_id)
+                result_reason = "provider_identity_conflict"
+                if prepared_create is not None:
+                    prepared_records.append({
+                        "action_id": action_id,
+                        "prepared_create_sha256": prepared_create["prepared_create_sha256"],
+                    })
                 break
             record_provider_id(action, provider_id=provider_id, kind="response")
             action["provider_reconciliation"] = initial_timing(recorded_at=now(), mechanism="response")
@@ -828,9 +1192,16 @@ def dispatch_external_authority_v2_intent(
             provider_ids.append(provider_id)
             intent["provider_bound_action_ids"] = deepcopy(bound_ids)
             intent["provider_operation_ids"] = deepcopy(provider_ids)
+            if prepared_create is not None:
+                prepared_records.append({
+                    "action_id": action_id,
+                    "prepared_create_sha256": prepared_create["prepared_create_sha256"],
+                })
+                intent["prepared_create_records"] = deepcopy(prepared_records)
             intent["next_action_index"] = len(bound_ids)
             intent["active_action_id"] = None
             intent["active_create_state"] = None
+            intent.pop("active_prepared_create_sha256", None)
             intent["state"] = "PROVIDER_PENDING" if len(bound_ids) == len(ordered_ids) else "DISPATCHING"
             intent["provider_io_performed"] = True
             persist_state(run_json, state)
@@ -850,6 +1221,35 @@ def dispatch_external_authority_v2_intent(
     with _exclusive_lifecycle_lock(root):
         state, intent, current_ids = load_intent_state()
         snapshot_sha256 = sha256_file(root / "workspace-snapshot.json")
+        if phase_aware:
+            return build_external_authority_provider_dispatch_result_v3(
+                outcome=(
+                    "ambiguous_submission" if ambiguous_ids
+                    else "exact_replay" if replay
+                    else "detached_provider_pending"
+                ),
+                reason_code=result_reason,
+                provider_io_disposition=(
+                    "create_entered_unknown" if ambiguous_ids
+                    else "provider_identity_durable"
+                ),
+                grant_invocation_disposition=(
+                    "create_entered_unknown" if ambiguous_ids
+                    else "replayed" if replay
+                    else "provider_pending"
+                ),
+                run_id=state["run_id"],
+                request_sha256=request_sha256,
+                grant_sha256=grant_sha256,
+                ordered_action_ids=deepcopy(current_ids),
+                provider_bound_action_ids=deepcopy(bound_ids),
+                ambiguous_action_ids=deepcopy(ambiguous_ids),
+                refused_action_ids=[],
+                provider_operation_ids=deepcopy(provider_ids),
+                prepared_create_records=deepcopy(prepared_records),
+                post_state_revision=int(state["state_revision"]),
+                post_snapshot_sha256=snapshot_sha256,
+            )
         result = {
             "schema_version": PROVIDER_DISPATCH_RESULT_SCHEMA_V2,
             "result_sha256": "pending",
@@ -888,6 +1288,7 @@ def resolve_external_authority_v2_request_payload(
         raise ExternalAuthorityV2ExecutionError(
             "request_payload_mismatch", "action request digest is invalid",
         )
+    discovered: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
     for name in ("openai-request.json", "openai-request-payload.private.json"):
         for path in root.rglob(name):
@@ -895,11 +1296,23 @@ def resolve_external_authority_v2_request_payload(
                 payload = load_json(path)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
-            if isinstance(payload, dict) and spend_digest(payload) == expected:
-                candidates.append(payload)
+            if isinstance(payload, dict):
+                discovered.append(payload)
+                if spend_digest(payload) == expected:
+                    candidates.append(payload)
+    if not discovered:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_unavailable",
+            "a snapshot-bound prepared provider request payload is unavailable",
+        )
+    if not candidates:
+        raise ExternalAuthorityV2ExecutionError(
+            "request_payload_digest_mismatch",
+            "no prepared provider request payload matches the action binding",
+        )
     if len(candidates) != 1:
         raise ExternalAuthorityV2ExecutionError(
-            "request_payload_mismatch",
-            "exactly one snapshot-bound prepared provider request payload is required",
+            "request_payload_ambiguous",
+            "more than one prepared provider request payload matches the action binding",
         )
     return deepcopy(candidates[0])
