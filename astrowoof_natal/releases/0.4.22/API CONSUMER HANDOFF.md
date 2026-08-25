@@ -16,4 +16,3 @@ Consumer summary:
    retained provider custody/fan-in is exhausted.
 7. Pin SBE 0.4.22 with exact SPC 0.11.1 and prove the newly deployed worker/profile
    pair before creating a paid QA cohort.
-

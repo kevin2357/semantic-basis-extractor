@@ -31,4 +31,3 @@ claim is introduced.
 Before a new paid QA cohort, AstroWoof API and its worker image must pin this fresh
 artifact together, deploy/attest the matching runtime and profile configuration,
 and complete the separate release-pair qualification.
-

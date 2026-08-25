@@ -8,4 +8,3 @@
 - Reconciliation remains bounded to four due actions per cycle.
 - Logs/events are diagnostic and non-authoritative.
 - Provider request atomicity and identity-less submission ambiguity are unchanged.
-
