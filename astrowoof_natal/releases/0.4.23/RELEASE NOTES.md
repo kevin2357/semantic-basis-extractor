@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.23
 
-Status: release candidate qualified; tag/publication pending owner and API review
+Status: published and independently digest-verified
 
 SBE 0.4.23 makes the external-authority v2 provider-create boundary
 machine-distinguishable. Deterministic payload/configuration preparation now
@@ -29,4 +29,7 @@ API to infer global reservation, capacity, billing, or product state.
 - External provider/network calls and spend: 0.
 - Frozen QA cohort access/mutation: 0.
 
-Tagging and publication remain pending final Waypoint 4 authorization.
+The immutable tag is `astrowoof-natal-authoring-v0.4.23`. GitHub reports the
+published 980,621-byte wheel with SHA-256
+`adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`;
+an independent post-publication download reproduced that digest exactly.

@@ -163,3 +163,14 @@ only correcting stale candidate/pending wording in the normative handoff and
 labelling the old Waypoint 1 questions as resolved decision history. Those prose
 corrections are complete. Owner and API authorized immutable 0.4.23 tagging and
 publication; no runtime or artifact rebuild is required.
+
+## 2026-08-25 — SBE 0.4.23 published and verified
+
+Created annotated tag `astrowoof-natal-authoring-v0.4.23` at approved release
+commit `eae1a637e83820415b474168450f8f05b29f72af` and published GitHub release
+376473200 with the qualified wheel and checksum file. GitHub's asset digest and
+an independent downloaded copy both match candidate SHA-256
+`adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`.
+
+The sprint is complete. API pin/adoption and any retained-run recovery remain
+separate consumer work.

@@ -173,6 +173,19 @@ run of 18 passing tests with one expected optional-schema skip. Its sole
 condition was documentation status cleanup; the candidate wheel bytes remain
 unchanged.
 
+## Publication evidence
+
+- Tag: `astrowoof-natal-authoring-v0.4.23`.
+- Tag commit: `eae1a637e83820415b474168450f8f05b29f72af`.
+- Annotated tag object: `d306d03f966f8f4e24d48efc1ae9ab5a8a45c76e`.
+- GitHub release ID: 376473200.
+- Published at: `2026-08-25T14:32:14Z`.
+- Wheel asset ID: 529321758; bytes: 980,621.
+- GitHub-reported and independently downloaded SHA-256:
+  `adf16ecc785c2eeb98bcc1b4ed77d49bba0f208a1943c58e74320b2eed5135de`.
+- Checksum asset ID: 529321759.
+- Draft/prerelease: false/false.
+
 Stress repetition identified and corrected stale process-cache reuse during
 authoritative snapshot publication when Windows recycled a temporary path.
 Both snapshot writing and validation now hash current bytes directly at the
