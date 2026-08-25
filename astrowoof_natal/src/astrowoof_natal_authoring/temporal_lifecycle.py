@@ -696,6 +696,10 @@ def validate_external_authority_request_v2(value: dict[str, Any]) -> None:
         or any(not _valid_action_id(item) for item in ids)
     ):
         raise ValueError("External-authority request action inventory is invalid")
+    if value.get("request_kind") == "ordinary_action_set" and ids != sorted(ids):
+        raise ValueError(
+            "External-authority ordinary action IDs must use canonical lexical order"
+        )
     body = {
         key: item for key, item in value.items()
         if key != "external_authority_request_sha256"

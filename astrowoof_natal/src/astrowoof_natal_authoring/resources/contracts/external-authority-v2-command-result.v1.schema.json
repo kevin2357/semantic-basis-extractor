@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.external_authority_v2_command_result.v1",
+  "type": "object",
+  "required": ["schema_version", "command_result_sha256", "outcome", "intent_result", "dispatch_result"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.external_authority_v2_command_result.v1"},
+    "command_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "outcome": {"enum": ["detached_provider_pending", "ambiguous_submission", "exact_replay"]},
+    "intent_result": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "external-authority-intent-result.v2.schema.json"}
+      ]
+    },
+    "dispatch_result": {"$ref": "external-authority-provider-dispatch-result.v2.schema.json"}
+  },
+  "additionalProperties": false
+}
