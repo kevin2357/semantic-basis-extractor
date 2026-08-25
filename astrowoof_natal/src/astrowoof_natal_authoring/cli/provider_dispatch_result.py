@@ -9,6 +9,7 @@ from typing import Any, Sequence
 
 from ..external_authority_v2_execution import (
     read_ambiguous_provider_submission_fixture_v1,
+    validate_ambiguous_provider_submission_fixture_v1,
     validate_external_authority_provider_dispatch_result_v3,
     validate_external_authority_v2_command_result_v2,
 )
@@ -27,16 +28,7 @@ def _validate(value: Any) -> Any:
     if schema == "astrowoof.external_authority_v2_command_result.v2":
         return validate_external_authority_v2_command_result_v2(value)
     if schema == "astrowoof.ambiguous_provider_submission_fixtures.v1":
-        for case in value.get("cases", []):
-            expected = case.get("expected_valid")
-            try:
-                validate_external_authority_provider_dispatch_result_v3(case.get("result"))
-                valid = True
-            except ValueError:
-                valid = False
-            if valid is not expected:
-                raise ValueError(f"fixture expectation mismatch: {case.get('name')!r}")
-        return value
+        return validate_ambiguous_provider_submission_fixture_v1(value)
     raise ValueError("unsupported provider dispatch evidence schema")
 
 

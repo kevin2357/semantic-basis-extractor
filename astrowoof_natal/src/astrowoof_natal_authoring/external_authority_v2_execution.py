@@ -386,11 +386,10 @@ def read_external_authority_v2_command_result_v2_schema() -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def read_ambiguous_provider_submission_fixture_v1() -> dict[str, Any]:
-    path = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
-        "external-authority-v2/ambiguous-provider-submission.v1.json"
-    )
-    value = json.loads(path.read_text(encoding="utf-8"))
+def validate_ambiguous_provider_submission_fixture_v1(
+    value: Any,
+) -> dict[str, Any]:
+    """Strictly validate a packaged or caller-supplied fixture bundle."""
     if (
         not isinstance(value, dict)
         or set(value) != {"schema_version", "cases"}
@@ -422,6 +421,15 @@ def read_ambiguous_provider_submission_fixture_v1() -> dict[str, Any]:
     if len(names) != len(set(names)):
         raise ValueError("ambiguous provider fixture names are not unique")
     return deepcopy(value)
+
+
+def read_ambiguous_provider_submission_fixture_v1() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+        "external-authority-v2/ambiguous-provider-submission.v1.json"
+    )
+    return validate_ambiguous_provider_submission_fixture_v1(
+        json.loads(path.read_text(encoding="utf-8"))
+    )
 
 
 class ExternalAuthorityV2ExecutionError(ValueError):

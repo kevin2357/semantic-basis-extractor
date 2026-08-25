@@ -172,3 +172,8 @@ python -m unittest \
 
 Result: 17 tests passed in 5.643 seconds. Provider credentials, network, spend,
 and retained-QA access remained zero.
+
+API review identified that caller-supplied fixture bundles did not initially use
+the packaged reader's complete closed-world validation. The shared validator and
+CLI regressions now prove empty and extra-key bundles fail before output-file
+creation. Focused correction suite: 16 tests passed in 7.030 seconds.

@@ -50,6 +50,29 @@ class ProviderDispatchResultCliWaypoint3(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unsupported"):
                 main(["--input", str(source)])
 
+    def test_input_fixture_bundle_is_closed_and_writes_nothing_on_failure(self):
+        malformed = (
+            {
+                "schema_version": "astrowoof.ambiguous_provider_submission_fixtures.v1",
+                "cases": [],
+            },
+            {
+                **read_ambiguous_provider_submission_fixture_v1(),
+                "unexpected": True,
+            },
+        )
+        for index, value in enumerate(malformed):
+            with self.subTest(index=index), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                source = root / "fixture.json"
+                output = root / "must-not-exist.json"
+                source.write_text(json.dumps(value), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "fixture bundle"):
+                    main([
+                        "--input", str(source), "--output", str(output),
+                    ])
+                self.assertFalse(output.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -116,6 +116,7 @@ from .external_authority_v2_execution import (  # noqa: E402
     validate_external_authority_provider_dispatch_result_v3,
     validate_external_authority_v2_command_result,
     validate_external_authority_v2_command_result_v2,
+    validate_ambiguous_provider_submission_fixture_v1,
 )
 from .external_authority_qa import (  # noqa: E402
     read_external_authority_qualification_schema,
@@ -249,6 +250,7 @@ __all__ = [
     "validate_external_authority_provider_dispatch_result_v3",
     "validate_external_authority_v2_command_result",
     "validate_external_authority_v2_command_result_v2",
+    "validate_ambiguous_provider_submission_fixture_v1",
     "read_external_authority_qualification_schema",
     "run_external_authority_qualification",
     "validate_external_authority_qualification_receipt",

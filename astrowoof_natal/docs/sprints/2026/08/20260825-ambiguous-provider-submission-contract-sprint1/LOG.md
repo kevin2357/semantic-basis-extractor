@@ -127,3 +127,14 @@ action, authority, provider-call, and result behavior.
 
 Focused Waypoint 3 gate: 17 tests passed. Paused for Waffle Checkpoint 3 API
 fixture/adoption review before installed-wheel and release qualification.
+
+## 2026-08-25 — Waffle Checkpoint 3 correction complete
+
+Factored one strict fixture-bundle value validator shared by packaged reading and
+the CLI `--input` path. Empty bundles, extra root keys, malformed case envelopes,
+duplicate names, and expectation mismatches now fail before output is written.
+Added the validator to the supported root-level Python surface and added CLI
+regressions for empty and extra-key bundles.
+
+Focused correction gate: 16 tests passed. Waffle Checkpoint 3's conditional
+approval is satisfied; Scenic Waypoint 4 release qualification may begin.
