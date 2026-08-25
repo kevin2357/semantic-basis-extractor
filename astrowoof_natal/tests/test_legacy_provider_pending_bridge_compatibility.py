@@ -46,6 +46,12 @@ MANIFEST_PATH = SPRINT / "results" / "fixture-manifest.json"
 COMMAND_CONTRACT_PATH = SPRINT / "SLICE 0 - FROZEN FIXTURE AND COMMAND CONTRACT.md"
 
 
+def canonical_lf_bytes(path: Path) -> bytes:
+    """Hash frozen text artifacts independently of checkout line endings."""
+
+    return path.read_bytes().replace(b"\r\n", b"\n")
+
+
 def workspace_hashes(root: Path) -> dict[str, str]:
     return {
         path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
@@ -173,11 +179,11 @@ class TestLegacyProviderPendingBridgeSlice0(unittest.TestCase):
         self.assertEqual(6, manifest["fixture"]["provider_identity_count"])
         self.assertEqual(
             manifest["fixture"]["sha256"],
-            hashlib.sha256(RECIPE_PATH.read_bytes()).hexdigest(),
+            hashlib.sha256(canonical_lf_bytes(RECIPE_PATH)).hexdigest(),
         )
         self.assertEqual(
             manifest["command_contract"]["sha256"],
-            hashlib.sha256(COMMAND_CONTRACT_PATH.read_bytes()).hexdigest(),
+            hashlib.sha256(canonical_lf_bytes(COMMAND_CONTRACT_PATH)).hexdigest(),
         )
 
     def test_materialized_fixture_is_valid_not_due_then_due_without_mutation(self) -> None:

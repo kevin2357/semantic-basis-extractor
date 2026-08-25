@@ -1,0 +1,70 @@
+{
+  "assertions": {
+    "bounded_holistic_4_plus_2_bridge": true,
+    "exact_holistic_4_plus_2_bridge": true,
+    "identity_before_next_create": true,
+    "ordinary_batch_explicitly_deferred": true,
+    "ordinary_response_stage_matrix": true,
+    "reconciliation_only_after_dispatch": true
+  },
+  "external_network_call_count": 0,
+  "provider_free": true,
+  "provider_spend_usd": 0,
+  "qualification_only": true,
+  "real_provider_create_count": 0,
+  "real_provider_retrieval_count": 0,
+  "receipt_sha256": "5eb7d1ef2fdbd7d1c0e9daae66ae665f667dc9bfc5ba2a83342cbbe8948ab950",
+  "routes": {
+    "bounded_natal": {
+      "initial_create_count": 6,
+      "initial_create_unique_count": 6,
+      "next_commands": {
+        "creative_retry": "provider_reconciliation_cycle",
+        "polish": "provider_reconciliation_cycle",
+        "qualitative_candidate": "provider_reconciliation_cycle",
+        "qualitative_critic": "provider_reconciliation_cycle"
+      },
+      "ordinary_create_count": 4,
+      "retrieval_count": 6,
+      "retrieval_cycle_counts": [
+        4,
+        2
+      ],
+      "retrieval_unique_count": 6,
+      "route_family": "bounded_natal",
+      "stage_outcomes": {
+        "creative_retry": "detached_provider_pending",
+        "polish": "detached_provider_pending",
+        "qualitative_candidate": "detached_provider_pending",
+        "qualitative_critic": "detached_provider_pending"
+      }
+    },
+    "exact_natal": {
+      "initial_create_count": 6,
+      "initial_create_unique_count": 6,
+      "next_commands": {
+        "creative_retry": "provider_reconciliation_cycle",
+        "polish": "provider_reconciliation_cycle",
+        "qualitative_candidate": "provider_reconciliation_cycle",
+        "qualitative_critic": "provider_reconciliation_cycle"
+      },
+      "ordinary_create_count": 4,
+      "retrieval_count": 6,
+      "retrieval_cycle_counts": [
+        4,
+        2
+      ],
+      "retrieval_unique_count": 6,
+      "route_family": "exact_natal",
+      "stage_outcomes": {
+        "creative_retry": "detached_provider_pending",
+        "polish": "detached_provider_pending",
+        "qualitative_candidate": "detached_provider_pending",
+        "qualitative_critic": "detached_provider_pending"
+      }
+    }
+  },
+  "sbe_version": "0.4.19",
+  "schema_version": "astrowoof.external_authority_v2_qualification.v1",
+  "status": "pass"
+}

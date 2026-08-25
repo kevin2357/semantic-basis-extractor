@@ -1,0 +1,261 @@
+{
+  "authorization_documents": [
+    {
+      "action_id": "paid_00000000000000000000000a",
+      "authorization_reference": "api-auth:1",
+      "binding": {
+        "commitment_micro_usd": 200000,
+        "maximum_output_tokens": 30000,
+        "model": "gpt-5.6-luna",
+        "prepared_state_revision": 21,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "route": "polish:attempt-001",
+        "run_id": "run_ordinary_fixture",
+        "service_level": "interactive",
+        "stage": "polish"
+      },
+      "schema_version": "astrowoof.provider_spend_authorization.v0.1"
+    },
+    {
+      "action_id": "paid_00000000000000000000000b",
+      "authorization_reference": "api-auth:2",
+      "binding": {
+        "commitment_micro_usd": 200000,
+        "maximum_output_tokens": 30000,
+        "model": "gpt-5.6-luna",
+        "prepared_state_revision": 21,
+        "price_book_version": "openai-public-2026-08-07.v1",
+        "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "request_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "route": "qualitative_critic:attempt-001",
+        "run_id": "run_ordinary_fixture",
+        "service_level": "interactive",
+        "stage": "qualitative_critic"
+      },
+      "schema_version": "astrowoof.provider_spend_authorization.v0.1"
+    }
+  ],
+  "grant": {
+    "action_count": 2,
+    "api_decision_id": "api-decision-fixture-1",
+    "checkpoint_basis_sha256": "d6a453aef73d980d69ba9c80faa25bf8cfb858f91960da9304237b66fdccc032",
+    "decision": "granted",
+    "external_authority_request_sha256": "f319fcfec7a9a494dad968c62f09582327538c4e4878c318c073a6a4e2facadc",
+    "grant_sha256": "bac1b6ce2422ad01310840764caf4088ac41f16cd87edaf34d9a4e1b5e655c7c",
+    "issued_at": "2026-08-20T15:00:01Z",
+    "issuer": "astrowoof-api",
+    "ordered_action_ids": [
+      "paid_00000000000000000000000a",
+      "paid_00000000000000000000000b"
+    ],
+    "ordered_member_authorizations": [
+      {
+        "action_id": "paid_00000000000000000000000a",
+        "authorization_document_sha256": "c11edde5e1ebb4631c712cb1d3f55356291b44f398d4b5c418e77d372f88492a",
+        "authorization_reference": "api-auth:1",
+        "binding_sha256": "ae1bf145e9ff830b64da148c5acf553efdfcf410fb46671b37a70905b106d099"
+      },
+      {
+        "action_id": "paid_00000000000000000000000b",
+        "authorization_document_sha256": "2c019ef208e21af1b177c7ce9e0d782d0a5b9837cce1fe29719f73ca5ea4207f",
+        "authorization_reference": "api-auth:2",
+        "binding_sha256": "9fa52842f001e260adbe665afa65a97324af6c104338aa1aa83c65ac22fd9f1d"
+      }
+    ],
+    "ordering_semantics": "lexical_action_id_ascending",
+    "provider_mechanism": "response",
+    "request_kind": "ordinary_action_set",
+    "request_schema_version": "astrowoof.external_authority_request.v2",
+    "route_family": "exact_natal",
+    "run_id": "run_ordinary_fixture",
+    "schema_version": "astrowoof.external_authority_grant.v2"
+  },
+  "inspection": {
+    "checkpoint_basis": {
+      "action_inventory": {
+        "actions": [
+          {
+            "action_id": "paid_00000000000000000000000a",
+            "ambiguity_review_reasons": [],
+            "attempt": 1,
+            "authorization_previously_recorded": false,
+            "binding": {
+              "commitment_micro_usd": 200000,
+              "maximum_output_tokens": 30000,
+              "model": "gpt-5.6-luna",
+              "prepared_state_revision": 21,
+              "price_book_version": "openai-public-2026-08-07.v1",
+              "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "request_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "route": "polish:attempt-001",
+              "run_id": "run_ordinary_fixture",
+              "service_level": "interactive",
+              "stage": "polish"
+            },
+            "blocking_action_ids": [],
+            "consumption_evidence_present": false,
+            "eligibility_reason": "eligible_prepared",
+            "necessary": true,
+            "pass_id": null,
+            "provider_evidence_present": false,
+            "provider_identity_present": false,
+            "provider_operation_id": null,
+            "providerless_denial_eligible": true,
+            "relationship": "blocking",
+            "route": "polish:attempt-001",
+            "state": "PREPARED"
+          },
+          {
+            "action_id": "paid_00000000000000000000000b",
+            "ambiguity_review_reasons": [],
+            "attempt": 1,
+            "authorization_previously_recorded": false,
+            "binding": {
+              "commitment_micro_usd": 200000,
+              "maximum_output_tokens": 30000,
+              "model": "gpt-5.6-luna",
+              "prepared_state_revision": 21,
+              "price_book_version": "openai-public-2026-08-07.v1",
+              "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "request_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "route": "qualitative_critic:attempt-001",
+              "run_id": "run_ordinary_fixture",
+              "service_level": "interactive",
+              "stage": "qualitative_critic"
+            },
+            "blocking_action_ids": [],
+            "consumption_evidence_present": false,
+            "eligibility_reason": "eligible_prepared",
+            "necessary": true,
+            "pass_id": null,
+            "provider_evidence_present": false,
+            "provider_identity_present": false,
+            "provider_operation_id": null,
+            "providerless_denial_eligible": true,
+            "relationship": "blocking",
+            "route": "qualitative_critic:attempt-001",
+            "state": "PREPARED"
+          }
+        ],
+        "ordering_semantics": "deterministic_presentation_only_not_execution_order",
+        "run_id": "run_ordinary_fixture",
+        "schema_version": "astrowoof.provider_action_inventory.v0.1"
+      },
+      "checkpoint_safe_for_worker_release": true,
+      "consumer_authority": {
+        "action_count": 0,
+        "action_ids": [],
+        "actions": [],
+        "state": "none"
+      },
+      "external_authority_state": {
+        "evidence_categories": [],
+        "kind": "request",
+        "ordered_action_ids": [
+          "paid_00000000000000000000000a",
+          "paid_00000000000000000000000b"
+        ],
+        "refusal_reason": null,
+        "request_kind": "ordinary_action_set"
+      },
+      "local_dependencies": [
+        {
+          "blocking": true,
+          "kind": "retry_preparation",
+          "reason_code": "prepared_action_authorization_pending"
+        }
+      ],
+      "native_route": {
+        "route_contract": "astrowoof.semantic_closure_run.v0.9",
+        "route_family": "exact_natal"
+      },
+      "observation": {
+        "inventory_valid": true,
+        "logical_workspace_root": "/srv/astrowoof/fixtures/external-authority-v2",
+        "native_exclusive_access": "declared",
+        "operator_state_revision": 22,
+        "snapshot_complete": true,
+        "snapshot_sha256": "707f372eb69135bc831b1b93b30120ae2d82f81ac5177ffd6aac03e23f4fa35d",
+        "writer_race_possible": false
+      },
+      "provider_custody": {
+        "action_ids": [],
+        "actions": [],
+        "earliest_resume_not_before": null,
+        "provider_action_count": 0,
+        "reservation_retention_action_count": 0,
+        "state": "none"
+      },
+      "quiescence": {
+        "reasons": [
+          "provider_continuation_remains",
+          "local_continuation_remains"
+        ],
+        "state": "not_quiescent"
+      },
+      "reconciliation_policy_version": "astrowoof.provider_reconciliation_policy.v0.2",
+      "review_reasons": [],
+      "terminal": {
+        "assembly_lint_validation_accepted": false,
+        "deck_bytes_exist": false,
+        "delivery_package_complete": false,
+        "delivery_publishable": false,
+        "local_continuation_remains": true,
+        "native_qa_passed": false,
+        "outcome": "nonterminal",
+        "provider_continuation_remains": true,
+        "terminal": false,
+        "terminal_reason": null
+      }
+    },
+    "checkpoint_basis_sha256": "d6a453aef73d980d69ba9c80faa25bf8cfb858f91960da9304237b66fdccc032",
+    "run_id": "run_ordinary_fixture",
+    "schema_version": "astrowoof.authoring_lifecycle_inspection.v0.6",
+    "temporal_decision": {
+      "capacity_disposition": "await_external_authority",
+      "checkpoint_basis_sha256": "d6a453aef73d980d69ba9c80faa25bf8cfb858f91960da9304237b66fdccc032",
+      "due_action_ids": [],
+      "eligible_now": false,
+      "local_work_ready_now": false,
+      "not_before": null,
+      "observed_at": "2026-08-20T15:00:00Z",
+      "reason_code": "spend_authorization_required",
+      "selected_command": "await_external_authority"
+    },
+    "temporal_decision_sha256": "f06fb7115bdf667e3ec7e290a3535741c6cb686496cd3836b2d5e00b77d94b96"
+  },
+  "no_grant_result": {
+    "checkpoint_basis_sha256": "d6a453aef73d980d69ba9c80faa25bf8cfb858f91960da9304237b66fdccc032",
+    "checkpoint_published": false,
+    "dispatch_permitted": false,
+    "external_authority_request_sha256": "f319fcfec7a9a494dad968c62f09582327538c4e4878c318c073a6a4e2facadc",
+    "native_mutation_performed": false,
+    "ordered_action_ids": [
+      "paid_00000000000000000000000a",
+      "paid_00000000000000000000000b"
+    ],
+    "ordering_semantics": "lexical_action_id_ascending",
+    "outcome": "awaiting_compatible_grant",
+    "provider_io_performed": false,
+    "reason_code": "compatible_grant_required",
+    "request_kind": "ordinary_action_set",
+    "result_sha256": "9be379da684de634fff455aab66a8d8468bcdf6aa90242c4a621d5a1ef76d963",
+    "run_id": "run_ordinary_fixture",
+    "schema_version": "astrowoof.external_authority_dispatch_result.v2",
+    "selected_command": "none"
+  },
+  "request": {
+    "checkpoint_basis_sha256": "d6a453aef73d980d69ba9c80faa25bf8cfb858f91960da9304237b66fdccc032",
+    "external_authority_request_sha256": "f319fcfec7a9a494dad968c62f09582327538c4e4878c318c073a6a4e2facadc",
+    "ordered_action_ids": [
+      "paid_00000000000000000000000a",
+      "paid_00000000000000000000000b"
+    ],
+    "request_kind": "ordinary_action_set",
+    "run_id": "run_ordinary_fixture",
+    "schema_version": "astrowoof.external_authority_request.v2"
+  },
+  "schema_version": "astrowoof.external_authority_v2_contract_fixture.v1"
+}
