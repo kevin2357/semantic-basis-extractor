@@ -1,7 +1,7 @@
 # External Authority v2 Execution Bridge — Sprint 1 Plan
 
 Date: 2026-08-24
-Status: release authorized; 0.4.20 source lock and publication in progress
+Status: complete; SBE 0.4.20 published and digest-verified
 
 ## Objective
 

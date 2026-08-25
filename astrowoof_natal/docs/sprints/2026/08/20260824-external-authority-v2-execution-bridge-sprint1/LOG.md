@@ -142,3 +142,12 @@ installed-wheel gate, and explicit API/owner review paws. No Slice 0 work began.
 - Fast focused source gate: 33 tests passed with 2 expected optional-schema skips.
 - Release/tag/publication authorized subject to the fresh committed-source wheel,
   installed qualification, and artifact checks.
+
+## 2026-08-24 — SBE 0.4.20 published
+
+- Source lock: `706f8cddf07cc79aaf394d1741031b3f3f927359`.
+- Release record/tag commit: `958d887c08f7b017e7cf83042149a690de5569ce`.
+- Published immutable tag: `astrowoof-natal-authoring-v0.4.20`.
+- Published wheel SHA-256:
+  `37fc4220fcaa3f003ab0171cd5c6542bb203287c780c953bd882ca96a10e65c8`.
+- GitHub asset digest and independent downloaded digest both match.

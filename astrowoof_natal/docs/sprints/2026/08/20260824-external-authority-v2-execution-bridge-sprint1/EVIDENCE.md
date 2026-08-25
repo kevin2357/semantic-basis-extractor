@@ -97,3 +97,10 @@
 - Duplicate public command-result definitions and duplicate lexical predicate:
   removed; no contract or runtime behavior change.
 - Post-cleanup fast source gate: **33 passed; 2 optional-schema skips**.
+- SBE 0.4.20 immutable release: published and independently digest-verified.
+- Tag: `astrowoof-natal-authoring-v0.4.20`.
+- Wheel SHA-256:
+  `37fc4220fcaa3f003ab0171cd5c6542bb203287c780c953bd882ca96a10e65c8`.
+- Final installed generic smoke and v2 qualification: pass.
+- Final installed v2 receipt SHA-256:
+  `cb1d813d781b751982031d4dd91528d12128c5eb35aac79dd52bcdb95185509e`.

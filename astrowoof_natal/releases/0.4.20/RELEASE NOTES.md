@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.20
 
-Status: qualified and authorized for immutable publication
+Status: published and independently digest-verified
 
 SBE 0.4.20 completes the executable external-authority v2 bridge introduced by
 temporal lifecycle inspection v0.6. A validated ordinary-action request can now be
@@ -30,3 +30,7 @@ The complete source suite was exercised before final cleanup: 654 tests passed,
 issue in a pre-existing frozen-artifact hash assertion. The test was corrected to
 hash canonical LF bytes and its focused regression passed. No production behavior
 or frozen evidence changed.
+
+The immutable tag is `astrowoof-natal-authoring-v0.4.20`. GitHub reports the
+published 935797-byte wheel with the qualified SHA-256, and an independent
+post-publication download reproduced that digest exactly.
