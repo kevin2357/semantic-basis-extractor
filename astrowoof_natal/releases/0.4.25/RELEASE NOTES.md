@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.25
 
-Status: qualified release candidate; publication pending
+Status: release preparation complete; publication authorized
 
 SBE 0.4.25 closes the post-fan-in ordinary-resume proof gap. A native worker now
 advertises concrete local work through lifecycle inspection v0.7 rather than

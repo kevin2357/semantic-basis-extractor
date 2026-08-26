@@ -19,7 +19,7 @@
     "artifact_source_commit": "c8641c3a16e944e1e0d1392db8167901c4224ce2",
     "source_date_epoch": 1787709856,
     "byte_reproducible": true,
-    "release_record_commit": "pending_release_record_commit"
+    "release_record_commit": "9b0d688d40714031c0107b2fd9de5c2ce4e07db4"
   },
   "runtime": {
     "requires_python": ">=3.11",
