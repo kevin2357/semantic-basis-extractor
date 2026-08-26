@@ -153,4 +153,3 @@ Retained Crumpet access or mutation: zero.
    persistence from native SBE `AUTHORIZED`/intent state. If not, retain the
    `PREPARED` reproduction as the contract basis and classify native intent states
    independently.
-
