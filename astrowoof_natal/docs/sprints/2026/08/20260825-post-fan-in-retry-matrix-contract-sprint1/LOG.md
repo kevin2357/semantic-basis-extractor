@@ -115,6 +115,18 @@ Current gate: build an isolated wheel and invoke the packaged v2 command.
 Current gate: final owner/API review before version bump, deterministic release
 builds, tag, or publication.
 
+## 2026-08-25 — SBE 0.4.25 published
+
+- Owner and API reviewer approved release.
+- Full suite: 755 passed; 38 expected environment/opt-in skips.
+- Two fixed-epoch builds were byte-identical at SHA-256
+  `ba08d58390392a9fa2fe5748b26b04122082f821f7898bf33d70eada0cbe98f5`.
+- Installed generic smoke and provider-pending lifecycle v2 qualification passed.
+- Tagged `astrowoof-natal-authoring-v0.4.25` and published the exact wheel plus
+  `SHA256SUMS.txt`.
+- Independent download reproduced the exact wheel digest and byte count.
+- Provider/network/spend and retained-QA access remained zero.
+
 ## 2026-08-25 — Slice 2 truthful runtime selection complete
 
 - Added a real workspace reader that derives v0.7 local-work inventory from the

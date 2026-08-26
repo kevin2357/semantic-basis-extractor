@@ -1,6 +1,6 @@
 # Evidence — Post-Fan-In Retry Matrix Contract Sprint 1
 
-Status: Slices 0–5 complete; final owner/API release review pending
+Status: complete; SBE 0.4.25 published and independently digest-verified
 
 ## Reviewed native surfaces
 

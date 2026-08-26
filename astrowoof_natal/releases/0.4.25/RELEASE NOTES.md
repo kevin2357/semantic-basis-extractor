@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.25
 
-Status: release preparation complete; publication authorized
+Status: published and independently digest-verified
 
 SBE 0.4.25 closes the post-fan-in ordinary-resume proof gap. A native worker now
 advertises concrete local work through lifecycle inspection v0.7 rather than
@@ -29,4 +29,7 @@ retry-2 external authority. The qualification command is not production authorit
 - External provider/network calls and spend: 0.
 - Retained QA cohort access/mutation: 0.
 
-The intended immutable tag is `astrowoof-natal-authoring-v0.4.25`.
+The immutable tag is `astrowoof-natal-authoring-v0.4.25`. GitHub reports the
+published 1,003,058-byte wheel with SHA-256
+`ba08d58390392a9fa2fe5748b26b04122082f821f7898bf33d70eada0cbe98f5`;
+an independent post-publication download reproduced that digest exactly.

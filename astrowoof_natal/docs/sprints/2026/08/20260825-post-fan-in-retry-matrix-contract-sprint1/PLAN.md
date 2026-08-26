@@ -1,7 +1,7 @@
 # Post-Fan-In Retry Matrix Contract — Sprint 1
 
 Date: 2026-08-25
-Status: Slices 0–5 complete; paused for final owner/API review before release work
+Status: complete; released as SBE 0.4.25
 Starting release: SBE 0.4.24
 Expected release: fresh immutable patch version if runtime or packaged-contract changes are required
 
