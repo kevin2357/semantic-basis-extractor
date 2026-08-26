@@ -918,6 +918,7 @@ def inspect_lifecycle(
     native_exclusive_access: str = "not_established",
     observed_at: str | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
+    allow_unversioned_local_resume: bool = True,
 ) -> dict[str, Any]:
     """Inspect exact native evidence without mutating any workspace member."""
     run_dir = run_dir.resolve()
@@ -1022,6 +1023,25 @@ def inspect_lifecycle(
     execution_branch = _execution_branch(
         capacity, custody, dependencies, review_reasons,
     )
+    if (
+        not allow_unversioned_local_resume
+        and execution_branch["command"] == "ordinary_resume"
+    ):
+        # Closed legacy lifecycle shapes cannot carry the concrete operation
+        # inventory required to authorize local execution. Public v0.5/v0.6
+        # readers therefore fail closed; v0.7 is the supported execution view.
+        review_reasons.append("local_work_contract_upgrade_required")
+        capacity.update({
+            "disposition": "retain_for_review",
+            "local_work_ready_now": False,
+            "resume_not_before": None,
+            "reason_code": "native_review_required",
+        })
+        execution_branch = {
+            "command": "none", "eligible_now": False,
+            "reason_code": "native_review_or_ambiguity",
+            "action_ids": [], "not_before": None,
+        }
     external_authority_request = None
     external_authority_refusal = None
     from .external_authority import (

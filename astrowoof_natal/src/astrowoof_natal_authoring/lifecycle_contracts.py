@@ -423,6 +423,8 @@ EVENT_NAMES = (
     "provider.completed",
     "provider.reconciliation_observed",
     "lifecycle.branch_selected",
+    "lifecycle.local_work_selected",
+    "lifecycle.local_work_consumed",
     "external_authority.request_selected",
     "external_authority.fence_validated",
     "external_authority.intent_committed",

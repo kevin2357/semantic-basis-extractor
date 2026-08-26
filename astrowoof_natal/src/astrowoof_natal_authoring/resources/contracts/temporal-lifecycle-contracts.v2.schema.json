@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.temporal_lifecycle_contracts.v2",
+  "title": "AstroWoof lifecycle v0.7 with immutable local-work inventory",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "checkpoint_basis_sha256",
+    "checkpoint_basis", "temporal_decision_sha256", "temporal_decision"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.7"},
+    "run_id": {"type": "string", "minLength": 1},
+    "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
+    "checkpoint_basis": {"$ref": "#/$defs/checkpointBasis"},
+    "temporal_decision_sha256": {"$ref": "#/$defs/sha256"},
+    "temporal_decision": {
+      "type": "object",
+      "required": [
+        "observed_at", "checkpoint_basis_sha256", "capacity_disposition",
+        "local_work_ready_now", "reason_code", "selected_command",
+        "eligible_now", "due_action_ids", "not_before",
+        "local_work_inventory_sha256"
+      ],
+      "properties": {
+        "observed_at": {"type": "string"},
+        "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
+        "capacity_disposition": {"type": "string", "minLength": 1},
+        "local_work_ready_now": {"type": "boolean"},
+        "reason_code": {"type": "string", "minLength": 1},
+        "selected_command": {"enum": [
+          "ordinary_resume", "provider_reconciliation_cycle",
+          "await_external_authority", "none"
+        ]},
+        "eligible_now": {"type": "boolean"},
+        "due_action_ids": {
+          "type": "array", "maxItems": 4, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/actionId"}
+        },
+        "not_before": {"type": ["string", "null"]},
+        "local_work_inventory_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "actionId": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+    "checkpointBasis": {
+      "type": "object",
+      "required": [
+        "observation", "terminal", "quiescence", "local_dependencies",
+        "action_inventory", "review_reasons", "provider_custody",
+        "native_route", "consumer_authority",
+        "checkpoint_safe_for_worker_release", "reconciliation_policy_version",
+        "external_authority_state", "local_work_inventory"
+      ],
+      "properties": {
+        "observation": {"type": "object"},
+        "terminal": {"type": "object"},
+        "quiescence": {"type": "object"},
+        "local_dependencies": {"type": "array"},
+        "action_inventory": {"type": "object"},
+        "review_reasons": {"type": "array", "uniqueItems": true},
+        "provider_custody": {"type": "object"},
+        "native_route": {"type": "object"},
+        "consumer_authority": {"type": "object"},
+        "checkpoint_safe_for_worker_release": {"type": "boolean"},
+        "reconciliation_policy_version": {
+          "const": "astrowoof.provider_reconciliation_policy.v0.2"
+        },
+        "external_authority_state": {"type": "object"},
+        "local_work_inventory": {"$ref": "#/$defs/localWorkInventory"}
+      },
+      "additionalProperties": false
+    },
+    "localWorkInventory": {
+      "type": "object",
+      "required": [
+        "schema_version", "run_id", "state_revision", "snapshot_sha256",
+        "logical_workspace_root", "ordering_semantics", "operations",
+        "consumed_operation_keys", "inventory_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "astrowoof.local_work_inventory.v1"},
+        "run_id": {"type": "string", "minLength": 1},
+        "state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root": {"type": "string", "minLength": 1},
+        "ordering_semantics": {"const": "sbe_selected_execution_order"},
+        "operations": {
+          "type": "array", "maxItems": 32, "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [
+              "operation_id", "operation_key", "kind", "route_family", "stage",
+              "source_action_ids", "reason_code", "basis_state_revision",
+              "basis_snapshot_sha256"
+            ],
+            "properties": {
+              "operation_id": {"type": "string", "pattern": "^local_[0-9a-f]{24}$"},
+              "operation_key": {"type": "string", "pattern": "^work_[0-9a-f]{24}$"},
+              "kind": {"enum": [
+                "provider_result_fan_in_and_retry_evaluation",
+                "final_assembly_and_qa", "delivery_construction"
+              ]},
+              "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+              "stage": {"enum": [
+                "authoring_initial", "creative_retry", "polish",
+                "qualitative_critic", "qualitative_candidate", null
+              ]},
+              "source_action_ids": {
+                "type": "array", "minItems": 1, "maxItems": 32,
+                "uniqueItems": true,
+                "items": {"$ref": "#/$defs/actionId"}
+              },
+              "reason_code": {"enum": [
+                "provider_evidence_ingestion_required", "final_assembly_required",
+                "delivery_not_constructed"
+              ]},
+              "basis_state_revision": {"type": "integer", "minimum": 0},
+              "basis_snapshot_sha256": {"$ref": "#/$defs/sha256"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "consumed_operation_keys": {
+          "type": "array", "maxItems": 32, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^work_[0-9a-f]{24}$"}
+        },
+        "inventory_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

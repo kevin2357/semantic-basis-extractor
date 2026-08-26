@@ -14,6 +14,7 @@ import os
 import threading
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
 
@@ -1546,8 +1547,50 @@ def resume_bounded_run(
         reconciliation_only=reconciliation_only,
     ) if provider.paid else None
 
+    prior_local_lifecycle: dict[str, Any] | None = None
+    if not reconciliation_only:
+        from .post_fan_in_contracts import inspect_post_fan_in_lifecycle
+
+        candidate_local_lifecycle = inspect_post_fan_in_lifecycle(
+            run_dir,
+            observed_at=datetime.now(timezone.utc).replace(
+                microsecond=0
+            ).isoformat().replace("+00:00", "Z"),
+            native_exclusive_access="declared",
+            event_emitter=event_emitter,
+        )
+        if candidate_local_lifecycle["temporal_decision"]["selected_command"] == (
+            "ordinary_resume"
+        ):
+            prior_local_lifecycle = candidate_local_lifecycle
+
+    def seal_local_progress() -> None:
+        nonlocal prior_local_lifecycle, state
+        if prior_local_lifecycle is None:
+            return
+        from .post_fan_in_contracts import commit_local_work_progress
+
+        successor = commit_local_work_progress(
+            run_dir, prior=prior_local_lifecycle,
+            observed_at=datetime.now(timezone.utc).replace(
+                microsecond=0
+            ).isoformat().replace("+00:00", "Z"),
+            event_emitter=event_emitter,
+        )
+        prior_local_lifecycle = (
+            successor
+            if successor["temporal_decision"]["selected_command"]
+            == "ordinary_resume"
+            else None
+        )
+        durable = load_json(run_json)
+        state.clear()
+        state.update(durable)
+
     try:
-        with checkpoint_spend_boundary(run_json, state):
+        with checkpoint_spend_boundary(
+            run_json, state, on_quiescent_checkpoint=seal_local_progress,
+        ):
             bounded = state["bounded"]
             final_dir = run_dir / "bounded" / "final"
             final_dir.mkdir(parents=True, exist_ok=True)

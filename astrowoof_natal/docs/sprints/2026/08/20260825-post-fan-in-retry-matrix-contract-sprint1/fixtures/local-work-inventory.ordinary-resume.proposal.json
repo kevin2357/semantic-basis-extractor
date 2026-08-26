@@ -1,0 +1,25 @@
+{
+  "schema_version": "astrowoof.local_work_inventory.v1",
+  "run_id": "fixture-exact-post-fan-in",
+  "state_revision": 8,
+  "snapshot_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "logical_workspace_root": "/work/qualification/post-fan-in",
+  "ordering_semantics": "sbe_selected_execution_order",
+  "operations": [
+    {
+      "kind": "provider_result_fan_in_and_retry_evaluation",
+      "route_family": "exact_natal",
+      "stage": "creative_retry",
+      "source_action_ids": [
+        "paid_111111111111111111111111"
+      ],
+      "reason_code": "provider_evidence_ingestion_required",
+      "operation_key": "work_9fdf9f6a14e468d0261ace8b",
+      "basis_state_revision": 8,
+      "basis_snapshot_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "operation_id": "local_b30ff086c47d85665a6cbf8a"
+    }
+  ],
+  "consumed_operation_keys": [],
+  "inventory_sha256": "18645469b1b6087ebfc974c650a7bf7aa17e19c7f6d0d1f4bb4b3ed867910491"
+}

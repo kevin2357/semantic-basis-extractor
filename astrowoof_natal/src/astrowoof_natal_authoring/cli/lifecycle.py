@@ -23,6 +23,7 @@ from ..lifecycle import (
 )
 from ..closure import load_json
 from ..temporal_lifecycle import inspect_temporal_lifecycle
+from ..post_fan_in_contracts import inspect_post_fan_in_lifecycle
 from .. import __version__
 from ..application_logging import (
     add_logging_arguments,
@@ -67,6 +68,14 @@ def main() -> None:
     )
     temporal_parser.add_argument("--observed-at", required=True)
 
+    local_parser = subparsers.add_parser("inspect-local-work")
+    local_parser.add_argument(
+        "--native-exclusive-access",
+        choices=("established", "declared", "not_established", "unknown"),
+        default="not_established",
+    )
+    local_parser.add_argument("--observed-at", required=True)
+
     deny_parser = subparsers.add_parser("deny-providerless")
     deny_parser.add_argument("--request", required=True, type=Path)
     deny_parser.add_argument("--decision-at")
@@ -107,12 +116,20 @@ def main() -> None:
             native_exclusive_access=args.native_exclusive_access,
             observed_at=args.observed_at,
             event_emitter=emitter,
+            allow_unversioned_local_resume=False,
         )
     elif args.operation == "inspect-temporal":
         result = inspect_temporal_lifecycle(
             args.run_dir,
             native_exclusive_access=args.native_exclusive_access,
             observed_at=args.observed_at,
+        )
+    elif args.operation == "inspect-local-work":
+        result = inspect_post_fan_in_lifecycle(
+            args.run_dir,
+            native_exclusive_access=args.native_exclusive_access,
+            observed_at=args.observed_at,
+            event_emitter=emitter,
         )
     elif args.operation == "deny-providerless":
         result = deny_providerless_action(

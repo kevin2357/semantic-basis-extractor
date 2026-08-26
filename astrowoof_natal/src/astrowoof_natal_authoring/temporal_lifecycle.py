@@ -234,6 +234,7 @@ def inspect_temporal_lifecycle(
     legacy = inspect_lifecycle(
         Path(run_dir), native_exclusive_access=native_exclusive_access,
         observed_at=canonical,
+        allow_unversioned_local_resume=False,
     )
     return build_lifecycle_inspection_v06(legacy)
 

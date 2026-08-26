@@ -78,6 +78,23 @@ from .temporal_lifecycle import (  # noqa: E402
 from .pending_lifecycle_qa import (  # noqa: E402
     run_provider_pending_lifecycle_qualification,
 )
+from .post_fan_in_qa import (  # noqa: E402
+    read_provider_pending_lifecycle_qualification_v2_schema,
+    run_provider_pending_lifecycle_qualification_v2,
+    validate_provider_pending_lifecycle_qualification_v2,
+)
+from .post_fan_in_contracts import (  # noqa: E402
+    build_lifecycle_inspection_v07,
+    commit_local_work_progress,
+    inspect_post_fan_in_lifecycle,
+    build_local_work_inventory,
+    read_lifecycle_inspection_v07_schema,
+    read_local_work_inventory_schema,
+    validate_lifecycle_inspection_v07,
+    validate_local_work_inventory,
+    validate_local_work_inventory_against_v05,
+    validate_local_work_progress,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -222,6 +239,19 @@ __all__ = [
     "validate_external_authority_request_v2_against_inspection",
     "validate_temporal_transition",
     "run_provider_pending_lifecycle_qualification",
+    "read_provider_pending_lifecycle_qualification_v2_schema",
+    "run_provider_pending_lifecycle_qualification_v2",
+    "validate_provider_pending_lifecycle_qualification_v2",
+    "build_lifecycle_inspection_v07",
+    "commit_local_work_progress",
+    "inspect_post_fan_in_lifecycle",
+    "build_local_work_inventory",
+    "read_lifecycle_inspection_v07_schema",
+    "read_local_work_inventory_schema",
+    "validate_lifecycle_inspection_v07",
+    "validate_local_work_inventory",
+    "validate_local_work_inventory_against_v05",
+    "validate_local_work_progress",
     "build_external_authority_request",
     "build_external_authority_refusal",
     "read_external_authority_request",

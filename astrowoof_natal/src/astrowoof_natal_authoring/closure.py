@@ -2694,7 +2694,10 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
 
 
 @contextmanager
-def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
+def checkpoint_spend_boundary(
+    run_json: Path, state: dict[str, Any],
+    *, on_quiescent_checkpoint: Callable[[], None] | None = None,
+):
     """Publish one complete checkpoint after a paid-stage pause unwinds."""
     try:
         yield
@@ -2705,6 +2708,8 @@ def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
             state.get("state_revision"),
         )
         save_state(run_json, state)
+        if on_quiescent_checkpoint is not None:
+            on_quiescent_checkpoint()
         from . import __version__
         from .native_transitions import publish_native_execution_result
         publish_native_execution_result(
@@ -2712,6 +2717,9 @@ def checkpoint_spend_boundary(run_json: Path, state: dict[str, Any]):
             sbe_release=__version__, published_at=utc_now(),
         )
         raise
+    else:
+        if on_quiescent_checkpoint is not None:
+            on_quiescent_checkpoint()
 
 
 def snapshot_inventory(
@@ -8008,6 +8016,40 @@ def main() -> None:
             "run.resumed" if args.resume else "run.started",
             data={"state_revision": int(state.get("state_revision") or 0)},
         )
+    prior_local_lifecycle: dict[str, Any] | None = None
+    def lifecycle_observed_now() -> str:
+        return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace(
+            "+00:00", "Z"
+        )
+
+    if args.resume:
+        from .post_fan_in_contracts import inspect_post_fan_in_lifecycle
+
+        candidate_local_lifecycle = inspect_post_fan_in_lifecycle(
+            args.run_dir, observed_at=args.observed_at or lifecycle_observed_now(),
+            native_exclusive_access="declared", event_emitter=event_emitter,
+        )
+        if candidate_local_lifecycle["temporal_decision"]["selected_command"] == (
+            "ordinary_resume"
+        ):
+            prior_local_lifecycle = candidate_local_lifecycle
+
+    def seal_local_progress() -> None:
+        nonlocal prior_local_lifecycle
+        if prior_local_lifecycle is None:
+            return
+        from .post_fan_in_contracts import commit_local_work_progress
+
+        successor = commit_local_work_progress(
+            args.run_dir, prior=prior_local_lifecycle,
+            observed_at=lifecycle_observed_now(), event_emitter=event_emitter,
+        )
+        prior_local_lifecycle = (
+            successor
+            if successor["temporal_decision"]["selected_command"]
+            == "ordinary_resume"
+            else None
+        )
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         from .native_transitions import publish_native_execution_result
         publish_native_execution_result(
@@ -8144,7 +8186,9 @@ def main() -> None:
         output_result(state)
         return
     authoring_complete = True
-    with checkpoint_spend_boundary(run_json, state):
+    with checkpoint_spend_boundary(
+        run_json, state, on_quiescent_checkpoint=seal_local_progress,
+    ):
         if args.service_level == "batch":
             batch_base_provider = openai_provider_for_attempt(provider, 1)
             authoring_complete = author_pending_passes_batch(
@@ -8194,7 +8238,9 @@ def main() -> None:
         )
         output_result(state)
         return
-    with checkpoint_spend_boundary(run_json, state):
+    with checkpoint_spend_boundary(
+        run_json, state, on_quiescent_checkpoint=seal_local_progress,
+    ):
         finalize_subjects(
             state=state,
             run_dir=args.run_dir,

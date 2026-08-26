@@ -50,6 +50,12 @@ EVENT_PAYLOAD_REQUIRED: dict[str, tuple[str, ...]] = {
         "native_status", "capacity_disposition", "command", "eligible_now",
         "reason_code", "provider_action_count", "local_dependency_count",
     ),
+    "lifecycle.local_work_selected": (
+        "selected_command", "operation_count", "inventory_sha256",
+    ),
+    "lifecycle.local_work_consumed": (
+        "consumed_count", "cumulative_consumed_count", "successor_command",
+    ),
     "external_authority.request_selected": (
         "request_sha256", "request_kind", "action_count", "selected_command",
     ),

@@ -1,0 +1,15 @@
+{
+  "schema_version": "astrowoof.post_fan_in_retry_matrix.v1",
+  "cases": [
+    {"case_id": "A", "name": "no_retry", "command": "ordinary_resume", "operation_kind": "final_assembly_and_qa"},
+    {"case_id": "B", "name": "retry_1_needed", "command": "await_external_authority", "operation_kind": null},
+    {"case_id": "C", "name": "retry_1_provider_pending", "command": "provider_reconciliation_cycle", "operation_kind": null},
+    {"case_id": "D", "name": "retry_1_completed_retry_2_needed", "command": "ordinary_resume", "operation_kind": "provider_result_fan_in_and_retry_evaluation"},
+    {"case_id": "E", "name": "retry_exhausted", "command": "none", "operation_kind": null},
+    {"case_id": "F", "name": "unjoinable_lineage", "command": "none", "operation_kind": null},
+    {"case_id": "G", "name": "authorized_without_provider_identity", "command": "none", "operation_kind": null},
+    {"case_id": "H", "name": "call_entered_without_provider_identity", "command": "none", "operation_kind": null}
+  ],
+  "provider_create_count": 0,
+  "provider_retrieval_count": 0
+}

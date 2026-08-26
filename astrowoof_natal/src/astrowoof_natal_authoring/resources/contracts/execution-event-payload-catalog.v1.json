@@ -15,6 +15,8 @@
     "provider.completed": {"required_fields": ["action_id", "provider_operation_id", "duration_ms"]},
     "provider.reconciliation_observed": {"required_fields": ["action_id", "route_family", "provider_operation_kind", "outcome"]},
     "lifecycle.branch_selected": {"required_fields": ["native_status", "capacity_disposition", "command", "eligible_now", "reason_code", "provider_action_count", "local_dependency_count"]},
+    "lifecycle.local_work_selected": {"required_fields": ["selected_command", "operation_count", "inventory_sha256"]},
+    "lifecycle.local_work_consumed": {"required_fields": ["consumed_count", "cumulative_consumed_count", "successor_command"]},
     "external_authority.request_selected": {"required_fields": ["request_sha256", "request_kind", "action_count", "selected_command"]},
     "external_authority.fence_validated": {"required_fields": ["request_sha256", "grant_sha256", "action_count"]},
     "external_authority.intent_committed": {"required_fields": ["request_sha256", "grant_sha256", "action_count", "state_revision"]},
