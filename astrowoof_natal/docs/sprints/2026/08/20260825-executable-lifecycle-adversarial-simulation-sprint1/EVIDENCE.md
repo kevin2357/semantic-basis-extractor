@@ -1,6 +1,6 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
-Status: Slice 1 contract candidate complete; joint review pending
+Status: Slice 2 SBE installed/runtime half complete; joint API proof pending
 
 ## Inputs reviewed
 
@@ -67,3 +67,44 @@ Slice 0 safety totals remain unchanged. Current gate: joint review before Slice 
 Artifact: `SLICE 1 - ADVERSARIAL TRACE CONTRACT AND API HANDOFF.md`
 
 Current gate: joint schema/authority review before Slice 2.
+
+## Slice 2 SBE vertical-slice evidence
+
+- Fixed sanitized historical `run.json` materialized directly; production
+  public-state, snapshot, writer, and inspection code used thereafter.
+- Real writer-fenced v0.7 inspection selected `none / retain_for_review` with zero
+  local operations.
+- Historical projection: `stutter`, active lease, allocated capacity, separate
+  competing-run starvation witness.
+- Corrected projection: `productive`, released lease, released capacity.
+- Identical native public evidence joined both projections.
+- Historical/corrected API fixture projections are joint-test inputs, not production
+  API evidence.
+- Reproducible API production validation/mapping receipt: pending API Sprint 52.
+- Focused SBE adapter/contract/adjacent runtime suite: 22 tests passed with one
+  optional-schema skip.
+- Installed candidate wheel SHA-256:
+  `d167cbb005d72cf6dc19e223beaa702ccd4207fa5a57d1949a0dc0d1c3103e26`.
+- Provider creates/retrievals/external calls: 0 / 0 / 0.
+- Spend: USD 0.
+- Retained QA access/mutation: 0.
+
+Artifact: `SLICE 2 - INSTALLED MUFFIN VERTICAL SLICE JOINT CHECKPOINT.md`
+
+Current gate: API two-run/one-slot scheduler/capacity proof.
+
+## Slice 2A joint acceptance evidence
+
+- API production mapping now uses the distinct nonterminal `REVIEW_REQUIRED`
+  disposition for SBE `retain_for_review`.
+- Production `SbeReadingWorker` path exercised with real queue/capacity services.
+- Native terminal ingress invocation: 0.
+- Retained workspace cleanup invocation: 0.
+- First API job durably classified `native_review_required`.
+- Capacity release and second queued-run claim: proven.
+- Stale original-claim replay: refused before duplicate transition.
+- Review closeout/job-failed/lease-released events: exactly one each.
+- Successor claim disturbance on replay: 0.
+- Independently reproduced focused committed API/SBE suite: 76 tests passed.
+
+Initial joint Muffin vertical gate: passed.

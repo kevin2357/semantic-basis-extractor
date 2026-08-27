@@ -108,6 +108,11 @@ from .adversarial_trace import (  # noqa: E402
     semantic_fingerprint as adversarial_trace_semantic_fingerprint,
     validate_adversarial_trace,
 )
+from .adversarial_adapter import (  # noqa: E402
+    build_review_no_action_runtime_trace,
+    inspect_review_no_action_workspace,
+    materialize_review_no_action_workspace,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -217,6 +222,9 @@ __all__ = [
     "read_adversarial_trace_fixture",
     "read_adversarial_trace_schema",
     "validate_adversarial_trace",
+    "build_review_no_action_runtime_trace",
+    "inspect_review_no_action_workspace",
+    "materialize_review_no_action_workspace",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",

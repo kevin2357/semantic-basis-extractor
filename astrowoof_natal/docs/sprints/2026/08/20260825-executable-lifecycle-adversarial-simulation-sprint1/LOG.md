@@ -75,3 +75,57 @@ Current gate: joint schema/authority review before Slice 2 executable adapters.
 - Added focused regressions for every review correction.
 
 Current gate remains joint schema/authority review before Slice 2.
+
+## 2026-08-27 — Slice 2 installed Muffin vertical slice
+
+- Added a qualification-only public adapter that directly creates one fixed,
+  sanitized historical `run.json`, then invokes production public-state, snapshot,
+  and inspection code.
+- Invoked the real v0.7 post-fan-in inspection under SBE's native writer fence and
+  froze the review/no-action boundary.
+- Projected the identical native lifecycle evidence through historical and corrected
+  API-owned fixture states: historical stutter/capacity retention versus productive
+  capacity release.
+- Built and installed a candidate wheel outside the source tree.
+- Produced historical/corrected API fixture projections as inputs for the API's real
+  translator test; these projections are not API production evidence.
+- No provider, external network, spend, credential, or retained-QA activity occurred.
+
+Current gate: API two-run/one-slot scheduler and capacity proof before broader Slice
+2 route expansion.
+
+## 2026-08-27 — API Slice 2 evidence-boundary correction
+
+- Incorporated API review approving the installed SBE runtime half.
+- Removed the unsealed cross-repository mapper observation from claimed joint proof.
+- Clarified that API Sprint 52 owns the reproducible production validator/mapper
+  receipt and two-run/one-slot persistence/scheduler proof.
+- Clarified fixed-fixture materialization versus production state construction.
+
+## 2026-08-27 — Reciprocal review of API Slice 2
+
+- Independently reran the installed candidate/API focused suite: 10 tests passed.
+- Confirmed the real SBE document, API validator, mapper, queue, and capacity
+  components are individually represented.
+- Found one remaining causal seam: the test manually fails the first job and releases
+  capacity rather than feeding the mapped result through `SbeReadingWorker`.
+- Recorded that production `TERMINAL_CLOSED` also requires sealed native-terminal
+  ingress, while the fixture truthfully represents nonterminal `retain_for_review`.
+- Requested one production-worker-path regression and an explicit nonterminal review
+  disposition decision before calling the joint vertical complete.
+
+Current gate remains the API production-worker causal proof.
+
+## 2026-08-27 — API Slice 2A causal proof accepted
+
+- Reviewed the API's distinct nonterminal `REVIEW_REQUIRED` worker disposition.
+- Confirmed the real production worker releases local capacity without terminal
+  ingress or retained-workspace cleanup and permits the second queued run to claim.
+- Requested and verified stale-claim replay coverage: queue/capacity/review side
+  effects and typed events remain singular, while the successor claim is undisturbed.
+- Independently reran the expanded affected suite: 76 committed tests passed; the
+  API's additional in-progress atomic capacity-refusal cell also passed in a 77-test
+  working-tree run.
+
+The initial joint Muffin vertical gate is closed. Broader Slice 2 route adapter work
+may proceed.
