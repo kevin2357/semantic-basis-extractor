@@ -1,5 +1,12 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 4 review corrections
+
+- Unit branch: 300 actual `advance_base_unit` events.
+- Accelerated branch: one actual `advance_to_boundary` event.
+- Successor states and SHA-256 identities match exactly.
+- Rehashed receipts with depths 0, 1, and 9 fail semantic validation.
+
 ## Slice 4 systematic explorer
 
 - Public projection builder/validator: `build_action_binding_projection()` and

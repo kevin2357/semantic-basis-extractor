@@ -127,9 +127,11 @@ from .adversarial_route_matrix import (  # noqa: E402
     validate_adversarial_route_matrix_qualification,
 )
 from .adversarial_explorer import (  # noqa: E402
+    advance_explorer_clock,
     build_action_binding_projection,
     run_systematic_explorer_qualification,
     validate_action_binding_projection,
+    validate_explorer_clock_state,
     validate_systematic_explorer_qualification,
 )
 from .external_authority import (  # noqa: E402
@@ -254,8 +256,10 @@ __all__ = [
     "build_adversarial_route_matrix_qualification",
     "validate_adversarial_route_matrix_qualification",
     "build_action_binding_projection",
+    "advance_explorer_clock",
     "run_systematic_explorer_qualification",
     "validate_action_binding_projection",
+    "validate_explorer_clock_state",
     "validate_systematic_explorer_qualification",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",

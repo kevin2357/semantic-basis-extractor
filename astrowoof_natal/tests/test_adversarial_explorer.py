@@ -5,9 +5,11 @@ import unittest
 
 import astrowoof_natal_authoring as public_api
 from astrowoof_natal_authoring.adversarial_explorer import (
+    advance_explorer_clock,
     build_action_binding_projection,
     run_systematic_explorer_qualification,
     validate_action_binding_projection,
+    validate_explorer_clock_state,
     validate_systematic_explorer_qualification,
 )
 
@@ -62,6 +64,24 @@ class AdversarialExplorerTests(unittest.TestCase):
         self.assertEqual(0, receipt["external_network_call_count"])
         self.assertEqual(0, receipt["real_provider_create_count"])
         self.assertGreater(receipt["wave"]["deduplicated_successor_count"], 0)
+        self.assertEqual(
+            receipt["clock_equivalence"]["unit_successor_sha256"],
+            receipt["clock_equivalence"]["accelerated_successor_sha256"],
+        )
+
+    def test_clock_equivalence_uses_real_transition_events(self):
+        initial = validate_explorer_clock_state({
+            "current_time": "2026-08-27T12:00:00Z",
+            "next_boundary": "2026-08-27T12:05:00Z",
+            "base_unit_seconds": 1,
+        })
+        repeated = initial
+        for _ in range(300):
+            repeated = advance_explorer_clock(repeated, "advance_base_unit")
+        accelerated = advance_explorer_clock(initial, "advance_to_boundary")
+        self.assertEqual(accelerated, repeated)
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            advance_explorer_clock(initial, "warp")
 
     def test_receipt_mutation_and_bounds_fail_closed(self):
         receipt = run_systematic_explorer_qualification(max_depth=2)
@@ -69,6 +89,20 @@ class AdversarialExplorerTests(unittest.TestCase):
         changed["provider_spend_usd"] = 1
         with self.assertRaises(ValueError):
             validate_systematic_explorer_qualification(changed)
+        for invalid_depth in (0, 1, 9):
+            changed = copy.deepcopy(receipt)
+            changed["max_depth"] = invalid_depth
+            body = {
+                key: value for key, value in changed.items()
+                if key != "receipt_sha256"
+            }
+            import hashlib
+            import json
+            changed["receipt_sha256"] = hashlib.sha256(json.dumps(
+                body, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+            ).encode("utf-8")).hexdigest()
+            with self.assertRaisesRegex(ValueError, "depth"):
+                validate_systematic_explorer_qualification(changed)
         for depth in (0, 1, 9, True):
             with self.assertRaises(ValueError):
                 run_systematic_explorer_qualification(max_depth=depth)

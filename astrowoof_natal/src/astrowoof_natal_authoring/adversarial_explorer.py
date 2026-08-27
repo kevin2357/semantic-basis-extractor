@@ -39,6 +39,39 @@ def _instant(value: str) -> datetime:
     return parsed
 
 
+def validate_explorer_clock_state(value: Any) -> dict[str, Any]:
+    if not isinstance(value, Mapping) or set(value) != {
+        "current_time", "next_boundary", "base_unit_seconds",
+    }:
+        raise ValueError("Explorer clock state fields are not exact")
+    current = _instant(value.get("current_time"))
+    boundary = _instant(value.get("next_boundary"))
+    unit = value.get("base_unit_seconds")
+    if isinstance(unit, bool) or not isinstance(unit, int) or not 1 <= unit <= 60:
+        raise ValueError("Explorer clock base unit is invalid")
+    if current > boundary:
+        raise ValueError("Explorer clock is beyond its next boundary")
+    return deepcopy(dict(value))
+
+
+def advance_explorer_clock(state: Mapping[str, Any], event: str) -> dict[str, Any]:
+    current = validate_explorer_clock_state(state)
+    now = _instant(current["current_time"])
+    boundary = _instant(current["next_boundary"])
+    if event == "advance_base_unit":
+        successor = min(
+            now + timedelta(seconds=current["base_unit_seconds"]), boundary,
+        )
+    elif event == "advance_to_boundary":
+        successor = boundary
+    else:
+        raise ValueError("Explorer clock event is unsupported")
+    current["current_time"] = successor.isoformat(timespec="seconds").replace(
+        "+00:00", "Z",
+    )
+    return validate_explorer_clock_state(current)
+
+
 def validate_action_binding_projection(value: Any) -> dict[str, Any]:
     """Validate the exact redacted member join used by create-once checks."""
 
@@ -136,6 +169,25 @@ def _projection_fingerprint(projection: Mapping[str, Any], now: str) -> str:
     })
 
 
+def _clock_equivalence() -> dict[str, Any]:
+    initial = validate_explorer_clock_state({
+        "current_time": "2026-08-27T12:00:00Z",
+        "next_boundary": "2026-08-27T12:05:00Z",
+        "base_unit_seconds": 1,
+    })
+    repeated = deepcopy(initial)
+    for _ in range(300):
+        repeated = advance_explorer_clock(repeated, "advance_base_unit")
+    accelerated = advance_explorer_clock(initial, "advance_to_boundary")
+    return {
+        "unit_event_count": 300,
+        "accelerated_event_count": 1,
+        "unit_successor_sha256": _digest(repeated),
+        "accelerated_successor_sha256": _digest(accelerated),
+        "successors_equal": repeated == accelerated,
+    }
+
+
 def _explore_member_wave(max_depth: int) -> dict[str, Any]:
     initial = build_action_binding_projection([
         _member(index, durable=index <= 4) for index in range(1, 7)
@@ -193,17 +245,16 @@ def run_systematic_explorer_qualification(*, max_depth: int = 2) -> dict[str, An
         )
     muffin_result = classify_adversarial_transition(muffin)
     wave = _explore_member_wave(max_depth)
-    base = "2026-08-27T12:00:00Z"
-    repeated = (
-        datetime.fromisoformat(base.replace("Z", "+00:00")) + timedelta(seconds=300)
-    ).isoformat(timespec="seconds").replace("+00:00", "Z")
-    accelerated = "2026-08-27T12:05:00Z"
+    clock = _clock_equivalence()
     assertions = {
         "muffin_minimal_stutter_found": muffin_result["classification"] == "stutter",
         "partial_wave_distinct_create_allowed": wave["distinct_member_create_witness"] is not None,
         "same_action_binding_duplicate_refused": wave["duplicate_create_refusal_witness"] is not None,
         "semantic_state_deduplicated": wave["deduplicated_successor_count"] > 0,
-        "accelerated_time_matches_unit_steps": repeated == accelerated,
+        "accelerated_time_matches_unit_steps": bool(
+            clock["successors_equal"]
+            and clock["unit_successor_sha256"] == clock["accelerated_successor_sha256"]
+        ),
     }
     body = {
         "schema_version": CONTRACT,
@@ -216,6 +267,7 @@ def run_systematic_explorer_qualification(*, max_depth: int = 2) -> dict[str, An
         "provider_spend_usd": 0,
         "muffin_trace_sha256": muffin["trace_sha256"],
         "wave": wave,
+        "clock_equivalence": clock,
         "assertions": assertions,
     }
     return validate_systematic_explorer_qualification({
@@ -228,7 +280,7 @@ def validate_systematic_explorer_qualification(value: Any) -> dict[str, Any]:
         "schema_version", "receipt_sha256", "status", "qualification_only",
         "provider_free", "max_depth", "external_network_call_count",
         "real_provider_create_count", "provider_spend_usd", "muffin_trace_sha256",
-        "wave", "assertions",
+        "wave", "clock_equivalence", "assertions",
     }
     if not isinstance(value, Mapping) or set(value) != keys or value.get("schema_version") != CONTRACT:
         raise ValueError("Systematic explorer receipt fields are not exact")
@@ -243,7 +295,11 @@ def validate_systematic_explorer_qualification(value: Any) -> dict[str, Any]:
         or value.get("provider_spend_usd") != 0
     ):
         raise ValueError("Systematic explorer safety declaration is invalid")
-    if isinstance(value.get("max_depth"), bool) or not isinstance(value.get("max_depth"), int):
+    if (
+        isinstance(value.get("max_depth"), bool)
+        or not isinstance(value.get("max_depth"), int)
+        or not 2 <= value["max_depth"] <= 8
+    ):
         raise ValueError("Systematic explorer depth is invalid")
     if not isinstance(value.get("muffin_trace_sha256"), str) or len(value["muffin_trace_sha256"]) != 64:
         raise ValueError("Systematic explorer Muffin trace identity is invalid")
@@ -264,6 +320,21 @@ def validate_systematic_explorer_qualification(value: Any) -> dict[str, Any]:
             for item in witness
         ):
             raise ValueError("Systematic explorer witness is invalid")
+    clock = value.get("clock_equivalence")
+    if not isinstance(clock, Mapping) or set(clock) != {
+        "unit_event_count", "accelerated_event_count", "unit_successor_sha256",
+        "accelerated_successor_sha256", "successors_equal",
+    }:
+        raise ValueError("Systematic explorer clock evidence is invalid")
+    if (
+        clock.get("unit_event_count") != 300
+        or clock.get("accelerated_event_count") != 1
+        or clock.get("successors_equal") is not True
+        or clock.get("unit_successor_sha256") != clock.get("accelerated_successor_sha256")
+        or not isinstance(clock.get("unit_successor_sha256"), str)
+        or len(clock["unit_successor_sha256"]) != 64
+    ):
+        raise ValueError("Systematic explorer clock equivalence is invalid")
     assertions = value.get("assertions")
     if not isinstance(assertions, Mapping) or set(assertions) != {
         "muffin_minimal_stutter_found", "partial_wave_distinct_create_allowed",

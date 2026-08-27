@@ -1,5 +1,12 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 4 API review corrections
+
+- Replaced precomputed clock arithmetic with a closed clock state and actual
+  repeated-unit/accelerated-boundary transitions.
+- Added successor equality and digest evidence to the qualification receipt.
+- Made the receipt validator independently enforce the public 2–8 depth bound.
+
 ## 2026-08-27 — Slice 4 systematic branch explorer
 
 - Added a strict per-action/binding projection with create-entry, durable identity,

@@ -30,7 +30,11 @@ The provider-free qualification:
 5. reaches the same final projection through member 5→6 and 6→5 and deduplicates
    that semantic successor; and
 6. proves 300 one-second clock steps and acceleration to the declared five-minute
-   boundary yield the same canonical instant.
+   boundary yield the same closed clock successor and canonical fingerprint.
+
+The clock proof uses the actual `advance_base_unit` transition 300 times on one
+branch and the actual `advance_to_boundary` transition once on the other. It does
+not compare a precomputed timestamp to a literal.
 
 The Muffin cell invokes a real native lifecycle reader. The partial-wave state is an
 explicit abstract model over redacted native authority facts; it does not claim to
@@ -39,7 +43,8 @@ that projection to the installed runtime adapter without changing its invariant.
 
 ## Bounds and safety
 
-- Qualification depth is explicit and limited to 2–8.
+- Qualification depth is explicit and limited to 2–8 by both runner and receipt
+  validator.
 - Breadth-first order retains the shortest witness.
 - Semantic state deduplication is digest-based and deterministic.
 - No network capability, credentials, provider operation, retained QA, or spend is
@@ -50,4 +55,3 @@ that projection to the installed runtime adapter without changing its invariant.
 - 31 adversarial tests passed.
 - One optional `jsonschema` check skipped in the lean interpreter.
 - `git diff --check` passed with non-failing Windows line-ending notices only.
-
