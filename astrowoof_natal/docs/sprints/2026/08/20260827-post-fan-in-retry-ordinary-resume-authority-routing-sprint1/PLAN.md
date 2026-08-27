@@ -264,6 +264,58 @@ Gate: closed SBE and joint receipts bind the exact incident and corrected path.
 
 **Voof-paws 4:** API fixture-by-fixture and fairness review.
 
+## Slice 4A — Public ordered inspection-projection bundle
+
+The first API joined-campaign attempt established that the Slice 4 receipt is a
+valid reproducible SBE qualification attestation, but its phase hashes are
+intentionally opaque. API cannot feed opaque hashes through its real lifecycle
+translator, persistence, scheduler, lease, and capacity services without
+reconstructing SBE-owned facts from private workspace state.
+
+Publish a sanitized, closed, provider-free ordered projection bundle for the
+existing seven phases, in this exact order:
+
+1. `provider_not_due`;
+2. `provider_retrieval`;
+3. `local_fan_in`;
+4. `local_operation_consumed`;
+5. `ordinary_v2_authority`;
+6. `one_dispatch`; and
+7. `exact_replay`.
+
+Each phase projection must expose only the validated public facts needed by the
+existing API consumer boundary:
+
+- stable scenario/native-run identity, route family, and provider mechanism;
+- selected command, capacity disposition and reason, eligibility, and
+  `not_before`;
+- public provider-custody classification and ordered action IDs;
+- public local-operation inventory plus consumption identity/count where
+  applicable;
+- external-authority state and ordered action IDs where applicable; and
+- stable phase and bundle digests binding the projections to the existing fixture
+  and receipt.
+
+Add a closed schema, strict Python validator, supported public reader, packaged
+fixture/export surface, and installed-wheel CLI/test coverage. Require exact phase
+order, closed vocabularies/shapes, cross-phase joins, reproducibility across fresh
+disposable workspaces, semantic mutation refusal, and privacy-sentinel coverage.
+
+The bundle must not expose raw `run.json`, logical workspace paths, snapshot
+paths/digests used as filesystem locators, prompts, provider request payloads,
+provider IDs, credentials, protected provenance, or retained-QA data. It conveys
+validated observations only: API still may not select an SBE command, invent local
+work, reconstruct native state, or derive mutation authority from the bundle.
+
+Keep the Slice 1–3 runtime correction, v1/v2 authority boundaries, and current
+qualification outcome vocabulary unchanged. External provider/network calls,
+spend, and retained-QA access remain zero.
+
+Gate: API validates the projection bundle fixture-by-fixture before the candidate
+is rebuilt and Slice 5 installed qualification is repeated.
+
+**Voof-paws 4A:** API projection-bundle contract and fixture review.
+
 ## Slice 5 — Installed-wheel and compatibility qualification
 
 From one committed source identity:
@@ -277,6 +329,13 @@ From one committed source identity:
 - run generic release smoke and installed adversarial qualification;
 - run the API joined campaign against that exact candidate; and
 - record Windows/Linux status appropriate to the changed runtime path.
+
+The first `0.4.27` candidate at source `e1a22ab` and wheel SHA-256
+`ae8da7a7ce64cd83e1a4444fb8a77587eafb1c1f5a7ff1cc3ac615dfb51e611a`
+passed SBE and independent API installed qualification. It is retained as valid
+pre-4A evidence, not as the final release artifact. Because Slice 4A changes the
+packaged public surface, rebuild from the committed 4A source and repeat every
+Slice 5 artifact/installed gate before the joined campaign resumes.
 
 All tests are provider-free. Provider/network calls, spend, and retained-QA access
 must remain zero.
@@ -358,10 +417,11 @@ post-publication evidence without moving the tag.
 2. After Slice 0: causal reproduction review.
 3. After Slice 1: contract/authority matrix freeze.
 4. After Slice 3: runtime and failure-boundary review.
-5. After Slice 4: API joint/fairness review.
-6. After Slice 5: installed candidate review.
-7. Before version bump/tag/publication.
-8. Before any retained-cohort recovery or paid QA.
+5. After Slice 4: API qualification-receipt review.
+6. After Slice 4A: API projection-bundle contract and fixture review.
+7. After repeated Slice 5: installed candidate and joined-campaign review.
+8. Before version bump/tag/publication.
+9. Before any retained-cohort recovery or paid QA.
 
 ## Acceptance
 

@@ -159,3 +159,23 @@ Status: Slice 4 approved; Slice 5 in progress.
 
 Status: SBE Slice 5 component complete; API/Linux candidate review required
 before Slice 6 release preparation.
+
+## API Slice 5 review and joined-campaign blocker
+
+- Review: `API SLICE 5 REVIEW.md`.
+- Independent installed-candidate disposition: approved for the API joined
+  campaign; publication withheld.
+- Approved pre-4A wheel SHA-256:
+  `ae8da7a7ce64cd83e1a4444fb8a77587eafb1c1f5a7ff1cc3ac615dfb51e611a`.
+- Blocker review: `API JOINED-CAMPAIGN BLOCKER REVIEW.md`.
+- Blocker classification: public handoff incompleteness, not a runtime regression.
+- Missing evidence: closed ordered lifecycle projections that API can validate and
+  route through its real translator/persistence/scheduler services.
+- Existing receipt status: valid reproducible SBE attestation, insufficient by
+  itself as API campaign input.
+- Safety totals remain: external provider/network calls 0, spend USD 0,
+  retained-QA access/mutation none.
+
+Status: corrective Slice 4A required. The pre-4A candidate is not approved for
+publication or deployment; repeat Slice 5 after the packaged projection surface
+is complete and reviewed.

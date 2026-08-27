@@ -196,3 +196,26 @@ Current gate: Slice 5 installed-wheel and compatibility qualification.
 - External provider/network calls, spend, and retained-QA access remained zero.
 
 Current gate: API/Linux joined-candidate review before Slice 6 release decision.
+
+## 2026-08-27 — API Slice 5 review incorporated
+
+- Added `API SLICE 5 REVIEW.md`.
+- API independently ran the installed public runner outside the checkout and
+  confirmed its provider-pending endpoint and reproducible receipt/phase evidence.
+- API approved source `e1a22ab`, version `0.4.27`, and wheel SHA-256
+  `ae8da7a7ce64cd83e1a4444fb8a77587eafb1c1f5a7ff1cc3ac615dfb51e611a`
+  as the exact joined-campaign candidate.
+- Publication, deployment, provider work, spend, and retained-QA recovery remained
+  explicitly unauthorized pending the joined campaign.
+
+## 2026-08-27 — Joined-campaign handoff blocker accepted
+
+- Added `API JOINED-CAMPAIGN BLOCKER REVIEW.md`.
+- The existing receipt remains valid SBE qualification evidence, but its opaque
+  phase hashes cannot exercise API's real lifecycle translator and scheduler.
+- Added corrective Slice 4A for a closed, sanitized, ordered public
+  inspection-projection bundle covering the existing seven phases.
+- The previously qualified wheel remains historical pre-4A evidence. Slice 5 must
+  be repeated from committed 4A source before the joined campaign or release.
+
+Current gate: Slice 4A implementation, followed by API projection-bundle review.
