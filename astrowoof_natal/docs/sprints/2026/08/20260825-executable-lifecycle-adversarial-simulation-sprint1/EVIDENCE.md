@@ -1,5 +1,13 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 5 seeded campaign
+
+- Public walk/replay: `run_seeded_walk()` and `replay_seeded_walk()`.
+- Public campaign qualification: `run_seeded_campaign_qualification()`.
+- Fixed seeds: 7, 19, 41; exact and bounded route coverage.
+- Shrunk stutter witness length: one event.
+- External provider/network calls: 0; real creates: 0; spend: USD 0.
+
 ## Slice 4 review corrections
 
 - Unit branch: 300 actual `advance_base_unit` events.

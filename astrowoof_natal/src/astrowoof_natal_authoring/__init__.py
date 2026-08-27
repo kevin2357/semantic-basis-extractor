@@ -134,6 +134,13 @@ from .adversarial_explorer import (  # noqa: E402
     validate_explorer_clock_state,
     validate_systematic_explorer_qualification,
 )
+from .adversarial_campaign import (  # noqa: E402
+    replay_seeded_walk,
+    run_seeded_campaign_qualification,
+    run_seeded_walk,
+    shrink_stutter_counterexample,
+    validate_seeded_campaign_qualification,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -261,6 +268,11 @@ __all__ = [
     "validate_action_binding_projection",
     "validate_explorer_clock_state",
     "validate_systematic_explorer_qualification",
+    "replay_seeded_walk",
+    "run_seeded_campaign_qualification",
+    "run_seeded_walk",
+    "shrink_stutter_counterexample",
+    "validate_seeded_campaign_qualification",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",

@@ -1,5 +1,14 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 5 seeded campaign and shrinking
+
+- Added deterministic state-aware walks with fixed seeds across exact and bounded
+  route projections.
+- Added exact whole-walk replay validation and transition-kind coverage.
+- Added a semantic shrinker that reduces the checkpoint-republish stutter to its
+  single causal event.
+- Kept provider/network/spend capabilities structurally absent.
+
 ## 2026-08-27 — Slice 4 API review corrections
 
 - Replaced precomputed clock arithmetic with a closed clock state and actual
