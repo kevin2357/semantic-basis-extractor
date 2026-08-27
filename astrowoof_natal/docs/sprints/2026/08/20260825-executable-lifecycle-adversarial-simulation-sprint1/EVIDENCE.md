@@ -1,5 +1,17 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 7 API review
+
+- Result: approved with no SBE correction requested.
+- API independently built and installed the candidate wheel, invoked the public
+  catalog reader, and validated 15 cases, nine packaged fixtures, and every literal
+  fixture SHA-256.
+- Independently observed catalog SHA-256:
+  `eea70ce9fed3c1ee986454dbac8e71e5e39b266f895628cd8adb2e53e9eab01e`.
+- External provider/network calls: 0; spend: USD 0; retained QA access: 0.
+- Remaining joint gate: API production adapters must consume the catalog and emit
+  the composed campaign receipt before tag/adoption.
+
 ## Slice 7 consumer catalog
 
 - Contract: `astrowoof.adversarial_consumer_catalog.v1`.
