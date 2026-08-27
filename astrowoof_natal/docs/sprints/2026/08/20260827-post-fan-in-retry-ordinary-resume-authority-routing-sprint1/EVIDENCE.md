@@ -11,4 +11,23 @@
 - Provider spend: USD 0.
 - Runtime/source/schema changes: none.
 
-Status: planning complete; Slice 0 not started.
+## Slice 0 evidence
+
+- Findings: `SLICE 0 - INCIDENT REPRODUCTION AND CAUSAL FINDINGS.md`.
+- Public runtime characterization:
+  `tests/test_post_fan_in_retry_authority_routing_slice0.py`.
+- Existing selector characterization retained:
+  `tests/test_post_fan_in_retry_matrix_slice0.py`.
+- Focused command:
+  `python -m unittest astrowoof_natal.tests.test_post_fan_in_retry_authority_routing_slice0 astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 -v`.
+- Result: 7 passed.
+- Production source/schema changes: none.
+- Retained QA access/mutation: none.
+- External provider/network calls: 0.
+- Provider create/retrieval calls: 0.
+- Spend: USD 0.
+
+- API review: `API SLICE 0 REVIEW.md`.
+- API disposition: approved to begin Slice 1.
+
+Status: Slice 0 approved; Slice 1 ready to begin.

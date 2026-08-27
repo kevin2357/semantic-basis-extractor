@@ -1,7 +1,7 @@
 # Post-Fan-In Retry Ordinary-Resume Authority Routing — SBE Sprint 1
 
 Date: 2026-08-27
-Status: planning complete; implementation awaits owner/API review
+Status: Slice 0 API-approved; Slice 1 ready to begin
 Companion: AstroWoof API operational incident and follow-on sprint to be identified
 
 ## Objective
@@ -115,22 +115,23 @@ evidence, reconciliation status, and local-work inventory.
 
 At minimum specify:
 
-| Native facts | Required command | Authority/side-effect rule |
-| --- | --- | --- |
-| fresh initial six-member wave awaiting authority | existing initial-wave constrained boundary | exact v1 request + aggregate grant + six documents |
-| provider ID pending/not due | provider reconciliation cycle/not-due | retrieval-only; no create or local work |
-| provider ID due | provider reconciliation cycle | SBE selects bounded due subset |
-| retrieved completed evidence | ordinary resume | exact concrete local fan-in operation |
-| next ordinary action prepared | await external authority | exact v2 request; no mutation/create without grant |
-| ordinary action authorized/intent fenced | constrained v2 dispatch or review | generic resume cannot create |
-| call entered without durable identity | ambiguity/review | never retry create |
-| completed initial-wave lineage only | classify current ordinary/provider facts | must not reactivate initial admission |
-| active initial-wave state with wrong command/documents | typed refusal | zero provider I/O and no partial authority |
-| no executable operation | non-local typed disposition | no quiescent local-capacity loop |
+| Native facts | Required command | Authority/side-effect rule | API authority consequence |
+| --- | --- | --- | --- |
+| fresh initial six-member wave awaiting authority | existing initial-wave constrained boundary | exact v1 request + aggregate grant + six documents | API may evaluate only the exact aggregate initial-wave request |
+| provider ID pending/not due | provider reconciliation cycle/not-due | retrieval-only; no create or local work | retain provider custody; no new authority |
+| provider ID due | provider reconciliation cycle | SBE selects bounded due subset | API invokes only the run-level reconciliation command |
+| retrieved completed evidence | ordinary resume | exact concrete local fan-in operation; no provider I/O | no new authority; later prepared retry authority is not an input to fan-in |
+| fan-in consumed and next ordinary action prepared | await external authority | exact ordinary v2 request; no mutation/create without grant | API may evaluate and issue only an ordinary v2 grant |
+| ordinary action authorized/intent fenced | constrained v2 dispatch or review | generic resume cannot create | retain the exact admitted ordinary authority |
+| call entered without durable identity | ambiguity/review | never retry create | retain ambiguity/review custody |
+| completed initial-wave lineage only | classify current ordinary/provider facts | must not reactivate initial admission | historical v1 authority cannot authorize ordinary work |
+| active initial-wave state with wrong command/documents | typed refusal | zero provider I/O and no partial authority | retain/refuse according to exact initial-wave admission evidence |
+| no executable operation | non-local typed disposition | no quiescent local-capacity loop | API follows the typed non-local disposition |
 
 Decide and document:
 
-- the exact closed set of active initial-wave states;
+- the exact closed set of active initial-wave states; `DETACHED` and every other
+  terminal/historical wave state are lineage only, never active admission;
 - whether a helper/predicate is shared by exact and bounded routes;
 - whether v0.7 already expresses every corrected branch;
 - refusal precedence when stale, provider, ambiguity, and wrong-authority evidence
@@ -138,6 +139,16 @@ Decide and document:
 - which command consumes local-work progress and when;
 - replay identities and required publication evidence; and
 - legacy workspace posture.
+
+The selected `ordinary_resume` contract is consuming: when its local-work inventory
+is nonempty, invocation must either consume the exact semantic operation and change
+the checkpoint basis or return a typed non-local refusal/disposition. Publishing
+unchanged meaning as a successful local cycle is forbidden.
+
+Provider custody/reconciliation continues to outrank both local fan-in and new
+authority. Exact and bounded Batch are explicitly unsupported/deferred for this
+interactive correction unless Slice 1 proves an already-supported equivalent
+path; they must not inherit behavior accidentally.
 
 Add schema/semantic fixtures and mutation tests only if the public shape changes.
 Otherwise explicitly record that the patch tightens invalid routing in place.
