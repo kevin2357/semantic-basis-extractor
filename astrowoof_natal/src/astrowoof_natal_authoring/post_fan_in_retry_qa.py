@@ -47,6 +47,44 @@ def _digest(value: Any) -> str:
     ).encode("utf-8")).hexdigest()
 
 
+def _lifecycle_projection(value: Mapping[str, Any]) -> dict[str, Any]:
+    """Return stable public semantics without ephemeral checkpoint/path identity."""
+
+    validated = validate_lifecycle_inspection_v07(dict(value))
+    decision = validated["temporal_decision"]
+    basis = validated["checkpoint_basis"]
+    inventory = basis["local_work_inventory"]
+    custody = basis["provider_custody"]
+    authority = basis["external_authority_state"]
+    return {
+        "schema_version": validated["schema_version"],
+        "run_id": validated["run_id"],
+        "route_family": basis["native_route"]["route_family"],
+        "provider_mechanism": (
+            custody["actions"][0]["provider_operation_kind"]
+            if custody["actions"] else "none"
+        ),
+        "selected_command": decision["selected_command"],
+        "capacity_disposition": decision["capacity_disposition"],
+        "reason_code": decision["reason_code"],
+        "eligible_now": decision["eligible_now"],
+        "due_action_ids": list(decision["due_action_ids"]),
+        "not_before_present": decision["not_before"] is not None,
+        "provider_custody": {
+            "classification": custody["state"],
+            "action_ids": list(custody["action_ids"]),
+        },
+        "local_operations": [{
+            "kind": item["kind"],
+            "stage": item["stage"],
+            "source_action_ids": list(item["source_action_ids"]),
+            "reason_code": item["reason_code"],
+        } for item in inventory["operations"]],
+        "consumed_operation_count": len(inventory["consumed_operation_keys"]),
+        "external_authority_action_ids": list(authority["ordered_action_ids"]),
+    }
+
+
 def _binding(run_id: str, route: str, revision: int) -> dict[str, Any]:
     return {
         "run_id": run_id,
@@ -220,7 +258,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
             native_exclusive_access="declared",
         )
         validate_lifecycle_inspection_v07(not_due)
-        phases.append({"phase": "provider_not_due", "evidence_sha256": _digest(not_due)})
+        phases.append({"phase": "provider_not_due", "evidence_sha256": _digest(_lifecycle_projection(not_due))})
         retrievals: list[str] = []
         no_op = reconcile_provider_cycle(
             run_dir, observed_at="2026-08-27T12:00:00Z",
@@ -237,7 +275,14 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         )
         if due["outcome"] != "progressed_local" or retrievals != ["resp_fixture_retry_1"]:
             raise ValueError("Post-fan-in qualification retrieval boundary failed")
-        phases.append({"phase": "provider_retrieval", "evidence_sha256": _digest(due)})
+        phases.append({
+            "phase": "provider_retrieval",
+            "evidence_sha256": _digest({
+                "outcome": due["outcome"],
+                "completed_action_ids": due["cycle"]["completed_action_ids"],
+                "retrieved_provider_operation_count": len(retrievals),
+            }),
+        })
         local = inspect_post_fan_in_lifecycle(
             run_dir, observed_at="2026-08-27T12:01:01Z",
             native_exclusive_access="declared",
@@ -245,7 +290,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         validate_lifecycle_inspection_v07(local)
         if local["temporal_decision"]["selected_command"] != "ordinary_resume":
             raise ValueError("Post-fan-in qualification did not expose local fan-in")
-        phases.append({"phase": "local_fan_in", "evidence_sha256": _digest(local)})
+        phases.append({"phase": "local_fan_in", "evidence_sha256": _digest(_lifecycle_projection(local))})
 
         state_path = run_dir / "run.json"
         state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -259,7 +304,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         )
         if successor["temporal_decision"]["selected_command"] != "await_external_authority":
             raise ValueError("Post-fan-in qualification did not consume local work")
-        phases.append({"phase": "local_operation_consumed", "evidence_sha256": _digest(successor)})
+        phases.append({"phase": "local_operation_consumed", "evidence_sha256": _digest(_lifecycle_projection(successor))})
 
         inspection = inspect_temporal_lifecycle(
             run_dir, native_exclusive_access="declared",
@@ -282,7 +327,14 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
             run_dir, request=request, inspection=inspection, grant=grant,
             authorization_documents=[document],
         )
-        phases.append({"phase": "ordinary_v2_authority", "evidence_sha256": _digest(intent)})
+        phases.append({
+            "phase": "ordinary_v2_authority",
+            "evidence_sha256": _digest({
+                "request_kind": request["request_kind"],
+                "ordered_action_ids": request["ordered_action_ids"],
+                "intent_outcome": intent["outcome"],
+            }),
+        })
         creates: list[str] = []
         dispatched = dispatch_external_authority_v2_intent(
             run_dir,
@@ -295,7 +347,13 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         )
         if dispatched["outcome"] != "detached_provider_pending" or creates != [second]:
             raise ValueError("Post-fan-in qualification dispatch failed")
-        phases.append({"phase": "one_dispatch", "evidence_sha256": _digest(dispatched)})
+        phases.append({
+            "phase": "one_dispatch",
+            "evidence_sha256": _digest({
+                "outcome": dispatched["outcome"],
+                "created_action_ids": list(creates),
+            }),
+        })
         replay = dispatch_external_authority_v2_intent(
             run_dir,
             request_sha256=request["external_authority_request_sha256"],
@@ -304,7 +362,14 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         )
         if replay["outcome"] != "exact_replay" or creates != [second]:
             raise ValueError("Post-fan-in qualification replay duplicated create")
-        phases.append({"phase": "exact_replay", "evidence_sha256": _digest(replay)})
+        phases.append({
+            "phase": "exact_replay",
+            "evidence_sha256": _digest({
+                "outcome": replay["outcome"],
+                "created_action_ids": list(creates),
+                "duplicate_create_count": 0,
+            }),
+        })
         endpoint = inspect_post_fan_in_lifecycle(
             run_dir, observed_at="2026-08-27T12:01:04Z",
             native_exclusive_access="declared",
@@ -323,7 +388,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         "historical_incident": fixture["historical_incident"],
         "phases": phases,
         "endpoint": "detached_provider_pending",
-        "endpoint_evidence_sha256": _digest(endpoint),
+        "endpoint_evidence_sha256": _digest(_lifecycle_projection(endpoint)),
         "scripted_retrieval_count": len(retrievals),
         "scripted_create_count": len(creates),
         "duplicate_create_count": 0,

@@ -113,3 +113,12 @@ Status: Slice 3 approved; Slice 4 may begin.
 - Retained-QA access/mutation: none.
 
 Status: SBE Slice 4 component complete; API joined-campaign review pending.
+
+- API review: `API SLICE 4 REVIEW.md`.
+- Reproducibility defect: confirmed and corrected.
+- Reproducibility assertion: two independent disposable workspaces produce equal
+  phase evidence, endpoint evidence, receipt identity, and receipt value.
+- Corrected focused result: 6 passed; 1 expected optional-schema skip.
+- Corrected combined result: 26 passed; 1 expected optional-schema skip.
+
+Status: Slice 4 correction complete; API re-review pending.

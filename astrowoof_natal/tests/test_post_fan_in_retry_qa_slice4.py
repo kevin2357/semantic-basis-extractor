@@ -68,6 +68,17 @@ class PostFanInRetryQualificationTests(unittest.TestCase):
         self.assertNotIn("workspace-snapshot.json", rendered)
         self.assertNotIn("resp_fixture", rendered)
 
+    def test_receipt_is_reproducible_across_ephemeral_workspaces(self) -> None:
+        first = run_post_fan_in_retry_qualification()
+        second = run_post_fan_in_retry_qualification()
+        self.assertEqual(first["phases"], second["phases"])
+        self.assertEqual(
+            first["endpoint_evidence_sha256"],
+            second["endpoint_evidence_sha256"],
+        )
+        self.assertEqual(first["receipt_sha256"], second["receipt_sha256"])
+        self.assertEqual(first, second)
+
     def test_cli_writes_valid_receipt_and_fixture(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             receipt_path = Path(temporary) / "receipt.json"

@@ -22,6 +22,12 @@ The matching Python readers are exported from `astrowoof_natal_authoring`:
 The fixture identity is the canonical SHA-256 of the closed packaged fixture. The
 receipt binds that fixture digest, the installed package version, every public
 phase-evidence digest, the final public lifecycle evidence, and the receipt itself.
+Phase and endpoint identities hash closed semantic projections rather than complete
+native inspection bytes. Ephemeral logical workspace roots, snapshot identities,
+and qualification wall-clock instants are deliberately excluded; route, mechanism,
+command, capacity, custody, action inventory, local-work semantics, outcome, and
+replay facts remain bound. Two identical invocations under one package version must
+produce an identical receipt.
 
 ## What the qualification proves
 

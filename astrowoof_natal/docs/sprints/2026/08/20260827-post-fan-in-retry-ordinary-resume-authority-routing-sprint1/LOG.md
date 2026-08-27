@@ -151,3 +151,18 @@ Current gate: Slice 4 public fixture and adversarial qualification may proceed.
   optional-schema skip.
 
 Current gate: API fixture-by-fixture review and joined one-slot campaign.
+
+## 2026-08-27 — API Slice 4 reproducibility correction
+
+- Added `API SLICE 4 REVIEW.md` and accepted its reproducibility finding.
+- Replaced full lifecycle/result hashing with closed semantic evidence projections
+  that retain route, mechanism, command, capacity, custody, ordered action/local
+  work, outcome, and replay facts while excluding ephemeral logical-root,
+  snapshot, and wall-clock identities.
+- Added a two-invocation regression requiring identical ordered phase digests,
+  endpoint digest, receipt digest, and complete receipt bytes.
+- Focused qualification: 6 passed with one expected optional-schema skip.
+- Combined Slice 1–4 routing/qualification suite: 26 passed with one expected
+  optional-schema skip.
+
+Current gate: API Slice 4 re-review before installed-wheel qualification.
