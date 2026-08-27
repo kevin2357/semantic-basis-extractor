@@ -135,11 +135,11 @@ def adversarial_safety_violations(trace: Mapping[str, Any]) -> list[str]:
     prior_provider_states = {
         item["state"] for item in before["provider_fixture"]["operations"]
     }
-    if prior_provider_states & {
-        "pending", "completed", "failed", "cancelled", "expired",
-        "malformed", "identity_conflict",
-    } and effects["scripted_provider_creates"]:
-        violations.append("provider_identity_recreated")
+    # Trace v1 intentionally exposes opaque provider correlations but no join from
+    # a create count to an action/binding. It therefore cannot truthfully decide
+    # whether a create belongs to a known member or a distinct unentered member.
+    # The systematic explorer uses a richer action-bound internal state; do not
+    # turn this aggregate v1 observation into a false duplicate-create verdict.
     if (
         "entered_identity_unknown" in prior_provider_states
         and (

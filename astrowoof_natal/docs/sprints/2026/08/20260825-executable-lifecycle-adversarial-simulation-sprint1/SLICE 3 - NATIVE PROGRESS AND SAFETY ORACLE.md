@@ -13,7 +13,6 @@ The history evaluator retains prior semantic fingerprints so recurrence is a rea
 history property. The safety evaluator additionally detects the v1-expressible
 forms of:
 
-- provider create after durable provider identity;
 - provider work after identity-less call-entry ambiguity;
 - advertised local work that is neither consumed nor replaced by a typed
   disposition; and
@@ -36,10 +35,15 @@ the source qualification receipts' strict readers for snapshot/result/receipt jo
 and route-specific append-only facts. It does not invent missing action or billing
 facts.
 
+In particular, v1's opaque provider operations are not joined to an opaque
+action/binding identity. The oracle therefore does **not** infer duplicate creation
+from "some provider member already exists" plus "some create occurred": that would
+falsely reject legitimate partial-wave progression. Slice 4's explorer state must
+carry the exact redacted action/binding join before claiming create-at-most-once.
+
 ## Focused qualification
 
 - 27 adversarial tests passed.
 - One optional `jsonschema` check skipped in the lean interpreter.
 - Zero external provider/network calls and USD 0 spend.
 - `git diff --check` passed with non-failing Windows line-ending notices only.
-

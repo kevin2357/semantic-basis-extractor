@@ -113,13 +113,13 @@ class AdversarialOracleTests(unittest.TestCase):
         self.assertEqual("refused", result["classification"])
         self.assertEqual("event_not_enabled", result["refusal_reason"])
 
-    def test_provider_identity_is_retrieval_only(self):
+    def test_v1_does_not_infer_duplicate_create_without_action_join(self):
         trace = build_adversarial_trace_fixture(
             "provider-not-due-legitimate-wait.v1.json"
         )
         trace["expected"]["side_effects"]["scripted_provider_creates"] = 1
         trace = finalize_adversarial_trace(trace)
-        self.assertIn(
+        self.assertNotIn(
             "provider_identity_recreated", adversarial_safety_violations(trace),
         )
 

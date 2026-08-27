@@ -1,5 +1,14 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 3 API review correction
+
+- Accepted the review finding that trace v1 cannot join aggregate create counts to
+  one exact action/binding and therefore cannot prove create-at-most-once.
+- Removed the overbroad global provider-identity/create rule rather than widening
+  the frozen v1 contract.
+- Required Slice 4's explorer state to carry the redacted action/binding join needed
+  for a truthful per-member invariant.
+
 ## 2026-08-27 — Slice 3 native progress and safety oracle
 
 - Added independent derivation of progress, wait, replay, stutter, recurrence,

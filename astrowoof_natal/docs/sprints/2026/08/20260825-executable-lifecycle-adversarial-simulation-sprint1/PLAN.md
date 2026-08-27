@@ -182,6 +182,12 @@ Testing/gate:
 
 ## Slice 4 — Systematic branch explorer
 
+Before exploration, define a closed internal action/member projection that joins
+each opaque action reference and binding digest to create-entry, durable provider
+identity, retrieval, and terminal evidence. Trace v1 remains frozen and must not be
+widened. Only this joined projection may enforce create-at-most-once per exact
+action/binding; aggregate provider-operation presence is insufficient.
+
 Implement bounded breadth-first exploration. At each state:
 
 1. derive the complete enabled meaningful-event set;

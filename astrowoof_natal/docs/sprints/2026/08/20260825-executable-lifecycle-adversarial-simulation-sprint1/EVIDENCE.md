@@ -1,5 +1,12 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 3 review correction
+
+- Added a regression proving trace v1 does not falsely classify a mixed partial
+  wave as duplicate creation merely because another member has provider evidence.
+- Create-at-most-once remains required, but its proof moves to Slice 4's exact
+  redacted action/binding projection.
+
 ## Slice 3 native oracle
 
 - Public derivation: `classify_adversarial_transition()`.
