@@ -129,3 +129,33 @@ Status: Slice 4 correction complete; API re-review pending.
 - Disposition: approved for installed-wheel qualification.
 
 Status: Slice 4 approved; Slice 5 in progress.
+
+## Slice 5 SBE candidate evidence
+
+- Candidate source commit: `e1a22ab`.
+- Candidate version: `0.4.27`.
+- Fixed build epoch: `1787844361`.
+- Deterministic wheel A/B size: 1,048,593 bytes each.
+- Deterministic wheel A/B SHA-256:
+  `ae8da7a7ce64cd83e1a4444fb8a77587eafb1c1f5a7ff1cc3ac615dfb51e611a`.
+- Exact installed SPC dependency: `semantic-projection-core==0.11.1`.
+- Wheel inventory confirmed:
+  - `astrowoof_natal_authoring/py.typed`;
+  - `post-fan-in-retry-qualification.v1.schema.json`;
+  - `post-fan-in-retry-routing.v1.json`; and
+  - console entry point `astrowoof-post-fan-in-retry-qa`.
+- Installed generic release smoke: passed with `--require-installed` from an
+  external literal `site-packages` tree.
+- Installed adversarial qualification: passed.
+- Installed post-fan-in qualification: passed twice with byte-identical receipts.
+- Installed post-fan-in receipt SHA-256:
+  `0db488713ad4711f52431d0a65187d6103f7784e41cd9a2c1d192c5af7eee074`.
+- Full source suite: 829 passed in 825.722 seconds; 40 expected skips.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+- Platform status: Windows source/build/installed qualification complete; the
+  API/Linux joined campaign against this exact candidate remains the next gate.
+
+Status: SBE Slice 5 component complete; API/Linux candidate review required
+before Slice 6 release preparation.

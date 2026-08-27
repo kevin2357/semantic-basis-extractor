@@ -177,3 +177,22 @@ Current gate: API Slice 4 re-review before installed-wheel qualification.
 - Candidate version advanced to fresh unpublished patch `0.4.27`.
 
 Current gate: Slice 5 installed-wheel and compatibility qualification.
+
+## 2026-08-27 — Slice 5 SBE candidate qualification complete
+
+- Locked candidate source at commit `e1a22ab` with fresh version `0.4.27`.
+- Built twice from that source with fixed `SOURCE_DATE_EPOCH=1787844361`.
+- Both wheels are byte-identical: 1,048,593 bytes, SHA-256
+  `ae8da7a7ce64cd83e1a4444fb8a77587eafb1c1f5a7ff1cc3ac615dfb51e611a`.
+- Inspected the wheel and confirmed `py.typed`, the post-fan-in fixture, its
+  closed receipt schema, and `astrowoof-post-fan-in-retry-qa` are packaged.
+- Installed the candidate outside the checkout with exact SPC `0.11.1`.
+- Installed generic release smoke, adversarial qualification, and post-fan-in
+  qualification all passed.
+- Two fresh installed post-fan-in invocations produced identical receipt bytes,
+  SHA-256
+  `0db488713ad4711f52431d0a65187d6103f7784e41cd9a2c1d192c5af7eee074`.
+- Full source suite: 829 passed, 40 expected environment/opt-in skips.
+- External provider/network calls, spend, and retained-QA access remained zero.
+
+Current gate: API/Linux joined-candidate review before Slice 6 release decision.
