@@ -1,7 +1,7 @@
 # Post-Fan-In Retry Ordinary-Resume Authority Routing — SBE Sprint 1
 
 Date: 2026-08-27
-Status: Slice 0 API-approved; Slice 1 ready to begin
+Status: Slice 1 API-approved; Slice 2 runtime correction in progress
 Companion: AstroWoof API operational incident and follow-on sprint to be identified
 
 ## Objective

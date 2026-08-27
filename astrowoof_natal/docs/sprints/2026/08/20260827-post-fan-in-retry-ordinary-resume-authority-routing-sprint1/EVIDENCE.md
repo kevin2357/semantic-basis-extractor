@@ -31,3 +31,23 @@
 - API disposition: approved to begin Slice 1.
 
 Status: Slice 0 approved; Slice 1 ready to begin.
+
+## Slice 1 evidence
+
+- Normative contract: `POST-FAN-IN ROUTING CONTRACT AND DECISION MATRIX.md`.
+- Closed fixture:
+  `fixtures/post-fan-in-authority-routing-matrix.v1.json`.
+- Contract validator/mutation coverage:
+  `tests/test_post_fan_in_authority_routing_contract_slice1.py`.
+- Focused command:
+  `python -m unittest astrowoof_natal.tests.test_post_fan_in_authority_routing_contract_slice1 astrowoof_natal.tests.test_post_fan_in_retry_authority_routing_slice0 astrowoof_natal.tests.test_post_fan_in_retry_contract_slice1 astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice3`.
+- Result: 19 passed; 1 expected optional-schema skip.
+- Runtime/source/schema changes: none.
+- External provider/network calls: 0.
+- Retained QA access/mutation: none.
+- Spend: USD 0.
+
+Status: Slice 1 complete; API contract review required before Slice 2.
+
+- API review: `API SLICE 1 REVIEW.md`.
+- API disposition: approved for Slice 2 runtime implementation.

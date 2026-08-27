@@ -48,3 +48,36 @@ Current gate: owner/API review of Slice 0 before Slice 1 contract freeze.
 
 Current gate: Slice 1 may begin; API review is required after Slice 1 before runtime
 implementation.
+
+## 2026-08-27 — Slice 1 complete
+
+- Added `POST-FAN-IN ROUTING CONTRACT AND DECISION MATRIX.md`.
+- Froze four noninterchangeable phases: v1 initial admission, provider custody,
+  provider-free local fan-in, and later ordinary v2 paid continuation.
+- Froze the active initial-wave set as `AWAITING_SPEND_AUTHORIZATION`,
+  `AUTHORIZED`, and `SUBMITTING`.
+- Froze `DETACHED` and `FAILED` as historical lineage; unknown states fail closed.
+- Defined consuming ordinary-resume behavior and provider/ambiguity/refusal
+  precedence.
+- Recorded exact/bounded interactive applicability and deliberate ordinary-v2
+  Batch deferral without weakening Batch retrieval custody.
+- Concluded lifecycle v0.7 already carries the required public evidence; no schema
+  or public command change is proposed.
+- Added a closed four-route machine-readable decision fixture and mutation tests.
+- Focused Slice 0/1 and post-fan-in matrix suite: 19 tests passed, 1 expected
+  optional-schema skip.
+- No production runtime, provider, retained-QA, or release action occurred.
+
+Current gate: API contract review before Slice 2 runtime implementation.
+
+## 2026-08-27 — API Slice 1 review incorporated
+
+- Added `API SLICE 1 REVIEW.md`.
+- API independently reproduced the 19-pass focused result with one expected
+  optional-schema skip.
+- Contract approved without schema or command changes.
+- Slice 2 conditions confirm one centralized positive active-wave predicate,
+  preservation of the v1 active fence, historical-lineage fallthrough to current
+  facts, consuming-resume protection, and bounded non-regression.
+
+Current gate: Slice 2 runtime implementation may proceed.

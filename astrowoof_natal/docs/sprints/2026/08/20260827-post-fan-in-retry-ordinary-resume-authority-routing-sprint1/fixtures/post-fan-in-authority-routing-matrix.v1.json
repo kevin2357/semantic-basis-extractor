@@ -1,0 +1,122 @@
+{
+  "schema_version": "astrowoof.post_fan_in_authority_routing_matrix.v1",
+  "active_initial_wave_states": [
+    "AWAITING_SPEND_AUTHORIZATION",
+    "AUTHORIZED",
+    "SUBMITTING"
+  ],
+  "historical_initial_wave_states": [
+    "DETACHED",
+    "FAILED"
+  ],
+  "cases": [
+    {
+      "case_id": "exact-interactive-active-initial-awaiting",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "active_initial_wave_awaiting_authority",
+      "selected_command": "await_external_authority",
+      "authority_contract": "initial_wave_v1_aggregate",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "exact-interactive-retry-not-due",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "provider_identity_pending_not_due",
+      "selected_command": "provider_reconciliation_cycle",
+      "authority_contract": "retain_existing_provider_custody",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "exact-interactive-retry-due",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "provider_identity_due",
+      "selected_command": "provider_reconciliation_cycle",
+      "authority_contract": "retain_existing_provider_custody",
+      "provider_io": "retrieve_only"
+    },
+    {
+      "case_id": "exact-interactive-retry-retrieved",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "retrieved_completion_pending_fan_in",
+      "selected_command": "ordinary_resume",
+      "authority_contract": "none",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "exact-interactive-next-retry-prepared",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "fan_in_consumed_next_ordinary_prepared",
+      "selected_command": "await_external_authority",
+      "authority_contract": "ordinary_action_v2",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "exact-interactive-provider-ambiguous",
+      "route_family": "exact_natal",
+      "provider_mechanism": "response",
+      "native_fact": "call_entered_without_identity",
+      "selected_command": "none",
+      "authority_contract": "retain_ambiguity_review",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "bounded-interactive-retry-retrieved",
+      "route_family": "bounded_natal",
+      "provider_mechanism": "response",
+      "native_fact": "retrieved_completion_pending_fan_in",
+      "selected_command": "ordinary_resume",
+      "authority_contract": "none",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "bounded-interactive-next-retry-prepared",
+      "route_family": "bounded_natal",
+      "provider_mechanism": "response",
+      "native_fact": "fan_in_consumed_next_ordinary_prepared",
+      "selected_command": "await_external_authority",
+      "authority_contract": "ordinary_action_v2",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "exact-batch-provider-due",
+      "route_family": "exact_natal",
+      "provider_mechanism": "batch",
+      "native_fact": "provider_identity_due",
+      "selected_command": "provider_reconciliation_cycle",
+      "authority_contract": "retain_existing_provider_custody",
+      "provider_io": "retrieve_only"
+    },
+    {
+      "case_id": "exact-batch-ordinary-prepared",
+      "route_family": "exact_natal",
+      "provider_mechanism": "batch",
+      "native_fact": "fan_in_consumed_next_ordinary_prepared",
+      "selected_command": "none",
+      "authority_contract": "ordinary_batch_v2_deferred",
+      "provider_io": "none"
+    },
+    {
+      "case_id": "bounded-batch-provider-due",
+      "route_family": "bounded_natal",
+      "provider_mechanism": "batch",
+      "native_fact": "provider_identity_due",
+      "selected_command": "provider_reconciliation_cycle",
+      "authority_contract": "retain_existing_provider_custody",
+      "provider_io": "retrieve_only"
+    },
+    {
+      "case_id": "bounded-batch-ordinary-prepared",
+      "route_family": "bounded_natal",
+      "provider_mechanism": "batch",
+      "native_fact": "fan_in_consumed_next_ordinary_prepared",
+      "selected_command": "none",
+      "authority_contract": "ordinary_batch_v2_deferred",
+      "provider_io": "none"
+    }
+  ]
+}
