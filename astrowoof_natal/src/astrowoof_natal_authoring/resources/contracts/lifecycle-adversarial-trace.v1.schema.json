@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.lifecycle_adversarial_trace.v1",
+  "title": "AstroWoof Provider-Free Lifecycle Adversarial Trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trace_id", "trace_sha256", "construction_class", "package", "clock", "route_cell", "public_evidence", "before", "event", "after", "expected", "privacy"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.lifecycle_adversarial_trace.v1"},
+    "trace_id": {"type": "string", "pattern": "^simtrace_[0-9a-f]{24}$"},
+    "trace_sha256": {"$ref": "#/$defs/sha256"},
+    "construction_class": {"enum": ["legally_reached", "historical_shape", "synthetic_invalid_state"]},
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version", "schema_resource"],
+      "properties": {
+        "name": {"const": "astrowoof-natal-authoring"},
+        "version": {"type": "string", "minLength": 1},
+        "schema_resource": {"const": "lifecycle-adversarial-trace.v1.schema.json"}
+      }
+    },
+    "clock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["logical_step_before", "logical_step_after", "simulated_time_before", "simulated_time_after", "time_event"],
+      "properties": {
+        "logical_step_before": {"type": "integer", "minimum": 0},
+        "logical_step_after": {"type": "integer", "minimum": 1},
+        "simulated_time_before": {"type": "string", "format": "date-time"},
+        "simulated_time_after": {"type": "string", "format": "date-time"},
+        "time_event": {"enum": ["none", "advance_base_unit", "advance_duration", "advance_to_boundary"]}
+      }
+    },
+    "route_cell": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "provider_mechanism", "stage", "support"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_mechanism": {"enum": ["response", "batch", "none"]},
+        "stage": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate", "closeout"]},
+        "support": {"enum": ["supported", "explicitly_refused", "deferred"]}
+      }
+    },
+    "public_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "before": {"$ref": "#/$defs/state"},
+    "event": {"$ref": "#/$defs/event"},
+    "after": {"$ref": "#/$defs/state"},
+    "expected": {"$ref": "#/$defs/expected"},
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contains_prompt", "contains_provider_payload", "contains_raw_provider_id", "contains_workspace_path", "contains_credentials"],
+      "properties": {
+        "contains_prompt": {"const": false}, "contains_provider_payload": {"const": false},
+        "contains_raw_provider_id": {"const": false}, "contains_workspace_path": {"const": false},
+        "contains_credentials": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "schema_version", "sha256", "opaque_ref"],
+      "properties": {
+        "kind": {"enum": ["lifecycle_inspection", "native_result", "publication_receipt", "qualification_fixture"]},
+        "schema_version": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"},
+        "opaque_ref": {"type": "string", "pattern": "^fixture:[a-z0-9][a-z0-9._-]{2,95}$"}
+      }
+    },
+    "native": {
+      "type": "object", "additionalProperties": false,
+      "required": ["native_run_ref", "route_contract", "checkpoint_basis_sha256", "snapshot_sha256", "state_revision", "selected_command", "capacity_disposition", "reason_code", "local_operation_keys", "consumed_operation_keys", "provider_custody", "resume_not_before", "external_authority", "terminal", "review_required", "delivery_publishable", "semantic_fences"],
+      "properties": {
+        "native_run_ref": {"type": "string", "pattern": "^fixture:[a-z0-9][a-z0-9._-]{2,95}$"}, "route_contract": {"type": "string", "minLength": 1},
+        "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"}, "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "state_revision": {"type": "integer", "minimum": 0},
+        "selected_command": {"enum": ["ordinary_resume", "provider_reconciliation_cycle", "await_external_authority", "none"]},
+        "capacity_disposition": {"enum": ["continue_local_cycle", "release_until_due", "await_external_authority", "retain_for_review", "terminal", "unsupported_retain_capacity"]},
+        "reason_code": {"enum": ["native_review_or_ambiguity", "provider_reconciliation_not_due", "local_work_ready", "spend_authorization_required", "terminal", "unsupported_contract"]},
+        "local_operation_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^opkey_[0-9a-f]{24}$"}},
+        "consumed_operation_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^opkey_[0-9a-f]{24}$"}},
+        "provider_custody": {"enum": ["none", "known_operations_pending", "completed_local_work", "ambiguous_or_conflicting", "terminal"]},
+        "resume_not_before": {"type": ["string", "null"], "format": "date-time"},
+        "external_authority": {"enum": ["none", "awaiting", "granted", "refused"]},
+        "terminal": {"type": "boolean"}, "review_required": {"type": "boolean"}, "delivery_publishable": {"type": "boolean"},
+        "semantic_fences": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/semantic_fence"}}
+      }
+    },
+    "semantic_fence": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "sha256"],
+      "properties": {"kind": {"enum": ["checkpoint_basis", "action_inventory", "authority_request", "provider_custody", "publication"]}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "api": {
+      "type": "object", "additionalProperties": false,
+      "required": ["run_ref", "run_disposition", "job_disposition", "lease_disposition", "capacity_state", "reservation_state", "competing_eligible_run_count"],
+      "properties": {
+        "run_ref": {"type": "string", "pattern": "^fixture:[a-z0-9][a-z0-9._-]{2,95}$"}, "run_disposition": {"enum": ["queued", "running", "succeeded", "failed", "review_required"]},
+        "job_disposition": {"enum": ["available", "leased", "deferred", "succeeded", "failed"]},
+        "lease_disposition": {"enum": ["none", "active", "released", "expired"]},
+        "capacity_state": {"enum": ["none", "allocated", "released"]},
+        "reservation_state": {"enum": ["none", "retained", "releasable", "settled", "review"]},
+        "competing_eligible_run_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "provider_operation": {
+      "type": "object", "additionalProperties": false, "required": ["correlation_id", "state"],
+      "properties": {"correlation_id": {"type": "string", "pattern": "^simop_[0-9a-f]{24}$"}, "state": {"enum": ["not_entered", "entered_identity_unknown", "pending", "completed", "failed", "cancelled", "expired", "malformed", "identity_conflict"]}}
+    },
+    "provider": {
+      "type": "object", "additionalProperties": false, "required": ["network_capability", "credential_capability", "operations"],
+      "properties": {"network_capability": {"const": false}, "credential_capability": {"const": false}, "operations": {"type": "array", "items": {"$ref": "#/$defs/provider_operation"}}}
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["raw_evidence_sha256", "semantic_fingerprint_sha256", "native", "api_fixture", "provider_fixture"],
+      "properties": {"raw_evidence_sha256": {"$ref": "#/$defs/sha256"}, "semantic_fingerprint_sha256": {"$ref": "#/$defs/sha256"}, "native": {"$ref": "#/$defs/native"}, "api_fixture": {"$ref": "#/$defs/api"}, "provider_fixture": {"$ref": "#/$defs/provider"}}
+    },
+    "event": {
+      "type": "object", "additionalProperties": false, "required": ["actor", "kind", "enabled", "refusal_reason"],
+      "properties": {"actor": {"enum": ["scheduler", "claimed_worker", "replacement_worker", "sbe_command", "external_authority_service", "fake_provider", "lease_clock_reaper", "storage_publisher", "operator", "crash_injector"]}, "kind": {"enum": ["inspect_lifecycle", "ingest_native_result", "ordinary_resume", "provider_reconciliation_cycle", "await_external_authority", "advance_time", "claim_job", "release_capacity", "expire_lease", "provider_transition", "publish", "operator_command", "interrupt"]}, "enabled": {"type": "boolean"}, "refusal_reason": {"oneOf": [{"type": "null"}, {"enum": ["event_not_enabled", "stale_observation", "unsupported_route", "invalid_input", "contradictory_input"]}]}}
+    },
+    "side_effects": {
+      "type": "object", "additionalProperties": false, "required": ["scripted_provider_creates", "scripted_provider_retrievals", "external_network_calls", "lease_released", "capacity_released"],
+      "properties": {"scripted_provider_creates": {"type": "integer", "minimum": 0}, "scripted_provider_retrievals": {"type": "integer", "minimum": 0}, "external_network_calls": {"const": 0}, "lease_released": {"type": "boolean"}, "capacity_released": {"type": "boolean"}}
+    },
+    "starvation": {
+      "type": "object", "additionalProperties": false, "required": ["victim_run_ref", "blocker_run_ref", "eligible_since_step", "witness_steps"],
+      "properties": {"victim_run_ref": {"type": "string", "pattern": "^fixture:[a-z0-9][a-z0-9._-]{2,95}$"}, "blocker_run_ref": {"type": "string", "pattern": "^fixture:[a-z0-9][a-z0-9._-]{2,95}$"}, "eligible_since_step": {"type": "integer", "minimum": 0}, "witness_steps": {"type": "integer", "minimum": 1}}
+    },
+    "progress_witness": {
+      "type": "object", "additionalProperties": false, "required": ["prior_semantic_fingerprint_sha256", "prior_logical_step"],
+      "properties": {"prior_semantic_fingerprint_sha256": {"$ref": "#/$defs/sha256"}, "prior_logical_step": {"type": "integer", "minimum": 0}}
+    },
+    "expected": {
+      "type": "object", "additionalProperties": false, "required": ["classification", "declared_contradictions", "progress_witness", "starvation_witness", "side_effects"],
+      "properties": {"classification": {"enum": ["productive", "legitimate_wait", "idempotent_replay", "stutter", "cycle", "refused", "contradictory_evidence"]}, "declared_contradictions": {"type": "array", "uniqueItems": true, "items": {"enum": ["command_local_inventory_mismatch", "command_custody_mismatch", "custody_operation_mismatch", "wait_schedule_mismatch", "terminal_command_mismatch", "review_command_mismatch"]}}, "progress_witness": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/progress_witness"}]}, "starvation_witness": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/starvation"}]}, "side_effects": {"$ref": "#/$defs/side_effects"}}
+    }
+  }
+}

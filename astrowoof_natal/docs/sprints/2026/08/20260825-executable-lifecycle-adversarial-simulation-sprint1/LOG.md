@@ -42,3 +42,36 @@ Current gate: joint Slice 0 vocabulary/protocol review before Slice 1.
   future-affecting digests, construction labels, ownership, and route coverage.
 - Updated the SBE plan to add `contradictory_evidence` and clarify that starvation
   is a multi-run property rather than a transition classification.
+
+## 2026-08-27 — Slice 1 adversarial trace contract
+
+- Published a closed Draft 2020-12 trace schema and strict Python semantic
+  validator independent of optional `jsonschema`.
+- Separated materialized native/API/provider state from oracle classification and
+  raw evidence identity from the future-affecting semantic fingerprint.
+- Froze legal, historical, and synthetic-invalid construction classes; explicit
+  clock events; route support; seven transition classifications; and a separate
+  starvation witness.
+- Added deterministic canonical builders and packaged public readers for three
+  provider-free fixtures: historical Muffin cycle, legitimate provider wait, and
+  contradictory command/custody evidence.
+- Exported the public contract surface from the installed package root.
+- Added strict mutation, optional JSON Schema, canonicalization, privacy, route,
+  contradiction, and fixture-drift regressions.
+
+Current gate: joint schema/authority review before Slice 2 executable adapters.
+
+## 2026-08-27 — API Slice 1 review corrections
+
+- Replaced whole-native-object fingerprinting with an explicit narrow semantic
+  projection and closed ordered fence inventory. Snapshot/revision/raw-evidence
+  churn no longer masquerades as progress.
+- Made `refused` biconditional with a disabled event and one closed refusal reason;
+  contradictory evidence remains a distinct enabled inspection outcome.
+- Added a prior-fingerprint/prior-step recurrence witness required only for cycles;
+  a one-step identical successor is now unambiguously stutter.
+- Constrained native/API/starvation references to opaque `fixture:` identities and
+  closed the native reason-code vocabulary.
+- Added focused regressions for every review correction.
+
+Current gate remains joint schema/authority review before Slice 2.

@@ -1,7 +1,7 @@
 # Executable Lifecycle Adversarial Simulation — SBE Sprint 1
 
 Date: 2026-08-25
-Status: Slice 0 complete; paused for joint vocabulary/protocol review before Slice 1
+Status: Slice 1 candidate complete; paused for joint schema/authority review before Slice 2
 Companion: AstroWoof API Sprint 52
 
 ## Objective

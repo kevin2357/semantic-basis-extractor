@@ -95,6 +95,19 @@ from .post_fan_in_contracts import (  # noqa: E402
     validate_local_work_inventory_against_v05,
     validate_local_work_progress,
 )
+from .adversarial_trace import (  # noqa: E402
+    FIXTURE_NAMES as ADVERSARIAL_TRACE_FIXTURE_NAMES,
+    SCHEMA_VERSION as ADVERSARIAL_TRACE_SCHEMA_VERSION,
+    build_adversarial_trace_fixture,
+    canonical_adversarial_trace_bytes,
+    derive_trace_id as derive_adversarial_trace_id,
+    derive_trace_sha256 as derive_adversarial_trace_sha256,
+    finalize_adversarial_trace,
+    read_adversarial_trace_fixture,
+    read_adversarial_trace_schema,
+    semantic_fingerprint as adversarial_trace_semantic_fingerprint,
+    validate_adversarial_trace,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -193,6 +206,17 @@ from .provider_economics_qa import (  # noqa: E402
 )
 
 __all__ = [
+    "ADVERSARIAL_TRACE_FIXTURE_NAMES",
+    "ADVERSARIAL_TRACE_SCHEMA_VERSION",
+    "adversarial_trace_semantic_fingerprint",
+    "build_adversarial_trace_fixture",
+    "canonical_adversarial_trace_bytes",
+    "derive_adversarial_trace_id",
+    "derive_adversarial_trace_sha256",
+    "finalize_adversarial_trace",
+    "read_adversarial_trace_fixture",
+    "read_adversarial_trace_schema",
+    "validate_adversarial_trace",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",

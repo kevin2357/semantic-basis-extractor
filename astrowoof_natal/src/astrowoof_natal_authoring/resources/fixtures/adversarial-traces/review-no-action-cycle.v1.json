@@ -1,0 +1,150 @@
+{
+  "schema_version": "astrowoof.lifecycle_adversarial_trace.v1",
+  "trace_id": "simtrace_a2627d86c8d0758ddba9c0f8",
+  "trace_sha256": "a2627d86c8d0758ddba9c0f8dd564e5d2d53f2345ab81808e94fefb7c24784da",
+  "construction_class": "historical_shape",
+  "package": {
+    "name": "astrowoof-natal-authoring",
+    "version": "0.4.25",
+    "schema_resource": "lifecycle-adversarial-trace.v1.schema.json"
+  },
+  "clock": {
+    "logical_step_before": 1,
+    "logical_step_after": 2,
+    "simulated_time_before": "2026-08-27T12:00:00Z",
+    "simulated_time_after": "2026-08-27T12:00:00Z",
+    "time_event": "none"
+  },
+  "route_cell": {
+    "route_family": "exact_natal",
+    "provider_mechanism": "response",
+    "stage": "creative_retry",
+    "support": "supported"
+  },
+  "public_evidence": [
+    {
+      "kind": "lifecycle_inspection",
+      "schema_version": "astrowoof.authoring_lifecycle_inspection.v0.7",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "opaque_ref": "fixture:lifecycle-inspection"
+    }
+  ],
+  "before": {
+    "raw_evidence_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "semantic_fingerprint_sha256": "0e8a936f8d3fa13147c599028f7b90b6e857c71481d6f31ba041db4e7024e97c",
+    "native": {
+      "native_run_ref": "fixture:native-simulation-run",
+      "route_contract": "astrowoof.semantic_closure_run.v0.9",
+      "checkpoint_basis_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "snapshot_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "state_revision": 7,
+      "selected_command": "none",
+      "capacity_disposition": "retain_for_review",
+      "reason_code": "native_review_or_ambiguity",
+      "local_operation_keys": [],
+      "consumed_operation_keys": [],
+      "provider_custody": "none",
+      "resume_not_before": null,
+      "external_authority": "none",
+      "terminal": false,
+      "review_required": true,
+      "delivery_publishable": false,
+      "semantic_fences": [
+        {
+          "kind": "checkpoint_basis",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ]
+    },
+    "api_fixture": {
+      "run_ref": "fixture:api-simulation-run",
+      "run_disposition": "running",
+      "job_disposition": "leased",
+      "lease_disposition": "active",
+      "capacity_state": "allocated",
+      "reservation_state": "none",
+      "competing_eligible_run_count": 1
+    },
+    "provider_fixture": {
+      "network_capability": false,
+      "credential_capability": false,
+      "operations": []
+    }
+  },
+  "event": {
+    "actor": "claimed_worker",
+    "kind": "ingest_native_result",
+    "enabled": true,
+    "refusal_reason": null
+  },
+  "after": {
+    "raw_evidence_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "semantic_fingerprint_sha256": "0e8a936f8d3fa13147c599028f7b90b6e857c71481d6f31ba041db4e7024e97c",
+    "native": {
+      "native_run_ref": "fixture:native-simulation-run",
+      "route_contract": "astrowoof.semantic_closure_run.v0.9",
+      "checkpoint_basis_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "snapshot_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "state_revision": 7,
+      "selected_command": "none",
+      "capacity_disposition": "retain_for_review",
+      "reason_code": "native_review_or_ambiguity",
+      "local_operation_keys": [],
+      "consumed_operation_keys": [],
+      "provider_custody": "none",
+      "resume_not_before": null,
+      "external_authority": "none",
+      "terminal": false,
+      "review_required": true,
+      "delivery_publishable": false,
+      "semantic_fences": [
+        {
+          "kind": "checkpoint_basis",
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ]
+    },
+    "api_fixture": {
+      "run_ref": "fixture:api-simulation-run",
+      "run_disposition": "running",
+      "job_disposition": "leased",
+      "lease_disposition": "active",
+      "capacity_state": "allocated",
+      "reservation_state": "none",
+      "competing_eligible_run_count": 1
+    },
+    "provider_fixture": {
+      "network_capability": false,
+      "credential_capability": false,
+      "operations": []
+    }
+  },
+  "expected": {
+    "classification": "cycle",
+    "declared_contradictions": [],
+    "progress_witness": {
+      "prior_semantic_fingerprint_sha256": "0e8a936f8d3fa13147c599028f7b90b6e857c71481d6f31ba041db4e7024e97c",
+      "prior_logical_step": 0
+    },
+    "starvation_witness": {
+      "victim_run_ref": "fixture:api-competing-run",
+      "blocker_run_ref": "fixture:api-simulation-run",
+      "eligible_since_step": 0,
+      "witness_steps": 1
+    },
+    "side_effects": {
+      "scripted_provider_creates": 0,
+      "scripted_provider_retrievals": 0,
+      "external_network_calls": 0,
+      "lease_released": false,
+      "capacity_released": false
+    }
+  },
+  "privacy": {
+    "contains_prompt": false,
+    "contains_provider_payload": false,
+    "contains_raw_provider_id": false,
+    "contains_workspace_path": false,
+    "contains_credentials": false
+  }
+}
