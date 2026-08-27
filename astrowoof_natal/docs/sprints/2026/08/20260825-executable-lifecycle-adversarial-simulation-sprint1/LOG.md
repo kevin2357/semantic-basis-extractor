@@ -20,6 +20,25 @@
 Current gate: final API/owner review before version bump, tag, publication, or
 adoption.
 
+## 2026-08-27 — Joint release-review corrections complete
+
+- Accepted the two substantive corrections in
+  `API JOINT CAMPAIGN RELEASE REVIEW.md`.
+- API now executes the historical starvation shape through the shared adversarial
+  adapter/oracle and derives blocker, victim, steps, and trace digest from that
+  execution. The corrected real-worker path carries a separate digest.
+- Packaged-fixture cases now preserve the exact catalog fixture SHA-256 separately
+  from their adapter-result SHA-256. Evidence kinds have closed, distinct shapes.
+- Corrected focused campaign: 7 passed in 42.54 seconds. API committed and pushed
+  the correction as `1636927`.
+- Regenerated receipt internal identity:
+  `1d200013835e75bde8ab476ae5a02480ac07660a235b77fc8ce88148eb20055d`;
+  file SHA-256:
+  `ed7e580d2a8ec1514d517916a67ddfb0b69077a2a8651e1d23f60319ecf10e98`.
+
+Current gate: request final API/owner release review. No tag, publication, pin, or
+deployment has occurred.
+
 ## 2026-08-27 — Slice 8 SBE-local release qualification
 
 - Passed the 44-test focused adversarial suite with one expected optional-schema

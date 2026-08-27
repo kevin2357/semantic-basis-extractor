@@ -20,6 +20,21 @@
 
 Status: composed campaign complete; final API/owner release review pending.
 
+### Release-review correction
+
+- API correction commit: `1636927` (`Tighten joint campaign release evidence`).
+- Historical starvation is now a separately executed `historical_shape`, not
+  constructor-supplied expected values.
+- Corrected and historical trace digests are independently bound in the receipt.
+- Every packaged-fixture discharge binds both the exact catalog fixture digest and
+  a distinct adapter-result digest; non-fixture evidence rejects fixture hashes.
+- Corrected focused suite: 7 passed in 42.54 seconds.
+- Corrected receipt internal identity:
+  `1d200013835e75bde8ab476ae5a02480ac07660a235b77fc8ce88148eb20055d`.
+- Corrected receipt file SHA-256:
+  `ed7e580d2a8ec1514d517916a67ddfb0b69077a2a8651e1d23f60319ecf10e98`.
+- External provider/network/spend and retained-QA totals remain zero.
+
 ## Slice 8 SBE-local qualification
 
 - Focused adversarial suite: 44 passed, 1 expected optional-schema skip.
