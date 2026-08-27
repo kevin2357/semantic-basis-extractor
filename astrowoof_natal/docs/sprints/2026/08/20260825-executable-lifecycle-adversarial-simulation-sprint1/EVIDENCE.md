@@ -1,5 +1,18 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 6 installed qualification
+
+- Console: `astrowoof-adversarial-qa`.
+- Contract: `astrowoof.lifecycle_adversarial_qualification.v1`.
+- Candidate wheel SHA-256:
+  `b40edcde3026e1bcf3910e9f89d194bd7af0be11f40518c1f905eff628e22fc5`.
+- Deterministic installed receipt SHA-256:
+  `ae8b988c13723f8447bd1548748320447ac7f63ca4eb020cefae96413133435a`.
+- Repeated installed-console receipt equality: true.
+- Aggregate: 3 fixtures, seeds 7/19/41, 22 route cells, 32 invariant/cell
+  checks, exact and bounded route coverage.
+- External provider/network calls: 0; real creates: 0; spend: USD 0.
+
 ## Slice 5 seeded campaign
 
 - Public walk/replay: `run_seeded_walk()` and `replay_seeded_walk()`.

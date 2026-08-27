@@ -1,5 +1,15 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 6 public qualification surface
+
+- Added the packaged `astrowoof-adversarial-qa` console command and strict v1
+  receipt/schema/Python surface.
+- Bound stable contract/corpus/seed/coverage/counterexample evidence while excluding
+  invocation-specific temporary-workspace identities.
+- Refused output under a native workspace before qualification execution.
+- Built and installed the candidate wheel in isolation and ran the real console
+  command twice; receipt bytes matched exactly.
+
 ## 2026-08-27 — Slice 5 seeded campaign and shrinking
 
 - Added deterministic state-aware walks with fixed seeds across exact and bounded

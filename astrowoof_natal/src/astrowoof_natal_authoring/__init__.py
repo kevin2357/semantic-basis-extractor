@@ -141,6 +141,11 @@ from .adversarial_campaign import (  # noqa: E402
     shrink_stutter_counterexample,
     validate_seeded_campaign_qualification,
 )
+from .adversarial_qa import (  # noqa: E402
+    read_adversarial_qualification_schema,
+    run_adversarial_qualification,
+    validate_adversarial_qualification,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -273,6 +278,9 @@ __all__ = [
     "run_seeded_walk",
     "shrink_stutter_counterexample",
     "validate_seeded_campaign_qualification",
+    "read_adversarial_qualification_schema",
+    "run_adversarial_qualification",
+    "validate_adversarial_qualification",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",

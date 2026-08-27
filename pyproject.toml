@@ -38,6 +38,7 @@ astrowoof-operator-retirement = "astrowoof_natal_authoring.cli.operator_retireme
 astrowoof-operator-retirement-qa = "astrowoof_natal_authoring.operator_retirement_qa:main"
 astrowoof-provider-economics-export = "astrowoof_natal_authoring.cli.provider_economics:main"
 astrowoof-provider-economics-qa = "astrowoof_natal_authoring.provider_economics_qa:main"
+astrowoof-adversarial-qa = "astrowoof_natal_authoring.adversarial_qa:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}

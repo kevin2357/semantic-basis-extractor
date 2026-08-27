@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.lifecycle_adversarial_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_sha256", "status", "qualification_only",
+    "provider_free", "package", "schema_sha256", "corpus_sha256",
+    "fixture_count", "fixed_seeds", "route_cell_count", "transition_coverage",
+    "invariant_count", "counterexample_refs", "component_contracts",
+    "external_network_call_count", "real_provider_create_count", "provider_spend_usd"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.lifecycle_adversarial_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "astrowoof-natal-authoring"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixture_count": {"const": 3},
+    "fixed_seeds": {"const": [7, 19, 41]},
+    "route_cell_count": {"const": 22},
+    "transition_coverage": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "invariant_count": {"type": "integer", "minimum": 10},
+    "counterexample_refs": {"type": "array", "items": {"type": "string"}},
+    "component_contracts": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["schema_version", "evidence_sha256"],
+        "properties": {
+          "schema_version": {"type": "string", "minLength": 1},
+          "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "external_network_call_count": {"const": 0},
+    "real_provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0}
+  }
+}
