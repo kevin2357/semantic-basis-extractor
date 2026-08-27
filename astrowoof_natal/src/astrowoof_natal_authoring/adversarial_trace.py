@@ -184,6 +184,14 @@ def semantic_fingerprint(state: Mapping[str, Any]) -> str:
     })
 
 
+def native_contradictions(state: Mapping[str, Any]) -> list[str]:
+    """Return closed native contradictions without trusting a trace declaration."""
+
+    if not isinstance(state, Mapping) or "native" not in state:
+        raise ValueError("state must contain native evidence")
+    return _validate_native(state["native"], "state.native")
+
+
 def finalize_adversarial_trace(value: Mapping[str, Any]) -> dict[str, Any]:
     result = deepcopy(dict(value))
     for label in ("before", "after"):

@@ -1,5 +1,16 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 3 native progress and safety oracle
+
+- Added independent derivation of progress, wait, replay, stutter, recurrence,
+  refusal, and contradiction classifications.
+- Added a progress fingerprint that excludes publication-only checkpoint churn while
+  preserving the checkpoint digest's separate stale-authority role.
+- Added trace-v1 safety checks for provider recreation, ambiguity, and local-work
+  consumption/re-advertisement.
+- Focused adversarial suite: 27 passed, one optional-schema skip.
+- Paused at the planned native invariant/fingerprint review gate.
+
 ## 2026-08-27 — Slice 2 broader route adapter matrix
 
 - Composed the real deployed four-route, external-authority v2, and post-fan-in v2

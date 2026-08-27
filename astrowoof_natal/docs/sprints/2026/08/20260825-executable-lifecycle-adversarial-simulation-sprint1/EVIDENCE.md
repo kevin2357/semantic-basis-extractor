@@ -1,5 +1,16 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 3 native oracle
+
+- Public derivation: `classify_adversarial_transition()`.
+- Ordered history evaluation: `evaluate_adversarial_history()`.
+- Safety evaluation: `adversarial_safety_violations()` and
+  `assert_adversarial_safety()`.
+- Public contradiction derivation: `native_contradictions()`.
+- No-op snapshot/revision/checkpoint republish regression proves no false progress.
+- Focused result: 27 passed, one optional-schema skip.
+- Provider/network calls: 0; spend: USD 0.
+
 ## Slice 2 broader route matrix
 
 - Public builder: `build_adversarial_route_matrix_qualification()`.
