@@ -219,3 +219,21 @@ Current gate: API/Linux joined-candidate review before Slice 6 release decision.
   be repeated from committed 4A source before the joined campaign or release.
 
 Current gate: Slice 4A implementation, followed by API projection-bundle review.
+
+## 2026-08-27 — Corrective Slice 4A implemented
+
+- Added closed contract `astrowoof.post_fan_in_retry_inspection_bundle.v1`.
+- Added a packaged schema plus public Python reader, runner, and strict validator.
+- Extended the installed qualification CLI with `--inspection-bundle` and
+  `--inspection-bundle-schema`.
+- Published the seven exact ordered lifecycle projections needed by API while
+  excluding private workspace/provider evidence.
+- Bound each phase, the complete bundle, the existing fixture, and the existing
+  qualification receipt by canonical SHA-256 identities.
+- Froze scripted post-dispatch scheduling evidence so independent temporary
+  workspaces reproduce exact bundle bytes.
+- Focused bundle/receipt suite: 9 tests passed, 1 expected optional-schema skip.
+- Adjacent Slice 1–3 regression suite: 20 tests passed.
+- External provider/network calls, spend, and retained-QA access remained zero.
+
+Current gate: API Slice 4A contract and fixture review before rebuilding Slice 5.

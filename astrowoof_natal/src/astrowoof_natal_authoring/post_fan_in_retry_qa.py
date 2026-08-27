@@ -37,7 +37,9 @@ from .temporal_lifecycle import (
 
 
 CONTRACT = "astrowoof.post_fan_in_retry_qualification.v1"
+PROJECTION_CONTRACT = "astrowoof.post_fan_in_retry_inspection_bundle.v1"
 SCHEMA_RESOURCE = "post-fan-in-retry-qualification.v1.schema.json"
+PROJECTION_SCHEMA_RESOURCE = "post-fan-in-retry-inspection-bundle.v1.schema.json"
 FIXTURE_RESOURCE = "post-fan-in-retry-routing.v1.json"
 
 
@@ -60,21 +62,21 @@ def _lifecycle_projection(value: Mapping[str, Any]) -> dict[str, Any]:
         "schema_version": validated["schema_version"],
         "run_id": validated["run_id"],
         "route_family": basis["native_route"]["route_family"],
-        "provider_mechanism": (
-            custody["actions"][0]["provider_operation_kind"]
-            if custody["actions"] else "none"
-        ),
+        # This exact fixture's route contract is interactive Responses even in
+        # phases where no provider-bound action is presently in custody.
+        "provider_mechanism": "response",
         "selected_command": decision["selected_command"],
         "capacity_disposition": decision["capacity_disposition"],
         "reason_code": decision["reason_code"],
         "eligible_now": decision["eligible_now"],
         "due_action_ids": list(decision["due_action_ids"]),
-        "not_before_present": decision["not_before"] is not None,
+        "not_before": decision["not_before"],
         "provider_custody": {
             "classification": custody["state"],
             "action_ids": list(custody["action_ids"]),
         },
         "local_operations": [{
+            "operation_key": item["operation_key"],
             "kind": item["kind"],
             "stage": item["stage"],
             "source_action_ids": list(item["source_action_ids"]),
@@ -83,6 +85,11 @@ def _lifecycle_projection(value: Mapping[str, Any]) -> dict[str, Any]:
         "consumed_operation_count": len(inventory["consumed_operation_keys"]),
         "external_authority_action_ids": list(authority["ordered_action_ids"]),
     }
+
+
+def _phase_projection(phase: str, value: Mapping[str, Any]) -> dict[str, Any]:
+    body = {"phase": phase, **_lifecycle_projection(value)}
+    return {**body, "phase_sha256": _digest(body)}
 
 
 def _binding(run_id: str, route: str, revision: int) -> dict[str, Any]:
@@ -139,6 +146,13 @@ def read_post_fan_in_retry_fixture() -> dict[str, Any]:
 def read_post_fan_in_retry_qualification_schema() -> dict[str, Any]:
     path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
         SCHEMA_RESOURCE,
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_post_fan_in_retry_inspection_bundle_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        PROJECTION_SCHEMA_RESOURCE,
     )
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -248,17 +262,19 @@ def _package_version() -> str:
         return "source-tree"
 
 
-def run_post_fan_in_retry_qualification() -> dict[str, Any]:
+def _run_post_fan_in_retry_artifacts() -> tuple[dict[str, Any], dict[str, Any]]:
     fixture = read_post_fan_in_retry_fixture()
     with tempfile.TemporaryDirectory(prefix="astrowoof-post-fan-in-") as temporary:
         run_dir, first, second = _materialize(Path(temporary))
         phases: list[dict[str, Any]] = []
+        projections: list[dict[str, Any]] = []
         not_due = inspect_post_fan_in_lifecycle(
             run_dir, observed_at="2026-08-27T12:00:00Z",
             native_exclusive_access="declared",
         )
         validate_lifecycle_inspection_v07(not_due)
         phases.append({"phase": "provider_not_due", "evidence_sha256": _digest(_lifecycle_projection(not_due))})
+        projections.append(_phase_projection("provider_not_due", not_due))
         retrievals: list[str] = []
         no_op = reconcile_provider_cycle(
             run_dir, observed_at="2026-08-27T12:00:00Z",
@@ -288,9 +304,11 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
             native_exclusive_access="declared",
         )
         validate_lifecycle_inspection_v07(local)
+        projections.append(_phase_projection("provider_retrieval", local))
         if local["temporal_decision"]["selected_command"] != "ordinary_resume":
             raise ValueError("Post-fan-in qualification did not expose local fan-in")
         phases.append({"phase": "local_fan_in", "evidence_sha256": _digest(_lifecycle_projection(local))})
+        projections.append(_phase_projection("local_fan_in", local))
 
         state_path = run_dir / "run.json"
         state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -305,6 +323,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         if successor["temporal_decision"]["selected_command"] != "await_external_authority":
             raise ValueError("Post-fan-in qualification did not consume local work")
         phases.append({"phase": "local_operation_consumed", "evidence_sha256": _digest(_lifecycle_projection(successor))})
+        projections.append(_phase_projection("local_operation_consumed", successor))
 
         inspection = inspect_temporal_lifecycle(
             run_dir, native_exclusive_access="declared",
@@ -335,6 +354,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
                 "intent_outcome": intent["outcome"],
             }),
         })
+        projections.append(_phase_projection("ordinary_v2_authority", successor))
         creates: list[str] = []
         dispatched = dispatch_external_authority_v2_intent(
             run_dir,
@@ -354,6 +374,22 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
                 "created_action_ids": list(creates),
             }),
         })
+        # Freeze the scripted custody schedule so the public qualification bundle
+        # is reproducible rather than inheriting the host wall clock used by the
+        # production dispatch helper.
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        dispatched_action = next(
+            item for item in state["spend_ledger"]["actions"]
+            if item["action_id"] == second
+        )
+        dispatched_action["provider_reconciliation"]["last_attempt_at"] = "2026-08-27T12:01:03Z"
+        dispatched_action["provider_reconciliation"]["resume_not_before"] = "2026-08-27T12:01:18Z"
+        save_state(state_path, state)
+        dispatched_inspection = inspect_post_fan_in_lifecycle(
+            run_dir, observed_at="2026-08-27T12:01:04Z",
+            native_exclusive_access="declared",
+        )
+        projections.append(_phase_projection("one_dispatch", dispatched_inspection))
         replay = dispatch_external_authority_v2_intent(
             run_dir,
             request_sha256=request["external_authority_request_sha256"],
@@ -377,6 +413,7 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
         validate_lifecycle_inspection_v07(endpoint)
         if endpoint["temporal_decision"]["selected_command"] != "provider_reconciliation_cycle":
             raise ValueError("Post-fan-in qualification endpoint is not provider pending")
+        projections.append(_phase_projection("exact_replay", endpoint))
 
     body = {
         "schema_version": CONTRACT,
@@ -402,9 +439,30 @@ def run_post_fan_in_retry_qualification() -> dict[str, Any]:
             "contains_retained_qa_data": False,
         },
     }
-    return validate_post_fan_in_retry_qualification({
+    receipt = validate_post_fan_in_retry_qualification({
         **body, "receipt_sha256": _digest(body),
     })
+    bundle_body = {
+        "schema_version": PROJECTION_CONTRACT,
+        "scenario_id": fixture["scenario_id"],
+        "fixture_sha256": body["fixture_sha256"],
+        "qualification_receipt_sha256": receipt["receipt_sha256"],
+        "phases": projections,
+    }
+    bundle = validate_post_fan_in_retry_inspection_bundle({
+        **bundle_body, "bundle_sha256": _digest(bundle_body),
+    })
+    return receipt, bundle
+
+
+def run_post_fan_in_retry_qualification() -> dict[str, Any]:
+    receipt, _bundle = _run_post_fan_in_retry_artifacts()
+    return receipt
+
+
+def run_post_fan_in_retry_inspection_bundle() -> dict[str, Any]:
+    _receipt, bundle = _run_post_fan_in_retry_artifacts()
+    return bundle
 
 
 def validate_post_fan_in_retry_qualification(value: Any) -> dict[str, Any]:
@@ -453,6 +511,83 @@ def validate_post_fan_in_retry_qualification(value: Any) -> dict[str, Any]:
     return dict(value)
 
 
+def validate_post_fan_in_retry_inspection_bundle(value: Any) -> dict[str, Any]:
+    keys = {
+        "schema_version", "bundle_sha256", "scenario_id", "fixture_sha256",
+        "qualification_receipt_sha256", "phases",
+    }
+    if not isinstance(value, Mapping) or set(value) != keys:
+        raise ValueError("Post-fan-in inspection bundle fields are not exact")
+    if value.get("schema_version") != PROJECTION_CONTRACT:
+        raise ValueError("Unsupported post-fan-in inspection bundle")
+    body = {key: item for key, item in value.items() if key != "bundle_sha256"}
+    if value.get("bundle_sha256") != _digest(body):
+        raise ValueError("Post-fan-in inspection bundle digest mismatch")
+    fixture = read_post_fan_in_retry_fixture()
+    if value.get("scenario_id") != fixture["scenario_id"] or value.get("fixture_sha256") != _digest(fixture):
+        raise ValueError("Post-fan-in inspection bundle fixture identity differs")
+    for name in ("qualification_receipt_sha256",):
+        item = value.get(name)
+        if not isinstance(item, str) or len(item) != 64 or any(c not in "0123456789abcdef" for c in item):
+            raise ValueError("Post-fan-in inspection bundle receipt identity is invalid")
+    phases = value.get("phases")
+    expected = fixture["corrected_sequence"]
+    if not isinstance(phases, list) or len(phases) != len(expected):
+        raise ValueError("Post-fan-in inspection bundle phase count differs")
+    phase_keys = {
+        "phase", "phase_sha256", "schema_version", "run_id", "route_family",
+        "provider_mechanism", "selected_command", "capacity_disposition",
+        "reason_code", "eligible_now", "due_action_ids", "not_before",
+        "provider_custody", "local_operations", "consumed_operation_count",
+        "external_authority_action_ids",
+    }
+    first = "paid_000000000000000000000101"
+    second = "paid_000000000000000000000102"
+    semantics = {
+        "provider_not_due": ("provider_reconciliation_cycle", "release_until_due", "provider_reconciliation_not_due", False, "known_operations_pending", [first], 0, 0, []),
+        "provider_retrieval": ("ordinary_resume", "continue_local_cycle", "ordinary_local_continuation_ready", True, "completed_evidence_pending_local_work", [first], 1, 0, []),
+        "local_fan_in": ("ordinary_resume", "continue_local_cycle", "ordinary_local_continuation_ready", True, "completed_evidence_pending_local_work", [first], 1, 0, []),
+        "local_operation_consumed": ("await_external_authority", "await_external_authority", "spend_authorization_required", False, "none", [], 0, 1, [second]),
+        "ordinary_v2_authority": ("await_external_authority", "await_external_authority", "spend_authorization_required", False, "none", [], 0, 1, [second]),
+        "one_dispatch": ("provider_reconciliation_cycle", "release_until_due", "provider_reconciliation_not_due", False, "known_operations_pending", [second], 0, 1, []),
+        "exact_replay": ("provider_reconciliation_cycle", "release_until_due", "provider_reconciliation_not_due", False, "known_operations_pending", [second], 0, 1, []),
+    }
+    for expected_name, phase in zip(expected, phases, strict=True):
+        if not isinstance(phase, Mapping) or set(phase) != phase_keys or phase.get("phase") != expected_name:
+            raise ValueError("Post-fan-in inspection bundle phase shape differs")
+        phase_body = {key: item for key, item in phase.items() if key != "phase_sha256"}
+        if phase.get("phase_sha256") != _digest(phase_body):
+            raise ValueError("Post-fan-in inspection phase digest mismatch")
+        if phase.get("run_id") != "fixture-post-fan-in-retry" or phase.get("route_family") != "exact_natal":
+            raise ValueError("Post-fan-in inspection phase identity differs")
+        if phase.get("schema_version") != "astrowoof.authoring_lifecycle_inspection.v0.7" or phase.get("provider_mechanism") != "response":
+            raise ValueError("Post-fan-in inspection phase contract differs")
+        for field in ("due_action_ids", "external_authority_action_ids"):
+            if not isinstance(phase.get(field), list) or any(not isinstance(item, str) for item in phase[field]):
+                raise ValueError("Post-fan-in inspection action inventory is invalid")
+        custody = phase.get("provider_custody")
+        if not isinstance(custody, Mapping) or set(custody) != {"classification", "action_ids"}:
+            raise ValueError("Post-fan-in inspection custody projection is invalid")
+        if not isinstance(phase.get("local_operations"), list) or not isinstance(phase.get("consumed_operation_count"), int):
+            raise ValueError("Post-fan-in inspection local-work projection is invalid")
+        expected_semantics = semantics[expected_name]
+        actual_semantics = (
+            phase["selected_command"], phase["capacity_disposition"],
+            phase["reason_code"], phase["eligible_now"],
+            custody["classification"], custody["action_ids"],
+            len(phase["local_operations"]), phase["consumed_operation_count"],
+            phase["external_authority_action_ids"],
+        )
+        if actual_semantics != expected_semantics:
+            raise ValueError("Post-fan-in inspection phase semantics differ")
+        for operation in phase["local_operations"]:
+            if not isinstance(operation, Mapping) or set(operation) != {
+                "operation_key", "kind", "stage", "source_action_ids", "reason_code",
+            } or not isinstance(operation["source_action_ids"], list):
+                raise ValueError("Post-fan-in inspection local operation is invalid")
+    return copy.deepcopy(dict(value))
+
+
 def _inside_native_workspace(path: Path) -> bool:
     target = path.resolve()
     return any(
@@ -466,13 +601,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path)
     parser.add_argument("--schema", action="store_true")
     parser.add_argument("--fixture", action="store_true")
+    parser.add_argument("--inspection-bundle", action="store_true")
+    parser.add_argument("--inspection-bundle-schema", action="store_true")
     args = parser.parse_args(argv)
-    if args.schema and args.fixture:
-        parser.error("--schema and --fixture are mutually exclusive")
+    if sum(bool(item) for item in (args.schema, args.fixture, args.inspection_bundle, args.inspection_bundle_schema)) > 1:
+        parser.error("public artifact selectors are mutually exclusive")
     if args.output and _inside_native_workspace(args.output):
         parser.error("--output must not be inside a native SBE workspace")
     value = (
         read_post_fan_in_retry_qualification_schema() if args.schema
+        else read_post_fan_in_retry_inspection_bundle_schema() if args.inspection_bundle_schema
+        else run_post_fan_in_retry_inspection_bundle() if args.inspection_bundle
         else read_post_fan_in_retry_fixture() if args.fixture
         else run_post_fan_in_retry_qualification()
     )

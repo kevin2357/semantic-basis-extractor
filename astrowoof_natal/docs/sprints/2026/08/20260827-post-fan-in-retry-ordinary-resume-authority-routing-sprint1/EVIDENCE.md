@@ -179,3 +179,21 @@ before Slice 6 release preparation.
 Status: corrective Slice 4A required. The pre-4A candidate is not approved for
 publication or deployment; repeat Slice 5 after the packaged projection surface
 is complete and reviewed.
+
+## Corrective Slice 4A evidence
+
+- Contract: `astrowoof.post_fan_in_retry_inspection_bundle.v1`.
+- Schema: `post-fan-in-retry-inspection-bundle.v1.schema.json`.
+- Public CLI selectors: `--inspection-bundle`, `--inspection-bundle-schema`.
+- Ordered projections: all seven existing qualification phases, exact order.
+- Reproducibility: exact bundle equality across fresh disposable workspaces.
+- Semantic mutations: digest and closed phase semantics refuse changes.
+- Privacy: no provider IDs/payloads, prompts, native paths/files, credentials,
+  protected provenance, or retained-QA evidence.
+- Focused result: 9 passed; 1 expected optional-schema skip.
+- Adjacent regression result: 20 passed.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+
+Status: Slice 4A implemented; API projection-bundle review required.

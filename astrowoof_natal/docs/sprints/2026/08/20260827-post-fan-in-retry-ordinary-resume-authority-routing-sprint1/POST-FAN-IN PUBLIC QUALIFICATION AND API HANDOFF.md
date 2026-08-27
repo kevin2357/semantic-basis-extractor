@@ -1,6 +1,6 @@
 # Post-Fan-In Public Qualification and API Handoff
 
-Status: Slice 4 SBE qualification implemented; API joined-campaign review pending.
+Status: corrective Slice 4A projection bundle implemented; API review pending.
 
 ## Supported installed surface
 
@@ -10,12 +10,17 @@ The installed wheel exposes:
 astrowoof-post-fan-in-retry-qa
 astrowoof-post-fan-in-retry-qa --fixture
 astrowoof-post-fan-in-retry-qa --schema
+astrowoof-post-fan-in-retry-qa --inspection-bundle
+astrowoof-post-fan-in-retry-qa --inspection-bundle-schema
 ```
 
 The matching Python readers are exported from `astrowoof_natal_authoring`:
 
 - `read_post_fan_in_retry_fixture()`;
 - `read_post_fan_in_retry_qualification_schema()`;
+- `read_post_fan_in_retry_inspection_bundle_schema()`;
+- `run_post_fan_in_retry_inspection_bundle()`;
+- `validate_post_fan_in_retry_inspection_bundle()`;
 - `run_post_fan_in_retry_qualification()`; and
 - `validate_post_fan_in_retry_qualification()`.
 
@@ -28,6 +33,17 @@ and qualification wall-clock instants are deliberately excluded; route, mechanis
 command, capacity, custody, action inventory, local-work semantics, outcome, and
 replay facts remain bound. Two identical invocations under one package version must
 produce an identical receipt.
+
+The companion `astrowoof.post_fan_in_retry_inspection_bundle.v1` artifact exposes
+the seven ordered lifecycle projections behind those hashes. Each closed phase
+contains the native run/route/mechanism identity, selected command, native capacity
+conclusion, eligibility and schedule, public custody/action inventory, local-work
+inventory and consumed count, and external-authority action inventory. Every phase
+has its own semantic digest; the bundle binds the fixture and qualification receipt
+digests and has an outer content digest.
+
+The bundle is observation evidence for API translation and scheduling tests. It
+does not grant API permission to select commands or mutate SBE state.
 
 ## What the qualification proves
 
@@ -53,7 +69,7 @@ ordinary-authority facts.
 
 ## Privacy and authority boundary
 
-The fixture and receipt expose no raw `run.json`, workspace path, prompt, provider
+The fixture, receipt, and projection bundle expose no raw `run.json`, workspace path, prompt, provider
 payload, provider response ID, private selector, credentials, or retained-QA data.
 The local provider transport is scripted; external network calls and spend are
 zero.
@@ -64,7 +80,7 @@ retained run, prove API persistence, or prove reader delivery.
 ## API joined campaign
 
 The API companion should run this command against the exact installed candidate
-wheel, validate the fixture and receipt, and then drive the public projections
+wheel, validate the fixture, receipt, and ordered inspection bundle, and then drive the public projections
 through its real persistence, lifecycle translation, scheduler, lease, and
 capacity services. With two runs and one slot it must prove that the waiting run
 does not retain the slot, the competing eligible run progresses, provider/spend

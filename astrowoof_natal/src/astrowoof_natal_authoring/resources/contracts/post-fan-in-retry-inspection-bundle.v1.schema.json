@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/post-fan-in-retry-inspection-bundle.v1.schema.json",
+  "title": "AstroWoof post-fan-in retry inspection bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_sha256", "scenario_id", "fixture_sha256", "qualification_receipt_sha256", "phases"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.post_fan_in_retry_inspection_bundle.v1"},
+    "bundle_sha256": {"$ref": "#/$defs/digest"},
+    "scenario_id": {"const": "post_fan_in_retry_ordinary_v2"},
+    "fixture_sha256": {"$ref": "#/$defs/digest"},
+    "qualification_receipt_sha256": {"$ref": "#/$defs/digest"},
+    "phases": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "prefixItems": [
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "provider_not_due"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "provider_retrieval"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "local_fan_in"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "local_operation_consumed"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "ordinary_v2_authority"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "one_dispatch"}}},
+        {"$ref": "#/$defs/phase", "properties": {"phase": {"const": "exact_replay"}}}
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stringArray": {"type": "array", "items": {"type": "string"}},
+    "phase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["phase", "phase_sha256", "schema_version", "run_id", "route_family", "provider_mechanism", "selected_command", "capacity_disposition", "reason_code", "eligible_now", "due_action_ids", "not_before", "provider_custody", "local_operations", "consumed_operation_count", "external_authority_action_ids"],
+      "properties": {
+        "phase": {"type": "string"}, "phase_sha256": {"$ref": "#/$defs/digest"},
+        "schema_version": {"const": "astrowoof.authoring_lifecycle_inspection.v0.7"},
+        "run_id": {"const": "fixture-post-fan-in-retry"},
+        "route_family": {"const": "exact_natal"},
+        "provider_mechanism": {"const": "response"},
+        "selected_command": {"type": "string"}, "capacity_disposition": {"type": "string"},
+        "reason_code": {"type": "string"}, "eligible_now": {"type": "boolean"},
+        "due_action_ids": {"$ref": "#/$defs/stringArray"},
+        "not_before": {"type": ["string", "null"]},
+        "provider_custody": {"type": "object", "additionalProperties": false, "required": ["classification", "action_ids"], "properties": {"classification": {"type": "string"}, "action_ids": {"$ref": "#/$defs/stringArray"}}},
+        "local_operations": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["operation_key", "kind", "stage", "source_action_ids", "reason_code"], "properties": {"operation_key": {"$ref": "#/$defs/digest"}, "kind": {"type": "string"}, "stage": {"type": "string"}, "source_action_ids": {"$ref": "#/$defs/stringArray"}, "reason_code": {"type": "string"}}}},
+        "consumed_operation_count": {"type": "integer", "minimum": 0},
+        "external_authority_action_ids": {"$ref": "#/$defs/stringArray"}
+      }
+    }
+  }
+}
