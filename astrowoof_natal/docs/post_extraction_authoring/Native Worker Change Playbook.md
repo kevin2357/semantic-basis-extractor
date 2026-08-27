@@ -4,7 +4,7 @@
 status: accepted
 owner: semantic-basis-extractor
 scope: safely planning, implementing, qualifying, releasing, and jointly integrating native-worker changes
-last_reviewed: 2026-08-18
+last_reviewed: 2026-08-27
 ```
 
 ## Purpose
@@ -36,6 +36,7 @@ For any non-trivial native change, read these first:
 6. [Spend Authorization Consumer Handoff](Spend%20Authorization%20Consumer%20Handoff.md)
 7. [Provider Disclosure and Durable Workspace Contract](Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
 8. [Maintainer Release Playbook](Maintainer%20Release%20Playbook.md)
+9. [Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md)
 
 Also read the current release notes, compatibility statement, API handoff, known
 limitations, manifest, and packaged contract catalog. For a shared boundary, read
@@ -273,6 +274,14 @@ an already conflicting publication.
 
 ## Test failure boundaries, not only outcomes
 
+For lifecycle, provider-custody, authority, wrapper, or scheduler-facing changes,
+use the adversarial simulator before relying on another paid QA cohort. Add the
+affected transition to the semantic oracle, prove its event admissibility, and test
+stutter, cycle, contradiction, and starvation behavior where applicable. A shared
+boundary must also run through the API's real translator and persistence services;
+an SBE-only receipt cannot claim API lease or fairness behavior. Follow
+[Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md).
+
 Inject interruption before and after:
 
 - prepared-action and authorization-request persistence;
@@ -500,6 +509,12 @@ approval, frozen aggregate and per-stage ceilings, supported reconciliation only
 and a final audit of provider operations, native commitments/reported usage, API
 reservations, cleanup, and spend.
 
+When lifecycle semantics, wrapper translation, capacity disposition, or scheduling
+changes, also require the installed adversarial catalog/joint campaign appropriate
+to the ownership boundary. Promote a newly discovered incident to a minimized,
+sanitized deterministic fixture rather than relying only on a retained workspace or
+random seed.
+
 ## Finish a joint change
 
 Before calling the work complete:
@@ -519,6 +534,7 @@ Before calling the work complete:
 
 ## Related procedures
 
+- [Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md)
 - [Maintainer Release Playbook](Maintainer%20Release%20Playbook.md)
 - [Runtime Contracts](Runtime%20Contracts.md)
 - [Authoring Lifecycle Consumer Handoff](Authoring%20Lifecycle%20Consumer%20Handoff.md)

@@ -29,10 +29,14 @@ Use bounded sprint slices with explicit gates:
 5. **Packaged deterministic QA.** Run `astrowoof-release-smoke
    --require-installed` from outside the source tree and exercise retry, resume,
    assembly, delivery integrity, and cleanup.
-6. **Controlled live candidate.** Use a known subject and real provider only
+6. **Adversarial lifecycle qualification.** For lifecycle, provider-custody, or
+   authority changes, run the installed provider-free adversarial qualification.
+   If API translation, leases, capacity, or scheduling are affected, require the
+   API joined campaign against the same candidate and catalog.
+7. **Controlled live candidate.** Use a known subject and real provider only
    after deterministic gates pass. Record attempts, usage, cost, QA, and any
    defect found.
-7. **Reproducibility and publication.** Build twice with controlled timestamps,
+8. **Reproducibility and publication.** Build twice with controlled timestamps,
    require byte-identical wheels, produce checksums and handoff documents, tag
    the qualified commit, publish assets, download them again, and reverify.
 
@@ -126,6 +130,21 @@ requires:
 - the consumer handoff assigns cross-run reservation and billing authority to
   the API.
 
+For a release that changes lifecycle commands/results, local-work projection,
+provider custody, external authority, wrapper translation, capacity disposition,
+or scheduler-facing evidence, promotion also requires:
+
+- installed `astrowoof-adversarial-qa` from the exact candidate wheel;
+- zero external network/provider calls, spend, and retained-QA access;
+- named historical and malformed fixtures returning their expected classification;
+- fixed seed/depth/time budgets and any unexplored frontier recorded;
+- newly discovered failures minimized and promoted to deterministic fixtures; and
+- a joined API receipt when the changed claim depends on API persistence, lease,
+  capacity, reservation, or scheduler behavior.
+
+See
+[Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md).
+
 For v0.9 or later, also verify the provider-disclosure allowlist across
 initial authoring, creative retry and Batch construction, polish, critic, and
 candidate requests. Exercise exact-path snapshot restore and rejection of a
@@ -153,3 +172,8 @@ A release is complete only when:
 
 If one condition is unmet, the result is a candidate or a blocked release, not
 a release with an implicit waiver.
+
+## Related procedures
+
+- [Native Worker Change Playbook](Native%20Worker%20Change%20Playbook.md)
+- [Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md)
