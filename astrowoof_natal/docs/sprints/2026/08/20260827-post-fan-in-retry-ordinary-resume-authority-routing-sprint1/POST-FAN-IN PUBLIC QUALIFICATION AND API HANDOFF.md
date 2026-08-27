@@ -45,6 +45,12 @@ digests and has an outer content digest.
 The bundle is observation evidence for API translation and scheduling tests. It
 does not grant API permission to select commands or mutate SBE state.
 
+The public bundle validator reconstructs the canonical provider-free qualification
+receipt for the installed package and requires the bundle's receipt reference to
+equal that receipt identity. Rehashing a bundle around an arbitrary receipt
+reference therefore fails; outer content addressing alone is not accepted as a
+receipt join.
+
 ## What the qualification proves
 
 The provider-free command constructs a disposable exact-Natal interactive

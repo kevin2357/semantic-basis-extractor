@@ -75,6 +75,18 @@ class PostFanInRetryQualificationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_post_fan_in_retry_inspection_bundle(changed)
 
+    def test_projection_bundle_rejects_rehashed_wrong_receipt_binding(self) -> None:
+        changed = run_post_fan_in_retry_inspection_bundle()
+        changed["qualification_receipt_sha256"] = "0" * 64
+        bundle_body = {
+            key: value for key, value in changed.items() if key != "bundle_sha256"
+        }
+        changed["bundle_sha256"] = hashlib.sha256(
+            json.dumps(bundle_body, sort_keys=True, separators=(",", ":")).encode(),
+        ).hexdigest()
+        with self.assertRaisesRegex(ValueError, "receipt identity differs"):
+            validate_post_fan_in_retry_inspection_bundle(changed)
+
     def test_provider_free_public_qualification_reaches_pending_endpoint(self) -> None:
         receipt = run_post_fan_in_retry_qualification()
         self.assertEqual("pass", receipt["status"])

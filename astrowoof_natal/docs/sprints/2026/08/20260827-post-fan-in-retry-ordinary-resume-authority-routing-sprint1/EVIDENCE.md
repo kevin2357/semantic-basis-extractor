@@ -197,3 +197,18 @@ is complete and reviewed.
 - Retained-QA access/mutation: none.
 
 Status: Slice 4A implemented; API projection-bundle review required.
+
+### API Slice 4A receipt-binding correction
+
+- Review: `API SLICE 4A REVIEW.md`.
+- Finding reproduced: a rehashed arbitrary receipt reference was previously
+  accepted.
+- Correction: public validation reconstructs and validates the canonical receipt,
+  then requires exact receipt-identity equality.
+- Requested fully rehashed wrong-receipt mutation: refused.
+- Focused result: 10 passed; 1 expected optional-schema skip.
+- Adjacent regression result: 20 passed.
+- Provider/network/spend/retained-QA totals remain zero.
+
+Status: Slice 4A correction complete; fresh candidate build and installed
+qualification required.

@@ -262,7 +262,9 @@ def _package_version() -> str:
         return "source-tree"
 
 
-def _run_post_fan_in_retry_artifacts() -> tuple[dict[str, Any], dict[str, Any]]:
+def _run_post_fan_in_retry_artifacts(
+    *, validate_bundle: bool = True,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     fixture = read_post_fan_in_retry_fixture()
     with tempfile.TemporaryDirectory(prefix="astrowoof-post-fan-in-") as temporary:
         run_dir, first, second = _materialize(Path(temporary))
@@ -449,9 +451,13 @@ def _run_post_fan_in_retry_artifacts() -> tuple[dict[str, Any], dict[str, Any]]:
         "qualification_receipt_sha256": receipt["receipt_sha256"],
         "phases": projections,
     }
-    bundle = validate_post_fan_in_retry_inspection_bundle({
+    bundle_value = {
         **bundle_body, "bundle_sha256": _digest(bundle_body),
-    })
+    }
+    bundle = (
+        _validate_post_fan_in_retry_inspection_bundle(bundle_value, receipt)
+        if validate_bundle else bundle_value
+    )
     return receipt, bundle
 
 
@@ -511,7 +517,10 @@ def validate_post_fan_in_retry_qualification(value: Any) -> dict[str, Any]:
     return dict(value)
 
 
-def validate_post_fan_in_retry_inspection_bundle(value: Any) -> dict[str, Any]:
+def _validate_post_fan_in_retry_inspection_bundle(
+    value: Any,
+    qualification_receipt: Mapping[str, Any],
+) -> dict[str, Any]:
     keys = {
         "schema_version", "bundle_sha256", "scenario_id", "fixture_sha256",
         "qualification_receipt_sha256", "phases",
@@ -526,10 +535,11 @@ def validate_post_fan_in_retry_inspection_bundle(value: Any) -> dict[str, Any]:
     fixture = read_post_fan_in_retry_fixture()
     if value.get("scenario_id") != fixture["scenario_id"] or value.get("fixture_sha256") != _digest(fixture):
         raise ValueError("Post-fan-in inspection bundle fixture identity differs")
-    for name in ("qualification_receipt_sha256",):
-        item = value.get(name)
-        if not isinstance(item, str) or len(item) != 64 or any(c not in "0123456789abcdef" for c in item):
-            raise ValueError("Post-fan-in inspection bundle receipt identity is invalid")
+    canonical_receipt = validate_post_fan_in_retry_qualification(
+        qualification_receipt,
+    )
+    if value.get("qualification_receipt_sha256") != canonical_receipt["receipt_sha256"]:
+        raise ValueError("Post-fan-in inspection bundle receipt identity differs")
     phases = value.get("phases")
     expected = fixture["corrected_sequence"]
     if not isinstance(phases, list) or len(phases) != len(expected):
@@ -586,6 +596,13 @@ def validate_post_fan_in_retry_inspection_bundle(value: Any) -> dict[str, Any]:
             } or not isinstance(operation["source_action_ids"], list):
                 raise ValueError("Post-fan-in inspection local operation is invalid")
     return copy.deepcopy(dict(value))
+
+
+def validate_post_fan_in_retry_inspection_bundle(value: Any) -> dict[str, Any]:
+    """Validate a bundle against a freshly reconstructed canonical receipt."""
+
+    receipt, _bundle = _run_post_fan_in_retry_artifacts(validate_bundle=False)
+    return _validate_post_fan_in_retry_inspection_bundle(value, receipt)
 
 
 def _inside_native_workspace(path: Path) -> bool:

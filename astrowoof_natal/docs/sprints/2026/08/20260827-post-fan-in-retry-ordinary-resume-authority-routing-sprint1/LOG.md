@@ -237,3 +237,18 @@ Current gate: Slice 4A implementation, followed by API projection-bundle review.
 - External provider/network calls, spend, and retained-QA access remained zero.
 
 Current gate: API Slice 4A contract and fixture review before rebuilding Slice 5.
+
+## 2026-08-27 — API Slice 4A receipt-binding correction
+
+- Added `API SLICE 4A REVIEW.md` and reproduced its integrity finding.
+- Refactored shared provider-free artifact construction to avoid recursive public
+  validation.
+- The public bundle validator now reconstructs the canonical qualification receipt
+  and requires the claimed receipt identity to match it exactly.
+- Added the requested mutation: replace only the receipt digest, recompute the
+  outer bundle digest, and require refusal.
+- Focused Slice 4A suite: 10 passed, 1 expected optional-schema skip.
+- Adjacent Slice 1–3 suite: 20 passed.
+
+Current gate: commit corrected source, build a fresh post-4A candidate, and repeat
+installed qualification before the API joined campaign.
