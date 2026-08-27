@@ -166,3 +166,14 @@ Current gate: API fixture-by-fixture review and joined one-slot campaign.
   optional-schema skip.
 
 Current gate: API Slice 4 re-review before installed-wheel qualification.
+
+## 2026-08-27 — API Slice 4 re-review approved
+
+- Added `API SLICE 4 RE-REVIEW.md`.
+- API independently confirmed identical phase, endpoint, and receipt identities
+  across fresh temporary workspaces.
+- API approved Slice 5 installed-wheel qualification without further contract or
+  runtime changes.
+- Candidate version advanced to fresh unpublished patch `0.4.27`.
+
+Current gate: Slice 5 installed-wheel and compatibility qualification.

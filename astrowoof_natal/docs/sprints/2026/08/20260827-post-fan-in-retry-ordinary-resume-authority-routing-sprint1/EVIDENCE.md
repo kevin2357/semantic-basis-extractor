@@ -122,3 +122,10 @@ Status: SBE Slice 4 component complete; API joined-campaign review pending.
 - Corrected combined result: 26 passed; 1 expected optional-schema skip.
 
 Status: Slice 4 correction complete; API re-review pending.
+
+- API re-review: `API SLICE 4 RE-REVIEW.md`.
+- Independent result: receipt, phase evidence, and endpoint evidence reproduce
+  exactly across fresh workspaces.
+- Disposition: approved for installed-wheel qualification.
+
+Status: Slice 4 approved; Slice 5 in progress.
