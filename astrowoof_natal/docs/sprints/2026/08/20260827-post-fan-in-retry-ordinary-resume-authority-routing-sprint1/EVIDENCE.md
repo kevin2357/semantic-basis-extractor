@@ -212,3 +212,26 @@ Status: Slice 4A implemented; API projection-bundle review required.
 
 Status: Slice 4A correction complete; fresh candidate build and installed
 qualification required.
+
+## Fresh post-4A candidate evidence
+
+- Artifact source commit: `9205235`.
+- Version: `0.4.27` (unpublished).
+- Fixed build epoch: `1787872684`.
+- Deterministic wheel size: 1,051,330 bytes.
+- Deterministic wheel SHA-256:
+  `db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`.
+- Exact installed dependency: `semantic-projection-core==0.11.1`.
+- Installed qualification receipt SHA-256:
+  `982f8e3044c7e20a9324d44c61867af5e1787d2d996289ad7fe57aff19e6f2b9`.
+- Installed projection bundle SHA-256:
+  `75247d8652698e122c46fc79480bbf5b73fd0671b8cb38cb6aa5671eaab2a8a4`.
+- Receipt/bundle join: exact match, validated by installed public API.
+- Installed adversarial qualification: passed.
+- Generic installed release smoke: `DELIVERY_COMPLETE`; cleanup complete.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+
+Status: fresh post-4A candidate qualified on Windows. API joined campaign must use
+the exact wheel digest above; publication and deployment remain withheld.

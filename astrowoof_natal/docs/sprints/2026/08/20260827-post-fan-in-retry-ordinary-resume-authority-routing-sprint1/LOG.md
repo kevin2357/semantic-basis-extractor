@@ -252,3 +252,24 @@ Current gate: API Slice 4A contract and fixture review before rebuilding Slice 5
 
 Current gate: commit corrected source, build a fresh post-4A candidate, and repeat
 installed qualification before the API joined campaign.
+
+## 2026-08-27 — Fresh post-4A candidate qualified
+
+- Corrected artifact source: `9205235`.
+- Rebuilt `0.4.27` twice with fixed `SOURCE_DATE_EPOCH=1787872684`.
+- Both wheels are byte-identical: 1,051,330 bytes, SHA-256
+  `db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`.
+- Installed outside the checkout with exact SPC `0.11.1`.
+- Installed receipt and ordered-bundle commands passed; the bundle's receipt
+  reference exactly matched the installed canonical receipt.
+- Installed adversarial qualification passed.
+- Generic installed release smoke reached `DELIVERY_COMPLETE` and completed
+  cleanup successfully.
+- Receipt identity:
+  `982f8e3044c7e20a9324d44c61867af5e1787d2d996289ad7fe57aff19e6f2b9`.
+- Bundle identity:
+  `75247d8652698e122c46fc79480bbf5b73fd0671b8cb38cb6aa5671eaab2a8a4`.
+- External provider/network calls, spend, and retained-QA access remained zero.
+
+Current gate: API consumes this exact replacement candidate in the joined
+campaign; the pre-4A wheel is superseded.

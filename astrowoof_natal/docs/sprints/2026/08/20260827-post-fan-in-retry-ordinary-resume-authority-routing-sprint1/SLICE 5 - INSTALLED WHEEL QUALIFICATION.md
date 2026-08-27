@@ -2,6 +2,13 @@
 
 Status: SBE candidate qualification complete; API/Linux review pending.
 
+> Supersession note: the original candidate below remains valid pre-4A evidence,
+> but is not the joined-campaign artifact. Corrective Slice 4A produced replacement
+> source `9205235` and deterministic wheel SHA-256
+> `db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`.
+> Its installed receipt/bundle, adversarial qualification, and generic release
+> smoke passed. API must use that exact replacement wheel.
+
 ## Candidate identity
 
 - Source commit: `e1a22ab`
