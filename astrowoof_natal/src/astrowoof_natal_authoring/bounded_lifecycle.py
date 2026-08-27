@@ -57,6 +57,7 @@ from .initial_wave import (
     build_initial_wave_binding_bundle,
     build_wave_authorization,
     execute_initial_wave_creates,
+    is_active_initial_wave,
     preflight_wave_authorization,
     validate_initial_wave,
     validate_initial_wave_binding_bundle_against_wave,
@@ -1512,11 +1513,7 @@ def resume_bounded_run(
             state, run_dir, provider, event_emitter, token, _failure_injector,
         )
         return state
-    elif (
-        isinstance(state.get("initial_authoring_wave"), dict)
-        and state["initial_authoring_wave"].get("state")
-        in {"AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED", "SUBMITTING"}
-    ):
+    elif is_active_initial_wave(state.get("initial_authoring_wave")):
         logger.warning(
             "bounded_external_authority_refused reason=aggregate_grant_required wave_state=%s",
             state["initial_authoring_wave"].get("state"),

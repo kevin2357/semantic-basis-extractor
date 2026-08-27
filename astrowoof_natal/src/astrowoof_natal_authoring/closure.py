@@ -67,6 +67,7 @@ from .initial_wave import (
     build_initial_wave_binding_bundle,
     build_wave_authorization,
     execute_initial_wave_creates,
+    is_active_initial_wave,
     preflight_wave_authorization,
     validate_initial_wave,
     validate_initial_wave_binding_bundle_against_wave,
@@ -8075,7 +8076,7 @@ def main() -> None:
     if args.spend_authorization and not (
         args.initial_wave_authorization or args.external_authority_grant
     ):
-        if isinstance(state.get("initial_authoring_wave"), dict):
+        if is_active_initial_wave(state.get("initial_authoring_wave")):
             raise InitialWaveError(
                 "aggregate_grant_required",
                 "Initial-wave member authorizations require the exact "
@@ -8116,7 +8117,7 @@ def main() -> None:
         args.provider == "openai"
         and args.service_level == "interactive"
         and (
-            isinstance(state.get("initial_authoring_wave"), dict)
+            is_active_initial_wave(state.get("initial_authoring_wave"))
             or all(
                 not record.get("attempts")
                 for record in state.get("passes", {}).values()

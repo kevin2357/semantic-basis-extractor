@@ -16,6 +16,10 @@ from astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 import _binding
 from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
 
 
+class _ReachedOrdinaryAuthoring(RuntimeError):
+    pass
+
+
 def _resume_arguments(run_dir: Path, authorization: Path | None = None) -> list[str]:
     values = [
         "astrowoof-run-semantic-closure", "--run-dir", str(run_dir), "--resume",
@@ -95,7 +99,7 @@ class PostFanInRetryAuthorityRoutingSlice0Tests(SemanticClosureFixture):
         ):
             closure.main()
 
-    def test_public_resume_routes_completed_retry_into_initial_wave_grant_guard(self) -> None:
+    def test_public_resume_routes_completed_retry_past_initial_wave_guard(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run_dir, retry_one, _retry_two = self._openai_workspace(Path(temporary))
             authorization = Path(temporary) / "ordinary-authorization.json"
@@ -119,32 +123,25 @@ class PostFanInRetryAuthorityRoutingSlice0Tests(SemanticClosureFixture):
                     "ordered_action_ids"
                 ],
             )
-            run_before = (run_dir / "run.json").read_bytes()
-            snapshot_before = (run_dir / "workspace-snapshot.json").read_bytes()
-            with self.assertRaises(InitialWaveError) as raised:
+            with patch.object(
+                closure, "apply_spend_authorizations", return_value=[]
+            ), patch.object(
+                closure, "author_pending_passes",
+                side_effect=_ReachedOrdinaryAuthoring("ordinary path reached"),
+            ), self.assertRaises(_ReachedOrdinaryAuthoring):
                 self._run_main(_resume_arguments(run_dir, authorization))
-            self.assertEqual("aggregate_grant_required", raised.exception.reason_code)
-            self.assertEqual(run_before, (run_dir / "run.json").read_bytes())
-            self.assertEqual(
-                snapshot_before, (run_dir / "workspace-snapshot.json").read_bytes(),
-            )
-            self.assertFalse((run_dir / "native-results").exists())
 
     def test_stored_detached_wave_alone_reactivates_initial_wave_branch(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run_dir, _retry_one, _retry_two = self._openai_workspace(Path(temporary))
-            ordinary_calls: list[str] = []
-
-            def ordinary_path(**_kwargs: object) -> bool:
-                ordinary_calls.append("author_pending_passes")
-                return False
-
-            with patch.object(closure, "author_pending_passes", side_effect=ordinary_path):
+            with patch.object(
+                closure, "author_pending_passes",
+                side_effect=_ReachedOrdinaryAuthoring("ordinary path reached"),
+            ), self.assertRaises(_ReachedOrdinaryAuthoring):
                 self._run_main(_resume_arguments(run_dir))
-            self.assertEqual([], ordinary_calls)
             state = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
             self.assertEqual("DETACHED", state["initial_authoring_wave"]["state"])
-            self.assertTrue((run_dir / "native-results").is_dir())
+            self.assertFalse((run_dir / "native-results").exists())
 
     def test_active_initial_wave_still_requires_aggregate_grant(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

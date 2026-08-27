@@ -81,3 +81,25 @@ Current gate: API contract review before Slice 2 runtime implementation.
   facts, consuming-resume protection, and bounded non-regression.
 
 Current gate: Slice 2 runtime implementation may proceed.
+
+## 2026-08-27 — Slice 2 complete
+
+- Added one centralized positive classifier for active versus historical
+  initial-wave state.
+- Updated exact ordinary-authorization guarding and initial-wave-mode selection to
+  use the positive classifier instead of object presence.
+- Updated bounded generic initial-wave fencing to use the same classifier without
+  changing its existing active-state behavior.
+- Exact stored `DETACHED` lineage now falls through to current local/provider/
+  ordinary-authority facts.
+- Active initial admission remains aggregate-grant fenced.
+- Unknown/malformed stored wave states fail closed as `unsupported_contract`.
+- Added nonmutation, active/historical-set, public-dispatch, and bounded parity
+  coverage.
+- Focused Slice 0–3 route suite: 24 tests passed.
+- Wider initial-wave, external-authority, bounded, and Slice 2 suite: 77 tests
+  passed.
+- Provider/network/spend/retained-QA activity remained zero.
+
+Current gate: Slice 3 composed runtime/failure qualification; API review follows
+Slice 3.

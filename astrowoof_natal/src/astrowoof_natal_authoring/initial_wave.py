@@ -43,6 +43,10 @@ MAXIMUM_DUE_RETRIEVALS_PER_CYCLE = 4
 MAXIMUM_PARALLEL_RETRIEVALS = 4
 CACHE_POLICY = "no_serial_cache_warmer"
 SUPPORTED_ROUTE_FAMILIES = frozenset({"exact_natal", "bounded_natal"})
+ACTIVE_INITIAL_WAVE_STATES = frozenset({
+    "AWAITING_SPEND_AUTHORIZATION", "AUTHORIZED", "SUBMITTING",
+})
+HISTORICAL_INITIAL_WAVE_STATES = frozenset({"DETACHED", "FAILED"})
 MEMBER_OUTCOMES = frozenset({
     "provider_bound",
     "authorized_unstarted",
@@ -113,6 +117,29 @@ class DefinitelyUnattemptedCreate(RuntimeError):
 
 class ProviderCreateRefused(RuntimeError):
     """Provider definitively refused creation and returned no operation."""
+
+
+def classify_initial_wave_state(wave: object) -> str:
+    """Classify current admission separately from immutable wave lineage."""
+    if wave is None:
+        return "absent"
+    if not isinstance(wave, Mapping):
+        raise InitialWaveError(
+            "unsupported_contract", "Stored initial-wave evidence is not an object",
+        )
+    state = wave.get("state")
+    if state in ACTIVE_INITIAL_WAVE_STATES:
+        return "active"
+    if state in HISTORICAL_INITIAL_WAVE_STATES:
+        return "historical"
+    raise InitialWaveError(
+        "unsupported_contract", f"Unsupported stored initial-wave state: {state!r}",
+    )
+
+
+def is_active_initial_wave(wave: object) -> bool:
+    """Return true only for the closed positive initial-admission state set."""
+    return classify_initial_wave_state(wave) == "active"
 
 
 @dataclass(frozen=True)

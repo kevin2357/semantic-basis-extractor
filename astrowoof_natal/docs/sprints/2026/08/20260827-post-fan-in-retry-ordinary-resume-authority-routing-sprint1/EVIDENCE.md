@@ -51,3 +51,20 @@ Status: Slice 1 complete; API contract review required before Slice 2.
 
 - API review: `API SLICE 1 REVIEW.md`.
 - API disposition: approved for Slice 2 runtime implementation.
+
+## Slice 2 evidence
+
+- Runtime source:
+  - `src/astrowoof_natal_authoring/initial_wave.py`
+  - `src/astrowoof_natal_authoring/closure.py`
+  - `src/astrowoof_natal_authoring/bounded_lifecycle.py`
+- Runtime tests:
+  - `tests/test_post_fan_in_retry_authority_routing_slice0.py`
+  - `tests/test_post_fan_in_retry_routing_runtime_slice2.py`
+- Focused route/contract/post-fan-in result: 24 passed.
+- Wider initial-wave/external-authority/bounded result: 77 passed.
+- External provider/network calls: 0.
+- Retained QA access/mutation: none.
+- Spend: USD 0.
+
+Status: Slice 2 complete; Slice 3 in progress.
