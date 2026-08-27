@@ -1,5 +1,18 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 8 SBE-local release qualification
+
+- Passed the 44-test focused adversarial suite with one expected optional-schema
+  skip.
+- Built two byte-identical fixed-epoch candidate wheels from the committed Slice 7
+  source and installed the candidate outside the source tree.
+- Ran the installed `astrowoof-adversarial-qa` surface twice; receipt bytes were
+  identical and reported zero external calls, real creates, and spend.
+- Passed the 799-test broad suite with 39 expected environment/opt-in skips.
+- Confirmed zero retained-QA access or mutation.
+- Did not bump, tag, publish, or recommend adoption: the catalog's joined API
+  campaign receipt and final owner/API review remain blocking release gates.
+
 ## 2026-08-27 — Slice 7 API catalog review accepted
 
 - Preserved the API agent's public-artifact-only review in the sprint record.

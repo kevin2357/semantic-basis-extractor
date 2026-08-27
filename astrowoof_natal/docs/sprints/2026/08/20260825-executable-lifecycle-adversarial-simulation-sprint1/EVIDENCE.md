@@ -1,5 +1,24 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 8 SBE-local qualification
+
+- Focused adversarial suite: 44 passed, 1 expected optional-schema skip.
+- Broad suite: 799 passed, 39 expected environment/opt-in skips; duration
+  779.599 seconds.
+- Fixed build epoch: `1787844361`.
+- Two independent 1,040,753-byte candidate wheels: byte-identical SHA-256
+  `31f0adf1e43d01b45b79a0341c1deee421b54ff522880babbbaa009eee2220bb`.
+- Candidate package version remained `0.4.25`; this is qualification evidence, not
+  an attempt to overwrite the published release.
+- Two isolated installed qualification receipts: byte-identical file SHA-256
+  `ae8b988c13723f8447bd1548748320447ac7f63ca4eb020cefae96413133435a`.
+- Receipt status: pass; 3 fixtures; seeds 7/19/41; 22 route cells; 32 checks.
+- External provider/network calls: 0; real provider creates: 0; spend: USD 0.
+- Retained-QA access/mutation: 0.
+- Remaining release gate: joined API catalog campaign receipt proving the required
+  composed traces, including three-run bounded-capacity progress/fairness, followed
+  by final owner/API review.
+
 ## Slice 7 API review
 
 - Result: approved with no SBE correction requested.
