@@ -113,6 +113,10 @@ from .adversarial_adapter import (  # noqa: E402
     inspect_review_no_action_workspace,
     materialize_review_no_action_workspace,
 )
+from .adversarial_route_matrix import (  # noqa: E402
+    build_adversarial_route_matrix_qualification,
+    validate_adversarial_route_matrix_qualification,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -225,6 +229,8 @@ __all__ = [
     "build_review_no_action_runtime_trace",
     "inspect_review_no_action_workspace",
     "materialize_review_no_action_workspace",
+    "build_adversarial_route_matrix_qualification",
+    "validate_adversarial_route_matrix_qualification",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",

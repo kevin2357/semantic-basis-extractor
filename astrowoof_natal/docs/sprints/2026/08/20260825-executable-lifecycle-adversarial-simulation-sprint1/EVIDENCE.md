@@ -1,6 +1,16 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
-Status: Slice 2 SBE installed/runtime half complete; joint API proof pending
+## Slice 2 broader route matrix
+
+- Public builder: `build_adversarial_route_matrix_qualification()`.
+- Strict validator: `validate_adversarial_route_matrix_qualification()`.
+- Cells: 22, spanning exact/bounded initial Response/Batch, post-fan-in local work,
+  four ordinary Response stages, and their explicitly refused Batch counterparts.
+- Source evidence: three validated production-path qualification receipts.
+- Focused result: 20 passed, one optional-schema skip.
+- External provider/network calls: 0; real provider creates: 0; spend: USD 0.
+
+Status: Slice 2 complete; initial joint API causal/replay proof accepted
 
 ## Inputs reviewed
 

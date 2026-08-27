@@ -1,5 +1,15 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 2 broader route adapter matrix
+
+- Composed the real deployed four-route, external-authority v2, and post-fan-in v2
+  qualification surfaces into one closed 22-cell provider-free matrix.
+- Bound each supported/refused cell to the source receipt contract, digest, and
+  assertion rather than duplicating production behavior.
+- Preserved deliberate ordinary-Batch refusal and separated provider topology from
+  denial/terminal/publication oracle work owned by Slice 3.
+- Focused adversarial suite: 20 passed, one optional-schema skip.
+
 ## 2026-08-25 — Planning
 
 - Reviewed the existing API Sprint 20 transition oracle and seeded campaign.
