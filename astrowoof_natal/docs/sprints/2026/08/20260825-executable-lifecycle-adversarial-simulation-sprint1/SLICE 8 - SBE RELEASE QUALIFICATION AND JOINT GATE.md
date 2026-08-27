@@ -1,7 +1,7 @@
 # Slice 8 — SBE Release Qualification and Joint Gate
 
 Date: 2026-08-27  
-Status: SBE-local qualification complete; joined API campaign pending
+Status: joined campaign approved; SBE 0.4.26 published and verified
 
 ## Completed SBE evidence
 
@@ -22,19 +22,14 @@ Status: SBE-local qualification complete; joined API campaign pending
 All qualification was provider-free. External network calls, real provider creates,
 and spend were zero. No retained QA workspace was opened or mutated.
 
-## Why this is not yet a release recommendation
+## Final release disposition
 
-The candidate still reports published version `0.4.25`; it is intentionally not a
-release artifact. SBE's public surface changed, so any eventual publication must use
-a fresh immutable version.
-
-The Slice 7 catalog is an inventory and integrity fence, not composed-system proof.
-Before a version bump, tag, publication, or API adoption recommendation, the API must
-consume the exact catalog through its real validators, worker translation,
-persistence, lease/capacity, and scheduler paths and emit the joined campaign
-receipt. That receipt must include the required three-run bounded-capacity
-progress/fairness witness. Final owner and API review remain mandatory after that
-evidence exists.
+The API consumed the exact catalog through its real validators, worker translation,
+persistence, lease/capacity, and scheduler paths. Its corrected 15-case receipt binds
+the executed historical starvation shape separately from the corrected production
+worker path and preserves sealed fixture identities separately from adapter results.
+Final API and owner review approved publication. SBE 0.4.26 is now immutable;
+consumer deployment/pinning remains separate.
 
 ## Seed budgets and incident promotion
 

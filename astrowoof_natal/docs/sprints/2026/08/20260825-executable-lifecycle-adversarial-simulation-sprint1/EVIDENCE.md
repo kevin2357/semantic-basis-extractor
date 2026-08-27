@@ -1,5 +1,26 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## SBE 0.4.26 publication
+
+- Artifact source: `8f6addb19a4225040aa5e2762c5f5b264edb5a7a`.
+- Release-record commit: `95eec9ee90248a0ca94f10d92549752b7e40f077`.
+- Tag target: `bab2a7ac6aafc839808e3c277f6fecb0a1b818a2`.
+- Tag: `astrowoof-natal-authoring-v0.4.26`.
+- Release ID: `377980739`.
+- Published at: `2026-08-27T16:46:50Z`.
+- Wheel: 1,040,752 bytes; SHA-256
+  `b120221381e20c491b0face592a2dfe32f9d057d99ca1213936b977d635d1047`.
+- GitHub wheel asset ID: `532593157`; checksum asset ID: `532593156`.
+- Two deterministic source builds, GitHub's asset digest, and an independently
+  downloaded release asset all match.
+- Installed release smoke: pass. Installed aggregate adversarial qualification:
+  pass; receipt SHA-256
+  `3a42cda2d5691e7fe99f758a32590a3e3ed5180b3017131761cc7f405cb0f67e`.
+- Exact dependency: `semantic-projection-core==0.11.1`.
+- External provider/network calls: 0; spend: USD 0; retained-QA access/mutation: 0.
+
+Status: SBE release complete and immutable; API pin/deployment remains separate.
+
 ## Final joint review
 
 - Review: `API FINAL JOINT CAMPAIGN REVIEW.md`.

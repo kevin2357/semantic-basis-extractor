@@ -1,5 +1,22 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — SBE 0.4.26 published and verified
+
+- Owner authorized final release after unconditional API barkproval.
+- Versioned artifact source commit: `8f6addb19a4225040aa5e2762c5f5b264edb5a7a`.
+- Qualified release record: `95eec9ee90248a0ca94f10d92549752b7e40f077`;
+  locked tag target: `bab2a7ac6aafc839808e3c277f6fecb0a1b818a2`.
+- Two fixed-epoch builds were byte-identical at 1,040,752 bytes and SHA-256
+  `b120221381e20c491b0face592a2dfe32f9d057d99ca1213936b977d635d1047`.
+- Post-version-lock focused contracts passed 21 tests. Installed generic smoke and
+  installed adversarial qualification passed from a site-packages path.
+- Published immutable tag `astrowoof-natal-authoring-v0.4.26` with wheel and
+  checksum assets. GitHub's asset digest and an independent download both match the
+  qualified wheel.
+- Provider/network/spend and retained-QA totals remained zero.
+
+Sprint complete. API worker-image pin/deployment remains a separate consumer action.
+
 ## 2026-08-27 — Final joint campaign review approved
 
 - Accepted `API FINAL JOINT CAMPAIGN REVIEW.md` as unconditional API approval for

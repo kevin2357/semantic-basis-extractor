@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.26
 
-Status: qualified release candidate; owner and API release gates approved
+Status: published and independently digest-verified
 
 SBE 0.4.26 adds a provider-free adversarial lifecycle qualification surface for
 the sophisticated native/API execution boundary. It publishes closed trace,
@@ -37,3 +37,8 @@ executed historical starvation shape, and the corrected production worker path.
 
 API deployment and version adoption remain separate follow-on decisions after
 publication.
+
+The immutable tag is `astrowoof-natal-authoring-v0.4.26`. GitHub reports the
+published 1,040,752-byte wheel with SHA-256
+`b120221381e20c491b0face592a2dfe32f9d057d99ca1213936b977d635d1047`;
+an independent post-publication download reproduced that digest exactly.
