@@ -1,5 +1,25 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Joint API campaign evidence
+
+- API commit: `2109b6e` (`Complete joint adversarial lifecycle campaign`).
+- Public catalog SHA-256:
+  `eea70ce9fed3c1ee986454dbac8e71e5e39b266f895628cd8adb2e53e9eab01e`.
+- Joined receipt internal identity:
+  `14a58ba927e60df32c4010f2284c44b6eb09da76018dcb82e849973e157313ce`.
+- Joined receipt file SHA-256:
+  `b5c8951d72134e4174146b7dd25cc734071c9f8dd3d5eaac837adeb4d1d285c1`.
+- Exact 15-case inventory: validated and discharged in catalog order.
+- Real API three-run/one-slot progress: third continuously eligible run claims at
+  step three after two review/no-action runs release capacity.
+- Exact expired-lease replacement/stale-writer fence: passed as a separate real
+  queue/capacity cell.
+- Focused joined suite: 6 passed in 42.56 seconds.
+- Receipt-producing real-worker cell: 1 passed in 44.09 seconds.
+- External provider/network calls: 0; spend: USD 0; retained-QA access/mutation: 0.
+
+Status: composed campaign complete; final API/owner release review pending.
+
 ## Slice 8 SBE-local qualification
 
 - Focused adversarial suite: 44 passed, 1 expected optional-schema skip.

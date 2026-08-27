@@ -1,5 +1,25 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Joint API campaign complete
+
+- Accepted `API SLICE 8 REVIEW.md`: SBE-local Slice 8 is approved without a
+  correction, while tag/publication remained gated on the composed campaign.
+- API Sprint 52 consumed the installed SBE candidate and exact 15-case catalog
+  through supported validators and real API translation, persistence, worker,
+  lease/capacity, and scheduler paths.
+- The real three-run/one-slot cell proves a continuously eligible third run claims
+  capacity at step three after two review/no-action runs release it. A separate
+  expired-lease cell proves replacement custody and stale-writer refusal.
+- API retained a closed joined receipt with internal identity
+  `14a58ba927e60df32c4010f2284c44b6eb09da76018dcb82e849973e157313ce`
+  and file SHA-256
+  `b5c8951d72134e4174146b7dd25cc734071c9f8dd3d5eaac837adeb4d1d285c1`.
+- Focused joined validation passed 6 tests; the receipt-producing real-worker cell
+  independently passed. Provider/network/spend and retained-QA totals remain zero.
+
+Current gate: final API/owner review before version bump, tag, publication, or
+adoption.
+
 ## 2026-08-27 — Slice 8 SBE-local release qualification
 
 - Passed the 44-test focused adversarial suite with one expected optional-schema
