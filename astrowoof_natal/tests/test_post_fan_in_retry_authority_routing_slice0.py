@@ -84,6 +84,22 @@ class PostFanInRetryAuthorityRoutingSlice0Tests(SemanticClosureFixture):
                 ),
             },
         ))
+        retry_payload = {
+            "model": "scripted-provider",
+            "input": "provider-free post-fan-in retry qualification",
+        }
+        retry_payload_path = run_dir / "ordinary-retry-request.private.json"
+        retry_artifact = closure.persist_provider_request_payload(
+            retry_payload_path, retry_payload,
+        )
+        retry_action = next(
+            action for action in state["spend_ledger"]["actions"]
+            if action["action_id"] == retry_two
+        )
+        retry_action["binding"]["request_sha256"] = retry_artifact[
+            "canonical_request_sha256"
+        ]
+        retry_action["request_payload_artifact"] = retry_artifact
         state["state_revision"] = 8
         state["status"] = "AWAITING_SPEND_AUTHORIZATION"
         closure.save_state(state_path, state)

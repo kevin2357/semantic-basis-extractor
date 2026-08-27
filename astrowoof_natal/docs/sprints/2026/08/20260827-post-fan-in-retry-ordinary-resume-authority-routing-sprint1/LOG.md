@@ -103,3 +103,35 @@ Current gate: Slice 2 runtime implementation may proceed.
 
 Current gate: Slice 3 composed runtime/failure qualification; API review follows
 Slice 3.
+
+## 2026-08-27 — Slice 3 complete
+
+- Added a composed provider-free exact-interactive proof through not-due,
+  due retrieval, durable completed evidence, local fan-in, operation consumption,
+  ordinary v2 request/grant/intent/dispatch, and exact replay.
+- Confirmed not-due reconciliation is byte-identical and retrieval-free.
+- Confirmed due reconciliation returns `progressed_local`, accurately separating
+  provider retrieval from semantic fan-in.
+- Confirmed retained `DETACHED` initial-wave lineage no longer captures the public
+  ordinary-resume path.
+- Confirmed one scripted ordinary v2 create and zero duplicate creates on replay.
+- Re-ran exact/bounded 4+2, all applicable response stages, ambiguity/fence, and
+  deliberate Batch-deferral coverage.
+- Focused composed/route/failure suite: 44 tests passed.
+- Added `SLICE 3 - COMPOSED RUNTIME AND FAILURE QUALIFICATION.md`.
+
+Current gate: API runtime/failure-boundary review before Slice 4.
+
+## 2026-08-27 — API Slice 3 review incorporated
+
+- Added `API SLICE 3 REVIEW.md`.
+- API independently reran the focused Slice 1/3 suite: 19 passed with one
+  expected optional-schema skip.
+- API approved the composed runtime proof and made its promotion to a reusable
+  installed-wheel fixture an explicit Slice 4 deliverable.
+- The fixture must expose only validated public projections, bind stable fixture
+  and receipt identities, and end at an SBE-owned delivery-ready or explicitly
+  provider-pending boundary. API persistence, one-slot fairness, and reader
+  delivery remain in the joined campaign.
+
+Current gate: Slice 4 public fixture and adversarial qualification may proceed.

@@ -1,7 +1,7 @@
 # Post-Fan-In Retry Ordinary-Resume Authority Routing — SBE Sprint 1
 
 Date: 2026-08-27
-Status: Slice 2 complete; Slice 3 composed runtime qualification in progress
+Status: Slice 3 complete; awaiting API runtime/failure-boundary review
 Companion: AstroWoof API operational incident and follow-on sprint to be identified
 
 ## Objective
@@ -233,7 +233,23 @@ Add:
 - exact fixture and adapter-result digests; and
 - privacy sentinel coverage.
 
-Publish a sanitized SBE fixture/public qualification component for API. The API
+Publish a sanitized SBE fixture/public qualification component for API. This is
+an explicit release-blocking deliverable of this sprint, not a source-only test
+helper. It must have a supported packaged reader/validator, a provider-free CLI,
+and stable fixture/receipt digest identities. It must materialize both the
+historical incident and the corrected successor through public lifecycle,
+command, and evidence projections only; it must not expose raw `run.json`,
+private selectors, prompts, provider payloads, retained-QA data, or filesystem
+paths.
+
+The corrected SBE endpoint must be **delivery-ready**, not claim API reader
+delivery. It must prove the path through retained provider custody, retrieval,
+local fan-in, consumed-operation evidence, ordinary v2 authority, exactly one
+dispatch, and replay non-duplication, ending either at the next supported
+non-local terminal/delivery disposition or at explicitly modeled
+provider-pending custody. API persistence and reader delivery remain API-owned.
+
+The API
 companion must drive it through real lifecycle translation, persistence, lease,
 capacity, and scheduler services with two runs and one slot. Prove:
 
