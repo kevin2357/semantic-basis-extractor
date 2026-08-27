@@ -273,3 +273,16 @@ installed qualification before the API joined campaign.
 
 Current gate: API consumes this exact replacement candidate in the joined
 campaign; the pre-4A wheel is superseded.
+
+## 2026-08-27 — API Slice 4A re-review approved
+
+- Added `API SLICE 4A RE-REVIEW.md`.
+- API independently confirmed the canonical receipt join and requested mutation
+  refusal: 10 passed, 1 expected optional-schema skip.
+- API approved the replacement wheel SHA-256
+  `db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`
+  for the joined provider-free campaign.
+- The older pre-4A wheel with the same unpublished version is explicitly
+  superseded and must not be selected by version string alone.
+
+Current gate: API/Linux joined campaign against the exact replacement digest.

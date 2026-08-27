@@ -235,3 +235,13 @@ qualification required.
 
 Status: fresh post-4A candidate qualified on Windows. API joined campaign must use
 the exact wheel digest above; publication and deployment remain withheld.
+
+- API Slice 4A re-review: approved.
+- Independent focused result: 10 passed; 1 expected optional-schema skip.
+- Joined-campaign pin: replacement wheel SHA-256
+  `db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`.
+- Version-only selection is unsafe because the superseded candidate also carries
+  unpublished version `0.4.27`.
+
+Status: awaiting API/Linux joined-campaign evidence; no publication, deployment,
+provider work, spending, or retained-QA recovery authorized.
