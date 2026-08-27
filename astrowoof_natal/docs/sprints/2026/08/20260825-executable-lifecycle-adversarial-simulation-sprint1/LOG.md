@@ -1,5 +1,19 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Final joint campaign review approved
+
+- Accepted `API FINAL JOINT CAMPAIGN REVIEW.md` as unconditional API approval for
+  the SBE release gate.
+- API independently reproduced the corrected focused campaign: 7 passed in 45.51
+  seconds against the isolated installed candidate.
+- API revalidated the regenerated 15-case receipt against SBE's public catalog.
+- The review reports zero network/provider calls, spend, retained-QA access,
+  deployment, or release activity.
+- API deployment and version adoption remain separate follow-on decisions.
+
+Current gate: explicit owner authorization before SBE version bump, tag, or
+publication.
+
 ## 2026-08-27 — Joint API campaign complete
 
 - Accepted `API SLICE 8 REVIEW.md`: SBE-local Slice 8 is approved without a

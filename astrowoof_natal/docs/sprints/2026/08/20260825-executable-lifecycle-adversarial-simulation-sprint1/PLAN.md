@@ -1,8 +1,8 @@
 # Executable Lifecycle Adversarial Simulation — SBE Sprint 1
 
 Date: 2026-08-25
-Status: SBE-local Slice 8 qualification and joint API campaign complete; final
-owner/API release review remains the tag/adoption gate
+Status: SBE-local qualification and joint API campaign approved; owner release
+authorization is the remaining SBE tag/publication gate
 Companion: AstroWoof API Sprint 52
 
 ## Objective

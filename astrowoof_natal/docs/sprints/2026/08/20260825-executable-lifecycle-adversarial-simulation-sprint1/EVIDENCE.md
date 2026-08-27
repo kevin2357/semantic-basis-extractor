@@ -1,5 +1,15 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Final joint review
+
+- Review: `API FINAL JOINT CAMPAIGN REVIEW.md`.
+- Decision: approved for the SBE release/adoption gate.
+- Independent API reproduction: 7 passed in 45.51 seconds.
+- Regenerated receipt validation: passed; case count 15.
+- External network/provider calls: 0; spend: USD 0; retained-QA access: 0.
+- Remaining SBE gate: explicit owner release authorization.
+- API deployment and pin/adoption remain separately gated.
+
 ## Joint API campaign evidence
 
 - API commit: `2109b6e` (`Complete joint adversarial lifecycle campaign`).
