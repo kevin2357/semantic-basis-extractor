@@ -1,5 +1,17 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 4 systematic explorer
+
+- Public projection builder/validator: `build_action_binding_projection()` and
+  `validate_action_binding_projection()`.
+- Provider-free qualification: `run_systematic_explorer_qualification()`.
+- Six-member initial state: four durable identities, two unentered members.
+- Shortest distinct-create and duplicate-refusal witnesses: one event each.
+- Alternative member ordering reaches one deduplicated semantic successor.
+- Real v0.7 Muffin inspection yields a one-step stutter witness.
+- Focused result: 31 passed, one optional-schema skip.
+- External provider/network calls: 0; real creates: 0; spend: USD 0.
+
 ## Slice 3 review correction
 
 - Added a regression proving trace v1 does not falsely classify a mixed partial

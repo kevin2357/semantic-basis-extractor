@@ -1,5 +1,17 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 4 systematic branch explorer
+
+- Added a strict per-action/binding projection with create-entry, durable identity,
+  and retrieval evidence.
+- Added bounded breadth-first partial-wave exploration with shortest witnesses and
+  semantic-state deduplication.
+- Proved distinct-member creation is valid while same-member recreation refuses.
+- Proved the real Muffin boundary's minimal stutter and accelerated/unit clock
+  equivalence.
+- Focused adversarial suite: 31 passed, one optional-schema skip.
+- Paused at the planned systematic-explorer review gate.
+
 ## 2026-08-27 — Slice 3 API review correction
 
 - Accepted the review finding that trace v1 cannot join aggregate create counts to
