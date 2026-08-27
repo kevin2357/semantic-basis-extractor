@@ -1,5 +1,14 @@
 # Evidence — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## Slice 7 consumer catalog
+
+- Contract: `astrowoof.adversarial_consumer_catalog.v1`.
+- Catalog SHA-256:
+  `eea70ce9fed3c1ee986454dbac8e71e5e39b266f895628cd8adb2e53e9eab01e`.
+- Cases: 15; ownership classes: SBE, joint, API.
+- Packaged fixtures are literal-byte hash validated by the public reader.
+- Provider/network calls: 0; spend: USD 0; retained QA access: 0.
+
 ## Slice 6 installed qualification
 
 - Console: `astrowoof-adversarial-qa`.

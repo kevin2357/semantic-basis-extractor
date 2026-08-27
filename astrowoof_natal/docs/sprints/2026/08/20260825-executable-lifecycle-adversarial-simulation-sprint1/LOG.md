@@ -1,5 +1,14 @@
 # Log — Executable Lifecycle Adversarial Simulation SBE Sprint 1
 
+## 2026-08-27 — Slice 7 SBE joint consumer catalog
+
+- Added a strict 15-case consumer catalog separating SBE, joint, and API authority.
+- Bound every static packaged fixture to literal-byte SHA-256 validation.
+- Represented runtime route proofs as qualification-component contracts rather than
+  static-oracle substitutes.
+- Explicitly left expired-lease and three-run starvation materialization to API.
+- Published the catalog/API handoff and paused for fixture-by-fixture joint review.
+
 ## 2026-08-27 — Slice 6 public qualification surface
 
 - Added the packaged `astrowoof-adversarial-qa` console command and strict v1

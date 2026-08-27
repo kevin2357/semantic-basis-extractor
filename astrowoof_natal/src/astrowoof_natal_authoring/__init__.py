@@ -146,6 +146,10 @@ from .adversarial_qa import (  # noqa: E402
     run_adversarial_qualification,
     validate_adversarial_qualification,
 )
+from .adversarial_consumer import (  # noqa: E402
+    read_adversarial_consumer_catalog,
+    validate_adversarial_consumer_catalog,
+)
 from .external_authority import (  # noqa: E402
     build_external_authority_refusal,
     build_external_authority_request,
@@ -281,6 +285,8 @@ __all__ = [
     "read_adversarial_qualification_schema",
     "run_adversarial_qualification",
     "validate_adversarial_qualification",
+    "read_adversarial_consumer_catalog",
+    "validate_adversarial_consumer_catalog",
     "NativeTransitionResultView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",
