@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/post-fan-in-retry-qualification.v1.schema.json",
+  "title": "AstroWoof post-fan-in retry qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_sha256", "status", "qualification_only",
+    "provider_free", "package", "fixture_sha256", "historical_incident",
+    "phases", "endpoint", "endpoint_evidence_sha256",
+    "scripted_retrieval_count", "scripted_create_count",
+    "duplicate_create_count", "external_network_call_count",
+    "provider_spend_usd", "privacy"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.post_fan_in_retry_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {"name": {"const": "astrowoof-natal-authoring"}, "version": {"type": "string", "minLength": 1}}
+    },
+    "fixture_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "historical_incident": {
+      "type": "object", "additionalProperties": false,
+      "required": ["incorrect_branch", "retained_wave_state", "required_branch"],
+      "properties": {
+        "incorrect_branch": {"const": "initial_wave_admission"},
+        "retained_wave_state": {"const": "DETACHED"},
+        "required_branch": {"const": "ordinary_resume_then_ordinary_v2"}
+      }
+    },
+    "phases": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "prefixItems": [
+        {"$ref": "#/$defs/provider_not_due"},
+        {"$ref": "#/$defs/provider_retrieval"},
+        {"$ref": "#/$defs/local_fan_in"},
+        {"$ref": "#/$defs/local_operation_consumed"},
+        {"$ref": "#/$defs/ordinary_v2_authority"},
+        {"$ref": "#/$defs/one_dispatch"},
+        {"$ref": "#/$defs/exact_replay"}
+      ],
+      "items": false
+    },
+    "endpoint": {"const": "detached_provider_pending"},
+    "endpoint_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scripted_retrieval_count": {"const": 1},
+    "scripted_create_count": {"const": 1},
+    "duplicate_create_count": {"const": 0},
+    "external_network_call_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contains_prompt", "contains_provider_payload", "contains_raw_run_state", "contains_workspace_path", "contains_retained_qa_data"],
+      "properties": {
+        "contains_prompt": {"const": false},
+        "contains_provider_payload": {"const": false},
+        "contains_raw_run_state": {"const": false},
+        "contains_workspace_path": {"const": false},
+        "contains_retained_qa_data": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "phase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["phase", "evidence_sha256"],
+      "properties": {"phase": {"type": "string"}, "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+    },
+    "provider_not_due": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "provider_not_due"}}}]},
+    "provider_retrieval": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "provider_retrieval"}}}]},
+    "local_fan_in": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "local_fan_in"}}}]},
+    "local_operation_consumed": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "local_operation_consumed"}}}]},
+    "ordinary_v2_authority": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "ordinary_v2_authority"}}}]},
+    "one_dispatch": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "one_dispatch"}}}]},
+    "exact_replay": {"allOf": [{"$ref": "#/$defs/phase"}, {"properties": {"phase": {"const": "exact_replay"}}}]}
+  }
+}

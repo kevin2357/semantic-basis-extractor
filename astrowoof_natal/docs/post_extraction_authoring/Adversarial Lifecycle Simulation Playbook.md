@@ -42,6 +42,20 @@ Use `astrowoof-adversarial-qa --schema` to inspect the aggregate receipt schema.
 The command requires no provider credential, performs no provider operation, and
 must report zero network calls, provider creates, and spend.
 
+Post-fan-in retry routing has an additional production-shaped qualification:
+
+```text
+astrowoof-post-fan-in-retry-qa
+```
+
+This command materializes a disposable, sanitized native workspace and proves the
+sequence from retained provider custody through retrieval, local fan-in, consumed
+local work, ordinary-v2 authorization, one scripted dispatch, and exact replay.
+It ends at explicit provider-pending custody. Its receipt is qualification evidence,
+not execution authority, delivery evidence, or permission to recover a retained
+workspace. Use `--fixture` to export the stable public scenario and `--schema` to
+export the closed receipt schema.
+
 The API companion campaign consumes the installed SBE package through these public
 surfaces and then drives applicable cases through real API repositories, workers,
 leases, capacity services, and scheduler selection. It does not inspect SBE private

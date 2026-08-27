@@ -135,3 +135,19 @@ Current gate: API runtime/failure-boundary review before Slice 4.
   delivery remain in the joined campaign.
 
 Current gate: Slice 4 public fixture and adversarial qualification may proceed.
+
+## 2026-08-27 — Slice 4 SBE qualification implemented
+
+- Added a stable packaged post-fan-in scenario fixture and strict public reader.
+- Added a closed receipt schema, Python runner/validator, and installed CLI entry
+  point `astrowoof-post-fan-in-retry-qa`.
+- The provider-free runtime materializes a disposable native workspace and proves
+  not-due, retrieval, local fan-in, consumed operation, ordinary-v2 authority,
+  one dispatch, exact replay, and an explicit provider-pending endpoint.
+- Added privacy, mutation, schema, fixture, CLI, and output validation coverage.
+- Updated the adversarial simulation playbook and added the API handoff.
+- Focused Slice 4 qualification: 5 passed with one expected optional-schema skip.
+  Combined Slice 1–4 routing/qualification suite: 25 passed with one expected
+  optional-schema skip.
+
+Current gate: API fixture-by-fixture review and joined one-slot campaign.

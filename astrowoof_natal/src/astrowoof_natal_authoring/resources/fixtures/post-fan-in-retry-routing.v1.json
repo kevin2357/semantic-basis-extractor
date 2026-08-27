@@ -1,0 +1,29 @@
+{
+  "schema_version": "astrowoof.post_fan_in_retry_fixture.v1",
+  "scenario_id": "post_fan_in_retry_ordinary_v2",
+  "route_family": "exact_natal",
+  "provider_mechanism": "response",
+  "historical_incident": {
+    "incorrect_branch": "initial_wave_admission",
+    "retained_wave_state": "DETACHED",
+    "required_branch": "ordinary_resume_then_ordinary_v2"
+  },
+  "corrected_sequence": [
+    "provider_not_due",
+    "provider_retrieval",
+    "local_fan_in",
+    "local_operation_consumed",
+    "ordinary_v2_authority",
+    "one_dispatch",
+    "exact_replay"
+  ],
+  "endpoint": "detached_provider_pending",
+  "prohibited_public_fields": [
+    "private_selector",
+    "prompt",
+    "provider_payload",
+    "raw_run_state",
+    "retained_qa_data",
+    "workspace_path"
+  ]
+}

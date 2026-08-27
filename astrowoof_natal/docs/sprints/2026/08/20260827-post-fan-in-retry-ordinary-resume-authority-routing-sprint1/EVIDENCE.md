@@ -92,3 +92,24 @@ Status: Slice 3 complete; API review required before Slice 4.
   installed-wheel post-fan-in fixture and stable receipt identity.
 
 Status: Slice 3 approved; Slice 4 may begin.
+
+## Slice 4 SBE evidence
+
+- Public fixture:
+  `src/astrowoof_natal_authoring/resources/fixtures/post-fan-in-retry-routing.v1.json`.
+- Closed receipt schema:
+  `src/astrowoof_natal_authoring/resources/contracts/post-fan-in-retry-qualification.v1.schema.json`.
+- Public runner/reader/validator:
+  `src/astrowoof_natal_authoring/post_fan_in_retry_qa.py`.
+- CLI: `astrowoof-post-fan-in-retry-qa`.
+- Tests: `tests/test_post_fan_in_retry_qa_slice4.py`.
+- Focused result: 5 passed; 1 expected optional-`jsonschema` skip.
+- Combined Slice 1–4 result: 25 passed; 1 expected optional-schema skip.
+- Scripted local retrievals: 1.
+- Scripted local creates: 1.
+- Duplicate creates: 0.
+- External network/provider calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+
+Status: SBE Slice 4 component complete; API joined-campaign review pending.

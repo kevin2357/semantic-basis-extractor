@@ -219,6 +219,12 @@ from .operator_retirement_qa import (  # noqa: E402
     run_operator_retirement_qualification,
     validate_operator_retirement_qualification,
 )
+from .post_fan_in_retry_qa import (  # noqa: E402
+    read_post_fan_in_retry_fixture,
+    read_post_fan_in_retry_qualification_schema,
+    run_post_fan_in_retry_qualification,
+    validate_post_fan_in_retry_qualification,
+)
 from .provider_economics import (  # noqa: E402
     MAX_RETRIEVAL_REFERENCES,
     PROVIDER_ECONOMICS_FIXTURE_NAMES,
@@ -399,6 +405,10 @@ __all__ = [
     "read_operator_retirement_qualification_schema",
     "run_operator_retirement_qualification",
     "validate_operator_retirement_qualification",
+    "read_post_fan_in_retry_fixture",
+    "read_post_fan_in_retry_qualification_schema",
+    "run_post_fan_in_retry_qualification",
+    "validate_post_fan_in_retry_qualification",
     "MAX_RETRIEVAL_REFERENCES",
     "PROVIDER_ECONOMICS_FIXTURE_NAMES",
     "PROVIDER_ECONOMICS_SCHEMA_VERSION",
