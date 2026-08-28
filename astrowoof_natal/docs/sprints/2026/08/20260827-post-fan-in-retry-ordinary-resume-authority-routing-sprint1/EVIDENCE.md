@@ -400,3 +400,17 @@ Status: corrected source must be committed before final candidate qualification.
 
 Status: SBE Slice 5 complete. API joined-campaign qualification must pin the exact
 wheel digest above before Slice 6 release review.
+
+## API final candidate review
+
+- Review: `API SLICE 5 FINAL CANDIDATE REVIEW.md`.
+- Exact candidate consumed: source `adbbc70`, wheel SHA-256 `210ed3c9…c276`.
+- API focused campaign: 10 passed.
+- API commit: `abcc024`.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+- Disposition: approved for SBE release.
+
+Status: Slice 6 release preparation complete; owner tag/publication authorization
+pending.

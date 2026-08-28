@@ -421,3 +421,16 @@ qualification from the new source identity.
 
 Current gate: API consumes the exact final candidate digest in its joined campaign
 before Slice 6 release decision.
+
+## 2026-08-27 — API final candidate approval and Slice 6 preparation
+
+- Added `API SLICE 5 FINAL CANDIDATE REVIEW.md`.
+- API consumed exact source `adbbc70` / wheel SHA-256 `210ed3c9…c276` and passed
+  10 focused installed campaign tests in API commit `abcc024`.
+- API approved the candidate for SBE release with no remaining contract changes.
+- Prepared the 0.4.27 release notes, compatibility, known-limitations/retained-
+  cohort posture, consumer routing handoff, and machine-readable manifest.
+- Release records distinguish artifact source from the later release-lock commit.
+
+Current gate: commit release preparation, then explicit owner authorization before
+tag or publication.
