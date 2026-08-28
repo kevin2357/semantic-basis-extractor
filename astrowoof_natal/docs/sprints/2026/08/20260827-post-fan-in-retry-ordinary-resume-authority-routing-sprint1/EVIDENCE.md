@@ -374,3 +374,29 @@ is nonterminal.
 Focused regression after correction: 3 passed, 1 expected optional-schema skip.
 
 Status: corrected source must be committed before final candidate qualification.
+
+## Final post-4B candidate evidence
+
+- Artifact source commit: `adbbc70`.
+- Version: `0.4.27` (unpublished).
+- Fixed build epoch: `1787874000`.
+- Deterministic A/B wheel size: 1,060,420 bytes.
+- Deterministic A/B wheel SHA-256:
+  `210ed3c98bcc84c2cfe9e9669edebaa56a1780bc1bb8057e61c0fffbd0c4c276`.
+- Exact installed dependency: `semantic-projection-core==0.11.1`.
+- Generic installed release smoke: passed, `DELIVERY_COMPLETE`.
+- Installed adversarial qualification: passed.
+- Installed post-fan-in retry qualification: passed.
+- Installed scoped ordinary-v2 happy-path qualification and bundle: passed.
+- Installed happy-path receipt identity:
+  `fe794bc6f1afeaf18971b6298c6bcb41d10d5b5ec5965fdc05d26c470859ba61`.
+- Two installed receipt files: byte-identical.
+- Receipt-file SHA-256:
+  `31c46af0692d20b8dcecb118b52349b5c5bf5dcde1955e1b9cf37ada710c7588`.
+- Full source suite: 839 passed, 41 expected skips, 833.803 seconds.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+
+Status: SBE Slice 5 complete. API joined-campaign qualification must pin the exact
+wheel digest above before Slice 6 release review.

@@ -401,3 +401,23 @@ Current gate: Slice 5 qualification from the committed post-4B source identity.
 
 Current gate: commit the correction, then restart deterministic build and broad
 qualification from the new source identity.
+
+## 2026-08-27 — Final post-4B Slice 5 qualification complete
+
+- Final candidate source: `adbbc70`.
+- Built twice with `SOURCE_DATE_EPOCH=1787874000`; both wheels are byte-identical
+  at 1,060,420 bytes and SHA-256
+  `210ed3c98bcc84c2cfe9e9669edebaa56a1780bc1bb8057e61c0fffbd0c4c276`.
+- Installed outside the checkout with exact SPC `0.11.1`.
+- Generic installed release smoke passed and reached `DELIVERY_COMPLETE`.
+- Installed adversarial qualification, post-fan-in retry qualification, and both
+  scoped happy-path witnesses passed.
+- Two installed happy-path receipts were byte-identical; receipt-file SHA-256
+  `31c46af0692d20b8dcecb118b52349b5c5bf5dcde1955e1b9cf37ada710c7588`.
+- Full source suite: 839 passed, 41 expected environment/opt-in skips, in
+  833.803 seconds.
+- `git diff --check` passed.
+- External provider/network calls, spend, and retained-QA access remained zero.
+
+Current gate: API consumes the exact final candidate digest in its joined campaign
+before Slice 6 release decision.
