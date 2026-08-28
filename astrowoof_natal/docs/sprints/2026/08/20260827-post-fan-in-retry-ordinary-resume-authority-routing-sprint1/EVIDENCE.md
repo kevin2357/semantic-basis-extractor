@@ -425,3 +425,22 @@ pending.
 
 Status: tag and publication authorized; release lock and post-publication evidence
 pending.
+
+## Immutable publication evidence
+
+- Release-lock/tag-target commit:
+  `f04551e50b19cfe38dae495d008f91287b34132d`.
+- Tag: `astrowoof-natal-authoring-v0.4.27`.
+- GitHub release ID: `378229362`.
+- Published: `2026-08-28T02:31:44Z`.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.27`.
+- Wheel asset ID: `533153612`; bytes: 1,060,420.
+- GitHub wheel asset digest:
+  `sha256:210ed3c98bcc84c2cfe9e9669edebaa56a1780bc1bb8057e61c0fffbd0c4c276`.
+- Freshly downloaded wheel SHA-256:
+  `210ed3c98bcc84c2cfe9e9669edebaa56a1780bc1bb8057e61c0fffbd0c4c276`.
+- Checksum asset ID: `533153614`; bytes: 116; GitHub digest:
+  `sha256:bce08ac3d501c7362f87b398183f3617837f6ba6b45cd589d741a3cfdda963e2`.
+
+Status: published artifact verified; sprint complete.

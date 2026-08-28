@@ -445,3 +445,19 @@ tag or publication.
 
 Current gate: commit the release lock, rebuild/verify exact artifact bytes, then
 tag, publish, download-verify, and record post-publication evidence.
+
+## 2026-08-27 — SBE 0.4.27 published and verified
+
+- Release lock and immutable tag target:
+  `f04551e50b19cfe38dae495d008f91287b34132d`.
+- Published tag: `astrowoof-natal-authoring-v0.4.27`.
+- GitHub release ID: `378229362`; published at `2026-08-28T02:31:44Z`.
+- Downloaded the published wheel and checksum asset into a fresh verification
+  directory.
+- Downloaded wheel size: 1,060,420 bytes.
+- Downloaded wheel SHA-256 and GitHub asset digest both equal
+  `210ed3c98bcc84c2cfe9e9669edebaa56a1780bc1bb8057e61c0fffbd0c4c276`.
+- Published checksum asset SHA-256:
+  `bce08ac3d501c7362f87b398183f3617837f6ba6b45cd589d741a3cfdda963e2`.
+
+Status: sprint and immutable 0.4.27 publication complete.
