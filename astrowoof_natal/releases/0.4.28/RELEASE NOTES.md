@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.28
 
-Status: candidate qualified; tag and publication require explicit owner approval
+Status: candidate qualified; tag and publication explicitly authorized
 
 SBE 0.4.28 makes exact-interactive editorial review a complete native handoff
 rather than a process-exit inference. Before exit 2, the public command now seals
@@ -40,5 +40,5 @@ by its runtime and Python validator.
 - External provider/network calls and spend: 0.
 - Retained Pippin/Duchess access or mutation during implementation/qualification: 0.
 
-This evidence recommends the candidate for final API and owner review. It does not
-authorize tagging, publication, deployment, or retained-run recovery.
+Final API and owner review approved immutable tagging and publication. Deployment
+and retained-run recovery remain separate consumer decisions.

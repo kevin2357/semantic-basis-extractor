@@ -238,4 +238,10 @@ Status: Slice 5 correction complete; API re-review required before Slice 6.
   post-fan-in, and adversarial qualifications all passed.
 - External provider/network calls, spend, and retained-QA access: 0.
 
-Status: Slice 6 complete; paused at Voof-paws 5. Tag/publication not authorized.
+Status: Slice 6 complete; final API and owner review approved tag/publication.
+
+## 2026-08-28 — Voof-paws 5 final release approval
+
+- API final review approved SBE 0.4.28 for immutable tag and publication.
+- Owner explicitly authorized tag and publication.
+- Exact-interactive scope and deferred Batch/bounded parity remain explicit.

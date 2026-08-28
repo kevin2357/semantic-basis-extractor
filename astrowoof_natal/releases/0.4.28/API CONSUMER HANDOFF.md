@@ -57,4 +57,5 @@ operations.
   `365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
 - Source commit: `25e0be9ce670b3643f47f6cdd0a71de7d00ad11e`.
 
-These are candidate identities pending final review and immutable publication.
+These are the approved immutable release identities. Consumer deployment remains
+separately gated on the API-side integration and qualification work.

@@ -310,5 +310,5 @@ Status: correction complete; API re-review required before Slice 6.
 - Retained Pippin/Duchess access or mutation: 0.
 - `git diff --check`: pass after review-record whitespace normalization.
 
-Status: release candidate qualified; final API/owner review required before tag
-or publication.
+Status: release candidate qualified; final API and owner review approved immutable
+tag and publication as SBE 0.4.28.
