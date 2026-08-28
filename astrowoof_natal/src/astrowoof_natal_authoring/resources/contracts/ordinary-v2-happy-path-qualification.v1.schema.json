@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/ordinary-v2-happy-path-qualification.v1.schema.json",
+  "title": "AstroWoof ordinary v2 happy-path qualification v1",
+  "type": "object",
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "package", "fixture_sha256", "witnesses", "scripted_retrieval_count", "scripted_create_count", "duplicate_create_count", "duplicate_local_consumption_count", "external_network_call_count", "provider_spend_usd", "privacy"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.ordinary_v2_happy_path_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {"type": "object"},
+    "fixture_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "witnesses": {"type": "array", "minItems": 2, "maxItems": 2},
+    "scripted_retrieval_count": {"type": "integer", "minimum": 0},
+    "scripted_create_count": {"type": "integer", "minimum": 0},
+    "duplicate_create_count": {"const": 0},
+    "duplicate_local_consumption_count": {"const": 0},
+    "external_network_call_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "privacy": {"const": "public_projection_only"}
+  },
+  "additionalProperties": false
+}

@@ -289,3 +289,45 @@ Status: API interpretation requested before implementation freeze.
   action IDs retained.
 
 Status: selector correction complete; public happy-path witnesses in progress.
+
+## Slice 4B public witness evidence
+
+Implemented public artifacts:
+
+- `astrowoof.ordinary_v2_happy_path_qualification.v1`
+- `astrowoof.ordinary_v2_happy_path_bundle.v1`
+- `astrowoof.ordinary_v2_happy_path_fixture.v1`
+- `astrowoof-ordinary-v2-happy-path-qa`
+
+Observed source-tree receipt:
+
+- status: `pass`
+- witnesses: `two_retries_out_of_order`,
+  `retry_then_qualitative_critic`
+- scripted retrieval observations: 4
+- scripted creates: 3
+- duplicate creates: 0
+- duplicate local consumptions: 0
+- external network calls: 0
+- provider spend: USD 0
+- receipt SHA-256:
+  `ab27e4110031327ac98630fb0a4fc84b38ba28ec212f6fd8c7a54e3429751c36`
+
+Installed-wheel qualification:
+
+- candidate wheel version: `0.4.27` (unpublished replacement build)
+- candidate wheel SHA-256:
+  `db6e33c1aa81b00aaf8b18a2535c622724f73e67675d4000a7891d6fecb59530`
+- exact SPC dependency: `semantic-projection-core==0.11.1`
+- two fresh installed CLI runs produced byte-identical receipt files
+- receipt-file SHA-256:
+  `292d39148d3c039e0b824987da289bb82e79e8299c989cbb0d5190c6b66861e1`
+- installed bundle export and canonical receipt join: passed
+
+The first witness proves custody-first out-of-order completion and one aggregate
+two-member ordinary-v2 successor request. The second proves a creative retry can
+advance to a distinct enabled qualitative-critic action prepared by the production
+spend callback. Both end provider pending and replay exactly.
+
+Status: Slice 4B implementation and source qualification complete; API contract
+review pending before installed-wheel/release qualification.

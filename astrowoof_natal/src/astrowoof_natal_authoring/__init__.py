@@ -228,6 +228,15 @@ from .post_fan_in_retry_qa import (  # noqa: E402
     validate_post_fan_in_retry_inspection_bundle,
     validate_post_fan_in_retry_qualification,
 )
+from .happy_path_qa import (  # noqa: E402
+    read_ordinary_v2_happy_path_bundle_schema,
+    read_ordinary_v2_happy_path_fixture,
+    read_ordinary_v2_happy_path_qualification_schema,
+    run_ordinary_v2_happy_path_bundle,
+    run_ordinary_v2_happy_path_qualification,
+    validate_ordinary_v2_happy_path_bundle,
+    validate_ordinary_v2_happy_path_qualification,
+)
 from .provider_economics import (  # noqa: E402
     MAX_RETRIEVAL_REFERENCES,
     PROVIDER_ECONOMICS_FIXTURE_NAMES,
@@ -415,6 +424,13 @@ __all__ = [
     "run_post_fan_in_retry_qualification",
     "validate_post_fan_in_retry_inspection_bundle",
     "validate_post_fan_in_retry_qualification",
+    "read_ordinary_v2_happy_path_bundle_schema",
+    "read_ordinary_v2_happy_path_fixture",
+    "read_ordinary_v2_happy_path_qualification_schema",
+    "run_ordinary_v2_happy_path_bundle",
+    "run_ordinary_v2_happy_path_qualification",
+    "validate_ordinary_v2_happy_path_bundle",
+    "validate_ordinary_v2_happy_path_qualification",
     "MAX_RETRIEVAL_REFERENCES",
     "PROVIDER_ECONOMICS_FIXTURE_NAMES",
     "PROVIDER_ECONOMICS_SCHEMA_VERSION",

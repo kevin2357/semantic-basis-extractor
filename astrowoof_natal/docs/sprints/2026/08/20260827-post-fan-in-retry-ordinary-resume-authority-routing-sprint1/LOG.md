@@ -343,3 +343,22 @@ correction and fixture implementation.
   select its exact local operation while the earlier retry remains retained.
 
 Current gate: public Witness A and Witness B artifact implementation.
+
+## 2026-08-27 — Slice 4B public happy-path witnesses
+
+- Implemented one aggregate ordinary-v2 action-set for co-ready successors while
+  preserving separate member bindings, authorization documents, and paid-action
+  authority.
+- Preserved custody precedence: a prepared successor remains masked until all
+  retained provider custody has cleared.
+- Added `astrowoof-ordinary-v2-happy-path-qa`, two closed schemas, and a closed
+  packaged fixture inventory.
+- Added real-engine witnesses for out-of-order two-retry completion and
+  retry-to-enabled-qualitative-critic continuation.
+- Both witnesses end at truthful detached provider-pending custody and prove exact
+  replay without duplicate create or local consumption.
+- Public projections use reproducible semantic request/grant digests plus exact
+  per-member binding and authorization-document digests.
+
+Current gate: API reviews the Slice 4B public contract and fixture evidence before
+installed-wheel/release qualification resumes.

@@ -1,0 +1,9 @@
+{
+  "schema_version": "astrowoof.ordinary_v2_happy_path_fixture.v1",
+  "witnesses": [
+    "two_retries_out_of_order",
+    "retry_then_qualitative_critic"
+  ],
+  "privacy": "public_projection_only",
+  "authority_rule": "one_ordinary_action_set_for_co_ready_actions"
+}

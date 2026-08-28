@@ -40,6 +40,7 @@ astrowoof-provider-economics-export = "astrowoof_natal_authoring.cli.provider_ec
 astrowoof-provider-economics-qa = "astrowoof_natal_authoring.provider_economics_qa:main"
 astrowoof-adversarial-qa = "astrowoof_natal_authoring.adversarial_qa:main"
 astrowoof-post-fan-in-retry-qa = "astrowoof_natal_authoring.post_fan_in_retry_qa:main"
+astrowoof-ordinary-v2-happy-path-qa = "astrowoof_natal_authoring.happy_path_qa:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}
