@@ -316,6 +316,57 @@ is rebuilt and Slice 5 installed qualification is repeated.
 
 **Voof-paws 4A:** API projection-bundle contract and fixture review.
 
+## Slice 4B — Representative public happy-path witnesses
+
+The API simulator supplies broad generated combinatorial coverage, but API must not
+claim that generated states are produced by the installed SBE engine without a
+public real-engine witness. Add two representative exact-Natal interactive,
+provider-free witnesses using the Slice 4A authority/privacy pattern.
+
+First characterize the production path and freeze the smallest truthful downstream
+ordinary stage supported by current orchestration. Prefer the normal creative-retry
+to polish transition if its prerequisites can be built through supported runtime
+code; otherwise document and select the next existing ordinary Response stage that
+does not require fabricated private state. Do not add a new lifecycle state or
+weaken stage prerequisites merely to make the fixture convenient.
+
+### Witness A — Two retries with out-of-order completion
+
+- prepare and bind two distinct ordinary retry actions and provider identities;
+- complete them in the opposite order from submission/action order;
+- reconcile and fan in while retaining exact action and semantic-operation identity;
+- require a distinct fresh ordinary-v2 request/grant decision for each successor;
+- prove detached initial-wave lineage never revives v1 admission; and
+- prove replay duplicates no retrieval, local consumption, grant consumption, or
+  provider create.
+
+### Witness B — Retry followed by a downstream ordinary stage
+
+- retrieve and consume one completed retry exactly once;
+- advance through supported native orchestration to the frozen downstream stage;
+- expose a distinct exact ordinary-v2 authority request for that stage;
+- end at the next truthful provider-pending, non-local, or delivery-ready native
+  disposition without claiming API reader delivery; and
+- prove replay is nonduplicating.
+
+For each witness publish a closed versioned fixture, receipt, and ordered inspection
+projection bundle with strict Python/schema validation, stable semantic and outer
+digests, canonical receipt binding, public readers/runners, and provider-free CLI
+access. Expose only route/mechanism/command/capacity/reason/eligibility, public
+custody/action inventories, local operation keys/consumption, and external-authority
+inventory. Exclude raw native state, paths, snapshots as filesystem evidence,
+prompts, request payloads, provider IDs, credentials, protected provenance, and
+retained-QA data.
+
+Require fresh-workspace byte reproducibility, fully rehashed semantic and receipt-
+binding mutation refusal, exact replay, privacy sentinels, installed-wheel execution,
+zero external provider/network calls, zero spend, and no retained-QA access.
+
+Gate: API reviews both real-engine witness traces fixture-by-fixture before the
+replacement candidate is rebuilt and the joined campaign resumes.
+
+**Voof-paws 4B:** API happy-path witness contract and fixture review.
+
 ## Slice 5 — Installed-wheel and compatibility qualification
 
 From one committed source identity:
@@ -336,6 +387,13 @@ passed SBE and independent API installed qualification. It is retained as valid
 pre-4A evidence, not as the final release artifact. Because Slice 4A changes the
 packaged public surface, rebuild from the committed 4A source and repeat every
 Slice 5 artifact/installed gate before the joined campaign resumes.
+
+The post-4A replacement at source `9205235` and wheel SHA-256
+`db5ff09afce53b063dea1b29d8fcb94af581bcf383f7cab5da1d65cc0d4e48ed`
+was independently approved at the Slice 5 gate. It remains valid evidence for the
+4A surface, but Slice 4B changes packaged artifacts again. Do not use version-only
+selection or reuse either earlier wheel: repeat deterministic build and installed
+qualification from committed 4B source and pin the new digest.
 
 All tests are provider-free. Provider/network calls, spend, and retained-QA access
 must remain zero.
@@ -419,9 +477,10 @@ post-publication evidence without moving the tag.
 4. After Slice 3: runtime and failure-boundary review.
 5. After Slice 4: API qualification-receipt review.
 6. After Slice 4A: API projection-bundle contract and fixture review.
-7. After repeated Slice 5: installed candidate and joined-campaign review.
-8. Before version bump/tag/publication.
-9. Before any retained-cohort recovery or paid QA.
+7. After Slice 4B: API representative-witness contract and fixture review.
+8. After repeated Slice 5: installed candidate and joined-campaign review.
+9. Before version bump/tag/publication.
+10. Before any retained-cohort recovery or paid QA.
 
 ## Acceptance
 

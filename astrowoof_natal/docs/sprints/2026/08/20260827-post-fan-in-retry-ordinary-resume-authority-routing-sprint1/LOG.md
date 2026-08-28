@@ -286,3 +286,25 @@ campaign; the pre-4A wheel is superseded.
   superseded and must not be selected by version string alone.
 
 Current gate: API/Linux joined campaign against the exact replacement digest.
+
+## 2026-08-27 — API Slice 5 re-review recorded
+
+- Added `API SLICE 5 RE-REVIEW.md`.
+- API approved the post-4A wheel digest `db5ff09a...d4e48ed` as the exact joined-
+  campaign input and independently confirmed its installed evidence.
+- Publication/deployment remained withheld.
+
+## 2026-08-27 — Corrective Slice 4B requested
+
+- Added `API SLICE 4B PUBLIC HAPPY-PATH WITNESS REQUEST.md`.
+- Added two representative installed-engine witnesses: two retries with out-of-
+  order completion, and retry followed by one supported downstream ordinary stage.
+- Preserved the generated simulator as broad combinatorial evidence and the new
+  witnesses as narrow claims about real installed SBE behavior.
+- Added a production-path characterization requirement before freezing the exact
+  downstream stage; no lifecycle/stage prerequisite may be fabricated or weakened.
+- The post-4A wheel remains valid historical evidence but is superseded as the
+  future joined-campaign artifact because 4B changes the packaged surface.
+
+Current gate: Slice 4B production-path characterization and implementation,
+followed by API witness review and another fresh Slice 5 candidate.

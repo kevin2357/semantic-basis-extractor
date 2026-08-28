@@ -245,3 +245,18 @@ the exact wheel digest above; publication and deployment remain withheld.
 
 Status: awaiting API/Linux joined-campaign evidence; no publication, deployment,
 provider work, spending, or retained-QA recovery authorized.
+
+## Slice 5 re-review and Slice 4B request
+
+- API Slice 5 re-review: post-4A candidate independently approved for the joined
+  campaign, with publication still withheld.
+- Slice 4B request: two representative public real-engine happy-path witnesses.
+- Witness scope: exact interactive Response route; existing lifecycle and authority
+  contracts only.
+- Broad permutation ownership remains with the generated API simulator.
+- Downstream-stage identity requires production-path characterization before freeze.
+- Post-4A candidate status: valid historical qualification evidence, superseded as
+  final campaign input once 4B changes are committed.
+- Safety posture remains provider-free, zero-spend, and no retained-QA access.
+
+Status: Slice 4B planned; API review required after both witness artifacts pass.
