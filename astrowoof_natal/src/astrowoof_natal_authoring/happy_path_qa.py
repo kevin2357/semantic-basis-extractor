@@ -58,6 +58,7 @@ def read_ordinary_v2_happy_path_fixture() -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict) or set(value) != {
         "schema_version", "witnesses", "privacy", "authority_rule",
+        "evidence_scope", "fixture_installed_precursors",
     }:
         raise ValueError("Happy-path fixture fields are not exact")
     if value.get("schema_version") != FIXTURE_CONTRACT:
@@ -70,6 +71,17 @@ def read_ordinary_v2_happy_path_fixture() -> dict[str, Any]:
         raise ValueError("Happy-path fixture authority rule differs")
     if value.get("privacy") != "public_projection_only":
         raise ValueError("Happy-path fixture privacy rule differs")
+    if value.get("evidence_scope") != "post_fan_in_selector_authority_and_replay":
+        raise ValueError("Happy-path fixture evidence scope differs")
+    if value.get("fixture_installed_precursors") != {
+        "two_retries_out_of_order": [
+            "retry_reported_acceptance", "successor_prepared_actions",
+        ],
+        "retry_then_qualitative_critic": [
+            "retry_reported_acceptance", "accepted_pass_prerequisite",
+        ],
+    }:
+        raise ValueError("Happy-path fixture precursor inventory differs")
     return value
 
 
@@ -297,6 +309,10 @@ def _two_retries(root: Path) -> dict[str, Any]:
         raise ValueError("Aggregate successor dispatch order differs")
     return {
         "witness_id": "two_retries_out_of_order",
+        "evidence_scope": "post_fan_in_selector_authority_and_replay",
+        "fixture_installed_precursors": [
+            "retry_reported_acceptance", "successor_prepared_actions",
+        ],
         "phases": phases,
         "retrieval_order": ["later_submission_completed_first", "earlier_submission_completed_second"],
         "authority": authority,
@@ -398,6 +414,10 @@ def _retry_then_critic(root: Path) -> dict[str, Any]:
         raise ValueError("Retry-to-critic dispatch identity differs")
     return {
         "witness_id": "retry_then_qualitative_critic",
+        "evidence_scope": "post_fan_in_selector_authority_and_replay",
+        "fixture_installed_precursors": [
+            "retry_reported_acceptance", "accepted_pass_prerequisite",
+        ],
         "phases": [
             _phase_projection("retry_local", local),
             _phase_projection("retry_consumed", consumed),
@@ -512,6 +532,7 @@ def _validate_bundle(value: Any, receipt: Mapping[str, Any]) -> dict[str, Any]:
             "scripted_retrieval_count", "scripted_create_count",
             "duplicate_create_count", "duplicate_local_consumption_count",
             "replay_outcome", "endpoint",
+            "evidence_scope", "fixture_installed_precursors",
         }
         if not isinstance(projection, Mapping) or set(projection) != witness_keys:
             raise ValueError("Happy-path witness projection fields are not exact")
@@ -519,6 +540,13 @@ def _validate_bundle(value: Any, receipt: Mapping[str, Any]) -> dict[str, Any]:
             raise ValueError("Happy-path bundle witness evidence differs")
         if projection.get("endpoint") != "detached_provider_pending" or projection.get("replay_outcome") != "exact_replay":
             raise ValueError("Happy-path witness endpoint differs")
+        fixture = read_ordinary_v2_happy_path_fixture()
+        if (
+            projection.get("evidence_scope") != fixture["evidence_scope"]
+            or projection.get("fixture_installed_precursors")
+            != fixture["fixture_installed_precursors"][projection["witness_id"]]
+        ):
+            raise ValueError("Happy-path witness evidence scope differs")
         if projection.get("duplicate_create_count") != 0 or projection.get("duplicate_local_consumption_count") != 0:
             raise ValueError("Happy-path witness duplicated work")
         authority = projection.get("authority")

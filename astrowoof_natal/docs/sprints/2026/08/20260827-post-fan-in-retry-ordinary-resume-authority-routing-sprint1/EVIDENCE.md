@@ -311,17 +311,17 @@ Observed source-tree receipt:
 - external network calls: 0
 - provider spend: USD 0
 - receipt SHA-256:
-  `ab27e4110031327ac98630fb0a4fc84b38ba28ec212f6fd8c7a54e3429751c36`
+  `fe794bc6f1afeaf18971b6298c6bcb41d10d5b5ec5965fdc05d26c470859ba61`
 
 Installed-wheel qualification:
 
 - candidate wheel version: `0.4.27` (unpublished replacement build)
 - candidate wheel SHA-256:
-  `db6e33c1aa81b00aaf8b18a2535c622724f73e67675d4000a7891d6fecb59530`
+  `8c5ff0b00174f637b2f1485148dd7c8577ef6f6e6cb391137927fe8d657004f5`
 - exact SPC dependency: `semantic-projection-core==0.11.1`
 - two fresh installed CLI runs produced byte-identical receipt files
 - receipt-file SHA-256:
-  `292d39148d3c039e0b824987da289bb82e79e8299c989cbb0d5190c6b66861e1`
+  `31c46af0692d20b8dcecb118b52349b5c5bf5dcde1955e1b9cf37ada710c7588`
 - installed bundle export and canonical receipt join: passed
 
 The first witness proves custody-first out-of-order completion and one aggregate
@@ -331,3 +331,27 @@ spend callback. Both end provider pending and replay exactly.
 
 Status: Slice 4B implementation and source qualification complete; API contract
 review pending before installed-wheel/release qualification.
+
+## Slice 4B API review correction
+
+API correctly identified that precursor acceptance/successor facts are installed
+by the private deterministic fixture. The public evidence is now explicitly and
+machine-readably scoped to `post_fan_in_selector_authority_and_replay`. Each
+witness carries its exact fixture-installed precursor inventory. Documentation no
+longer describes the artifacts as end-to-end real-engine witnesses.
+
+Refreshed evidence-scope qualification:
+
+- focused tests: 7 passed, 1 expected optional-schema skip
+- installed wheel SHA-256:
+  `8c5ff0b00174f637b2f1485148dd7c8577ef6f6e6cb391137927fe8d657004f5`
+- two installed CLI receipts: byte-identical
+- receipt identity:
+  `fe794bc6f1afeaf18971b6298c6bcb41d10d5b5ec5965fdc05d26c470859ba61`
+- receipt-file SHA-256:
+  `31c46af0692d20b8dcecb118b52349b5c5bf5dcde1955e1b9cf37ada710c7588`
+- external provider/network calls: 0
+- spend: USD 0
+
+Status: evidence-scope correction and refreshed installed qualification complete;
+API re-review pending.

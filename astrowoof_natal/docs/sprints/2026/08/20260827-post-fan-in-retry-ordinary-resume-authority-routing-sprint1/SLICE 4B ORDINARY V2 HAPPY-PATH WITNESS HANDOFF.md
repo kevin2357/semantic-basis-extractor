@@ -3,6 +3,26 @@
 Status: implemented and provider-free source qualification complete; API review
 required before release qualification resumes.
 
+## Evidence scope
+
+These are **production-shaped, real-selector/authority witnesses**, not complete
+end-to-end production-path simulations. The closed public scope is
+`post_fan_in_selector_authority_and_replay`.
+
+The fixture installs precursor facts needed to enter that boundary:
+
+- both witnesses install the retry's reported/accepted result;
+- the two-retry witness installs the successor prepared actions; and
+- the critic witness installs the accepted-pass prerequisite, then uses the
+  production `SpendController` callback to prepare the critic action.
+
+Consequently, the artifacts prove mixed-custody selection, custody precedence,
+exact local-operation identity, ordered aggregate-v2 authority, constrained
+dispatch, and replay safety. They do **not** prove provider-output semantic
+evaluation, QA acceptance, natural successor generation, or final-stage product
+policy. This boundary is machine-visible in the packaged fixture and each public
+witness projection.
+
 ## Public surface
 
 SBE now publishes two representative real-engine witnesses through:
@@ -19,7 +39,8 @@ The CLI defaults to the closed qualification receipt. `--bundle`, `--fixture`,
 
 ## Witness 1 — out-of-order ordinary retries
 
-The first witness starts with two provider-bound creative retries. The later
+The first witness starts from two fixture-installed provider-bound creative
+retries. The later
 submitted action completes first. SBE retrieves the due actions, advertises and
 consumes only the completed action's exact local operation, and keeps the earlier
 action in provider custody. Its prepared successor therefore remains masked from
@@ -33,7 +54,8 @@ replay performs no additional create or local consumption.
 
 ## Witness 2 — retry to qualitative critic
 
-The second witness retrieves and consumes one creative retry, then invokes the
+The second witness begins from fixture-installed retry acceptance and accepted-
+pass prerequisites. It retrieves and consumes one creative retry, then invokes the
 production `SpendController` callback to prepare an enabled
 `qualitative_critic` action. The distinct ordinary-v2 request is granted and
 dispatched through the real constrained executor. The endpoint is truthfully

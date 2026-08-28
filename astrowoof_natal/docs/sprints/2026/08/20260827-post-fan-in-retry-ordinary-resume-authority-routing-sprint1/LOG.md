@@ -362,3 +362,16 @@ Current gate: public Witness A and Witness B artifact implementation.
 
 Current gate: API reviews the Slice 4B public contract and fixture evidence before
 installed-wheel/release qualification resumes.
+
+## 2026-08-27 — Slice 4B evidence-scope correction
+
+- Accepted API review's distinction between production-shaped setup and the real
+  selector/authority boundary exercised by the witnesses.
+- Added the closed `post_fan_in_selector_authority_and_replay` scope to the
+  packaged fixture and every public witness projection.
+- Added exact machine-readable inventories of fixture-installed precursor facts.
+- Narrowed handoff claims: these witnesses prove post-fan-in selection, custody,
+  authority, dispatch, and replay; they do not prove upstream semantic evaluation,
+  QA acceptance, natural successor generation, or product-policy selection.
+
+Current gate: rerun source and installed-wheel evidence, then API re-review.

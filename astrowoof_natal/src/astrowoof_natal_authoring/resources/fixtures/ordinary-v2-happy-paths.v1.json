@@ -5,5 +5,16 @@
     "retry_then_qualitative_critic"
   ],
   "privacy": "public_projection_only",
-  "authority_rule": "one_ordinary_action_set_for_co_ready_actions"
+  "authority_rule": "one_ordinary_action_set_for_co_ready_actions",
+  "evidence_scope": "post_fan_in_selector_authority_and_replay",
+  "fixture_installed_precursors": {
+    "two_retries_out_of_order": [
+      "retry_reported_acceptance",
+      "successor_prepared_actions"
+    ],
+    "retry_then_qualitative_critic": [
+      "retry_reported_acceptance",
+      "accepted_pass_prerequisite"
+    ]
+  }
 }

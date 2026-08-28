@@ -41,6 +41,11 @@ class HappyPathQualificationTests(unittest.TestCase):
         self.assertEqual("retry_then_qualitative_critic", critic["witness_id"])
         self.assertEqual("qualitative_critic", critic["authority"]["members"][0]["stage"])
         for witness in bundle["witnesses"]:
+            self.assertEqual(
+                "post_fan_in_selector_authority_and_replay",
+                witness["evidence_scope"],
+            )
+            self.assertTrue(witness["fixture_installed_precursors"])
             self.assertEqual("exact_replay", witness["replay_outcome"])
             self.assertEqual(0, witness["duplicate_create_count"])
             self.assertEqual(0, witness["duplicate_local_consumption_count"])
@@ -59,6 +64,16 @@ class HappyPathQualificationTests(unittest.TestCase):
 
         changed = copy.deepcopy(bundle)
         changed["witnesses"][0]["unexpected"] = True
+        with self.assertRaises(ValueError):
+            public.validate_ordinary_v2_happy_path_bundle(changed)
+
+        changed = copy.deepcopy(bundle)
+        changed["witnesses"][0]["evidence_scope"] = "end_to_end_production"
+        body = {key: value for key, value in changed.items() if key != "bundle_sha256"}
+        import hashlib
+        changed["bundle_sha256"] = hashlib.sha256(json.dumps(
+            body, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
         with self.assertRaises(ValueError):
             public.validate_ordinary_v2_happy_path_bundle(changed)
 
