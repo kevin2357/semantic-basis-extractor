@@ -434,3 +434,14 @@ before Slice 6 release decision.
 
 Current gate: commit release preparation, then explicit owner authorization before
 tag or publication.
+
+## 2026-08-27 — Slice 6 final release approval
+
+- Added `API SLICE 6 FINAL RELEASE REVIEW.md`.
+- API release-pair coverage passed 23 tests against exact candidate digest
+  `210ed3c9…c276`; API commit `8dc7ede`.
+- API and owner approvals are unconditional for immutable 0.4.27 tag/publication.
+- Release-review checkpoint: `db736e7e8ced31f85f5b1f9d6a8f2746f1ae1dcf`.
+
+Current gate: commit the release lock, rebuild/verify exact artifact bytes, then
+tag, publish, download-verify, and record post-publication evidence.

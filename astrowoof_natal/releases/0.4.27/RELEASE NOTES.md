@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.27
 
-Status: release preparation complete; owner tag/publication authorization pending
+Status: tag and publication authorized; immutable publication in progress
 
 SBE 0.4.27 corrects post-fan-in lifecycle routing and publishes two scoped,
 provider-free ordinary-v2 happy-path witnesses. Completed provider evidence now
@@ -32,4 +32,4 @@ fixture-installed precursors are machine-readable.
 - External provider/network calls and spend: 0.
 - Retained QA access/mutation: 0.
 
-The immutable tag and publication remain pending explicit owner authorization.
+Owner and API reviews authorize immutable tag and publication.

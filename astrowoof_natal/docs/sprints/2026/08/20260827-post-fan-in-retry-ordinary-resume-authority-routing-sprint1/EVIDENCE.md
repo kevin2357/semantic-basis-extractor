@@ -414,3 +414,14 @@ wheel digest above before Slice 6 release review.
 
 Status: Slice 6 release preparation complete; owner tag/publication authorization
 pending.
+
+## Slice 6 final approval
+
+- API final release review: unconditional go.
+- API release-pair tests: 23 passed.
+- API commit: `8dc7ede`.
+- Owner authorization: granted.
+- Review checkpoint: `db736e7e8ced31f85f5b1f9d6a8f2746f1ae1dcf`.
+
+Status: tag and publication authorized; release lock and post-publication evidence
+pending.
