@@ -597,13 +597,17 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
     observed = datetime.fromisoformat(
         decision["observed_at"].replace("Z", "+00:00")
     )
-    expected_due = [
-        item.get("action_id") for item in custody_actions
-        if item.get("resume_not_before") is not None
-        and datetime.fromisoformat(
-            item["resume_not_before"].replace("Z", "+00:00")
-        ) <= observed
-    ][:4]
+    expected_due = (
+        [
+            item.get("action_id") for item in custody_actions
+            if item.get("resume_not_before") is not None
+            and datetime.fromisoformat(
+                item["resume_not_before"].replace("Z", "+00:00")
+            ) <= observed
+        ][:4]
+        if decision.get("reason_code") == "provider_reconciliation_due"
+        else []
+    )
     if due_ids != expected_due:
         raise ValueError("Lifecycle due-action subset is not the native selection")
     if decision.get("reason_code") == "provider_reconciliation_due":

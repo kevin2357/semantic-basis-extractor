@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "closeout_terminal": true,
+    "command_exit_code": 2,
+    "custody_finality": "mixed_resolution_required",
+    "historical_v01_readable": true,
+    "historical_v01_refused_as_v02": true,
+    "lineage_contiguous": true,
+    "local_continuation_remains": false,
+    "new_provider_create_permitted": false,
+    "protected_sentinel_absent": true,
+    "provider_continuation_remains": false,
+    "provider_post_count": 0,
+    "providerless_denial_action_ids": [
+      "paid_000000000000000000000103"
+    ],
+    "providerless_denial_outcome": "applied",
+    "public_result_v02": "astrowoof.native_execution_result.v0.2",
+    "receipt_mutation_refused": true,
+    "reconciliation_action_ids": [
+      "paid_000000000000000000000102"
+    ],
+    "reported_action_id": "paid_000000000000000000000101",
+    "review_immutable": true,
+    "review_receipt_valid": true,
+    "review_result_valid": true,
+    "scripted_get_count": 1,
+    "successor_outcome": "review_required",
+    "successor_result_valid": true
+  },
+  "receipt_sha256": "6289962655c36e4c2cab5828c30499a75155094c0437898c7f68fdf4e0afeb6d",
+  "sbe_release": "0.4.28",
+  "schema_version": "astrowoof.terminal_review_qualification.v1",
+  "status": "pass"
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.terminal_review_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "sbe_release", "checks", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.terminal_review_qualification.v1"},
+    "status": {"const": "pass"},
+    "sbe_release": {"type": "string", "minLength": 1},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_result_v02", "command_exit_code", "custody_finality",
+        "reported_action_id", "reconciliation_action_ids",
+        "providerless_denial_action_ids", "new_provider_create_permitted",
+        "review_result_valid", "review_receipt_valid", "review_immutable",
+        "successor_result_valid", "successor_outcome", "lineage_contiguous",
+        "providerless_denial_outcome", "closeout_terminal",
+        "provider_continuation_remains", "local_continuation_remains",
+        "historical_v01_readable", "historical_v01_refused_as_v02",
+        "receipt_mutation_refused", "scripted_get_count", "provider_post_count",
+        "protected_sentinel_absent"
+      ],
+      "properties": {
+        "public_result_v02": {"const": "astrowoof.native_execution_result.v0.2"},
+        "command_exit_code": {"const": 2},
+        "custody_finality": {"const": "mixed_resolution_required"},
+        "reported_action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+        "reconciliation_action_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "providerless_denial_action_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+        "new_provider_create_permitted": {"const": false},
+        "review_result_valid": {"const": true},
+        "review_receipt_valid": {"const": true},
+        "review_immutable": {"const": true},
+        "successor_result_valid": {"const": true},
+        "successor_outcome": {"const": "review_required"},
+        "lineage_contiguous": {"const": true},
+        "providerless_denial_outcome": {"const": "applied"},
+        "closeout_terminal": {"const": true},
+        "provider_continuation_remains": {"const": false},
+        "local_continuation_remains": {"const": false},
+        "historical_v01_readable": {"const": true},
+        "historical_v01_refused_as_v02": {"const": true},
+        "receipt_mutation_refused": {"const": true},
+        "scripted_get_count": {"const": 1},
+        "provider_post_count": {"const": 0},
+        "protected_sentinel_absent": {"const": true}
+      }
+    }
+  }
+}

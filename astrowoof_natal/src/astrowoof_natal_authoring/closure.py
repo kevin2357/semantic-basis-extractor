@@ -2408,9 +2408,13 @@ def update_run_status(state: dict[str, Any]) -> None:
             if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
             else "DELIVERY_COMPLETE"
         )
-    elif state.get("status") in {"FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW"}:
-        # Final-deck QA is stronger than pass-derived authoring completeness.
-        # Once reached, ordinary persistence must not reopen optional stages.
+    elif state.get("status") in {
+        "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
+        "FINAL_QA_REQUIRES_REVIEW",
+    }:
+        # Editorial review is stronger than paid-action custody or pass-derived
+        # authoring completeness. Once reached, custody-only persistence must
+        # not reopen authoring or flatten the run back to provider-pending.
         pass
     elif "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
         state["status"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
@@ -2698,6 +2702,9 @@ def save_state(run_json: Path, state: dict[str, Any]) -> None:
 def checkpoint_spend_boundary(
     run_json: Path, state: dict[str, Any],
     *, on_quiescent_checkpoint: Callable[[], None] | None = None,
+    terminal_review_v02: bool = False,
+    terminal_review_output: Callable[[dict[str, Any]], None] | None = None,
+    event_emitter: Any = None,
 ):
     """Publish one complete checkpoint after a paid-stage pause unwinds."""
     try:
@@ -2713,9 +2720,47 @@ def checkpoint_spend_boundary(
             on_quiescent_checkpoint()
         from . import __version__
         from .native_transitions import publish_native_execution_result
+        if terminal_review_v02:
+            from .post_fan_in_contracts import inspect_post_fan_in_lifecycle
+            lifecycle = inspect_post_fan_in_lifecycle(
+                run_json.parent,
+                observed_at=datetime.now(timezone.utc).replace(
+                    microsecond=0
+                ).isoformat().replace("+00:00", "Z"),
+                native_exclusive_access="declared",
+                event_emitter=event_emitter,
+            )
+            if (
+                state.get("status") in {
+                    "FAILED_REQUIRES_REVIEW",
+                    "FINAL_QA_FAILED",
+                    "FINAL_QA_REQUIRES_REVIEW",
+                }
+                or (
+                    lifecycle["temporal_decision"]["selected_command"] == "none"
+                    and lifecycle["temporal_decision"]["capacity_disposition"]
+                    == "retain_for_review"
+                )
+            ):
+                sealed = publish_native_execution_result(
+                    run_json.parent, command_kind="ordinary_authoring",
+                    sbe_release=__version__, published_at=utc_now(),
+                    event_emitter=event_emitter, terminal_review_v02=True,
+                    terminal_review_cause="native_lifecycle_review_required",
+                )
+                from .terminal_review_contracts import (
+                    build_terminal_review_command_result,
+                )
+                command_result = build_terminal_review_command_result(
+                    sealed["result"], sealed["receipt"],
+                )
+                if terminal_review_output is not None:
+                    terminal_review_output(command_result)
+                raise SystemExit(2) from None
         publish_native_execution_result(
             run_json.parent, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=utc_now(),
+            event_emitter=event_emitter,
         )
         raise
     else:
@@ -8189,6 +8234,8 @@ def main() -> None:
     authoring_complete = True
     with checkpoint_spend_boundary(
         run_json, state, on_quiescent_checkpoint=seal_local_progress,
+        terminal_review_v02=args.service_level == "interactive",
+        terminal_review_output=output_result, event_emitter=event_emitter,
     ):
         if args.service_level == "batch":
             batch_base_provider = openai_provider_for_attempt(provider, 1)
@@ -8241,6 +8288,8 @@ def main() -> None:
         return
     with checkpoint_spend_boundary(
         run_json, state, on_quiescent_checkpoint=seal_local_progress,
+        terminal_review_v02=args.service_level == "interactive",
+        terminal_review_output=output_result, event_emitter=event_emitter,
     ):
         finalize_subjects(
             state=state,
@@ -8288,17 +8337,27 @@ def main() -> None:
                 "outcome": state["status"], "terminal_reason": terminal_reason,
             })
     from .native_transitions import publish_native_execution_result
-    publish_native_execution_result(
-        args.run_dir, command_kind="ordinary_authoring",
-        sbe_release=__version__, published_at=utc_now(),
-        event_emitter=event_emitter,
-    )
-    output_result(state)
-    if state["status"] in {
+    review_required = state["status"] in {
         "FAILED_REQUIRES_REVIEW",
         "FINAL_QA_FAILED",
         "FINAL_QA_REQUIRES_REVIEW",
-    }:
+    }
+    sealed = publish_native_execution_result(
+        args.run_dir, command_kind="ordinary_authoring",
+        sbe_release=__version__, published_at=utc_now(),
+        event_emitter=event_emitter,
+        terminal_review_v02=(
+            review_required and args.service_level == "interactive"
+        ),
+    )
+    if review_required and args.service_level == "interactive":
+        from .terminal_review_contracts import build_terminal_review_command_result
+        output_result(build_terminal_review_command_result(
+            sealed["result"], sealed["receipt"],
+        ))
+        raise SystemExit(2)
+    output_result(state)
+    if review_required:
         raise SystemExit(2)
 
 

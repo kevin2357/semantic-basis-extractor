@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/terminal-review-result-v0.2.schema.json",
+  "title": "AstroWoof native terminal-review execution result v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "result_id", "result_sha256", "invocation_id", "run_id", "sbe_release", "published_at", "command_kind", "route_binding", "pre_checkpoint", "post_checkpoint", "journal_range", "outcome", "cause_code", "action_dispositions", "action_inventory_sha256", "custody_finality", "reconciliation_action_ids", "providerless_denial_action_ids", "new_provider_create_permitted", "projection_refs"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.native_execution_result.v0.2"},
+    "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+    "result_sha256": {"$ref": "#/$defs/sha256"},
+    "invocation_id": {"type": "string", "pattern": "^ninv_[0-9a-f]{24}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "sbe_release": {"type": "string", "minLength": 1, "maxLength": 32},
+    "published_at": {"type": "string", "minLength": 1, "maxLength": 40},
+    "command_kind": {"enum": ["ordinary_authoring", "provider_reconciliation"]},
+    "route_binding": {"$ref": "#/$defs/route_binding"},
+    "pre_checkpoint": {"type": ["object", "null"]},
+    "post_checkpoint": {"type": "object"},
+    "journal_range": {"type": "object"},
+    "outcome": {"const": "review_required"},
+    "cause_code": {"enum": ["final_qa_requires_review", "authoring_attempts_exhausted", "provider_terminal_failure", "provider_output_invalid", "provider_identity_conflict", "ambiguous_provider_submission", "snapshot_or_journal_invalid", "native_lifecycle_review_required"]},
+    "action_dispositions": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/action"}},
+    "action_inventory_sha256": {"$ref": "#/$defs/sha256"},
+    "custody_finality": {"enum": ["final", "provider_reconciliation_required", "providerless_denial_required", "mixed_resolution_required", "ambiguity_review_required"]},
+    "reconciliation_action_ids": {"$ref": "#/$defs/action_ids"},
+    "providerless_denial_action_ids": {"$ref": "#/$defs/action_ids"},
+    "new_provider_create_permitted": {"const": false},
+    "projection_refs": {"type": "object", "maxProperties": 0}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "action_id": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"},
+    "action_ids": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/action_id"}},
+    "route_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "provider_mechanism", "native_operation_ref"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_mechanism": {"enum": ["response", "batch"]},
+        "native_operation_ref": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ordinal", "action_id", "binding_sha256", "stage", "route", "route_family", "provider_mechanism", "native_action_state", "provider_operation_id", "provider_status", "consumption_present", "reported_present", "usage_reported", "custody_disposition", "denial_evidence_sha256"],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 1, "maximum": 128},
+        "action_id": {"$ref": "#/$defs/action_id"},
+        "binding_sha256": {"$ref": "#/$defs/sha256"},
+        "stage": {"enum": ["authoring_initial", "creative_retry", "polish", "qualitative_critic", "qualitative_candidate"]},
+        "route": {"type": "string", "minLength": 1, "maxLength": 256},
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_mechanism": {"enum": ["response", "batch"]},
+        "native_action_state": {"enum": ["PREPARED", "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED", "WAITING", "REPORTED", "DENIED_PROVIDERLESS", "BUDGET_EXHAUSTED", "SKIPPED_BUDGET_EXHAUSTED", "AMBIGUOUS_PROVIDER_SUBMISSION"]},
+        "provider_operation_id": {"type": ["string", "null"], "maxLength": 256},
+        "provider_status": {"type": ["string", "null"], "maxLength": 64},
+        "consumption_present": {"type": "boolean"},
+        "reported_present": {"type": "boolean"},
+        "usage_reported": {"type": "boolean"},
+        "custody_disposition": {"enum": ["terminally_accounted", "provider_reconciliation_only", "providerless_denial_only", "ambiguity_review_only"]},
+        "denial_evidence_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    }
+  }
+}

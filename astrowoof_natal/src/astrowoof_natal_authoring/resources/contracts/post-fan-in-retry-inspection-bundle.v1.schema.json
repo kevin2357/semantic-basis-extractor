@@ -27,6 +27,7 @@
   },
   "$defs": {
     "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "operationKey": {"type": "string", "pattern": "^work_[0-9a-f]{24}$"},
     "stringArray": {"type": "array", "items": {"type": "string"}},
     "phase": {
       "type": "object", "additionalProperties": false,
@@ -42,7 +43,7 @@
         "due_action_ids": {"$ref": "#/$defs/stringArray"},
         "not_before": {"type": ["string", "null"]},
         "provider_custody": {"type": "object", "additionalProperties": false, "required": ["classification", "action_ids"], "properties": {"classification": {"type": "string"}, "action_ids": {"$ref": "#/$defs/stringArray"}}},
-        "local_operations": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["operation_key", "kind", "stage", "source_action_ids", "reason_code"], "properties": {"operation_key": {"$ref": "#/$defs/digest"}, "kind": {"type": "string"}, "stage": {"type": "string"}, "source_action_ids": {"$ref": "#/$defs/stringArray"}, "reason_code": {"type": "string"}}}},
+        "local_operations": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["operation_key", "kind", "stage", "source_action_ids", "reason_code"], "properties": {"operation_key": {"$ref": "#/$defs/operationKey"}, "kind": {"type": "string"}, "stage": {"type": "string"}, "source_action_ids": {"$ref": "#/$defs/stringArray"}, "reason_code": {"type": "string"}}}},
         "consumed_operation_count": {"type": "integer", "minimum": 0},
         "external_authority_action_ids": {"$ref": "#/$defs/stringArray"}
       }

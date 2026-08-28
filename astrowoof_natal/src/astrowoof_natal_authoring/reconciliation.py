@@ -1514,8 +1514,10 @@ def run_bounded_authoring_reconciliation(
         SNAPSHOT_NAME,
         SpendController,
         author_pending_passes,
+        estimated_cost,
         finalize_subjects,
         load_json,
+        normalized_usage,
         run_qualitative_review,
         save_state,
         sha256_file,
@@ -1584,6 +1586,72 @@ def run_bounded_authoring_reconciliation(
         _failure_injector("after_provider_retrieval_checkpoint")
     completed_ids = set(result["cycle"]["completed_action_ids"])
     if not completed_ids or result["outcome"] == "review_required":
+        emit_checkpoint_events(result)
+        return result
+
+    state = load_json(run_dir / "run.json")
+    if state.get("status") in {
+        "FAILED_REQUIRES_REVIEW",
+        "FINAL_QA_FAILED",
+        "FINAL_QA_REQUIRES_REVIEW",
+    }:
+        # Editorial review is terminal for authoring, but already-submitted
+        # provider work may still be retrieved and financially accounted.  Do
+        # not feed its output back through pass/finalization logic or permit a
+        # new create merely because the response completed later.
+        for action in (state.get("spend_ledger") or {}).get("actions", []):
+            if action.get("action_id") not in completed_ids:
+                continue
+            response_path = (
+                run_dir / "lifecycle" / "provider-reconciliation" /
+                f"{action['action_id']}.response.json"
+            )
+            response = json.loads(response_path.read_text(encoding="utf-8"))
+            raw_usage = response.get("usage")
+            usage = normalized_usage(response) if isinstance(raw_usage, dict) else None
+            estimate = estimated_cost(
+                str(response.get("model") or (action.get("binding") or {}).get("model") or ""),
+                usage,
+            ) if usage is not None else None
+            action["reported"] = {
+                "usage": usage,
+                "estimated_micro_usd": (
+                    int(round(float(estimate["estimated_amount"]) * 1_000_000))
+                    if estimate is not None else None
+                ),
+                "cost_disposition": (
+                    "provider_usage_reported"
+                    if usage is not None
+                    else "provider_usage_unavailable_billing_reconciliation_pending"
+                ),
+            }
+            action["state"] = "REPORTED"
+        save_state(run_dir / "run.json", state)
+        artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
+        record = json.loads(artifact.read_text(encoding="utf-8"))
+        local_continuation = {
+            "pass_ids": [], "stages": [],
+            "completed_action_ids": sorted(completed_ids),
+            "exhausted_before_detach": True,
+        }
+        record["local_continuation"] = local_continuation
+        write_json_atomic(artifact, record)
+        write_workspace_snapshot(run_dir)
+        inspection = inspect_lifecycle(
+            run_dir, native_exclusive_access="established", observed_at=observed_at,
+        )
+        result["outcome"] = "review_required"
+        result["inspection"] = inspection
+        result["local_continuation"] = local_continuation
+        result["result_checkpoint"] = {
+            "operator_state_revision": inspection["observation"]["operator_state_revision"],
+            "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
+            "result_artifact": {
+                "logical_path": artifact.relative_to(run_dir).as_posix(),
+                "bytes": artifact.stat().st_size,
+                "sha256": _file_sha256(artifact),
+            },
+        }
         emit_checkpoint_events(result)
         return result
 

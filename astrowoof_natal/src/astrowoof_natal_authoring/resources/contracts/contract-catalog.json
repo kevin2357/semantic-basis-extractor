@@ -31,6 +31,8 @@
     "provider_reconciliation_cycle_result_historical": "astrowoof.provider_reconciliation_cycle_result.v0.1",
     "native_transition_journal_record": "astrowoof.native_transition_journal_record.v0.1",
     "native_execution_result": "astrowoof.native_execution_result.v0.1",
+    "native_terminal_review_result": "astrowoof.native_execution_result.v0.2",
+    "terminal_review_command_result": "astrowoof.terminal_review_command_result.v0.1",
     "native_result_index": "astrowoof.native_result_index.v0.1",
     "native_publication_receipt": "astrowoof.native_publication_receipt.v0.1",
     "native_transition_consumer_fixtures": "astrowoof.native_transition_consumer_fixtures.v0.1",
@@ -77,7 +79,8 @@
     "provider_economics_transaction_revision": "astrowoof.provider_economics_transaction_revision.v1",
     "provider_economics_export": "astrowoof.provider_economics_export.v1",
     "provider_economics_qualification": "astrowoof.provider_economics_qualification.v1",
-    "provider_pending_lifecycle_qualification": "astrowoof.provider_pending_lifecycle_qualification.v2"
+    "provider_pending_lifecycle_qualification": "astrowoof.provider_pending_lifecycle_qualification.v2",
+    "terminal_review_qualification": "astrowoof.terminal_review_qualification.v1"
   },
   "compatibility": {
     "legacy_projected_directory": "normalized_to_projected_input_v0.1",

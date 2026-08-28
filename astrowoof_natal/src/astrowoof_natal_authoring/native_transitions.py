@@ -109,6 +109,56 @@ def _receipt_digest(receipt: dict[str, Any]) -> str:
     return _digest(basis)
 
 
+def validate_native_publication_receipt(
+    receipt: dict[str, Any], result: dict[str, Any],
+) -> None:
+    """Validate the canonical v0.1 receipt against a v0.1 or v0.2 result."""
+    receipt_keys = {
+        "schema_version", "receipt_id", "receipt_sha256", "run_id",
+        "invocation_id", "result_id", "result_sha256", "snapshot_sha256",
+        "checkpoint_basis_sha256", "journal_range_sha256",
+        "logical_workspace_root",
+    }
+    if not isinstance(receipt, dict) or set(receipt) != receipt_keys:
+        raise ValueError("Native publication receipt shape is invalid")
+    receipt_digest = _receipt_digest(receipt)
+    if (
+        receipt.get("schema_version") != RECEIPT_SCHEMA
+        or receipt.get("receipt_sha256") != receipt_digest
+        or receipt.get("receipt_id") != f"nreceipt_{receipt_digest[:24]}"
+    ):
+        raise ValueError("Native publication receipt binding identity is invalid")
+    schema = result.get("schema_version") if isinstance(result, dict) else None
+    if schema == EXECUTION_RESULT_SCHEMA:
+        result_digest = _result_digest(result)
+        if (
+            result.get("result_sha256") != result_digest
+            or result.get("result_id") != f"nres_{result_digest[:24]}"
+            or result.get("outcome") not in OUTCOMES
+        ):
+            raise ValueError("Native execution result identity is invalid")
+    elif schema == "astrowoof.native_execution_result.v0.2":
+        from .terminal_review_contracts import validate_terminal_review_result_v02
+        validate_terminal_review_result_v02(result)
+    else:
+        raise ValueError("Unsupported native execution result schema")
+    if (
+        receipt.get("run_id") != result.get("run_id")
+        or receipt.get("invocation_id") != result.get("invocation_id")
+        or receipt.get("result_id") != result.get("result_id")
+        or receipt.get("result_sha256") != result.get("result_sha256")
+        or receipt.get("checkpoint_basis_sha256")
+        != (result.get("post_checkpoint") or {}).get("checkpoint_basis_sha256")
+        or receipt.get("journal_range_sha256")
+        != (result.get("journal_range") or {}).get("range_sha256")
+        or not isinstance(receipt.get("logical_workspace_root"), str)
+        or not receipt["logical_workspace_root"]
+        or not isinstance(receipt.get("snapshot_sha256"), str)
+        or len(receipt["snapshot_sha256"]) != 64
+    ):
+        raise ValueError("Native publication receipt/result binding is invalid")
+
+
 def mint_invocation_id() -> str:
     return f"ninv_{uuid.uuid4().hex[:24]}"
 
@@ -545,6 +595,29 @@ def _write_immutable_execution_result_internal(run_dir: Path, result: dict[str, 
     return value
 
 
+def _write_terminal_review_result_internal(
+    run_dir: Path, result: dict[str, Any], state: dict[str, Any],
+) -> dict[str, Any]:
+    from .terminal_review_contracts import build_terminal_review_result_v02
+    value = build_terminal_review_result_v02(result, state)
+    if len(_canonical(value)) > MAX_RESULT_BYTES:
+        raise ValueError("Terminal review result exceeds size bound")
+    path = run_dir / RESULT_DIRECTORY / f"{value['result_id']}.json"
+    if path.exists():
+        if load_json(path) != value:
+            raise ValueError("Immutable terminal review result identity conflict")
+    else:
+        write_json_atomic(path, value)
+    index_path = run_dir / RESULT_INDEX_NAME
+    index = load_json(index_path) if index_path.exists() else {
+        "schema_version": RESULT_INDEX_SCHEMA, "result_ids": [],
+    }
+    if value["result_id"] not in index["result_ids"]:
+        index["result_ids"].append(value["result_id"])
+    write_json_atomic(index_path, index)
+    return value
+
+
 def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> dict[str, Any]:
     run_dir = run_dir.resolve()
     with _exclusive_lifecycle_lock(run_dir):
@@ -638,7 +711,9 @@ def _publish_receipt(
 def publish_native_execution_result(
     run_dir: Path, *, command_kind: str, sbe_release: str, published_at: str,
     event_emitter: Any = None, projection_refs: dict[str, Any] | None = None,
-    _writer_held: bool = False,
+    _writer_held: bool = False, terminal_review_v02: bool = False,
+    terminal_review_cause: str | None = None,
+    _failure_injector: Any = None,
 ) -> dict[str, Any]:
     """Seal current native meaning as result + full snapshot + immutable receipt."""
     run_dir = run_dir.resolve()
@@ -689,6 +764,8 @@ def publish_native_execution_result(
                 run_dir, orphan, snapshot_sha256=sha256_file(run_dir / SNAPSHOT_NAME),
                 basis=basis,
             )
+            if _failure_injector is not None:
+                _failure_injector("after_receipt_published")
             sealed = {"result": orphan, "receipt": receipt}
             if event_emitter is not None:
                 event_emitter.emit("native.result_published", data={
@@ -700,32 +777,95 @@ def publish_native_execution_result(
                 orphan["result_id"], receipt["receipt_id"], orphan["outcome"],
             )
             return sealed
-        invocation_id = mint_invocation_id()
-        bind_logging_context(invocation_id=invocation_id)
-        logger.info(
-            "native_invocation_started command_kind=%s state_revision=%s",
-            command_kind, state.get("state_revision"),
-        )
         route = _native_route(state)
         outcome, cause = _outcome(state)
+        if terminal_review_v02:
+            outcome = "review_required"
+            cause = terminal_review_cause or cause
         revision = int(state.get("state_revision") or 0)
+        if terminal_review_v02 and indexed_results:
+            latest = indexed_results[-1]
+            if (
+                latest.get("schema_version")
+                == "astrowoof.native_execution_result.v0.2"
+                and latest.get("command_kind") == command_kind
+                and latest.get("outcome") == outcome
+                and latest.get("cause_code") == cause
+                and latest.get("route_binding") == route
+                and latest.get("post_checkpoint", {}).get(
+                    "native_state_revision"
+                ) == revision
+            ):
+                from .terminal_review_contracts import (
+                    build_terminal_action_dispositions,
+                )
+                if latest.get("action_inventory_sha256") == _digest(
+                    build_terminal_action_dispositions(state)
+                ):
+                    replay = read_native_transition_result(
+                        run_dir, latest["result_id"]
+                    )
+                    logger.info(
+                        "native_publication_exact_replay result_id=%s outcome=%s",
+                        latest["result_id"], latest["outcome"],
+                    )
+                    return {
+                        "result": replay["result"],
+                        "receipt": replay["receipt"],
+                    }
+
+        journal_records = validate_transition_journal(run_dir)
+        unclaimed = journal_records[prior_end:]
+        repair_invocation = (
+            len(unclaimed) >= 3
+            and [item.get("record_kind") for item in unclaimed[-3:]]
+            == ["invocation.started", "native.transitioned", "invocation.closed"]
+            and len({item.get("invocation_id") for item in unclaimed[-3:]}) == 1
+            and all(
+                item.get("native_state_revision") == revision
+                and item.get("route_binding") == route
+                for item in unclaimed[-3:]
+            )
+            and unclaimed[-2].get("native_transition", {}).get("outcome") == outcome
+            and unclaimed[-2].get("native_transition", {}).get("cause_code") == cause
+            and unclaimed[-1].get("native_transition", {}).get("outcome") == outcome
+            and unclaimed[-1].get("native_transition", {}).get("cause_code") == cause
+        )
+        if repair_invocation:
+            invocation_id = str(unclaimed[-1]["invocation_id"])
+            published_at = str(unclaimed[-1]["observed_at"])
+            logger.warning(
+                "native_publication_repair invocation_id=%s "
+                "reason=unsealed_journal_tail",
+                invocation_id,
+            )
+        else:
+            invocation_id = mint_invocation_id()
+            bind_logging_context(invocation_id=invocation_id)
+            logger.info(
+                "native_invocation_started command_kind=%s state_revision=%s",
+                command_kind, state.get("state_revision"),
+            )
         common = {
             "invocation_id": invocation_id, "observed_at": published_at,
             "native_state_revision": revision, "route_binding": route,
             "action_binding": None, "provider_observation": None,
         }
-        for kind, transition in (
-            ("invocation.started", None),
-            ("native.transitioned", {"outcome": outcome, "cause_code": cause, "native_status": state.get("status")}),
-            ("invocation.closed", {"outcome": outcome, "cause_code": cause}),
-        ):
-            _append_transition_record_internal(run_dir, {
-                **common, "record_kind": kind, "native_transition": transition,
-            })
+        if not repair_invocation:
+            for kind, transition in (
+                ("invocation.started", None),
+                ("native.transitioned", {"outcome": outcome, "cause_code": cause, "native_status": state.get("status")}),
+                ("invocation.closed", {"outcome": outcome, "cause_code": cause}),
+            ):
+                _append_transition_record_internal(run_dir, {
+                    **common, "record_kind": kind, "native_transition": transition,
+                })
+            if _failure_injector is not None:
+                _failure_injector("after_journal_appended")
         selected = journal_range(run_dir, prior_end + 1, len(validate_transition_journal(run_dir)))
         basis = checkpoint_basis(run_dir, revision)
         pre_snapshot = run_dir / SNAPSHOT_NAME
-        result = _write_immutable_execution_result_internal(run_dir, {
+        result_basis = {
             "invocation_id": invocation_id, "run_id": state["run_id"],
             "sbe_release": sbe_release, "published_at": published_at,
             "command_kind": command_kind, "route_binding": route,
@@ -742,14 +882,28 @@ def publish_native_execution_result(
             "action_ids": [item["action_id"] for item in (state.get("spend_ledger") or {}).get("actions", [])],
             "provider_operations": [deepcopy(item.get("provider")) for item in (state.get("spend_ledger") or {}).get("actions", []) if item.get("provider")],
             "projection_refs": deepcopy(projection_refs or {}),
-        })
+        }
+        if terminal_review_v02:
+            result = _write_terminal_review_result_internal(
+                run_dir, result_basis, state,
+            )
+        else:
+            result = _write_immutable_execution_result_internal(run_dir, result_basis)
+        if _failure_injector is not None:
+            _failure_injector("after_result_written")
         from .closure import write_workspace_snapshot, sha256_file
         write_workspace_snapshot(run_dir)
+        if _failure_injector is not None:
+            _failure_injector("after_snapshot_written")
         validate_workspace_snapshot(run_dir, state)
+        if _failure_injector is not None:
+            _failure_injector("after_snapshot_validated")
         snapshot_sha256 = sha256_file(run_dir / SNAPSHOT_NAME)
         receipt = _publish_receipt(
             run_dir, result, snapshot_sha256=snapshot_sha256, basis=basis,
         )
+        if _failure_injector is not None:
+            _failure_injector("after_receipt_published")
         sealed = {"result": result, "receipt": receipt}
         if event_emitter is not None:
             event_emitter.emit("native.result_published", data={
@@ -774,13 +928,17 @@ def read_native_transition_result(
     run_dir = run_dir.resolve()
     path = run_dir / RESULT_DIRECTORY / f"{result_id}.json"
     result = load_json(path)
-    if result.get("schema_version") != EXECUTION_RESULT_SCHEMA:
+    if result.get("schema_version") == EXECUTION_RESULT_SCHEMA:
+        digest = _result_digest(result)
+        if result.get("result_sha256") != digest or result.get("result_id") != f"nres_{digest[:24]}":
+            raise ValueError("Native execution result identity is invalid")
+        if result.get("outcome") not in OUTCOMES:
+            raise ValueError("Unknown native execution outcome")
+    elif result.get("schema_version") == "astrowoof.native_execution_result.v0.2":
+        from .terminal_review_contracts import validate_terminal_review_result_v02
+        validate_terminal_review_result_v02(result)
+    else:
         raise ValueError("Unsupported native execution result schema")
-    digest = _result_digest(result)
-    if result.get("result_sha256") != digest or result.get("result_id") != f"nres_{digest[:24]}":
-        raise ValueError("Native execution result identity is invalid")
-    if result.get("outcome") not in OUTCOMES:
-        raise ValueError("Unknown native execution outcome")
     expected = result["journal_range"]
     observed = journal_range(run_dir, expected["start_sequence"], expected["end_sequence"])
     for key in ("start_sequence", "end_sequence", "record_count", "range_sha256"):
@@ -792,17 +950,9 @@ def read_native_transition_result(
     if not receipt_path.is_file():
         raise ValueError("Native execution result has no immutable publication receipt")
     receipt = load_json(receipt_path)
-    receipt_digest = _receipt_digest(receipt)
-    if (
-        receipt.get("schema_version") != RECEIPT_SCHEMA
-        or receipt.get("receipt_sha256") != receipt_digest
-        or receipt.get("receipt_id") != f"nreceipt_{receipt_digest[:24]}"
-        or receipt.get("result_id") != result_id
-        or receipt.get("result_sha256") != result["result_sha256"]
-        or receipt.get("journal_range_sha256") != observed["range_sha256"]
-        or receipt.get("logical_workspace_root") != normalized_path(run_dir)
-    ):
-        raise ValueError("Native publication receipt binding is invalid")
+    validate_native_publication_receipt(receipt, result)
+    if receipt.get("logical_workspace_root") != normalized_path(run_dir):
+        raise ValueError("Native publication receipt workspace binding is invalid")
     retained_snapshot = (
         run_dir / RECEIPT_DIRECTORY / f"{result_id}.workspace-snapshot.json"
     )
@@ -842,6 +992,7 @@ __all__ = [
     "checkpoint_basis", "journal_range", "mint_invocation_id",
     "NativeTransitionResultView", "latest_native_transition_result",
     "publish_native_execution_result", "read_native_transition_result",
+    "validate_native_publication_receipt",
     "validate_transition_journal",
     "sync_provider_transition_journal", "write_immutable_execution_result",
 ]
