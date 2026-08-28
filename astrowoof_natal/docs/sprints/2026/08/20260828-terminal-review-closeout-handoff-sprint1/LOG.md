@@ -245,3 +245,14 @@ Status: Slice 6 complete; final API and owner review approved tag/publication.
 - API final review approved SBE 0.4.28 for immutable tag and publication.
 - Owner explicitly authorized tag and publication.
 - Exact-interactive scope and deferred Batch/bounded parity remain explicit.
+
+## 2026-08-28 — Immutable publication
+
+- Locked and tagged release commit `b61ea7dcdba1c8769833c46c785db974c88d3c77`
+  as `astrowoof-natal-authoring-v0.4.28`.
+- Published the exact qualified wheel and checksum asset to GitHub release
+  `378409256`.
+- Downloaded both assets and verified the wheel SHA-256 remained
+  `365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
+- Publication introduced no provider traffic, spend, deployment, or retained-run
+  mutation.

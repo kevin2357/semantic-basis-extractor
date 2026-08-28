@@ -312,3 +312,17 @@ Status: correction complete; API re-review required before Slice 6.
 
 Status: release candidate qualified; final API and owner review approved immutable
 tag and publication as SBE 0.4.28.
+
+## Immutable publication evidence
+
+- Tag: `astrowoof-natal-authoring-v0.4.28`.
+- Tag target: `b61ea7dcdba1c8769833c46c785db974c88d3c77`.
+- GitHub release ID: `378409256`.
+- Published at: `2026-08-28T10:23:09Z`.
+- Wheel asset ID: `533629996`.
+- Published/downloaded wheel SHA-256:
+  `365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
+- Checksum asset ID: `533629994`.
+- Checksum asset SHA-256:
+  `19e0dba92bd94ae162b6bef942e959adff70338a05034f93f06d7ce4928b2352`.
+- Download verification: pass.

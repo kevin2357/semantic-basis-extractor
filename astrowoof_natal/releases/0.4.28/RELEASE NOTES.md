@@ -1,6 +1,6 @@
 # AstroWoof Natal Authoring 0.4.28
 
-Status: candidate qualified; tag and publication explicitly authorized
+Status: published and download-verified
 
 SBE 0.4.28 makes exact-interactive editorial review a complete native handoff
 rather than a process-exit inference. Before exit 2, the public command now seals
@@ -40,5 +40,8 @@ by its runtime and Python validator.
 - External provider/network calls and spend: 0.
 - Retained Pippin/Duchess access or mutation during implementation/qualification: 0.
 
-Final API and owner review approved immutable tagging and publication. Deployment
-and retained-run recovery remain separate consumer decisions.
+Final API and owner review approved immutable publication. The release is published
+at `astrowoof-natal-authoring-v0.4.28`; downloaded wheel and GitHub asset metadata
+both verify SHA-256
+`365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
+Deployment and retained-run recovery remain separate consumer decisions.
