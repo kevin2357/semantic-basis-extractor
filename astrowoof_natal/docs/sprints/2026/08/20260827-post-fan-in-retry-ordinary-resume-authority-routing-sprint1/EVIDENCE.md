@@ -362,3 +362,15 @@ API approved the corrected evidence scope and authorized fresh installed-wheel a
 release qualification. No runtime, schema, or fixture correction remains open.
 
 Status: Slice 4B complete; Slice 5 committed-source qualification is next.
+
+## Slice 5 broad-gate correction
+
+The first broad-suite attempt correctly refused a contradictory lifecycle shape:
+completed evidence had asserted local continuation while another provider action
+was due. No provider or retained-QA work was involved. The selector now permits
+completed-evidence local fan-in only when retained custody is not due and the run
+is nonterminal.
+
+Focused regression after correction: 3 passed, 1 expected optional-schema skip.
+
+Status: corrected source must be committed before final candidate qualification.

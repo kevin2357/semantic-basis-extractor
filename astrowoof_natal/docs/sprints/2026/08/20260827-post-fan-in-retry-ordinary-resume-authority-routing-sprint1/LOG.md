@@ -386,3 +386,18 @@ Current gate: rerun source and installed-wheel evidence, then API re-review.
   qualification.
 
 Current gate: Slice 5 qualification from the committed post-4B source identity.
+
+## 2026-08-27 — Slice 5 adjacent regression corrected
+
+- The broad gate caught an adjacent contradiction in the mixed-custody selector:
+  completed provider evidence was marking local continuation while another
+  provider action was already due for retrieval.
+- Narrowed the rule: completed evidence selects local fan-in only when the run is
+  nonterminal and no retained provider action is presently due.
+- This preserves the Slice 4B pending/not-due fan-in case, preserves retrieval
+  precedence for due custody, and keeps nonblocking completed optional evidence
+  from reopening a terminal run.
+- Added a regression covering the same workspace at not-due and later-due times.
+
+Current gate: commit the correction, then restart deterministic build and broad
+qualification from the new source identity.

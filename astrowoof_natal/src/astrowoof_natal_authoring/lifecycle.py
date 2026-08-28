@@ -810,7 +810,7 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "provider_reconciliation_due",
         )
-    elif completed_evidence:
+    elif completed_evidence and not terminal_status:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",
         )
@@ -963,7 +963,15 @@ def inspect_lifecycle(
         == "completed"
         for action in (state.get("spend_ledger") or {}).get("actions", [])
     )
-    local_continuation = bool(dependencies) or completed_provider_evidence
+    observed_instant = parse_utc_instant(observation["observed_at"])
+    due_provider_work = any(
+        action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+        and (action.get("provider") or {}).get("id")
+        and (timing := validated_timing(action)) is not None
+        and timing.get("last_outcome") != "completed"
+        and parse_utc_instant(timing["resume_not_before"]) <= observed_instant
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+    )
     status = str(state.get("status") or "")
     subjects = list((state.get("subjects") or {}).values())
     complete = bool(subjects) and all(
@@ -983,6 +991,11 @@ def inspect_lifecycle(
         "FAILED_REQUIRES_REVIEW", "BUDGET_EXHAUSTED",
         "AMBIGUOUS_PROVIDER_SUBMISSION", "POLICY_STOPPED",
     }
+    # Completed provider evidence may select local fan-in only for a nonterminal
+    # run. Nonblocking optional evidence must not reopen a delivered/terminal run.
+    local_continuation = bool(dependencies) or (
+        completed_provider_evidence and not terminal and not due_provider_work
+    )
     if complete:
         outcome, terminal_reason = "delivery_complete", "delivery_complete"
     elif status == "BUDGET_EXHAUSTED":

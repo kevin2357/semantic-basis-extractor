@@ -78,6 +78,21 @@ class MixedProviderCustodySlice4BTests(unittest.TestCase):
             self.assertEqual("known_operations_pending", custody["state"])
             self.assertEqual([first, later], custody["action_ids"])
 
+            due = inspect_post_fan_in_lifecycle(
+                run_dir,
+                observed_at="2026-08-27T12:02:00Z",
+                native_exclusive_access="declared",
+            )
+            self.assertEqual(
+                "provider_reconciliation_cycle",
+                due["temporal_decision"]["selected_command"],
+            )
+            self.assertFalse(
+                due["checkpoint_basis"]["terminal"][
+                    "local_continuation_remains"
+                ]
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
