@@ -335,7 +335,10 @@ weaken stage prerequisites merely to make the fixture convenient.
 - prepare and bind two distinct ordinary retry actions and provider identities;
 - complete them in the opposite order from submission/action order;
 - reconcile and fan in while retaining exact action and semantic-operation identity;
-- require a distinct fresh ordinary-v2 request/grant decision for each successor;
+- require a distinct exact ordinary-v2 action/binding/authorization member for
+  each successor; subject to the Slice 4B characterization gate, preserve the
+  existing aggregate `ordinary_action_set` request when both are simultaneously
+  eligible;
 - prove detached initial-wave lineage never revives v1 admission; and
 - prove replay duplicates no retrieval, local consumption, grant consumption, or
   provider create.
@@ -362,7 +365,16 @@ Require fresh-workspace byte reproducibility, fully rehashed semantic and receip
 binding mutation refusal, exact replay, privacy sentinels, installed-wheel execution,
 zero external provider/network calls, zero spend, and no retained-QA access.
 
-Gate: API reviews both real-engine witness traces fixture-by-fixture before the
+Characterization found a mixed-custody selector gap: completed evidence can make
+capacity `continue_local_cycle/local_work_ready` while the public branch remains
+`none` when another provider action is pending. Correct this narrowly so validated
+completed custody selects `ordinary_resume` and v0.7 supplies the concrete local
+operation. Preserve the other pending action's custody and prevent fresh authority
+from outranking it.
+
+Gate: API first confirms the aggregate ordinary-v2 member interpretation recorded
+in `SLICE 4B - PRODUCTION PATH CHARACTERIZATION AND CONTRACT QUESTION.md`. After
+that freeze, API reviews both real-engine witness traces fixture-by-fixture before the
 replacement candidate is rebuilt and the joined campaign resumes.
 
 **Voof-paws 4B:** API happy-path witness contract and fixture review.

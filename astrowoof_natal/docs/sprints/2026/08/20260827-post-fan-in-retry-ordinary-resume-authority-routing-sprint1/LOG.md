@@ -308,3 +308,22 @@ Current gate: API/Linux joined campaign against the exact replacement digest.
 
 Current gate: Slice 4B production-path characterization and implementation,
 followed by API witness review and another fresh Slice 5 candidate.
+
+## 2026-08-27 — Slice 4B production-path characterization
+
+- Reproduced out-of-order completion with two provider-bound creative retries.
+- Found a real mixed-custody branch gap: capacity reports
+  `continue_local_cycle/local_work_ready`, but command selection falls through to
+  `none` when the older dependency projection is empty.
+- Identified the narrow correction: completed provider evidence selects
+  `ordinary_resume`; v0.7 remains responsible for a concrete local-work inventory.
+- Confirmed retained custody still prevents either prepared successor from
+  dispatching until the other provider operation is reconciled.
+- Identified the truthful authority shape as distinct exact successor members in
+  one aggregate ordinary-v2 action-set request when both become eligible.
+- Confirmed polish is the preferred downstream witness only if normal final-
+  assembly prerequisites are driven through production orchestration.
+- Added `SLICE 4B - PRODUCTION PATH CHARACTERIZATION AND CONTRACT QUESTION.md`.
+
+Current gate: API confirms aggregate-member interpretation before Slice 4B runtime
+correction and fixture implementation.

@@ -260,3 +260,23 @@ provider work, spending, or retained-QA recovery authorized.
 - Safety posture remains provider-free, zero-spend, and no retained-QA access.
 
 Status: Slice 4B planned; API review required after both witness artifacts pass.
+
+## Slice 4B characterization evidence
+
+- Route/mechanism: exact Natal / interactive Response.
+- Provider-bound retry actions: 2.
+- Completion order: later action completed while earlier action remained pending.
+- Reconciliation outcome: `progressed_local`.
+- Capacity: `continue_local_cycle`, reason `local_work_ready`.
+- Incorrect selected command: `none`, reason `terminal_or_no_continuation`.
+- Root cause: execution-branch selection requires an older dependency projection
+  even though validated custody already proves completed evidence.
+- Proposed correction: select `ordinary_resume` for completed provider evidence;
+  require v0.7 concrete local work; retain all other provider custody.
+- Authority topology: distinct action/binding/grant members, potentially one
+  aggregate ordinary-v2 request after both results are consumed.
+- External provider/network calls: 0.
+- Spend: USD 0.
+- Retained-QA access/mutation: none.
+
+Status: API interpretation requested before implementation freeze.
