@@ -15,7 +15,7 @@
   "build": {
     "artifact_source_commit": "25e0be9ce670b3643f47f6cdd0a71de7d00ad11e",
     "source_date_epoch": 1787911516,
-    "release_record_commit": "pending_release_approval_commit"
+    "release_record_commit": "1b44c450d02cac69677dba30ffa376eb139d5959"
   },
   "runtime": {
     "requires_python": ">=3.11",
