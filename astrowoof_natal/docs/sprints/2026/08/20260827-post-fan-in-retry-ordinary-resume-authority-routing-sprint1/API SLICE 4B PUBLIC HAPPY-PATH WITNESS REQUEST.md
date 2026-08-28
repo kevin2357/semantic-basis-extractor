@@ -22,8 +22,12 @@ Add two representative, provider-free, installed-wheel qualification artifacts:
    - One provider result becomes available before the other despite opposite
      submission/order position.
    - Reconciliation and local fan-in retain exact action/operation identity.
-   - Each successor requires its own distinct ordinary v2 authority request;
-     no initial-wave v1 authority is revived.
+   - Each successor requires its own distinct exact ordinary-v2 action binding,
+     authorization document, and ordered grant member; no initial-wave v1
+     authority is revived. When both successors become co-ready after retained
+     provider custody has cleared, one sealed ordinary-v2 action-set
+     request/grant may authorize their complete ordered set. The fixture must
+     not require artificial separate temporal request envelopes.
    - Replay causes no duplicate retrieval, local consumption, grant consumption,
      or create.
 
@@ -65,4 +69,3 @@ and stale-replay effects. It will not use private SBE workspace state.
 The generated API simulator remains the broad combinatorial layer; these two
 fixtures are representative real-engine witnesses, not a demand for exhaustive
 fixture enumeration.
-

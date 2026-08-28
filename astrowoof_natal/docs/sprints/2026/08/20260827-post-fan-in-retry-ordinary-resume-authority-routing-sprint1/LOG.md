@@ -327,3 +327,19 @@ followed by API witness review and another fresh Slice 5 candidate.
 
 Current gate: API confirms aggregate-member interpretation before Slice 4B runtime
 correction and fixture implementation.
+
+## 2026-08-27 — API interpretation approved; selector corrected
+
+- Added `API SLICE 4B PRODUCTION-PATH INTERPRETATION.md` and the API's clarified
+  original request.
+- Froze one aggregate `ordinary_action_set` envelope with distinct exact member
+  bindings/authorization documents when successors become co-ready.
+- Preserved retained provider-custody precedence and all-or-none API admission.
+- Corrected mixed-custody command selection so completed provider evidence selects
+  `ordinary_resume` even when the older dependency projection is empty.
+- Updated v0.5 semantic validation and terminal continuation evidence consistently;
+  v0.7 remains the source of the concrete local operation.
+- Added a production-shaped regression proving the later retry can complete and
+  select its exact local operation while the earlier retry remains retained.
+
+Current gate: public Witness A and Witness B artifact implementation.

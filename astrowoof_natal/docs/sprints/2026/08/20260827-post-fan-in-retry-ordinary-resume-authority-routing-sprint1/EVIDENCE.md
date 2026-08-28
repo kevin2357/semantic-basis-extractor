@@ -280,3 +280,12 @@ Status: Slice 4B planned; API review required after both witness artifacts pass.
 - Retained-QA access/mutation: none.
 
 Status: API interpretation requested before implementation freeze.
+
+- API interpretation: approved aggregate ordinary-v2 action-set with distinct
+  exact members.
+- Mixed-custody selector correction: implemented.
+- Regression: later action completed, earlier action pending, selected command
+  `ordinary_resume`, one exact completed-evidence local operation, both custody
+  action IDs retained.
+
+Status: selector correction complete; public happy-path witnesses in progress.

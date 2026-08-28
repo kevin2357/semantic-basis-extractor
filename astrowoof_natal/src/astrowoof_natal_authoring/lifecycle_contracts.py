@@ -523,7 +523,13 @@ def validate_lifecycle_inspection_v04(value: dict[str, Any]) -> None:
         else:
             errors.append("provider_reconciliation_reason")
     elif command == "ordinary_resume":
-        if not terminal.get("local_continuation_remains") or not dependencies:
+        completed_provider_evidence = any(
+            item.get("custody_classification") == "completed_provider_evidence"
+            for item in custody.get("actions", [])
+        )
+        if not terminal.get("local_continuation_remains") or not (
+            dependencies or completed_provider_evidence
+        ):
             errors.append("ordinary_local_continuation")
         if capacity.get("disposition") != "continue_local_cycle":
             errors.append("capacity_disposition")

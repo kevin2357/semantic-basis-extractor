@@ -859,6 +859,10 @@ def _execution_branch(
     """Publish the one supported next command without delegating member choice."""
     disposition = capacity["disposition"]
     reason = capacity["reason_code"]
+    completed_provider_evidence = any(
+        item.get("custody_classification") == "completed_provider_evidence"
+        for item in custody.get("actions", [])
+    )
     if review_reasons or disposition == "retain_for_review":
         command, eligible, branch_reason = (
             "none", False, "native_review_or_ambiguity",
@@ -891,7 +895,9 @@ def _execution_branch(
         )
         action_ids = list(custody["action_ids"])
         not_before = capacity["resume_not_before"]
-    elif disposition == "continue_local_cycle" and dependencies:
+    elif disposition == "continue_local_cycle" and (
+        dependencies or completed_provider_evidence
+    ):
         command, eligible, branch_reason = (
             "ordinary_resume", True, "ordinary_local_continuation_ready",
         )
@@ -950,7 +956,14 @@ def inspect_lifecycle(
     }
     dependencies = _local_dependencies(state)
     provider_continuation = any(item["necessary"] for item in actions)
-    local_continuation = bool(dependencies)
+    completed_provider_evidence = any(
+        action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+        and (action.get("provider") or {}).get("id")
+        and (action.get("provider_reconciliation") or {}).get("last_outcome")
+        == "completed"
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+    )
+    local_continuation = bool(dependencies) or completed_provider_evidence
     status = str(state.get("status") or "")
     subjects = list((state.get("subjects") or {}).values())
     complete = bool(subjects) and all(
