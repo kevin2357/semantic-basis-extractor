@@ -1,6 +1,6 @@
 # API Slice 1 review — terminal review and mixed custody contract
 
-Date: 2026-08-28  
+Date: 2026-08-28
 Status: approved in direction; make the small corrections below before Slice 2
 runtime integration.
 

@@ -1,6 +1,6 @@
 # API Slice 3 review — review custody settlement without authoring reopen
 
-Date: 2026-08-28  
+Date: 2026-08-28
 Status: approved for Slice 4.
 
 ## Assessment

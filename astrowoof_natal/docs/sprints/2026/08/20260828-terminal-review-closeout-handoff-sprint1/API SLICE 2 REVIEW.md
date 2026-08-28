@@ -1,6 +1,6 @@
 # API Slice 2 review — exact interactive publication before exit
 
-Date: 2026-08-28  
+Date: 2026-08-28
 Status: approved for Slice 3; exact interactive only.
 
 ## Assessment

@@ -1,6 +1,6 @@
 # API Slice 0 review — terminal review closeout handoff
 
-Date: 2026-08-28  
+Date: 2026-08-28
 Status: approved with the contract refinements below. Slice 1 may begin.
 
 ## Assessment

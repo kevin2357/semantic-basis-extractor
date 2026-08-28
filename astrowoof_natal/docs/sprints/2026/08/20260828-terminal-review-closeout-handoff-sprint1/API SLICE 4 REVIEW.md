@@ -1,6 +1,6 @@
 # API Slice 4 review — interruption, replay, and immutable review lineage
 
-Date: 2026-08-28  
+Date: 2026-08-28
 Status: approved for Slice 5 packaged/installed qualification.
 
 ## Assessment
