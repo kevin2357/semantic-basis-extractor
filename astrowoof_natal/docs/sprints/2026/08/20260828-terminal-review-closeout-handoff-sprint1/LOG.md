@@ -220,3 +220,22 @@ Status: Slice 5 complete; paused at Voof-paws 4 for API fixture/consumer review.
   refused the rehashed mutation and installed lifecycle smoke passed.
 
 Status: Slice 5 correction complete; API re-review required before Slice 6.
+
+## 2026-08-28 — Slice 6 release preparation
+
+- API approved the corrected Slice 5 qualification.
+- Bumped the unreleased candidate to 0.4.28; 0.4.27 remains immutable.
+- The first strict-schema broad run exposed one pre-existing packaged-schema
+  mismatch: post-fan-in runtime/Python validation used canonical
+  `work_<24 hex>` keys while its JSON Schema incorrectly required bare 64-hex.
+- Aligned that schema with the already-frozen runtime identity; focused
+  post-fan-in plus terminal-review gate passed 15/15.
+- Strict broad source rerun: 860 passed, 3 expected skips, 750.136 seconds.
+- Locked artifact source at `25e0be9ce670b3643f47f6cdd0a71de7d00ad11e`.
+- Two fixed-epoch wheels were byte-identical at 1,077,913 bytes and SHA-256
+  `365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
+- Clean-installed generic release smoke, lifecycle smoke, terminal-review,
+  post-fan-in, and adversarial qualifications all passed.
+- External provider/network calls, spend, and retained-QA access: 0.
+
+Status: Slice 6 complete; paused at Voof-paws 5. Tag/publication not authorized.

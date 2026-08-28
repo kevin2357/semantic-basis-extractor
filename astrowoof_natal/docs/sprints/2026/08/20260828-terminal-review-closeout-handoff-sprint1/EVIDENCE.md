@@ -279,3 +279,36 @@ Status: Slice 5 complete; API fixture/consumer review required before Slice 6.
   `b6341100d54b0147dbf138d3a1a54043453057a8e23927afbcac6fb451337572`.
 
 Status: correction complete; API re-review required before Slice 6.
+
+## Slice 6 release-candidate evidence
+
+- Candidate version: 0.4.28.
+- Artifact source commit:
+  `25e0be9ce670b3643f47f6cdd0a71de7d00ad11e`.
+- Fixed build epoch: `1787911516`.
+- Strict-schema broad source suite: 860 passed, 3 expected skips, 750.136 seconds.
+- Schema mismatch found by the first broad run: post-fan-in inspection-bundle
+  operation key expected bare SHA-256 while public runtime identity was
+  `work_<24 hex>`.
+- Corrected focused gate: 15 passed.
+- Candidate A/B wheel bytes: 1,077,913 / 1,077,913.
+- Candidate A/B SHA-256:
+  `365ab0bc63a03e2c9c06638631b5e47c78ce494331f014741472a3e59fa58fb4`.
+- Byte reproducibility: pass.
+- Installed runtime path: isolated `site-packages` under
+  `.release-0.4.28-installed`.
+- Installed generic release smoke: pass.
+- Installed lifecycle smoke: pass.
+- Installed terminal-review qualification: pass; receipt
+  `6289962655c36e4c2cab5828c30499a75155094c0437898c7f68fdf4e0afeb6d`.
+- Installed post-fan-in qualification: pass; receipt
+  `9085c0a83d615c24163e6268c8ed89fac14a89dce2843ec61bdab8ab51e630f1`.
+- Installed adversarial qualification: pass; receipt
+  `3f1ee272e9724898acdfa4dff2fa82edbc16cbc144507ed22e351e9956c26e76`.
+- Exact dependency: `semantic-projection-core==0.11.1`.
+- External provider/network calls and spend: 0 / USD 0.
+- Retained Pippin/Duchess access or mutation: 0.
+- `git diff --check`: pass after review-record whitespace normalization.
+
+Status: release candidate qualified; final API/owner review required before tag
+or publication.

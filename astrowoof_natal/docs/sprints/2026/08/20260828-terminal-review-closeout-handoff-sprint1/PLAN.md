@@ -2,8 +2,9 @@
 
 ## Status
 
-Slices 0–4 complete and API-approved; Slice 5 packaged/installed qualification
-is complete and awaiting API fixture/consumer review. The
+Slices 0–5 complete and API-approved; Slice 6 broad regression, deterministic
+build, installed qualification, and release preparation are complete. Final API
+and owner review is required before tag/publication. The
 controlled read-only retained-checkpoint inspection is complete, with no
 provider operation, deployment,
 version bump, tag, or publication is authorized by this plan.
@@ -357,6 +358,8 @@ Pause for API review of the runtime result and custody mapping.
 Pause for API fixture/consumer review before release qualification.
 
 ## Slice 6 — Broad regression and release preparation
+
+**Status:** complete; paused at Voof-paws 5 for final API and owner review.
 
 ### Work
 
