@@ -355,3 +355,10 @@ Refreshed evidence-scope qualification:
 
 Status: evidence-scope correction and refreshed installed qualification complete;
 API re-review pending.
+
+## Slice 4B API re-review
+
+API approved the corrected evidence scope and authorized fresh installed-wheel and
+release qualification. No runtime, schema, or fixture correction remains open.
+
+Status: Slice 4B complete; Slice 5 committed-source qualification is next.

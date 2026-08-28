@@ -375,3 +375,14 @@ installed-wheel/release qualification resumes.
   QA acceptance, natural successor generation, or product-policy selection.
 
 Current gate: rerun source and installed-wheel evidence, then API re-review.
+
+## 2026-08-27 — Slice 4B API re-review approved
+
+- Added `API SLICE 4B RE-REVIEW.md`.
+- API accepted the closed evidence scope, machine-readable precursor inventory,
+  aggregate authority topology, deterministic installed artifacts, and privacy
+  boundary without further contract changes.
+- Slice 4B is approved for fresh committed-source installed-wheel and release
+  qualification.
+
+Current gate: Slice 5 qualification from the committed post-4B source identity.
