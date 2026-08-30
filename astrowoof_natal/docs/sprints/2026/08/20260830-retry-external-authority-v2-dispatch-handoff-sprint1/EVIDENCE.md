@@ -182,3 +182,21 @@ Release qualification is active against the final `0.4.31` version identity.
 Final owner/API release approval received. The full-suite exception remains
 explicit and is not represented as a green full-suite run. The forthcoming
 records-only release lock and tag are distinct from the artifact source commit.
+
+## Published release
+
+- Artifact source commit: `3709f18d1b8c15c6030173868e175110a7894c51`.
+- Release/evidence-lock commit and tag target:
+  `a1dde7714479b9ea150d8d7a534e58d1f1553d55`.
+- Tag: `astrowoof-natal-authoring-v0.4.31`.
+- Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.31`.
+- Published wheel size: 1,111,586 bytes.
+- Published/downloaded wheel SHA-256:
+  `6bb587c9cd5cd0ef8bf767a677450fbaf7fcd9bf3be655ef68584e279a03f0d9`.
+- Local and downloaded published bytes: exact match.
+
+## Current gate
+
+Release complete. API adoption and deployment remain separate consumer-owned
+work; publication itself did not resume retained QA or perform provider work.

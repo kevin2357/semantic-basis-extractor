@@ -2,9 +2,8 @@
 
 ## Status
 
-Slice 0, the bounded Diffie follow-up, Slice 1 implementation/API review, and the
-lean release-candidate gate are complete. Fresh immutable candidate `0.4.31` is
-paused for final owner/API commit, tag, and publication approval.
+Slice 0, the bounded Diffie follow-up, Slice 1 implementation/API review, the
+lean release gate, and immutable `0.4.31` publication are complete.
 Voof-paws 1 classified
 Hellman as an API terminal-result ingestion/routing defect. Diffie's exact rejected
 document remains unavailable; a provider-free source-compatible strict-consumer

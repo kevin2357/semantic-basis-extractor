@@ -199,3 +199,19 @@ resource-set SHA-256 is
 The release/evidence-lock commit is records-only and must be distinguished from
 artifact source commit `3709f18`. Tag and publication proceed from the lock commit,
 while the wheel provenance remains bound to `3709f18`.
+
+## 2026-08-30 — `0.4.31` publication
+
+- Release/evidence-lock commit: `a1dde7714479b9ea150d8d7a534e58d1f1553d55`.
+- Annotated tag: `astrowoof-natal-authoring-v0.4.31`, resolving to the release
+  lock commit.
+- Published the committed-source wheel through the immutable GitHub release.
+- Downloaded the asset into a fresh verification directory. Published and local
+  bytes both have size 1,111,586 and SHA-256
+  `6bb587c9cd5cd0ef8bf767a677450fbaf7fcd9bf3be655ef68584e279a03f0d9`.
+- Publication verification made no provider call and did not access retained QA.
+
+## Current gate
+
+Sprint and SBE `0.4.31` release are complete. API may pin the immutable wheel for
+its separately qualified terminal-result availability integration.
