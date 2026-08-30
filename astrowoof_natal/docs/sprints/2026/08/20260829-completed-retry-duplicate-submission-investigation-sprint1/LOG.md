@@ -137,3 +137,13 @@ must use a fresh immutable version after the joint gate.
 
 Status: release candidate complete; final API/owner review required before
 commit, tag, or publication.
+
+## 2026-08-30 — 0.4.30 published and verified
+
+- Committed release source at `0b37c70` and pushed `main`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.30`.
+- Published the exact qualified wheel as a public, non-prerelease GitHub release.
+- Downloaded the public asset into a fresh directory and verified SHA-256
+  `19a8728b35281e2415ec0b407ef882a505576e41c81d34488961ce08b5a83e9a`.
+
+Status: sprint and SBE release complete. API companion adoption remains gated.

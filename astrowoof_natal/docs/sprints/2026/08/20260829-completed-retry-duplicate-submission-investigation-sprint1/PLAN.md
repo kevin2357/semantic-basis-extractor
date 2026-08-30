@@ -2,10 +2,9 @@
 
 ## Status
 
-Slices 0–5 complete. The causal and contract gates are approved; the native
-correction, API-shaped packaged fixtures, full regression, deterministic wheel,
-and installed qualification pass. Paused for final API/owner release review
-before commit/tag/publication. No retained-run mutation, real
+Sprint complete. SBE `0.4.30` is committed, tagged, published, downloaded, and
+hash-verified. API companion ingestion remains required before the affected
+legacy-generic live path may be enabled. No retained-run mutation, real
 provider operation, recovery, release, deployment, or affected-worker resume
 occurred.
 
