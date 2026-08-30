@@ -4061,6 +4061,98 @@ def run_pass_acceptance(
     }
 
 
+def prepare_completed_exact_attempt_for_adoption(
+    *, spec: PassSpec, record: dict[str, Any], state: dict[str, Any],
+    run_dir: Path, run_json: Path,
+) -> bool:
+    """Join one reconciled exact-interactive action back to its pass attempt.
+
+    External-authority v2 intentionally persists provider custody in the paid
+    ledger.  Before ordinary authoring can evaluate a successor retry, this
+    adapter restores the exact pass-attempt marker needed by the existing
+    response validation/materialization/QA path.  It never interprets provider
+    output and never makes a provider request.
+    """
+    if state.get("schema_version") != "astrowoof.semantic_closure_run.v0.9":
+        return False
+    attempts = record.get("attempts") or []
+    if not attempts:
+        return False
+    attempt = attempts[-1]
+    if (
+        attempt.get("state") != "AMBIGUOUS_PROVIDER_SUBMISSION"
+        or attempt.get("finished_at") is not None
+        or not isinstance(attempt.get("attempt_number"), int)
+        or not isinstance(attempt.get("paid_action_id"), str)
+    ):
+        return False
+    action_id = attempt["paid_action_id"]
+    actions = (state.get("spend_ledger") or {}).get("actions") or []
+    matches = [item for item in actions if item.get("action_id") == action_id]
+    if len(matches) != 1:
+        return False
+    action = matches[0]
+    binding = action.get("binding") or {}
+    provider = action.get("provider") or {}
+    timing = action.get("provider_reconciliation") or {}
+    expected_stage = (
+        "authoring_initial" if attempt["attempt_number"] == 1
+        else "creative_retry"
+    )
+    expected_route = f"{spec.pass_id}:attempt-{attempt['attempt_number']:03d}"
+    response_id = provider.get("id")
+    if (
+        action.get("state") not in {"PROVIDER_ID_RECORDED", "WAITING"}
+        or provider.get("kind") != "response"
+        or not isinstance(response_id, str) or not response_id
+        or timing.get("last_outcome") != "completed"
+        or binding.get("run_id") != state.get("run_id")
+        or binding.get("stage") != expected_stage
+        or binding.get("route") != expected_route
+        or binding.get("service_level") != "interactive"
+    ):
+        return False
+    response_path = (
+        run_dir / "lifecycle" / "provider-reconciliation"
+        / f"{action_id}.response.json"
+    )
+    if not response_path.is_file():
+        return False
+    try:
+        response = load_json(response_path)
+    except (OSError, TypeError, ValueError, json.JSONDecodeError):
+        return False
+    if response.get("id") != response_id or response.get("status") != "completed":
+        return False
+
+    attempt_root = (
+        run_dir / "passes" / spec.pass_id
+        / f"attempt-{attempt['attempt_number']:03d}"
+    )
+    attempt_root.mkdir(parents=True, exist_ok=True)
+    write_json_atomic(attempt_root / "openai-background-response.json", {
+        "id": response_id,
+        "status": "completed",
+        "adopted_from_reconciliation": True,
+    })
+    attempt["state"] = "WAITING_FOR_RESPONSE"
+    attempt["provider_metadata"] = {
+        "provider": "openai",
+        "response_id": response_id,
+        "response_status": "completed",
+        "adoption_source": "provider_reconciliation",
+    }
+    attempt["error"] = None
+    record["state"] = "WAITING_FOR_RESPONSE"
+    save_state(run_json, state)
+    logger.info(
+        "completed_provider_result_joined_for_adoption pass_id=%s attempt=%s "
+        "action_id=%s provider_id=%s",
+        spec.pass_id, attempt["attempt_number"], action_id, response_id,
+    )
+    return True
+
+
 def author_one_pass(
     *,
     spec: PassSpec,
@@ -4096,6 +4188,23 @@ def author_one_pass(
 
     pass_root = run_dir / "passes" / spec.pass_id
     source_workspace = prepare_source_workspace(spec, pass_root)
+    last_attempt = (record.get("attempts") or [None])[-1]
+    if (
+        isinstance(last_attempt, dict)
+        and last_attempt.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
+        and last_attempt.get("finished_at") is None
+        and not prepare_completed_exact_attempt_for_adoption(
+            spec=spec, record=record, state=state, run_dir=run_dir,
+            run_json=run_json,
+        )
+    ):
+        logger.warning(
+            "completed_provider_result_adoption_unavailable pass_id=%s "
+            "attempt=%s action_id=%s",
+            spec.pass_id, last_attempt.get("attempt_number"),
+            last_attempt.get("paid_action_id"),
+        )
+        return
     completed_attempts = len(record["attempts"])
     interrupted_attempt = (
         record["attempts"][-1]

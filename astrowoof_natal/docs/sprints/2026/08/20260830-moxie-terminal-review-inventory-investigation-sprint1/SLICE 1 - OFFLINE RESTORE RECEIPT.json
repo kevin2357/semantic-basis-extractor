@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.investigation.offline_restore_receipt.v1",
+  "archive_sha256": "aa6b472e3b865242f93c388a8664828a292ff05953e835211f90a70567132920",
+  "inventory_sha256": "88d6e44341ade8d21fccf3c2964f721e03f45e089a510c4859f3ca9f8bc61509",
+  "member_count": 764,
+  "total_member_bytes": 17122490,
+  "generation": 11,
+  "predecessor_archive_sha256": "cbf54d17c5dab734151709482df9bda049a5bf89966d908916843834de664a00",
+  "archive_member_count_including_manifest": 765,
+  "unique_member_paths_validated": true,
+  "relative_member_paths_validated": true,
+  "regular_file_types_validated": true,
+  "declared_member_set_validated": true,
+  "declared_member_sizes_validated": true,
+  "declared_member_hashes_validated": true,
+  "expanded_byte_bound_validated": true,
+  "archive_safety_validated": true,
+  "remote_operation_count": 0,
+  "provider_operation_count": 0,
+  "native_command_count": 0,
+  "workspace_mutation_count": 0
+}

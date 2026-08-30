@@ -28,8 +28,8 @@
     "successor_outcome": "review_required",
     "successor_result_valid": true
   },
-  "receipt_sha256": "2f3ebfbcb6223c810e6c713ac446a04c2e0e4663a057faa8cb84540523d563be",
-  "sbe_release": "0.4.31",
+  "receipt_sha256": "f19224ac9a9c89f5f3a1e9295981d4c06b0b0b2f0e5b29333bd8dae82b1cdc06",
+  "sbe_release": "0.4.33",
   "schema_version": "astrowoof.terminal_review_qualification.v1",
   "status": "pass"
 }

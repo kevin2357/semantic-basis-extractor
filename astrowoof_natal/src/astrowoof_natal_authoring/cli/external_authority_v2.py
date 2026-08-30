@@ -5,11 +5,19 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
 from pathlib import Path
 from typing import Any
 
+from .. import __version__
+from ..application_logging import (
+    add_logging_arguments,
+    bind_logging_context,
+    configure_logging_from_args,
+)
 from ..closure import OpenAIResponsesProvider
+from ..execution_events import ExecutionEventEmitter, JsonlEventSink, StdoutJsonlSink
 from ..external_authority_v2 import build_no_grant_dispatch_result_v2
 from ..external_authority_v2_execution import (
     ExternalAuthorityV2ExecutionError,
@@ -20,6 +28,9 @@ from ..external_authority_v2_execution import (
     dispatch_external_authority_v2_intent,
     resolve_external_authority_v2_request_payload,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def _load(path: Path) -> Any:
@@ -59,16 +70,50 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--base-url", default="https://api.openai.com/v1")
     parser.add_argument("--http-timeout-seconds", type=float, default=15.0)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--events-jsonl", type=Path)
+    parser.add_argument("--events-stdout-jsonl", action="store_true")
+    add_logging_arguments(parser)
     args = parser.parse_args(argv)
+    configure_logging_from_args(args)
     run_dir = args.run_dir.resolve()
     _outside_workspace(args.output, run_dir)
+    _outside_workspace(args.events_jsonl, run_dir)
+    if args.events_jsonl is not None and args.events_stdout_jsonl:
+        parser.error("choose only one event transport")
+    if args.events_stdout_jsonl and args.output is None:
+        parser.error("--events-stdout-jsonl requires --output")
+    native_state = _load(run_dir / "run.json")
+    bind_logging_context(
+        run_id=str(native_state.get("run_id") or "-"),
+        current_state=str(native_state.get("status") or "-"),
+    )
+    sink = None
+    if args.events_stdout_jsonl:
+        sink = StdoutJsonlSink()
+    elif args.events_jsonl is not None:
+        sink = JsonlEventSink(args.events_jsonl)
+    event_emitter = (
+        ExecutionEventEmitter(
+            release=__version__, sink=sink,
+            base_correlation={
+                "native_run_id": str(native_state.get("run_id") or ""),
+            },
+        )
+        if sink is not None else None
+    )
+    logger.info("command_start command=external_authority_v2 provider=%s", args.provider)
     inspection = _load(args.inspection)
     request = _load(args.request)
 
     if args.grant is None:
         if args.authorization or args.provider != "none":
             parser.error("grant-free inspection accepts no authorization or provider")
-        _render(build_no_grant_dispatch_result_v2(inspection), args.output)
+        result = build_no_grant_dispatch_result_v2(inspection)
+        logger.info(
+            "command_complete command=external_authority_v2 outcome=%s provider_io=none",
+            result["outcome"],
+        )
+        _render(result, args.output)
         return 3
     if args.provider != "openai":
         parser.error("provider-capable v2 execution requires --provider openai")
@@ -83,6 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         intent_result = commit_external_authority_v2_dispatch_intent(
             run_dir, request=request, inspection=inspection, grant=grant,
             authorization_documents=documents,
+            event_emitter=event_emitter,
         )
     except ExternalAuthorityV2ExecutionError as exc:
         if exc.reason_code not in {
@@ -90,7 +136,16 @@ def main(argv: list[str] | None = None) -> int:
             "action_state_or_custody_mismatch", "stale_checkpoint_basis",
             "exact_replay",
         }:
+            logger.error(
+                "command_refused command=external_authority_v2 phase=intent "
+                "reason=%s error_class=%s",
+                exc.reason_code, type(exc).__name__,
+            )
             raise
+        logger.info(
+            "intent_revalidation_deferred reason=%s",
+            exc.reason_code,
+        )
         intent_result = None
 
     def prepare(action: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
@@ -163,9 +218,26 @@ def main(argv: list[str] | None = None) -> int:
             "transport_attempts": attempts,
         }
 
-    dispatch_result = dispatch_external_authority_v2_intent(
-        run_dir, request_sha256=request["external_authority_request_sha256"],
-        grant_sha256=grant["grant_sha256"], prepare=prepare, create=create,
+    try:
+        dispatch_result = dispatch_external_authority_v2_intent(
+            run_dir, request_sha256=request["external_authority_request_sha256"],
+            grant_sha256=grant["grant_sha256"], prepare=prepare, create=create,
+            event_emitter=event_emitter,
+        )
+    except ExternalAuthorityV2ExecutionError as exc:
+        logger.error(
+            "command_refused command=external_authority_v2 phase=dispatch "
+            "reason=%s error_class=%s",
+            exc.reason_code, type(exc).__name__,
+        )
+        raise
+    logger.info(
+        "command_complete command=external_authority_v2 outcome=%s "
+        "provider_bound_count=%s ambiguous_count=%s refused_count=%s",
+        dispatch_result["outcome"],
+        len(dispatch_result.get("provider_bound_action_ids") or []),
+        len(dispatch_result.get("ambiguous_action_ids") or []),
+        len(dispatch_result.get("refused_action_ids") or []),
     )
     _render(build_external_authority_v2_command_result_v2(
         intent_result=intent_result, dispatch_result=dispatch_result,

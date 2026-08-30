@@ -1,0 +1,29 @@
+{
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1",
+  "purpose": "moxie_terminal_review_inventory_read_only_investigation",
+  "environment": "qa",
+  "namespace": "checkpoint",
+  "object_uuid": "429d43b2-6dc0-4ad9-ac31-ee68c9d32878",
+  "object_key": "v1/checkpoint/429d43b26dc04ad9ac31ee68c9d32878",
+  "expected_etag": "\"43ecac806938556e1bf16e6b63952130\"",
+  "expected_archive_sha256": "aa6b472e3b865242f93c388a8664828a292ff05953e835211f90a70567132920",
+  "expected_archive_bytes": 3924276,
+  "expected_inventory_sha256": "88d6e44341ade8d21fccf3c2964f721e03f45e089a510c4859f3ca9f8bc61509",
+  "api_run_id": "b39c8b14-d0c7-440a-b5b8-bd4bb0d85205",
+  "sbe_job_id": "5f2757db-feb6-457e-8f76-e56f45e7eadf",
+  "native_run_id": "53bacbe893fa722a50a251111d9263a7c703da28c088b30fcdc9ff3798a8dea4",
+  "checkpoint_id": "95a0bfa6-c067-45a2-817c-83d0aa57117d",
+  "checkpoint_generation": 11,
+  "logical_restore_path": "/work/runs/b39c8b14-d0c7-440a-b5b8-bd4bb0d85205/sbe",
+  "approved_operations": {
+    "head_count": 1,
+    "get_count": 1,
+    "list_count": 0,
+    "write_count": 0,
+    "delete_count": 0
+  },
+  "source_documents": {
+    "background_sha256": "6b83afca7f396483ab9ab0463e8d8654bf6ca5aed89794fac10551e3d8b4ee4e",
+    "api_review_sha256": "bf6ecc4a46cefc05a3c70e4c15e8180e2b2ed45191cd577f981a0ddb3ee7e11a"
+  }
+}

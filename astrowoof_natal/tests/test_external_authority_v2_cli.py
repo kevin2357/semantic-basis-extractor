@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import copy
+import io
 import json
 import os
 import tempfile
 import unittest
+from contextlib import nullcontext
 from pathlib import Path
 from unittest.mock import patch
 
@@ -69,6 +71,124 @@ def _inputs(root: Path):
 
 
 class ExternalAuthorityV2CliSlice5(unittest.TestCase):
+    def test_public_cli_emits_safe_ordered_execution_trace(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            run_dir, request, paths = _inputs(root)
+            output = root / "result.json"
+            event_stdout = io.StringIO()
+            calls = []
+
+            def create(_provider, payload, **_kwargs):
+                calls.append(copy.deepcopy(payload))
+                return ({"id": f"resp_trace_{len(calls)}", "status": "in_progress"}, 1)
+
+            argv = [
+                "--run-dir", str(run_dir), "--inspection", str(paths["inspection"]),
+                "--request", str(paths["request"]), "--grant", str(paths["grant"]),
+                "--provider", "openai", "--output", str(output),
+                "--events-stdout-jsonl", "--invocation-id", "inv_trace_safe",
+            ]
+            for path in paths["documents"]:
+                argv.extend(("--authorization", str(path)))
+            with patch.dict(os.environ, {
+                "SBE_QA_KEY": "protected-api-key-sentinel",
+            }), patch(
+                "astrowoof_natal_authoring.cli.external_authority_v2."
+                "OpenAIResponsesProvider.create_response_only", new=create,
+            ), patch("sys.stdout", event_stdout):
+                argv.extend(("--api-key-env", "SBE_QA_KEY"))
+                self.assertEqual(0, main(argv))
+
+            envelopes = [
+                json.loads(line) for line in event_stdout.getvalue().splitlines()
+            ]
+            names = [item["event_name"] for item in envelopes]
+            self.assertEqual(
+                [
+                    "external_authority.request_selected",
+                    "external_authority.fence_validated",
+                    "external_authority.intent_committed",
+                ],
+                names[:3],
+            )
+            self.assertEqual(1, names.count(
+                "external_authority.provider_create_permitted"
+            ))
+            permission = next(
+                item for item in envelopes
+                if item["event_name"] == "external_authority.provider_create_permitted"
+            )
+            self.assertEqual(
+                len(request["ordered_action_ids"]), permission["data"]["action_count"],
+            )
+            self.assertEqual(len(request["ordered_action_ids"]), names.count(
+                "provider.identity_recorded"
+            ))
+            rendered = event_stdout.getvalue()
+            self.assertNotIn("protected-api-key-sentinel", rendered)
+            self.assertNotIn("qualification request", rendered)
+            self.assertNotIn("authorization_reference", rendered)
+
+    def test_refusal_event_is_typed_and_event_sink_failure_cannot_change_dispatch(self):
+        from astrowoof_natal_authoring.external_authority_v2_execution import (
+            ExternalAuthorityV2ExecutionError,
+        )
+
+        for failing_sink in (False, True):
+            with self.subTest(failing_sink=failing_sink), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                run_dir, _, paths = _inputs(root)
+                output = root / "result.json"
+                events = root / "events.jsonl"
+                argv = [
+                    "--run-dir", str(run_dir),
+                    "--inspection", str(paths["inspection"]),
+                    "--request", str(paths["request"]),
+                    "--grant", str(paths["grant"]),
+                    "--provider", "openai", "--api-key-env", "SBE_QA_KEY",
+                    "--output", str(output), "--events-jsonl", str(events),
+                ]
+                for path in paths["documents"]:
+                    argv.extend(("--authorization", str(path)))
+                sink_patch = (
+                    patch(
+                        "astrowoof_natal_authoring.execution_events."
+                        "JsonlEventSink.__call__",
+                        side_effect=OSError("scripted diagnostic sink failure"),
+                    )
+                    if failing_sink else nullcontext()
+                )
+                captured_stderr = io.StringIO()
+                with patch.dict(os.environ, {"SBE_QA_KEY": "qualification"}), patch(
+                    "astrowoof_natal_authoring.cli.external_authority_v2."
+                    "resolve_external_authority_v2_request_payload",
+                    side_effect=ExternalAuthorityV2ExecutionError(
+                        "request_payload_unavailable", "protected-payload-sentinel",
+                    ),
+                ), patch("sys.stderr", captured_stderr), sink_patch:
+                    self.assertEqual(3, main(argv))
+                result = validate_external_authority_v2_command_result_v2(load_json(output))
+                self.assertEqual("pre_provider_refusal", result["outcome"])
+                self.assertEqual("not_attempted", result["dispatch_result"][
+                    "provider_io_disposition"
+                ])
+                self.assertNotIn("protected-payload-sentinel", captured_stderr.getvalue())
+                self.assertNotIn("qualification request", captured_stderr.getvalue())
+                if not failing_sink:
+                    envelopes = [
+                        json.loads(line)
+                        for line in events.read_text(encoding="utf-8").splitlines()
+                    ]
+                    refusal = next(
+                        item for item in envelopes
+                        if item["event_name"] == "external_authority.refused"
+                    )
+                    self.assertEqual("request_payload_unavailable", refusal["data"][
+                        "reason_code"
+                    ])
+                    self.assertNotIn("protected-payload-sentinel", json.dumps(envelopes))
+
     def test_provider_capable_cli_dispatch_and_exact_replay(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

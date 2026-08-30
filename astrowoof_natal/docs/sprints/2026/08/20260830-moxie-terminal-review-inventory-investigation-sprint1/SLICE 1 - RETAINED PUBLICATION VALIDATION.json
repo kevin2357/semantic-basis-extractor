@@ -1,0 +1,39 @@
+{
+  "action_count": 8,
+  "action_ids": [
+    "paid_a015169151774e145f831c33",
+    "paid_e720b871d1dd3ddc2e05d948",
+    "paid_0cd6b9243c939ccc09e37169",
+    "paid_3427805988bab60cfad8553d",
+    "paid_856d9da5b181ea9a11099bbf",
+    "paid_a40ffcb021c9f200d352fc2e",
+    "paid_5769a5e279df0fc506f65a91",
+    "paid_95b6252fedb1610b3be397d9"
+  ],
+  "cause_code": "local_work_progress_contradiction",
+  "checkpoint_basis_sha256": "f10b223e1e0af9e984ba997a05c5d9c3a990c7225623aa8075d01725a0f6c46a",
+  "checkpoint_basis_valid": true,
+  "journal_range_sha256": "432fc70d2297a617052f9dc3cabf2452edc6bcd83eaf94135a30151abca728b1",
+  "journal_range_valid": true,
+  "logical_root_relocation_note": "Receipt retains the original Linux logical root; validation did not reinterpret the temporary Windows extraction path as native identity.",
+  "native_command_count": 0,
+  "native_state_revision": 69,
+  "outcome": "review_required",
+  "provider_operation_count": 0,
+  "providerless_denial_action_ids": [
+    "paid_95b6252fedb1610b3be397d9"
+  ],
+  "public_result_valid": true,
+  "receipt_id": "nreceipt_5306a291337a44ce6b26c380",
+  "receipt_sha256": "5306a291337a44ce6b26c3806d8a9eb031bafb4b156820bda458b96def0c3464",
+  "receipt_valid": true,
+  "reconciliation_action_ids": [
+    "paid_5769a5e279df0fc506f65a91"
+  ],
+  "remote_operation_count": 0,
+  "result_id": "nres_b68e9150988370d154aa3c06",
+  "result_sha256": "b68e9150988370d154aa3c06595f28d43fadd5d6b2bc5832cc96680cfa607704",
+  "retained_snapshot_valid": true,
+  "schema_version": "astrowoof.investigation.retained_publication_validation.v1",
+  "snapshot_sha256": "b7d2743bb9cf349022d2563bd28e2eb1c5c499d9e8370133330f84eadec3344a"
+}

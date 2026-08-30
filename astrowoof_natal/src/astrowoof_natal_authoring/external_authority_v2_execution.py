@@ -660,6 +660,12 @@ def commit_external_authority_v2_dispatch_intent(
                 "authorization_mismatch", str(exc),
             ) from exc
         if event_emitter is not None:
+            event_emitter.emit("external_authority.request_selected", data={
+                "request_sha256": request["external_authority_request_sha256"],
+                "request_kind": request["request_kind"],
+                "action_count": len(ids),
+                "selected_command": "external_authority_v2_dispatch",
+            }, correlation={"native_run_id": str(state.get("run_id") or "")})
             event_emitter.emit("external_authority.fence_validated", data={
                 "request_sha256": request["external_authority_request_sha256"],
                 "grant_sha256": grant["grant_sha256"],
