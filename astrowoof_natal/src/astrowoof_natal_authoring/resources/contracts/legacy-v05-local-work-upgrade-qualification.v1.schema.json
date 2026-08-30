@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/legacy-v05-local-work-upgrade-qualification.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "package", "fixture_sha256", "bundle_schema_sha256", "qualification_schema_sha256", "scenarios", "provider_io", "privacy"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.legacy_v05_local_work_upgrade_qualification.v1"},
+    "receipt_sha256": {"$ref": "#/$defs/sha"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {"type": "object"},
+    "fixture_sha256": {"$ref": "#/$defs/sha"},
+    "bundle_schema_sha256": {"$ref": "#/$defs/sha"},
+    "qualification_schema_sha256": {"$ref": "#/$defs/sha"},
+    "scenarios": {"type": "array", "minItems": 4, "maxItems": 4},
+    "provider_io": {"type": "object"},
+    "privacy": {"type": "object"}
+  },
+  "$defs": {"sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

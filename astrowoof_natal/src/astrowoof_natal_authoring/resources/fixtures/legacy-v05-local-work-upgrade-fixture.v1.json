@@ -1,0 +1,18 @@
+{
+  "schema_version": "astrowoof.legacy_v05_local_work_upgrade_fixture.v1",
+  "scenario_ids": [
+    "consistent_not_due",
+    "consistent_due",
+    "lineage_conflict_with_custody",
+    "lineage_conflict_after_custody"
+  ],
+  "expected_outcomes": {
+    "consistent_not_due": "ordinary_resume",
+    "consistent_due": "provider_reconciliation_cycle",
+    "lineage_conflict_with_custody": "provider_reconciliation_cycle",
+    "lineage_conflict_after_custody": "retain_for_review"
+  },
+  "legacy_upgrade_predicate": "local_dependency_count",
+  "provider_io_permitted": false,
+  "qualification_only": true
+}

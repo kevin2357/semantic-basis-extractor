@@ -16,8 +16,16 @@ from astrowoof_natal_authoring import (
 )
 from astrowoof_natal_authoring import closure
 from astrowoof_natal_authoring.lifecycle import inspect_lifecycle
+from astrowoof_natal_authoring.lifecycle_contracts import (
+    validate_lifecycle_inspection_v05,
+)
 from astrowoof_natal_authoring.post_fan_in_contracts import (
     inspect_post_fan_in_lifecycle,
+    validate_lifecycle_inspection_v07,
+)
+from astrowoof_natal_authoring.retry_lineage_contracts import (
+    inspect_retry_lineage_lifecycle,
+    validate_lifecycle_inspection_v08,
 )
 from astrowoof_natal.tests.test_post_fan_in_retry_authority_routing_slice0 import (
     PostFanInRetryAuthorityRoutingSlice0Tests,
@@ -203,6 +211,113 @@ class RetryExternalAuthorityV2HandoffSlice0Tests(
             ]
             self.assertEqual(1, len(operations))
             self.assertEqual([provider_bound], operations[0]["source_action_ids"])
+
+    def test_legacy_upgrade_witness_joins_v05_v07_v08_on_one_checkpoint(self) -> None:
+        """Prove the exact compatibility predicate and public successor joins."""
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, provider_bound, providerless = self._openai_workspace(
+                Path(temporary)
+            )
+            state_path = run_dir / "run.json"
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            pending = next(
+                action
+                for action in state["spend_ledger"]["actions"]
+                if action["action_id"] == providerless
+            )
+            pending["state"] = "WAITING"
+            pending["provider"] = {
+                "id": "resp_exact_natal_retry_2",
+                "kind": "response",
+            }
+            pending["provider_reconciliation"] = {
+                "policy_version": "astrowoof.provider_reconciliation_policy.v0.2",
+                "provider_retrieval_attempt_count": 1,
+                "last_attempt_at": "2026-08-30T08:55:00Z",
+                "last_outcome": "pending",
+                "resume_not_before": "2026-08-30T09:05:00Z",
+            }
+            state["status"] = "WAITING_FOR_RESPONSE"
+            state["state_revision"] += 1
+            closure.save_state(state_path, state)
+
+            observed_at = "2026-08-30T09:00:00Z"
+            legacy = inspect_lifecycle(
+                run_dir,
+                observed_at=observed_at,
+                native_exclusive_access="declared",
+            )
+            local = inspect_post_fan_in_lifecycle(
+                run_dir,
+                observed_at=observed_at,
+                native_exclusive_access="declared",
+            )
+            lineage = inspect_retry_lineage_lifecycle(
+                run_dir,
+                observed_at=observed_at,
+                native_exclusive_access="declared",
+            )
+
+            validate_lifecycle_inspection_v05(legacy)
+            validate_lifecycle_inspection_v07(local)
+            validate_lifecycle_inspection_v08(lineage)
+
+            # Freeze the sole API-only relation which rejects this otherwise
+            # coherent native v0.5 document.
+            api_predicate_failures = []
+            if not legacy["local_dependencies"]:
+                api_predicate_failures.append("local_dependency_count")
+            self.assertEqual(["local_dependency_count"], api_predicate_failures)
+            self.assertEqual("ordinary_resume", legacy["execution_branch"]["command"])
+            self.assertTrue(legacy["terminal"]["local_continuation_remains"])
+            self.assertTrue(any(
+                action["custody_classification"] == "completed_provider_evidence"
+                for action in legacy["provider_custody"]["actions"]
+            ))
+
+            expected_identity = {
+                "run_id": legacy["run_id"],
+                "revision": legacy["observation"]["operator_state_revision"],
+                "snapshot_sha256": legacy["observation"]["snapshot_sha256"],
+                "logical_workspace_root": legacy["observation"][
+                    "logical_workspace_root"
+                ],
+            }
+            for successor in (local, lineage):
+                observation = successor["checkpoint_basis"]["observation"]
+                self.assertEqual(expected_identity, {
+                    "run_id": successor["run_id"],
+                    "revision": observation["operator_state_revision"],
+                    "snapshot_sha256": observation["snapshot_sha256"],
+                    "logical_workspace_root": observation["logical_workspace_root"],
+                })
+
+            self.assertEqual(
+                local["checkpoint_basis"]["local_work_inventory"],
+                lineage["checkpoint_basis"]["local_work_inventory"],
+            )
+            self.assertEqual(
+                "ordinary_resume",
+                lineage["temporal_decision"]["selected_command"],
+            )
+            self.assertTrue(lineage["temporal_decision"]["eligible_now"])
+            self.assertEqual(
+                "continue_local_cycle",
+                lineage["temporal_decision"]["capacity_disposition"],
+            )
+            operations = lineage["checkpoint_basis"]["local_work_inventory"][
+                "operations"
+            ]
+            self.assertEqual(1, len(operations))
+            self.assertEqual([provider_bound], operations[0]["source_action_ids"])
+            self.assertIn(
+                provider_bound,
+                lineage["checkpoint_basis"]["provider_custody"]["action_ids"],
+            )
+            self.assertIn(
+                providerless,
+                lineage["checkpoint_basis"]["provider_custody"]["action_ids"],
+            )
 
     def test_existing_public_qualification_proves_the_complete_supported_sequence(self) -> None:
         receipt = run_post_fan_in_retry_qualification()

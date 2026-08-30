@@ -141,6 +141,15 @@ from .retry_lineage_qa import (  # noqa: E402
     run_retry_lineage_qualification,
     validate_retry_lineage_qualification,
 )
+from .legacy_local_work_upgrade_qa import (  # noqa: E402
+    build_legacy_local_work_upgrade_bundle,
+    read_legacy_local_work_upgrade_bundle_schema,
+    read_legacy_local_work_upgrade_fixture,
+    read_legacy_local_work_upgrade_qualification_schema,
+    run_legacy_local_work_upgrade_qualification,
+    validate_legacy_local_work_upgrade_bundle,
+    validate_legacy_local_work_upgrade_qualification,
+)
 from .generic_dispatch_refusal import (  # noqa: E402
     build_generic_provider_dispatch_refusal,
     read_generic_provider_dispatch_refusal_schema,
@@ -530,6 +539,13 @@ __all__ = [
     "run_post_fan_in_retry_qualification",
     "validate_post_fan_in_retry_inspection_bundle",
     "validate_post_fan_in_retry_qualification",
+    "build_legacy_local_work_upgrade_bundle",
+    "read_legacy_local_work_upgrade_bundle_schema",
+    "read_legacy_local_work_upgrade_fixture",
+    "read_legacy_local_work_upgrade_qualification_schema",
+    "run_legacy_local_work_upgrade_qualification",
+    "validate_legacy_local_work_upgrade_bundle",
+    "validate_legacy_local_work_upgrade_qualification",
     "read_ordinary_v2_happy_path_bundle_schema",
     "read_ordinary_v2_happy_path_fixture",
     "read_ordinary_v2_happy_path_qualification_schema",
