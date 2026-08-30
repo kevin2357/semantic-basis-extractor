@@ -1,5 +1,17 @@
 # Sprint log
 
+## 2026-08-29 — Immutable publication
+
+- Pushed release-lock commit `5f317b9` and annotated tag
+  `astrowoof-natal-authoring-v0.4.29`.
+- Published the exact qualified wheel and checksum to GitHub release
+  `379163756`.
+- Downloaded the published wheel and independently reverified SHA-256
+  `25b35b74b35c65e4bce97f7050e5579d6f802aad944569954e50b7db054c2726`.
+
+Status: SBE 0.4.29 is immutably tagged, published, and download-verified. API
+pinning and joint qualification remain consumer-owned follow-up work.
+
 ## 2026-08-29 — Slice 8 release qualification
 
 - Recorded API Voof-paws 6 approval and bumped the fresh candidate to `0.4.29`;

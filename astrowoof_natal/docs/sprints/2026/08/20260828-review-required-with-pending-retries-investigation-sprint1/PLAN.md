@@ -2,10 +2,10 @@
 
 ## Status
 
-Slices 0–8 complete; Voof-paws 6 and owner release approval recorded. The fresh
-`0.4.29` candidate passed release qualification and is ready for immutable tag
-and publication. No provider work, retained-run mutation, deployment, or
-retained-run recovery is authorized.
+Slices 0–8 complete; Voof-paws 6 and owner release approval recorded. SBE
+`0.4.29` is immutably tagged, published, and download-verified. API pinning and
+joint qualification remain consumer-owned follow-up work. No provider work,
+retained-run mutation, deployment, or retained-run recovery is authorized.
 
 ## Objective
 

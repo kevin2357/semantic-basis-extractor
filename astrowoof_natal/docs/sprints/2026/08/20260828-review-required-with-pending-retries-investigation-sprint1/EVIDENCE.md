@@ -1,5 +1,19 @@
 # Sprint evidence
 
+## Immutable publication evidence
+
+- Tag: `astrowoof-natal-authoring-v0.4.29`.
+- Tag target: `5f317b982241c2fdad3d322ba595429c33bb5ed8`.
+- GitHub release ID: `379163756`.
+- Published at: `2026-08-30T02:50:46Z`.
+- Wheel asset ID: `536065695`.
+- Published/downloaded wheel SHA-256:
+  `25b35b74b35c65e4bce97f7050e5579d6f802aad944569954e50b7db054c2726`.
+- Checksum asset ID: `536065692`.
+- Checksum asset SHA-256:
+  `d2e2a85e3fd2c5566ef58f6770ffb2e47a234822c079cff22c1aefe829c2eb60`.
+- Download verification: pass.
+
 ## Slice 8 final release evidence
 
 - Release version: `0.4.29`.
