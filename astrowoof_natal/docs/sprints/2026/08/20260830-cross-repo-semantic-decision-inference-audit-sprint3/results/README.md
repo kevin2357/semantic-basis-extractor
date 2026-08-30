@@ -8,6 +8,7 @@
 4. [Adversarial inference matrix](../SLICE%203%20-%20ADVERSARIAL%20INFERENCE%20MATRIX.md)
 5. [Finding classification and ownership](../SLICE%204%20-%20FINDING%20CLASSIFICATION%20AND%20OWNERSHIP.md)
 6. [API implementation handoff and closeout](../SLICE%205%20-%20API%20IMPLEMENTATION%20HANDOFF%20AND%20AUDIT%20CLOSEOUT.md)
+7. [API final closeout review](../API%20FINAL%20CLOSEOUT%20REVIEW.md)
 
 ## Final result
 
@@ -16,3 +17,4 @@
 - SBE release required: no.
 - Next work: bounded API implementation and joint provider-free qualification.
 - Provider activity, spend, retained-QA access, and deployment: zero.
+- Final owner/API closeout gate: approved.

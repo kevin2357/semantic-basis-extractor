@@ -2,7 +2,9 @@
 
 ## Current gate
 
-Slices 0–5 are complete. Owner/API final closeout review is pending.
+Closed. Slices 0–5 are complete, owner/API final closeout approval is recorded,
+and no SBE release is required. The three confirmed corrections belong to a
+focused API-only mapper sprint against frozen SBE 0.4.32 contracts.
 
 ## Slice 0
 
@@ -61,6 +63,18 @@ Slices 0–5 are complete. Owner/API final closeout review is pending.
 - Recommended SBE source/schema/version/release change: none.
 - Production source/test/schema changes, provider activity, retained-QA access,
   deployment, configuration mutation, and spend: zero.
+
+## Final closeout
+
+- Approval: `API FINAL CLOSEOUT REVIEW.md`.
+- Final classification: three bounded API mapper defects; zero demonstrated SBE
+  contract gaps.
+- Release disposition: no SBE version bump, tag, wheel, or publication.
+- Follow-up boundary: focused API-only mapper sprint, followed by installed SBE
+  0.4.32 qualification before any deployment decision.
+- Explicit authority safeguard: local capacity disposition does not release or
+  settle reservations, provider/consumer custody, or financial authority.
+- Deployment, provider work, spend, and retained-QA recovery: zero.
 
 ## Slice 4
 

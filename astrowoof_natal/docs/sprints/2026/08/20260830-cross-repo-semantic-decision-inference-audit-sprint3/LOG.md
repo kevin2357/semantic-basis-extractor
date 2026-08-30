@@ -147,4 +147,17 @@
   settlement/delivery dimensions.
 - No production code, test code, schema, provider activity, retained-QA access,
   deployment, configuration mutation, or release occurred.
-- Audit closeout awaits owner/API final review.
+- At the Slice 5 checkpoint, audit closeout awaited owner/API final review.
+## 2026-08-30 — Final closeout approval
+
+- Incorporated `API FINAL CLOSEOUT REVIEW.md` and owner approval.
+- Closed the audit with three bounded API mapper defects and no demonstrated SBE
+  public-contract gap.
+- Preserved the implementation safeguard that local worker-capacity treatment
+  must not imply reservation, provider/consumer custody, settlement, or other
+  API-global authority release.
+- Assigned follow-up to a focused API-only mapper sprint using the frozen SBE
+  0.4.32 contracts and an installed qualification gate.
+- No SBE source, schema, version, tag, or release change is warranted.
+- No deployment, provider work, spend, or retained-QA recovery was authorized or
+  performed.

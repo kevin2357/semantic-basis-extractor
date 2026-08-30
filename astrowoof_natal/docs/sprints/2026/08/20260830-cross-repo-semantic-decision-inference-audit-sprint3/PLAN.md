@@ -10,9 +10,10 @@ only where the audit proves that explicit native evidence is missing.
 
 ## Status
 
-Slices 0–5 are complete. No runtime changes, API changes, schema changes,
-provider activity, or release are claimed. The final API implementation handoff
-and maintainer-process updates await owner/API closeout review.
+Slices 0–5 are complete and the owner/API closeout gate is satisfied. The audit
+is closed with three bounded API mapper defects, no demonstrated SBE contract
+gap, and no SBE release. Follow-up belongs to a focused API-only mapper sprint
+using the frozen SBE 0.4.32 public contracts.
 
 ## Scope boundary
 
