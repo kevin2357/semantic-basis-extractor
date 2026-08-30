@@ -2,7 +2,7 @@
 
 ## Current gate
 
-Slices 0–3 are complete. Joint review is required before Slice 4.
+Slices 0–4 are complete. Joint review is required before Slice 5.
 
 ## Slice 0
 
@@ -47,6 +47,19 @@ Slices 0–3 are complete. Joint review is required before Slice 4.
   0.4.32 source: 122 tests completed successfully.
 - Stale API `.venv` attempt: collection error due to missing released 0.4.32
   symbols; recorded as environment evidence, not a test failure.
+- Production source/test/schema changes, provider activity, retained-QA access,
+  deployment, configuration mutation, and spend: zero.
+
+## Slice 4
+
+- Classification: `SLICE 4 - FINDING CLASSIFICATION AND OWNERSHIP.md`.
+- Confirmed API mapper defects: 3.
+- Confirmed SBE public-contract gaps: 0.
+- Explicit current API product-policy decisions: 2.
+- Contract-backed mutation families: 15.
+- Recommended SBE release: none.
+- Recommended next implementation: one bounded API sprint plus joint installed-
+  SBE consumer qualification.
 - Production source/test/schema changes, provider activity, retained-QA access,
   deployment, configuration mutation, and spend: zero.
 

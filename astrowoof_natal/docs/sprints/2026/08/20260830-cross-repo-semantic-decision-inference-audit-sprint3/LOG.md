@@ -109,3 +109,22 @@
 - No production code, test code, schema, provider activity, retained-QA access,
   deployment, configuration mutation, or release occurred.
 - Paused at the joint review gate before Slice 4 classification.
+
+## 2026-08-30 — Slice 4 classification and ownership freeze
+
+- Incorporated API approval of Slice 3 and its corrected ownership assignments.
+- Classified generic latest-result ingress, absent-readiness inference, and
+  bounded review/unsupported terminal collapse as API mapper defects.
+- Assigned the bounded collapse highest priority because it can manufacture a
+  terminal-ingress attempt and then activate latest-result discovery.
+- Confirmed that SBE `0.4.32` already exposes the necessary exact identity,
+  readiness, and bounded disposition facts; no SBE contract or release is
+  recommended.
+- Preserved outer API `failed` status for review as an explicit current product
+  policy, while requiring separate custody, settlement, reservation, and
+  delivery decisions.
+- Classified 15 mutation families as contract-backed and retained one useful
+  due/not-due runtime-spy coverage addition.
+- No production code, test code, schema, provider activity, retained-QA access,
+  deployment, configuration mutation, or release occurred.
+- Paused at the planned joint classification gate before Slice 5 handoffs.
