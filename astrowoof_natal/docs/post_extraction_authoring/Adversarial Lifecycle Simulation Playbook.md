@@ -5,7 +5,7 @@ status: accepted
 owner: semantic-basis-extractor
 scope: provider-free lifecycle modeling, counterexample reduction, joint SBE/API qualification, and release evidence
 introduced_in: astrowoof-natal-authoring 0.4.26
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-30
 ```
 
 ## Purpose
@@ -155,6 +155,38 @@ Use the smallest mode that proves the claim:
 
 Random exploration finds candidates; shrinking and deterministic fixture promotion
 make findings durable.
+
+## Audit semantic proxy inferences
+
+When an integration defect may come from interpreting a status or label too
+broadly, build a semantic decision registry before adding fields or changing the
+state machine. Inventory every API sink that changes scheduling, authority,
+terminality, delivery, capacity, settlement, or publication. Trace each sink from
+the installed public artifact through validation and identity joins to its API
+transaction.
+
+Then hold the tempting proxy constant and mutate one independent fact. Useful pairs
+include:
+
+- sealed terminal versus sealed nonterminal;
+- native editorial terminal versus API product terminal;
+- review with final custody versus review with reconciliation/denial custody;
+- provider identity pending before due versus the same identity at due time;
+- no local dependencies versus completed evidence requiring deterministic fan-in;
+- terminal versus publishable;
+- provider terminal with usage reported versus usage unavailable;
+- exact invocation result versus conflicting latest discovery; and
+- explicit readiness false versus readiness absent.
+
+Record the positive permission required for the tested transition. A passing test
+must prove that absent, contradictory, and unknown-version evidence reach distinct
+typed refusal/review paths rather than `False`, empty, a default branch, or generic
+retry.
+
+Do not compress native-result ingestion, outer API terminalization, local capacity
+release, action-level custody/settlement, and delivery into one expected state. A
+simulator that asserts only the final job status can pass while losing the
+authoritative distinction the test was meant to protect.
 
 ## Model time deliberately
 

@@ -2,7 +2,7 @@
 
 ## Current gate
 
-Slices 0–4 are complete. Joint review is required before Slice 5.
+Slices 0–5 are complete. Owner/API final closeout review is pending.
 
 ## Slice 0
 
@@ -47,6 +47,18 @@ Slices 0–4 are complete. Joint review is required before Slice 5.
   0.4.32 source: 122 tests completed successfully.
 - Stale API `.venv` attempt: collection error due to missing released 0.4.32
   symbols; recorded as environment evidence, not a test failure.
+- Production source/test/schema changes, provider activity, retained-QA access,
+  deployment, configuration mutation, and spend: zero.
+
+## Slice 5
+
+- Final handoff: `SLICE 5 - API IMPLEMENTATION HANDOFF AND AUDIT CLOSEOUT.md`.
+- API correction backlog: 3 production mapper changes plus custody/temporal
+  regression coverage.
+- Suggested API implementation slices: 7.
+- Process documents updated: Native Worker Change Playbook and Adversarial
+  Lifecycle Simulation Playbook.
+- Recommended SBE source/schema/version/release change: none.
 - Production source/test/schema changes, provider activity, retained-QA access,
   deployment, configuration mutation, and spend: zero.
 

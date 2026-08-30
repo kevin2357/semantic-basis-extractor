@@ -10,9 +10,9 @@ only where the audit proves that explicit native evidence is missing.
 
 ## Status
 
-Slices 0–4 are complete. No runtime changes, API changes, schema changes,
-provider activity, or release are claimed. Three API mapper defects and zero
-SBE contract gaps are frozen pending joint review before Slice 5 handoffs.
+Slices 0–5 are complete. No runtime changes, API changes, schema changes,
+provider activity, or release are claimed. The final API implementation handoff
+and maintainer-process updates await owner/API closeout review.
 
 ## Scope boundary
 

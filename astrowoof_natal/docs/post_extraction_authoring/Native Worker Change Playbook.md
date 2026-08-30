@@ -4,7 +4,7 @@
 status: accepted
 owner: semantic-basis-extractor
 scope: safely planning, implementing, qualifying, releasing, and jointly integrating native-worker changes
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-30
 ```
 
 ## Purpose
@@ -272,6 +272,46 @@ an already conflicting publication.
 - Events are redacted, bounded, failure-isolated observations. They never authorize
   state transitions or replace native artifacts.
 
+## Treat labels as coordinates, not decisions
+
+Descriptive words such as `sealed`, `terminal`, `review_required`, `pending`,
+`complete`, `failed`, and `unsupported` are not standalone transition authority.
+The same word may occur in an integrity contract, native editorial result, provider
+operation, lifecycle scheduler, API product record, or diagnostic event with
+different scope.
+
+For every consumer decision, maintain a semantic decision registry that names:
+
+- the exact schema/version and installed wheel identity;
+- exact required fields and their closed values;
+- the positive permission being consumed;
+- every run/action/binding/provider/invocation/result/receipt/snapshot join;
+- additional API-owned lease, reservation, settlement, or publication facts;
+- distinct behavior for absent, contradictory, and unknown-version evidence; and
+- the forbidden inference that a tempting label, null, empty list, presence check,
+  exit code, or default branch would otherwise invite.
+
+Keep these decisions in separate registry rows even when one transaction performs
+several of them:
+
+1. accept and persist a native terminal result;
+2. terminalize an API job/run/reading;
+3. release local capacity or a lease;
+4. retain/release provider or consumer authority;
+5. settle billing; and
+6. publish delivery.
+
+An exact invocation-returned result identity outranks exit code and generic
+discovery. Availability discovery is permitted only in a named preflight/recovery
+path when no invocation identity exists; the discovered exact result must still be
+read and fully validated. Normal ingress must not contain a generic “latest sealed”
+fallback.
+
+Absence is not negative permission. A missing readiness value cannot become local
+continuation; an empty provider inventory cannot prove terminality; no local
+dependencies cannot disprove deterministic fan-in; and a failed outer product state
+cannot imply that provider custody, settlement, or publication is complete.
+
 ## Test failure boundaries, not only outcomes
 
 For lifecycle, provider-custody, authority, wrapper, or scheduler-facing changes,
@@ -514,6 +554,13 @@ changes, also require the installed adversarial catalog/joint campaign appropria
 to the ownership boundary. Promote a newly discovered incident to a minimized,
 sanitized deterministic fixture rather than relying only on a retained workspace or
 random seed.
+
+For mapper changes, mutate one independent fact while holding the tempting proxy
+constant. Include sealed/nonterminal, review with and without custody, terminal but
+nonpublishable, provider identity due/not-due, missing readiness, exact invocation
+identity versus discovered latest, exit 0 with typed refusal, and exit 2 with an
+invocation-bound result. Unknown, absent, and contradictory evidence must be three
+separate cases.
 
 ## Finish a joint change
 
