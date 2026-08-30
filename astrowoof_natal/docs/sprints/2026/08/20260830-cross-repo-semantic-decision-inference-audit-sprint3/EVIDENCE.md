@@ -2,7 +2,7 @@
 
 ## Current gate
 
-Slices 0–2 are complete. Joint review is required before Slice 3.
+Slices 0–3 are complete. Joint review is required before Slice 4.
 
 ## Slice 0
 
@@ -33,6 +33,22 @@ Slices 0–2 are complete. Joint review is required before Slice 3.
   review versus bounded review mapping.
 - Production source/test/schema changes, provider activity, retained-QA access,
   deployment, and spend: zero.
+
+## Slice 3
+
+- Mutation matrix: `SLICE 3 - ADVERSARIAL INFERENCE MATRIX.md`.
+- Required proxy mutations covered: 15.
+- Additional requested mutations: latest-result fallback, absent readiness, and
+  SBE-owned due subset.
+- Confirmed consumer seams awaiting classification: 3.
+- Missing follow-up regression cells: 7.
+- Focused verification: 10 passed.
+- Broader API lifecycle/worker/ingress/adversarial verification against SBE
+  0.4.32 source: 122 tests completed successfully.
+- Stale API `.venv` attempt: collection error due to missing released 0.4.32
+  symbols; recorded as environment evidence, not a test failure.
+- Production source/test/schema changes, provider activity, retained-QA access,
+  deployment, configuration mutation, and spend: zero.
 
 ## Slice 2
 

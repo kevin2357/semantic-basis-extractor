@@ -10,9 +10,9 @@ only where the audit proves that explicit native evidence is missing.
 
 ## Status
 
-Slices 0–2 are complete. No runtime changes, API changes, schema changes,
-provider activity, or release are claimed. The completed semantic decision
-registry is paused at the joint review gate before adversarial classification.
+Slices 0–3 are complete. No runtime changes, API changes, schema changes,
+provider activity, or release are claimed. The adversarial matrix is ready for
+joint review before Slice 4 assigns defect class, severity, and ownership.
 
 ## Scope boundary
 

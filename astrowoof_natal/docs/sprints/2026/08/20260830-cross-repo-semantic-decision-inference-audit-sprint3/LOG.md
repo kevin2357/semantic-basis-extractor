@@ -87,3 +87,25 @@
   deployment, or release occurred.
 - Paused at the planned joint review gate before Slice 3.
 - Focused API ingress/preflight verification: 10 tests passed in 7.61 seconds.
+
+## 2026-08-30 — Slice 3 adversarial inference review
+
+- Incorporated the API wording correction: normal availability absence
+  continues the ordinary selector, not universally lifecycle inspection.
+- Exercised/reasoned through all 15 required proxy mutations and the three API-
+  requested focused cases.
+- Confirmed that due/not-due progression consumes SBE's temporal decision and
+  SBE-selected subset without API member reconstruction.
+- Isolated the generic `read_latest_sealed` terminal-ingress fallback from the
+  corrected availability-preflight path.
+- Confirmed the generic worker readiness fallback converts an absent explicit
+  local-continuation value into inferred readiness.
+- Confirmed bounded `review_required` and `unsupported` both map to
+  `TERMINAL_CLOSED` without an exact terminal-result identity at that site.
+- Recorded seven minimized missing-test cells for follow-up implementation.
+- Broader provider-free source-surface matrix completed successfully: 122 tests.
+  A stale installed SBE in API's `.venv` caused collection errors on the first
+  attempt; no assertions ran or failed in that attempt.
+- No production code, test code, schema, provider activity, retained-QA access,
+  deployment, configuration mutation, or release occurred.
+- Paused at the joint review gate before Slice 4 classification.
