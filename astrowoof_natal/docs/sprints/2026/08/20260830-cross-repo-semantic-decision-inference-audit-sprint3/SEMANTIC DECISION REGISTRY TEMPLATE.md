@@ -56,4 +56,3 @@ no exact returned result ID
   → validate availability + discovered exact result + receipt + joins
   → discovery alone performs no transition
 ```
-

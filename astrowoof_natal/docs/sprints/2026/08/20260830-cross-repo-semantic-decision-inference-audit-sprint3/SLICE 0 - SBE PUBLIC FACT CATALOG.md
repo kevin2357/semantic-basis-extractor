@@ -221,4 +221,3 @@ decisions. The API audit should therefore begin with a presumption that mapper
 shortcuts—not missing SBE booleans—are the likely issue. A new SBE field is
 justified only when a registry row proves that no existing validated field or
 join can express the required native permission.
-
