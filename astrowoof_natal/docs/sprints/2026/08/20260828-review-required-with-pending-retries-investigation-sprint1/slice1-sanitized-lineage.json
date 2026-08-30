@@ -1,0 +1,43 @@
+{
+  "schema_version": "astrowoof.sbe_sanitized_retry_lineage.v0.1",
+  "runs": [
+    {
+      "label": "pippin-von-waffle",
+      "native_run_id": "8fcce2334d4e717595cafe5af18bb6ee5d097270da362a6783a5fab2f5a8bb79",
+      "state_revision": 88,
+      "status": "AWAITING_SPEND_AUTHORIZATION",
+      "accepted_initial_passes": 5,
+      "affected_pass_number": 6,
+      "qa_attempts": [
+        {"attempt": 1, "action_id": "paid_515c95af47adc2c87c72c192", "outcome": "PASS_QA_REJECTED", "issue_codes": ["theme_group_coverage"]},
+        {"attempt": 2, "action_id": "paid_b22c4c30626fa24636e1f74f", "outcome": "PASS_QA_REJECTED", "issue_codes": ["theme_group_coverage"]},
+        {"attempt": 3, "action_id": "paid_387fa13b80e7a5b7acad9c96", "outcome": "AWAITING_SPEND_AUTHORIZATION", "issue_codes": []}
+      ],
+      "creative_retry_actions": [
+        {"action_id": "paid_d3a5e09f09f5c64716ccac42", "attempt": 2, "state": "WAITING", "provider_identity_durable": true, "request_sha256": "ff8c9e5d507d83743098c59c1e7dc23f78ae9b4e0edc8b923df1fe9edc09597f"},
+        {"action_id": "paid_b22c4c30626fa24636e1f74f", "attempt": 2, "state": "REPORTED", "provider_identity_durable": true, "request_sha256": "1ef5e49e11e9eb1ff812b75c8c04c7b758a1721dbb8afe816b212edd795ec18e"},
+        {"action_id": "paid_dce132aa80a57e21f92fcb94", "attempt": 3, "state": "AUTHORIZED", "provider_identity_durable": false, "request_sha256": "28a706d1ef3ee560e34e10ed473da9da4f99cd622c846b7c55c9c87deaf52cf8"},
+        {"action_id": "paid_387fa13b80e7a5b7acad9c96", "attempt": 3, "state": "PREPARED", "provider_identity_durable": false, "request_sha256": "1ef5e49e11e9eb1ff812b75c8c04c7b758a1721dbb8afe816b212edd795ec18e"}
+      ]
+    },
+    {
+      "label": "duchess-crumpet",
+      "native_run_id": "d436f2a008656d16bb8f1efbdb11342278ed808ad88acba3fdafef087d230268",
+      "state_revision": 89,
+      "status": "AWAITING_SPEND_AUTHORIZATION",
+      "accepted_initial_passes": 5,
+      "affected_pass_number": 6,
+      "qa_attempts": [
+        {"attempt": 1, "action_id": "paid_c019f259dbb595c12540a1f1", "outcome": "PASS_QA_REJECTED", "issue_codes": ["theme_group_coverage"]},
+        {"attempt": 2, "action_id": "paid_849986497f19b4ffb84a34f9", "outcome": "PASS_QA_REJECTED", "issue_codes": ["theme_group_coverage"]},
+        {"attempt": 3, "action_id": "paid_f20ea3978b41e01418dbf0a1", "outcome": "AWAITING_SPEND_AUTHORIZATION", "issue_codes": []}
+      ],
+      "creative_retry_actions": [
+        {"action_id": "paid_14eebbbb1f47f7c682849334", "attempt": 2, "state": "WAITING", "provider_identity_durable": true, "request_sha256": "3f27cfd78063145bd5f87f122590d3b64c1df0db60d632c4b7db70c70bd77b38"},
+        {"action_id": "paid_849986497f19b4ffb84a34f9", "attempt": 2, "state": "REPORTED", "provider_identity_durable": true, "request_sha256": "f7c0977c2fbabc80f4d94a630115cc40cf83cb83c7e42fd9dc13601a4a3688f2"},
+        {"action_id": "paid_e85cd8a7ca4c65670899b2be", "attempt": 3, "state": "AUTHORIZED", "provider_identity_durable": false, "request_sha256": "ab66538d64eab4621cc8fc49ef069b7a9fba3aa66cf4c33aae06420861134c48"},
+        {"action_id": "paid_f20ea3978b41e01418dbf0a1", "attempt": 3, "state": "PREPARED", "provider_identity_durable": false, "request_sha256": "f7c0977c2fbabc80f4d94a630115cc40cf83cb83c7e42fd9dc13601a4a3688f2"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "astrowoof.sbe_retry_review_causal_matrix.v0.1",
+  "provider_operations": 0,
+  "cases": [
+    {
+      "case_id": "retry_reentry_binding_drift",
+      "evidence_class": "reproduced",
+      "confidence": "high",
+      "observed": "one authorized and one prepared action share a pass-attempt route but have different request digests",
+      "cause": "retry feedback is lost when the incomplete current attempt becomes the final record"
+    },
+    {
+      "case_id": "duplicate_lineage_publicly_accepted",
+      "evidence_class": "reproduced",
+      "confidence": "high",
+      "observed": "v0.7 validation accepts duplicate attempt routes and contradictory request bindings",
+      "cause": "public projection lacks an exact pass-attempt-to-action uniqueness join"
+    },
+    {
+      "case_id": "provider_custody_masked_by_authorized_providerless",
+      "evidence_class": "reproduced",
+      "confidence": "high",
+      "observed": "base inspection selects reconciliation but v0.7 selects none/retain_for_review",
+      "cause": "post-fan-in authorized-providerless override runs without provider-custody precedence"
+    },
+    {
+      "case_id": "theme_group_specificity",
+      "evidence_class": "disproved",
+      "confidence": "high",
+      "observed": "historical and generic QA rejection fixtures produce identical lifecycle decisions",
+      "cause": "the defect depends on retry state, not the QA issue vocabulary"
+    }
+  ]
+}

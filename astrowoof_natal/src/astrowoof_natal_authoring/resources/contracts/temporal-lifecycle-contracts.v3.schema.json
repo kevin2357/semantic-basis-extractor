@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"astrowoof.temporal_lifecycle_contracts.v3",
+  "title":"AstroWoof lifecycle v0.8 with retry-lineage evidence",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","run_id","checkpoint_basis_sha256","checkpoint_basis","temporal_decision_sha256","temporal_decision"],
+  "properties":{"schema_version":{"const":"astrowoof.authoring_lifecycle_inspection.v0.8"},"run_id":{"type":"string","minLength":1},"checkpoint_basis_sha256":{"$ref":"#/$defs/sha"},"checkpoint_basis":{"$ref":"#/$defs/basis"},"temporal_decision_sha256":{"$ref":"#/$defs/sha"},"temporal_decision":{"$ref":"#/$defs/decision"}},
+  "$defs":{
+    "sha":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "actionId":{"type":"string","pattern":"^paid_[0-9a-f]{24}$"},
+    "basis":{"type":"object","additionalProperties":false,"required":["observation","terminal","quiescence","local_dependencies","action_inventory","review_reasons","provider_custody","native_route","consumer_authority","checkpoint_safe_for_worker_release","reconciliation_policy_version","external_authority_state","local_work_inventory","retry_lineage_inventory"],"properties":{"observation":{"type":"object"},"terminal":{"type":"object"},"quiescence":{"type":"object"},"local_dependencies":{"type":"array"},"action_inventory":{"type":"object"},"review_reasons":{"type":"array","uniqueItems":true},"provider_custody":{"type":"object"},"native_route":{"type":"object"},"consumer_authority":{"type":"object"},"checkpoint_safe_for_worker_release":{"type":"boolean"},"reconciliation_policy_version":{"const":"astrowoof.provider_reconciliation_policy.v0.2"},"external_authority_state":{"type":"object"},"local_work_inventory":{"type":"object"},"retry_lineage_inventory":{"$ref":"retry-lineage-contracts.v1.schema.json#/$defs/inventory"}}},
+    "decision":{"type":"object","additionalProperties":false,"required":["observed_at","checkpoint_basis_sha256","capacity_disposition","local_work_ready_now","reason_code","selected_command","eligible_now","due_action_ids","not_before","local_work_inventory_sha256","retry_lineage_inventory_sha256"],"properties":{"observed_at":{"type":"string"},"checkpoint_basis_sha256":{"$ref":"#/$defs/sha"},"capacity_disposition":{"type":"string","minLength":1},"local_work_ready_now":{"type":"boolean"},"reason_code":{"type":"string","minLength":1},"selected_command":{"enum":["ordinary_resume","provider_reconciliation_cycle","await_external_authority","none"]},"eligible_now":{"type":"boolean"},"due_action_ids":{"type":"array","maxItems":4,"uniqueItems":true,"items":{"$ref":"#/$defs/actionId"}},"not_before":{"type":["string","null"]},"local_work_inventory_sha256":{"$ref":"#/$defs/sha"},"retry_lineage_inventory_sha256":{"$ref":"#/$defs/sha"}}}
+  }
+}

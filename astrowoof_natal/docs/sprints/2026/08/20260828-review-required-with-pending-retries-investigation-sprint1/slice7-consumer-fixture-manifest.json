@@ -1,0 +1,25 @@
+{
+  "schema_version": "astrowoof.retry_lineage_consumer_fixture_manifest.v1",
+  "status": "candidate_api_review",
+  "artifacts": [
+    {
+      "path": "resources/contracts/retry-lineage-contracts.v1.schema.json",
+      "sha256": "1cf41750176ca7044973d2f93c10cad883e878c27e48466ef5a04377eae73e9b"
+    },
+    {
+      "path": "resources/contracts/temporal-lifecycle-contracts.v3.schema.json",
+      "sha256": "92629fb47bc0c501936e498d7eafe77f5bff7f0615b5bbc7286ce97d4e38ace1"
+    },
+    {
+      "path": "resources/contracts/retry-lineage-qualification.v1.schema.json",
+      "sha256": "d2b1499dc1ee696d8125eb2cda5517bd14dd9d8ee619b3d164cebbafeb655cf7"
+    },
+    {
+      "path": "resources/fixtures/lifecycle/retry-lineage-mixed-custody.v0.8.json",
+      "sha256": "95d4a1ef2bfa102bb39f62a863b3b1c6081b7824ff167e29a40a38ceca9e4a0c"
+    }
+  ],
+  "qualification_receipt_schema": "astrowoof.retry_lineage_qualification.v1",
+  "route_scope": ["exact_natal:response", "bounded_natal:response"],
+  "deferred_route_scope": ["exact_natal:batch", "bounded_natal:batch"]
+}

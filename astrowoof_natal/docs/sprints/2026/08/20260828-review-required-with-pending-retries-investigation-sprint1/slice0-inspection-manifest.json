@@ -1,0 +1,45 @@
+{
+  "schema_version": "astrowoof.sbe_review_retry_inspection.v0.1",
+  "status": "protocol_frozen_no_retained_access",
+  "documents": [
+    {
+      "path": "BACKGROUND.md",
+      "sha256": "1e2253f3f2b3485bf41a5324f8e8e1ae4527a6fd397f06d7786a3d0dfce270cc"
+    },
+    {
+      "path": "SLICE 0 - EVIDENCE MAP AND READ-ONLY INSPECTION PROTOCOL.md",
+      "sha256": "ad5ebf34973c2763f33d6d18e7062208591bd4c800b45ba5408200a32364e74b"
+    }
+  ],
+  "subjects": [
+    {
+      "name": "Pippin von Waffle",
+      "api_run_id": "fbe8ada6-511d-469f-a9b6-31fe15835138",
+      "native_run_id": "8fcce2334d4e717595cafe5af18bb6ee5d097270da362a6783a5fab2f5a8bb79",
+      "active_generation": 12,
+      "archive_bytes": 4014784,
+      "declared_member_count": 789
+    },
+    {
+      "name": "Duchess Crumpet",
+      "api_run_id": "40783a32-e326-4605-8503-de8838152fc0",
+      "native_run_id": "d436f2a008656d16bb8f1efbdb11342278ed808ad88acba3fdafef087d230268",
+      "active_generation": 13,
+      "archive_bytes": 4054594,
+      "declared_member_count": 796
+    }
+  ],
+  "remote_operation_limits": {
+    "r2_head": 2,
+    "r2_get": 2,
+    "r2_list": 0,
+    "r2_put": 0,
+    "r2_copy": 0,
+    "r2_delete": 0,
+    "provider_create": 0,
+    "provider_retrieve": 0
+  },
+  "retained_mutation_allowed": false,
+  "exact_protected_checkpoint_authority_required_before_get": true,
+  "owner_api_review_required_before_access": true
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "astrowoof.sbe_retained_inspection_receipt.v0.1",
+  "authority_sha256": "1a21adf1b125304e9a1baa7ded358e32eb7f564b2c4489b812e79289462dcbf1",
+  "local_fetch_receipt_sha256": "115ba42b599fd6e41f0d288419e735ddf587d7a2923af60f3d8ffbe8a392a965",
+  "remote_operations": {
+    "final_attempt": {"head": 2, "get": 2, "list": 0, "write": 0, "copy": 0, "delete": 0},
+    "cumulative": {"head": 4, "get": 4, "list": 0, "write": 0, "copy": 0, "delete": 0}
+  },
+  "provider_operations": {"create": 0, "retrieve": 0, "spend_usd": "0"},
+  "retained_mutations": {"workspace": 0, "api": 0, "r2": 0},
+  "archives": [
+    {
+      "label": "pippin-von-waffle",
+      "native_run_id": "8fcce2334d4e717595cafe5af18bb6ee5d097270da362a6783a5fab2f5a8bb79",
+      "generation": 12,
+      "bytes": 4014784,
+      "sha256": "7730fb4cb37cfd28a2d1b7c9f845aa0051504dae29e893fdf6b4578b67216e8f",
+      "archive_and_inventory_valid": true,
+      "logical_root_join": "mismatch"
+    },
+    {
+      "label": "duchess-crumpet",
+      "native_run_id": "d436f2a008656d16bb8f1efbdb11342278ed808ad88acba3fdafef087d230268",
+      "generation": 13,
+      "bytes": 4054594,
+      "sha256": "a2dcf2eb71aff3b0dd1df3dc7bc0c680527cf319fe55aa1df54b83ef1efeb9ea",
+      "archive_and_inventory_valid": true,
+      "logical_root_join": "mismatch"
+    }
+  ]
+}

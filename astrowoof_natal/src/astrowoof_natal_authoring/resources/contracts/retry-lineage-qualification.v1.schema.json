@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.retry_lineage_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_sha256", "status", "qualification_only",
+    "provider_free", "package", "schema_sha256", "routes", "crash_matrix",
+    "assertions", "external_network_call_count", "provider_create_count",
+    "provider_spend_usd"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.retry_lineage_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "astrowoof-natal-authoring"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "routes": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["route_family", "before", "after", "exact_replay"],
+        "properties": {
+          "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+          "before": {"$ref": "#/$defs/projection"},
+          "after": {"$ref": "#/$defs/projection"},
+          "exact_replay": {"const": true}
+        }
+      }
+    },
+    "crash_matrix": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["boundary", "create_permitted"],
+        "properties": {
+          "boundary": {"enum": ["prepared", "authorized", "call_entered", "provider_identity_durable", "reported"]},
+          "create_permitted": {"const": false}
+        }
+      }
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "custody_precedes_conflict_review",
+        "post_custody_conflict_is_non_dispatching",
+        "same_observation_is_exact_replay",
+        "whole_ledger_conflict_blocks_create",
+        "completed_predecessor_feedback_is_stable"
+      ],
+      "properties": {
+        "custody_precedes_conflict_review": {"const": true},
+        "post_custody_conflict_is_non_dispatching": {"const": true},
+        "same_observation_is_exact_replay": {"const": true},
+        "whole_ledger_conflict_blocks_create": {"const": true},
+        "completed_predecessor_feedback_is_stable": {"const": true}
+      }
+    },
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0}
+  },
+  "$defs": {
+    "projection": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "route_family", "selected_command", "capacity_disposition",
+        "due_action_count", "custody_action_count", "lineage_status",
+        "conflict_classification", "forward_dispatch_permitted",
+        "reconciliation_permitted"
+      ],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "selected_command": {"enum": ["provider_reconciliation_cycle", "none"]},
+        "capacity_disposition": {"enum": ["continue_local_cycle", "retain_for_review"]},
+        "due_action_count": {"type": "integer", "minimum": 0},
+        "custody_action_count": {"type": "integer", "minimum": 0},
+        "lineage_status": {"const": "conflict"},
+        "conflict_classification": {"const": "retry_lineage_conflict_requires_review"},
+        "forward_dispatch_permitted": {"const": false},
+        "reconciliation_permitted": {"const": true}
+      }
+    }
+  }
+}

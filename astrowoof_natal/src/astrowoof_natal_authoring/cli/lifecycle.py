@@ -24,6 +24,7 @@ from ..lifecycle import (
 from ..closure import load_json
 from ..temporal_lifecycle import inspect_temporal_lifecycle
 from ..post_fan_in_contracts import inspect_post_fan_in_lifecycle
+from ..retry_lineage_contracts import inspect_retry_lineage_lifecycle
 from .. import __version__
 from ..application_logging import (
     add_logging_arguments,
@@ -75,6 +76,14 @@ def main() -> None:
         default="not_established",
     )
     local_parser.add_argument("--observed-at", required=True)
+
+    lineage_parser = subparsers.add_parser("inspect-retry-lineage")
+    lineage_parser.add_argument(
+        "--native-exclusive-access",
+        choices=("established", "declared", "not_established", "unknown"),
+        default="not_established",
+    )
+    lineage_parser.add_argument("--observed-at", required=True)
 
     deny_parser = subparsers.add_parser("deny-providerless")
     deny_parser.add_argument("--request", required=True, type=Path)
@@ -130,6 +139,12 @@ def main() -> None:
             native_exclusive_access=args.native_exclusive_access,
             observed_at=args.observed_at,
             event_emitter=emitter,
+        )
+    elif args.operation == "inspect-retry-lineage":
+        result = inspect_retry_lineage_lifecycle(
+            args.run_dir,
+            native_exclusive_access=args.native_exclusive_access,
+            observed_at=args.observed_at,
         )
     elif args.operation == "deny-providerless":
         result = deny_providerless_action(

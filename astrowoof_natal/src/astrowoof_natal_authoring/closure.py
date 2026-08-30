@@ -795,17 +795,38 @@ def workspace_file_inventory(workspace: Path) -> list[dict[str, Any]]:
 
 
 def retry_feedback_from_record(
-    record: dict[str, Any],
+    record: dict[str, Any], *, before_attempt_number: int | None = None,
 ) -> dict[str, Any] | None:
-    if not record.get("attempts"):
+    attempts = [
+        item for item in (record.get("attempts") or [])
+        if before_attempt_number is None
+        or int(item.get("attempt_number") or 0) < before_attempt_number
+    ]
+    if not attempts:
         return None
-    attempt = record["attempts"][-1]
+    # The current incomplete attempt is never predecessor evidence. Select the
+    # latest completed predecessor by explicit attempt number/state, not list
+    # position, so resume cannot erase the QA feedback that formed its request.
+    completed = [
+        item for item in attempts
+        if item.get("state") in {
+            "PASS_QA_REJECTED", "ATTEMPT_ERROR", "PASS_QA_ACCEPTED",
+        }
+        or ((item.get("qa") or {}).get("report") or {}).get("status")
+        in {"reject", "accept"}
+        or item.get("finished_at") is not None
+    ]
+    if not completed:
+        return None
+    attempt = max(completed, key=lambda item: int(item.get("attempt_number") or 0))
     qa_report = (attempt.get("qa") or {}).get("report") or {}
     if qa_report.get("status") == "reject":
         rejected_reports = []
         issue_codes: list[str] = []
         affected_claim_ids: list[str] = []
-        for prior_attempt in record["attempts"]:
+        for prior_attempt in sorted(
+            completed, key=lambda item: int(item.get("attempt_number") or 0)
+        ):
             prior_report = (prior_attempt.get("qa") or {}).get("report") or {}
             if prior_report.get("status") != "reject":
                 continue
@@ -2964,19 +2985,46 @@ class SpendController:
         ) -> None:
             request_sha256 = spend_digest(payload)
             with self._consumption_lock(), self.state_lock:
-                existing = next(
-                    (
-                        item for item in self.ledger["actions"]
-                        if item["binding"]["stage"] == stage
-                        and item["binding"]["route"] == route
-                        and item["binding"]["request_sha256"] == request_sha256
-                        and item["binding"]["model"] == model
-                        and item["binding"]["service_level"] == service_level
-                        and item["binding"]["maximum_output_tokens"]
-                        == maximum_output_tokens
-                    ),
-                    None,
+                exact_retry_candidate = (
+                    stage == "creative_retry"
+                    and self.state.get("schema_version")
+                    == "astrowoof.semantic_closure_run.v0.9"
+                    and not route.startswith("bounded_natal.v2:")
+                    and bool(self.state.get("passes"))
                 )
+                retry_route_match = (
+                    re.fullmatch(r"([^:]+):attempt-(\d{3})", route)
+                    if exact_retry_candidate else None
+                )
+                if exact_retry_candidate and retry_route_match is None:
+                    raise ValueError("Creative-retry route identity is invalid")
+                exact_retry = exact_retry_candidate
+                if exact_retry:
+                    from .retry_lineage_contracts import (
+                        assert_retry_lineage_forward_dispatch_safe,
+                    )
+                    assert_retry_lineage_forward_dispatch_safe(self.state)
+                logical_matches = [
+                    item for item in self.ledger["actions"]
+                    if item["binding"]["stage"] == stage
+                    and item["binding"]["route"] == route
+                    and item["binding"]["model"] == model
+                    and item["binding"]["service_level"] == service_level
+                    and item["binding"]["maximum_output_tokens"]
+                    == maximum_output_tokens
+                ]
+                if exact_retry and len(logical_matches) > 1:
+                    raise ValueError(
+                        "Conflicting paid actions exist for one creative-retry attempt"
+                    )
+                existing = logical_matches[0] if logical_matches else None
+                if (
+                    exact_retry and existing is not None
+                    and existing["binding"]["request_sha256"] != request_sha256
+                ):
+                    raise ValueError(
+                        "Creative-retry request changed for an existing logical attempt"
+                    )
                 if existing is None:
                     input_tokens = estimated_text_tokens(
                         json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
@@ -3005,7 +3053,6 @@ class SpendController:
                         price_book_version=PRICE_BOOK_VERSION,
                     )
                     existing = prepare_action(self.ledger, binding)
-                    persist_state(self.run_json, self.state)
                 if request_payload_artifact is not None:
                     expected_keys = {
                         "schema_version", "logical_path", "file_sha256",
@@ -3033,7 +3080,43 @@ class SpendController:
                     existing["request_payload_artifact"] = deepcopy(
                         request_payload_artifact
                     )
-                    persist_state(self.run_json, self.state)
+                if exact_retry:
+                    assert retry_route_match is not None
+                    pass_id, attempt_text = retry_route_match.groups()
+                    attempt_number = int(attempt_text)
+                    record = (self.state.get("passes") or {}).get(pass_id)
+                    attempts = (record or {}).get("attempts") or []
+                    matches = [
+                        item for item in attempts
+                        if item.get("attempt_number") == attempt_number
+                    ]
+                    if len(matches) != 1:
+                        raise ValueError(
+                            "Creative-retry action does not join one pass attempt"
+                        )
+                    from .retry_lineage_contracts import derive_retry_attempt_key
+                    lineage = {
+                        "schema_version": "astrowoof.retry_attempt_evidence.v1",
+                        "attempt_key": derive_retry_attempt_key(
+                            native_run_id=self.state["run_id"],
+                            route_family="exact_natal", stage=stage,
+                            pass_id=pass_id, attempt_number=attempt_number,
+                        ),
+                        "action_id": existing["action_id"],
+                        "binding_sha256": spend_digest(existing["binding"]),
+                        "request_sha256": request_sha256,
+                        "request_payload_artifact": deepcopy(
+                            existing.get("request_payload_artifact")
+                        ),
+                    }
+                    prior_lineage = matches[0].get("retry_attempt_evidence")
+                    if prior_lineage is not None and prior_lineage != lineage:
+                        raise ValueError("Creative-retry attempt evidence changed")
+                    matches[0]["retry_attempt_evidence"] = lineage
+                    matches[0]["paid_action_id"] = existing["action_id"]
+                # One persistence boundary publishes the prepared action, its
+                # binding-owned payload reference, and the pass-attempt pointer.
+                persist_state(self.run_json, self.state)
                 if existing["state"] == "DENIED_PROVIDERLESS":
                     transition = (existing.get("negative_authorization") or {}).get(
                         "run_transition"
@@ -4035,7 +4118,9 @@ def author_one_pass(
             "authoring_attempt_start pass_id=%s attempt=%s max_attempts=%s",
             spec.pass_id, attempt_number, max_attempts,
         )
-        feedback = retry_feedback_from_record(record)
+        feedback = retry_feedback_from_record(
+            record, before_attempt_number=attempt_number,
+        )
         attempt_root = pass_root / f"attempt-{attempt_number:03d}"
         response_workspace = attempt_root / "response" / spec.pass_id
         if (
@@ -4044,7 +4129,6 @@ def author_one_pass(
         ):
             attempt = interrupted_attempt
             interrupted_attempt = None
-            feedback = None
             with state_lock:
                 attempt["state"] = "SUBMITTED"
                 record["state"] = "SUBMITTED"
