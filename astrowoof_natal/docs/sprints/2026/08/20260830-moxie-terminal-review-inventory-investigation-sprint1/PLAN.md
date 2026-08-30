@@ -204,10 +204,10 @@ retry/provider custody, replay, and provenance; agree a risk-proportionate gate;
 freeze version/hash before testing; and seek separate owner approval before
 commit/tag/publication. Retained QA recovery/deployment remain out of scope.
 
-Status: complete. Final byte-identical `0.4.33` wheels and installed
-qualifications pass. Paused for final API/owner review before commit, tag, and
-publication. The once-run full suite and focused fixture correction are recorded
-without claiming a repeated wholly green full suite.
+Status: complete and published as `astrowoof-natal-authoring-v0.4.33`. Final
+byte-identical wheels and installed qualifications passed. The once-run full
+suite and focused fixture correction are recorded without claiming a repeated
+wholly green full suite.
 
 ## Acceptance criteria
 

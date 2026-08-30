@@ -172,3 +172,17 @@ operation has been run.
 - Per explicit owner direction, did not repeat the full suite. Final installed
   qualifications were rerun against the rebuilt final wheel and passed.
 - Paused for final API/owner review before commit/tag/publication.
+
+## 2026-08-30 — 0.4.33 published
+
+- Received final API and owner approval for commit, tag, and publication.
+- Committed the approved release source as `b072ac1` and pushed `main`.
+- Created and pushed immutable tag
+  `astrowoof-natal-authoring-v0.4.33`.
+- Published the exact approved wheel as a non-draft, non-prerelease GitHub
+  release.
+- Downloaded the public asset afresh and verified SHA-256 equality with the
+  approved candidate:
+  `2559ba0e6edd07c27641d11933928457aae8e4a082c1158a74ca0c523cfd7313`.
+- No tests were repeated during publication; the approved release gate and its
+  documented full-suite caveat remain unchanged.

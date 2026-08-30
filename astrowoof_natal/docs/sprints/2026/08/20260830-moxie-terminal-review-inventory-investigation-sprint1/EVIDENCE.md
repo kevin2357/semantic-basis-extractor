@@ -168,3 +168,16 @@ prohibited.
 - Full suite repeated: no, per explicit owner direction.
 - Final installed qualifications after rebuild: passed.
 - Provider/network/spend and retained Moxie/R2 activity: zero.
+
+## Published release
+
+- Source commit: `b072ac1`.
+- Tag: `astrowoof-natal-authoring-v0.4.33`.
+- Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.33`.
+- Asset: `astrowoof_natal_authoring-0.4.33-py3-none-any.whl`.
+- Asset size: 1,119,466 bytes.
+- GitHub asset ID: `RA_kwDOToQdE84gA5gL`.
+- Candidate and freshly downloaded public-asset SHA-256:
+  `2559ba0e6edd07c27641d11933928457aae8e4a082c1158a74ca0c523cfd7313`.
+- Published release state: non-draft, non-prerelease.
