@@ -110,3 +110,14 @@
   snapshot/mutation source changed, so the approved lean package-only gate
   remains applicable and the full runtime suite was not run.
 - Paused before commit/tag/publication for final owner/API release review.
+
+## 2026-08-30 — `0.4.32` publication
+
+- Received final owner and API approval for the lean release.
+- Committed release source as `d6515af87591e60836c4992415665d07401d29e4`.
+- Rebuilt from that exact commit and reproduced candidate SHA-256
+  `c45cd46ff4d7ffa98024b662c55f840e8f7cbea9682d32e97273f6e451493d6e`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.32`.
+- Published the verified wheel in a public, non-draft GitHub release.
+- Downloaded the remote asset and independently reproduced the same SHA-256.
+- No deployment, provider work, spend, or retained-QA access occurred.

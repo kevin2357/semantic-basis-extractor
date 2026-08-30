@@ -80,3 +80,11 @@ joint contract freeze proves that evidence insufficient.
   gate; no full-suite pass is claimed.
 - Provider create/retrieve/network/spend and retained-QA access: zero.
 - Candidate review: `SLICE 4 - LEAN RELEASE CANDIDATE REVIEW.md`.
+
+## Publication
+
+- Release source: `d6515af87591e60836c4992415665d07401d29e4`.
+- Tag: `astrowoof-natal-authoring-v0.4.32`.
+- Published wheel SHA-256, independently downloaded and verified:
+  `c45cd46ff4d7ffa98024b662c55f840e8f7cbea9682d32e97273f6e451493d6e`.
+- Publication record: `POST-RELEASE - 0.4.32 PUBLICATION EVIDENCE.md`.

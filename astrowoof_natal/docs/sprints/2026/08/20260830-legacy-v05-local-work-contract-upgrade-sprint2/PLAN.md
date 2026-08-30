@@ -9,16 +9,14 @@ SBE implementation or release.
 
 ## Status
 
-Slices 1–3 are complete and API-approved. Slice 4's lean installed-wheel release
-gate is complete against fresh candidate version `0.4.32`; final owner/API
-release approval is pending. The same-checkpoint witness
+Slices 1–4 and immutable `0.4.32` publication are complete. The same-checkpoint witness
 proved the released readers and validators, and refined mixed-custody precedence:
 not-due pending custody does not block exact deterministic fan-in of separately
 completed evidence. No SBE runtime correction is indicated. API requested one
 additive packaged qualification bundle/receipt for Slice 3 so its consumer does
 not import SBE tests or manufacture a native workspace; that surface is now
 implemented and source-qualified. Version bump and installed-wheel release gate
-are complete.
+and lean installed-wheel gate are complete.
 
 This is provisionally classified as a **lean package-only patch**. If the diff
 remains confined to qualification code, closed schemas/fixtures, package exports,
