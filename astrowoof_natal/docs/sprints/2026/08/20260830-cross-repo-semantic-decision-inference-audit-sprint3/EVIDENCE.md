@@ -2,15 +2,7 @@
 
 ## Current gate
 
-Planning artifacts only:
-
-- `PRE-SPRINT HUDDLE.md`
-- `PLAN.md`
-- `LOG.md`
-
-API Sprint 60 plan review is incorporated, including invocation-result
-precedence, positive-permission accounting, installed compatibility identity,
-and typed absent/contradictory/unknown-version handling.
+Slices 0–1 are complete. Slice 2 evidence-source tracing is next.
 
 ## Slice 0
 
@@ -24,4 +16,20 @@ and typed absent/contradictory/unknown-version handling.
 - Installed compatibility basis: SBE `0.4.32`, SPC `0.11.1`.
 - Production source/schema changes, provider activity, retained-QA access,
   deployment, and spend: zero.
-- Current gate: API review before Slice 1.
+- Historical Slice 0 gate: API review before Slice 1; satisfied.
+
+## Slice 1
+
+- Decision inventory: `SLICE 1 - API DECISION SINK INVENTORY.md`.
+- API source basis: `main` after Sprint 60 commit `676cb3a`.
+- Production areas inspected: SBE worker and runtime, lifecycle consumers,
+  native terminal and transition ingestion, provider orchestration, authority
+  admission/dispatch, queue/capacity handling, publication/cleanup, and bounded
+  operator recovery services.
+- Inventory rows: 20 primary worker/runtime sinks, 10 native-result/authority/
+  settlement sinks, 10 product/recovery sinks, and 6 subprocess evidence-
+  precedence sites.
+- Explicit unresolved audit target: lifecycle review versus v0.2 terminal
+  review versus bounded review mapping.
+- Production source/test/schema changes, provider activity, retained-QA access,
+  deployment, and spend: zero.

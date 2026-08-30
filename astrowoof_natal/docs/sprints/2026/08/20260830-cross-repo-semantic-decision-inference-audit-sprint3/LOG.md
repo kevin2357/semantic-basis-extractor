@@ -44,3 +44,23 @@
 - No production code, schema, provider, retained-QA, deployment, or API source
   changed.
 - Paused for API catalog review before Slice 1 decision-sink enumeration.
+
+## 2026-08-30 — Slice 1 API decision-sink inventory
+
+- Incorporated API approval of the Slice 0 catalog and elevated the ambiguous
+  `review_required` terminality question into the audit rather than resolving it
+  from vocabulary.
+- Enumerated ordinary worker/runtime routing, native-result ingestion,
+  authority/custody/settlement, product/publication/cleanup, operator recovery,
+  and subprocess evidence-precedence decision sinks.
+- Named an intended authority owner and immediate input for every sink, with
+  production source and test references.
+- Separated three currently distinct review-shaped surfaces: nonterminal
+  lifecycle review, v0.2 native terminal-review result, and bounded
+  reconciliation review mapping.
+- Recorded exact invocation-result precedence, availability recovery, exit-code,
+  and JSONL command-envelope sites as separate audit rows.
+- No risk classification is claimed yet; Slice 2 must trace exact validators,
+  joins, persistence order, and positive permissions.
+- No production code, test code, schema, provider activity, retained-QA access,
+  deployment, or release occurred.

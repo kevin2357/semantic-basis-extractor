@@ -10,9 +10,9 @@ only where the audit proves that explicit native evidence is missing.
 
 ## Status
 
-Slice 0 is complete. No runtime changes, API changes, schema changes, provider
-activity, or release are claimed. Paused for API review of the native fact catalog
-before Slice 1 begins.
+Slices 0–1 are complete. No runtime changes, API changes, schema changes,
+provider activity, or release are claimed. The API decision-sink inventory is
+ready for the Slice 2 evidence-source trace.
 
 ## Scope boundary
 
