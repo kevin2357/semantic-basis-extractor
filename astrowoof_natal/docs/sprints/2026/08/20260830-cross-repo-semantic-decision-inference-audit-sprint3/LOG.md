@@ -64,3 +64,26 @@
   joins, persistence order, and positive permissions.
 - No production code, test code, schema, provider activity, retained-QA access,
   deployment, or release occurred.
+
+## 2026-08-30 — Slice 2 evidence trace and semantic decision registry
+
+- Traced every Slice 1 sink from installed SBE evidence through strict reader,
+  identity joins, API persistence, mapper, and queue/product/resource effect.
+- Recorded the exact SBE `0.4.32` and SPC `0.11.1` wheel identities used as the
+  interpretation basis.
+- Completed 28 registry rows covering scheduling, creation, retrieval, local
+  work, native-result ingestion, API terminalization, review, delivery,
+  capacity, settlement, cleanup, recovery, and subprocess precedence.
+- Kept native terminal-result acceptance, API job/run/reading terminalization,
+  capacity release, provider custody/settlement, and publication as separate
+  decisions.
+- Proved the current API trace for invocation-bound v0.2 review: exact envelope
+  and publication ingestion precede `queue.fail(retryable=false)`, which marks
+  the job, generation run, and reading failed while action-specific custody may
+  remain.
+- Identified six factual tensions for adversarial testing without yet assigning
+  defect class or severity.
+- No production code, test code, schema, provider activity, retained-QA access,
+  deployment, or release occurred.
+- Paused at the planned joint review gate before Slice 3.
+- Focused API ingress/preflight verification: 10 tests passed in 7.61 seconds.

@@ -10,9 +10,9 @@ only where the audit proves that explicit native evidence is missing.
 
 ## Status
 
-Slices 0–1 are complete. No runtime changes, API changes, schema changes,
-provider activity, or release are claimed. The API decision-sink inventory is
-ready for the Slice 2 evidence-source trace.
+Slices 0–2 are complete. No runtime changes, API changes, schema changes,
+provider activity, or release are claimed. The completed semantic decision
+registry is paused at the joint review gate before adversarial classification.
 
 ## Scope boundary
 

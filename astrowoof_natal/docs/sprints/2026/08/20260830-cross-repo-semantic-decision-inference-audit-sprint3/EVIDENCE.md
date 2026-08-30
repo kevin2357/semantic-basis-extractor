@@ -2,7 +2,7 @@
 
 ## Current gate
 
-Slices 0–1 are complete. Slice 2 evidence-source tracing is next.
+Slices 0–2 are complete. Joint review is required before Slice 3.
 
 ## Slice 0
 
@@ -31,5 +31,25 @@ Slices 0–1 are complete. Slice 2 evidence-source tracing is next.
   precedence sites.
 - Explicit unresolved audit target: lifecycle review versus v0.2 terminal
   review versus bounded review mapping.
+- Production source/test/schema changes, provider activity, retained-QA access,
+  deployment, and spend: zero.
+
+## Slice 2
+
+- Completed registry: `SLICE 2 - SEMANTIC DECISION REGISTRY.md`.
+- Installed API dependency identity:
+  - SBE `0.4.32`, SHA-256 `c45cd46…493d6e`;
+  - SPC `0.11.1`, SHA-256 `dc345cd3…a7da612`.
+- Source traces include exact availability preflight, lifecycle version routing,
+  provider reconciliation, local resume, v1/v2 constrained authority,
+  invocation-bound terminal review, native transition ingestion, API queue/run/
+  reading effects, capacity release, settlement, publication, cleanup, and named
+  operator recoveries.
+- Registry rows: 28; all 46 Slice 1 sites are covered through explicit ID joins.
+- Factual review target: three distinct review-shaped surfaces and their outer
+  API terminalization/custody effects.
+- Focused API verification: 10 passed. Covered invocation-result precedence,
+  explicit preflight identity, conflicting authority refusal, lifecycle review
+  upgrade, sealed terminal preflight, and sealed nonterminal routing.
 - Production source/test/schema changes, provider activity, retained-QA access,
   deployment, and spend: zero.
