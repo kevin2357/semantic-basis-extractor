@@ -8168,12 +8168,34 @@ def main() -> None:
         nonlocal prior_local_lifecycle
         if prior_local_lifecycle is None:
             return
-        from .post_fan_in_contracts import commit_local_work_progress
-
-        successor = commit_local_work_progress(
-            args.run_dir, prior=prior_local_lifecycle,
-            observed_at=lifecycle_observed_now(), event_emitter=event_emitter,
+        from .post_fan_in_contracts import (
+            LocalWorkProgressContradiction,
+            commit_local_work_progress,
         )
+        from .native_transitions import publish_native_execution_result
+
+        try:
+            successor = commit_local_work_progress(
+                args.run_dir, prior=prior_local_lifecycle,
+                observed_at=lifecycle_observed_now(), event_emitter=event_emitter,
+                contradiction_publisher=lambda: publish_native_execution_result(
+                    args.run_dir, command_kind="ordinary_authoring",
+                    sbe_release=__version__, published_at=utc_now(),
+                    event_emitter=event_emitter, _writer_held=True,
+                    terminal_review_v02=True,
+                    terminal_review_cause="local_work_progress_contradiction",
+                ),
+            )
+        except LocalWorkProgressContradiction as exc:
+            if exc.sealed is None:
+                raise
+            from .terminal_review_contracts import (
+                build_terminal_review_command_result,
+            )
+            output_result(build_terminal_review_command_result(
+                exc.sealed["result"], exc.sealed["receipt"],
+            ))
+            raise SystemExit(2) from None
         prior_local_lifecycle = (
             successor
             if successor["temporal_decision"]["selected_command"]
@@ -8212,6 +8234,32 @@ def main() -> None:
                 "snapshot-bound external-authority request and aggregate grant",
             )
         documents = [load_json(path) for path in args.spend_authorization]
+        from .generic_dispatch_refusal import (
+            build_generic_provider_dispatch_refusal,
+            generic_create_capable_action_ids,
+        )
+        generic_action_ids = generic_create_capable_action_ids(state, documents)
+        if generic_action_ids:
+            from .retry_lineage_contracts import inspect_retry_lineage_lifecycle
+
+            inspection = inspect_retry_lineage_lifecycle(
+                args.run_dir,
+                observed_at=args.observed_at or lifecycle_observed_now(),
+                native_exclusive_access="declared",
+            )
+            refusal = build_generic_provider_dispatch_refusal(
+                run_id=state["run_id"],
+                checkpoint_basis_sha256=inspection["checkpoint_basis_sha256"],
+                ordered_action_ids=generic_action_ids,
+                state_revision=int(state.get("state_revision") or 0),
+                snapshot_sha256=sha256_file(args.run_dir / SNAPSHOT_NAME),
+            )
+            logger.warning(
+                "generic_provider_dispatch_refused reason=%s action_count=%s",
+                refusal["reason_code"], len(generic_action_ids),
+            )
+            output_result(refusal)
+            return
         try:
             apply_spend_authorizations(state, documents)
         finally:

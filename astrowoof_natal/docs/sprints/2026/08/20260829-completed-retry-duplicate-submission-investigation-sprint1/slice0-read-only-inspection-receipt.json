@@ -1,0 +1,33 @@
+{
+  "schema_version": "astrowoof.read_only_investigation_receipt.v1",
+  "object_key": "v1/checkpoint/fce698df05044536bda1b9e9afeffd64",
+  "archive_sha256": "eb8353732aba6b67169e9fe08603949412b1fa4c1d662326fa2ad5df4b88433e",
+  "archive_byte_size": 3832236,
+  "inventory_sha256": "2f53194805d643ebed032417d627b0d6260bf88bbbcf9634f4d6be78af89ffe5",
+  "validated_workspace_member_count": 760,
+  "validated_workspace_member_bytes": 16672267,
+  "remote_operations": {
+    "head": 2,
+    "get": 1,
+    "list": 0,
+    "write": 0,
+    "delete": 0,
+    "copy": 0
+  },
+  "head_retry_reason": "The first exact HEAD was stopped locally before GET because the inspection validator omitted one expected metadata field. The corrected validator repeated the same exact HEAD, then performed one exact GET.",
+  "side_effect_assertions": {
+    "provider_operations": 0,
+    "workspace_mutations": 0,
+    "worker_resumes": 0,
+    "recovery_commands": 0
+  },
+  "protected_temporary_bytes_removed": true,
+  "validated_member_hashes": {
+    "run.json": "ce76c2e712061f96af99fcb09ba956ef7f00b12599781f7201bad20a42ea3fc4",
+    "workspace-snapshot.json": "dd8ac174c4bd08d798333a3fce868b7a710999632e8ac03cea6a32445c748286",
+    "native-transition-journal.jsonl": "00dded683db07bd44763410e70a532b346e1e0da5d78f3a093d1147b7ddc3962",
+    "native-result-index.json": "d50838c337bf4afc891e056a7b566a2d0e1ffe683fb9240db34ffc1cf51a7499",
+    "native-results/nres_baa071ce080d1201658cb3ec.json": "544d7c9d0bf57a7355f6dd9883a336a439ac13573ec25dabe41459f0780610bf",
+    "native-publication-receipts/nres_baa071ce080d1201658cb3ec.json": "6a138bc62d8c324a85a8e2cf36b62d7f084badd0f8c45a4ec16429503c8da135"
+  }
+}

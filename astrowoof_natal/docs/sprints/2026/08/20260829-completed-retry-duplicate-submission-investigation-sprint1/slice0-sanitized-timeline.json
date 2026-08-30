@@ -1,0 +1,89 @@
+{
+  "schema_version": "astrowoof.sbe_investigation_timeline.v1",
+  "incident": {
+    "native_run_id": "42407f1f4386eb0fcd387de9feb305a932d6626949dea247750f785bd1851920",
+    "affected_action_id": "paid_fb28a0c3a7e2a44743d65b8d",
+    "predecessor_action_id": "paid_258bd9d47d23c08a15a11256",
+    "route_family": "exact_natal",
+    "stage": "creative_retry"
+  },
+  "checkpoint": {
+    "generation": 11,
+    "storage_created_at": "2026-08-30T04:14:46.121770Z",
+    "archive_sha256": "eb8353732aba6b67169e9fe08603949412b1fa4c1d662326fa2ad5df4b88433e",
+    "inventory_sha256": "2f53194805d643ebed032417d627b0d6260bf88bbbcf9634f4d6be78af89ffe5",
+    "native_state_revision": 69,
+    "native_status": "AWAITING_SPEND_AUTHORIZATION"
+  },
+  "retained_native_facts": {
+    "predecessor": {
+      "pass_attempt": 2,
+      "pass_attempt_state": "AMBIGUOUS_PROVIDER_SUBMISSION",
+      "ledger_state": "WAITING",
+      "provider_identity_durable": true,
+      "reconciliation_outcome": "completed",
+      "reported": false
+    },
+    "successor": {
+      "pass_attempt": 3,
+      "pass_attempt_state": "AWAITING_SPEND_AUTHORIZATION",
+      "ledger_state": "PREPARED",
+      "provider_identity_durable": false,
+      "authorization_present": false,
+      "consumption_present": false,
+      "prepared_at": "2026-08-30T04:14:06.617729Z"
+    },
+    "latest_native_result": {
+      "result_id": "nres_baa071ce080d1201658cb3ec",
+      "published_at": "2026-08-30T04:13:39Z",
+      "outcome": "provider_pending",
+      "contains_predecessor_action": true,
+      "contains_successor_action": false
+    }
+  },
+  "later_observations_not_present_in_checkpoint": [
+    {
+      "at": "2026-08-30T04:15:07Z",
+      "kind": "provider_identity_recorded",
+      "provider_identity_ordinal": 1
+    },
+    {
+      "at": "2026-08-30T04:17:01.196Z",
+      "kind": "provider_completed",
+      "provider_identity_ordinal": 1
+    },
+    {
+      "at": "2026-08-30T04:17:02.884Z",
+      "kind": "local_work_progress_refused",
+      "reason": "semantic_work_not_consumed"
+    },
+    {
+      "at": "2026-08-30T04:17:23Z",
+      "kind": "provider_identity_recorded",
+      "provider_identity_ordinal": 2
+    },
+    {
+      "at": "2026-08-30T04:19:36Z",
+      "kind": "provider_completed",
+      "provider_identity_ordinal": 2
+    }
+  ],
+  "api_join": {
+    "affected_action_state": "authorized",
+    "provider_operation_id": null,
+    "direct_v2_admission_id": null,
+    "run_scoped_v2_admission_action_ids": [
+      "paid_258bd9d47d23c08a15a11256"
+    ],
+    "affected_action_in_run_scoped_v2_admission": false,
+    "native_execution_receipts_after_affected_action_created": 0
+  },
+  "characterization": {
+    "public_boundary": "astrowoof-run-semantic-closure --resume --spend-authorization",
+    "restores": 2,
+    "scripted_provider_creates": 2,
+    "first_exit_reason": "ordinary_resume did not consume advertised local work",
+    "second_exit_reason": "ordinary_resume did not consume advertised local work",
+    "external_provider_calls": 0
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "purpose": "Exact frozen QA coordinate packet for one bounded, read-only checkpoint HEAD and GET. This is evidence, not a new interchange contract.",
+  "incident": {
+    "api_run_id": "f84b3524-659a-4b86-83b4-7deb5b7c59a6",
+    "native_run_id": "42407f1f4386eb0fcd387de9feb305a932d6626949dea247750f785bd1851920",
+    "affected_native_action_id": "paid_fb28a0c3a7e2a44743d65b8d",
+    "environment": "qa",
+    "sbe_release": "0.4.29"
+  },
+  "active_sbe_checkpoint": {
+    "checkpoint_id": "5fdb2c2b-d21d-42fc-8f6a-355c94615ab7",
+    "job_id": "85afa810-d7d6-45fb-8c7a-dc7ddbe0fdc8",
+    "attempt_id": "a24c4d25-bfad-4f44-aed5-f000b0e18a01",
+    "attempt_number": 9,
+    "lease_id": "b123cf7d-a921-483f-b41d-c31a131a4409",
+    "fencing_identity": "b123cf7d-a921-483f-b41d-c31a131a4409",
+    "sequence": 11,
+    "generation": 11,
+    "state": "active",
+    "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+    "compatibility_identity": "astrowoof.qa.sbe0429-retry-lineage.v1",
+    "storage_contract_version": "astrowoof.storage-receipt.v1",
+    "storage_environment": "qa",
+    "storage_namespace": "checkpoint",
+    "storage_object_uuid": "fce698df-0504-4536-bda1-b9e9afeffd64",
+    "storage_object_key": "v1/checkpoint/fce698df05044536bda1b9e9afeffd64",
+    "archive_sha256": "eb8353732aba6b67169e9fe08603949412b1fa4c1d662326fa2ad5df4b88433e",
+    "archive_byte_size": 3832236,
+    "inventory_sha256": "2f53194805d643ebed032417d627b0d6260bf88bbbcf9634f4d6be78af89ffe5",
+    "media_type": "application/vnd.astrowoof.checkpoint+zip",
+    "protection_class": "protected-operator",
+    "provider_version_or_etag": "8f97f5030b664d05f72b4f7169ec2c0c",
+    "storage_created_at": "2026-08-30T04:14:46.121770Z",
+    "logical_restore_path": "/work/runs/f84b3524-659a-4b86-83b4-7deb5b7c59a6/sbe",
+    "native_lifecycle_status": "AWAITING_SPEND_AUTHORIZATION"
+  },
+  "current_job": {
+    "job_id": "85afa810-d7d6-45fb-8c7a-dc7ddbe0fdc8",
+    "stage": "sbe-authoring",
+    "state": "retry_wait",
+    "attempt_count": 13,
+    "max_attempts": 64,
+    "failure_classification": "transient_dependency",
+    "failure_reason_code": "sbe.dependency.command_failed",
+    "failure_exception_type": "CalledProcessError",
+    "updated_at": "2026-08-30T04:25:58.855618Z"
+  },
+  "affected_paid_action": {
+    "paid_action_id": "ea262c45-c5af-4062-83e4-0ddc61f7f8e5",
+    "action_key": "13f734cb1fe103a0425789f2e8407deac649d7fc5fa669855246ad7b5905d153:66",
+    "native_action_id": "paid_fb28a0c3a7e2a44743d65b8d",
+    "category": "creative_retry",
+    "authoritative_state": "authorized",
+    "maximum_authorized_usd": "1.602220",
+    "immutable_binding_sha256": "b6cb9ca6abb4ac13bdd994bf30a826ac693504364bb629adc229e2bf4a876b7d",
+    "provider_operation_id": null,
+    "reported_cost_usd": null,
+    "reconciled_cost_usd": null,
+    "external_authority_admission_id": null,
+    "external_authority_v2_admission_id": null,
+    "created_at": "2026-08-30T04:15:03.827783Z",
+    "updated_at": "2026-08-30T04:15:03.827783Z"
+  },
+  "narrow_api_handoff_and_intake_evidence": {
+    "direct_admission_join_for_affected_action": {
+      "ordinary_admission": null,
+      "v2_admission": null,
+      "note": "The affected action has no direct admission foreign key."
+    },
+    "run_scoped_v2_admission_not_for_affected_action": {
+      "admission_id": "93538d98-68ed-4b5a-9b7c-fef90b86cdb1",
+      "awaiting_grant_id": "9c88a29e-b530-4558-8562-e49b1ae3387e",
+      "request_kind": "ordinary_action_set",
+      "action_count": 1,
+      "ordered_action_ids": ["paid_258bd9d47d23c08a15a11256"],
+      "contains_affected_action": false,
+      "external_authority_request_sha256": "776121f658d06dce4508350a7e773047d850bdd12a238714311c812cf76b43b4",
+      "external_authority_grant_sha256": "7125ff48d35dec315ef7ca0353c02c79f1ab6ec6f25e4b9065e82fd4eaa3f926",
+      "created_at": "2026-08-30T04:10:49.436131Z"
+    },
+    "provider_operation_rows_for_affected_paid_action": [],
+    "native_execution_receipts_after_affected_action_created": [],
+    "absence_scope": "These empty collections are the results of exact read-only joins for this run/action as of 2026-08-30T04:25:58Z. They do not establish that the native workspace lacks either provider identity."
+  },
+  "native_log_correlation_only": {
+    "first_provider_identity": "resp_0a83dca212896636006a93ae4a599087d0ae269439ce29c1d8",
+    "second_provider_identity": "resp_00ecec3e2a02b87b006a93aed2cb2887d0912ecce39fcef0a4",
+    "note": "These identities are non-authoritative structured SBE log evidence. Neither is selected as canonical by this packet."
+  },
+  "access_constraints": {
+    "allowed_initial_remote_operations": ["one exact HEAD", "one exact streaming GET after matching HEAD"],
+    "forbidden": ["R2 LIST", "writes", "deletes", "copies", "provider access", "run mutation", "worker resume"],
+    "secrets_included": false,
+    "signed_urls_included": false
+  },
+  "source": {
+    "authority": "Render QA PostgreSQL, read-only render psql queries",
+    "queried_at": "2026-08-30T04:25:58Z",
+    "query_scope": "exact API run, active SBE checkpoint, affected action, direct admission joins, provider-operation rows, and post-action native-execution receipts"
+  }
+}

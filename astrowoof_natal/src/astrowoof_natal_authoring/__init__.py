@@ -134,6 +134,21 @@ from .retry_lineage_qa import (  # noqa: E402
     run_retry_lineage_qualification,
     validate_retry_lineage_qualification,
 )
+from .generic_dispatch_refusal import (  # noqa: E402
+    build_generic_provider_dispatch_refusal,
+    read_generic_provider_dispatch_refusal_schema,
+    validate_generic_provider_dispatch_refusal,
+)
+from .duplicate_submission_fence_fixtures import (  # noqa: E402
+    read_duplicate_submission_fence_fixtures,
+    read_duplicate_submission_fence_fixtures_schema,
+    validate_duplicate_submission_fence_fixtures,
+)
+from .duplicate_submission_fence_qa import (  # noqa: E402
+    read_duplicate_submission_fence_qualification_schema,
+    run_duplicate_submission_fence_qualification,
+    validate_duplicate_submission_fence_qualification,
+)
 from .adversarial_trace import (  # noqa: E402
     FIXTURE_NAMES as ADVERSARIAL_TRACE_FIXTURE_NAMES,
     SCHEMA_VERSION as ADVERSARIAL_TRACE_SCHEMA_VERSION,
@@ -434,6 +449,15 @@ __all__ = [
     "read_retry_lineage_qualification_schema",
     "run_retry_lineage_qualification",
     "validate_retry_lineage_qualification",
+    "build_generic_provider_dispatch_refusal",
+    "read_generic_provider_dispatch_refusal_schema",
+    "validate_generic_provider_dispatch_refusal",
+    "read_duplicate_submission_fence_fixtures",
+    "read_duplicate_submission_fence_fixtures_schema",
+    "validate_duplicate_submission_fence_fixtures",
+    "read_duplicate_submission_fence_qualification_schema",
+    "run_duplicate_submission_fence_qualification",
+    "validate_duplicate_submission_fence_qualification",
     "build_external_authority_request",
     "build_external_authority_refusal",
     "read_external_authority_request",

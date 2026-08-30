@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.duplicate_submission_fence_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "package", "fixture_bundle_sha256", "fixture_bundle_schema_sha256", "qualification_schema_sha256", "assertions", "external_network_call_count", "provider_create_count", "provider_retrieval_count", "provider_spend_usd"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.duplicate_submission_fence_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {"type": "object", "additionalProperties": false, "required": ["name", "version"], "properties": {"name": {"const": "astrowoof-natal-authoring"}, "version": {"type": "string", "minLength": 1}}},
+    "fixture_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixture_bundle_schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "qualification_schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assertions": {"type": "object", "additionalProperties": false, "required": ["generic_refusal_requires_fresh_inspection", "generic_refusal_proves_no_provider_attempt", "contradiction_publication_is_sealed", "contradiction_exits_review_required", "provider_custody_is_retained", "new_provider_create_is_forbidden"], "properties": {"generic_refusal_requires_fresh_inspection": {"const": true}, "generic_refusal_proves_no_provider_attempt": {"const": true}, "contradiction_publication_is_sealed": {"const": true}, "contradiction_exits_review_required": {"const": true}, "provider_custody_is_retained": {"const": true}, "new_provider_create_is_forbidden": {"const": true}}},
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 0},
+    "provider_retrieval_count": {"const": 0},
+    "provider_spend_usd": {"const": 0}
+  }
+}

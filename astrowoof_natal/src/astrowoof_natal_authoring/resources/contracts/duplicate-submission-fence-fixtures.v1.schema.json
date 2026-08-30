@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.duplicate_submission_fence_fixtures.v1",
+  "title": "AstroWoof duplicate-submission fence consumer fixtures v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generic_provider_dispatch_refusal", "local_work_progress_contradiction", "bundle_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.duplicate_submission_fence_fixtures.v1"},
+    "generic_provider_dispatch_refusal": {"type": "object"},
+    "local_work_progress_contradiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command_result", "native_result", "publication_receipt"],
+      "properties": {
+        "command_result": {"type": "object"},
+        "native_result": {"type": "object"},
+        "publication_receipt": {"type": "object"}
+      }
+    },
+    "bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

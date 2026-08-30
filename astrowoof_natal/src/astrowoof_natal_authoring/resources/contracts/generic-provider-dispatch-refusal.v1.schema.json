@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.generic_provider_dispatch_refusal.v1",
+  "type": "object",
+  "required": ["schema_version", "result_sha256", "outcome", "reason_code", "provider_io_disposition", "new_provider_create_permitted", "run_id", "checkpoint_basis_sha256", "ordered_action_ids", "state_revision", "snapshot_sha256", "next_step"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.generic_provider_dispatch_refusal.v1"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "outcome": {"const": "pre_provider_refusal"},
+    "reason_code": {"const": "external_authority_v2_dispatch_required"},
+    "provider_io_disposition": {"const": "not_attempted"},
+    "new_provider_create_permitted": {"const": false},
+    "run_id": {"type": "string", "minLength": 1},
+    "checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "ordered_action_ids": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}},
+    "state_revision": {"type": "integer", "minimum": 0},
+    "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "next_step": {"const": "fresh_lifecycle_inspection"}
+  },
+  "additionalProperties": false
+}

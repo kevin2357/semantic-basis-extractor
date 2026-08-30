@@ -17,26 +17,33 @@ policy bundle.
 
 Use bounded sprint slices with explicit gates:
 
-1. **Package and dependency audit.** Inventory modules, entry points, package
+1. **Freeze the fresh release identity before expensive testing.** Select an
+   unreleased version, update `pyproject.toml`, and refresh every deterministic
+   fixture, manifest, receipt, expected wheel name, and handoff field whose
+   content identity includes the distribution version. Run the focused
+   release-identity/packaged-fixture tests first. The full suite MUST NOT begin
+   while the candidate still carries an already-published version or while a
+   version-bound fixture still expects the previous release.
+2. **Package and dependency audit.** Inventory modules, entry points, package
    data, subprocesses, external contracts, compatibility shims, and generated
    material that must remain excluded.
-2. **Installable package boundary.** Build and install outside the checkout;
+3. **Installable package boundary.** Build and install outside the checkout;
    resolve resources through the package; exercise every supported CLI.
-3. **Stable contracts.** Version input, parameters, authoring profile,
+4. **Stable contracts.** Version input, parameters, authoring profile,
    operator/public state, provenance, and delivery behavior before publication.
-4. **Provenance.** Hash normalized inputs, packaged resources, final artifacts,
+5. **Provenance.** Hash normalized inputs, packaged resources, final artifacts,
    QA, and delivery; copy upstream declarations only when present.
-5. **Packaged deterministic QA.** Run `astrowoof-release-smoke
+6. **Packaged deterministic QA.** Run `astrowoof-release-smoke
    --require-installed` from outside the source tree and exercise retry, resume,
    assembly, delivery integrity, and cleanup.
-6. **Adversarial lifecycle qualification.** For lifecycle, provider-custody, or
+7. **Adversarial lifecycle qualification.** For lifecycle, provider-custody, or
    authority changes, run the installed provider-free adversarial qualification.
    If API translation, leases, capacity, or scheduling are affected, require the
    API joined campaign against the same candidate and catalog.
-7. **Controlled live candidate.** Use a known subject and real provider only
+8. **Controlled live candidate.** Use a known subject and real provider only
    after deterministic gates pass. Record attempts, usage, cost, QA, and any
    defect found.
-8. **Reproducibility and publication.** Build twice with controlled timestamps,
+9. **Reproducibility and publication.** Build twice with controlled timestamps,
    require byte-identical wheels, produce checksums and handoff documents, tag
    the qualified commit, publish assets, download them again, and reverify.
 

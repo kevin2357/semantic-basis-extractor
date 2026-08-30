@@ -73,6 +73,7 @@ CAUSE_CODES = {
     "run_cancelled_before_submission", "ambiguous_provider_submission",
     "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence",
     "operator_retired",
+    "local_work_progress_contradiction",
 }
 COST_DISPOSITIONS = {
     "provider_usage_reported",

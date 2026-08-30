@@ -1,0 +1,23 @@
+{
+  "assertions": {
+    "contradiction_exits_review_required": true,
+    "contradiction_publication_is_sealed": true,
+    "generic_refusal_proves_no_provider_attempt": true,
+    "generic_refusal_requires_fresh_inspection": true,
+    "new_provider_create_is_forbidden": true,
+    "provider_custody_is_retained": true
+  },
+  "external_network_call_count": 0,
+  "fixture_bundle_schema_sha256": "8c1c9341594b295f99e3f360964f74f91fe9eafee3bb09bca7382be786c5dbd3",
+  "fixture_bundle_sha256": "5382bd768a38cc3eeb2aafa092c3407c276932d479012c8deddc5a32f8cd9955",
+  "package": {"name": "astrowoof-natal-authoring", "version": "0.4.30"},
+  "provider_create_count": 0,
+  "provider_free": true,
+  "provider_retrieval_count": 0,
+  "provider_spend_usd": 0,
+  "qualification_only": true,
+  "qualification_schema_sha256": "b65cd29e3e3b341768b85fcb664b0af263055f888bbc62234d528a2f195e0ceb",
+  "receipt_sha256": "56ef9c75a84c079c140b21cc66074c0a036b0e10d1d9723fbaca3a6d4e645547",
+  "schema_version": "astrowoof.duplicate_submission_fence_qualification.v1",
+  "status": "pass"
+}

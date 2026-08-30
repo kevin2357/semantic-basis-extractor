@@ -9,7 +9,7 @@ import json
 import logging
 from pathlib import Path
 import re
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from .temporal_lifecycle import (
     build_lifecycle_inspection_v06,
@@ -37,6 +37,14 @@ PAID_STAGES = frozenset({
 })
 
 logger = logging.getLogger(__name__)
+
+
+class LocalWorkProgressContradiction(ValueError):
+    """Advertised local work survived the command's purported consumption."""
+
+    def __init__(self, message: str, *, sealed: dict[str, Any] | None = None):
+        super().__init__(message)
+        self.sealed = sealed
 
 _INVENTORY_KEYS = frozenset({
     "schema_version", "run_id", "state_revision", "snapshot_sha256",
@@ -367,6 +375,7 @@ def inspect_post_fan_in_lifecycle(
 def commit_local_work_progress(
     run_dir: Path | str, *, prior: Mapping[str, Any], observed_at: str,
     event_emitter: Any | None = None,
+    contradiction_publisher: Callable[[], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Seal consumed semantic work after the command changed native truth."""
     from .closure import load_json, save_state, validate_workspace_snapshot
@@ -406,7 +415,14 @@ def commit_local_work_progress(
                 "local_work_progress_refused reason=semantic_work_not_consumed "
                 "operation_count=%s", len(old_keys),
             )
-            raise ValueError("ordinary_resume did not consume advertised local work")
+            sealed = (
+                contradiction_publisher()
+                if contradiction_publisher is not None else None
+            )
+            raise LocalWorkProgressContradiction(
+                "ordinary_resume did not consume advertised local work",
+                sealed=sealed,
+            )
         for operation_key in old_keys:
             if operation_key not in history:
                 history.append(operation_key)

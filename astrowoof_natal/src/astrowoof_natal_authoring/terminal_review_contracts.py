@@ -39,6 +39,7 @@ _REVIEW_CAUSES = frozenset({
     "provider_identity_conflict", "ambiguous_provider_submission",
     "snapshot_or_journal_invalid",
     "native_lifecycle_review_required",
+    "local_work_progress_contradiction",
 })
 
 
