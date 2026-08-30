@@ -5,10 +5,13 @@
 - Version: `0.4.31`
 - Dependency: `semantic-projection-core==0.11.1`
 - Wheel: `astrowoof_natal_authoring-0.4.31-py3-none-any.whl`
-- Size: 1,111,585 bytes
-- SHA-256: `bfba2bd71624990644cbb693e98cafd54c18dedb9109283d819053624edff282`
+- Size: 1,111,586 bytes
+- SHA-256: `6bb587c9cd5cd0ef8bf767a677450fbaf7fcd9bf3be655ef68584e279a03f0d9`
+- Artifact source commit: `3709f18d1b8c15c6030173868e175110a7894c51`
 
-Two controlled builds produced byte-identical wheel bytes.
+Two controlled post-commit builds produced byte-identical wheel bytes. The later
+release/evidence-lock commit contains only release records and is intentionally
+distinct from the artifact source commit above.
 
 ## Scope
 

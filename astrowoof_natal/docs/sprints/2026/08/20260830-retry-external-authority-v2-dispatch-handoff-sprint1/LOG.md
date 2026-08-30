@@ -185,6 +185,17 @@ Release-shaped `0.4.31` qualification is active. No full suite has started yet.
 
 ## Current gate
 
-Candidate `0.4.31` is release-shaped and paused for final approval. The release
-record deliberately does not describe the once-run full suite as wholly green;
-the single mechanical fixture failure and its focused correction are retained.
+Candidate `0.4.31` received final owner/API approval. Artifact source was committed
+and pushed as `3709f18d1b8c15c6030173868e175110a7894c51`. Removing trailing blank lines
+to satisfy the staged diff gate changed packaged bytes after the pre-commit build,
+so the committed source was rebuilt twice and requalified rather than publishing
+the earlier candidate hash. Both committed-source wheels are byte-identical at
+SHA-256 `6bb587c9cd5cd0ef8bf767a677450fbaf7fcd9bf3be655ef68584e279a03f0d9`
+and size 1,111,586 bytes. The exact wheel passed terminal-review qualification,
+generic installed release smoke, and both availability outcomes. Its installed
+resource-set SHA-256 is
+`c5dcbbf70c3378ec16cd69b77c9d8fe4cbcac04d67bbf247853dad3a0a10cb3d`.
+
+The release/evidence-lock commit is records-only and must be distinguished from
+artifact source commit `3709f18`. Tag and publication proceed from the lock commit,
+while the wheel provenance remains bound to `3709f18`.

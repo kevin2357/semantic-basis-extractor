@@ -164,18 +164,21 @@ Release qualification is active against the final `0.4.31` version identity.
 - Full suite, run once: 905 cases; 857 passed, 47 expected skips, one deterministic
   packaged-receipt version mismatch.
 - Corrected affected focused gate: 30 passed, two optional-schema skips.
-- Byte-identical wheel builds:
-  `bfba2bd71624990644cbb693e98cafd54c18dedb9109283d819053624edff282`.
+- Byte-identical committed-source wheel builds:
+  `6bb587c9cd5cd0ef8bf767a677450fbaf7fcd9bf3be655ef68584e279a03f0d9`.
+- Artifact source commit:
+  `3709f18d1b8c15c6030173868e175110a7894c51`.
 - Installed SBE/SPC identity: `0.4.31` / `0.11.1`.
 - Installed terminal-review receipt:
   `2f3ebfbcb6223c810e6c713ac446a04c2e0e4663a057faa8cb84540523d563be`.
 - Installed release-smoke resource set:
-  `4983a243dab2b1847cc9acbbebc6db4ba19d3a0a61eedd1d50431d139e79f5e0`.
+  `c5dcbbf70c3378ec16cd69b77c9d8fe4cbcac04d67bbf247853dad3a0a10cb3d`.
 - Installed availability CLI: `none_available` and `available` passed.
 - External provider calls, spend, retained-QA reads/writes, worker resume, and
   deployment: zero.
 
 ## Current gate
 
-Paused for final owner/API release approval. The full-suite exception is explicit
-and is not represented as a green full-suite run.
+Final owner/API release approval received. The full-suite exception remains
+explicit and is not represented as a green full-suite run. The forthcoming
+records-only release lock and tag are distinct from the artifact source commit.
