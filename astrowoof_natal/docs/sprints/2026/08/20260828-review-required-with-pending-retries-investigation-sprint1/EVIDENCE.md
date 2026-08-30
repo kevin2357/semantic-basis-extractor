@@ -1,5 +1,30 @@
 # Sprint evidence
 
+## Slice 8 final release evidence
+
+- Release version: `0.4.29`.
+- Exact artifact source commit: `f6a045b`.
+- Corrected full suite: 879 passed; 44 expected environment/opt-in skips.
+- Deterministic wheel builds: byte-identical.
+- Wheel SHA-256:
+  `25b35b74b35c65e4bce97f7050e5579d6f802aad944569954e50b7db054c2726`.
+- Installed generic release smoke: pass.
+- Installed lifecycle smoke: pass.
+- Installed retry-lineage receipt SHA-256:
+  `70c3ffc1ce9181f8cbaa2e5afdfd7d953f927d0d09bcef90ac976e19afa4d575`.
+- Installed terminal-review receipt SHA-256:
+  `9eec36cd470243fcd8acff650ac8e16ab8795d469bf202144e3d53ad7f24d8c0`.
+- Installed post-fan-in qualification: pass.
+- Installed adversarial receipt SHA-256:
+  `79eaa3dfc31d9e41fc0814a649751ad0d24df22c5b79bf47db1b24317cae3224`.
+- SPC dependency/compatibility pin: `semantic-projection-core==0.11.1`.
+- External provider/network/spend: 0/0/USD 0.
+- Retained Pippin/Duchess/R2/API access or mutation during implementation and
+  release qualification: 0.
+
+The later release-lock commit changes documentation/evidence only. The wheel is
+the exact artifact built from `f6a045b`.
+
 ## Slice 7 installed-wheel evidence
 
 - Public console command: `astrowoof-retry-lineage-qa`.

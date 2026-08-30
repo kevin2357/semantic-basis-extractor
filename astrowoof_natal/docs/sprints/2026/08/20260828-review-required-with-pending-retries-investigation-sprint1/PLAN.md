@@ -2,9 +2,10 @@
 
 ## Status
 
-Slices 0–7 complete; Voof-paws 6 approved. Slice 8 release preparation for the
-fresh `0.4.29` candidate is in progress. No provider work, retained-run mutation,
-deployment, or retained-run recovery is authorized.
+Slices 0–8 complete; Voof-paws 6 and owner release approval recorded. The fresh
+`0.4.29` candidate passed release qualification and is ready for immutable tag
+and publication. No provider work, retained-run mutation, deployment, or
+retained-run recovery is authorized.
 
 ## Objective
 
@@ -367,6 +368,8 @@ Pause before release preparation until API confirms its companion implementation
 and joint provider-free campaign consume the packaged contract correctly.
 
 ## Slice 8 — Broad regression and release preparation
+
+**Status:** complete; immutable tag/publication authorized.
 
 ### Work
 

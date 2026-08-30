@@ -1,5 +1,25 @@
 # Sprint log
 
+## 2026-08-29 — Slice 8 release qualification
+
+- Recorded API Voof-paws 6 approval and bumped the fresh candidate to `0.4.29`;
+  immutable `0.4.28` was not reused.
+- The first broad run exercised 879 tests and exposed three release-only/adjacent
+  compatibility seams: exact retry enforcement leaked into a bounded route and a
+  minimal spend fixture, while the terminal-review fixture still identified
+  `0.4.28`.
+- Narrowly corrected those three cells and reran each directly: 3 passed.
+- Reran the complete suite from corrected source: 879 passed, 44 expected skips.
+- Locked artifact source commit `f6a045b`, then produced two byte-identical wheels
+  under a fixed source epoch.
+- Installed the exact wheel in a fresh Python 3.11 environment; generic release
+  smoke, lifecycle smoke, retry-lineage, terminal-review, post-fan-in, and
+  adversarial qualifications all passed.
+
+Status: Slice 8 complete; owner/API release approval recorded. Tag and publication
+may proceed from the release-lock commit while preserving `f6a045b` as the exact
+artifact source identity.
+
 ## 2026-08-28 — Slice 7 installed-wheel surface and consumer handoff
 
 - Incorporated API Voof-paws 5 approval and its explicit interactive-only scope.
