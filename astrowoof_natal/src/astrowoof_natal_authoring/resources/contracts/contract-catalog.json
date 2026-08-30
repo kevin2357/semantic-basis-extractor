@@ -34,6 +34,7 @@
     "native_terminal_review_result": "astrowoof.native_execution_result.v0.2",
     "terminal_review_command_result": "astrowoof.terminal_review_command_result.v0.1",
     "native_result_index": "astrowoof.native_result_index.v0.1",
+    "native_transition_result_availability": "astrowoof.native_transition_result_availability.v1",
     "native_publication_receipt": "astrowoof.native_publication_receipt.v0.1",
     "native_transition_consumer_fixtures": "astrowoof.native_transition_consumer_fixtures.v0.1",
     "authoring_closeout_result": "astrowoof.authoring_closeout_result.v0.1",

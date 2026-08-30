@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/native-transition-result-availability.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "native_run_id",
+    "logical_workspace_root",
+    "workspace_snapshot_sha256",
+    "availability",
+    "result_count",
+    "latest_result_id",
+    "result_index_sha256",
+    "availability_document_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.native_transition_result_availability.v1"},
+    "native_run_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "logical_workspace_root": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "workspace_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "availability": {"enum": ["none_available", "available"]},
+    "result_count": {"type": "integer", "minimum": 0, "maximum": 512},
+    "latest_result_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"}
+      ]
+    },
+    "result_index_sha256": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "availability_document_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"availability": {"const": "none_available"}}},
+      "then": {
+        "properties": {
+          "result_count": {"const": 0},
+          "latest_result_id": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"availability": {"const": "available"}}},
+      "then": {
+        "properties": {
+          "result_count": {"type": "integer", "minimum": 1, "maximum": 512},
+          "latest_result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+          "result_index_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  ]
+}

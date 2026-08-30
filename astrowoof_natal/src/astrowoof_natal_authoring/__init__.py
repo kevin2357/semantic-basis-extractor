@@ -24,6 +24,13 @@ from .native_transitions import (  # noqa: E402
     validate_native_publication_receipt,
     validate_transition_journal,
 )
+from .native_transition_availability import (  # noqa: E402
+    NativeTransitionAvailabilityError,
+    NativeTransitionAvailabilityView,
+    read_native_transition_result_availability,
+    read_native_transition_result_availability_schema,
+    validate_native_transition_result_availability,
+)
 from .route_parity import (  # noqa: E402
     read_bounded_route_parity_traces,
     read_route_parity_oracle,
@@ -360,6 +367,8 @@ __all__ = [
     "read_adversarial_consumer_catalog",
     "validate_adversarial_consumer_catalog",
     "NativeTransitionResultView",
+    "NativeTransitionAvailabilityError",
+    "NativeTransitionAvailabilityView",
     "ProviderReconciliationAdapters",
     "InitialWaveError",
     "__version__",
@@ -372,7 +381,10 @@ __all__ = [
     "read_initial_wave_authority_inputs",
     "read_initial_wave_schema",
     "read_native_transition_result",
+    "read_native_transition_result_availability",
+    "read_native_transition_result_availability_schema",
     "validate_native_publication_receipt",
+    "validate_native_transition_result_availability",
     "read_bounded_route_parity_traces",
     "read_route_parity_oracle",
     "read_deployed_qa_schema",

@@ -1,0 +1,90 @@
+{
+  "packet_schema_version": "astrowoof.api_retained_checkpoint_coordinate_packet.v0.1",
+  "purpose": "exact two-object read-only SBE Slice 0 inspection",
+  "authorization_scope": {
+    "allowed_operations_per_object": [
+      "HEAD",
+      "GET"
+    ],
+    "forbidden_operations": [
+      "list",
+      "prefix_discovery",
+      "write",
+      "copy",
+      "restore_in_place",
+      "repair",
+      "delete",
+      "provider_access",
+      "retained_run_mutation"
+    ],
+    "credentials_or_signed_urls_included": false
+  },
+  "storage": {
+    "environment": "qa",
+    "namespace": "checkpoint",
+    "protection_class": "protected-operator",
+    "r2_key_rule": "v1/checkpoint/{storage_object_uuid_without_hyphens}"
+  },
+  "checkpoints": [
+    {
+      "label": "Diffie",
+      "api_run_id": "9cbc3c0c-9a5f-42ff-8fc0-cc23f08b75df",
+      "native_run_id": "ee69cb149c4e533ff9e1341355ef2ce13246a5e8a2617b387da903ecfd58fa60",
+      "checkpoint_id": "3f71f000-c46f-4a00-866b-334410a7f3e4",
+      "job_id": "2b70d6de-baa2-4eb1-89d0-c77ccdf93333",
+      "attempt_id": "60bb7fb6-4271-48c0-aa85-5b0902cc4d77",
+      "active_generation": 8,
+      "checkpoint_state": "active",
+      "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+      "compatibility_identity": "astrowoof.qa.sbe0430-duplicate-submission-fence.v1",
+      "native_lifecycle_status": "bounded-detached_provider_pending",
+      "storage_object_uuid": "b45379c6-1427-4b49-a660-0d8c3a1a90aa",
+      "r2_object_key": "v1/checkpoint/b45379c614274b49a6600d8c3a1a90aa",
+      "archive_byte_size": 3603994,
+      "archive_sha256": "6f01b862011090b7ad0e20bef91c1c0295cbf4e4dd728e97498be6bbc06ba6bb",
+      "inventory_sha256": "c1e9d8178f9c7cd67c003cb77fcfa7083a306270db16d4c6078011318edd8079",
+      "provider_version_or_etag": "339ab7cc6d9dc129766333e5875cc71d",
+      "logical_restore_path": "/work/runs/9cbc3c0c-9a5f-42ff-8fc0-cc23f08b75df/sbe",
+      "checkpoint_published_at": "2026-08-30T08:54:58.326988Z",
+      "lifecycle_basis_record_id": "f57cf249-59dc-446f-bb4c-35dffc20ac37",
+      "lifecycle_inspection_schema": "astrowoof.authoring_lifecycle_inspection.v0.6",
+      "lifecycle_operator_state_revision": 61,
+      "snapshot_sha256": "19e3bb83c9c279046abea4bf1a6da96dd12e7a47a800da303a29917bddc5caaa",
+      "checkpoint_basis_sha256": "27bbdd780d0839f981c75b791a3dec3c7a4786b7ad45ae49ed24416ebb253e7f",
+      "lifecycle_basis_recorded_at": "2026-08-30T08:55:01.035699Z",
+      "sbe_release": "0.4.30",
+      "sbe_worker_image_digest": "sha256:79ec43ba5b9d6a2c92f80e28b6e3dd7f031f8874db5486bb164a658138923e43",
+      "provider_mechanism": "openai.responses.background"
+    },
+    {
+      "label": "Hellman",
+      "api_run_id": "bababdec-3f3d-4315-8dfc-e70c46dd6288",
+      "native_run_id": "856e9c41085e954a964edc2963d2de64ccafbedfee81c5805a779abee2faf550",
+      "checkpoint_id": "a2b3550c-312f-42aa-a4a0-61a5bd4ed694",
+      "job_id": "fd4e0556-5b26-41c8-919f-5399a5e550bf",
+      "attempt_id": "9c49997d-836a-4c98-905c-15bde929b53b",
+      "active_generation": 11,
+      "checkpoint_state": "active",
+      "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+      "compatibility_identity": "astrowoof.qa.sbe0430-duplicate-submission-fence.v1",
+      "native_lifecycle_status": "AWAITING_SPEND_AUTHORIZATION",
+      "storage_object_uuid": "6c2dd3f6-1391-44fa-ae60-c9800ecdb118",
+      "r2_object_key": "v1/checkpoint/6c2dd3f6139144faae60c9800ecdb118",
+      "archive_byte_size": 3931685,
+      "archive_sha256": "134cc51563a43b8f9dc1b08ba86bd9598461624a2975e45487f30251bf813ca6",
+      "inventory_sha256": "32723fee92b955259a4c351ea8b18ed59e5f55a854ea290abe987b8fe864eef7",
+      "provider_version_or_etag": "13413927714171b82bba25da72899e5c",
+      "logical_restore_path": "/work/runs/bababdec-3f3d-4315-8dfc-e70c46dd6288/sbe",
+      "checkpoint_published_at": "2026-08-30T08:59:24.141461Z",
+      "lifecycle_basis_record_id": "57eb8f45-b54c-4122-bd2b-8edeb57562cf",
+      "lifecycle_inspection_schema": "astrowoof.authoring_lifecycle_inspection.v0.6",
+      "lifecycle_operator_state_revision": 67,
+      "snapshot_sha256": "88ae93a90fdd634232dc79f1ac4da4cfb4e2029fe757e493579b89b707392d7f",
+      "checkpoint_basis_sha256": "ec3eee146d94a27729935a1063505f9f8cd88d431875dc6bc47a89367e1df3eb",
+      "lifecycle_basis_recorded_at": "2026-08-30T09:00:47.002886Z",
+      "sbe_release": "0.4.30",
+      "sbe_worker_image_digest": "sha256:79ec43ba5b9d6a2c92f80e28b6e3dd7f031f8874db5486bb164a658138923e43",
+      "provider_mechanism": "openai.responses.background"
+    }
+  ]
+}

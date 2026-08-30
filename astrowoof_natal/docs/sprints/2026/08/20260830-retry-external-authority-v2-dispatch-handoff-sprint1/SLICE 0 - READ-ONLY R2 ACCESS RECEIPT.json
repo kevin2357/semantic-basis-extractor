@@ -1,0 +1,70 @@
+{
+  "schema_version": "astrowoof.sbe_slice0_read_only_access_receipt.v0.1",
+  "coordinate_packet_sha256": "7071e19780a1bfa88f9789764a1d79e63b2a7ef3160881b3a830f1030fba26a5",
+  "authorization": "owner-approved exact two-object read-only inspection",
+  "accessed_objects": [
+    {
+      "label": "Diffie",
+      "native_run_id": "ee69cb149c4e533ff9e1341355ef2ce13246a5e8a2617b387da903ecfd58fa60",
+      "r2_object_key": "v1/checkpoint/b45379c614274b49a6600d8c3a1a90aa",
+      "head_count": 1,
+      "get_count": 1,
+      "head_content_length": 3603994,
+      "head_etag": "339ab7cc6d9dc129766333e5875cc71d",
+      "archive_sha256": "6f01b862011090b7ad0e20bef91c1c0295cbf4e4dd728e97498be6bbc06ba6bb",
+      "archive_generation": 8,
+      "archive_inventory_sha256": "c1e9d8178f9c7cd67c003cb77fcfa7083a306270db16d4c6078011318edd8079",
+      "archive_inventory_member_count": 720,
+      "validated_member_count": 720,
+      "snapshot_sha256": "19e3bb83c9c279046abea4bf1a6da96dd12e7a47a800da303a29917bddc5caaa",
+      "snapshot_member_count": 696,
+      "native_logical_workspace_root": "/work/runs/workspace-5acebd85-8a39-4b65-8476-527a768ff8e9/sbe"
+    },
+    {
+      "label": "Hellman",
+      "native_run_id": "856e9c41085e954a964edc2963d2de64ccafbedfee81c5805a779abee2faf550",
+      "r2_object_key": "v1/checkpoint/6c2dd3f6139144faae60c9800ecdb118",
+      "head_count": 1,
+      "get_count": 1,
+      "head_content_length": 3931685,
+      "head_etag": "13413927714171b82bba25da72899e5c",
+      "archive_sha256": "134cc51563a43b8f9dc1b08ba86bd9598461624a2975e45487f30251bf813ca6",
+      "archive_generation": 11,
+      "archive_inventory_sha256": "32723fee92b955259a4c351ea8b18ed59e5f55a854ea290abe987b8fe864eef7",
+      "archive_inventory_member_count": 764,
+      "validated_member_count": 764,
+      "snapshot_sha256": "88ae93a90fdd634232dc79f1ac4da4cfb4e2029fe757e493579b89b707392d7f",
+      "snapshot_member_count": 731,
+      "native_logical_workspace_root": "/work/runs/workspace-3e22df9c-47e9-452f-a4ac-2a5f898bfa6a/sbe"
+    }
+  ],
+  "validation": {
+    "archive_hashes_match": true,
+    "etags_match": true,
+    "archive_inventories_match": true,
+    "all_declared_member_hashes_match": true,
+    "workspace_snapshot_member_paths_and_hashes_match": true,
+    "native_run_and_snapshot_logical_roots_match": true,
+    "windows_relocation_changed_only_case_sensitive_path_collation_order": true,
+    "prompt_or_authored_content_interpreted_count": 0
+  },
+  "operation_counts": {
+    "r2_head": 2,
+    "r2_get": 2,
+    "r2_list": 0,
+    "r2_write": 0,
+    "provider_operations": 0,
+    "retained_workspace_mutations": 0,
+    "recovery_or_resume_commands": 0
+  },
+  "temporary_protected_bytes_removed_after_validation": true,
+  "supporting_local_evidence_sha256": {
+    "raw_access_metadata": "0493c93869f93d10125380a8b1d565076de27c874009f7765fca36a54564718b",
+    "archive_validation_report": "97a65824ea612c2b9e7f69fb9d713e6f5c6d22b5e9bd2f5d61222d979927cf59",
+    "sanitized_relocated_projection": "55beae8262d551cb7c708546b82a519fede252b5b5d08b6fd3967887ee6a0eb3"
+  },
+  "notes": [
+    "The coordinate packet logical_restore_path values name API-facing run paths and do not equal the authoritative native workspace_contract roots embedded in these archives.",
+    "No stable-path-dependent public result was exposed as authoritative from the Windows relocation; content-addressed result, receipt, snapshot and journal joins were validated independently."
+  ]
+}

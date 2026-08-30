@@ -1,0 +1,129 @@
+{
+  "schema_version": "astrowoof.retry_v2_handoff_slice0_timeline.v0.1",
+  "coordinate_packet_sha256": "7071e19780a1bfa88f9789764a1d79e63b2a7ef3160881b3a830f1030fba26a5",
+  "runs": [
+    {
+      "label": "Diffie",
+      "native_run_id": "ee69cb149c4e533ff9e1341355ef2ce13246a5e8a2617b387da903ecfd58fa60",
+      "checkpoint_generation": 8,
+      "checkpoint_published_at": "2026-08-30T08:54:58.326988Z",
+      "native_state_revision": 61,
+      "native_status": "AUTHORING",
+      "creative_retry_actions": [
+        {
+          "action_id": "paid_499f3df525ee7c3f1493089a",
+          "route": "dog-edcc61fa-42ae-4c38-893c-3d4d35cdf461_6:attempt-002",
+          "native_state": "WAITING",
+          "provider_identity_present": true,
+          "native_reconciliation_outcome": "pending",
+          "resume_not_before": "2026-08-30T08:55:24Z",
+          "reported_present": false
+        },
+        {
+          "action_id": "paid_ec216fb31076e8de0ea30f6a",
+          "route": "dog-edcc61fa-42ae-4c38-893c-3d4d35cdf461_4:attempt-002",
+          "native_state": "WAITING",
+          "provider_identity_present": true,
+          "native_reconciliation_outcome": "pending",
+          "resume_not_before": "2026-08-30T08:55:24Z",
+          "reported_present": false
+        }
+      ],
+      "latest_sealed_result": {
+        "result_id": "nres_218114a64a7d0f1221c948f1",
+        "published_at": "2026-08-30T08:54:54Z",
+        "command_kind": "provider_reconciliation",
+        "outcome": "provider_pending",
+        "cause_code": "provider_operation_pending"
+      },
+      "retained_checkpoint_lifecycle": {
+        "selected_command": "provider_reconciliation_cycle",
+        "reason_code": "provider_reconciliation_not_due",
+        "capacity_disposition": "release_until_due",
+        "eligible_now": false,
+        "provider_action_count": 2,
+        "external_authority_action_count": 0,
+        "review_reason_count": 0
+      },
+      "later_api_observation": {
+        "observed_at": "2026-08-30T08:56:52Z",
+        "outcome": "failed",
+        "reason": "SBE ordinary resume branch evidence is incomplete",
+        "proven_inside_retained_checkpoint": false
+      },
+      "causal_conclusion": "The active checkpoint is coherent provider-pending/not-due native evidence. It predates the API failure and contains no retrieved completion or later ordinary-resume document. Diffie's exact rejected lifecycle document or later scratch evidence is still required."
+    },
+    {
+      "label": "Hellman",
+      "native_run_id": "856e9c41085e954a964edc2963d2de64ccafbedfee81c5805a779abee2faf550",
+      "checkpoint_generation": 11,
+      "checkpoint_published_at": "2026-08-30T08:59:24.141461Z",
+      "native_state_revision": 67,
+      "native_status": "AWAITING_SPEND_AUTHORIZATION",
+      "creative_retry_actions": [
+        {
+          "action_id": "paid_886d1daeeb7012b40a6fcae3",
+          "route": "dog-a54a0278-e1fc-494d-9944-ccac6bd4c7d6_6:attempt-002",
+          "native_action_state": "WAITING",
+          "pass_attempt_state": "AMBIGUOUS_PROVIDER_SUBMISSION",
+          "provider_identity_present": true,
+          "native_reconciliation_outcome": "completed",
+          "consumption_present": true,
+          "reported_present": false
+        },
+        {
+          "action_id": "paid_bfce7b3ea385abe55a5045d1",
+          "route": "dog-a54a0278-e1fc-494d-9944-ccac6bd4c7d6_6:attempt-003",
+          "native_action_state": "PREPARED",
+          "pass_attempt_state": "AWAITING_SPEND_AUTHORIZATION",
+          "provider_identity_present": false,
+          "consumption_present": false,
+          "reported_present": false
+        }
+      ],
+      "sealed_review_result": {
+        "result_id": "nres_1087eba75d3c29aba23193d5",
+        "result_sha256": "1087eba75d3c29aba23193d525c3d1d58e30936b896ddf3de9172980490b338e",
+        "receipt_id": "nreceipt_f367d82b9a92c868399d9d17",
+        "receipt_sha256": "f367d82b9a92c868399d9d17624e371f69f5d719239bbf02b448da44abd7c2ce",
+        "published_at": "2026-08-30T08:58:46.712710+00:00",
+        "command_kind": "ordinary_authoring",
+        "outcome": "review_required",
+        "cause_code": "local_work_progress_contradiction",
+        "new_provider_create_permitted": false,
+        "custody_finality": "mixed_resolution_required",
+        "reconciliation_action_ids": [
+          "paid_886d1daeeb7012b40a6fcae3"
+        ],
+        "providerless_denial_action_ids": [
+          "paid_bfce7b3ea385abe55a5045d1"
+        ],
+        "snapshot_sha256": "88ae93a90fdd634232dc79f1ac4da4cfb4e2029fe757e493579b89b707392d7f",
+        "journal_start_sequence": 82,
+        "journal_end_sequence": 85,
+        "journal_range_sha256": "0154ba74e7ab574350ce14198849a0cd1442780f278e531a796f120e8aeb62ac",
+        "canonical_result_receipt_join_valid": true,
+        "journal_chain_and_range_valid": true
+      },
+      "same_checkpoint_lifecycle_projection": {
+        "lifecycle_v05_selected_command": "ordinary_resume",
+        "lifecycle_v07_selected_command": "ordinary_resume",
+        "lifecycle_v08_selected_command": "ordinary_resume",
+        "lifecycle_v07_local_operation_count": 1,
+        "lifecycle_v08_retry_lineage_status": "consistent",
+        "provider_custody_state": "completed_evidence_pending_local_work",
+        "external_authority_action_count": 0
+      },
+      "later_api_observation": {
+        "lifecycle_basis_recorded_at": "2026-08-30T09:00:47.002886Z",
+        "generic_refusal_reason": "external_authority_v2_dispatch_required",
+        "repeat_observed_at_examples": [
+          "2026-08-30T09:04:37Z",
+          "2026-08-30T09:05:34Z"
+        ],
+        "proven_inside_retained_checkpoint": false
+      },
+      "causal_conclusion": "Before the later retry loop, SBE had already sealed an immutable review-required result and receipt against this exact active snapshot. That result prohibited new provider creation and explicitly classified the provider-bound action for reconciliation and the prepared action for providerless denial. API should have ingested that terminal-review handoff before consulting the still-nonterminal lifecycle projection."
+    }
+  ]
+}

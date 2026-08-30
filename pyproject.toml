@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astrowoof-natal-authoring"
-version = "0.4.30"
+version = "0.4.31"
 description = "AstroWoof semantic-basis extraction and resumable natal-deck authoring runtime"
 readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs for implementation documentation.", content-type = "text/plain"}
 requires-python = ">=3.11"
@@ -22,6 +22,7 @@ astrowoof-lifecycle-smoke = "astrowoof_natal_authoring.lifecycle_smoke:main"
 astrowoof-admit-bounded-natal = "astrowoof_natal_authoring.cli.bounded_admit:main"
 astrowoof-run-bounded-natal = "astrowoof_natal_authoring.cli.bounded_run:main"
 astrowoof-native-transition = "astrowoof_natal_authoring.cli.native_transition:main"
+astrowoof-native-transition-availability = "astrowoof_natal_authoring.cli.native_transition_availability:main"
 astrowoof-route-parity-evidence = "astrowoof_natal_authoring.route_parity:main"
 astrowoof-initial-wave-contract = "astrowoof_natal_authoring.initial_wave_contract:main"
 astrowoof-deployed-qa = "astrowoof_natal_authoring.cli.deployed_qa:main"
