@@ -11,6 +11,20 @@ from astrowoof_natal_authoring import (
     run_terminal_review_qualification,
     validate_terminal_review_qualification,
 )
+from astrowoof_natal_authoring.terminal_review_qa import _installed_version
+
+
+def _with_fixture_release(receipt: dict, fixture_release: str) -> dict:
+    normalized = copy.deepcopy(receipt)
+    normalized["sbe_release"] = fixture_release
+    basis = {
+        key: item for key, item in normalized.items()
+        if key != "receipt_sha256"
+    }
+    normalized["receipt_sha256"] = hashlib.sha256(json.dumps(
+        basis, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+    ).encode("utf-8")).hexdigest()
+    return normalized
 
 
 class TerminalReviewQualificationTests(unittest.TestCase):
@@ -19,6 +33,7 @@ class TerminalReviewQualificationTests(unittest.TestCase):
         second = run_terminal_review_qualification()
         self.assertEqual(first, second)
         validate_terminal_review_qualification(first)
+        self.assertEqual(_installed_version(), first["sbe_release"])
         self.assertEqual(0, first["checks"]["provider_post_count"])
         self.assertEqual(1, first["checks"]["scripted_get_count"])
 
@@ -51,12 +66,17 @@ class TerminalReviewQualificationTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     validate_terminal_review_qualification(mutated)
 
-    def test_packaged_fixture_is_the_reproducible_receipt(self) -> None:
+    def test_packaged_fixture_is_the_release_normalized_receipt(self) -> None:
         resource = files("astrowoof_natal_authoring.resources").joinpath(
             "fixtures/lifecycle/terminal-review-qualification.v1.json"
         )
         fixture = json.loads(resource.read_text(encoding="utf-8"))
-        self.assertEqual(run_terminal_review_qualification(), fixture)
+        self.assertEqual(
+            _with_fixture_release(
+                run_terminal_review_qualification(), fixture["sbe_release"]
+            ),
+            fixture,
+        )
 
     def test_packaged_schema_validates_receipt_when_jsonschema_available(self) -> None:
         schema = read_terminal_review_qualification_schema()

@@ -28,8 +28,8 @@
     "successor_outcome": "review_required",
     "successor_result_valid": true
   },
-  "receipt_sha256": "f19224ac9a9c89f5f3a1e9295981d4c06b0b0b2f0e5b29333bd8dae82b1cdc06",
-  "sbe_release": "0.4.33",
+  "receipt_sha256": "b31baf9979c1e78ac6e710b96c97556025fd6647e53e5022f85dacc0bf313a09",
+  "sbe_release": "fixture-terminal-review-v1",
   "schema_version": "astrowoof.terminal_review_qualification.v1",
   "status": "pass"
 }
