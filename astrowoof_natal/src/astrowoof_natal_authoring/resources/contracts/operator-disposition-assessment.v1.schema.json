@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/operator-disposition-assessment.v1.schema.json",
+  "title": "AstroWoof operator disposition assessment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "assessment_sha256", "native_run_id", "route",
+    "compatibility", "checkpoint", "lifecycle_evidence", "terminal_evidence",
+    "native_custody_class", "custody_summary", "quarantine_posture",
+    "supported_next_actions", "reason_code", "evidence_categories",
+    "diagnostic_only", "provider_io_performed", "workspace_mutation_performed"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.operator_disposition_assessment.v1"},
+    "assessment_sha256": {"$ref": "#/$defs/sha256"},
+    "native_run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "route": {
+      "type": "object", "additionalProperties": false,
+      "required": ["family", "contract"],
+      "properties": {
+        "family": {"enum": ["exact_natal", "bounded_natal"]},
+        "contract": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    },
+    "compatibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sbe_release", "identity_sha256"],
+      "properties": {
+        "sbe_release": {"type": "string", "minLength": 1, "maxLength": 64},
+        "identity_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "checkpoint": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state_revision", "snapshot_sha256", "checkpoint_basis_sha256", "logical_workspace_root_id"],
+      "properties": {
+        "state_revision": {"type": "integer", "minimum": 0},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_workspace_root_id": {"type": "string", "pattern": "^lroot_[0-9a-f]{24}$"}
+      }
+    },
+    "lifecycle_evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "document_sha256"],
+      "properties": {
+        "schema_version": {"enum": ["astrowoof.authoring_lifecycle_inspection.v0.5", "astrowoof.authoring_lifecycle_inspection.v0.6", "astrowoof.authoring_lifecycle_inspection.v0.7", "astrowoof.authoring_lifecycle_inspection.v0.8"]},
+        "document_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "terminal_evidence": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["discovery_mode", "availability_document_sha256", "result_id", "result_sha256", "receipt_id", "receipt_sha256", "snapshot_sha256", "checkpoint_basis_sha256"],
+          "properties": {
+            "discovery_mode": {"enum": ["invocation_result", "availability_recovery"]},
+            "availability_document_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+            "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+            "result_sha256": {"$ref": "#/$defs/sha256"},
+            "receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+            "receipt_sha256": {"$ref": "#/$defs/sha256"},
+            "snapshot_sha256": {"$ref": "#/$defs/sha256"},
+            "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      ]
+    },
+    "native_custody_class": {
+      "enum": [
+        "provider_free_quiescent", "provider_pending_known_identity",
+        "completed_unadopted", "native_local_work_ready",
+        "providerless_authority", "submission_ambiguous", "sealed_terminal",
+        "unsupported_or_inconsistent"
+      ]
+    },
+    "custody_summary": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "provider_identity_count", "completed_unadopted_count",
+        "ambiguous_submission_count", "local_operation_count",
+        "providerless_authority_count", "retry_lineage_conflict",
+        "sealed_result_count", "provider_operation_refs",
+        "provider_operation_refs_overflow"
+      ],
+      "properties": {
+        "provider_identity_count": {"type": "integer", "minimum": 0},
+        "completed_unadopted_count": {"type": "integer", "minimum": 0},
+        "ambiguous_submission_count": {"type": "integer", "minimum": 0},
+        "local_operation_count": {"type": "integer", "minimum": 0},
+        "providerless_authority_count": {"type": "integer", "minimum": 0},
+        "retry_lineage_conflict": {"type": "boolean"},
+        "sealed_result_count": {"type": "integer", "minimum": 0, "maximum": 1},
+        "provider_operation_refs": {
+          "type": "array", "maxItems": 32, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}
+        },
+        "provider_operation_refs_overflow": {"type": "boolean"}
+      }
+    },
+    "quarantine_posture": {"enum": ["permitted", "prohibited", "native_prior_action_required"]},
+    "supported_next_actions": {
+      "type": "array", "maxItems": 32, "uniqueItems": true,
+      "items": {
+        "enum": [
+          "provider_reconciliation_cycle", "ordinary_resume",
+          "external_authority_v1", "external_authority_v2",
+          "providerless_denial", "terminal_result_ingress",
+          "operator_retirement_assessment", "operator_review",
+          "fresh_disposition_assessment"
+        ]
+      }
+    },
+    "reason_code": {
+      "enum": [
+        "provider_free_quiescent", "known_provider_operation_pending",
+        "completed_provider_evidence_requires_adoption", "native_local_work_ready",
+        "providerless_authority_requires_named_action",
+        "provider_submission_ambiguous", "sealed_terminal_result_available",
+        "unsupported_or_inconsistent_evidence"
+      ]
+    },
+    "evidence_categories": {
+      "type": "array", "maxItems": 32, "uniqueItems": true,
+      "items": {"enum": ["contradictory_evidence", "external_authority_unjoinable", "identity_join_failed", "local_work_inventory_unavailable", "provider_custody_unjoinable", "retry_lineage_conflict", "snapshot_invalid", "terminal_evidence_unjoinable", "unknown_lifecycle_schema", "unsupported_provider_mechanism", "unsupported_route", "writer_exclusivity_unestablished"]}
+    },
+    "diagnostic_only": {"const": true},
+    "provider_io_performed": {"const": false},
+    "workspace_mutation_performed": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

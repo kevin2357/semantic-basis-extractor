@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/operator-disposition-qualification.v1.schema.json",
+  "title": "AstroWoof operator disposition qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_sha256", "status", "qualification_only",
+    "provider_free", "package", "assessment_schema_sha256", "fixture_bundle_sha256",
+    "qualification_schema_sha256", "assertions", "external_network_call_count",
+    "provider_create_count", "provider_retrieval_count", "provider_spend_usd"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.operator_disposition_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "astrowoof-natal-authoring"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "assessment_schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixture_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "qualification_schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "public_cli_fresh_process", "assessment_schema_valid",
+        "provider_custody_classified", "reconciliation_named_without_subset",
+        "byte_identical_replay", "workspace_nonmutating",
+        "availability_recovery_default_disabled", "protected_sentinel_absent"
+      ],
+      "properties": {
+        "public_cli_fresh_process": {"const": true},
+        "assessment_schema_valid": {"const": true},
+        "provider_custody_classified": {"const": true},
+        "reconciliation_named_without_subset": {"const": true},
+        "byte_identical_replay": {"const": true},
+        "workspace_nonmutating": {"const": true},
+        "availability_recovery_default_disabled": {"const": true},
+        "protected_sentinel_absent": {"const": true}
+      }
+    },
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 0},
+    "provider_retrieval_count": {"const": 0},
+    "provider_spend_usd": {"const": 0}
+  }
+}

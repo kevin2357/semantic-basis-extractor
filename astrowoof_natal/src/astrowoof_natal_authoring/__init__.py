@@ -31,6 +31,22 @@ from .native_transition_availability import (  # noqa: E402
     read_native_transition_result_availability_schema,
     validate_native_transition_result_availability,
 )
+from .operator_disposition import (  # noqa: E402
+    build_operator_disposition_assessment,
+    logical_workspace_root_id,
+    read_operator_disposition_assessment,
+    read_operator_disposition_assessment_schema,
+    validate_operator_disposition_assessment,
+)
+from .operator_disposition_fixtures import (  # noqa: E402
+    read_operator_disposition_fixtures,
+    validate_operator_disposition_fixtures,
+)
+from .operator_disposition_qa import (  # noqa: E402
+    read_operator_disposition_qualification_schema,
+    run_operator_disposition_qualification,
+    validate_operator_disposition_qualification,
+)
 from .route_parity import (  # noqa: E402
     read_bounded_route_parity_traces,
     read_route_parity_oracle,
@@ -403,6 +419,16 @@ __all__ = [
     "read_native_transition_result",
     "read_native_transition_result_availability",
     "read_native_transition_result_availability_schema",
+    "build_operator_disposition_assessment",
+    "logical_workspace_root_id",
+    "read_operator_disposition_assessment",
+    "read_operator_disposition_assessment_schema",
+    "validate_operator_disposition_assessment",
+    "read_operator_disposition_fixtures",
+    "validate_operator_disposition_fixtures",
+    "read_operator_disposition_qualification_schema",
+    "run_operator_disposition_qualification",
+    "validate_operator_disposition_qualification",
     "validate_native_publication_receipt",
     "validate_native_transition_result_availability",
     "read_bounded_route_parity_traces",
