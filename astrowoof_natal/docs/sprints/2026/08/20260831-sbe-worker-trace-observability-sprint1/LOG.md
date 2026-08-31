@@ -64,13 +64,16 @@
 - Froze version `0.4.36` before candidate tests/builds.
 - Focused modified-boundary tests: 94 passed; two additional requested module
   names did not exist and were not counted as failures.
-- Reproducible controlled wheels matched at SHA-256
-  `85b94911d82b1dd960c19f72e78ebc4cd6828378dddc8de1bacef3c4aee35841`.
+- Reproducible pre-commit controlled wheels matched. After source commit
+  `96980ab`, the final committed-source rebuilds matched at SHA-256
+  `a76157d5342cb3b72a88b0b04fe8f3b549b8941b46d92d268182cbf934e8d826`.
 - Clean installed-wheel trace qualification passed with byte SHA-256
   `82e8aa59c681a7064164569824cefee04fb3ee7473c064b46f1fe3abd81cc7c2`
   and internal qualification digest
   `5625a9c2ea879ee4305dab90553873fc2dfd4b6dfbd44dbf9d643e437fc9cc2a`.
 - Generic installed-wheel release smoke passed.
+- The committed-source wheel reran both installed qualifications successfully;
+  its trace receipt remains byte-identical to the pre-commit qualification.
 - The minimal isolated environment reports optional `jsonschema` absent during
   `pip check`; SBE and SPC install/version/resource checks and both installed
   qualification commands passed. No dependency was downloaded from a network.

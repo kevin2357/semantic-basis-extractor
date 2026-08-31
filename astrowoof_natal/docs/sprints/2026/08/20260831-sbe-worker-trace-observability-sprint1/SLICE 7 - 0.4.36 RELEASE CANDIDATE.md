@@ -12,8 +12,9 @@ widened. Trace output remains non-authoritative and privacy bounded.
 ## Candidate identity
 
 - Version: `0.4.36`
+- Source commit: `96980ab`
 - Reproducible wheel SHA-256:
-  `85b94911d82b1dd960c19f72e78ebc4cd6828378dddc8de1bacef3c4aee35841`
+  `a76157d5342cb3b72a88b0b04fe8f3b549b8941b46d92d268182cbf934e8d826`
 - Installed trace receipt SHA-256:
   `82e8aa59c681a7064164569824cefee04fb3ee7473c064b46f1fe3abd81cc7c2`
 - Receipt qualification SHA-256:
