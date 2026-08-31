@@ -549,6 +549,23 @@ def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
         # durable provider operation first. It becomes local work only after the
         # provider evidence has been ingested into native state.
         return []
+    completed_provider_evidence = any(
+        action.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
+        and (action.get("provider") or {}).get("id")
+        and (action.get("provider_reconciliation") or {}).get("last_outcome")
+        == "completed"
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+    )
+    if completed_provider_evidence:
+        # Completed durable evidence must be adopted before a different
+        # providerless action can become the next authority boundary. Derive
+        # this from custody itself rather than trusting a possibly stale outer
+        # status restored from an older checkpoint.
+        return [{
+            "kind": "local_assembly",
+            "blocking": True,
+            "reason_code": "provider_evidence_ingestion_required",
+        }]
     status = str(state.get("status") or "")
     dependencies: list[dict[str, Any]] = []
     mapping = {

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astrowoof-natal-authoring"
-version = "0.4.34"
+version = "0.4.35"
 description = "AstroWoof semantic-basis extraction and resumable natal-deck authoring runtime"
 readme = {text = "AstroWoof natal authoring runtime. See astrowoof_natal/docs for implementation documentation.", content-type = "text/plain"}
 requires-python = ">=3.11"
@@ -47,6 +47,7 @@ astrowoof-retry-lineage-qa = "astrowoof_natal_authoring.retry_lineage_qa:main"
 astrowoof-duplicate-submission-fence-qa = "astrowoof_natal_authoring.duplicate_submission_fence_qa:main"
 astrowoof-legacy-local-work-upgrade-qa = "astrowoof_natal_authoring.legacy_local_work_upgrade_qa:main"
 astrowoof-v2-intent-retirement-qa = "astrowoof_natal_authoring.intent_retirement_qa:main"
+astrowoof-final-qa-mixed-custody-qa = "astrowoof_natal_authoring.final_qa_mixed_custody_qa:main"
 
 [tool.setuptools]
 package-dir = {"" = "astrowoof_natal/src"}

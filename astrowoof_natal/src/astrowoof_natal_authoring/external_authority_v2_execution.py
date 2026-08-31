@@ -28,6 +28,8 @@ PROVIDER_DISPATCH_RESULT_SCHEMA_V2 = "astrowoof.external_authority_provider_disp
 COMMAND_RESULT_SCHEMA_V1 = "astrowoof.external_authority_v2_command_result.v1"
 PROVIDER_DISPATCH_RESULT_SCHEMA_V3 = "astrowoof.external_authority_provider_dispatch_result.v3"
 COMMAND_RESULT_SCHEMA_V2 = "astrowoof.external_authority_v2_command_result.v2"
+PROVIDER_DISPATCH_RESULT_SCHEMA_V4 = "astrowoof.external_authority_provider_dispatch_result.v4"
+COMMAND_RESULT_SCHEMA_V3 = "astrowoof.external_authority_v2_command_result.v3"
 RETIRED_INVOCATION_SCHEMA_V1 = (
     "astrowoof.external_authority_v2_retired_invocation.v1"
 )
@@ -340,6 +342,74 @@ def read_external_authority_provider_dispatch_result_v3_schema() -> dict[str, An
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def validate_external_authority_provider_dispatch_result_v4(
+    value: Any,
+) -> dict[str, Any]:
+    """Validate the post-intent lifecycle-refusal result.
+
+    V4 is deliberately narrow: it represents an all-member refusal after the
+    aggregate intent checkpoint but before any provider call is entered.
+    """
+    if not isinstance(value, dict) or set(value) != _PROVIDER_RESULT_V3_KEYS:
+        raise ValueError("v4 provider dispatch result fields are not exact")
+    if value.get("schema_version") != PROVIDER_DISPATCH_RESULT_SCHEMA_V4:
+        raise ValueError("v4 provider dispatch result schema is invalid")
+    if (
+        value.get("outcome") != "pre_provider_refusal"
+        or value.get("reason_code") != "post_intent_lifecycle_contradiction"
+        or value.get("provider_io_disposition") != "not_attempted"
+        or value.get("grant_invocation_disposition") != "refused"
+    ):
+        raise ValueError("v4 provider dispatch result semantics are invalid")
+    if not isinstance(value.get("run_id"), str) or not value["run_id"]:
+        raise ValueError("v4 provider dispatch run_id is invalid")
+    for key in ("request_sha256", "grant_sha256", "post_snapshot_sha256"):
+        item = value.get(key)
+        if (
+            not isinstance(item, str) or len(item) != 64
+            or any(char not in "0123456789abcdef" for char in item)
+        ):
+            raise ValueError(f"v4 provider dispatch {key} is invalid")
+    ordered = value.get("ordered_action_ids")
+    if (
+        not isinstance(ordered, list) or not ordered or ordered != sorted(ordered)
+        or len(ordered) != len(set(ordered))
+        or any(
+            not isinstance(item, str) or _ACTION_ID.fullmatch(item) is None
+            for item in ordered
+        )
+        or value.get("provider_bound_action_ids") != []
+        or value.get("ambiguous_action_ids") != []
+        or value.get("refused_action_ids") != ordered
+        or value.get("provider_operation_ids") != []
+        or value.get("prepared_create_records") != []
+    ):
+        raise ValueError("v4 provider dispatch action inventory is invalid")
+    revision = value.get("post_state_revision")
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+        raise ValueError("v4 provider dispatch revision is invalid")
+    body = {key: item for key, item in value.items() if key != "result_sha256"}
+    if value.get("result_sha256") != _digest(body):
+        raise ValueError("v4 provider dispatch result digest mismatch")
+    return deepcopy(value)
+
+
+def build_external_authority_provider_dispatch_result_v4(
+    **fields: Any,
+) -> dict[str, Any]:
+    body = {"schema_version": PROVIDER_DISPATCH_RESULT_SCHEMA_V4, **deepcopy(fields)}
+    return validate_external_authority_provider_dispatch_result_v4({
+        **body, "result_sha256": _digest(body),
+    })
+
+
+def read_external_authority_provider_dispatch_result_v4_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-provider-dispatch-result.v4.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def build_external_authority_v2_command_result_v2(
     *, intent_result: dict[str, Any] | None, dispatch_result: dict[str, Any],
 ) -> dict[str, Any]:
@@ -385,6 +455,58 @@ def validate_external_authority_v2_command_result_v2(value: Any) -> dict[str, An
 def read_external_authority_v2_command_result_v2_schema() -> dict[str, Any]:
     path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
         "external-authority-v2-command-result.v2.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_external_authority_v2_command_result_v3(
+    *, intent_result: dict[str, Any] | None, dispatch_result: dict[str, Any],
+) -> dict[str, Any]:
+    if intent_result is not None:
+        validate_external_authority_intent_result_v2(intent_result)
+    validate_external_authority_provider_dispatch_result_v4(dispatch_result)
+    body = {
+        "schema_version": COMMAND_RESULT_SCHEMA_V3,
+        "outcome": dispatch_result["outcome"],
+        "intent_result": deepcopy(intent_result),
+        "dispatch_result": deepcopy(dispatch_result),
+    }
+    return validate_external_authority_v2_command_result_v3({
+        **body, "command_result_sha256": _digest(body),
+    })
+
+
+def validate_external_authority_v2_command_result_v3(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != _COMMAND_RESULT_KEYS:
+        raise ValueError("v3 command result fields are not exact")
+    if value.get("schema_version") != COMMAND_RESULT_SCHEMA_V3:
+        raise ValueError("v3 command result schema is invalid")
+    dispatch = validate_external_authority_provider_dispatch_result_v4(
+        value.get("dispatch_result")
+    )
+    intent = value.get("intent_result")
+    if intent is not None:
+        validate_external_authority_intent_result_v2(intent)
+        if (
+            intent["request_sha256"] != dispatch["request_sha256"]
+            or intent["grant_sha256"] != dispatch["grant_sha256"]
+            or intent["ordered_action_ids"] != dispatch["ordered_action_ids"]
+        ):
+            raise ValueError("v3 command intent and dispatch do not join")
+    if value.get("outcome") != dispatch["outcome"]:
+        raise ValueError("v3 command outcome does not join dispatch")
+    body = {
+        key: item for key, item in value.items()
+        if key != "command_result_sha256"
+    }
+    if value.get("command_result_sha256") != _digest(body):
+        raise ValueError("v3 command result digest mismatch")
+    return deepcopy(value)
+
+
+def read_external_authority_v2_command_result_v3_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-v2-command-result.v3.schema.json"
     )
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -1225,6 +1347,30 @@ def dispatch_external_authority_v2_intent(
             raise ExternalAuthorityV2ExecutionError(
                 "native_evidence_invalid", "dispatch history outcome is unsupported",
             )
+        if item.get("reason_code") == "post_intent_lifecycle_contradiction":
+            refused_ids = item.get("refused_action_ids")
+            if refused_ids != item.get("ordered_action_ids"):
+                raise ExternalAuthorityV2ExecutionError(
+                    "native_evidence_invalid",
+                    "post-intent refusal inventory is invalid",
+                )
+            return build_external_authority_provider_dispatch_result_v4(
+                outcome="pre_provider_refusal",
+                reason_code=item["reason_code"],
+                provider_io_disposition="not_attempted",
+                grant_invocation_disposition="refused",
+                run_id=state["run_id"],
+                request_sha256=request_sha256,
+                grant_sha256=grant_sha256,
+                ordered_action_ids=deepcopy(item["ordered_action_ids"]),
+                provider_bound_action_ids=[],
+                ambiguous_action_ids=[],
+                refused_action_ids=deepcopy(refused_ids),
+                provider_operation_ids=[],
+                prepared_create_records=[],
+                post_state_revision=int(item["post_state_revision"]),
+                post_snapshot_sha256=sha256_file(root / "workspace-snapshot.json"),
+            )
         return build_external_authority_provider_dispatch_result_v3(
             outcome="pre_provider_refusal",
             reason_code=item["reason_code"],
@@ -1333,6 +1479,98 @@ def dispatch_external_authority_v2_intent(
                 raise ExternalAuthorityV2ExecutionError(
                     "action_state_or_custody_mismatch", "native intent member is not durably submitting",
                 )
+
+        terminal_statuses = {
+            "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS",
+            "FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW",
+            "FAILED_REQUIRES_REVIEW", "BUDGET_EXHAUSTED",
+            "POLICY_STOPPED",
+        }
+        if str(state.get("status") or "") in terminal_statuses:
+            if not phase_aware:
+                raise ExternalAuthorityV2ExecutionError(
+                    "native_evidence_invalid",
+                    "post-intent lifecycle is terminal before provider call-entry",
+                )
+            if (
+                intent.get("next_action_index") != 0
+                or intent.get("provider_bound_action_ids")
+                or intent.get("provider_operation_ids")
+                or intent.get("active_action_id") is not None
+                or any(action.get("provider") is not None for action in actions)
+            ):
+                raise ExternalAuthorityV2ExecutionError(
+                    "native_evidence_invalid",
+                    "terminal post-intent lifecycle conflicts with existing provider custody",
+                )
+            archived = {
+                "schema_version": "astrowoof.external_authority_v2_refused_invocation.v1",
+                "outcome": "pre_provider_refusal",
+                "request_sha256": request_sha256,
+                "grant_sha256": grant_sha256,
+                "ordered_action_ids": deepcopy(ordered_ids),
+                "provider_bound_action_ids": [],
+                "provider_operation_ids": [],
+                "refused_action_id": ordered_ids[0],
+                "refused_action_ids": deepcopy(ordered_ids),
+                "unentered_action_ids": deepcopy(ordered_ids),
+                "reason_code": "post_intent_lifecycle_contradiction",
+                "prepared_create_records": [],
+                "unentered_action_evidence": [
+                    {
+                        "action_id": action["action_id"],
+                        "authorization": deepcopy(action.get("authorization")),
+                        "consumption": deepcopy(action.get("consumption")),
+                    }
+                    for action in actions
+                ],
+                "post_state_revision": int(state.get("state_revision") or 0) + 1,
+            }
+            state.setdefault("external_authority_v2_dispatch_history", []).append(
+                archived
+            )
+            for action in actions:
+                member_history = deepcopy(archived)
+                member_history["member_disposition"] = "not_entered_after_refusal"
+                action.setdefault(
+                    "external_authority_v2_refused_invocations", []
+                ).append(member_history)
+                action["state"] = "PREPARED"
+                action["authorization"] = None
+                action.pop("consumption", None)
+            state.pop("external_authority_v2_dispatch_intent", None)
+            persist_state(run_json, state)
+            write_workspace_snapshot(root)
+            validate_workspace_snapshot(root, state)
+            emit("external_authority.refused", data={
+                "reason_code": "post_intent_lifecycle_contradiction",
+                "category": "pre_provider_refusal",
+                "selected_command": "external_authority_v2_dispatch",
+                "action_count": len(ordered_ids),
+            })
+            logger.info(
+                "provider_dispatch_classified outcome=pre_provider_refusal "
+                "reason=post_intent_lifecycle_contradiction action_count=%s "
+                "provider_io=not_attempted",
+                len(ordered_ids),
+            )
+            return build_external_authority_provider_dispatch_result_v4(
+                outcome="pre_provider_refusal",
+                reason_code="post_intent_lifecycle_contradiction",
+                provider_io_disposition="not_attempted",
+                grant_invocation_disposition="refused",
+                run_id=state["run_id"],
+                request_sha256=request_sha256,
+                grant_sha256=grant_sha256,
+                ordered_action_ids=deepcopy(ordered_ids),
+                provider_bound_action_ids=[],
+                ambiguous_action_ids=[],
+                refused_action_ids=deepcopy(ordered_ids),
+                provider_operation_ids=[],
+                prepared_create_records=[],
+                post_state_revision=int(state["state_revision"]),
+                post_snapshot_sha256=sha256_file(root / "workspace-snapshot.json"),
+            )
 
         cursor = intent.get("next_action_index")
         if isinstance(cursor, bool) or not isinstance(cursor, int) or not 0 <= cursor <= len(ordered_ids):

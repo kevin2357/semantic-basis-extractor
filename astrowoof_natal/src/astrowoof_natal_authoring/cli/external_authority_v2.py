@@ -24,6 +24,7 @@ from ..external_authority_v2_execution import (
     build_external_authority_prepared_create,
     build_external_authority_prepared_create_basis,
     build_external_authority_v2_command_result_v2,
+    build_external_authority_v2_command_result_v3,
     commit_external_authority_v2_dispatch_intent,
     dispatch_external_authority_v2_intent,
     resolve_external_authority_v2_request_payload,
@@ -239,9 +240,17 @@ def main(argv: list[str] | None = None) -> int:
         len(dispatch_result.get("ambiguous_action_ids") or []),
         len(dispatch_result.get("refused_action_ids") or []),
     )
-    _render(build_external_authority_v2_command_result_v2(
-        intent_result=intent_result, dispatch_result=dispatch_result,
-    ), args.output)
+    command_result = (
+        build_external_authority_v2_command_result_v3(
+            intent_result=intent_result, dispatch_result=dispatch_result,
+        )
+        if dispatch_result.get("schema_version")
+        == "astrowoof.external_authority_provider_dispatch_result.v4"
+        else build_external_authority_v2_command_result_v2(
+            intent_result=intent_result, dispatch_result=dispatch_result,
+        )
+    )
+    _render(command_result, args.output)
     return 0 if dispatch_result["outcome"] in {"detached_provider_pending", "exact_replay"} else 3
 
 

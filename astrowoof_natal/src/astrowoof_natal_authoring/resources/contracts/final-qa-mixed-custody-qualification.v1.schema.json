@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.final_qa_mixed_custody_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "external_network_call_count", "real_provider_create_count", "provider_spend_usd", "sbe_version", "pending_case", "refusal_case", "terminal_case", "assertions"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.final_qa_mixed_custody_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "external_network_call_count": {"const": 0},
+    "real_provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "pending_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["exit_code", "command_schema_version", "outcome", "outer_status", "terminal", "provider_continuation_remains", "selected_command", "scripted_provider_create_count"],
+      "properties": {
+        "exit_code": {"const": 0},
+        "command_schema_version": {"const": "astrowoof.external_authority_v2_command_result.v2"},
+        "outcome": {"const": "detached_provider_pending"},
+        "outer_status": {"const": "WAITING_FOR_RESPONSE"},
+        "terminal": {"const": false},
+        "provider_continuation_remains": {"const": true},
+        "selected_command": {"const": "provider_reconciliation_cycle"},
+        "scripted_provider_create_count": {"const": 1}
+      }
+    },
+    "refusal_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["exit_code", "command_schema_version", "dispatch_schema_version", "outcome", "reason_code", "provider_io_disposition", "scripted_provider_create_count", "history_reason_code", "fresh_authority_required"],
+      "properties": {
+        "exit_code": {"const": 3},
+        "command_schema_version": {"const": "astrowoof.external_authority_v2_command_result.v3"},
+        "dispatch_schema_version": {"const": "astrowoof.external_authority_provider_dispatch_result.v4"},
+        "outcome": {"const": "pre_provider_refusal"},
+        "reason_code": {"const": "post_intent_lifecycle_contradiction"},
+        "provider_io_disposition": {"const": "not_attempted"},
+        "scripted_provider_create_count": {"const": 0},
+        "history_reason_code": {"const": "post_intent_lifecycle_contradiction"},
+        "fresh_authority_required": {"const": true}
+      }
+    },
+    "terminal_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "receipt_sha256", "public_result_v02", "review_receipt_valid", "provider_post_count"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.terminal_review_qualification.v1"},
+        "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "public_result_v02": {"const": "astrowoof.native_execution_result.v0.2"},
+        "review_receipt_valid": {"const": true},
+        "provider_post_count": {"const": 0}
+      }
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider_custody_outranks_final_qa_review", "provider_custody_selects_reconciliation", "post_intent_contradiction_refuses_before_provider_io", "refused_grant_history_is_immutable", "no_custody_review_terminal_remains_valid", "terminal_result_receipt_join_is_valid"],
+      "properties": {
+        "provider_custody_outranks_final_qa_review": {"const": true},
+        "provider_custody_selects_reconciliation": {"const": true},
+        "post_intent_contradiction_refuses_before_provider_io": {"const": true},
+        "refused_grant_history_is_immutable": {"const": true},
+        "no_custody_review_terminal_remains_valid": {"const": true},
+        "terminal_result_receipt_join_is_valid": {"const": true}
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "api_run_id": "f056cdb2-8954-492f-8dde-4f644aa2ee6a",
+  "archive_bytes": 5303567,
+  "archive_sha256": "a53a6a916a530381af500121882a6dd40ce638af974fd261d1c26f09c3e37eb1",
+  "checkpoint_generation": 18,
+  "checkpoint_id": "44ffb561-c2ff-4dc9-8868-f8a40f4bd5e5",
+  "head_manifest_sha256": "ec923a8db77ca80a2deadfbaad476bb9696753874023cc0ed57c3b8b1e45a6a1",
+  "inventory_sha256": "bda5e1bd10527ed454b636a0a1442284f1d39b5e4f43552bb6e086b675ee1717",
+  "manifest_sha256": "a066d66ae3fcce3624a4f14b875a168c394238a45b138ed6657344611d3b6681",
+  "native_run_id": "23087de39dfa3d6211dc0d012dee469088c1dfa94eb1337953ad8cfb4f63009d",
+  "object_key": "v1/checkpoint/19224c980c0c4a6291206d36e712f88c",
+  "provider_operation_count": 0,
+  "provider_version_or_etag": "\"cb0606da5dbd0a66c612b53d80dc1f31\"",
+  "remote_operation_counts": {
+    "delete": 0,
+    "get": 1,
+    "head": 1,
+    "list": 0,
+    "write": 0
+  },
+  "sbe_job_id": "955afa91-82d2-469e-9127-20322dbba84e",
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt.v1",
+  "workspace_mutation_count": 0
+}

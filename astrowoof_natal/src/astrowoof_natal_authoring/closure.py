@@ -2429,20 +2429,30 @@ def update_run_status(state: dict[str, Any]) -> None:
             if "DELIVERY_COMPLETE_WITH_WARNINGS" in final_states
             else "DELIVERY_COMPLETE"
         )
-    elif state.get("status") in {
-        "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
-        "FINAL_QA_REQUIRES_REVIEW",
-    }:
-        # Editorial review is stronger than paid-action custody or pass-derived
-        # authoring completeness. Once reached, custody-only persistence must
-        # not reopen authoring or flatten the run back to provider-pending.
-        pass
     elif "AMBIGUOUS_PROVIDER_SUBMISSION" in spend_states:
         state["status"] = "AMBIGUOUS_PROVIDER_SUBMISSION"
+    elif spend_states & {"PROVIDER_ID_RECORDED", "WAITING"}:
+        # Durable provider custody is stronger than a provisional editorial
+        # finding, a separate providerless action, or a budget refusal.  The
+        # provider may already be complete; WAITING_FOR_RESPONSE is the
+        # nonterminal outer projection while lifecycle custody/timing selects
+        # retrieval or completed-evidence fan-in precisely.
+        state["status"] = "WAITING_FOR_RESPONSE"
     elif "BUDGET_EXHAUSTED" in spend_states:
         state["status"] = "BUDGET_EXHAUSTED"
     elif "PREPARED" in spend_states:
         state["status"] = "AWAITING_SPEND_AUTHORIZATION"
+    elif spend_states & {"AUTHORIZED", "SUBMITTING"}:
+        # Constrained dispatch is native work in progress.  It must not become
+        # a review terminal merely because final assembly currently warns.
+        state["status"] = "AUTHORING"
+    elif state.get("status") in {
+        "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
+        "FINAL_QA_REQUIRES_REVIEW",
+    }:
+        # Preserve a genuine review terminal only after stronger custody,
+        # ambiguity, authority, and delivery facts above have been exhausted.
+        pass
     elif "FINAL_QA_FAILED" in final_states:
         state["status"] = "FINAL_QA_FAILED"
     elif "FINAL_QA_WARN" in final_states:
@@ -2655,12 +2665,22 @@ def update_run_status(state: dict[str, Any]) -> None:
     state["updated_at"] = utc_now()
 
 
-def persist_state(run_json: Path, state: dict[str, Any]) -> None:
+def persist_state(
+    run_json: Path, state: dict[str, Any],
+    *, preserve_review_status: str | None = None,
+) -> None:
     """Persist operator/public/authorization state without attesting workspace."""
     old_revision = int(state.get("state_revision") or 0)
     old_status = state.get("status")
     state["state_revision"] = int(state.get("state_revision") or 0) + 1
     update_run_status(state)
+    if preserve_review_status is not None:
+        if preserve_review_status not in {
+            "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
+            "FINAL_QA_REQUIRES_REVIEW",
+        }:
+            raise ValueError("Review-status preservation is not a review status")
+        state["status"] = preserve_review_status
     bind_logging_context(
         run_id=state.get("run_id"), current_state=state.get("status")
     )
@@ -2711,11 +2731,38 @@ def save_state(
     state: dict[str, Any],
     *,
     retire_external_authority_v2: bool = False,
+    preserve_review_status: str | None = None,
     _failure_injector: Callable[[str], None] | None = None,
 ) -> None:
     """Persist state and publish a coordinator-owned quiescent checkpoint."""
+    if preserve_review_status is None:
+        index_path = run_json.parent / "native-result-index.json"
+        if index_path.is_file():
+            from .native_transitions import read_native_transition_result
+
+            for result_id in reversed(load_json(index_path).get("result_ids", [])):
+                published = read_native_transition_result(
+                    run_json.parent, result_id,
+                )["result"]
+                if (
+                    published.get("schema_version")
+                    == "astrowoof.native_execution_result.v0.2"
+                    and published.get("outcome") == "review_required"
+                ):
+                    observed = str(state.get("status") or "")
+                    preserve_review_status = (
+                        observed
+                        if observed in {
+                            "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
+                            "FINAL_QA_REQUIRES_REVIEW",
+                        }
+                        else "FAILED_REQUIRES_REVIEW"
+                    )
+                    break
     if threading.current_thread() is not threading.main_thread():
-        persist_state(run_json, state)
+        persist_state(
+            run_json, state, preserve_review_status=preserve_review_status,
+        )
         return
     if (
         retire_external_authority_v2
@@ -2742,7 +2789,10 @@ def save_state(
             )
             if retired is not None and _failure_injector is not None:
                 _failure_injector("before_retirement_state_persistence")
-            persist_state(run_json, candidate)
+            persist_state(
+                run_json, candidate,
+                preserve_review_status=preserve_review_status,
+            )
             if retired is not None and _failure_injector is not None:
                 _failure_injector("after_retirement_state_before_snapshot")
             write_workspace_snapshot(run_json.parent)
@@ -2756,7 +2806,9 @@ def save_state(
                 state.get("state_revision"), run_json.parent / SNAPSHOT_NAME,
             )
             return
-    persist_state(run_json, state)
+    persist_state(
+        run_json, state, preserve_review_status=preserve_review_status,
+    )
     write_workspace_snapshot(run_json.parent)
     logger.info(
         "checkpoint_committed state_revision=%s snapshot=%s",

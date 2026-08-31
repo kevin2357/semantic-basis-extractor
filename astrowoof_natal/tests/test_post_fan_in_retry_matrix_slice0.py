@@ -237,8 +237,8 @@ class PostFanInRetrySlice0Tests(unittest.TestCase):
                 )
                 self.assertEqual(
                     [{
-                        "kind": "retry_preparation", "blocking": True,
-                        "reason_code": "prepared_action_authorization_pending",
+                        "kind": "local_assembly", "blocking": True,
+                        "reason_code": "provider_evidence_ingestion_required",
                     }],
                     first["local_dependencies"],
                 )

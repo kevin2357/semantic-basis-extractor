@@ -1525,6 +1525,32 @@ def run_bounded_authoring_reconciliation(
         write_workspace_snapshot,
     )
     from .lifecycle import inspect_lifecycle
+    from .native_transitions import read_native_transition_result
+
+    sealed_terminal_review_exists = False
+    sealed_review_status: str | None = None
+    result_index = run_dir / "native-result-index.json"
+    if result_index.is_file():
+        indexed = load_json(result_index).get("result_ids", [])
+        for result_id in reversed(indexed):
+            published = read_native_transition_result(run_dir, result_id)
+            published_result = published["result"]
+            if (
+                published_result.get("schema_version")
+                == "astrowoof.native_execution_result.v0.2"
+                and published_result.get("outcome") == "review_required"
+            ):
+                sealed_terminal_review_exists = True
+                observed_status = load_json(run_dir / "run.json").get("status")
+                sealed_review_status = (
+                    observed_status
+                    if observed_status in {
+                        "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
+                        "FINAL_QA_REQUIRES_REVIEW",
+                    }
+                    else "FAILED_REQUIRES_REVIEW"
+                )
+                break
 
     def emit_checkpoint_events(value: dict[str, Any]) -> None:
         checkpoint = value.get("result_checkpoint")
@@ -1590,7 +1616,7 @@ def run_bounded_authoring_reconciliation(
         return result
 
     state = load_json(run_dir / "run.json")
-    if state.get("status") in {
+    if sealed_terminal_review_exists or state.get("status") in {
         "FAILED_REQUIRES_REVIEW",
         "FINAL_QA_FAILED",
         "FINAL_QA_REQUIRES_REVIEW",
@@ -1626,7 +1652,10 @@ def run_bounded_authoring_reconciliation(
                 ),
             }
             action["state"] = "REPORTED"
-        save_state(run_dir / "run.json", state)
+        save_state(
+            run_dir / "run.json", state,
+            preserve_review_status=sealed_review_status,
+        )
         artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
         record = json.loads(artifact.read_text(encoding="utf-8"))
         local_continuation = {

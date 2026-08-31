@@ -68,15 +68,15 @@ class RetryExternalAuthorityV2HandoffSlice0Tests(
 
             self.assertEqual("ordinary_resume", legacy["execution_branch"]["command"])
             self.assertEqual("local_work_ready", legacy["execution_capacity"]["reason_code"])
-            # The production-shaped fixture does not reproduce Diffie's strict
-            # consumer failure: v0.5 carries one authorization-pending retry
-            # dependency and is internally coherent at this checkpoint.
+            # Completed provider evidence outranks the separately prepared
+            # retry even if an older restored outer status still says authority
+            # is pending.
             self.assertEqual(
                 [
                     {
-                        "kind": "retry_preparation",
+                        "kind": "local_assembly",
                         "blocking": True,
-                        "reason_code": "prepared_action_authorization_pending",
+                        "reason_code": "provider_evidence_ingestion_required",
                     }
                 ],
                 legacy["local_dependencies"],

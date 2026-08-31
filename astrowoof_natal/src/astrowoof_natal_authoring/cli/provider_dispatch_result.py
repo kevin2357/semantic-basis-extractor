@@ -11,7 +11,9 @@ from ..external_authority_v2_execution import (
     read_ambiguous_provider_submission_fixture_v1,
     validate_ambiguous_provider_submission_fixture_v1,
     validate_external_authority_provider_dispatch_result_v3,
+    validate_external_authority_provider_dispatch_result_v4,
     validate_external_authority_v2_command_result_v2,
+    validate_external_authority_v2_command_result_v3,
 )
 
 
@@ -25,8 +27,12 @@ def _validate(value: Any) -> Any:
     schema = value.get("schema_version")
     if schema == "astrowoof.external_authority_provider_dispatch_result.v3":
         return validate_external_authority_provider_dispatch_result_v3(value)
+    if schema == "astrowoof.external_authority_provider_dispatch_result.v4":
+        return validate_external_authority_provider_dispatch_result_v4(value)
     if schema == "astrowoof.external_authority_v2_command_result.v2":
         return validate_external_authority_v2_command_result_v2(value)
+    if schema == "astrowoof.external_authority_v2_command_result.v3":
+        return validate_external_authority_v2_command_result_v3(value)
     if schema == "astrowoof.ambiguous_provider_submission_fixtures.v1":
         return validate_ambiguous_provider_submission_fixture_v1(value)
     raise ValueError("unsupported provider dispatch evidence schema")
