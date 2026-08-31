@@ -154,3 +154,14 @@
 - Installed Draft 2020-12 and Python semantic validation passed.
 - No external network, provider, spend, R2, or retained-run activity occurred.
 - API and owner approved commit/tag/publication; release execution began.
+
+## 2026-08-31 — 0.4.35 publication
+
+- Committed and pushed the approved release source at `e73b057e`.
+- Rebuilt from committed source and reproduced the approved wheel SHA-256
+  `830a4cd9288628c399a79f9d255edbb49caa5ab608046af6f12cfec8bbe34cfb`.
+- Pushed immutable tag `astrowoof-natal-authoring-v0.4.35`.
+- Published the wheel through the repository's established GitHub Releases
+  channel; SBE is not published to PyPI.
+- Downloaded the public asset and confirmed its size and SHA-256 exactly match
+  the committed-source build and approved candidate.

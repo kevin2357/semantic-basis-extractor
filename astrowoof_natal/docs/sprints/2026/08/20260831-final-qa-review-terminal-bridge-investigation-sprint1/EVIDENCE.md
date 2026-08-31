@@ -138,5 +138,16 @@ recovery/mutation, external network, real provider work, or spend occurred.
 - Final candidate external provider/network calls, spend, R2 access, and
   retained-run access: zero.
 
-Final gate: API and owner release approval received; release execution is in
-progress.
+Final gate complete: API and owner approved release; SBE `0.4.35` is published.
+
+## Publication evidence
+
+- Source commit: `e73b057e`.
+- Tag: `astrowoof-natal-authoring-v0.4.35`.
+- Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.35`.
+- Public asset: `astrowoof_natal_authoring-0.4.35-py3-none-any.whl`.
+- Size: `1136408` bytes.
+- GitHub asset digest and downloaded SHA-256:
+  `830a4cd9288628c399a79f9d255edbb49caa5ab608046af6f12cfec8bbe34cfb`.
+- Release is public, non-draft, and non-prerelease.

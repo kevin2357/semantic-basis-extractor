@@ -2,9 +2,8 @@
 
 ## Status
 
-Slices 0–6 complete. Fresh `0.4.35` release bytes are reproducible and pass the
-installed smoke/qualification gates. API and owner approved commit, tag, and
-publication; release execution is in progress.
+Slices 0–6 complete and published as SBE `0.4.35`. The committed-source wheel,
+GitHub release asset, and approved candidate are byte-identical.
 
 ## Objective
 
