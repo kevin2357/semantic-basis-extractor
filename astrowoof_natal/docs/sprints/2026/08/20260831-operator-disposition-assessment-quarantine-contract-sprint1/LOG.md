@@ -104,3 +104,17 @@ Current gate: API review and explicit owner approval before commit/tag/publish.
 - API final review: approved without conditions.
 - Owner approval: commit, tag, and publish `0.4.37`.
 - Release execution begun from the reviewed source and deterministic candidate.
+
+## 2026-08-31 — `0.4.37` published and verified
+
+- Release source commit: `bb94fe1c5b9f63e9dd2b60ca07d886dbcca2c5a5`.
+- Immutable tag: `astrowoof-natal-authoring-v0.4.37`.
+- Published GitHub Release wheel and checksum assets.
+- Downloaded the published wheel and independently reproduced SHA-256
+  `032a2ab0d9367e4dad68c1a9814b75bbf7e108a00fde44c2fdc1602875ec0a7c`.
+- Reinstalled the downloaded artifact; `pip check` reported no broken
+  requirements.
+- Published-wheel operator-disposition qualification passed with receipt
+  `09294f61c5582ef207960048f0b50c5b1a4d3f9b79a97f508fd9e8198074c94f`.
+
+Sprint status: complete.

@@ -8,10 +8,10 @@ matrix are implemented. Availability-based terminal-result discovery now
 defaults disabled and is available only through an explicit reader opt-in.
 Provider activity, retained-workspace access,
 deployment, version bump, tag, and release have not begun. Paused at
-Slices 0–4 and the lean `0.4.37` candidate gate are complete. Installed-wheel
-qualification, affected regression coverage, dependency verification, and
-deterministic rebuild evidence are recorded. API and owner approved commit,
-tag, and publication; release execution is in progress.
+Sprint complete. SBE `0.4.37` is committed, immutably tagged, published, and
+post-publication verified. Installed-wheel qualification, affected regression
+coverage, dependency verification, and deterministic rebuild evidence are
+recorded.
 
 ## Objective
 

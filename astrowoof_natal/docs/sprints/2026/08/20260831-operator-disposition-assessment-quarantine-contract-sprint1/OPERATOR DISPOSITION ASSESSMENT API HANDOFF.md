@@ -2,8 +2,8 @@
 
 ## Status
 
-Slice 4 and the installed-wheel qualification are complete against the frozen
-`0.4.37` candidate. API and owner approved commit, tag, and publication.
+SBE `0.4.37` is published and post-publication verified. API and owner approved
+the immutable release.
 
 ## Public surfaces
 

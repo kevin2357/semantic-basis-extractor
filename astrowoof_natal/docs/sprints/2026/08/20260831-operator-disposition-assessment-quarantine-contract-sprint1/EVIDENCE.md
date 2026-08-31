@@ -158,3 +158,14 @@ environment includes JSON Schema support and passed `pip check`. The full
 runtime suite was deliberately not run because this patch changes only a
 read-only default, public projection packaging, CLI, fixtures, and qualification
 surface—not lifecycle mutation, reconciliation, scheduling, or provider logic.
+
+## Publication verification
+
+- Release: `astrowoof-natal-authoring-v0.4.37`
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.37`
+- Source commit: `bb94fe1c5b9f63e9dd2b60ca07d886dbcca2c5a5`
+- Downloaded wheel SHA-256:
+  `032a2ab0d9367e4dad68c1a9814b75bbf7e108a00fde44c2fdc1602875ec0a7c`
+- Downloaded-wheel `pip check`: clean.
+- Downloaded-wheel qualification: pass; receipt identity unchanged.
