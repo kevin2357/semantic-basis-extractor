@@ -82,7 +82,7 @@
 
 ## Current gate
 
-Paused after Slice 6 candidate qualification for final API/owner release review. The authorized remote budget
+Published as SBE `0.4.34`. The authorized remote budget
 is exhausted. No external provider, spend, retained reconciliation/resume/repair,
 or retained-run mutation occurred.
 
@@ -167,3 +167,14 @@ or retained-run mutation occurred.
   skips in the lean host interpreter.
 - This is provider-free qualification: external provider/network calls `0`,
   real provider creates/retrievals `0`, spend `$0`, retained Delerium access `0`.
+
+## Publication evidence
+
+- Source commit: `c5ec8c20216971f22da768f827a3602f42f1d04a`.
+- Tag: `astrowoof-natal-authoring-v0.4.34`.
+- Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.34`.
+- Public asset: `astrowoof_natal_authoring-0.4.34-py3-none-any.whl`.
+- GitHub asset digest and downloaded verification SHA-256:
+  `20a64e366840e143f1f9cb6cd936a7dd15341dc2041562e8f33860eb4ed70b2d`.
+- Release is public, non-draft, and non-prerelease.

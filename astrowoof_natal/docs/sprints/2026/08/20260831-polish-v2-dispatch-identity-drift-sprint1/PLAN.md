@@ -2,8 +2,8 @@
 
 ## Status
 
-Slices 0–6 complete; paused for final API/owner release review before commit,
-tag, or publication. The authorized generation-11 `HEAD` and `GET` are complete; no
+Slices 0–6 complete and published as SBE `0.4.34`. The authorized generation-11
+`HEAD` and `GET` are complete; no
 external provider activity, remote write, retained worker execution, or
 retained-run mutation occurred.
 

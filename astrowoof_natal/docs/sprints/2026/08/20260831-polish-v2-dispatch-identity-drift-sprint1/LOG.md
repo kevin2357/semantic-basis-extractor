@@ -162,3 +162,13 @@
   terminal-review qualifications passed.
 - No external provider call, spend, R2 access, or retained-run mutation occurred.
 - Paused before commit/tag/publication for final API/owner release approval.
+
+## 2026-08-30 — 0.4.34 publication
+
+- Received final API and owner approval.
+- Committed release source at `c5ec8c20216971f22da768f827a3602f42f1d04a`.
+- Rebuilt from that exact commit and reproduced approved wheel SHA-256
+  `20a64e366840e143f1f9cb6cd936a7dd15341dc2041562e8f33860eb4ed70b2d`.
+- Pushed `main` and immutable tag `astrowoof-natal-authoring-v0.4.34`.
+- Published the GitHub release and downloaded the public asset; GitHub's asset
+  digest and the downloaded bytes both match the approved SHA-256.
