@@ -2706,11 +2706,56 @@ def persist_state(run_json: Path, state: dict[str, Any]) -> None:
     )
 
 
-def save_state(run_json: Path, state: dict[str, Any]) -> None:
+def save_state(
+    run_json: Path,
+    state: dict[str, Any],
+    *,
+    retire_external_authority_v2: bool = False,
+    _failure_injector: Callable[[str], None] | None = None,
+) -> None:
     """Persist state and publish a coordinator-owned quiescent checkpoint."""
     if threading.current_thread() is not threading.main_thread():
         persist_state(run_json, state)
         return
+    if (
+        retire_external_authority_v2
+        and isinstance(state.get("external_authority_v2_dispatch_intent"), dict)
+    ):
+        from .external_authority_v2_execution import (
+            retire_completed_external_authority_v2_intent,
+        )
+        from .lifecycle import _exclusive_lifecycle_lock
+
+        with _exclusive_lifecycle_lock(run_json.parent):
+            persisted = load_json(run_json)
+            if (
+                persisted.get("run_id") != state.get("run_id")
+                or int(persisted.get("state_revision") or 0)
+                != int(state.get("state_revision") or 0)
+            ):
+                raise ValueError(
+                    "Quiescent retirement checkpoint does not join persisted state"
+                )
+            candidate = deepcopy(state)
+            retired = retire_completed_external_authority_v2_intent(
+                candidate, run_json.parent,
+            )
+            if retired is not None and _failure_injector is not None:
+                _failure_injector("before_retirement_state_persistence")
+            persist_state(run_json, candidate)
+            if retired is not None and _failure_injector is not None:
+                _failure_injector("after_retirement_state_before_snapshot")
+            write_workspace_snapshot(run_json.parent)
+            validate_workspace_snapshot(run_json.parent, candidate)
+            state.clear()
+            state.update(candidate)
+            if retired is not None and _failure_injector is not None:
+                _failure_injector("after_retirement_snapshot_publication")
+            logger.info(
+                "checkpoint_committed state_revision=%s snapshot=%s",
+                state.get("state_revision"), run_json.parent / SNAPSHOT_NAME,
+            )
+            return
     persist_state(run_json, state)
     write_workspace_snapshot(run_json.parent)
     logger.info(
@@ -2736,7 +2781,10 @@ def checkpoint_spend_boundary(
             type(exc).__name__, sanitize_error_message(exc),
             state.get("state_revision"),
         )
-        save_state(run_json, state)
+        save_state(
+            run_json, state,
+            retire_external_authority_v2=terminal_review_v02,
+        )
         if on_quiescent_checkpoint is not None:
             on_quiescent_checkpoint()
         from . import __version__
@@ -2785,6 +2833,15 @@ def checkpoint_spend_boundary(
         )
         raise
     else:
+        if terminal_review_v02:
+            # This is the first coordinator-owned complete checkpoint after
+            # worker-thread reconciliation/adoption/reporting persistence.
+            # Retire an exactly terminal v2 intent before local-progress
+            # inspection or any successor-authority selection can run.
+            save_state(
+                run_json, state,
+                retire_external_authority_v2=True,
+            )
         if on_quiescent_checkpoint is not None:
             on_quiescent_checkpoint()
 
@@ -8509,7 +8566,10 @@ def main() -> None:
             )
     if not authoring_complete:
         update_run_status(state)
-        save_state(run_json, state)
+        save_state(
+            run_json, state,
+            retire_external_authority_v2=args.service_level == "interactive",
+        )
         if event_emitter is not None:
             event_emitter.emit("run.detached", data={
                 "state_revision": int(state.get("state_revision") or 0),
@@ -8558,7 +8618,10 @@ def main() -> None:
                         run_state=state,
                     )
     update_run_status(state)
-    save_state(run_json, state)
+    save_state(
+        run_json, state,
+        retire_external_authority_v2=args.service_level == "interactive",
+    )
     if event_emitter is not None:
         event_emitter.emit("checkpoint.committed", data={
             "state_revision": int(state.get("state_revision") or 0),

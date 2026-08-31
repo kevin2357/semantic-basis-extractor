@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.external_authority_v2_intent_retirement_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "external_network_call_count", "real_provider_create_count", "provider_spend_usd", "sbe_version", "complete_case", "partial_case", "conflict_case", "assertions"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.external_authority_v2_intent_retirement_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "external_network_call_count": {"const": 0},
+    "real_provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "complete_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["retired_record_count", "live_intent_after_checkpoint", "snapshot_valid", "predecessor_create_count", "replay_outcome", "replay_provider_call_count", "successor_outcome", "successor_provider_create_count"],
+      "properties": {
+        "retired_record_count": {"const": 1}, "live_intent_after_checkpoint": {"const": false}, "snapshot_valid": {"const": true}, "predecessor_create_count": {"const": 1}, "replay_outcome": {"const": "exact_replay"}, "replay_provider_call_count": {"const": 0}, "successor_outcome": {"const": "detached_provider_pending"}, "successor_provider_create_count": {"const": 1}
+      }
+    },
+    "partial_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["live_intent_retained", "retired_record_count", "successor_provider_create_count"],
+      "properties": {"live_intent_retained": {"const": true}, "retired_record_count": {"const": 0}, "successor_provider_create_count": {"const": 0}}
+    },
+    "conflict_case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["refusal_reason", "live_intent_retained", "retired_record_count", "successor_provider_create_count"],
+      "properties": {"refusal_reason": {"const": "native_evidence_invalid"}, "live_intent_retained": {"const": true}, "retired_record_count": {"const": 0}, "successor_provider_create_count": {"const": 0}}
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coordinator_checkpoint_retires_complete_intent", "published_snapshot_contains_retirement", "exact_predecessor_replay_is_inert", "fresh_successor_creates_once", "partial_terminal_inventory_retains_intent", "contradictory_terminal_evidence_retains_intent"],
+      "properties": {
+        "coordinator_checkpoint_retires_complete_intent": {"const": true}, "published_snapshot_contains_retirement": {"const": true}, "exact_predecessor_replay_is_inert": {"const": true}, "fresh_successor_creates_once": {"const": true}, "partial_terminal_inventory_retains_intent": {"const": true}, "contradictory_terminal_evidence_retains_intent": {"const": true}
+      }
+    }
+  }
+}

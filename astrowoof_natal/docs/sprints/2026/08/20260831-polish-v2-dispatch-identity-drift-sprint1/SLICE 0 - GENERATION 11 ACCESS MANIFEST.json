@@ -1,0 +1,26 @@
+{
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1",
+  "purpose": "delerium_polish_v2_dispatch_identity_read_only_investigation",
+  "environment": "qa",
+  "namespace": "checkpoint",
+  "object_uuid": "60c09a6f-1426-4c2a-a38e-77e8662aaac1",
+  "object_key": "v1/checkpoint/60c09a6f14264c2aa38e77e8662aaac1",
+  "expected_etag": "\"052b105050b4067d818814ae581d8b01\"",
+  "expected_archive_sha256": "ec70409af469ea8fffb9217533a2173a8c206675a9949aa249f9ce4e1be92000",
+  "expected_archive_bytes": 4779709,
+  "expected_inventory_sha256": "dba64797a61449848bb378bba82e74491d5a0b6d2b02fd75bff81d790a37ca4c",
+  "api_run_id": "3ecc3cde-26f1-4f02-a0ec-96fd7fb0001a",
+  "sbe_job_id": "1c241872-0882-44b7-aaf4-cd1091af7b0f",
+  "native_run_id": "8756c0b6a642f85fa911557aeedf0b228dfbb3776ba070c3864a137632339091",
+  "checkpoint_id": "d0270152-7749-4c66-8aa4-58117e70d8b4",
+  "checkpoint_generation": 11,
+  "logical_restore_path": "/work/runs/3ecc3cde-26f1-4f02-a0ec-96fd7fb0001a/sbe",
+  "compatibility_identity": "astrowoof.qa.sbe0433-post-retry-authority-admission.v1",
+  "approved_operations": {
+    "head_count": 1,
+    "get_count": 1,
+    "list_count": 0,
+    "write_count": 0,
+    "delete_count": 0
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "archive_sha256": "ec70409af469ea8fffb9217533a2173a8c206675a9949aa249f9ce4e1be92000",
+  "archive_safety_valid": true,
+  "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+  "compatibility_identity": "astrowoof.qa.sbe0433-post-retry-authority-admission.v1",
+  "generation": 11,
+  "inner_snapshot_member_count": 934,
+  "inner_snapshot_members_valid": true,
+  "inventory_sha256": "dba64797a61449848bb378bba82e74491d5a0b6d2b02fd75bff81d790a37ca4c",
+  "member_count": 964,
+  "predecessor_archive_sha256": "5b115ce782a508c95b6f9417e3241db40b46047af3f4754603f994ffe400808b",
+  "provider_operation_count": 0,
+  "remote_operation_count": 0,
+  "schema_version": "astrowoof.investigation.offline_restore_receipt.v1",
+  "total_member_bytes": 19897082,
+  "workspace_command_count": 0,
+  "workspace_mutation_count": 0
+}

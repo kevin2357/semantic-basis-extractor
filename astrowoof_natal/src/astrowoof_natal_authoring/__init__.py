@@ -270,6 +270,11 @@ from .external_authority_v2_qa import (  # noqa: E402
     run_external_authority_v2_qualification,
     validate_external_authority_v2_qualification,
 )
+from .intent_retirement_qa import (  # noqa: E402
+    read_intent_retirement_qualification_schema,
+    run_intent_retirement_qualification,
+    validate_intent_retirement_qualification,
+)
 from .payload_recovery_qa import (  # noqa: E402
     read_payload_recovery_qualification_schema,
     run_payload_recovery_qualification,
@@ -517,6 +522,9 @@ __all__ = [
     "run_external_authority_qualification",
     "validate_external_authority_qualification_receipt",
     "read_external_authority_v2_qualification_schema",
+    "read_intent_retirement_qualification_schema",
+    "run_intent_retirement_qualification",
+    "validate_intent_retirement_qualification",
     "run_external_authority_v2_qualification",
     "validate_external_authority_v2_qualification",
     "read_payload_recovery_qualification_schema",

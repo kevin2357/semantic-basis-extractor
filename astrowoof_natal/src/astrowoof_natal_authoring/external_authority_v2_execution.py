@@ -28,6 +28,9 @@ PROVIDER_DISPATCH_RESULT_SCHEMA_V2 = "astrowoof.external_authority_provider_disp
 COMMAND_RESULT_SCHEMA_V1 = "astrowoof.external_authority_v2_command_result.v1"
 PROVIDER_DISPATCH_RESULT_SCHEMA_V3 = "astrowoof.external_authority_provider_dispatch_result.v3"
 COMMAND_RESULT_SCHEMA_V2 = "astrowoof.external_authority_v2_command_result.v2"
+RETIRED_INVOCATION_SCHEMA_V1 = (
+    "astrowoof.external_authority_v2_retired_invocation.v1"
+)
 _ACTION_ID = re.compile(r"^paid_[0-9a-f]{24}$")
 _RESULT_KEYS = {
     "schema_version", "result_sha256", "outcome", "run_id", "request_sha256",
@@ -550,6 +553,339 @@ def _current_actions(state: Mapping[str, Any], action_ids: list[str]) -> list[di
     return [by_id[action_id] for action_id in action_ids]
 
 
+def _strict_sha256(value: Any, *, label: str) -> str:
+    if (
+        not isinstance(value, str) or len(value) != 64
+        or any(char not in "0123456789abcdef" for char in value)
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", f"{label} is invalid",
+        )
+    return value
+
+
+def _validate_retired_invocation(value: Any) -> dict[str, Any]:
+    keys = {
+        "schema_version", "outcome", "request_schema_version",
+        "request_sha256", "checkpoint_basis_sha256", "grant_schema_version",
+        "grant_sha256", "api_decision_id", "ordering_semantics",
+        "ordered_action_ids", "ordered_authorization_document_sha256s",
+        "provider_bound_action_ids", "provider_operation_ids",
+        "prepared_create_records", "terminal_action_records",
+        "terminal_evidence_sha256", "retirement_state_revision",
+        "retirement_record_sha256",
+    }
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired invocation fields are not exact",
+        )
+    if (
+        value.get("schema_version") != RETIRED_INVOCATION_SCHEMA_V1
+        or value.get("outcome") != "provider_completed"
+        or value.get("request_schema_version")
+        != "astrowoof.external_authority_request.v2"
+        or value.get("grant_schema_version")
+        != "astrowoof.external_authority_grant.v2"
+        or value.get("ordering_semantics") != "lexical_action_id_ascending"
+        or not isinstance(value.get("api_decision_id"), str)
+        or not value["api_decision_id"]
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired invocation identity is invalid",
+        )
+    for key in (
+        "request_sha256", "checkpoint_basis_sha256", "grant_sha256",
+        "terminal_evidence_sha256", "retirement_record_sha256",
+    ):
+        _strict_sha256(value.get(key), label=f"retired invocation {key}")
+    ordered = value.get("ordered_action_ids")
+    bound = value.get("provider_bound_action_ids")
+    operations = value.get("provider_operation_ids")
+    authorization_digests = value.get(
+        "ordered_authorization_document_sha256s"
+    )
+    prepared = value.get("prepared_create_records")
+    terminal = value.get("terminal_action_records")
+    if (
+        not isinstance(ordered, list) or not ordered or ordered != sorted(ordered)
+        or len(ordered) != len(set(ordered))
+        or any(
+            not isinstance(item, str) or _ACTION_ID.fullmatch(item) is None
+            for item in ordered
+        )
+        or bound != ordered
+        or not isinstance(operations, list) or len(operations) != len(ordered)
+        or len(operations) != len(set(operations))
+        or any(not isinstance(item, str) or not item for item in operations)
+        or not isinstance(authorization_digests, list)
+        or len(authorization_digests) != len(ordered)
+        or not isinstance(prepared, list) or len(prepared) != len(ordered)
+        or not isinstance(terminal, list) or len(terminal) != len(ordered)
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired invocation inventory is invalid",
+        )
+    for digest_value in authorization_digests:
+        _strict_sha256(
+            digest_value, label="retired authorization document digest",
+        )
+    for index, record in enumerate(prepared):
+        if (
+            not isinstance(record, dict)
+            or set(record) != {"action_id", "prepared_create_sha256"}
+            or record.get("action_id") != ordered[index]
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid", "retired prepared-create join is invalid",
+            )
+        _strict_sha256(
+            record.get("prepared_create_sha256"),
+            label="retired prepared-create digest",
+        )
+    terminal_keys = {
+        "action_id", "binding_sha256", "authorization_document_sha256",
+        "authorization_reference", "consumption_sha256", "provider_kind",
+        "provider_operation_id", "reconciliation_evidence_sha256",
+        "reported_evidence_sha256", "response_artifact",
+    }
+    for index, record in enumerate(terminal):
+        if (
+            not isinstance(record, dict) or set(record) != terminal_keys
+            or record.get("action_id") != ordered[index]
+            or record.get("provider_operation_id") != operations[index]
+            or record.get("provider_kind") != "response"
+            or not isinstance(record.get("authorization_reference"), str)
+            or not record["authorization_reference"]
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid", "retired terminal-action join is invalid",
+            )
+        for key in (
+            "binding_sha256", "authorization_document_sha256",
+            "consumption_sha256", "reconciliation_evidence_sha256",
+            "reported_evidence_sha256",
+        ):
+            _strict_sha256(record.get(key), label=f"retired action {key}")
+        artifact = record.get("response_artifact")
+        if (
+            not isinstance(artifact, dict)
+            or set(artifact) != {"logical_path", "bytes", "sha256"}
+            or not isinstance(artifact.get("logical_path"), str)
+            or not artifact["logical_path"]
+            or isinstance(artifact.get("bytes"), bool)
+            or not isinstance(artifact.get("bytes"), int)
+            or artifact["bytes"] < 1
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid", "retired response artifact is invalid",
+            )
+        _strict_sha256(
+            artifact.get("sha256"), label="retired response artifact digest",
+        )
+    if value["terminal_evidence_sha256"] != _digest(terminal):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired terminal evidence digest mismatch",
+        )
+    revision = value.get("retirement_state_revision")
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired invocation revision is invalid",
+        )
+    body = {
+        key: item for key, item in value.items()
+        if key != "retirement_record_sha256"
+    }
+    if value["retirement_record_sha256"] != _digest(body):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "retired invocation digest mismatch",
+        )
+    return deepcopy(value)
+
+
+def retire_completed_external_authority_v2_intent(
+    state: dict[str, Any], run_dir: Path | str,
+) -> dict[str, Any] | None:
+    """Retire one completely terminal ordinary-v2 intent without persistence.
+
+    The caller owns the native writer and must persist state plus publish and
+    validate one workspace snapshot before exposing the mutation.
+    """
+    from .closure import load_json, sha256_file
+
+    intent = state.get("external_authority_v2_dispatch_intent")
+    if intent is None:
+        return None
+    if not isinstance(intent, dict):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "live v2 dispatch intent is malformed",
+        )
+    ordered = intent.get("ordered_action_ids")
+    if (
+        not isinstance(ordered, list) or not ordered or ordered != sorted(ordered)
+        or len(ordered) != len(set(ordered))
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "live v2 dispatch inventory is invalid",
+        )
+    actions = _current_actions(state, ordered)
+    if any(action.get("state") != "REPORTED" for action in actions):
+        return None
+    if (
+        intent.get("schema_version") != INTENT_SCHEMA_V2
+        or intent.get("state") != "PROVIDER_PENDING"
+        or intent.get("next_action_index") != len(ordered)
+        or intent.get("active_action_id") is not None
+        or intent.get("active_create_state") is not None
+        or intent.get("provider_io_performed") is not True
+        or intent.get("provider_bound_action_ids") != ordered
+        or not isinstance(intent.get("provider_operation_ids"), list)
+        or len(intent["provider_operation_ids"]) != len(ordered)
+        or not isinstance(intent.get("prepared_create_records"), list)
+        or len(intent["prepared_create_records"]) != len(ordered)
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid",
+            "terminal actions do not join one complete live v2 intent",
+        )
+    root = Path(run_dir).resolve()
+    authorization_digests = intent.get(
+        "ordered_authorization_document_sha256s"
+    )
+    if (
+        not isinstance(authorization_digests, list)
+        or len(authorization_digests) != len(ordered)
+    ):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "intent authorization inventory is invalid",
+        )
+    terminal_records: list[dict[str, Any]] = []
+    for index, action in enumerate(actions):
+        binding = action.get("binding")
+        authorization = action.get("authorization")
+        consumption = action.get("consumption")
+        provider = action.get("provider")
+        reconciliation = action.get("provider_reconciliation")
+        reported = action.get("reported")
+        provider_id = intent["provider_operation_ids"][index]
+        if (
+            not isinstance(binding, dict)
+            or not isinstance(authorization, dict)
+            or _digest(authorization) != authorization_digests[index]
+            or authorization.get("action_id") != action["action_id"]
+            or authorization.get("binding") != binding
+            or not isinstance(
+                authorization.get("authorization_reference"), str
+            )
+            or not authorization["authorization_reference"]
+            or not isinstance(consumption, dict)
+            or consumption.get("consumer_id")
+            != f"external-grant-v2:{intent.get('api_decision_id')}"
+            or not isinstance(consumption.get("state_revision"), int)
+            or not isinstance(provider, dict)
+            or provider != {"kind": "response", "id": provider_id}
+            or not isinstance(reconciliation, dict)
+            or reconciliation.get("last_outcome") != "completed"
+            or reconciliation.get("resume_not_before") is not None
+            or not isinstance(reported, dict)
+            or (
+                not isinstance(reported.get("usage"), dict)
+                and reported.get("cost_disposition")
+                != "provider_usage_unavailable_billing_reconciliation_pending"
+            )
+        ):
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid",
+                "reported action does not join complete terminal intent evidence",
+            )
+        response_path = (
+            root / "lifecycle" / "provider-reconciliation"
+            / f"{action['action_id']}.response.json"
+        )
+        if not response_path.is_file():
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid",
+                "terminal intent response artifact is unavailable",
+            )
+        try:
+            response = load_json(response_path)
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid",
+                "terminal intent response artifact is invalid",
+            ) from exc
+        if response.get("id") != provider_id or response.get("status") != "completed":
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid",
+                "terminal response identity or status conflicts with intent",
+            )
+        terminal_records.append({
+            "action_id": action["action_id"],
+            "binding_sha256": _digest(binding),
+            "authorization_document_sha256": _digest(authorization),
+            "authorization_reference": authorization["authorization_reference"],
+            "consumption_sha256": _digest(consumption),
+            "provider_kind": "response",
+            "provider_operation_id": provider_id,
+            "reconciliation_evidence_sha256": _digest(reconciliation),
+            "reported_evidence_sha256": _digest(reported),
+            "response_artifact": {
+                "logical_path": response_path.relative_to(root).as_posix(),
+                "bytes": response_path.stat().st_size,
+                "sha256": sha256_file(response_path),
+            },
+        })
+    body = {
+        "schema_version": RETIRED_INVOCATION_SCHEMA_V1,
+        "outcome": "provider_completed",
+        "request_schema_version": intent.get("request_schema_version"),
+        "request_sha256": intent.get("request_sha256"),
+        "checkpoint_basis_sha256": intent.get("checkpoint_basis_sha256"),
+        "grant_schema_version": intent.get("grant_schema_version"),
+        "grant_sha256": intent.get("grant_sha256"),
+        "api_decision_id": intent.get("api_decision_id"),
+        "ordering_semantics": intent.get("ordering_semantics"),
+        "ordered_action_ids": deepcopy(ordered),
+        "ordered_authorization_document_sha256s": deepcopy(
+            authorization_digests
+        ),
+        "provider_bound_action_ids": deepcopy(
+            intent["provider_bound_action_ids"]
+        ),
+        "provider_operation_ids": deepcopy(intent["provider_operation_ids"]),
+        "prepared_create_records": deepcopy(intent["prepared_create_records"]),
+        "terminal_action_records": terminal_records,
+        "terminal_evidence_sha256": _digest(terminal_records),
+        "retirement_state_revision": int(state.get("state_revision") or 0) + 1,
+    }
+    record = _validate_retired_invocation({
+        **body, "retirement_record_sha256": _digest(body),
+    })
+    history = state.setdefault("external_authority_v2_dispatch_history", [])
+    if not isinstance(history, list):
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "v2 dispatch history is malformed",
+        )
+    matches = [
+        item for item in history
+        if isinstance(item, dict)
+        and item.get("request_sha256") == record["request_sha256"]
+        and item.get("grant_sha256") == record["grant_sha256"]
+    ]
+    if matches:
+        raise ExternalAuthorityV2ExecutionError(
+            "native_evidence_invalid", "terminal v2 intent history is duplicated",
+        )
+    history.append(record)
+    state.pop("external_authority_v2_dispatch_intent", None)
+    logger.info(
+        "external_authority_intent_retired request=%s grant=%s actions=%s "
+        "retirement_revision=%s",
+        record["request_sha256"], record["grant_sha256"], len(ordered),
+        record["retirement_state_revision"],
+    )
+    return deepcopy(record)
+
+
 def _validate_dispatchable(actions: Sequence[Mapping[str, Any]]) -> None:
     for action in actions:
         if action.get("provider") is not None:
@@ -819,24 +1155,76 @@ def dispatch_external_authority_v2_intent(
             )
         return state, intent, ids
 
-    def replay_refusal(state: dict[str, Any]) -> dict[str, Any] | None:
-        if not phase_aware:
-            return None
+    def replay_history(state: dict[str, Any]) -> dict[str, Any] | None:
         history = state.get("external_authority_v2_dispatch_history") or []
         matches = [
             item for item in history
             if isinstance(item, dict)
             and item.get("request_sha256") == request_sha256
             and item.get("grant_sha256") == grant_sha256
-            and item.get("outcome") == "pre_provider_refusal"
         ]
         if not matches:
             return None
         if len(matches) != 1:
             raise ExternalAuthorityV2ExecutionError(
-                "native_evidence_invalid", "refused invocation history is duplicated",
+                "native_evidence_invalid", "dispatch invocation history is duplicated",
             )
         item = matches[0]
+        if item.get("outcome") == "provider_completed":
+            retired = _validate_retired_invocation(item)
+            if phase_aware:
+                return build_external_authority_provider_dispatch_result_v3(
+                    outcome="exact_replay",
+                    reason_code=None,
+                    provider_io_disposition="provider_identity_durable",
+                    grant_invocation_disposition="replayed",
+                    run_id=state["run_id"],
+                    request_sha256=request_sha256,
+                    grant_sha256=grant_sha256,
+                    ordered_action_ids=deepcopy(retired["ordered_action_ids"]),
+                    provider_bound_action_ids=deepcopy(
+                        retired["provider_bound_action_ids"]
+                    ),
+                    ambiguous_action_ids=[],
+                    refused_action_ids=[],
+                    provider_operation_ids=deepcopy(
+                        retired["provider_operation_ids"]
+                    ),
+                    prepared_create_records=deepcopy(
+                        retired["prepared_create_records"]
+                    ),
+                    post_state_revision=int(state["state_revision"]),
+                    post_snapshot_sha256=sha256_file(
+                        root / "workspace-snapshot.json"
+                    ),
+                )
+            body = {
+                "schema_version": PROVIDER_DISPATCH_RESULT_SCHEMA_V2,
+                "outcome": "exact_replay",
+                "run_id": state["run_id"],
+                "request_sha256": request_sha256,
+                "grant_sha256": grant_sha256,
+                "ordered_action_ids": deepcopy(retired["ordered_action_ids"]),
+                "provider_bound_action_ids": deepcopy(
+                    retired["provider_bound_action_ids"]
+                ),
+                "ambiguous_action_ids": [],
+                "provider_operation_ids": deepcopy(
+                    retired["provider_operation_ids"]
+                ),
+                "post_state_revision": int(state["state_revision"]),
+                "post_snapshot_sha256": sha256_file(
+                    root / "workspace-snapshot.json"
+                ),
+                "provider_io_performed": False,
+            }
+            return validate_external_authority_provider_dispatch_result_v2({
+                **body, "result_sha256": _digest(body),
+            })
+        if not phase_aware or item.get("outcome") != "pre_provider_refusal":
+            raise ExternalAuthorityV2ExecutionError(
+                "native_evidence_invalid", "dispatch history outcome is unsupported",
+            )
         return build_external_authority_provider_dispatch_result_v3(
             outcome="pre_provider_refusal",
             reason_code=item["reason_code"],
@@ -858,9 +1246,9 @@ def dispatch_external_authority_v2_intent(
     with _exclusive_lifecycle_lock(root):
         replay_state = load_json(run_json)
         validate_workspace_snapshot(root, replay_state)
-        refusal_replay = replay_refusal(replay_state)
-        if refusal_replay is not None:
-            return refusal_replay
+        historical_replay = replay_history(replay_state)
+        if historical_replay is not None:
+            return historical_replay
         state, intent, ordered_ids = load_intent_state()
         if phase_aware and (
             intent.get("state") == "AMBIGUOUS_PROVIDER_SUBMISSION"
