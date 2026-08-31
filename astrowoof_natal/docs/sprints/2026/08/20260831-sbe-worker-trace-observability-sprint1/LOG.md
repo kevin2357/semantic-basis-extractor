@@ -77,3 +77,14 @@
 - The minimal isolated environment reports optional `jsonschema` absent during
   `pip check`; SBE and SPC install/version/resource checks and both installed
   qualification commands passed. No dependency was downloaded from a network.
+
+## 2026-08-31 — publication
+
+- Owner approved commit, tag, and publication.
+- Source commit: `96980ab`; final evidence commit/tag target: `5076f4a`.
+- Published immutable tag `astrowoof-natal-authoring-v0.4.36` and GitHub
+  release with the committed-source wheel.
+- Downloaded the public asset afresh; SHA-256 matched
+  `a76157d5342cb3b72a88b0b04fe8f3b549b8941b46d92d268182cbf934e8d826`.
+- Public-wheel install reported version `0.4.36`, contained the packaged schema,
+  and reproduced the byte-identical qualification receipt.

@@ -2,9 +2,8 @@
 
 ## Status
 
-Slices 0–6 complete in source. Slice 7 packaging/release evidence is in
-progress. Owner authorized autonomous progress through review pauses unless a
-contract decision or material issue arose.
+Complete and published as immutable SBE `0.4.36`. Owner authorized release;
+the public wheel was downloaded and independently requalified.
 
 ## Objective
 

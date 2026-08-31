@@ -63,6 +63,10 @@ new regression makes that interval explicit and proves:
 
 ## Current gate
 
-Implementation, focused regression, reproducible build, installed trace
-qualification, and generic installed smoke are complete. Commit/tag/publication
-remain owner-authorized release actions.
+Published and publicly reverified:
+
+- Tag: `astrowoof-natal-authoring-v0.4.36`.
+- Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.36`.
+- Downloaded public wheel matched the recorded SHA-256.
+- Public-wheel version/resource check and trace qualification passed.
