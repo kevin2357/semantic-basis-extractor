@@ -617,6 +617,41 @@ class TestBoundedLifecycle(unittest.TestCase):
             )
             self.assertEqual("review_required", inspection["terminal"]["outcome"])
 
+    def test_generic_save_does_not_discover_sealed_results_mid_mutation(self) -> None:
+        """Only reconciliation may project an already-validated review result.
+
+        A coordinator routinely changes native bytes before publishing the next
+        snapshot.  Generic persistence must not try to read a sealed result at
+        that point because the result reader correctly rejects the temporarily
+        stale snapshot.
+        """
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            state = create_bounded_run(run_dir, self.artifacts)
+            for record in state["passes"].values():
+                record["state"] = "PASS_QA_ACCEPTED"
+            state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+            save_state(run_dir / "run.json", state)
+            publish_native_execution_result(
+                run_dir, command_kind="ordinary_authoring",
+                sbe_release="test", published_at="2026-08-18T14:30:00Z",
+            )
+
+            state = load_json(run_dir / "run.json")
+            state["updated_at"] = "2026-08-18T14:31:00Z"
+            # Model the normal writer interval after native truth changes and
+            # before save_state publishes the successor snapshot.
+            (run_dir / "run.json").write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8",
+            )
+
+            save_state(run_dir / "run.json", state)
+            validate_workspace_snapshot(run_dir, state)
+            self.assertEqual(
+                "FINAL_QA_REQUIRES_REVIEW",
+                load_json(run_dir / "run.json")["status"],
+            )
+
     def test_fake_route_completes_shared_lifecycle_and_closeout(self) -> None:
         events = []
         emitter = ExecutionEventEmitter(release="test", sink=events.append)

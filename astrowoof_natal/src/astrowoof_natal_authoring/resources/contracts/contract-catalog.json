@@ -87,7 +87,8 @@
     "provider_economics_export": "astrowoof.provider_economics_export.v1",
     "provider_economics_qualification": "astrowoof.provider_economics_qualification.v1",
     "provider_pending_lifecycle_qualification": "astrowoof.provider_pending_lifecycle_qualification.v2",
-    "terminal_review_qualification": "astrowoof.terminal_review_qualification.v1"
+    "terminal_review_qualification": "astrowoof.terminal_review_qualification.v1",
+    "sbe_trace_observability_qualification": "astrowoof.sbe_trace_observability_qualification.v1"
   },
   "compatibility": {
     "legacy_projected_directory": "normalized_to_projected_input_v0.1",

@@ -16,7 +16,7 @@ from ..application_logging import (
     bind_logging_context,
     configure_logging_from_args,
 )
-from ..closure import OpenAIResponsesProvider
+from ..closure import OpenAIResponsesProvider, validate_workspace_snapshot
 from ..execution_events import ExecutionEventEmitter, JsonlEventSink, StdoutJsonlSink
 from ..external_authority_v2 import build_no_grant_dispatch_result_v2
 from ..external_authority_v2_execution import (
@@ -28,6 +28,11 @@ from ..external_authority_v2_execution import (
     commit_external_authority_v2_dispatch_intent,
     dispatch_external_authority_v2_intent,
     resolve_external_authority_v2_request_payload,
+)
+from ..trace_observability import (
+    log_cli_exit,
+    log_decision_summary,
+    log_native_state_summary,
 )
 
 
@@ -88,6 +93,8 @@ def main(argv: list[str] | None = None) -> int:
         run_id=str(native_state.get("run_id") or "-"),
         current_state=str(native_state.get("status") or "-"),
     )
+    validate_workspace_snapshot(run_dir, native_state)
+    log_native_state_summary(logger, native_state, phase="command_entry")
     sink = None
     if args.events_stdout_jsonl:
         sink = StdoutJsonlSink()
@@ -114,7 +121,15 @@ def main(argv: list[str] | None = None) -> int:
             "command_complete command=external_authority_v2 outcome=%s provider_io=none",
             result["outcome"],
         )
+        log_decision_summary(
+            logger, result, command="external_authority_v2", operation="no_grant",
+        )
         _render(result, args.output)
+        log_cli_exit(
+            logger, command="external_authority_v2", operation="no_grant",
+            exit_code=3, outcome=result["outcome"],
+            authoritative_transport="output_file" if args.output else "stdout_json",
+        )
         return 3
     if args.provider != "openai":
         parser.error("provider-capable v2 execution requires --provider openai")
@@ -250,8 +265,23 @@ def main(argv: list[str] | None = None) -> int:
             intent_result=intent_result, dispatch_result=dispatch_result,
         )
     )
+    log_decision_summary(
+        logger, command_result, command="external_authority_v2",
+        operation="constrained_dispatch",
+    )
     _render(command_result, args.output)
-    return 0 if dispatch_result["outcome"] in {"detached_provider_pending", "exact_replay"} else 3
+    exit_code = (
+        0 if dispatch_result["outcome"] in {"detached_provider_pending", "exact_replay"}
+        else 3
+    )
+    log_cli_exit(
+        logger, command="external_authority_v2", operation="constrained_dispatch",
+        exit_code=exit_code, outcome=dispatch_result["outcome"],
+        result_id=command_result.get("result_id"),
+        receipt_id=command_result.get("receipt_id"),
+        authoritative_transport="output_file" if args.output else "stdout_json",
+    )
+    return exit_code
 
 
 if __name__ == "__main__":

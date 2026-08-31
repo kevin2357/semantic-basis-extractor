@@ -101,6 +101,12 @@ from .spend import (
     record_reported_cost,
     validate_policy,
 )
+from .trace_observability import (
+    log_cli_exit,
+    log_decision_summary,
+    log_native_state_summary,
+    log_workspace_fingerprint,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -2735,30 +2741,6 @@ def save_state(
     _failure_injector: Callable[[str], None] | None = None,
 ) -> None:
     """Persist state and publish a coordinator-owned quiescent checkpoint."""
-    if preserve_review_status is None:
-        index_path = run_json.parent / "native-result-index.json"
-        if index_path.is_file():
-            from .native_transitions import read_native_transition_result
-
-            for result_id in reversed(load_json(index_path).get("result_ids", [])):
-                published = read_native_transition_result(
-                    run_json.parent, result_id,
-                )["result"]
-                if (
-                    published.get("schema_version")
-                    == "astrowoof.native_execution_result.v0.2"
-                    and published.get("outcome") == "review_required"
-                ):
-                    observed = str(state.get("status") or "")
-                    preserve_review_status = (
-                        observed
-                        if observed in {
-                            "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED",
-                            "FINAL_QA_REQUIRES_REVIEW",
-                        }
-                        else "FAILED_REQUIRES_REVIEW"
-                    )
-                    break
     if threading.current_thread() is not threading.main_thread():
         persist_state(
             run_json, state, preserve_review_status=preserve_review_status,
@@ -2990,6 +2972,11 @@ def validate_workspace_snapshot(run_dir: Path, state: dict[str, Any]) -> None:
     logger.debug(
         "workspace_snapshot_valid member_count=%s run_dir=%s", len(actual), run_dir
     )
+    log_workspace_fingerprint(
+        logger, run_dir, state, validation_outcome="valid",
+        sbe_release=__version__,
+    )
+    log_native_state_summary(logger, state, phase="workspace_validated")
 
 
 def save_state_locked(
@@ -8049,6 +8036,17 @@ def main() -> None:
         parser.error("--events-stdout-jsonl is supported for authoring commands")
 
     def output_result(value: dict[str, Any]) -> None:
+        log_decision_summary(
+            logger, value, command="semantic_closure",
+            operation=(
+                "provider_reconciliation"
+                if (
+                    args.provider_reconciliation_cycle
+                    or args.bounded_provider_reconciliation
+                )
+                else "resume" if args.resume else "create"
+            ),
+        )
         if args.events_stdout_jsonl:
             StdoutJsonlSink()(command_result_envelope(value))
         else:
@@ -8300,6 +8298,11 @@ def main() -> None:
             event_emitter=event_emitter,
         )
         output_result(result)
+        log_cli_exit(
+            logger, command="semantic_closure", operation="provider_reconciliation",
+            exit_code=0 if result["outcome"] == "terminal" else 3,
+            outcome=result["outcome"], authoritative_transport="stdout_json",
+        )
         if result["outcome"] != "terminal":
             raise SystemExit(3)
         return
@@ -8711,8 +8714,22 @@ def main() -> None:
         output_result(build_terminal_review_command_result(
             sealed["result"], sealed["receipt"],
         ))
+        log_cli_exit(
+            logger, command="semantic_closure", operation="ordinary_authoring",
+            exit_code=2, outcome="review_required",
+            result_id=sealed["result"].get("result_id"),
+            receipt_id=sealed["receipt"].get("receipt_id"),
+            authoritative_transport="stdout_json",
+        )
         raise SystemExit(2)
     output_result(state)
+    log_cli_exit(
+        logger, command="semantic_closure", operation="ordinary_authoring",
+        exit_code=2 if review_required else 0, outcome=state.get("status"),
+        result_id=sealed["result"].get("result_id"),
+        receipt_id=sealed["receipt"].get("receipt_id"),
+        authoritative_transport="stdout_json",
+    )
     if review_required:
         raise SystemExit(2)
 

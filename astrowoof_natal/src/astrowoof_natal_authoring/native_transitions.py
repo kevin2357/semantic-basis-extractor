@@ -917,6 +917,16 @@ def publish_native_execution_result(
             invocation_id, result["result_id"], receipt["receipt_id"],
             result["outcome"], selected["record_count"], snapshot_sha256,
         )
+        from .trace_observability import log_decision_summary
+        log_decision_summary(
+            logger,
+            {
+                **result,
+                "receipt_id": receipt["receipt_id"],
+            },
+            command="native_transition_publication",
+            operation=command_kind,
+        )
         return sealed
 
 

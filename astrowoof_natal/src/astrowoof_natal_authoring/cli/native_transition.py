@@ -12,6 +12,7 @@ from ..native_transitions import (
     read_native_transition_result,
 )
 from ..application_logging import add_logging_arguments, configure_logging_from_args
+from ..trace_observability import log_cli_exit, log_decision_summary
 
 
 logger = logging.getLogger(__name__)
@@ -47,9 +48,15 @@ def main() -> None:
         latest_native_transition_result(run_dir)
         if args.latest else read_native_transition_result(run_dir, args.result_id)
     )
+    public_result = value.get("result") if isinstance(value.get("result"), dict) else value
+    log_decision_summary(
+        logger, public_result, command="native_transition",
+        operation="latest" if args.latest else "explicit",
+    )
     logger.info(
         "native_result_read result_id=%s outcome=%s",
-        value.get("result_id"), value.get("outcome"),
+        value.get("result_id") or public_result.get("result_id"),
+        public_result.get("outcome"),
     )
     rendered = json.dumps(
         value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
@@ -58,6 +65,15 @@ def main() -> None:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(rendered, encoding="utf-8")
     print(rendered, end="")
+    log_cli_exit(
+        logger, command="native_transition",
+        operation="latest" if args.latest else "explicit", exit_code=0,
+        outcome=public_result.get("outcome"),
+        result_id=value.get("result_id") or public_result.get("result_id"),
+        receipt_id=(value.get("receipt") or {}).get("receipt_id")
+        if isinstance(value.get("receipt"), dict) else value.get("receipt_id"),
+        authoritative_transport="output_file_and_stdout" if output else "stdout_json",
+    )
 
 
 if __name__ == "__main__":

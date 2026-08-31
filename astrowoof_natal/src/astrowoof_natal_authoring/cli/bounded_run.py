@@ -32,6 +32,11 @@ from ..spend import (
     AwaitingSpendAuthorization,
     BudgetExhausted,
 )
+from ..trace_observability import (
+    log_cli_exit,
+    log_decision_summary,
+    log_native_state_summary,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -160,7 +165,16 @@ def main() -> None:
                 ),
                 event_emitter=emitter,
             )
+            log_decision_summary(
+                logger, result, command="bounded_run",
+                operation="provider_reconciliation",
+            )
             print(json.dumps(result, sort_keys=True))
+            log_cli_exit(
+                logger, command="bounded_run", operation="provider_reconciliation",
+                exit_code=0 if result["outcome"] == "terminal" else 3,
+                outcome=result["outcome"], authoritative_transport="stdout_json",
+            )
             if result["outcome"] != "terminal":
                 raise SystemExit(3)
             return
@@ -184,6 +198,12 @@ def main() -> None:
                     event_emitter=emitter,
                 )
                 print(json.dumps(public_run_state(state), sort_keys=True))
+                log_native_state_summary(logger, state, phase="prepare_only_complete")
+                log_cli_exit(
+                    logger, command="bounded_run", operation="prepare_only",
+                    exit_code=0, outcome=state.get("status"),
+                    authoritative_transport="stdout_json",
+                )
                 return
         state = resume_bounded_run(
             args.run_dir,
@@ -200,7 +220,14 @@ def main() -> None:
             sbe_release=__version__, published_at=state["updated_at"],
             event_emitter=emitter,
         )
+        log_native_state_summary(logger, state, phase="ordinary_run_complete")
         print(json.dumps(public_run_state(state), sort_keys=True))
+        log_cli_exit(
+            logger, command="bounded_run",
+            operation="resume" if args.resume else "create",
+            exit_code=0 if state.get("status") == "DELIVERY_COMPLETE" else 3,
+            outcome=state.get("status"), authoritative_transport="stdout_json",
+        )
         if state.get("status") != "DELIVERY_COMPLETE":
             raise SystemExit(3)
     except (AwaitingSpendAuthorization, BudgetExhausted, AmbiguousProviderSubmission) as exc:
@@ -215,7 +242,13 @@ def main() -> None:
             sbe_release=__version__, published_at=state["updated_at"],
             event_emitter=emitter,
         )
+        log_native_state_summary(logger, state, phase="external_boundary")
         print(json.dumps(public_run_state(state), sort_keys=True))
+        log_cli_exit(
+            logger, command="bounded_run", operation="external_boundary",
+            exit_code=3, outcome=type(exc).__name__,
+            authoritative_transport="stdout_json", exception=exc,
+        )
         raise SystemExit(3)
 
 

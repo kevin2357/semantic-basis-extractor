@@ -31,6 +31,7 @@ from ..application_logging import (
     bind_logging_context,
     configure_logging_from_args,
 )
+from ..trace_observability import log_cli_exit, log_decision_summary
 
 
 logger = logging.getLogger(__name__)
@@ -172,6 +173,15 @@ def main() -> None:
     logger.info(
         "command_complete command=lifecycle operation=%s outcome=%s",
         args.operation, result.get("outcome", result.get("disposition", "complete")),
+    )
+    log_decision_summary(
+        logger, result, command="lifecycle", operation=args.operation,
+    )
+    log_cli_exit(
+        logger, command="lifecycle", operation=args.operation, exit_code=0,
+        outcome=result.get("outcome", result.get("disposition", "complete")),
+        result_id=result.get("result_id"), receipt_id=result.get("receipt_id"),
+        authoritative_transport="stdout_jsonl" if args.stdout_jsonl else "stdout_json",
     )
     if args.stdout_jsonl:
         StdoutJsonlSink()(command_result_envelope(result))
