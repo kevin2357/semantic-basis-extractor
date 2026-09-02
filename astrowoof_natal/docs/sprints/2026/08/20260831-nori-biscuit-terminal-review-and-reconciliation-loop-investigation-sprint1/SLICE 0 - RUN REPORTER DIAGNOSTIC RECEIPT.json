@@ -1,0 +1,22 @@
+{
+  "schema_version": "astrowoof.sbe_run_report_diagnostic_receipt.v0.1",
+  "source": {
+    "path": "C:\\Users\\kevin\\Downloads\\sbe logs.txt",
+    "bytes": 1714322,
+    "lines": 2000,
+    "sha256": "a0267e1984311ff067027c3897833cd8ce704ed6cee5fc0d3bcb0fa7f8c4fe20"
+  },
+  "coverage": {
+    "marked_records_seen": 1641,
+    "marked_records_parsed": 1641,
+    "json_envelopes": 265,
+    "malformed_marked_records": 0,
+    "native_run_count": 2,
+    "trace_ends_before_reported_biscuit_loop": true
+  },
+  "outputs": {
+    "report_json_sha256": "a4335c25350f26689ddcfe1a5ff59d287932a081d2c0e8fb8985ca6334e894a9",
+    "report_html_sha256": "bc62e8520d82b8c07514cf15c3013f32b34ba00561da7a7c0396f20ff0b92011"
+  },
+  "authority": "diagnostic_navigation_only"
+}

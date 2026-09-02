@@ -1,0 +1,23 @@
+{
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1",
+  "api_run_id": "5741d84d-b053-494f-9644-1cb9e4cb6cbf",
+  "sbe_job_id": "329b39f1-3084-4be4-86a0-152cfd68fb43",
+  "native_run_id": "e0b406dbacf2edf0ce7b421586e7464d8056fe0f893033a03edfdee957f6a9a0",
+  "checkpoint_id": "2a9c5936-b64a-4a7d-b81b-d74522713ebc",
+  "checkpoint_generation": 15,
+  "logical_restore_path": "/work/runs/5741d84d-b053-494f-9644-1cb9e4cb6cbf/sbe",
+  "compatibility_identity": "astrowoof.qa.sbe0437-generic-quarantine.v2",
+  "object_uuid": "7482718a-f773-4ae4-929d-3fc043171271",
+  "object_key": "v1/checkpoint/7482718af7734ae4929d3fc043171271",
+  "expected_archive_sha256": "721926c6b10c7cc3ee3de5276674a844afbfaef3abdd2d9058c8fd6a928e6e8d",
+  "expected_archive_bytes": 5014073,
+  "expected_inventory_sha256": "56514a2f326d85357f452dc4fcf035fdcd0c6697f220b36114ec644ff9cea756",
+  "expected_etag": "04934a4da3493aa5d2921bd7bf90b1fd",
+  "approved_operations": {
+    "head_count": 1,
+    "get_count": 1,
+    "list_count": 0,
+    "write_count": 0,
+    "delete_count": 0
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt_set.v1",
+  "remote_operation_totals": {
+    "head": 2,
+    "get": 2,
+    "list": 0,
+    "write": 0,
+    "delete": 0
+  },
+  "provider_operation_count": 0,
+  "workspace_mutation_count": 0,
+  "checkpoints": [
+    {
+      "api_run_id": "25704e4a-059d-49b0-b0e8-c0de5b230e58",
+      "native_run_id": "8a7c25e37385ef75e95d8b72a7efe7bdb1355495df4195cf1bab93f0d821dd84",
+      "checkpoint_id": "9c14e28e-eb1a-470e-b023-a5d5253f6137",
+      "checkpoint_generation": 13,
+      "object_key": "v1/checkpoint/9bbb5bbdabfc457a856c95a7cc1efa09",
+      "manifest_sha256": "da67b42c8e65e772688c3bedc65ffccfaaa058e089b237166da3fec56818420f",
+      "archive_sha256": "925dfed7c7a6a3b43c29ac963f3aa978c50d6d7a98c26c870c50e4ce3af89d47",
+      "archive_bytes": 4115956,
+      "inventory_sha256": "3aa7b1dbb99701d56ec7774cb5df99384340e1fa41400e00ac0a7b1a17b1c7b3",
+      "provider_version_or_etag": "5107c10aff34b46927dc0c346eca2288",
+      "archive_member_count": 783,
+      "workspace_snapshot_member_count": 744,
+      "archive_safe": true,
+      "archive_inventory_valid": true,
+      "workspace_snapshot_members_valid": true
+    },
+    {
+      "api_run_id": "5741d84d-b053-494f-9644-1cb9e4cb6cbf",
+      "native_run_id": "e0b406dbacf2edf0ce7b421586e7464d8056fe0f893033a03edfdee957f6a9a0",
+      "checkpoint_id": "2a9c5936-b64a-4a7d-b81b-d74522713ebc",
+      "checkpoint_generation": 15,
+      "object_key": "v1/checkpoint/7482718af7734ae4929d3fc043171271",
+      "manifest_sha256": "7e0af2a41b79fb95e7f1865fca4c5ccb42b07075872a41c74cdbbde206396452",
+      "archive_sha256": "721926c6b10c7cc3ee3de5276674a844afbfaef3abdd2d9058c8fd6a928e6e8d",
+      "archive_bytes": 5014073,
+      "inventory_sha256": "56514a2f326d85357f452dc4fcf035fdcd0c6697f220b36114ec644ff9cea756",
+      "provider_version_or_etag": "04934a4da3493aa5d2921bd7bf90b1fd",
+      "archive_member_count": 983,
+      "workspace_snapshot_member_count": 944,
+      "archive_safe": true,
+      "archive_inventory_valid": true,
+      "workspace_snapshot_members_valid": true
+    }
+  ]
+}

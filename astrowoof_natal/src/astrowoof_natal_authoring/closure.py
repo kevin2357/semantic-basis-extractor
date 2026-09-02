@@ -8385,9 +8385,27 @@ def main() -> None:
         ):
             prior_local_lifecycle = candidate_local_lifecycle
 
-    def seal_local_progress() -> None:
+    def seal_local_progress(*, defer_optional_stage_consumers: bool = False) -> None:
         nonlocal prior_local_lifecycle
         if prior_local_lifecycle is None:
+            return
+        operations = prior_local_lifecycle["checkpoint_basis"][
+            "local_work_inventory"
+        ]["operations"]
+        optional_stages = {
+            "polish", "qualitative_critic", "qualitative_candidate",
+        }
+        if (
+            defer_optional_stage_consumers
+            and operations
+            and all(operation.get("stage") in optional_stages for operation in operations)
+        ):
+            logger.info(
+                "local_work_progress_deferred reason=stage_consumer_not_reached "
+                "operation_count=%s stages=%s",
+                len(operations),
+                sorted({operation.get("stage") for operation in operations}),
+            )
             return
         from .post_fan_in_contracts import (
             LocalWorkProgressContradiction,
@@ -8417,6 +8435,12 @@ def main() -> None:
                 exc.sealed["result"], exc.sealed["receipt"],
             ))
             raise SystemExit(2) from None
+        # commit_local_work_progress owns its writer and persists the cumulative
+        # consumed-key lineage. Keep the coordinator's in-memory state aligned
+        # so its later checkpoint cannot overwrite that durable progress fact.
+        committed_state = load_json(run_json)
+        state.clear()
+        state.update(committed_state)
         prior_local_lifecycle = (
             successor
             if successor["temporal_decision"]["selected_command"]
@@ -8586,7 +8610,10 @@ def main() -> None:
         return
     authoring_complete = True
     with checkpoint_spend_boundary(
-        run_json, state, on_quiescent_checkpoint=seal_local_progress,
+        run_json, state,
+        on_quiescent_checkpoint=lambda: seal_local_progress(
+            defer_optional_stage_consumers=True,
+        ),
         terminal_review_v02=args.service_level == "interactive",
         terminal_review_output=output_result, event_emitter=event_emitter,
     ):
