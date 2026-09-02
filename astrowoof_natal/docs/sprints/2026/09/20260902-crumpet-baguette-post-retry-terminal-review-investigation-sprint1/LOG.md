@@ -41,3 +41,8 @@
   The full repository suite was not run; the complete 95-test closure module
   and focused affected matrices form the recorded risk-proportionate gate.
   Final source commit and explicit tag/publication approval remain pending.
+- 2026-09-02: Owner approved commit, tag, and publication. Committed source as
+  `fce360c`, committed the final artifact record as `baa33d9`, tagged
+  `astrowoof-natal-authoring-v0.4.39`, and published the wheel plus checksum to
+  GitHub Releases. An independent post-publication download reproduced wheel
+  SHA-256 `06217b35…a43fe4`; the immutable tag resolves to `baa33d9`.

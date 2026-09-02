@@ -1,8 +1,7 @@
 # Sprint 1 — Post-retry terminal-review investigation
 
-Status: Slices 0–4 complete and installed-wheel qualified. Slice 5 release
-candidate evidence is complete; final source commit and explicit release
-approval remain pending.
+Status: Complete. SBE 0.4.39 is committed, immutably tagged, published, and
+post-publication hash verified.
 
 ## Goal
 

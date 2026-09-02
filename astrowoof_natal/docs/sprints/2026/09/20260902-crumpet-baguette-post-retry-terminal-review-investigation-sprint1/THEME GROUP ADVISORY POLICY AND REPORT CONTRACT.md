@@ -1,6 +1,6 @@
 # Theme-group advisory policy and pass-gate report contract
 
-Status: owner-approved policy; implemented candidate pending combined release
+Status: implemented and published in SBE 0.4.39
 qualification.
 
 ## Decision

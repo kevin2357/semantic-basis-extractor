@@ -71,3 +71,12 @@ No API/SBE seam correction is indicated by Slice 0.
 - The full repository suite was not run. Qualification instead used the full
   95-test semantic-closure module, the affected validation and reporter suites,
   both installed feature qualifications, and installed release smoke.
+
+## Publication
+
+- Approved source commit: `fce360c`.
+- Final release-record commit and immutable tag target: `baa33d9`.
+- Tag: `astrowoof-natal-authoring-v0.4.39`.
+- The published wheel was downloaded independently after publication and its
+  SHA-256 exactly matched the committed candidate and `SHA256SUMS.txt`:
+  `06217b35a5cc024123bc3855c087b0f5c13864b06051d9847f90214c2da43fe4`.

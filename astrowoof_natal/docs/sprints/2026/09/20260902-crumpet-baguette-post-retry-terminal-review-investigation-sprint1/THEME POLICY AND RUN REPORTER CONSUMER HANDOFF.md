@@ -1,7 +1,6 @@
 # Theme policy and run reporter consumer handoff
 
-Status: source- and installed-wheel-qualified 0.4.39 candidate; final source
-commit and release approval pending.
+Status: SBE 0.4.39 published and post-publication verified.
 
 ## Theme-group acceptance policy
 
