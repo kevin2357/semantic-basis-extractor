@@ -103,9 +103,11 @@ from astrowoof_natal_authoring.extractor import (  # noqa: E402
     render_compact_v2_full_chart_basis,
 )
 from astrowoof_natal_authoring.validation import BAD_SECOND_PERSON  # noqa: E402
+from astrowoof_natal_authoring.assembly import parse_fields  # noqa: E402
 from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
     invalid_context_filter_claim_ids,
     invalid_theme_group_claim_ids,
+    theme_group_plan_issues,
 )
 from astrowoof_natal_authoring.spend import (  # noqa: E402
     AUTHORIZATION_SCHEMA,
@@ -2631,6 +2633,130 @@ class TestSemanticClosure(SemanticClosureFixture):
             affected, issue = invalid_theme_group_claim_ids(root)
             self.assertEqual("theme_group_registry", issue)
             self.assertTrue(affected)
+
+    def test_pass_six_theme_group_coverage_is_retained_advisory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build_story_workspace(
+                root, self.packet, ROOT, 0, card_start=51,
+                include_summaries=True, include_theme_plan=True,
+                pass_number=6, pass_count=6, assigned_cards=[],
+            )
+            fill_fake_workspace(root)
+            path = root / "ASSIGN THEME GROUPS.md"
+            fields = parse_fields(path)
+            registry = json.loads(
+                fields["theme_group_registry.interdogpendence"]
+            )
+            removed_id, replacement_id = registry[-1]["id"], registry[0]["id"]
+            text = path.read_text(encoding="utf-8")
+            text = re.sub(
+                r"(<!-- BEGIN FIELD: theme_group\.interdogpendence\.\d+ -->\s*)"
+                + re.escape(removed_id)
+                + r"(\s*<!-- END FIELD: theme_group\.interdogpendence\.\d+ -->)",
+                rf"\g<1>{replacement_id}\g<2>", text,
+            )
+            path.write_text(text, encoding="utf-8")
+
+            accepted, outcome = run_pass_acceptance(
+                root, root / "acceptance.json",
+                python_executable=Path(sys.executable),
+            )
+            self.assertTrue(accepted, outcome)
+            report = outcome["report"]
+            self.assertEqual("astrowoof.authoring_pass_gate.v0.2", report["schema_version"])
+            self.assertEqual([], report["editorial_issue_codes"])
+            self.assertEqual(["theme_group_coverage"], report["advisory_issue_codes"])
+            self.assertTrue(report["advisory_affected_claim_ids"])
+
+    def test_pass_six_unknown_theme_assignment_remains_hard_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build_story_workspace(
+                root, self.packet, ROOT, 0, card_start=51,
+                include_summaries=True, include_theme_plan=True,
+                pass_number=6, pass_count=6, assigned_cards=[],
+            )
+            fill_fake_workspace(root)
+            path = root / "ASSIGN THEME GROUPS.md"
+            text = path.read_text(encoding="utf-8")
+            text = re.sub(
+                r"(<!-- BEGIN FIELD: theme_group\.interdogpendence\.\d+ -->\s*)"
+                r"[^<\s]+"
+                r"(\s*<!-- END FIELD: theme_group\.interdogpendence\.\d+ -->)",
+                r"\g<1>not_in_registry\g<2>", text, count=1,
+            )
+            path.write_text(text, encoding="utf-8")
+
+            accepted, outcome = run_pass_acceptance(
+                root, root / "acceptance.json",
+                python_executable=Path(sys.executable),
+            )
+            self.assertFalse(accepted)
+            self.assertIn(
+                "theme_group_assignment",
+                outcome["report"]["editorial_issue_codes"],
+            )
+
+    def test_theme_group_balance_and_mirroring_are_advisories(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build_story_workspace(
+                root, self.packet, ROOT, 0, card_start=51,
+                include_summaries=True, include_theme_plan=True,
+                pass_number=6, pass_count=6, assigned_cards=[],
+            )
+            fill_fake_workspace(root)
+            path = root / "ASSIGN THEME GROUPS.md"
+            fields = parse_fields(path)
+            first_registry = json.loads(
+                fields["theme_group_registry.interdogpendence"]
+            )
+            second_registry = json.loads(fields["theme_group_registry.takeaways"])
+            second_registry[0]["title"] = first_registry[0]["title"]
+            text = path.read_text(encoding="utf-8")
+            text = re.sub(
+                r"(<!-- BEGIN FIELD: theme_group_registry\.takeaways -->\s*)"
+                r".*?"
+                r"(\s*<!-- END FIELD: theme_group_registry\.takeaways -->)",
+                lambda match: match.group(1)
+                + json.dumps(second_registry)
+                + match.group(2),
+                text, count=1, flags=re.DOTALL,
+            )
+            fields = parse_fields(path)
+            assignments = [
+                (name, value)
+                for name, value in fields.items()
+                if name.startswith("theme_group.interdogpendence.")
+            ]
+            counts = {}
+            for _, value in assignments:
+                counts[value] = counts.get(value, 0) + 1
+            donor = next(group_id for group_id, count in counts.items() if count >= 2)
+            recipient = next(group_id for group_id in counts if group_id != donor)
+            donor_fields = [name for name, value in assignments if value == donor]
+            for field_name in donor_fields[:-1]:
+                text = re.sub(
+                    rf"(<!-- BEGIN FIELD: {re.escape(field_name)} -->\s*)"
+                    + re.escape(donor)
+                    + rf"(\s*<!-- END FIELD: {re.escape(field_name)} -->)",
+                    rf"\g<1>{recipient}\g<2>", text, count=1,
+                )
+            path.write_text(text, encoding="utf-8")
+            codes = [issue["code"] for issue in theme_group_plan_issues(root)]
+            self.assertIn("theme_group_balance", codes)
+            self.assertIn("cross_section_theme_mirroring", codes)
+
+            accepted, outcome = run_pass_acceptance(
+                root, root / "acceptance.json",
+                python_executable=Path(sys.executable),
+            )
+            self.assertTrue(accepted, outcome)
+            self.assertEqual(
+                ["theme_group_balance", "cross_section_theme_mirroring"],
+                outcome["report"]["advisory_issue_codes"],
+            )
 
     def test_completed_malformed_output_preserves_billable_metadata(
         self,

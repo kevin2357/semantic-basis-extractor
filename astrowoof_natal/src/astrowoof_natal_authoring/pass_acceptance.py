@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+from copy import deepcopy
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -40,6 +41,12 @@ CONTEXT_FILTER_VOCABULARY = {
         "Trust & Security", "Stress & Resilience",
     },
 }
+
+THEME_GROUP_ADVISORY_CODES = frozenset({
+    "theme_group_coverage",
+    "theme_group_balance",
+    "cross_section_theme_mirroring",
+})
 
 
 def item(
@@ -228,18 +235,37 @@ def theme_group_plan_issues(
             if field.startswith(f"theme_group.{section}.") and value.strip()
         }
         counts = Counter(assignments.values())
-        if set(counts) != set(ids):
+        unknown_ids = set(counts) - set(ids)
+        missing_ids = set(ids) - set(counts)
+        if unknown_ids:
+            issues.append({
+                "code": "theme_group_assignment",
+                "message": (
+                    f"{section} assignments reference an unregistered "
+                    "chapter."
+                ),
+                "claim_ids": sorted(
+                    claim_id
+                    for claim_id, group_id in assignments.items()
+                    if group_id in unknown_ids
+                ),
+            })
+        if missing_ids:
             issues.append({
                 "code": "theme_group_coverage",
                 "message": (
-                    f"{section} assignments must use every registered chapter "
-                    "and no unregistered chapter."
+                    f"{section} assignments do not use every registered "
+                    "chapter."
                 ),
                 "claim_ids": affected,
             })
-            continue
-        sizes = list(counts.values())
-        if min(sizes) < 2 or max(sizes) > 2 * min(sizes):
+        known_counts = Counter(
+            group_id for group_id in assignments.values() if group_id in ids
+        )
+        sizes = list(known_counts.values())
+        if not unknown_ids and not missing_ids and (
+            min(sizes) < 2 or max(sizes) > 2 * min(sizes)
+        ):
             issues.append({
                 "code": "theme_group_balance",
                 "message": (
@@ -286,6 +312,36 @@ def invalid_theme_group_claim_ids(workspace: Path) -> tuple[list[str], str | Non
     return issues[0]["claim_ids"], issues[0]["code"]
 
 
+def apply_theme_group_policy(
+    report: dict[str, Any], issues: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Apply the closed hard/advisory policy to one full lint report."""
+    result = deepcopy(report)
+    if not isinstance(result.get("rejection_reasons"), list):
+        raise ValueError("Pass report rejection_reasons must be a list")
+    advisories = result.setdefault("advisory_reasons", [])
+    if not isinstance(advisories, list):
+        raise ValueError("Pass report advisory_reasons must be a list")
+    for issue in issues:
+        if (
+            not isinstance(issue, dict)
+            or set(issue) != {"code", "message", "claim_ids"}
+            or not isinstance(issue.get("code"), str)
+            or not issue["code"]
+            or not isinstance(issue.get("message"), str)
+            or not issue["message"]
+            or not isinstance(issue.get("claim_ids"), list)
+            or not all(isinstance(item, str) and item for item in issue["claim_ids"])
+        ):
+            raise ValueError("Theme-group issue shape is invalid")
+        if issue["code"] in THEME_GROUP_ADVISORY_CODES:
+            advisories.append(deepcopy(issue))
+        else:
+            result["status"] = "reject"
+            result["rejection_reasons"].append(deepcopy(issue))
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("workspace", type=Path)
@@ -293,9 +349,10 @@ def main() -> None:
     args = parser.parse_args()
 
     full_report: dict[str, Any] = {
-        "schema_version": "astrowoof.authoring_pass_lint.v0.1",
+        "schema_version": "astrowoof.authoring_pass_lint.v0.2",
         "workspace": str(args.workspace),
         **authoring_pass_acceptance(workspace_items(args.workspace)),
+        "advisory_reasons": [],
     }
     invalid_filter_claim_ids = invalid_context_filter_claim_ids(args.workspace)
     if invalid_filter_claim_ids:
@@ -306,16 +363,9 @@ def main() -> None:
             "claim_ids": invalid_filter_claim_ids,
         })
     theme_issues = theme_group_plan_issues(args.workspace)
-    invalid_theme_claim_ids = sorted({
-        claim_id
-        for issue in theme_issues
-        for claim_id in issue["claim_ids"]
-    })
-    for theme_issue in theme_issues:
-        full_report["status"] = "reject"
-        full_report["rejection_reasons"].append(theme_issue)
+    full_report = apply_theme_group_policy(full_report, theme_issues)
     if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
-        affected_claim_ids = sorted({
+        rejection_claim_ids = sorted({
             claim_id
             for group in (
                 full_report["exact_duplicate_groups"]
@@ -324,24 +374,43 @@ def main() -> None:
                 + full_report["dominant_openings"]
             )
             for claim_id in group.get("claim_ids", [])
-        } | set(invalid_filter_claim_ids) | set(invalid_theme_claim_ids))
+        } | set(invalid_filter_claim_ids) | {
+            claim_id
+            for reason in full_report["rejection_reasons"]
+            for claim_id in reason.get("claim_ids", [])
+        })
         issue_codes = [
             reason["code"]
             for reason in full_report["rejection_reasons"]
         ]
+        advisory_codes = [
+            reason["code"] for reason in full_report["advisory_reasons"]
+        ]
+        advisory_claim_ids = sorted({
+            claim_id
+            for reason in full_report["advisory_reasons"]
+            for claim_id in reason.get("claim_ids", [])
+        })
         report: dict[str, Any] = {
-            "schema_version": "astrowoof.authoring_pass_gate.v0.1",
+            "schema_version": "astrowoof.authoring_pass_gate.v0.2",
             "workspace": str(args.workspace),
             "status": full_report["status"],
             "editorial_issue_codes": issue_codes,
-            "affected_claim_ids": affected_claim_ids,
+            "affected_claim_ids": rejection_claim_ids,
+            "advisory_issue_codes": advisory_codes,
+            "advisory_affected_claim_ids": advisory_claim_ids,
             "guidance": (
                 "Treat this result as an editorial signal rather than a puzzle "
                 "about the checker. Return to the affected plans and rewrite "
                 "the cards as natural, memorable, genuinely independent "
                 "pieces. Follow GUIDING LIGHTS.md, then rerun this check."
                 if issue_codes
-                else "The pass cleared the bundled editorial gate."
+                else (
+                    "The pass cleared the bundled editorial gate with "
+                    "retained theme-group advisories."
+                    if advisory_codes
+                    else "The pass cleared the bundled editorial gate."
+                )
             ),
         }
     else:

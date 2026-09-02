@@ -431,7 +431,7 @@ class TestBrePacket(unittest.TestCase):
             for error in report["errors"]
         ))
 
-    def test_editorial_validator_rejects_lopsided_chapters(self) -> None:
+    def test_editorial_validator_defers_lopsided_chapter_policy(self) -> None:
         edited = complete_packet(self.packet)
         ids = [
             entry["id"]
@@ -446,12 +446,9 @@ class TestBrePacket(unittest.TestCase):
         report = run_editorial_validator(
             self.packet, edited, "--phase", "authoring"
         )
-        self.assertEqual("fail", report["status"])
-        self.assertTrue(any(
-            "2:1 balance boundary" in error for error in report["errors"]
-        ))
+        self.assertEqual("pass", report["status"], report["errors"])
 
-    def test_editorial_validator_rejects_cross_section_title_collision(self) -> None:
+    def test_editorial_validator_defers_cross_section_title_policy(self) -> None:
         edited = complete_packet(self.packet)
         edited["theme_group_registry"]["takeaways"][0]["title"] = (
             edited["theme_group_registry"]["interdogpendence"][0]["title"]
@@ -459,11 +456,7 @@ class TestBrePacket(unittest.TestCase):
         report = run_editorial_validator(
             self.packet, edited, "--phase", "authoring"
         )
-        self.assertEqual("fail", report["status"])
-        self.assertTrue(any(
-            "repeat or trivially reorder" in error
-            for error in report["errors"]
-        ))
+        self.assertEqual("pass", report["status"], report["errors"])
 
     def test_editorial_validator_preserves_legacy_theme_group_contract(self) -> None:
         baseline = deepcopy(self.packet)

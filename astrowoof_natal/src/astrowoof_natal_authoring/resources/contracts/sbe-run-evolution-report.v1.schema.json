@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/sbe-run-evolution-report.v1.schema.json",
+  "title": "AstroWoof SBE run evolution report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "report_sha256", "parser_version", "source",
+    "trace_sha256", "coverage", "diagnostic_only", "runs", "global_event_count"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.sbe_run_evolution_report.v1"},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parser_version": {"const": "astrowoof.sbe_trace_parser.v1"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "sha256", "line_count"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "line_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "trace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "coverage": {"type": "object"},
+    "diagnostic_only": {"const": true},
+    "runs": {"type": "array", "items": {"type": "object"}},
+    "global_event_count": {"type": "integer", "minimum": 0}
+  }
+}

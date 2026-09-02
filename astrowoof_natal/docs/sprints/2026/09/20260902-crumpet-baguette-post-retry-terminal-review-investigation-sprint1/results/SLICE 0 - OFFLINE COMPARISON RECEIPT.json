@@ -1,0 +1,54 @@
+{
+  "cases": [
+    {
+      "accepted_passes": [1, 2, 3, 4, 5],
+      "action_count": 8,
+      "action_states": ["REPORTED"],
+      "checkpoint_basis_sha256": "d87727e803c4921fe92f0f76b0d8887392745f6500dc26c501d1bb65505465dc",
+      "custody_finality": "final",
+      "label": "Crumpet",
+      "native_run_id": "dc647649b110f751e3ad3a5582e51a10d9ec920b3b095e246a90c5266397104f",
+      "native_status": "FAILED_REQUIRES_REVIEW",
+      "new_provider_create_permitted": false,
+      "pass_6_attempts": [
+        {"affected_claim_count": 33, "attempt": 1, "editorial_issue_codes": ["theme_group_coverage", "theme_group_coverage"], "state": "PASS_QA_REJECTED"},
+        {"affected_claim_count": 14, "attempt": 2, "editorial_issue_codes": ["theme_group_balance"], "state": "PASS_QA_REJECTED"},
+        {"affected_claim_count": 19, "attempt": 3, "editorial_issue_codes": ["theme_group_coverage"], "state": "PASS_QA_REJECTED"}
+      ],
+      "publication_valid": true,
+      "receipt_id": "nreceipt_89d9b1a44f141e60b6dd76d8",
+      "result_cause_code": "final_qa_requires_review",
+      "result_id": "nres_ca6d77a9e8d8fbf5cad98b8e",
+      "result_outcome": "review_required",
+      "snapshot_sha256": "f4b4734a370c4ead45f7c9d1947d410302c8611176bdc1abf157c9222710af12",
+      "state_revision": 101
+    },
+    {
+      "accepted_passes": [1, 2, 3, 4, 5],
+      "action_count": 8,
+      "action_states": ["REPORTED"],
+      "checkpoint_basis_sha256": "6446c267d7631f6484fa5210f04212f246f2ec19fbc97caa5074cc1e216d3fab",
+      "custody_finality": "final",
+      "label": "Baguette",
+      "native_run_id": "68459ce571ae96eafe78c9df20ccf1b89d1170a0ddf1556c5ebb7dc553bd72ed",
+      "native_status": "FAILED_REQUIRES_REVIEW",
+      "new_provider_create_permitted": false,
+      "pass_6_attempts": [
+        {"affected_claim_count": 33, "attempt": 1, "editorial_issue_codes": ["theme_group_coverage", "theme_group_coverage"], "state": "PASS_QA_REJECTED"},
+        {"affected_claim_count": 19, "attempt": 2, "editorial_issue_codes": ["theme_group_coverage"], "state": "PASS_QA_REJECTED"},
+        {"affected_claim_count": 19, "attempt": 3, "editorial_issue_codes": ["theme_group_coverage"], "state": "PASS_QA_REJECTED"}
+      ],
+      "publication_valid": true,
+      "receipt_id": "nreceipt_fccf141c0bae232726bb6c03",
+      "result_cause_code": "final_qa_requires_review",
+      "result_id": "nres_ae94df3ecd1b3562490bb18c",
+      "result_outcome": "review_required",
+      "snapshot_sha256": "c54e567723fa5ab8a68b7ab5cdcda9774d6055bce4acb3b7cf86ce5a87df42b2",
+      "state_revision": 101
+    }
+  ],
+  "provider_operation_count": 0,
+  "remote_operation_counts": {"delete": 0, "get": 2, "head": 2, "list": 0, "write": 0},
+  "schema_version": "astrowoof.investigation.post_retry_terminal_review_comparison.v1",
+  "workspace_mutation_count": 0
+}

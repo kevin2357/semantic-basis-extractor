@@ -47,6 +47,26 @@ from .operator_disposition_qa import (  # noqa: E402
     run_operator_disposition_qualification,
     validate_operator_disposition_qualification,
 )
+from .run_report import (  # noqa: E402
+    build_report_from_text,
+    parse_trace_text,
+    read_run_evolution_report,
+    read_run_evolution_report_schema,
+    render_report_html,
+    render_report_markdown,
+    render_report_mermaid,
+    validate_run_evolution_report,
+)
+from .run_report_qa import (  # noqa: E402
+    read_run_report_qualification_schema,
+    run_run_report_qualification,
+    validate_run_report_qualification,
+)
+from .theme_group_policy_qa import (  # noqa: E402
+    read_theme_group_policy_qualification_schema,
+    run_theme_group_policy_qualification,
+    validate_theme_group_policy_qualification,
+)
 from .route_parity import (  # noqa: E402
     read_bounded_route_parity_traces,
     read_route_parity_oracle,
@@ -620,4 +640,18 @@ __all__ = [
     "read_provider_economics_qualification_schema",
     "run_provider_economics_qualification",
     "validate_provider_economics_qualification",
+    "build_report_from_text",
+    "parse_trace_text",
+    "read_run_evolution_report",
+    "read_run_evolution_report_schema",
+    "render_report_html",
+    "render_report_markdown",
+    "render_report_mermaid",
+    "validate_run_evolution_report",
+    "read_run_report_qualification_schema",
+    "run_run_report_qualification",
+    "validate_run_report_qualification",
+    "read_theme_group_policy_qualification_schema",
+    "run_theme_group_policy_qualification",
+    "validate_theme_group_policy_qualification",
 ]

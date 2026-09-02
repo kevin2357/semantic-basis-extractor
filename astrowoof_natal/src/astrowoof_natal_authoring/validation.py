@@ -123,16 +123,6 @@ def validate_theme_group_registry(
             errors.append(f"{section} repeats or trivially reorders a title.")
         ids_by_section[section] = set(ids)
         titles_by_section[section] = set(titles)
-    if (
-        "interdogpendence" in titles_by_section
-        and "takeaways" in titles_by_section
-        and titles_by_section["interdogpendence"]
-        & titles_by_section["takeaways"]
-    ):
-        errors.append(
-            "Interdogpendence and Takeaways repeat or trivially reorder a "
-            "theme-group title."
-        )
     return ids_by_section, titles_by_section
 
 
@@ -338,20 +328,7 @@ def main() -> None:
             after.get("card", {}), f"Card {index}", errors, warnings
         )
 
-    if new_theme_contract:
-        for section, counts in theme_group_counts_by_section.items():
-            if set(counts) != theme_group_ids.get(section, set()):
-                errors.append(
-                    f"{section} cards must use every registered theme group."
-                )
-                continue
-            sizes = list(counts.values())
-            if sizes and (min(sizes) < 2 or max(sizes) > 2 * min(sizes)):
-                errors.append(
-                    f"{section} theme groups violate the two-card minimum or "
-                    f"2:1 balance boundary: {dict(counts)}."
-                )
-    else:
+    if not new_theme_contract:
         group_count = len(theme_group_counts)
         if group_count not in {3, 4}:
             errors.append(

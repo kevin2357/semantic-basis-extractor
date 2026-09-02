@@ -4147,6 +4147,15 @@ def run_pass_acceptance(
             f"{completed.stderr.strip()}"
         )
     report = load_json(report_path)
+    advisory_codes = report.get("advisory_issue_codes") or []
+    if advisory_codes:
+        logger.warning(
+            "pass_acceptance_advisory workspace=%s codes=%s "
+            "affected_claim_count=%s",
+            workspace.name,
+            ",".join(str(code) for code in advisory_codes),
+            len(report.get("advisory_affected_claim_ids") or []),
+        )
     accepted = completed.returncode == 0 and report.get("status") == "accept"
     return accepted, {
         "accepted": accepted,

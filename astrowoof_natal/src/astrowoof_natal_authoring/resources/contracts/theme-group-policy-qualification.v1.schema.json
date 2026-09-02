@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/theme-group-policy-qualification.v1.schema.json",
+  "title": "AstroWoof theme-group policy qualification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "qualification_only", "package_version",
+    "assertions", "external_network_call_count", "provider_call_count",
+    "workspace_access_count", "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.theme_group_policy_qualification.v1"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "package_version": {"type": "string", "minLength": 1},
+    "assertions": {
+      "type": "object",
+      "additionalProperties": {"const": true},
+      "minProperties": 6,
+      "maxProperties": 6
+    },
+    "external_network_call_count": {"const": 0},
+    "provider_call_count": {"const": 0},
+    "workspace_access_count": {"const": 0},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

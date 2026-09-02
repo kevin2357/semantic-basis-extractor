@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/sbe-run-report-qualification.v1.schema.json",
+  "title": "AstroWoof SBE run-report qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "qualification_only", "package_version",
+    "assertions", "external_network_call_count", "provider_call_count",
+    "workspace_access_count", "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.sbe_run_report_qualification.v1"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "package_version": {"type": "string", "minLength": 1},
+    "assertions": {
+      "type": "object",
+      "additionalProperties": {"const": true},
+      "minProperties": 1
+    },
+    "external_network_call_count": {"const": 0},
+    "provider_call_count": {"const": 0},
+    "workspace_access_count": {"const": 0},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
