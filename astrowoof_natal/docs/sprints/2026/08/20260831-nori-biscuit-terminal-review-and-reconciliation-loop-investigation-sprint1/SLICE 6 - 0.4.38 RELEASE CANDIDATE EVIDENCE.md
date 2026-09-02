@@ -4,9 +4,10 @@
 
 - Version: `0.4.38`
 - Wheel: `astrowoof_natal_authoring-0.4.38-py3-none-any.whl`
-- Bytes: `1,165,624`
-- SHA-256: `c50fe0faca9e3f29bfa56a3e9a43cca3733497946223ee240926f8db967e5feb`
-- Reproducibility: two independent clean-source builds were byte-identical.
+- Final committed-source bytes: `1,165,977`
+- Final committed-source SHA-256: `8d014cf6e51e3cf9616136b0453c87e042eee615a5cd14dfb0f07f787d9e4a5a`
+- Reproducibility: two independent builds from committed source identity
+  `4fc70cb` were byte-identical.
 - Dependency identity: `semantic-projection-core==0.11.1`.
 
 ## Scope proof
@@ -25,6 +26,13 @@ Explicit wheel-member inspection found no:
 
 The separately developed reporter files were restored in the working tree and
 remain untracked for their own sprint/commit path.
+
+The pre-commit clean-source candidate was SHA-256 `c50fe0fa...e5feb`. Git
+normalized `closure.py` line endings while creating the committed blob, so the
+post-commit wheel changed bytes without changing Python semantics. Member-level
+comparison isolated the difference to `closure.py` and the derived wheel
+`RECORD`. The final release artifact is therefore the reproducible wheel built
+from the committed source identity above, not the pre-commit candidate.
 
 ## Verification
 
