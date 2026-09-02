@@ -78,7 +78,7 @@ resolve from that wheel. The qualification was provider-free, network-free,
 R2-free, and native-workspace-free.
 
 The deterministic candidate wheel SHA-256 is
-`a0e5f8d2a09d78f2835318ec180dc0e91005c85ac1dfdeafc441836c66bb1670`.
+`06217b35a5cc024123bc3855c087b0f5c13864b06051d9847f90214c2da43fe4`.
 Its canonical theme-policy qualification receipt SHA-256 is
 `8572848ce703aeb2ec208bb26fedae868d7e85970bd9a3f5cead440e5cbe1d88`;
 the run-reporter qualification receipt SHA-256 is

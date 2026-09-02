@@ -52,7 +52,7 @@ No API/SBE seam correction is indicated by Slice 0.
 ## Installed 0.4.39 candidate evidence
 
 - Two fixed-epoch candidate builds are byte-identical: wheel SHA-256
-  `a0e5f8d2a09d78f2835318ec180dc0e91005c85ac1dfdeafc441836c66bb1670`.
+  `06217b35a5cc024123bc3855c087b0f5c13864b06051d9847f90214c2da43fe4`.
 - A clean isolated install reports package version `0.4.39`; `pip check` and
   `astrowoof-release-smoke --require-installed` pass.
 - Installed theme-policy qualification passes all six closed assertions;

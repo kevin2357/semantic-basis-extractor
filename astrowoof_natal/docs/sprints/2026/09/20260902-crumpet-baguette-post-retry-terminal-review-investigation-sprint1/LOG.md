@@ -33,7 +33,9 @@
   qualification remains pending.
 - 2026-09-02: Completed Slice 4 and the release-candidate portion of Slice 5.
   Version 0.4.39 was set before release-bound qualification. Two fixed-epoch
-  builds are byte-identical at wheel SHA-256 `a0e5f8d2…bb1670`. A clean isolated
+  pre-commit builds were byte-identical; after the approved source commit and
+  final hygiene normalization, two committed-source builds are byte-identical
+  at wheel SHA-256 `06217b35…a43fe4`. A clean isolated
   install passed `pip check`, installed release smoke, both closed feature
   qualifications, packaged-schema validation, and a real-log report build.
   The full repository suite was not run; the complete 95-test closure module
