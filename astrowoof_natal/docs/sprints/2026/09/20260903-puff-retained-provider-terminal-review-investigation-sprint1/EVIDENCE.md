@@ -65,3 +65,6 @@ access is authorized or needed.
 - No external provider request, R2 access, retained-QA access, or spend was
   performed. Supplemental local validation dependencies were used only to run
   the installed artifact's schema-capable test paths.
+- Publication verification: the wheel was independently downloaded from the
+  GitHub release and matched the qualified SHA-256 exactly; its published
+  `SHA256SUMS.txt` asset matches as well.

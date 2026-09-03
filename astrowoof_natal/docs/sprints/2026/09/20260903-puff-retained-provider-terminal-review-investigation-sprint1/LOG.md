@@ -108,3 +108,7 @@
   reproduced the qualified deterministic wheel SHA-256
   `4eb8afada01ae6c4d239d75387b75b32a4ee7756a78d742a48cfad99de848841`.
   Release checksum asset is recorded under `astrowoof_natal/releases/0.4.41/`.
+- 2026-09-03: Published GitHub release
+  `astrowoof-natal-authoring-v0.4.41` with the wheel and `SHA256SUMS.txt`.
+  An independent release download reproduced the qualified wheel SHA-256
+  exactly. The immutable tag resolves to release-record commit `30ce592`.

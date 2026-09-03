@@ -148,8 +148,7 @@ Gate: review runtime behavior and route matrix before packaging.
 
 ### Slice 6 — Packaging and handoff
 
-Status: complete through packaging/installed-wheel qualification; awaiting
-separate API/owner final release approval for candidate `0.4.41`.
+Status: complete and published as immutable SBE `0.4.41`.
 
 - Publish sanitized consumer fixtures for any new/changed public result.
 - If no public result/schema changes, state that explicitly; do not create a new

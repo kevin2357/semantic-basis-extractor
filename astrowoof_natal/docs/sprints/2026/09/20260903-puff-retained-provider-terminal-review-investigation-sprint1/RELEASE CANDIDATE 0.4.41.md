@@ -33,5 +33,6 @@ No public lifecycle, command-result, or API schema changes are introduced.
 - Two deterministic wheel builds matched byte-for-byte.
 - Provider calls, R2 access, retained-QA access, and spend: zero.
 
-This is release evidence only. Tagging and publication remain subject to the
-separate owner/API final gate.
+Published under immutable tag
+`astrowoof-natal-authoring-v0.4.41`. An independent release-asset download
+matches the recorded checksum exactly.
