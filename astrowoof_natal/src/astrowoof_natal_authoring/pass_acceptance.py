@@ -362,8 +362,9 @@ def main() -> None:
             "message": "One or more cards use an unregistered context filter.",
             "claim_ids": invalid_filter_claim_ids,
         })
-    theme_issues = theme_group_plan_issues(args.workspace)
-    full_report = apply_theme_group_policy(full_report, theme_issues)
+    # Theme-group metadata remains in the authored workspace for compatibility,
+    # but the filtering feature is dormant.  Do not evaluate, report, or gate
+    # on assignment, coverage, balance, registry, or cross-section mirroring.
     if os.environ.get("ASTROWOOF_OPAQUE_ACCEPTANCE") == "1":
         rejection_claim_ids = sorted({
             claim_id
@@ -405,12 +406,7 @@ def main() -> None:
                 "the cards as natural, memorable, genuinely independent "
                 "pieces. Follow GUIDING LIGHTS.md, then rerun this check."
                 if issue_codes
-                else (
-                    "The pass cleared the bundled editorial gate with "
-                    "retained theme-group advisories."
-                    if advisory_codes
-                    else "The pass cleared the bundled editorial gate."
-                )
+                else "The pass cleared the bundled editorial gate."
             ),
         }
     else:

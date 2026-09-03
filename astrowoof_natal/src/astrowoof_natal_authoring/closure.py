@@ -4259,6 +4259,154 @@ def prepare_completed_exact_attempt_for_adoption(
     return True
 
 
+def prepare_completed_optional_stage_for_adoption(
+    *,
+    state: dict[str, Any],
+    run_dir: Path,
+    attempt_root: Path,
+    stage: str,
+    route: str,
+    model: str,
+) -> bool:
+    """Materialize one exact reconciled v2 response for an optional consumer.
+
+    This adapter is deliberately narrower than ordinary provider recovery: it
+    does not interpret output, settle an action, or grant authority.  It only
+    joins already-durable completed evidence to the exact persisted consumer
+    attempt so the existing deterministic consumer path can parse and process
+    it without re-entering provider creation.
+    """
+    if state.get("schema_version") != SCHEMA_VERSION:
+        return False
+    actions = (state.get("spend_ledger") or {}).get("actions") or []
+    matches = [
+        item for item in actions
+        if (item.get("binding") or {}).get("stage") == stage
+        and (item.get("binding") or {}).get("route") == route
+        and (item.get("binding") or {}).get("model") == model
+    ]
+    if not matches:
+        return False
+    if len(matches) != 1:
+        raise ValueError("Optional-stage adoption has conflicting action lineage")
+    action = matches[0]
+    provider = action.get("provider") or {}
+    if not provider:
+        return False
+    response_id = provider.get("id")
+    reconciliation = action.get("provider_reconciliation") or {}
+    binding = action.get("binding") or {}
+    if (
+        action.get("state") not in {"PROVIDER_ID_RECORDED", "WAITING"}
+        or provider.get("kind") != "response"
+        or not isinstance(response_id, str) or not response_id
+        or reconciliation.get("last_outcome") != "completed"
+        or binding.get("run_id") != state.get("run_id")
+        or binding.get("stage") != stage
+        or binding.get("route") != route
+        or binding.get("model") != model
+        or binding.get("service_level") != "interactive"
+    ):
+        raise ValueError("Optional-stage completed evidence is not adoptable")
+    intent = state.get("external_authority_v2_dispatch_intent")
+    # This adapter is solely for the ordinary-v2 seam.  Older/native-only
+    # fixtures retain their existing attempt-local marker path and must not be
+    # reclassified merely because they carry completed provider evidence.
+    if intent is None:
+        return False
+    if not isinstance(intent, dict) or intent.get("state") != "PROVIDER_PENDING":
+        raise ValueError("Optional-stage completed evidence lacks a live v2 intent")
+    ordered = intent.get("ordered_action_ids")
+    provider_ids = intent.get("provider_operation_ids")
+    authorization_digests = intent.get("ordered_authorization_document_sha256s")
+    if (
+        not isinstance(ordered, list)
+        or not isinstance(provider_ids, list)
+        or not isinstance(authorization_digests, list)
+        or action.get("action_id") not in ordered
+        or len(ordered) != len(provider_ids)
+        or len(ordered) != len(authorization_digests)
+    ):
+        raise ValueError("Optional-stage completed evidence has invalid v2 inventory")
+    index = ordered.index(action["action_id"])
+    authorization = action.get("authorization")
+    consumption = action.get("consumption")
+    if (
+        provider_ids[index] != response_id
+        or action["action_id"] not in (intent.get("provider_bound_action_ids") or [])
+        or not isinstance(authorization, dict)
+        or spend_digest(authorization) != authorization_digests[index]
+        or authorization.get("action_id") != action["action_id"]
+        or authorization.get("binding") != binding
+        or not isinstance(consumption, dict)
+        or consumption.get("consumer_id")
+        != f"external-grant-v2:{intent.get('api_decision_id')}"
+    ):
+        raise ValueError("Optional-stage completed evidence does not join v2 authority")
+    payload_artifact = action.get("request_payload_artifact")
+    required_payload_keys = {
+        "schema_version", "logical_path", "file_sha256",
+        "canonical_request_sha256", "representation",
+    }
+    if (
+        not isinstance(payload_artifact, dict)
+        or set(payload_artifact) != required_payload_keys
+        or payload_artifact.get("schema_version")
+        != "astrowoof.provider_request_payload_artifact.v1"
+        or payload_artifact.get("representation") != "canonical_json_object"
+        or payload_artifact.get("canonical_request_sha256")
+        != binding.get("request_sha256")
+    ):
+        raise ValueError("Optional-stage binding-owned payload evidence is invalid")
+    payload_path = Path(str(payload_artifact.get("logical_path") or "")).resolve()
+    try:
+        payload_path.relative_to(run_dir.resolve())
+    except ValueError as exc:
+        raise ValueError("Optional-stage payload evidence escapes workspace") from exc
+    try:
+        payload = load_json(payload_path)
+    except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        raise ValueError("Optional-stage payload evidence is unavailable") from exc
+    if (
+        not isinstance(payload, dict)
+        or sha256_file(payload_path) != payload_artifact.get("file_sha256")
+        or spend_digest(payload) != binding.get("request_sha256")
+    ):
+        raise ValueError("Optional-stage payload evidence does not match binding")
+    response_path = (
+        run_dir / "lifecycle" / "provider-reconciliation"
+        / f"{action['action_id']}.response.json"
+    )
+    try:
+        response = load_json(response_path)
+    except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        raise ValueError("Optional-stage reconciliation response is unavailable") from exc
+    if response.get("id") != response_id or response.get("status") != "completed":
+        raise ValueError("Optional-stage reconciliation response identity is invalid")
+    marker = attempt_root / "openai-background-response.json"
+    expected = {
+        "id": response_id,
+        "status": "completed",
+        "adopted_from_reconciliation": True,
+    }
+    if marker.is_file():
+        try:
+            existing = load_json(marker)
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ValueError("Optional-stage response marker is invalid") from exc
+        if existing != expected:
+            raise ValueError("Optional-stage response marker conflicts with custody")
+        return True
+    attempt_root.mkdir(parents=True, exist_ok=True)
+    write_json_atomic(marker, expected)
+    logger.info(
+        "completed_optional_provider_result_joined_for_adoption stage=%s "
+        "route=%s action_id=%s provider_id=%s",
+        stage, route, action["action_id"], response_id,
+    )
+    return True
+
+
 def author_one_pass(
     *,
     spec: PassSpec,
@@ -6471,6 +6619,15 @@ def polish_subject(
             and attempt_number == int(pending_attempt["attempt_number"])
         )
         attempt_root = final_root / "polish" / f"attempt-{attempt_number:03d}"
+        if resuming_attempt and spend_controller is not None:
+            prepare_completed_optional_stage_for_adoption(
+                state=spend_controller.state,
+                run_dir=run_dir,
+                attempt_root=attempt_root,
+                stage="polish",
+                route=f"{subject}:polish:{attempt_number:03d}",
+                model=provider.model,
+            )
         lint_report = load_json(Path(record["lint_report"]))
         validation_report = load_json(Path(record["validation_report"]))
         allow_theme_group_edits = any(
@@ -6840,7 +6997,7 @@ def run_qualitative_review(
     )
     existing = record.get("qualitative_review") or {}
     resume_diagnosis = (
-        existing.get("state") == "DIAGNOSIS_COMPLETE"
+        existing.get("state") in {"DIAGNOSIS_COMPLETE", "CANDIDATE_SUBMITTED"}
         and editor_provider is not None
     )
     if existing.get("state") in {
@@ -6911,6 +7068,14 @@ def run_qualitative_review(
             )
             before_submit = provider_created = None
             if spend_controller is not None:
+                prepare_completed_optional_stage_for_adoption(
+                    state=spend_controller.state,
+                    run_dir=run_dir,
+                    attempt_root=critic_root,
+                    stage="qualitative_critic",
+                    route=f"{subject}:qualitative-critic",
+                    model=critic_provider.model,
+                )
                 before_submit, provider_created = spend_controller.callbacks(
                     stage="qualitative_critic",
                     route=f"{subject}:qualitative-critic",
@@ -6983,6 +7148,12 @@ def run_qualitative_review(
             review["finished_at"] = utc_now()
             return
 
+        # Persisted semantic state must move before the candidate authority
+        # boundary.  A detached candidate therefore resumes from its critic
+        # predecessor instead of recreating a completed critic request.
+        review["state"] = "CANDIDATE_SUBMITTED"
+        review["finished_at"] = None
+
         editor_root = qualitative_root / "candidate"
         all_fields = editable_deck_fields(deck, include_theme_groups=False)
         comparison_paths = sorted({
@@ -7028,6 +7199,14 @@ def run_qualitative_review(
         )
         before_submit = provider_created = None
         if spend_controller is not None:
+            prepare_completed_optional_stage_for_adoption(
+                state=spend_controller.state,
+                run_dir=run_dir,
+                attempt_root=editor_root,
+                stage="qualitative_candidate",
+                route=f"{subject}:qualitative-candidate",
+                model=editor_provider.model,
+            )
             before_submit, provider_created = spend_controller.callbacks(
                 stage="qualitative_candidate",
                 route=f"{subject}:qualitative-candidate",
