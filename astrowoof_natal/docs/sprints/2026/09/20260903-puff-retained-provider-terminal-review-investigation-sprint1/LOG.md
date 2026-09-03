@@ -104,3 +104,7 @@
   --require-installed` passed. Two deterministic builds produced the identical
   wheel SHA-256 `4eb8afada01ae6c4d239d75387b75b32a4ee7756a78d742a48cfad99de848841`.
   No external provider, R2, retained-QA, or spend activity occurred.
+- 2026-09-03: Owner approved tag/publication. The final committed-source rebuild
+  reproduced the qualified deterministic wheel SHA-256
+  `4eb8afada01ae6c4d239d75387b75b32a4ee7756a78d742a48cfad99de848841`.
+  Release checksum asset is recorded under `astrowoof_natal/releases/0.4.41/`.

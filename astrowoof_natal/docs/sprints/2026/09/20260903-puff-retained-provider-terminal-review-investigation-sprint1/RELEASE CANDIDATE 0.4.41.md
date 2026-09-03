@@ -21,6 +21,7 @@ No public lifecycle, command-result, or API schema changes are introduced.
   `4eb8afada01ae6c4d239d75387b75b32a4ee7756a78d742a48cfad99de848841`
 - Deterministic build input: `SOURCE_DATE_EPOCH=315532800`
 - Companion dependency: `semantic-projection-core 0.11.1`
+- Release source commit: `46c19f7`
 
 ## Qualification
 
