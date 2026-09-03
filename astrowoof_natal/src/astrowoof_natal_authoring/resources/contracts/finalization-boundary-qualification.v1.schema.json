@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/finalization-boundary-qualification.v1.schema.json",
+  "title": "AstroWoof finalization-boundary qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "qualification_only", "provider_free",
+    "package_version", "external_network_call_count", "real_provider_create_count",
+    "provider_spend_usd", "success_case", "review_case", "operational_case",
+    "assertions", "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.finalization_boundary_qualification.v1"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "package_version": {"type": "string", "minLength": 1},
+    "external_network_call_count": {"const": 0},
+    "real_provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "success_case": {"type": "object"},
+    "review_case": {"type": "object"},
+    "operational_case": {"type": "object"},
+    "assertions": {"type": "object"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

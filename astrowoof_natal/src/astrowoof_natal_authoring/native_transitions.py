@@ -74,6 +74,7 @@ CAUSE_CODES = {
     "snapshot_or_journal_invalid", "unsupported_route_or_legacy_evidence",
     "operator_retired",
     "local_work_progress_contradiction",
+    "finalization_contract_invalid",
 }
 COST_DISPOSITIONS = {
     "provider_usage_reported",

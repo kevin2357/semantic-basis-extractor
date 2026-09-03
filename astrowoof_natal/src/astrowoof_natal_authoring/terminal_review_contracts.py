@@ -40,6 +40,7 @@ _REVIEW_CAUSES = frozenset({
     "snapshot_or_journal_invalid",
     "native_lifecycle_review_required",
     "local_work_progress_contradiction",
+    "finalization_contract_invalid",
 })
 
 
@@ -306,6 +307,13 @@ def validate_terminal_review_result_v02(value: dict[str, Any]) -> None:
         raise ValueError("Terminal custody inventories do not join action dispositions")
     if value.get("custody_finality") not in CUSTODY_FINALITIES or value["custody_finality"] != _finality(actions):
         raise ValueError("Terminal custody finality is invalid")
+    if (
+        value.get("cause_code") == "finalization_contract_invalid"
+        and value.get("custody_finality") != "final"
+    ):
+        raise ValueError(
+            "Finalization contract review requires final action custody"
+        )
     result_sha = value.get("result_sha256")
     basis = {key: item for key, item in value.items() if key not in {"result_id", "result_sha256"}}
     expected = _digest(basis)

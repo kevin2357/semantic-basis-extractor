@@ -35,7 +35,7 @@ from typing import Any, Protocol
 from . import __version__
 from . import editorial_lint as editorial_lint_module
 from . import validation as validation_module
-from .assembly import assemble
+from .assembly import AssemblyContractError, assemble
 from .application_logging import (
     add_logging_arguments,
     bind_logging_context,
@@ -106,6 +106,7 @@ from .trace_observability import (
     log_decision_summary,
     log_native_state_summary,
     log_workspace_fingerprint,
+    sanitize_exception,
 )
 
 
@@ -5220,7 +5221,7 @@ def assemble_subject(
     if len(records) != PASS_COUNT or any(
         record["state"] != "PASS_QA_ACCEPTED" for record in records
     ):
-        raise ValueError(
+        raise AssemblyContractError(
             f"{subject} cannot be assembled until all six passes are accepted"
         )
     final_root = run_dir / "final" / subject
@@ -5243,12 +5244,15 @@ def assemble_subject(
         / subject
         / f"{subject}.selected-authoring-packet.json"
     )
-    packet = load_json(packet_path)
-    deck, assembly_report = assemble(
-        packet,
-        workspace_root,
-        allow_partial=False,
-    )
+    try:
+        packet = load_json(packet_path)
+        deck, assembly_report = assemble(
+            packet,
+            workspace_root,
+            allow_partial=False,
+        )
+    except ValueError as exc:
+        raise AssemblyContractError(str(exc)) from exc
     filter_repairs = sanitize_context_filters(deck)
     assembly_report["deterministic_context_filter_repairs"] = filter_repairs
     deck_path = final_root / f"natal.{subject}.cards.json"
@@ -8458,11 +8462,27 @@ def main() -> None:
         )
     if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
         from .native_transitions import publish_native_execution_result
-        publish_native_execution_result(
+        terminal_reason = state["terminal_transition"].get("terminal_reason")
+        sealed = publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=utc_now(),
             event_emitter=event_emitter,
+            terminal_review_v02=(
+                terminal_reason == "finalization_contract_invalid"
+            ),
+            terminal_review_cause=(
+                "finalization_contract_invalid"
+                if terminal_reason == "finalization_contract_invalid" else None
+            ),
         )
+        if terminal_reason == "finalization_contract_invalid":
+            from .terminal_review_contracts import (
+                build_terminal_review_command_result,
+            )
+            output_result(build_terminal_review_command_result(
+                sealed["result"], sealed["receipt"],
+            ))
+            raise SystemExit(2)
         output_result(state)
         return
     if (
@@ -8678,36 +8698,98 @@ def main() -> None:
         )
         output_result(state)
         return
-    with checkpoint_spend_boundary(
-        run_json, state, on_quiescent_checkpoint=seal_local_progress,
-        terminal_review_v02=args.service_level == "interactive",
-        terminal_review_output=output_result, event_emitter=event_emitter,
-    ):
-        finalize_subjects(
-            state=state,
-            run_dir=args.run_dir,
-            python_executable=args.python_executable,
-            allow_lint_warnings=args.allow_lint_warnings,
-            polish=args.polish,
-            polish_provider=polish_provider,
-            max_polish_attempts=args.max_polish_attempts,
-            spend_controller=spend_controller,
+    try:
+        with checkpoint_spend_boundary(
+            run_json, state, on_quiescent_checkpoint=seal_local_progress,
+            terminal_review_v02=args.service_level == "interactive",
+            terminal_review_output=output_result, event_emitter=event_emitter,
+        ):
+            finalize_subjects(
+                state=state,
+                run_dir=args.run_dir,
+                python_executable=args.python_executable,
+                allow_lint_warnings=args.allow_lint_warnings,
+                polish=args.polish,
+                polish_provider=polish_provider,
+                max_polish_attempts=args.max_polish_attempts,
+                spend_controller=spend_controller,
+            )
+            if args.qualitative_critic and critic_provider is not None:
+                for record in state.get("subjects", {}).values():
+                    if record.get("state") in FINAL_SUCCESS_STATES:
+                        run_qualitative_review(
+                            record=record,
+                            critic_provider=critic_provider,
+                            editor_provider=qualitative_editor_provider,
+                            run_dir=args.run_dir,
+                            python_executable=args.python_executable,
+                            max_findings=args.max_critic_findings,
+                            max_target_fields=args.max_qualitative_target_fields,
+                            max_target_cards=args.max_qualitative_target_cards,
+                            spend_controller=spend_controller,
+                            run_state=state,
+                        )
+    except AssemblyContractError as exc:
+        from .native_transitions import publish_native_execution_result
+        from .terminal_review_contracts import (
+            build_terminal_action_dispositions,
+            build_terminal_review_command_result,
         )
-        if args.qualitative_critic and critic_provider is not None:
-            for record in state.get("subjects", {}).values():
-                if record.get("state") in FINAL_SUCCESS_STATES:
-                    run_qualitative_review(
-                        record=record,
-                        critic_provider=critic_provider,
-                        editor_provider=qualitative_editor_provider,
-                        run_dir=args.run_dir,
-                        python_executable=args.python_executable,
-                        max_findings=args.max_critic_findings,
-                        max_target_fields=args.max_qualitative_target_fields,
-                        max_target_cards=args.max_qualitative_target_cards,
-                        spend_controller=spend_controller,
-                        run_state=state,
-                    )
+
+        dispositions = build_terminal_action_dispositions(state)
+        if any(
+            item["custody_disposition"] != "terminally_accounted"
+            for item in dispositions
+        ):
+            diagnostic = sanitize_exception(exc)
+            logger.error(
+                "finalization_contract_error_not_sealed reason=custody_not_final "
+                "error_class=%s exception_fingerprint=%s",
+                diagnostic["exception_class"], diagnostic["fingerprint"],
+            )
+            raise
+        diagnostic = sanitize_exception(exc)
+        logger.error(
+            "finalization_contract_invalid error_class=%s "
+            "exception_fingerprint=%s",
+            diagnostic["exception_class"], diagnostic["fingerprint"],
+        )
+        state["terminal_transition"] = {
+            "schema_version": (
+                "astrowoof.finalization_contract_transition.v0.1"
+            ),
+            "outcome": "terminalized",
+            "trigger": "deterministic_finalization_contract_failure",
+            "prior_status": state.get("status"),
+            "resulting_status": "FAILED_REQUIRES_REVIEW",
+            "terminal_outcome": "review_required",
+            "terminal_reason": "finalization_contract_invalid",
+            "committed_at": utc_now(),
+        }
+        save_state(
+            run_json, state,
+            retire_external_authority_v2=args.service_level == "interactive",
+            preserve_review_status="FAILED_REQUIRES_REVIEW",
+        )
+        sealed = publish_native_execution_result(
+            args.run_dir, command_kind="ordinary_authoring",
+            sbe_release=__version__, published_at=utc_now(),
+            event_emitter=event_emitter,
+            terminal_review_v02=True,
+            terminal_review_cause="finalization_contract_invalid",
+        )
+        output_result(build_terminal_review_command_result(
+            sealed["result"], sealed["receipt"],
+        ))
+        log_cli_exit(
+            logger, command="semantic_closure", operation="ordinary_authoring",
+            exit_code=2, outcome="review_required",
+            result_id=sealed["result"].get("result_id"),
+            receipt_id=sealed["receipt"].get("receipt_id"),
+            authoritative_transport="stdout_json",
+            exception=exc,
+        )
+        raise SystemExit(2) from None
     update_run_status(state)
     save_state(
         run_json, state,

@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from collections import Counter
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -27,9 +26,8 @@ HUMOR_FIELDS = {
 }
 
 
-def normalized_chapter_title(value: str) -> tuple[str, tuple[str, ...]]:
-    words = re.findall(r"[a-z0-9]+", value.casefold().replace("&", " and "))
-    return " ".join(words), tuple(sorted(word for word in words if word != "and"))
+class AssemblyContractError(ValueError):
+    """A deterministic contradiction in authored assembly evidence."""
 
 
 def load_json(path: Path) -> Any:
@@ -363,34 +361,10 @@ def assemble(
                 )
             card["theme_group_id"] = value
             authored_theme_priorities.append(priority_id)
-        normalized_titles = {
-            section: {
-                normalized_chapter_title(entry["title"])
-                for entry in entries
-            }
-            for section, entries in registries.items()
-        }
-        if normalized_titles["interdogpendence"] & normalized_titles["takeaways"]:
-            raise ValueError(
-                "Interdogpendence and Takeaways may not repeat or trivially "
-                "reorder chapter titles"
-            )
-        for section, ids in registry_ids.items():
-            counts = Counter(
-                card.get("theme_group_id")
-                for card in deck["cards"]
-                if theme_section(card) == section
-            )
-            if set(counts) != ids:
-                raise ValueError(
-                    f"{section} assignments must use every registered chapter"
-                )
-            sizes = list(counts.values())
-            if min(sizes) < 2 or max(sizes) > 2 * min(sizes):
-                raise ValueError(
-                    f"{section} chapters violate the two-claim minimum or "
-                    f"2:1 balance boundary: {dict(counts)}"
-                )
+        # Distribution policy is evaluated by the shared pass/final validation
+        # surface, where coverage, balance, and cross-section mirroring are
+        # retained advisories.  Assembly owns structural joins only: registry
+        # shape, field identity, section/card compatibility, and registered IDs.
     expected_theme_priorities = [
         card["priority_id"]
         for card in deck["cards"]

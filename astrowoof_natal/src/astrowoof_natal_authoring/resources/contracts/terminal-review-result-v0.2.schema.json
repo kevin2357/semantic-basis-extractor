@@ -19,7 +19,7 @@
     "post_checkpoint": {"type": "object"},
     "journal_range": {"type": "object"},
     "outcome": {"const": "review_required"},
-    "cause_code": {"enum": ["final_qa_requires_review", "authoring_attempts_exhausted", "provider_terminal_failure", "provider_output_invalid", "provider_identity_conflict", "ambiguous_provider_submission", "snapshot_or_journal_invalid", "native_lifecycle_review_required", "local_work_progress_contradiction"]},
+    "cause_code": {"enum": ["final_qa_requires_review", "authoring_attempts_exhausted", "provider_terminal_failure", "provider_output_invalid", "provider_identity_conflict", "ambiguous_provider_submission", "snapshot_or_journal_invalid", "native_lifecycle_review_required", "local_work_progress_contradiction", "finalization_contract_invalid"]},
     "action_dispositions": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/action"}},
     "action_inventory_sha256": {"$ref": "#/$defs/sha256"},
     "custody_finality": {"enum": ["final", "provider_reconciliation_required", "providerless_denial_required", "mixed_resolution_required", "ambiguity_review_required"]},
