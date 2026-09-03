@@ -57,3 +57,9 @@
   verification, and generic smoke passed. The full suite was intentionally not
   run and that omission is recorded in EVIDENCE. Awaiting explicit approval to
   commit, rebuild from committed source, tag, publish, and verify.
+- 2026-09-03: Owner approved release. Committed source as `bfc80db`, rebuilt
+  twice with the same `0a5904…54d8ad` wheel identity, tagged
+  `astrowoof-natal-authoring-v0.4.40`, and published the wheel plus checksum.
+  Independently downloaded the release, verified its checksum and peeled tag,
+  installed it with SPC `0.11.1`, passed dependency checking, and reproduced
+  the installed qualification receipt `dcbe51…948587`. Sprint complete.

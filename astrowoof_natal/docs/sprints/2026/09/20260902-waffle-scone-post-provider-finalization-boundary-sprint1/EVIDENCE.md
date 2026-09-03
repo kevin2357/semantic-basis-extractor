@@ -76,3 +76,12 @@
 - Candidate wheel evidence above precedes the final source commit. After owner
   approval, rebuild from the committed source and require the same deterministic
   wheel/qualification identities before tagging or publication.
+- Owner approved release. Source commit
+  `bfc80dbe1ea05fb3b9c1cda4a427ec5137c0f85c` reproduced the exact candidate
+  wheel twice, then tag `astrowoof-natal-authoring-v0.4.40` and the GitHub
+  release were published.
+- Independent published-asset verification:
+  - downloaded wheel SHA-256 matched `0a5904…54d8ad` and `SHA256SUMS.txt`;
+  - remote annotated tag peeled to `bfc80db…0f85c`;
+  - published wheel installed with SPC `0.11.1` and passed `pip check`; and
+  - installed qualification reproduced `dcbe51…948587` with status `pass`.

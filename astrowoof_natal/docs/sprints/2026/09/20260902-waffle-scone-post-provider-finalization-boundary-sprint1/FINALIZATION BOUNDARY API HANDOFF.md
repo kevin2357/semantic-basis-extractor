@@ -1,6 +1,6 @@
 # Finalization Boundary API Handoff
 
-Status: API-approved; SBE `0.4.40` release qualification in progress.
+Status: API-approved and published in immutable SBE `0.4.40`.
 
 ## Consumer rule
 

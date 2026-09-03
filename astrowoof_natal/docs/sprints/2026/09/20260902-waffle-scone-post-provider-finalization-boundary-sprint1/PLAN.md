@@ -1,7 +1,7 @@
 # Plan — Waffle/Scone Post-Provider Finalization Boundary
 
-Status: Slices 0–5 complete; `0.4.40` candidate awaits explicit commit/release
-approval.
+Status: Complete; immutable SBE `0.4.40` tagged, published, and independently
+verified.
 
 ## Goal
 
@@ -139,7 +139,7 @@ before version bump or release preparation.
 
 ## Slice 5 — Release preparation, if runtime changes warrant it
 
-Status: complete; final immutable rebuild follows the authorized source commit.
+Status: complete; immutable release published and verified.
 
 - Bump to a fresh immutable patch version before release-bound tests and hashes.
 - Run the narrow finalization/assembly/local-work suites, installed qualification,
