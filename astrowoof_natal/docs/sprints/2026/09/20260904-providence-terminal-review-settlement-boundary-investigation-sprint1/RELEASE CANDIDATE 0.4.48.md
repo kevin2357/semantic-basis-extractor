@@ -2,9 +2,9 @@
 
 ## Decision state
 
-Candidate construction and exact release-lock verification are green.
-Voof-paws 4 and explicit owner authorization remain required. Tagging and
-publication have not occurred.
+Released. Candidate construction, exact release-lock verification, API review,
+owner authorization, immutable tagging, asset publication, and fresh-download
+verification are complete.
 
 ## Candidate coordinates
 
@@ -38,6 +38,6 @@ publication have not occurred.
 
 ## Remaining gate
 
-API should review the exact release-lock commit, wheel SHA, focused-gate scope,
-and installed qualification. Explicit owner authorization is then required
-before creating the immutable tag or GitHub release.
+API approved the exact release-lock commit, wheel SHA, focused-gate scope, and
+installed qualification. The annotated tag points to the release lock, and the
+published/downloaded wheel and checksum manifest match the qualified artifact.

@@ -178,3 +178,22 @@
   deployment, recovery, or live-settlement activity.
 - Current gate: Voof-paws 4 and explicit owner authorization. Do not create the
   immutable tag or GitHub release yet.
+
+## 2026-09-04 — immutable 0.4.48 publication
+
+- Received unconditional API technical approval and explicit owner authority
+  to commit, tag, and publish `0.4.48` immutably.
+- Committed post-lock review evidence as `20cb3b4`, while preserving release
+  target `49f9e2e`.
+- Created and pushed annotated tag
+  `astrowoof-natal-authoring-v0.4.48`; remote peeled target is exactly
+  `49f9e2e3b76d71f84a90542f0fedfa2ae06d4e00`.
+- Published only the exact qualified wheel and `SHA256SUMS.txt` in GitHub
+  Release `RE_kwDOToQdE84W1NLh`.
+- Downloaded both assets into a fresh verification directory. Qualified,
+  downloaded, manifest, and GitHub wheel digests all equal
+  `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.48`.
+- Sprint complete. API ingestion/settlement and any live Providence operation
+  remain separate, unperformed work.

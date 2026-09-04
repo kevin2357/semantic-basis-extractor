@@ -109,3 +109,22 @@ live settlement or runtime implementation is authorized.
 - Final invocation-specific v2 receipt SHA-256:
   `8ba075e528aad103ba4ad88b036cbc2b6a1bfb5069ee67dc75c071898db8ceeb`
 - Tracked diff hygiene: clean; release-lock checkout package content unchanged
+
+## Immutable publication
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.48`
+- Tag object: `edacf864edab66f2e4c436dc2687186ffa3a28a4`
+- Remote peeled target:
+  `49f9e2e3b76d71f84a90542f0fedfa2ae06d4e00`
+- GitHub Release ID: `RE_kwDOToQdE84W1NLh`
+- Published: `2026-09-04T22:29:35Z`
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.48`
+- Wheel asset ID: `RA_kwDOToQdE84ge-0U`; GitHub digest equals qualified
+  SHA-256 `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`
+- Checksum asset ID: `RA_kwDOToQdE84ge-0V`; SHA-256
+  `e253a3ac70bfb30d765d0c387b15c62584e80f3582e0a2d89fcefd109f7ac73f`
+- Freshly downloaded wheel, qualified wheel, GitHub-reported digest, and
+  downloaded checksum line: exact match
+- Publication introduced no provider, QA, R2, API-state, deployment, recovery,
+  or live-settlement activity
