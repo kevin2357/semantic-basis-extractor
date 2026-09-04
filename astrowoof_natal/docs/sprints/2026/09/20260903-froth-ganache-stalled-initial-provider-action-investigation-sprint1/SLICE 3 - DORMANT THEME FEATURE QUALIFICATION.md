@@ -1,7 +1,7 @@
 # Slice 3 — dormant theme-feature qualification
 
-**Status:** clean-wheel and installed-artifact qualification complete; final
-release review pending.
+**Status:** final committed-source wheel qualification complete; tag and
+publication await owner approval.
 
 ## Scope
 
@@ -53,18 +53,22 @@ including reconciliation work.
 Wheel SHA-256:
 
 ```text
-5b18f4e25b12d92ca05ccd09e998a5f8051c69e1114a27a00ce5cbea35077de4
+58ccfaa319a244afea177e40e7c83e40b0e220c9bd86fe0034512ee19a28dc8d
 ```
 
-It was force-installed without dependencies into an existing isolated release
-environment. `pip check` reported no broken requirements. A clean working
-directory then confirmed that imported `assembly` and `extractor` modules came
-from that environment's `site-packages`, not the source tree, before executing
-the direct Ganache-shaped complete-assembly witness successfully.
+The final package was rebuilt twice from source commit `72d5d6c`, using a
+minimal archive of only `pyproject.toml` and package source so unrelated dirty
+files and long-path historical reference artifacts could not enter it.
+`SOURCE_DATE_EPOCH` was pinned to that commit's timestamp; both wheels matched
+the digest above. The final wheel was force-installed without dependencies into
+an isolated release environment. `pip check` reported no broken requirements.
+A clean working directory then confirmed that imported `assembly` and
+`extractor` modules came from that environment's `site-packages`, not the
+source tree, before executing the direct Ganache-shaped complete-assembly
+witness successfully.
 
 ## Release gate
 
-Before tag/publication: obtain final review, commit the exact candidate source,
-then rebuild from that commit and repeat the installed witness against the final
-wheel. The existing public theme-policy qualification command is historical
-policy evidence and is not used to claim this dormant-feature behavior.
+The release source commit and final wheel are ready for tag/publication. The
+existing public theme-policy qualification command is historical policy evidence
+and is not used to claim this dormant-feature behavior.

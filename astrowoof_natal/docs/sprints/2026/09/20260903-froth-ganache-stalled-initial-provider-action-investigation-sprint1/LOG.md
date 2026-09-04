@@ -70,5 +70,14 @@
   Installed it without dependencies in an isolated release environment:
   `pip check` passed and the Ganache-shaped real-assembly witness ran from
   installed `site-packages`. Final release review remains required.
+- 2026-09-03: Committed the source candidate as `72d5d6c` and pushed `main`.
+  Final-package rebuilds use a minimal archive of that exact commit's
+  `pyproject.toml` and package source, excluding unrelated dirty files and
+  avoiding Windows long-path reference artifacts. With `SOURCE_DATE_EPOCH`
+  pinned to the source commit timestamp, two builds were byte-identical:
+  SHA-256 `58ccfaa319a244afea177e40e7c83e40b0e220c9bd86fe0034512ee19a28dc8d`.
+  The final wheel installed cleanly, passed `pip check`, and passed the
+  installed Ganache-shaped witness. Tag and publication remain intentionally
+  pending final owner approval.
   `git diff --check` passed. No lifecycle, reconciliation, or terminal-result
   source is part of the retained correction.
