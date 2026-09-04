@@ -60,3 +60,19 @@
   `DELIVERY_COMPLETE`, has no terminal-review result ID, and completes cleanup.
 - The canonical rerun executed 1,035 maintained tests in 879.417 seconds:
   all passed with 52 expected environment/optional skips.
+
+## 2026-09-04 — committed-source candidate
+
+- Committed artifact source as `31a09e472bae871a0105d7a5e5719592b9a92407`.
+- Exported that exact commit into a clean source root, excluding all untracked
+  release and investigation material.
+- Built twice with `SOURCE_DATE_EPOCH=1788547986`; both 1,199,948-byte wheels
+  were byte-identical at SHA-256
+  `4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`.
+- The wheel contains 258 members, no absolute member paths, and the expected
+  mixed-custody v1 and finalization-boundary v1/v2 schemas.
+- Installed the exact candidate with immutable SPC 0.11.1
+  (`dc345c…a612`) into an isolated venv; `pip check` passed and both packages
+  resolved from that venv's `site-packages`.
+- Installed public mixed-custody, terminal-review, finalization-boundary, and
+  generic release-smoke commands all passed provider-free.

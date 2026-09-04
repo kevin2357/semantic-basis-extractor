@@ -82,3 +82,36 @@ should have been run.
 The replacement used the full maintained-suite gate requested by API. Final
 release still requires deterministic committed-source wheels, installed public
 qualification, and the exact API release-pair rerun against the candidate hash.
+
+## Committed-source candidate
+
+- Artifact-source commit:
+  `31a09e472bae871a0105d7a5e5719592b9a92407`
+- Version: `0.4.47`
+- `SOURCE_DATE_EPOCH`: `1788547986`
+- Wheel: `astrowoof_natal_authoring-0.4.47-py3-none-any.whl`
+- Size: `1,199,948` bytes
+- SHA-256:
+  `4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`
+- Independent builds: 2; byte-identical
+- Wheel members: 258; absolute paths: 0
+- SPC wheel SHA-256:
+  `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612`
+- Installed versions: SBE `0.4.47`, SPC `0.11.1`
+- `pip check`: pass
+
+Installed public command results:
+
+- `astrowoof-final-qa-mixed-custody-qa`: pass; receipt digest
+  `c99f5631c16cb4150b3188bd58908b391985fbefb82a3a5d0e506e3fabd16850`;
+  zero external calls, provider creates, or spend.
+- `astrowoof-terminal-review-qa --detailed`: pass; receipt digest
+  `190cbe74ee086835bba9a0d7af39a552b36049a9eaa64e88f9ee6c7a438b2de2`.
+- `astrowoof-finalization-boundary-qa`: pass; v2 receipt digest
+  `e1d32b2a3830fe2a620643dda0aedc8f5d594db3169c222d326fa52e3b5c904a`;
+  zero external calls, provider creates, or spend.
+- `astrowoof-release-smoke --require-installed`: pass;
+  `DELIVERY_COMPLETE`, no terminal-review result ID, cleanup complete.
+
+The exact API Sprint 76 release-pair gate remains required against this wheel
+before owner authorization to tag and publish.
