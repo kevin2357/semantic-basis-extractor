@@ -64,3 +64,12 @@
   authorization. The established release coordinate is
   `astrowoof-natal-authoring-v0.4.46`, with the exact qualified wheel and
   checksum assets still to be published and independently downloaded.
+
+- 2026-09-04: SBE `0.4.46` published under annotated tag
+  `astrowoof-natal-authoring-v0.4.46`. The tag object is `5468258` and resolves
+  to release-coordinate commit `b95c4f1`. GitHub release `382856483` carries
+  the exact qualified wheel and `SHA256SUMS.txt`; GitHub reports wheel asset
+  digest `c6155ed71428865faa49eaeaf3442f5f64bb670e2317b1ec6dfd0bda54dcbb14`.
+  A fresh authenticated download reproduced that digest and matched the
+  downloaded checksum manifest. This post-publication evidence does not move
+  the immutable tag.

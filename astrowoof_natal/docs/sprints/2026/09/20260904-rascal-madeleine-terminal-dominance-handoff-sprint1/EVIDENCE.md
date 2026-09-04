@@ -178,3 +178,22 @@ occurred.
   `SHA256SUMS.txt`.
 - Required post-publication gate: independently download the published wheel
   and reproduce the qualified SHA-256 before recording release completion.
+
+## Publication verification
+
+- Release-coordinate commit / immutable tag target:
+  `b95c4f12901d6c4e688c871daa1ec57d0f8056ef`.
+- Annotated tag object:
+  `546825881e46b36e9a963937caa8e54e074ab74b`.
+- GitHub release ID: `382856483`.
+- Published at: `2026-09-04T16:01:52Z`.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.46`.
+- Wheel asset ID: `544567351`; GitHub-reported digest:
+  `sha256:c6155ed71428865faa49eaeaf3442f5f64bb670e2317b1ec6dfd0bda54dcbb14`.
+- Checksum asset ID: `544567350`.
+- An independent authenticated release download reproduced wheel SHA-256
+  `c6155ed71428865faa49eaeaf3442f5f64bb670e2317b1ec6dfd0bda54dcbb14`;
+  the downloaded `SHA256SUMS.txt` names the same wheel and digest.
+
+This later evidence record does not move or replace the immutable release tag.

@@ -1,8 +1,8 @@
 # Plan — terminal-dominance handoff
 
-**Status:** Slices 0–3 complete; final `0.4.46` wheels are byte-identical and
-their installed-wheel qualification passed. Owner approved the full immutable
-release workflow under tag `astrowoof-natal-authoring-v0.4.46`.
+**Status:** Complete; SBE `0.4.46` is published under immutable tag
+`astrowoof-natal-authoring-v0.4.46`, and the downloaded wheel reproduced the
+qualified SHA-256.
 
 ## Slice 0 — Source and trace contract freeze
 
