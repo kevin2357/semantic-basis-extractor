@@ -46,3 +46,19 @@ restore or execute either workspace.
 
 The next gate is release-scope review. This correction has no provider, API,
 lifecycle, or retained-run behavior change.
+
+## Slice 4 release evidence
+
+- Released version: `astrowoof-natal-authoring 0.4.44`.
+- Immutable source commit and tag: `a19e5529e0b933d01ce33d9e7bebb53a21a15647` /
+  `astrowoof-natal-authoring-v0.4.44`.
+- Two wheels rebuilt from that exact source are byte-identical:
+  `76696ec947f02c03a1334225a3c7eaa3384a22860be25e833501db0292c9a89d`.
+- The final focused source suite ran after the version bump: `54` passing.
+- A disposable environment installed the released wheel with
+  `semantic-projection-core 0.11.1`; its provider-free theme-policy
+  qualification passed, the installed validator guard excludes the deprecated
+  theme flag, and `pip check` reported no broken requirements after installing
+  declared dependencies.
+- The published GitHub release asset was downloaded once and hash-checked; its
+  SHA-256 exactly matches the qualified wheel. GitHub reports the same digest.

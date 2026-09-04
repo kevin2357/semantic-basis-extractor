@@ -75,3 +75,16 @@
 - Extended the copied-validator subprocess regression: the flag now succeeds
   in both `polish` and `authoring` modes before the unchanged non-theme negative
   control runs.
+
+## 2026-09-04 — 0.4.44 publication
+
+- Committed the approved package-only correction as `a19e552`, then rebuilt
+  the exact source twice with a fixed source timestamp. Both wheels were
+  byte-identical at SHA-256
+  `76696ec947f02c03a1334225a3c7eaa3384a22860be25e833501db0292c9a89d`.
+- Re-ran the focused source suite after the `0.4.44` version bump: `54` tests
+  passed. A disposable installed environment passed the provider-free policy
+  qualification and `pip check` with SPC `0.11.1`.
+- Pushed `main` and immutable tag `astrowoof-natal-authoring-v0.4.44`, created
+  the GitHub release, then downloaded its wheel once. The downloaded and
+  GitHub-reported SHA-256 match the qualified artifact exactly.

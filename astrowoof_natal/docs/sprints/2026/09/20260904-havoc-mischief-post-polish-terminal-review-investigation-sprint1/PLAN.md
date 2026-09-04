@@ -52,7 +52,7 @@ a deprecated parser-compatible no-op. Prove missing, malformed, and legacy
 theme representations no longer influence validation, while live context-filter
 and ordinary editorial constraints still fail normally.
 
-## Slice 4 — Fresh packaged-boundary qualification — complete, release preparation
+## Slice 4 — Fresh packaged-boundary qualification — complete and released
 
 Build a fresh handoff bundle from the changed source and invoke its copied
 validator, rather than importing the source validator directly. Qualify both a
