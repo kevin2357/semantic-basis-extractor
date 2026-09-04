@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/terminal-review-command-result-v0.2.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "outcome", "exit_code", "native_invocation_id", "result_id", "result_sha256", "receipt_id", "receipt_sha256", "action_inventory_kind", "new_provider_create_permitted"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.terminal_review_command_result.v0.2"},
+    "outcome": {"const": "review_required"},
+    "exit_code": {"const": 2},
+    "native_invocation_id": {"type": "string", "pattern": "^ninv_[0-9a-f]{24}$"},
+    "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "action_inventory_kind": {"const": "explicit_zero_paid_actions"},
+    "new_provider_create_permitted": {"const": false}
+  }
+}

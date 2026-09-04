@@ -114,7 +114,7 @@ def _receipt_digest(receipt: dict[str, Any]) -> str:
 def validate_native_publication_receipt(
     receipt: dict[str, Any], result: dict[str, Any],
 ) -> None:
-    """Validate the canonical v0.1 receipt against a v0.1 or v0.2 result."""
+    """Validate the canonical v0.1 receipt against a supported result."""
     receipt_keys = {
         "schema_version", "receipt_id", "receipt_sha256", "run_id",
         "invocation_id", "result_id", "result_sha256", "snapshot_sha256",
@@ -142,6 +142,9 @@ def validate_native_publication_receipt(
     elif schema == "astrowoof.native_execution_result.v0.2":
         from .terminal_review_contracts import validate_terminal_review_result_v02
         validate_terminal_review_result_v02(result)
+    elif schema == "astrowoof.native_execution_result.v0.3":
+        from .terminal_review_contracts import validate_zero_action_terminal_review_result_v03
+        validate_zero_action_terminal_review_result_v03(result)
     else:
         raise ValueError("Unsupported native execution result schema")
     if (
@@ -620,6 +623,34 @@ def _write_terminal_review_result_internal(
     return value
 
 
+def _write_zero_action_terminal_review_result_internal(
+    run_dir: Path, result: dict[str, Any], state: dict[str, Any],
+) -> dict[str, Any]:
+    from .terminal_review_contracts import build_zero_action_terminal_review_result_v03
+    value = build_zero_action_terminal_review_result_v03(result, state)
+    if len(_canonical(value)) > MAX_RESULT_BYTES:
+        raise ValueError("Zero-action terminal review result exceeds size bound")
+    path = run_dir / RESULT_DIRECTORY / f"{value['result_id']}.json"
+    if path.exists():
+        if load_json(path) != value:
+            raise ValueError("Immutable zero-action terminal review result identity conflict")
+    else:
+        write_json_atomic(path, value)
+    index_path = run_dir / RESULT_INDEX_NAME
+    index = load_json(index_path) if index_path.exists() else {
+        "schema_version": RESULT_INDEX_SCHEMA, "result_ids": [],
+    }
+    if value["result_id"] not in index["result_ids"]:
+        index["result_ids"].append(value["result_id"])
+    write_json_atomic(index_path, index)
+    return value
+
+
+def _has_explicit_empty_paid_ledger(state: dict[str, Any]) -> bool:
+    ledger = state.get("spend_ledger")
+    return isinstance(ledger, dict) and ledger.get("actions") == []
+
+
 def write_immutable_execution_result(run_dir: Path, result: dict[str, Any]) -> dict[str, Any]:
     run_dir = run_dir.resolve()
     with _exclusive_lifecycle_lock(run_dir):
@@ -714,6 +745,7 @@ def publish_native_execution_result(
     run_dir: Path, *, command_kind: str, sbe_release: str, published_at: str,
     event_emitter: Any = None, projection_refs: dict[str, Any] | None = None,
     _writer_held: bool = False, terminal_review_v02: bool = False,
+    zero_action_terminal_review_v03: bool = False,
     terminal_review_cause: str | None = None,
     _failure_injector: Any = None,
 ) -> dict[str, Any]:
@@ -721,6 +753,8 @@ def publish_native_execution_result(
     run_dir = run_dir.resolve()
     lock = nullcontext() if _writer_held else _exclusive_lifecycle_lock(run_dir)
     with lock:
+        if terminal_review_v02 and zero_action_terminal_review_v03:
+            raise ValueError("Terminal review result versions are mutually exclusive")
         state = load_json(run_dir / "run.json")
         bind_logging_context(
             run_id=state.get("run_id"), current_state=state.get("status")
@@ -781,15 +815,18 @@ def publish_native_execution_result(
             return sealed
         route = _native_route(state)
         outcome, cause = _outcome(state)
-        if terminal_review_v02:
+        if terminal_review_v02 or zero_action_terminal_review_v03:
             outcome = "review_required"
             cause = terminal_review_cause or cause
         revision = int(state.get("state_revision") or 0)
-        if terminal_review_v02 and indexed_results:
+        if (terminal_review_v02 or zero_action_terminal_review_v03) and indexed_results:
             latest = indexed_results[-1]
             if (
-                latest.get("schema_version")
-                == "astrowoof.native_execution_result.v0.2"
+                latest.get("schema_version") == (
+                    "astrowoof.native_execution_result.v0.3"
+                    if zero_action_terminal_review_v03
+                    else "astrowoof.native_execution_result.v0.2"
+                )
                 and latest.get("command_kind") == command_kind
                 and latest.get("outcome") == outcome
                 and latest.get("cause_code") == cause
@@ -798,12 +835,17 @@ def publish_native_execution_result(
                     "native_state_revision"
                 ) == revision
             ):
-                from .terminal_review_contracts import (
-                    build_terminal_action_dispositions,
-                )
-                if latest.get("action_inventory_sha256") == _digest(
-                    build_terminal_action_dispositions(state)
-                ):
+                if zero_action_terminal_review_v03:
+                    expected_inventory = (
+                        _has_explicit_empty_paid_ledger(state)
+                        and latest.get("action_inventory_kind") == "explicit_zero_paid_actions"
+                    )
+                else:
+                    from .terminal_review_contracts import build_terminal_action_dispositions
+                    expected_inventory = latest.get("action_inventory_sha256") == _digest(
+                        build_terminal_action_dispositions(state)
+                    )
+                if expected_inventory:
                     replay = read_native_transition_result(
                         run_dir, latest["result_id"]
                     )
@@ -889,6 +931,10 @@ def publish_native_execution_result(
             result = _write_terminal_review_result_internal(
                 run_dir, result_basis, state,
             )
+        elif zero_action_terminal_review_v03:
+            result = _write_zero_action_terminal_review_result_internal(
+                run_dir, result_basis, state,
+            )
         else:
             result = _write_immutable_execution_result_internal(run_dir, result_basis)
         if _failure_injector is not None:
@@ -949,6 +995,9 @@ def read_native_transition_result(
     elif result.get("schema_version") == "astrowoof.native_execution_result.v0.2":
         from .terminal_review_contracts import validate_terminal_review_result_v02
         validate_terminal_review_result_v02(result)
+    elif result.get("schema_version") == "astrowoof.native_execution_result.v0.3":
+        from .terminal_review_contracts import validate_zero_action_terminal_review_result_v03
+        validate_zero_action_terminal_review_result_v03(result)
     else:
         raise ValueError("Unsupported native execution result schema")
     expected = result["journal_range"]

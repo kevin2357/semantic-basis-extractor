@@ -8,13 +8,21 @@ import unittest
 from astrowoof_natal_authoring.terminal_review_contracts import (
     build_terminal_review_command_result,
     build_terminal_review_result_v02,
+    build_zero_action_terminal_review_command_result,
+    build_zero_action_terminal_review_result_v03,
     read_terminal_review_command_result_schema,
     read_terminal_review_result_v02_schema,
+    read_zero_action_terminal_review_command_result_schema,
+    read_zero_action_terminal_review_result_v03_schema,
     validate_terminal_review_command_result,
     validate_terminal_review_command_result_against_publication,
     validate_terminal_review_result_v02,
     validate_terminal_review_result_v02_against_api_actions,
     validate_terminal_review_result_v02_against_receipt,
+    validate_zero_action_terminal_review_command_result,
+    validate_zero_action_terminal_review_command_result_against_publication,
+    validate_zero_action_terminal_review_result_v03,
+    validate_zero_action_terminal_review_result_v03_against_receipt,
 )
 from astrowoof_natal_authoring.native_transitions import (
     validate_native_publication_receipt,
@@ -58,6 +66,14 @@ class TerminalReviewContractTests(unittest.TestCase):
 
     def result(self) -> dict:
         return build_terminal_review_result_v02(self.base(), self.state())
+
+    def zero_state(self) -> dict:
+        return {"run_id": "native-run", "spend_ledger": {"actions": []}}
+
+    def zero_result(self) -> dict:
+        return build_zero_action_terminal_review_result_v03(
+            self.base(), self.zero_state(),
+        )
 
     def receipt(self, result: dict) -> dict:
         receipt = {
@@ -208,6 +224,67 @@ class TerminalReviewContractTests(unittest.TestCase):
         except ImportError:
             self.skipTest("jsonschema not installed")
         jsonschema.Draft202012Validator(schema).validate(self.result())
+
+    def test_zero_action_result_is_explicit_closed_and_receipt_bound(self) -> None:
+        result = self.zero_result()
+        receipt = self.receipt(result)
+        self.assertEqual("astrowoof.native_execution_result.v0.3", result["schema_version"])
+        self.assertEqual("explicit_zero_paid_actions", result["action_inventory_kind"])
+        self.assertEqual(0, result["paid_action_count"])
+        self.assertEqual(0, result["provider_operation_count"])
+        validate_zero_action_terminal_review_result_v03(result)
+        validate_zero_action_terminal_review_result_v03_against_receipt(result, receipt)
+        command = build_zero_action_terminal_review_command_result(result, receipt)
+        validate_zero_action_terminal_review_command_result(command)
+        validate_zero_action_terminal_review_command_result_against_publication(
+            command, result, receipt,
+        )
+
+    def test_zero_action_refuses_missing_nonempty_or_attached_evidence(self) -> None:
+        for state in (
+            {"run_id": "native-run"},
+            {"run_id": "native-run", "spend_ledger": None},
+            {"run_id": "native-run", "spend_ledger": {"actions": "none"}},
+            {"run_id": "native-run", "spend_ledger": {"actions": [self.state()["spend_ledger"]["actions"][0]]}},
+        ):
+            with self.subTest(state=state):
+                with self.assertRaises(ValueError):
+                    build_zero_action_terminal_review_result_v03(self.base(), state)
+        result = self.zero_result()
+        for key, value in (
+            ("provider_operations", []),
+            ("action_dispositions", []),
+            ("paid_action_count", 1),
+        ):
+            changed = copy.deepcopy(result)
+            changed[key] = value
+            basis = {k: v for k, v in changed.items() if k not in {"result_id", "result_sha256"}}
+            changed["result_sha256"] = hashlib.sha256(json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+            changed["result_id"] = f"nres_{changed['result_sha256'][:24]}"
+            with self.subTest(key=key):
+                with self.assertRaises(ValueError):
+                    validate_zero_action_terminal_review_result_v03(changed)
+
+    def test_paid_and_zero_action_result_versions_fail_closed_on_each_other(self) -> None:
+        with self.assertRaises(ValueError):
+            validate_zero_action_terminal_review_result_v03(self.result())
+        with self.assertRaises(ValueError):
+            validate_terminal_review_result_v02(self.zero_result())
+
+    def test_zero_action_schemas_are_packaged(self) -> None:
+        result_schema = read_zero_action_terminal_review_result_v03_schema()
+        command_schema = read_zero_action_terminal_review_command_result_schema()
+        self.assertEqual("astrowoof.native_execution_result.v0.3", result_schema["properties"]["schema_version"]["const"])
+        self.assertEqual("astrowoof.terminal_review_command_result.v0.2", command_schema["properties"]["schema_version"]["const"])
+        try:
+            import jsonschema
+        except ImportError:
+            self.skipTest("jsonschema not installed")
+        result = self.zero_result()
+        jsonschema.Draft202012Validator(result_schema).validate(result)
+        jsonschema.Draft202012Validator(command_schema).validate(
+            build_zero_action_terminal_review_command_result(result, self.receipt(result))
+        )
 
 
 if __name__ == "__main__":

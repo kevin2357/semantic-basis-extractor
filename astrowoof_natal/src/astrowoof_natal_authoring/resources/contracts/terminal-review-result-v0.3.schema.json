@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/terminal-review-result-v0.3.schema.json",
+  "title": "AstroWoof native zero-paid-action terminal-review execution result v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "result_id", "result_sha256", "invocation_id", "run_id", "sbe_release", "published_at", "command_kind", "route_binding", "pre_checkpoint", "post_checkpoint", "journal_range", "outcome", "cause_code", "action_inventory_kind", "paid_action_count", "provider_operation_count", "new_provider_create_permitted", "projection_refs"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.native_execution_result.v0.3"},
+    "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+    "result_sha256": {"$ref": "#/$defs/sha256"},
+    "invocation_id": {"type": "string", "pattern": "^ninv_[0-9a-f]{24}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "sbe_release": {"type": "string", "minLength": 1, "maxLength": 32},
+    "published_at": {"type": "string", "minLength": 1, "maxLength": 40},
+    "command_kind": {"enum": ["ordinary_authoring", "provider_reconciliation"]},
+    "route_binding": {"$ref": "#/$defs/route_binding"},
+    "pre_checkpoint": {"type": ["object", "null"]},
+    "post_checkpoint": {"type": "object"},
+    "journal_range": {"type": "object"},
+    "outcome": {"const": "review_required"},
+    "cause_code": {"enum": ["final_qa_requires_review", "authoring_attempts_exhausted", "finalization_contract_invalid"]},
+    "action_inventory_kind": {"const": "explicit_zero_paid_actions"},
+    "paid_action_count": {"const": 0},
+    "provider_operation_count": {"const": 0},
+    "new_provider_create_permitted": {"const": false},
+    "projection_refs": {"type": "object", "maxProperties": 0}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "route_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "provider_mechanism", "native_operation_ref"],
+      "properties": {
+        "route_family": {"enum": ["exact_natal", "bounded_natal"]},
+        "provider_mechanism": {"enum": ["response", "batch"]},
+        "native_operation_ref": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    }
+  }
+}

@@ -17,11 +17,16 @@ from .closure import (
     cleanup_completed_run,
     create_run,
     load_json,
+    save_state,
     sha256_file,
 )
 from .contracts import authoring_profile
 from .provenance import resource_set_provenance
 from .resource_access import resource
+from .native_transitions import read_native_transition_result
+from .terminal_review_contracts import (
+    validate_zero_action_terminal_review_command_result_against_publication,
+)
 
 
 SMOKE_SCHEMA = "astrowoof.natal_authoring.release_smoke.v0.1"
@@ -105,6 +110,11 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
         full_chart_basis_format="compact-v2",
         profile=profile,
     )
+    # This provider-free fixture has no paid-action lineage.  Materialize that
+    # fact before any resume rather than asking terminal publication to treat a
+    # missing ledger as empty.
+    state["spend_ledger"] = {"actions": []}
+    save_state(run_json, state)
     _check(state.get("status") == "AUTHORING", "create_run did not stop at AUTHORING", errors)
     _check(all(item["state"] == "GENERATED" for item in state["passes"].values()), "passes were not generated", errors)
     packet_path = (
@@ -153,12 +163,35 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
         "--foreground",
         "--poll-interval-seconds",
         "0.01",
+        "--release-smoke-zero-paid-actions",
     ]
     resumed = subprocess.run(command, capture_output=True, text=True, check=False)
-    _check(resumed.returncode == 0, f"resume command failed: {resumed.stderr}", errors)
     state = load_json(run_json)
     delivery_complete = state.get("status") == "DELIVERY_COMPLETE"
-    _check(delivery_complete, "run did not complete delivery", errors)
+    zero_action_terminal = state.get("status") in {
+        "FAILED_REQUIRES_REVIEW", "FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW",
+    }
+    terminal_publication: dict[str, Any] | None = None
+    if zero_action_terminal:
+        _check(resumed.returncode == 2, f"terminal resume exit was {resumed.returncode}: {resumed.stderr}", errors)
+        try:
+            command_result = json.loads(resumed.stdout)
+            result_id = command_result["result_id"]
+            terminal_publication = read_native_transition_result(run_dir, result_id)
+            validate_zero_action_terminal_review_command_result_against_publication(
+                command_result,
+                terminal_publication["result"],
+                terminal_publication["receipt"],
+            )
+            result = terminal_publication["result"]
+            _check(result.get("paid_action_count") == 0, "zero-action result has paid actions", errors)
+            _check(result.get("provider_operation_count") == 0, "zero-action result has provider operations", errors)
+            _check(result.get("action_inventory_kind") == "explicit_zero_paid_actions", "zero-action inventory marker is invalid", errors)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            _check(False, f"zero-action terminal publication is invalid: {exc}", errors)
+    else:
+        _check(resumed.returncode == 0, f"resume command failed: {resumed.stderr}", errors)
+        _check(delivery_complete, "run did not complete delivery", errors)
     first_pass = state.get("passes", {}).get("bre_1", {})
     _check(len(first_pass.get("attempts", [])) == 2, "forced rejection did not produce two attempts", errors)
     if first_pass.get("attempts"):
@@ -261,6 +294,10 @@ def run_smoke(work_dir: Path, *, require_installed: bool = False) -> dict[str, A
             },
             "initial_state": "AUTHORING",
             "resume": state.get("status"),
+            "zero_action_terminal_result_id": (
+                terminal_publication["result"]["result_id"]
+                if terminal_publication is not None else None
+            ),
             "forced_retry_attempt_count": len(first_pass.get("attempts", [])),
             "card_count": len(load_json(deck_path).get("cards", [])) if deck_path.is_file() else 0,
             "summary_count": len(load_json(deck_path).get("summary", {})) if deck_path.is_file() else 0,

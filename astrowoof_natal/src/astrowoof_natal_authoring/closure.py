@@ -8218,6 +8218,11 @@ def main() -> None:
         metavar="PASS_ID:COUNT",
         help="Make a fake pass raise COUNT provider errors before succeeding.",
     )
+    parser.add_argument(
+        "--release-smoke-zero-paid-actions",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
     add_logging_arguments(parser)
     args = parser.parse_args()
     configure_logging_from_args(args)
@@ -8298,6 +8303,8 @@ def main() -> None:
         parser.error("--qualitative-candidate requires --qualitative-critic")
     if args.qualitative_critic and args.provider != "openai":
         parser.error("--qualitative-critic requires --provider openai")
+    if args.release_smoke_zero_paid_actions and args.provider != "fake":
+        parser.error("--release-smoke-zero-paid-actions requires --provider fake")
     if args.service_level == "batch" and args.provider != "openai":
         parser.error("--service-level batch requires --provider openai")
     if args.batch_detach and args.service_level != "batch":
@@ -8998,19 +9005,35 @@ def main() -> None:
         "FINAL_QA_FAILED",
         "FINAL_QA_REQUIRES_REVIEW",
     }
+    zero_action_terminal_review_v03 = (
+        review_required
+        and args.service_level == "interactive"
+        and args.release_smoke_zero_paid_actions
+    )
     sealed = publish_native_execution_result(
         args.run_dir, command_kind="ordinary_authoring",
         sbe_release=__version__, published_at=utc_now(),
         event_emitter=event_emitter,
         terminal_review_v02=(
-            review_required and args.service_level == "interactive"
+            review_required
+            and args.service_level == "interactive"
+            and not zero_action_terminal_review_v03
         ),
+        zero_action_terminal_review_v03=zero_action_terminal_review_v03,
     )
     if review_required and args.service_level == "interactive":
-        from .terminal_review_contracts import build_terminal_review_command_result
-        output_result(build_terminal_review_command_result(
-            sealed["result"], sealed["receipt"],
-        ))
+        if zero_action_terminal_review_v03:
+            from .terminal_review_contracts import (
+                build_zero_action_terminal_review_command_result,
+            )
+            output_result(build_zero_action_terminal_review_command_result(
+                sealed["result"], sealed["receipt"],
+            ))
+        else:
+            from .terminal_review_contracts import build_terminal_review_command_result
+            output_result(build_terminal_review_command_result(
+                sealed["result"], sealed["receipt"],
+            ))
         log_cli_exit(
             logger, command="semantic_closure", operation="ordinary_authoring",
             exit_code=2, outcome="review_required",

@@ -20,7 +20,6 @@ SOURCE_PYTHONPATH = os.pathsep.join(
 from astrowoof_natal_authoring import smoke as smoke_module  # noqa: E402
 from astrowoof_natal_authoring.closure import (  # noqa: E402
     _fake_field_value,
-    save_state,
 )
 from astrowoof_natal_authoring.editorial_lint import (  # noqa: E402
     authoring_pass_acceptance,
@@ -58,7 +57,11 @@ class TestReleaseSmokeRuntime(unittest.TestCase):
             self.assertEqual(0, completed.returncode, completed.stderr)
             report = json.loads(completed.stdout)
             self.assertEqual("pass", report["status"])
-            self.assertEqual("DELIVERY_COMPLETE", report["checks"]["resume"])
+            self.assertEqual("FINAL_QA_FAILED", report["checks"]["resume"])
+            self.assertRegex(
+                report["checks"]["zero_action_terminal_result_id"],
+                r"^nres_[0-9a-f]{24}$",
+            )
 
     def test_fake_body_identity_survives_production_normalization(self):
         items = []
@@ -110,46 +113,42 @@ class TestReleaseSmokeRuntime(unittest.TestCase):
         reverse = render(reversed(identities), "\\")
         self.assertEqual(forward, reverse)
 
-    def test_successful_smoke_still_completes_cleanup(self):
+    def test_zero_action_terminal_smoke_is_a_qualified_fixture_outcome(self):
         with tempfile.TemporaryDirectory() as temporary:
             with patch.dict(os.environ, {"PYTHONPATH": SOURCE_PYTHONPATH}):
                 report = smoke_module.run_smoke(Path(temporary))
         self.assertEqual("pass", report["status"])
-        self.assertEqual("DELIVERY_COMPLETE", report["checks"]["resume"])
-        self.assertEqual("complete", report["checks"]["cleanup_status"])
-        self.assertGreater(report["checks"]["cleanup_target_count"], 0)
+        self.assertEqual("FINAL_QA_FAILED", report["checks"]["resume"])
+        self.assertRegex(
+            report["checks"]["zero_action_terminal_result_id"],
+            r"^nres_[0-9a-f]{24}$",
+        )
+        self.assertEqual("skipped", report["checks"]["cleanup_status"])
 
     def test_non_delivery_smoke_is_structured_and_skips_cleanup(self):
         real_run = subprocess.run
         with tempfile.TemporaryDirectory() as temporary:
             work_dir = Path(temporary)
 
-            def complete_then_require_review(*args, **kwargs):
-                result = real_run(*args, **kwargs)
-                run_json = work_dir / "run" / "run.json"
-                if run_json.is_file():
-                    state = json.loads(run_json.read_text(encoding="utf-8"))
-                    state["subjects"]["bre"]["state"] = "FINAL_QA_WARN"
-                    save_state(run_json, state)
-                return result
+            def leave_unresumed(*args, **kwargs):
+                command = args[0] if args else kwargs.get("args", [])
+                if "astrowoof_natal_authoring.closure" in command:
+                    return subprocess.CompletedProcess(command, 0, stdout="{}", stderr="")
+                return real_run(*args, **kwargs)
 
             with (
                 patch.dict(os.environ, {"PYTHONPATH": SOURCE_PYTHONPATH}),
                 patch.object(
                     smoke_module.subprocess,
                     "run",
-                    side_effect=complete_then_require_review,
+                    side_effect=leave_unresumed,
                 ),
             ):
                 report = smoke_module.run_smoke(work_dir)
 
             self.assertEqual("fail", report["status"])
             self.assertEqual(
-                "FINAL_QA_REQUIRES_REVIEW", report["checks"]["resume"]
-            )
-            self.assertEqual(
-                "FINAL_QA_WARN",
-                report["checks"]["final_qa"]["subject_state"],
+                "AUTHORING", report["checks"]["resume"]
             )
             self.assertIn("run did not complete delivery", report["errors"])
             self.assertEqual("skipped", report["checks"]["cleanup_status"])

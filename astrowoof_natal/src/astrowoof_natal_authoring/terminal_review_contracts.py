@@ -11,7 +11,9 @@ from typing import Any
 
 
 RESULT_SCHEMA = "astrowoof.native_execution_result.v0.2"
+ZERO_ACTION_RESULT_SCHEMA = "astrowoof.native_execution_result.v0.3"
 COMMAND_RESULT_SCHEMA = "astrowoof.terminal_review_command_result.v0.1"
+ZERO_ACTION_COMMAND_RESULT_SCHEMA = "astrowoof.terminal_review_command_result.v0.2"
 ACTION_STATES = frozenset({
     "PREPARED", "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED", "WAITING",
     "REPORTED", "DENIED_PROVIDERLESS", "BUDGET_EXHAUSTED",
@@ -40,6 +42,11 @@ _REVIEW_CAUSES = frozenset({
     "snapshot_or_journal_invalid",
     "native_lifecycle_review_required",
     "local_work_progress_contradiction",
+    "finalization_contract_invalid",
+})
+_ZERO_ACTION_REVIEW_CAUSES = frozenset({
+    "final_qa_requires_review",
+    "authoring_attempts_exhausted",
     "finalization_contract_invalid",
 })
 
@@ -178,6 +185,37 @@ def build_terminal_review_result_v02(
     value["result_sha256"] = _digest(value)
     value["result_id"] = f"nres_{value['result_sha256'][:24]}"
     validate_terminal_review_result_v02(value)
+    return value
+
+
+def build_zero_action_terminal_review_result_v03(
+    base_result: dict[str, Any], state: dict[str, Any],
+) -> dict[str, Any]:
+    """Seal the release-smoke's explicitly empty, pre-provider ledger.
+
+    This deliberately is not a convenience fallback for a missing paid-action
+    inventory.  Callers must have materialized ``spend_ledger.actions: []``
+    before the native invocation begins.
+    """
+    ledger = state.get("spend_ledger")
+    if not isinstance(ledger, dict):
+        raise ValueError("Zero-action terminal result requires an explicit empty ledger")
+    if not isinstance(ledger.get("actions"), list) or ledger["actions"]:
+        raise ValueError("Zero-action terminal result requires exactly zero paid actions")
+    value = deepcopy(base_result)
+    for key in ("result_id", "result_sha256", "action_ids", "provider_operations"):
+        value.pop(key, None)
+    value.update({
+        "schema_version": ZERO_ACTION_RESULT_SCHEMA,
+        "outcome": "review_required",
+        "action_inventory_kind": "explicit_zero_paid_actions",
+        "paid_action_count": 0,
+        "provider_operation_count": 0,
+        "new_provider_create_permitted": False,
+    })
+    value["result_sha256"] = _digest(value)
+    value["result_id"] = f"nres_{value['result_sha256'][:24]}"
+    validate_zero_action_terminal_review_result_v03(value)
     return value
 
 
@@ -321,6 +359,83 @@ def validate_terminal_review_result_v02(value: dict[str, Any]) -> None:
         raise ValueError("Terminal review result content identity is invalid")
 
 
+def _validate_terminal_result_common(value: dict[str, Any]) -> None:
+    if value.get("outcome") != "review_required" or value.get("new_provider_create_permitted") is not False:
+        raise ValueError("Terminal review result semantic disposition is invalid")
+    if not _INVOCATION_ID.fullmatch(str(value.get("invocation_id"))) or not isinstance(value.get("run_id"), str) or not value["run_id"]:
+        raise ValueError("Terminal review invocation/run identity is invalid")
+    if value.get("command_kind") not in {"ordinary_authoring", "provider_reconciliation"}:
+        raise ValueError("Terminal review command kind is invalid")
+    if not isinstance(value.get("sbe_release"), str) or not value["sbe_release"]:
+        raise ValueError("Terminal review release identity is invalid")
+    if not isinstance(value.get("published_at"), str) or not value["published_at"]:
+        raise ValueError("Terminal review publication time is invalid")
+    route = value.get("route_binding")
+    if not isinstance(route, dict) or set(route) != {"route_family", "provider_mechanism", "native_operation_ref"}:
+        raise ValueError("Terminal review route binding is invalid")
+    if route.get("route_family") not in {"exact_natal", "bounded_natal"} or route.get("provider_mechanism") not in {"response", "batch"}:
+        raise ValueError("Terminal review route vocabulary is invalid")
+    if not isinstance(route.get("native_operation_ref"), str) or not route["native_operation_ref"]:
+        raise ValueError("Terminal review native operation is invalid")
+    pre = value.get("pre_checkpoint")
+    if pre is not None and (
+        not isinstance(pre, dict) or set(pre) != {"snapshot_sha256"}
+        or not _DIGEST.fullmatch(str(pre.get("snapshot_sha256")))
+    ):
+        raise ValueError("Terminal review pre-checkpoint is invalid")
+    post = value.get("post_checkpoint")
+    if (
+        not isinstance(post, dict)
+        or set(post) != {"native_state_revision", "checkpoint_basis_sha256", "logical_workspace_root"}
+        or not isinstance(post.get("native_state_revision"), int)
+        or post["native_state_revision"] < 0
+        or not _DIGEST.fullmatch(str(post.get("checkpoint_basis_sha256")))
+        or not isinstance(post.get("logical_workspace_root"), str)
+        or not post["logical_workspace_root"]
+    ):
+        raise ValueError("Terminal review post-checkpoint is invalid")
+    journal = value.get("journal_range")
+    if (
+        not isinstance(journal, dict)
+        or set(journal) != {"start_sequence", "end_sequence", "record_count", "range_sha256", "closing_record_id"}
+        or not all(isinstance(journal.get(key), int) for key in ("start_sequence", "end_sequence", "record_count"))
+        or journal["start_sequence"] < 1
+        or journal["end_sequence"] < journal["start_sequence"]
+        or journal["record_count"] != journal["end_sequence"] - journal["start_sequence"] + 1
+        or not _DIGEST.fullmatch(str(journal.get("range_sha256")))
+        or not re.fullmatch(r"^ntr_[0-9a-f]{24}$", str(journal.get("closing_record_id")))
+    ):
+        raise ValueError("Terminal review journal range is invalid")
+    if not isinstance(value.get("projection_refs"), dict) or value["projection_refs"]:
+        raise ValueError("Terminal review projection refs must be empty")
+
+
+def validate_zero_action_terminal_review_result_v03(value: dict[str, Any]) -> None:
+    keys = {
+        "schema_version", "result_id", "result_sha256", "invocation_id", "run_id",
+        "sbe_release", "published_at", "command_kind", "route_binding", "pre_checkpoint",
+        "post_checkpoint", "journal_range", "outcome", "cause_code",
+        "action_inventory_kind", "paid_action_count", "provider_operation_count",
+        "new_provider_create_permitted", "projection_refs",
+    }
+    if not isinstance(value, dict) or set(value) != keys or value.get("schema_version") != ZERO_ACTION_RESULT_SCHEMA:
+        raise ValueError("Zero-action terminal result shape/schema is invalid")
+    _validate_terminal_result_common(value)
+    if value.get("cause_code") not in _ZERO_ACTION_REVIEW_CAUSES:
+        raise ValueError("Zero-action terminal review cause is invalid")
+    if (
+        value.get("action_inventory_kind") != "explicit_zero_paid_actions"
+        or value.get("paid_action_count") != 0
+        or value.get("provider_operation_count") != 0
+    ):
+        raise ValueError("Zero-action terminal inventory is invalid")
+    result_sha = value.get("result_sha256")
+    basis = {key: item for key, item in value.items() if key not in {"result_id", "result_sha256"}}
+    expected = _digest(basis)
+    if result_sha != expected or value.get("result_id") != f"nres_{expected[:24]}":
+        raise ValueError("Zero-action terminal result content identity is invalid")
+
+
 def validate_terminal_review_result_v02_against_receipt(
     result: dict[str, Any], receipt: dict[str, Any],
 ) -> None:
@@ -386,6 +501,26 @@ def build_terminal_review_command_result(
     return value
 
 
+def build_zero_action_terminal_review_command_result(
+    result: dict[str, Any], receipt: dict[str, Any],
+) -> dict[str, Any]:
+    validate_zero_action_terminal_review_result_v03_against_receipt(result, receipt)
+    value = {
+        "schema_version": ZERO_ACTION_COMMAND_RESULT_SCHEMA,
+        "outcome": "review_required",
+        "exit_code": 2,
+        "native_invocation_id": result["invocation_id"],
+        "result_id": result["result_id"],
+        "result_sha256": result["result_sha256"],
+        "receipt_id": receipt["receipt_id"],
+        "receipt_sha256": receipt["receipt_sha256"],
+        "action_inventory_kind": "explicit_zero_paid_actions",
+        "new_provider_create_permitted": False,
+    }
+    validate_zero_action_terminal_review_command_result(value)
+    return value
+
+
 def validate_terminal_review_command_result(value: dict[str, Any]) -> None:
     keys = {
         "schema_version", "outcome", "exit_code", "native_invocation_id",
@@ -409,6 +544,29 @@ def validate_terminal_review_command_result(value: dict[str, Any]) -> None:
         raise ValueError("Terminal review command result is invalid")
 
 
+def validate_zero_action_terminal_review_command_result(value: dict[str, Any]) -> None:
+    keys = {
+        "schema_version", "outcome", "exit_code", "native_invocation_id",
+        "result_id", "result_sha256", "receipt_id", "receipt_sha256",
+        "action_inventory_kind", "new_provider_create_permitted",
+    }
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ValueError("Zero-action terminal command result fields are invalid")
+    if (
+        value.get("schema_version") != ZERO_ACTION_COMMAND_RESULT_SCHEMA
+        or value.get("outcome") != "review_required"
+        or value.get("exit_code") != 2
+        or value.get("action_inventory_kind") != "explicit_zero_paid_actions"
+        or value.get("new_provider_create_permitted") is not False
+        or not _INVOCATION_ID.fullmatch(str(value.get("native_invocation_id")))
+        or not _RESULT_ID.fullmatch(str(value.get("result_id")))
+        or not _DIGEST.fullmatch(str(value.get("result_sha256")))
+        or not re.fullmatch(r"^nreceipt_[0-9a-f]{24}$", str(value.get("receipt_id")))
+        or not _DIGEST.fullmatch(str(value.get("receipt_sha256")))
+    ):
+        raise ValueError("Zero-action terminal command result is invalid")
+
+
 def validate_terminal_review_command_result_against_publication(
     command_result: dict[str, Any], result: dict[str, Any], receipt: dict[str, Any],
 ) -> None:
@@ -422,9 +580,33 @@ def validate_terminal_review_command_result_against_publication(
         )
 
 
+def validate_zero_action_terminal_review_result_v03_against_receipt(
+    result: dict[str, Any], receipt: dict[str, Any],
+) -> None:
+    from .native_transitions import validate_native_publication_receipt
+    validate_zero_action_terminal_review_result_v03(result)
+    validate_native_publication_receipt(receipt, result)
+
+
+def validate_zero_action_terminal_review_command_result_against_publication(
+    command_result: dict[str, Any], result: dict[str, Any], receipt: dict[str, Any],
+) -> None:
+    validate_zero_action_terminal_review_command_result(command_result)
+    validate_zero_action_terminal_review_result_v03_against_receipt(result, receipt)
+    if command_result != build_zero_action_terminal_review_command_result(result, receipt):
+        raise ValueError("Zero-action terminal command result does not join exact publication")
+
+
 def read_terminal_review_result_v02_schema() -> dict[str, Any]:
     resource = files("astrowoof_natal_authoring.resources").joinpath(
         "contracts/terminal-review-result-v0.2.schema.json"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def read_zero_action_terminal_review_result_v03_schema() -> dict[str, Any]:
+    resource = files("astrowoof_natal_authoring.resources").joinpath(
+        "contracts/terminal-review-result-v0.3.schema.json"
     )
     return json.loads(resource.read_text(encoding="utf-8"))
 
@@ -436,14 +618,29 @@ def read_terminal_review_command_result_schema() -> dict[str, Any]:
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
+def read_zero_action_terminal_review_command_result_schema() -> dict[str, Any]:
+    resource = files("astrowoof_natal_authoring.resources").joinpath(
+        "contracts/terminal-review-command-result-v0.2.schema.json"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
 __all__ = [
-    "RESULT_SCHEMA", "COMMAND_RESULT_SCHEMA", "build_terminal_action_dispositions",
-    "build_terminal_review_command_result",
+    "RESULT_SCHEMA", "ZERO_ACTION_RESULT_SCHEMA", "COMMAND_RESULT_SCHEMA",
+    "ZERO_ACTION_COMMAND_RESULT_SCHEMA", "build_terminal_action_dispositions",
+    "build_terminal_review_command_result", "build_zero_action_terminal_review_command_result",
     "build_terminal_review_result_v02", "read_terminal_review_result_v02_schema",
+    "build_zero_action_terminal_review_result_v03",
+    "read_zero_action_terminal_review_result_v03_schema",
     "validate_terminal_review_result_v02",
+    "validate_zero_action_terminal_review_result_v03",
     "validate_terminal_review_result_v02_against_receipt",
+    "validate_zero_action_terminal_review_result_v03_against_receipt",
     "validate_terminal_review_result_v02_against_api_actions",
     "validate_terminal_review_command_result",
+    "validate_zero_action_terminal_review_command_result",
     "validate_terminal_review_command_result_against_publication",
+    "validate_zero_action_terminal_review_command_result_against_publication",
     "read_terminal_review_command_result_schema",
+    "read_zero_action_terminal_review_command_result_schema",
 ]
