@@ -2798,7 +2798,7 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertEqual("theme_group_registry", issue)
             self.assertTrue(affected)
 
-    def test_pass_six_theme_group_coverage_is_retained_advisory(self) -> None:
+    def test_pass_six_theme_group_coverage_is_ignored_while_dormant(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             build_story_workspace(
@@ -2830,10 +2830,10 @@ class TestSemanticClosure(SemanticClosureFixture):
             report = outcome["report"]
             self.assertEqual("astrowoof.authoring_pass_gate.v0.2", report["schema_version"])
             self.assertEqual([], report["editorial_issue_codes"])
-            self.assertEqual(["theme_group_coverage"], report["advisory_issue_codes"])
-            self.assertTrue(report["advisory_affected_claim_ids"])
+            self.assertEqual([], report["advisory_issue_codes"])
+            self.assertEqual([], report["advisory_affected_claim_ids"])
 
-    def test_pass_six_unknown_theme_assignment_remains_hard_failure(self) -> None:
+    def test_pass_six_unknown_theme_assignment_is_ignored_while_dormant(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             build_story_workspace(
@@ -2856,13 +2856,10 @@ class TestSemanticClosure(SemanticClosureFixture):
                 root, root / "acceptance.json",
                 python_executable=Path(sys.executable),
             )
-            self.assertFalse(accepted)
-            self.assertIn(
-                "theme_group_assignment",
-                outcome["report"]["editorial_issue_codes"],
-            )
+            self.assertTrue(accepted, outcome)
+            self.assertEqual([], outcome["report"]["editorial_issue_codes"])
 
-    def test_theme_group_balance_and_mirroring_are_advisories(self) -> None:
+    def test_theme_group_diagnostics_are_not_acceptance_advisories(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             build_story_workspace(
@@ -2917,10 +2914,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 python_executable=Path(sys.executable),
             )
             self.assertTrue(accepted, outcome)
-            self.assertEqual(
-                ["theme_group_balance", "cross_section_theme_mirroring"],
-                outcome["report"]["advisory_issue_codes"],
-            )
+            self.assertEqual([], outcome["report"]["advisory_issue_codes"])
 
     def test_completed_malformed_output_preserves_billable_metadata(
         self,
@@ -3614,7 +3608,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     python_executable=Path(sys.executable),
                 ),
             )
-            self.assertEqual("progressed_local", result["outcome"])
+            self.assertEqual("terminal", result["outcome"])
             self.assertEqual("batch", result["provider_operations"][0]["provider_operation_kind"])
             self.assertEqual(6, result["provider_operations"][0]["member_count"])
             self.assertEqual(uploads, transport.upload_calls)
@@ -3733,14 +3727,14 @@ class TestSemanticClosure(SemanticClosureFixture):
                 max_attempts=3, python_executable=Path(sys.executable),
                 observed_at=next_due,
             )
-            self.assertEqual("progressed_local", completed["outcome"])
+            self.assertEqual("terminal", completed["outcome"])
             self.assertEqual(2, transport.retrieve_calls)
             replay = reconcile_batch_provider_cycle(
                 root / "run", provider=provider, transport=transport,
                 max_attempts=3, python_executable=Path(sys.executable),
                 observed_at=next_due,
             )
-            self.assertEqual("progressed_local", replay["outcome"])
+            self.assertEqual("terminal", replay["outcome"])
             self.assertEqual(2, transport.retrieve_calls)
             self.assertEqual(1, transport.create_calls)
 
@@ -3906,7 +3900,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 max_attempts=3, python_executable=Path(sys.executable),
                 observed_at=action["provider_reconciliation"]["resume_not_before"],
             )
-            self.assertEqual("progressed_local", result["outcome"])
+            self.assertEqual("terminal", result["outcome"])
             persisted = load_json(root / "run" / "run.json")
             paid = persisted["spend_ledger"]["actions"][0]
             self.assertEqual("REPORTED", paid["state"])
@@ -3957,7 +3951,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                     max_attempts=3, python_executable=Path(sys.executable),
                     observed_at=action["provider_reconciliation"]["resume_not_before"],
                 )
-                self.assertEqual("progressed_local", resumed["outcome"])
+                self.assertEqual("terminal", resumed["outcome"])
                 self.assertLessEqual(transport.retrieve_calls, calls + 1)
                 self.assertEqual(1, transport.create_calls)
                 self.assertEqual(1, transport.upload_calls)

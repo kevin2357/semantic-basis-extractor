@@ -68,7 +68,9 @@ The focused gate MUST include:
 1. the regression that reproduces the reported defect or contract gap;
 2. all directly changed unit/schema/validator tests;
 3. tests for every known production caller and every affected route, stage, and
-   mechanism cell;
+   mechanism cell, including every packaged qualification whose fixture calls
+   the changed selector/reducer even when that qualification's own source file
+   did not change;
 4. adjacent negative controls proving nearby unsupported or safety-critical
    behavior did not widen;
 5. release-identity and version-bound fixture tests;

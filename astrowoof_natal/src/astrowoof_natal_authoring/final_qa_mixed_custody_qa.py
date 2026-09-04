@@ -58,9 +58,20 @@ def _installed_version() -> str:
         return __version__
 
 
-def _warning_authority(root: Path):
+def _ordinary_polish_authority(root: Path):
     _pending_workspace(root, "exact_natal")
     _reconcile_4_plus_2(root)
+    return _ordinary_authority(root, "exact_natal", "polish")
+
+
+def _add_final_qa_review_evidence(root: Path, *, terminal_status: bool) -> None:
+    """Commit review evidence after authority or provider custody already exists.
+
+    New authority must never be manufactured after this conclusion exists.  The
+    custody-precedence qualification deliberately introduces it only after
+    provider identity durability. The separate refusal case injects a transient
+    terminal outer-status contradiction after the native intent checkpoint.
+    """
     state = load_json(root / "run.json")
     state["subjects"] = {
         "qualification-subject": {
@@ -75,10 +86,27 @@ def _warning_authority(root: Path):
             "delivery": None,
         },
     }
-    state["status"] = "FINAL_QA_REQUIRES_REVIEW"
-    persist_state(root / "run.json", state)
+    if terminal_status:
+        state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+        # This is an injected between-checkpoints contradiction.  The normal
+        # persistence reducer would immediately repair the outer spelling and
+        # erase the precise race the qualification is required to exercise.
+        (root / "run.json").write_text(
+            json.dumps(state, indent=2) + "\n", encoding="utf-8",
+        )
+    else:
+        persist_state(root / "run.json", state)
     write_workspace_snapshot(root)
-    return _ordinary_authority(root, "exact_natal", "polish")
+
+
+def _inject_post_intent_terminal_status(root: Path) -> None:
+    """Inject the transient outer-status contradiction fenced by dispatch."""
+    state = load_json(root / "run.json")
+    state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+    (root / "run.json").write_text(
+        json.dumps(state, indent=2) + "\n", encoding="utf-8",
+    )
+    write_workspace_snapshot(root)
 
 
 def _write_inputs(root: Path, inspection: dict[str, Any], request: dict[str, Any], documents: list[dict[str, Any]], grant: dict[str, Any]) -> tuple[list[str], Path]:
@@ -98,12 +126,16 @@ def _write_inputs(root: Path, inspection: dict[str, Any], request: dict[str, Any
 
 
 def _pending_case(root: Path) -> dict[str, Any]:
-    inspection, request, documents, grant = _warning_authority(root)
+    inspection, request, documents, grant = _ordinary_polish_authority(root)
     argv, output = _write_inputs(root, inspection, request, documents, grant)
     creates: list[str] = []
     with patch.dict(os.environ, {"OPENAI_API_KEY": "qualification-only"}), patch.object(authority_cli, "resolve_external_authority_v2_request_payload", return_value={"model": "scripted", "input": []}), patch.object(authority_cli.OpenAIResponsesProvider, "create_response_only", side_effect=lambda *_args, **_kwargs: (creates.append("POST") or ({"id": "resp_final_qa_mixed_custody", "status": "queued"}, 1))):
         exit_code = authority_cli.main(argv)
     command = json.loads(output.read_text(encoding="utf-8"))
+    # The finalization conclusion is later than provider identity durability.
+    # Keep the outer provider-pending spelling: lifecycle projection must derive
+    # review evidence from the subject record while retained custody wins.
+    _add_final_qa_review_evidence(root, terminal_status=False)
     state = load_json(root / "run.json")
     lifecycle = inspect_lifecycle(root, native_exclusive_access="declared")
     temporal = inspect_temporal_lifecycle(root, native_exclusive_access="declared", observed_at="2099-01-01T00:00:00Z")
@@ -120,16 +152,13 @@ def _pending_case(root: Path) -> dict[str, Any]:
 
 
 def _refusal_case(root: Path) -> dict[str, Any]:
-    inspection, request, documents, grant = _warning_authority(root)
+    inspection, request, documents, grant = _ordinary_polish_authority(root)
     argv, output = _write_inputs(root, inspection, request, documents, grant)
     original_commit = commit_external_authority_v2_dispatch_intent
 
     def commit_then_contradict(*args: Any, **kwargs: Any) -> dict[str, Any]:
         result = original_commit(*args, **kwargs)
-        state = load_json(root / "run.json")
-        state["status"] = "FINAL_QA_REQUIRES_REVIEW"
-        (root / "run.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-        write_workspace_snapshot(root)
+        _inject_post_intent_terminal_status(root)
         return result
 
     creates: list[str] = []

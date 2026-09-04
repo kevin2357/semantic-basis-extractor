@@ -1,0 +1,105 @@
+from __future__ import annotations
+
+import json
+import tempfile
+import threading
+import unittest
+from pathlib import Path
+
+from astrowoof_natal_authoring.closure import (
+    load_json,
+    normalized_path,
+    snapshot_inventory,
+    validate_workspace_snapshot,
+    write_workspace_snapshot,
+)
+
+
+def inventory_delta(
+    expected: list[dict[str, object]], actual: list[dict[str, object]],
+) -> dict[str, list[str]]:
+    """Test-only, content-free manifest classifier used by Slice 0."""
+    left = {str(item["path"]): item for item in expected}
+    right = {str(item["path"]): item for item in actual}
+    common = sorted(left.keys() & right.keys())
+    return {
+        "added": sorted(right.keys() - left.keys()),
+        "removed": sorted(left.keys() - right.keys()),
+        "changed_bytes": [
+            path for path in common
+            if left[path]["bytes"] != right[path]["bytes"]
+        ],
+        "changed_digest": [
+            path for path in common
+            if left[path]["sha256"] != right[path]["sha256"]
+        ],
+    }
+
+
+class PartialReconciliationSnapshotMutationSlice0Tests(unittest.TestCase):
+    def make_workspace(self, root: Path) -> tuple[Path, dict[str, object]]:
+        run_dir = root / "run"
+        run_dir.mkdir()
+        (run_dir / "run.json").write_text('{"revision":14}\n', encoding="utf-8")
+        (run_dir / "public-run.json").write_text(
+            '{"status":"WAITING_FOR_RESPONSE"}\n', encoding="utf-8",
+        )
+        state: dict[str, object] = {
+            "workspace_contract": {
+                "mode": "stable_logical_absolute_path",
+                "logical_root": normalized_path(run_dir),
+            }
+        }
+        write_workspace_snapshot(run_dir)
+        return run_dir, state
+
+    def test_equal_member_count_can_mean_changed_authoritative_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, state = self.make_workspace(Path(temporary))
+            expected = load_json(run_dir / "workspace-snapshot.json")["members"]
+
+            # Same path and byte count, different digest: this is the only safe
+            # interpretation of Kardamom's first 390/390 line until path-level
+            # evidence identifies the writer.
+            (run_dir / "run.json").write_text('{"revision":15}\n', encoding="utf-8")
+            actual = snapshot_inventory(run_dir, use_process_cache=False)
+            delta = inventory_delta(expected, actual)
+
+            self.assertEqual([], delta["added"])
+            self.assertEqual([], delta["removed"])
+            self.assertEqual([], delta["changed_bytes"])
+            self.assertEqual(["run.json"], delta["changed_digest"])
+            with self.assertRaisesRegex(ValueError, "incomplete or changed"):
+                validate_workspace_snapshot(run_dir, state)
+
+    def test_sibling_pass_output_invalidates_whole_workspace_snapshot(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, state = self.make_workspace(Path(temporary))
+            expected = load_json(run_dir / "workspace-snapshot.json")["members"]
+            writer_done = threading.Event()
+
+            def sibling_pass_writer() -> None:
+                response = run_dir / "passes" / "pass-5" / "attempt-001" / "response"
+                response.mkdir(parents=True)
+                for index in range(30):
+                    (response / f"member-{index:02d}.json").write_text(
+                        json.dumps({"index": index}) + "\n", encoding="utf-8",
+                    )
+                writer_done.set()
+
+            worker = threading.Thread(target=sibling_pass_writer)
+            worker.start()
+            self.assertTrue(writer_done.wait(5))
+            worker.join()
+
+            actual = snapshot_inventory(run_dir, use_process_cache=False)
+            delta = inventory_delta(expected, actual)
+            self.assertEqual(30, len(delta["added"]))
+            self.assertTrue(all(path.startswith("passes/pass-5/") for path in delta["added"]))
+            self.assertEqual([], delta["removed"])
+            with self.assertRaisesRegex(ValueError, "incomplete or changed"):
+                validate_workspace_snapshot(run_dir, state)
+
+
+if __name__ == "__main__":
+    unittest.main()

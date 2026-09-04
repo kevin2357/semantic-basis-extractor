@@ -57,10 +57,9 @@ class TestReleaseSmokeRuntime(unittest.TestCase):
             self.assertEqual(0, completed.returncode, completed.stderr)
             report = json.loads(completed.stdout)
             self.assertEqual("pass", report["status"])
-            self.assertEqual("FINAL_QA_FAILED", report["checks"]["resume"])
-            self.assertRegex(
+            self.assertEqual("DELIVERY_COMPLETE", report["checks"]["resume"])
+            self.assertIsNone(
                 report["checks"]["zero_action_terminal_result_id"],
-                r"^nres_[0-9a-f]{24}$",
             )
 
     def test_fake_body_identity_survives_production_normalization(self):
@@ -113,17 +112,16 @@ class TestReleaseSmokeRuntime(unittest.TestCase):
         reverse = render(reversed(identities), "\\")
         self.assertEqual(forward, reverse)
 
-    def test_zero_action_terminal_smoke_is_a_qualified_fixture_outcome(self):
+    def test_zero_action_delivery_smoke_is_a_qualified_fixture_outcome(self):
         with tempfile.TemporaryDirectory() as temporary:
             with patch.dict(os.environ, {"PYTHONPATH": SOURCE_PYTHONPATH}):
                 report = smoke_module.run_smoke(Path(temporary))
         self.assertEqual("pass", report["status"])
-        self.assertEqual("FINAL_QA_FAILED", report["checks"]["resume"])
-        self.assertRegex(
+        self.assertEqual("DELIVERY_COMPLETE", report["checks"]["resume"])
+        self.assertIsNone(
             report["checks"]["zero_action_terminal_result_id"],
-            r"^nres_[0-9a-f]{24}$",
         )
-        self.assertEqual("skipped", report["checks"]["cleanup_status"])
+        self.assertEqual("complete", report["checks"]["cleanup_status"])
 
     def test_non_delivery_smoke_is_structured_and_skips_cleanup(self):
         real_run = subprocess.run

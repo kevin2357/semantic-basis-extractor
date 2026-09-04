@@ -1,0 +1,354 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import tempfile
+import threading
+import unittest
+from pathlib import Path
+
+import astrowoof_natal_authoring
+from astrowoof_natal_authoring import closure
+from astrowoof_natal_authoring.native_transitions import (
+    publish_native_execution_result,
+    read_native_transition_result,
+)
+from astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 import _workspace
+from astrowoof_natal.tests.test_semantic_closure import (
+    ConcurrentTrackingProvider,
+    SemanticClosureFixture,
+    authored_field_payload,
+    completed_response,
+)
+
+
+class PartialReconciliationWheelBattleSlice2Tests(SemanticClosureFixture):
+    """One fixture intentionally run against the immutable 0.4.35/0.4.36 wheels."""
+
+    def test_worker_save_while_sibling_response_tree_exists(self) -> None:
+        expected_version = os.environ["SBE_WHEEL_BATTLE_VERSION"]
+        expected_failure = os.environ["SBE_WHEEL_BATTLE_EXPECT_FAILURE"] == "1"
+        self.assertEqual(expected_version, astrowoof_natal_authoring.__version__)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, _retry_one, _retry_two = _workspace(
+                Path(temporary), "exact_natal"
+            )
+            sealed = publish_native_execution_result(
+                run_dir,
+                command_kind="ordinary_authoring",
+                sbe_release=expected_version,
+                published_at="2026-08-31T12:00:00Z",
+                terminal_review_v02=True,
+                terminal_review_cause="final_qa_requires_review",
+            )
+            result_path = (
+                run_dir / "native-results"
+                / f"{sealed['result']['result_id']}.json"
+            )
+            immutable_result_sha256 = hashlib.sha256(
+                result_path.read_bytes()
+            ).hexdigest()
+
+            # Model the sibling pass-local writes that occurred outside the
+            # shared state lock before Kardamom's worker-local save.
+            response = (
+                run_dir / "passes" / "sibling-pass" / "attempt-001" / "response"
+            )
+            response.mkdir(parents=True)
+            for index in range(30):
+                (response / f"member-{index:02d}.json").write_text(
+                    json.dumps({"index": index}) + "\n", encoding="utf-8",
+                )
+
+            state = closure.load_json(run_dir / "run.json")
+            errors: list[BaseException] = []
+
+            def worker_save() -> None:
+                try:
+                    closure.save_state(run_dir / "run.json", state)
+                except BaseException as exc:  # test captures exact wheel behavior
+                    errors.append(exc)
+
+            worker = threading.Thread(target=worker_save)
+            worker.start()
+            worker.join(10)
+            self.assertFalse(worker.is_alive())
+
+            if expected_failure:
+                self.assertEqual(1, len(errors))
+                self.assertIsInstance(errors[0], ValueError)
+                self.assertIn("incomplete or changed", str(errors[0]))
+                return
+
+            self.assertEqual([], errors)
+            # The coordinator, not a worker, publishes the complete successor.
+            closure.save_state(run_dir / "run.json", state)
+            closure.validate_workspace_snapshot(run_dir, state)
+            replay = read_native_transition_result(
+                run_dir, sealed["result"]["result_id"]
+            )
+            self.assertEqual(sealed["result"], replay["result"])
+            self.assertEqual(
+                immutable_result_sha256,
+                hashlib.sha256(result_path.read_bytes()).hexdigest(),
+            )
+
+    def test_serial_and_concurrent_local_fan_in_have_same_native_truth(self) -> None:
+        projections: list[dict[str, object]] = []
+        peaks: list[int] = []
+        for max_workers in (1, 2):
+            with tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                provider = ConcurrentTrackingProvider()
+                state, run_json = self.make_state(root, provider, max_attempts=1)
+                selected = sorted(state["passes"])[:2]
+                closure.author_pending_passes(
+                    state=state,
+                    provider=provider,
+                    run_dir=run_json.parent,
+                    max_attempts=1,
+                    python_executable=Path(os.sys.executable),
+                    run_json=run_json,
+                    max_workers=max_workers,
+                    only_pass_ids=set(selected),
+                )
+                persisted = closure.load_json(run_json)
+                closure.validate_workspace_snapshot(run_json.parent, persisted)
+                pass_truth = []
+                for pass_id in sorted(persisted["passes"]):
+                    record = persisted["passes"][pass_id]
+                    accepted_files: list[tuple[str, str]] = []
+                    if record.get("accepted_workspace"):
+                        accepted = Path(record["accepted_workspace"])
+                        accepted_files = [
+                            (
+                                path.relative_to(accepted).as_posix(),
+                                hashlib.sha256(path.read_bytes()).hexdigest(),
+                            )
+                            for path in sorted(accepted.rglob("*"))
+                            if path.is_file()
+                        ]
+                    pass_truth.append({
+                        "pass_id": pass_id,
+                        "state": record["state"],
+                        "accepted_attempt": record.get("accepted_attempt"),
+                        "attempt_states": [
+                            attempt["state"] for attempt in record["attempts"]
+                        ],
+                        "qa_statuses": [
+                            ((attempt.get("qa") or {}).get("report") or {}).get("status")
+                            for attempt in record["attempts"]
+                        ],
+                        "accepted_files": accepted_files,
+                    })
+                projections.append({
+                    "status": persisted["status"],
+                    "passes": pass_truth,
+                    "action_inventory": [
+                        {
+                            "action_id": action["action_id"],
+                            "state": action["state"],
+                            "binding": action["binding"],
+                            "provider": action.get("provider"),
+                        }
+                        for action in (persisted.get("spend_ledger") or {}).get(
+                            "actions", []
+                        )
+                    ],
+                })
+                peaks.append(provider.peak)
+
+        self.assertEqual(projections[0], projections[1])
+        self.assertEqual(1, peaks[0])
+        self.assertGreaterEqual(peaks[1], 2)
+
+    def test_real_mixed_reconciliation_boundary_matches_wheel_behavior(self) -> None:
+        expected_failure = os.environ["SBE_WHEEL_BATTLE_EXPECT_FAILURE"] == "1"
+
+        class ResponseMapTransport:
+            def __init__(self, responses: dict[str, dict[str, object]]) -> None:
+                self.responses = responses
+                self.calls: list[dict[str, object]] = []
+
+            def request_json(self, **kwargs):
+                self.calls.append(kwargs)
+                self.assert_get(kwargs)
+                response_id = str(kwargs["url"]).rsplit("/", 1)[-1]
+                return self.responses[response_id]
+
+            @staticmethod
+            def assert_get(kwargs: dict[str, object]) -> None:
+                if kwargs.get("method") != "GET" or kwargs.get("payload") is not None:
+                    raise AssertionError("mixed-custody fixture attempted provider creation")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            transport = ResponseMapTransport({})
+            provider = closure.OpenAIResponsesProvider(
+                api_key="provider-free",
+                transport=transport,
+                sleep=lambda _seconds: None,
+                require_spend_authorization=True,
+                prompt_cache_mode="disabled",
+            )
+            state, run_json = self.make_state(root, provider, max_attempts=1)
+            specs = {
+                spec.pass_id: spec for spec in closure.specs_from_state(state)
+            }
+            selected = sorted(state["passes"])[:4]
+            actions = []
+            for ordinal, pass_id in enumerate(selected, 1):
+                record = state["passes"][pass_id]
+                spec = specs[pass_id]
+                pass_root = run_json.parent / "passes" / pass_id
+                source_workspace = closure.prepare_source_workspace(spec, pass_root)
+                attempt_root = pass_root / "attempt-001"
+                attempt_root.mkdir(parents=True, exist_ok=True)
+                response_id = f"resp_wheel_battle_{ordinal}"
+                (attempt_root / "openai-background-response.json").write_text(
+                    json.dumps({"id": response_id, "status": "in_progress"}) + "\n",
+                    encoding="utf-8",
+                )
+                record["state"] = "WAITING_FOR_RESPONSE"
+                record["attempts"] = [{
+                    "attempt_number": 1,
+                    "state": "WAITING_FOR_RESPONSE",
+                    "started_at": "2026-08-31T11:50:00Z",
+                    "finished_at": None,
+                    "response_workspace": str(
+                        attempt_root / "response" / pass_id
+                    ),
+                    "provider_metadata": None,
+                    "qa": None,
+                    "error": None,
+                }]
+                action_id = f"paid_{ordinal:024d}"
+                binding = {
+                    "run_id": state["run_id"],
+                    "profile_sha256": "1" * 64,
+                    "prepared_state_revision": ordinal,
+                    "stage": "authoring_initial",
+                    "route": f"{pass_id}:attempt-001",
+                    "request_sha256": str(ordinal) * 64,
+                    "model": provider.model,
+                    "service_level": "interactive",
+                    "maximum_output_tokens": provider.max_output_tokens,
+                    "commitment_micro_usd": 50_000,
+                    "price_book_version": closure.PRICE_BOOK_VERSION,
+                }
+                actions.append({
+                    "action_id": action_id,
+                    "state": "WAITING",
+                    "binding": binding,
+                    "authorization": {
+                        "schema_version": "astrowoof.provider_spend_authorization.v0.1",
+                        "action_id": action_id,
+                        "binding": binding,
+                        "authorization_reference": f"wheel-battle-{ordinal}",
+                    },
+                    "consumption": {
+                        "consumer_id": "wheel-battle",
+                        "state_revision": ordinal,
+                    },
+                    "provider": {"id": response_id, "kind": "response"},
+                    "provider_reconciliation": {
+                        "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                        "provider_retrieval_attempt_count": 0,
+                        "last_attempt_at": None,
+                        "last_outcome": "provider_identity_recorded",
+                        "resume_not_before": "2026-08-31T11:50:15Z",
+                    },
+                    "reported": None,
+                    "reconciliation_reference_ids": [],
+                })
+                transport.responses[response_id] = (
+                    completed_response(
+                        authored_field_payload(source_workspace),
+                        response_id=response_id,
+                    )
+                    if ordinal in {1, 3}
+                    else {"id": response_id, "status": "in_progress"}
+                )
+                if ordinal in {1, 3}:
+                    actions[-1]["provider_reconciliation"].update({
+                        "provider_retrieval_attempt_count": 1,
+                        "last_attempt_at": "2026-08-31T11:50:30Z",
+                        "last_outcome": "completed",
+                        "resume_not_before": None,
+                    })
+                    evidence = (
+                        run_json.parent / "lifecycle" / "provider-reconciliation"
+                        / f"{action_id}.response.json"
+                    )
+                    evidence.parent.mkdir(parents=True, exist_ok=True)
+                    evidence.write_text(
+                        json.dumps(transport.responses[response_id]) + "\n",
+                        encoding="utf-8",
+                    )
+            for pass_id, record in state["passes"].items():
+                if pass_id not in selected:
+                    record["state"] = "SUBMITTED"
+            state["spend_ledger"]["actions"] = actions
+            closure.save_state(run_json, state)
+            sealed = publish_native_execution_result(
+                run_json.parent,
+                command_kind="ordinary_authoring",
+                sbe_release=os.environ["SBE_WHEEL_BATTLE_VERSION"],
+                published_at="2026-08-31T11:51:00Z",
+                terminal_review_v02=True,
+                terminal_review_cause="final_qa_requires_review",
+            )
+
+            controller = closure.SpendController(
+                state=state,
+                run_json=run_json,
+                state_lock=threading.Lock(),
+                consumer_id="wheel-battle",
+                reconciliation_only=True,
+            )
+            completed_passes = {selected[0], selected[2]}
+            try:
+                closure.author_pending_passes(
+                    state=state,
+                    provider=provider,
+                    run_dir=run_json.parent,
+                    max_attempts=1,
+                    python_executable=Path(os.sys.executable),
+                    run_json=run_json,
+                    max_workers=2,
+                    spend_controller=controller,
+                    only_pass_ids=completed_passes,
+                )
+            except ValueError as exc:
+                if not expected_failure:
+                    raise
+                self.assertIn("incomplete or changed", str(exc))
+                return
+
+            if expected_failure:
+                self.fail("0.4.35 unexpectedly crossed the historical boundary")
+            self.assertEqual([], transport.calls)
+            persisted = closure.load_json(run_json)
+            closure.validate_workspace_snapshot(run_json.parent, persisted)
+            self.assertEqual(
+                2,
+                sum(
+                    record["state"] == "PASS_QA_ACCEPTED"
+                    for record in persisted["passes"].values()
+                ),
+            )
+            pending = [
+                action for action in persisted["spend_ledger"]["actions"]
+                if action["state"] in {"WAITING", "PROVIDER_ID_RECORDED"}
+            ]
+            self.assertEqual(2, len(pending))
+            replay = read_native_transition_result(
+                run_json.parent, sealed["result"]["result_id"]
+            )
+            self.assertEqual(sealed["result"], replay["result"])
+
+
+if __name__ == "__main__":
+    unittest.main()

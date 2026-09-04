@@ -143,7 +143,7 @@ class TerminalReviewInterruptionSlice4Tests(unittest.TestCase):
             original = read_native_transition_result(run_dir, review["result_id"])
             later = read_native_transition_result(run_dir, successor["result_id"])
             self.assertEqual("review_required", original["result"]["outcome"])
-            self.assertEqual("review_required", later["result"]["outcome"])
+            self.assertEqual("provider_pending", later["result"]["outcome"])
             self.assertEqual("provider_reconciliation", later["result"]["command_kind"])
             self.assertEqual(
                 original["result"]["journal_range"]["end_sequence"] + 1,

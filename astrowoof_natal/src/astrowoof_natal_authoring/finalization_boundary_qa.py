@@ -15,7 +15,6 @@ from typing import Any
 from unittest.mock import patch
 
 from . import closure
-from .assembly import parse_fields
 from .contracts import authoring_profile
 from .native_transitions import read_native_transition_result
 from .smoke import materialize_fixture
@@ -24,7 +23,7 @@ from .terminal_review_contracts import (
 )
 
 
-RECEIPT_SCHEMA = "astrowoof.finalization_boundary_qualification.v1"
+RECEIPT_SCHEMA = "astrowoof.finalization_boundary_qualification.v2"
 
 
 def _canonical(value: Any) -> bytes:
@@ -43,20 +42,6 @@ def _installed_version() -> str:
     except PackageNotFoundError:
         from . import __version__
         return __version__
-
-
-def _replace_theme_values(path: Path, values: list[str]) -> None:
-    cursor = iter(values)
-
-    def replace(match: Any) -> str:
-        if not match.group(2).startswith("theme_group.interdogpendence."):
-            return match.group(0)
-        return match.group(1) + next(cursor) + match.group(4)
-
-    path.write_text(
-        closure.FIELD_PATTERN.sub(replace, path.read_text(encoding="utf-8")),
-        encoding="utf-8",
-    )
 
 
 def _completed_run(root: Path) -> tuple[dict[str, Any], Path]:
@@ -198,7 +183,7 @@ def validate_finalization_boundary_qualification(value: Any) -> dict[str, Any]:
         or not value["package_version"]
         or value.get("success_case") != {
             "exit_code": 0, "native_status": "DELIVERY_COMPLETE",
-            "advisory_code": "theme_group_balance",
+            "theme_group_artifact_present": False,
         }
         or value.get("review_case") != {
             "exit_code": 2,
@@ -215,7 +200,7 @@ def validate_finalization_boundary_qualification(value: Any) -> dict[str, Any]:
         }
         or not isinstance(value.get("assertions"), dict)
         or set(value["assertions"]) != {
-            "advisory_distribution_reaches_delivery",
+            "dormant_theme_feature_absent_reaches_delivery",
             "deterministic_contradiction_seals_review",
             "invocation_identity_selects_exact_result",
             "api_action_binding_join_is_valid",
@@ -231,7 +216,7 @@ def validate_finalization_boundary_qualification(value: Any) -> dict[str, Any]:
 
 def read_finalization_boundary_qualification_schema() -> dict[str, Any]:
     resource = files("astrowoof_natal_authoring.resources.contracts").joinpath(
-        "finalization-boundary-qualification.v1.schema.json"
+        "finalization-boundary-qualification.v2.schema.json"
     )
     return json.loads(resource.read_text(encoding="utf-8"))
 
@@ -241,22 +226,16 @@ def run_finalization_boundary_qualification() -> dict[str, Any]:
         root = Path(temporary)
 
         success_state, success_json = _completed_run(root / "success")
-        assignment = Path(success_state["passes"]["bre_6"]["accepted_workspace"]) / "ASSIGN THEME GROUPS.md"
-        fields = parse_fields(assignment)
-        groups = [item["id"] for item in json.loads(fields["theme_group_registry.interdogpendence"])]
-        _replace_theme_values(assignment, [groups[0]] * 14 + [groups[1]] * 2 + [groups[2]] * 2 + [groups[3]] * 2)
-        accepted, acceptance = closure.run_pass_acceptance(
-            assignment.parent, root / "success-acceptance.json",
-            python_executable=Path(sys.executable),
+        theme_group_artifact = (
+            Path(success_state["passes"]["bre_6"]["accepted_workspace"])
+            / "ASSIGN THEME GROUPS.md"
         )
-        closure.write_workspace_snapshot(success_json.parent)
         _stage_completed_provider_evidence(success_state, success_json)
         success_exit, _ = _invoke(success_json.parent)
         success_case = {
             "exit_code": success_exit,
             "native_status": closure.load_json(success_json)["status"],
-            "advisory_code": acceptance["report"]["advisory_issue_codes"][0]
-            if accepted else "not_accepted",
+            "theme_group_artifact_present": theme_group_artifact.exists(),
         }
 
         review_state, review_json = _completed_run(root / "review")
@@ -311,7 +290,13 @@ def run_finalization_boundary_qualification() -> dict[str, Any]:
         }
 
     assertions = {
-        "advisory_distribution_reaches_delivery": success_case["native_status"] == "DELIVERY_COMPLETE",
+        "dormant_theme_feature_absent_reaches_delivery": (
+            success_case == {
+                "exit_code": 0,
+                "native_status": "DELIVERY_COMPLETE",
+                "theme_group_artifact_present": False,
+            }
+        ),
         "deterministic_contradiction_seals_review": review_case["cause_code"] == "finalization_contract_invalid",
         "invocation_identity_selects_exact_result": command["result_id"] == result["result_id"],
         "api_action_binding_join_is_valid": review_case["api_action_join_valid"],

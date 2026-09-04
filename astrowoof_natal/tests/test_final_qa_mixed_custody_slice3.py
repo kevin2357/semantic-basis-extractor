@@ -29,7 +29,7 @@ POLISH_ACTION = "paid_00000000000000000000000a"
 SECONDARY_ACTION = "paid_00000000000000000000000b"
 
 
-def _final_qa_warning_authority(root: Path):
+def _ordinary_polish_authority(root: Path):
     run_dir, _, _, _, _ = authority_inputs(root)
     state = load_json(run_dir / "run.json")
     state["spend_ledger"]["actions"] = [
@@ -38,21 +38,7 @@ def _final_qa_warning_authority(root: Path):
         if (action.get("binding") or {}).get("stage") == "polish"
     ]
     state["spend_ledger"]["actions"][0]["action_id"] = POLISH_ACTION
-    state["subjects"] = {
-        "glimmer-fixture": {
-            "subject": "glimmer-fixture",
-            "state": "FINAL_QA_WARN",
-            "polish_attempts": [{
-                "attempt_number": 1,
-                "state": "SUBMITTED",
-                "provider_metadata": None,
-                "accepted": False,
-            }],
-            "delivery": None,
-        },
-    }
-    # This is the valid authority checkpoint: the prepared action outranks the
-    # provisional subject warning.
+    state["subjects"] = {}
     state["status"] = "AWAITING_SPEND_AUTHORIZATION"
     (run_dir / "run.json").write_text(
         json.dumps(state, indent=2) + "\n", encoding="utf-8",
@@ -90,10 +76,46 @@ def _final_qa_warning_authority(root: Path):
     return run_dir, inspection, request, documents, grant
 
 
+def _add_final_qa_review_evidence(
+    run_dir: Path, *, terminal_status: bool = False,
+) -> None:
+    state = load_json(run_dir / "run.json")
+    state["subjects"] = {
+        "glimmer-fixture": {
+            "subject": "glimmer-fixture",
+            "state": "FINAL_QA_WARN",
+            "polish_attempts": [{
+                "attempt_number": 1,
+                "state": "SUBMITTED",
+                "provider_metadata": None,
+                "accepted": False,
+            }],
+            "delivery": None,
+        },
+    }
+    if terminal_status:
+        state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+        (run_dir / "run.json").write_text(
+            json.dumps(state, indent=2) + "\n", encoding="utf-8",
+        )
+    else:
+        persist_state(run_dir / "run.json", state)
+    write_workspace_snapshot(run_dir)
+
+
+def _inject_post_intent_terminal_status(run_dir: Path) -> None:
+    state = load_json(run_dir / "run.json")
+    state["status"] = "FINAL_QA_REQUIRES_REVIEW"
+    (run_dir / "run.json").write_text(
+        json.dumps(state, indent=2) + "\n", encoding="utf-8",
+    )
+    write_workspace_snapshot(run_dir)
+
+
 class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
     def _provider_bound_with_secondary(self, root: Path, secondary_state: str):
         run_dir, inspection, request, documents, grant = (
-            _final_qa_warning_authority(root)
+            _ordinary_polish_authority(root)
         )
         commit_external_authority_v2_dispatch_intent(
             run_dir,
@@ -110,6 +132,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                 "kind": "response", "id": "resp_mixed_inventory",
             },
         )
+        _add_final_qa_review_evidence(run_dir)
         state = load_json(run_dir / "run.json")
         secondary = copy.deepcopy(state["spend_ledger"]["actions"][0])
         secondary["action_id"] = SECONDARY_ACTION
@@ -203,7 +226,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             outer = Path(temporary)
             run_dir, inspection, request, documents, grant = (
-                _final_qa_warning_authority(outer)
+                _ordinary_polish_authority(outer)
             )
             inputs = outer / "refusal-inputs"
             inputs.mkdir()
@@ -238,12 +261,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                 result = commit_external_authority_v2_dispatch_intent(
                     *args, **kwargs
                 )
-                state = load_json(run_dir / "run.json")
-                state["status"] = "FINAL_QA_REQUIRES_REVIEW"
-                (run_dir / "run.json").write_text(
-                    json.dumps(state, indent=2) + "\n", encoding="utf-8",
-                )
-                write_workspace_snapshot(run_dir)
+                _inject_post_intent_terminal_status(run_dir)
                 return result
 
             calls: list[str] = []
@@ -280,7 +298,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             outer = Path(temporary)
             run_dir, inspection, request, documents, grant = (
-                _final_qa_warning_authority(outer)
+                _ordinary_polish_authority(outer)
             )
             inputs = outer / "public-inputs"
             inputs.mkdir()
@@ -321,6 +339,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                 ),
             ):
                 self.assertEqual(0, cli.main(argv))
+            _add_final_qa_review_evidence(run_dir)
             command = json.loads(output_path.read_text(encoding="utf-8"))
             self.assertEqual("detached_provider_pending", command["outcome"])
             self.assertEqual(["POST"], calls)
@@ -353,7 +372,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
     def test_real_v2_path_preserves_nonterminal_provider_custody(self):
         with tempfile.TemporaryDirectory() as temporary:
             run_dir, inspection, request, documents, grant = (
-                _final_qa_warning_authority(Path(temporary))
+                _ordinary_polish_authority(Path(temporary))
             )
             commit_external_authority_v2_dispatch_intent(
                 run_dir,
@@ -379,6 +398,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                     or {"kind": "response", "id": "resp_glimmer_fixture"}
                 ),
             )
+            _add_final_qa_review_evidence(run_dir)
             self.assertEqual("detached_provider_pending", result["outcome"])
             self.assertEqual([POLISH_ACTION], creates)
             state = load_json(run_dir / "run.json")
@@ -402,7 +422,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
     def test_call_entry_ambiguity_outranks_review_status(self):
         with tempfile.TemporaryDirectory() as temporary:
             run_dir, inspection, request, documents, grant = (
-                _final_qa_warning_authority(Path(temporary))
+                _ordinary_polish_authority(Path(temporary))
             )
             commit_external_authority_v2_dispatch_intent(
                 run_dir,
@@ -419,6 +439,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                     TimeoutError("provider acceptance unknown")
                 ),
             )
+            _add_final_qa_review_evidence(run_dir)
             self.assertEqual("ambiguous_submission", result["outcome"])
             state = load_json(run_dir / "run.json")
             self.assertEqual("AMBIGUOUS_PROVIDER_SUBMISSION", state["status"])
@@ -430,7 +451,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
 
     def test_providerless_authorized_polish_remains_nonterminal(self):
         with tempfile.TemporaryDirectory() as temporary:
-            run_dir, _, _, _, _ = _final_qa_warning_authority(Path(temporary))
+            run_dir, _, _, _, _ = _ordinary_polish_authority(Path(temporary))
             state = load_json(run_dir / "run.json")
             action = state["spend_ledger"]["actions"][0]
             action["state"] = "AUTHORIZED"
@@ -442,6 +463,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
             }
             persist_state(run_dir / "run.json", state)
             write_workspace_snapshot(run_dir)
+            _add_final_qa_review_evidence(run_dir)
             persisted = load_json(run_dir / "run.json")
             self.assertEqual("AUTHORING", persisted["status"])
             self.assertIsNone(action.get("provider"))
@@ -461,7 +483,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary:
             run_dir, inspection, request, documents, grant = (
-                _final_qa_warning_authority(Path(temporary))
+                _ordinary_polish_authority(Path(temporary))
             )
             intent_result = commit_external_authority_v2_dispatch_intent(
                 run_dir,
@@ -470,12 +492,7 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
                 grant=grant,
                 authorization_documents=documents,
             )
-            state = load_json(run_dir / "run.json")
-            state["status"] = "FINAL_QA_REQUIRES_REVIEW"
-            (run_dir / "run.json").write_text(
-                json.dumps(state, indent=2) + "\n", encoding="utf-8",
-            )
-            write_workspace_snapshot(run_dir)
+            _inject_post_intent_terminal_status(run_dir)
             calls: list[str] = []
             result = dispatch_external_authority_v2_intent(
                 run_dir,
@@ -583,11 +600,12 @@ class FinalQaMixedCustodySlice3Characterization(unittest.TestCase):
 
     def test_no_custody_final_qa_warning_is_a_legitimate_terminal_shape(self):
         with tempfile.TemporaryDirectory() as temporary:
-            run_dir, _, _, _, _ = _final_qa_warning_authority(Path(temporary))
+            run_dir, _, _, _, _ = _ordinary_polish_authority(Path(temporary))
             state = load_json(run_dir / "run.json")
             state["spend_ledger"]["actions"] = []
             persist_state(run_dir / "run.json", state)
             write_workspace_snapshot(run_dir)
+            _add_final_qa_review_evidence(run_dir, terminal_status=True)
             lifecycle = inspect_lifecycle(
                 run_dir, native_exclusive_access="declared",
             )
