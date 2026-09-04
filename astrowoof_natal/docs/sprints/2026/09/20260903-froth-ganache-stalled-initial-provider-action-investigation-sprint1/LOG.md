@@ -79,5 +79,10 @@
   The final wheel installed cleanly, passed `pip check`, and passed the
   installed Ganache-shaped witness. Tag and publication remain intentionally
   pending final owner approval.
+- 2026-09-03: Owner approved publication. Replaced the accidental bare
+  pre-publication `v0.4.42` tag with the repository's canonical immutable tag
+  `astrowoof-natal-authoring-v0.4.42`, then published the verified wheel and
+  checksum through GitHub Releases. A fresh release-asset download reproduced
+  the final SHA-256 exactly; GitHub also reports the same asset digest.
   `git diff --check` passed. No lifecycle, reconciliation, or terminal-result
   source is part of the retained correction.

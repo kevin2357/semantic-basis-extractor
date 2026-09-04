@@ -1,7 +1,6 @@
 # Slice 3 — dormant theme-feature qualification
 
-**Status:** final committed-source wheel qualification complete; tag and
-publication await owner approval.
+**Status:** released as `astrowoof-natal-authoring-v0.4.42`.
 
 ## Scope
 
@@ -69,6 +68,8 @@ witness successfully.
 
 ## Release gate
 
-The release source commit and final wheel are ready for tag/publication. The
-existing public theme-policy qualification command is historical policy evidence
-and is not used to claim this dormant-feature behavior.
+The [published GitHub Release](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.42)
+contains the final wheel and `SHA256SUMS.txt`. A fresh download reproduced the
+wheel digest above exactly. The existing public theme-policy qualification
+command is historical policy evidence and is not used to claim this
+dormant-feature behavior.
