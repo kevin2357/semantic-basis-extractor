@@ -64,3 +64,10 @@ inspection.
   the source checkout.
 - After installing the declared `jsonschema` dependency, isolated `pip check`
   reported no broken requirements.
+
+## Publication verification
+
+- Commit: `6cba751bc8d90d1561fecae7ede89d90ba29ff15`
+- Annotated tag: `astrowoof-natal-authoring-v0.4.45`
+- Published GitHub release wheel re-downloaded and matched the qualified SHA-256
+  `bcee274df15e877ca54efecbada15bed8565a604493689fdc9790e6178aeb42b`.

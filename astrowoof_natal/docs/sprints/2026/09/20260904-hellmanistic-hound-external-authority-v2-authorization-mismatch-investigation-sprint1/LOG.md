@@ -45,3 +45,7 @@
   tag/publication. Deployment sequencing is explicit: the API must implement
   and qualify exact v4/v5 refusal intake before the QA fleet relies on the
   patch; unknown results remain fail-closed in the interim.
+- 2026-09-04: Owner approved release. Committed `6cba751`, created and pushed
+  annotated tag `astrowoof-natal-authoring-v0.4.45`, and published the GitHub
+  wheel. The re-downloaded release asset matched the controlled qualified SHA-256
+  exactly. API intake remains the prerequisite for QA-fleet deployment.

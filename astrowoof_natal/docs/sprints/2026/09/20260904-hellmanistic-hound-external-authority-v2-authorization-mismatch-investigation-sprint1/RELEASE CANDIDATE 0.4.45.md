@@ -30,8 +30,10 @@ retained run, or change initial-wave, Batch, or bounded dispatch semantics.
 
 ## Release decision
 
-API technical review approves tag/publication. Owner tag/publication approval
-remains required.
+API technical review and owner approval were received. Release commit
+`6cba751bc8d90d1561fecae7ede89d90ba29ff15` was tagged as
+`astrowoof-natal-authoring-v0.4.45`, pushed to `origin`, and published on
+GitHub. The downloaded published wheel matched the qualified SHA-256 exactly.
 
 ## Deployment sequencing
 
