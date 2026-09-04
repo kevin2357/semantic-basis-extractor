@@ -3,7 +3,6 @@
 import argparse
 import json
 import re
-from collections import Counter
 from pathlib import Path
 
 
@@ -39,91 +38,6 @@ BAD_SECOND_PERSON = re.compile(
     r"(?:is|has|does|regulates|needs|wants|prefers)\b",
     re.IGNORECASE,
 )
-
-
-def theme_section(card: dict) -> str | None:
-    if card.get("claim_type") == "system_interaction":
-        return "interdogpendence"
-    if card.get("claim_type") == "synthesized_theme":
-        return "takeaways"
-    return None
-
-
-def normalized_chapter_title(value: str) -> tuple[str, tuple[str, ...]]:
-    words = re.findall(
-        r"[a-z0-9]+", value.casefold().replace("&", " and ")
-    )
-    return (
-        " ".join(words),
-        tuple(sorted(word for word in words if word != "and")),
-    )
-
-
-def validate_theme_group_registry(
-    value: object,
-    errors: list[str],
-) -> tuple[dict[str, set[str]], dict[str, set[tuple[str, tuple[str, ...]]]]]:
-    ids_by_section: dict[str, set[str]] = {}
-    titles_by_section: dict[str, set[tuple[str, tuple[str, ...]]]] = {}
-    if not isinstance(value, dict) or set(value) != {
-        "interdogpendence", "takeaways"
-    }:
-        errors.append(
-            "theme_group_registry must contain interdogpendence and takeaways."
-        )
-        return ids_by_section, titles_by_section
-    required = {"id", "title", "short_title", "emoji", "order"}
-    allowed = required | {"subtitle"}
-    for section in ("interdogpendence", "takeaways"):
-        entries = value.get(section)
-        if not isinstance(entries, list) or not 3 <= len(entries) <= 5:
-            errors.append(
-                f"{section} must define three to five theme-group entries."
-            )
-            continue
-        ids: list[str] = []
-        titles: list[tuple[str, tuple[str, ...]]] = []
-        for index, item in enumerate(entries, 1):
-            if (
-                not isinstance(item, dict)
-                or not required <= set(item)
-                or not set(item) <= allowed
-            ):
-                errors.append(
-                    f"{section} theme-group entry {index} has invalid fields."
-                )
-                continue
-            if item.get("order") != index:
-                errors.append(
-                    f"{section} theme-group orders must be consecutive from 1."
-                )
-            for field in ("id", "title", "short_title", "emoji"):
-                if not isinstance(item.get(field), str) or not item[field].strip():
-                    errors.append(
-                        f"{section} theme-group entry {index} has invalid {field}."
-                    )
-            if "subtitle" in item and not (
-                item["subtitle"] is None
-                or isinstance(item["subtitle"], str)
-            ):
-                errors.append(
-                    f"{section} theme-group entry {index} has invalid subtitle."
-                )
-            if isinstance(item.get("id"), str):
-                if not re.fullmatch(r"[a-z][a-z0-9_]*", item["id"]):
-                    errors.append(
-                        f"{section} theme-group entry {index} has invalid ID."
-                    )
-                ids.append(item["id"])
-            if isinstance(item.get("title"), str):
-                titles.append(normalized_chapter_title(item["title"]))
-        if len(ids) != len(set(ids)):
-            errors.append(f"{section} repeats a theme-group ID.")
-        if len(titles) != len(set(titles)):
-            errors.append(f"{section} repeats or trivially reorders a title.")
-        ids_by_section[section] = set(ids)
-        titles_by_section[section] = set(titles)
-    return ids_by_section, titles_by_section
 
 
 def validate_editorial_card(
@@ -175,8 +89,8 @@ def main() -> None:
         choices=["authoring", "polish"],
         default="authoring",
         help=(
-            "authoring allows initial population of filters, theme groups, and "
-            "summaries; polish locks them to the completed baseline by default."
+            "authoring allows initial population of filters and summaries; "
+            "polish locks them to the completed baseline by default."
         ),
     )
     parser.add_argument(
@@ -187,7 +101,7 @@ def main() -> None:
     parser.add_argument(
         "--allow-theme-group-edits",
         action="store_true",
-        help="In polish phase, explicitly permit chapter/theme regrouping.",
+        help="Deprecated compatibility option; theme groups are not evaluated.",
     )
     parser.add_argument(
         "--allow-summary-edits",
@@ -197,7 +111,6 @@ def main() -> None:
     args = parser.parse_args()
     if args.phase == "authoring" and any([
         args.allow_context_filter_edits,
-        args.allow_theme_group_edits,
         args.allow_summary_edits,
     ]):
         parser.error("Polish edit overrides may only be used with --phase polish.")
@@ -224,24 +137,6 @@ def main() -> None:
         for level in ["high", "detail"]
     }
     registered_categories = set(edited.get("categories", []))
-    new_theme_contract = "theme_group_registry" in original
-    theme_group_counts = Counter()
-    theme_group_counts_by_section = {
-        "interdogpendence": Counter(),
-        "takeaways": Counter(),
-    }
-    theme_group_ids: dict[str, set[str]] = {}
-    if new_theme_contract:
-        theme_group_ids, _ = validate_theme_group_registry(
-            edited.get("theme_group_registry"), errors
-        )
-        if (
-            args.phase == "polish"
-            and not args.allow_theme_group_edits
-            and original.get("theme_group_registry")
-            != edited.get("theme_group_registry")
-        ):
-            errors.append("Polish changed locked theme_group_registry.")
     for index, (before, after) in enumerate(zip(original_cards, edited_cards), 1):
         for field in LOCKED_CARD_FIELDS:
             if before.get(field) != after.get(field):
@@ -256,43 +151,9 @@ def main() -> None:
             errors.append(f"Card {index} has invalid categories.")
         if "category" in after:
             errors.append(f"Card {index} retains obsolete category field.")
-        if new_theme_contract and "theme_group_id" in before:
-            section = theme_section(after)
-            theme_group_id = after.get("theme_group_id")
-            if (
-                section is None
-                or not isinstance(theme_group_id, str)
-                or theme_group_id not in theme_group_ids.get(section, set())
-            ):
-                errors.append(f"Card {index} has invalid theme_group_id.")
-            else:
-                theme_group_counts_by_section[section][theme_group_id] += 1
-            if (
-                args.phase == "polish"
-                and not args.allow_theme_group_edits
-                and before.get("theme_group_id") != after.get("theme_group_id")
-            ):
-                errors.append(
-                    f"Card {index} changed locked polish-phase theme_group_id."
-                )
-            if "theme_group" in after:
-                errors.append(f"Card {index} retains legacy theme_group.")
-        elif new_theme_contract and "theme_group_id" in after:
-            errors.append(f"Card {index} unexpectedly added theme_group_id.")
-        elif not new_theme_contract and "theme_group" in before:
-            theme_group = after.get("theme_group")
-            if not isinstance(theme_group, str) or not theme_group.strip():
-                errors.append(f"Card {index} needs a nonempty theme_group.")
-            else:
-                theme_group_counts[theme_group.strip()] += 1
-            if (
-                args.phase == "polish"
-                and not args.allow_theme_group_edits
-                and before.get("theme_group") != after.get("theme_group")
-            ):
-                errors.append(f"Card {index} changed locked polish-phase theme_group.")
-        elif "theme_group" in after:
-            errors.append(f"Card {index} unexpectedly added theme_group.")
+        # Theme groups are a dormant future filtering feature.  Legacy and
+        # experimental representations remain structurally tolerated but do
+        # not contribute validation errors, warnings, or polish edit rules.
         filters = after.get("context_filter_groups", {})
         for key, registry_level in [
             ("high_level", "high"),
@@ -327,21 +188,6 @@ def main() -> None:
         validate_editorial_card(
             after.get("card", {}), f"Card {index}", errors, warnings
         )
-
-    if not new_theme_contract:
-        group_count = len(theme_group_counts)
-        if group_count not in {3, 4}:
-            errors.append(
-                "Selected aspects and syntheses together must use three or four "
-                f"theme groups; found {group_count}."
-            )
-        if theme_group_counts:
-            sizes = list(theme_group_counts.values())
-            if min(sizes) < 2 or max(sizes) - min(sizes) > 2:
-                errors.append(
-                    "Selected aspects and syntheses theme groups are not "
-                    f"approximately balanced: {dict(theme_group_counts)}."
-                )
 
     summary = edited.get("summary", {})
     if list(summary) != ["card1", "card2", "card3", "card4"]:

@@ -39,6 +39,7 @@ from astrowoof_natal_authoring.extractor import (  # noqa: E402
 )
 from astrowoof_natal_authoring.assembly import assemble  # noqa: E402
 from astrowoof_natal_authoring.registries import merge  # noqa: E402
+from astrowoof_natal_authoring.resource_access import copy_module_source  # noqa: E402
 from astrowoof_natal_authoring.editorial_lint import (  # noqa: E402
     authoring_pass_acceptance,
     lint_deck,
@@ -388,16 +389,13 @@ class TestBrePacket(unittest.TestCase):
             )
             self.assertEqual("pass", report["status"], report["errors"])
 
-    def test_editorial_validator_rejects_nonstring_registry_subtitle(self) -> None:
+    def test_editorial_validator_tolerates_legacy_registry_shape(self) -> None:
         edited = complete_packet(self.packet)
         edited["theme_group_registry"]["interdogpendence"][0]["subtitle"] = 42
         report = run_editorial_validator(
             self.packet, edited, "--phase", "authoring"
         )
-        self.assertEqual("fail", report["status"])
-        self.assertTrue(any(
-            "invalid subtitle" in error for error in report["errors"]
-        ))
+        self.assertEqual("pass", report["status"], report["errors"])
 
     def test_no_astro_advisory_distinguishes_ordinary_and_astrological_usage(self) -> None:
         ordinary = [
@@ -418,7 +416,7 @@ class TestBrePacket(unittest.TestCase):
         for text in astrological:
             self.assertIsNotNone(ASTRO_TERMS.search(text), text)
 
-    def test_editorial_validator_rejects_too_few_section_chapters(self) -> None:
+    def test_editorial_validator_tolerates_legacy_theme_group_cardinality(self) -> None:
         edited = complete_packet(self.packet)
         edited["theme_group_registry"]["takeaways"] = (
             edited["theme_group_registry"]["takeaways"][:2]
@@ -426,11 +424,7 @@ class TestBrePacket(unittest.TestCase):
         report = run_editorial_validator(
             self.packet, edited, "--phase", "authoring"
         )
-        self.assertEqual("fail", report["status"])
-        self.assertTrue(any(
-            "takeaways must define three to five" in error
-            for error in report["errors"]
-        ))
+        self.assertEqual("pass", report["status"], report["errors"])
 
     def test_editorial_validator_defers_lopsided_chapter_policy(self) -> None:
         edited = complete_packet(self.packet)
@@ -477,6 +471,94 @@ class TestBrePacket(unittest.TestCase):
             baseline, edited, "--phase", "authoring"
         )
         self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_editorial_validator_tolerates_missing_theme_fields(self) -> None:
+        baseline = deepcopy(self.packet)
+        edited = complete_packet(self.packet)
+        baseline.pop("theme_group_registry", None)
+        edited.pop("theme_group_registry", None)
+        for before, after in zip(baseline["cards"], edited["cards"]):
+            before.pop("theme_group_id", None)
+            after.pop("theme_group_id", None)
+            before.pop("theme_group", None)
+            after.pop("theme_group", None)
+        report = run_editorial_validator(
+            baseline, edited, "--phase", "authoring"
+        )
+        self.assertEqual("pass", report["status"], report["errors"])
+
+    def test_editorial_validator_keeps_non_theme_errors_active(self) -> None:
+        edited = complete_packet(self.packet)
+        edited["cards"][0]["context_filter_groups"]["high_level"] = [
+            "unregistered_filter"
+        ]
+        report = run_editorial_validator(
+            self.packet, edited, "--phase", "authoring"
+        )
+        self.assertEqual("fail", report["status"])
+        self.assertTrue(any(
+            "invalid high_level context filters" in error
+            for error in report["errors"]
+        ))
+
+    def test_copied_handoff_validator_keeps_theme_data_dormant(self) -> None:
+        baseline = complete_packet(self.packet)
+        edited = deepcopy(baseline)
+        baseline.pop("theme_group_registry", None)
+        edited.pop("theme_group_registry", None)
+        for before, after in zip(baseline["cards"], edited["cards"]):
+            before.pop("theme_group_id", None)
+            after.pop("theme_group_id", None)
+            before["theme_group"] = "legacy-placeholder"
+            after["theme_group"] = ""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            validator = root / "validate_astrowoof_editorial.py"
+            baseline_path = root / "baseline.json"
+            edited_path = root / "edited.json"
+            report_path = root / "report.json"
+            copy_module_source("astrowoof_natal_authoring.validation", validator)
+            baseline_path.write_text(json.dumps(baseline), encoding="utf-8")
+            edited_path.write_text(json.dumps(edited), encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable, str(validator), str(baseline_path),
+                    str(edited_path), "--phase", "polish", "--report",
+                    str(report_path), "--allow-theme-group-edits",
+                ],
+                check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("pass", json.loads(report_path.read_text())["status"])
+
+            result = subprocess.run(
+                [
+                    sys.executable, str(validator), str(baseline_path),
+                    str(edited_path), "--phase", "authoring",
+                    "--allow-theme-group-edits", "--report", str(report_path),
+                ],
+                check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual("pass", json.loads(report_path.read_text())["status"])
+
+            edited["cards"][0]["context_filter_groups"]["high_level"] = [
+                "unregistered_filter"
+            ]
+            edited_path.write_text(json.dumps(edited), encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable, str(validator), str(baseline_path),
+                    str(edited_path), "--phase", "polish", "--report",
+                    str(report_path),
+                ],
+                check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertTrue(any(
+                "invalid high_level context filters" in error
+                for error in json.loads(report_path.read_text())["errors"]
+            ))
 
     def test_authoring_allows_empty_context_filters(self) -> None:
         edited = complete_packet(self.packet)
