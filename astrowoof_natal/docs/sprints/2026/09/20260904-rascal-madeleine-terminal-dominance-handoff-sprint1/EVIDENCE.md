@@ -166,3 +166,15 @@ exercise the same installed public modules in the release qualification plan;
 the final fresh-version gate will rebuild and rerun this matrix with the final
 wheel identity recorded. No retained QA, R2, API, or real provider activity
 occurred.
+
+## Authorized release coordinates
+
+- Version: `0.4.46`.
+- Annotated tag: `astrowoof-natal-authoring-v0.4.46`.
+- Wheel: `astrowoof_natal_authoring-0.4.46-py3-none-any.whl`.
+- Qualified wheel SHA-256:
+  `c6155ed71428865faa49eaeaf3442f5f64bb670e2317b1ec6dfd0bda54dcbb14`.
+- Required publication assets: the exact qualified wheel and
+  `SHA256SUMS.txt`.
+- Required post-publication gate: independently download the published wheel
+  and reproduce the qualified SHA-256 before recording release completion.

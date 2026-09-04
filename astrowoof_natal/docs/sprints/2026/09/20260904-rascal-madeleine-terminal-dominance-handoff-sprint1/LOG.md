@@ -57,3 +57,10 @@
   is `9f0f1c7788e591fe869cdb75451b18f13d54dc8be7d276ca690aed9d14755545`.
   This remains provider-free: one scripted GET and zero POST/create, external
   network, or spend. Tag/publication awaits explicit owner approval.
+
+- 2026-09-04: Owner explicitly approved the full release process. A mistakenly
+  named source-only tag `v0.4.46` had briefly been pushed without a GitHub
+  release or wheel asset; it was removed locally and remotely under that
+  authorization. The established release coordinate is
+  `astrowoof-natal-authoring-v0.4.46`, with the exact qualified wheel and
+  checksum assets still to be published and independently downloaded.
