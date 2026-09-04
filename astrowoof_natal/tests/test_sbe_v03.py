@@ -34,6 +34,7 @@ from astrowoof_natal_authoring.extractor import (  # noqa: E402
     optimize,
     qa_report,
     render_full_chart_basis,
+    render_theme_group_assignment,
     subject_record,
 )
 from astrowoof_natal_authoring.assembly import assemble  # noqa: E402
@@ -880,7 +881,7 @@ class TestBrePacket(unittest.TestCase):
                 (3, 21, 10, False, False),
                 (4, 31, 10, False, False),
                 (5, 41, 10, False, False),
-                (6, 51, 0, True, True),
+                (6, 51, 0, True, False),
             ]
             for number, start, count, summaries, theme_plan in specs:
                 workspace = root / f"bre_{number}"
@@ -950,8 +951,35 @@ class TestBrePacket(unittest.TestCase):
                         encoding="utf-8",
                     )
                 theme_path = workspace / "ASSIGN THEME GROUPS.md"
-                if theme_path.exists():
+                if number == 6:
+                    # New pass six workspaces must not ask for the dormant
+                    # feature. A retained Ganache-shaped legacy artifact
+                    # remains harmless: it has valid structure and registry
+                    # fields, but one assignment references a chapter absent
+                    # from that registry.
+                    self.assertFalse(theme_path.exists())
+                    self.assertNotIn(
+                        "ASSIGN THEME GROUPS.md",
+                        start_here,
+                    )
+                    # The explicit rendering helper is used solely to make a
+                    # historical artifact; production generation omits it.
+                    theme_path.write_text(
+                        render_theme_group_assignment(self.packet),
+                        encoding="utf-8",
+                    )
                     complete_theme_plan(theme_path, self.packet)
+                    text = theme_path.read_text(encoding="utf-8")
+                    text, substitutions = re.subn(
+                        r"(<!-- BEGIN FIELD: theme_group\.interdogpendence\.\d+ -->\s*)"
+                        r"bond_dynamics"
+                        r"(\s*<!-- END FIELD: theme_group\.interdogpendence\.\d+ -->)",
+                        r"\1grounded_companionship\2",
+                        text,
+                        count=1,
+                    )
+                    self.assertEqual(1, substitutions)
+                    theme_path.write_text(text, encoding="utf-8")
             deck, report = assemble(
                 self.packet,
                 root,
@@ -960,14 +988,10 @@ class TestBrePacket(unittest.TestCase):
             self.assertEqual(6, report["workspace_count"])
             self.assertEqual(list(range(1, 51)), report["authored_priority_ids"])
             self.assertEqual([1, 2, 3, 4], report["authored_summary_ids"])
-            self.assertTrue(report["authored_theme_group_priority_ids"])
+            self.assertEqual([], report["authored_theme_group_priority_ids"])
             self.assertTrue(report["placeholder_free"])
             self.assertNotIn("__LLM_FILL__", json.dumps(deck))
-            self.assertTrue(all(
-                entry["subtitle"].strip()
-                for entries in deck["theme_group_registry"].values()
-                for entry in entries
-            ))
+            self.assertNotIn("theme_group_registry", deck)
 
     def test_summary_workspace_excludes_same_subject_gold_reference(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

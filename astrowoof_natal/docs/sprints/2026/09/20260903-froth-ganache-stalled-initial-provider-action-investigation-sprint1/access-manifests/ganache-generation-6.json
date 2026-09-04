@@ -1,0 +1,15 @@
+{
+  "api_run_id": "c1baf1d2-13d7-477f-8e85-d01f58b485f0",
+  "approved_operations": {"head_count": 1, "get_count": 1, "list_count": 0, "write_count": 0, "delete_count": 0},
+  "checkpoint_generation": 6,
+  "checkpoint_id": "ebad0600-bb9a-4598-b103-48c79fd6d9e8",
+  "expected_archive_bytes": 3341117,
+  "expected_archive_sha256": "742717aa5327b1b60f11c78e3cb4e31aaf37677fbb5d8846f8e65b1871579621",
+  "expected_etag": "93376d57ba561871aa1038bfb7d53fd7",
+  "expected_inventory_sha256": "d9d9a825222551b0a68eae56ef0befebf9422f4c904ae7952fe4c09fbc8a58fa",
+  "label": "Ganache Godel generation 6",
+  "native_run_id": "41e69bfd48b8b8fab0ef9000dfd1b8a58e4a9ee6f98e159e9673b90c84720d1f",
+  "object_key": "v1/checkpoint/b25e77e77b464740a5b39a95c8a46cc7",
+  "object_uuid": "b25e77e7-7b46-4740-a5b3-9a95c8a46cc7",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}

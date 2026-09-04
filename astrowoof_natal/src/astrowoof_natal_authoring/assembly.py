@@ -302,93 +302,16 @@ def assemble(
             "Full assembly requires Summary directories 01 through 04"
         )
 
-    theme_plan_paths = [
-        pass_workspace / "ASSIGN THEME GROUPS.md"
-        for pass_workspace in workspaces
-        if (pass_workspace / "ASSIGN THEME GROUPS.md").is_file()
-    ]
-    if len(theme_plan_paths) > 1:
-        raise ValueError("Theme-group assignment appears in more than one pass")
+    # Theme groups are a dormant future filtering feature.  Legacy workspaces
+    # may retain ASSIGN THEME GROUPS.md, but it is neither read nor validated:
+    # no assignment, registry, coverage, or balance fact affects deck assembly.
+    # The native packet model continues to tolerate those fields, while the
+    # final assembled deck drops the unused feature surface entirely so legacy
+    # placeholders cannot leak into otherwise valid delivery content.
+    deck.pop("theme_group_registry", None)
+    for card in deck["cards"]:
+        card.pop("theme_group_id", None)
     authored_theme_priorities: list[int] = []
-    if theme_plan_paths:
-        theme_fields = parse_fields(theme_plan_paths[0])
-        registries: dict[str, list[dict[str, Any]]] = {}
-        for section in ("interdogpendence", "takeaways"):
-            field = f"theme_group_registry.{section}"
-            if field not in theme_fields:
-                raise ValueError(f"{theme_plan_paths[0]}: missing field {field}")
-            registries[section] = parse_theme_registry(
-                theme_fields.pop(field),
-                section=section,
-                source=theme_plan_paths[0],
-            )
-        deck["theme_group_registry"] = registries
-        registry_ids = {
-            section: {entry["id"] for entry in entries}
-            for section, entries in registries.items()
-        }
-        for field_path, value in theme_fields.items():
-            match = re.fullmatch(
-                r"theme_group\.(interdogpendence|takeaways)\.(\d+)",
-                field_path,
-            )
-            if not match:
-                raise ValueError(
-                    f"{theme_plan_paths[0]}: unexpected field {field_path}"
-                )
-            section = match.group(1)
-            priority_id = int(match.group(2))
-            if not 1 <= priority_id <= len(deck["cards"]):
-                raise ValueError(
-                    f"{theme_plan_paths[0]}: unknown priority {priority_id}"
-                )
-            card = deck["cards"][priority_id - 1]
-            if "theme_group_id" not in card:
-                raise ValueError(
-                    f"{theme_plan_paths[0]}: Story {priority_id} does not accept "
-                    "a theme group"
-                )
-            expected_section = theme_section(card)
-            if section != expected_section:
-                raise ValueError(
-                    f"{theme_plan_paths[0]}: Story {priority_id} belongs to "
-                    f"{expected_section}, not {section}"
-                )
-            if value not in registry_ids[section]:
-                raise ValueError(
-                    f"{theme_plan_paths[0]}: Story {priority_id} references "
-                    f"unknown {section} chapter {value!r}"
-                )
-            card["theme_group_id"] = value
-            authored_theme_priorities.append(priority_id)
-        # Distribution policy is evaluated by the shared pass/final validation
-        # surface, where coverage, balance, and cross-section mirroring are
-        # retained advisories.  Assembly owns structural joins only: registry
-        # shape, field identity, section/card compatibility, and registered IDs.
-    expected_theme_priorities = [
-        card["priority_id"]
-        for card in deck["cards"]
-        if "theme_group_id" in card
-    ]
-    authored_theme_priorities.sort()
-    if (
-        not allow_partial
-        and len(workspaces) > 1
-        and expected_theme_priorities
-        and not theme_plan_paths
-    ):
-        raise ValueError(
-            "Multi-pass assembly requires ASSIGN THEME GROUPS.md"
-        )
-    if (
-        not allow_partial
-        and authored_theme_priorities
-        and authored_theme_priorities != expected_theme_priorities
-    ):
-        raise ValueError(
-            "Theme-group assignment does not cover every aspect and synthesis "
-            f"story; found {authored_theme_priorities}"
-        )
 
     report = {
         "schema_version": "astrowoof.story_workspace_assembly.v0.1",

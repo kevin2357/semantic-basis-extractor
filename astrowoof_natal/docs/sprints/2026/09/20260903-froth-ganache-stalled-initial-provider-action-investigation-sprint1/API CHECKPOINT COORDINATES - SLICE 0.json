@@ -1,0 +1,88 @@
+{
+  "packet_schema": "astrowoof.sbe.bounded_checkpoint_coordinate_packet.v1",
+  "issued_at": "2026-09-03T23:19:00Z",
+  "purpose": "Read-only retained-workspace inspection for the Froth/Ganache Slice 0 investigation.",
+  "authorization": {
+    "per_named_object": {
+      "head": 1,
+      "get": 1
+    },
+    "allowed_operations": ["HEAD", "GET"],
+    "forbidden_operations": [
+      "LIST",
+      "PUT",
+      "POST",
+      "DELETE",
+      "COPY",
+      "provider_access",
+      "resume",
+      "reconciliation",
+      "repair",
+      "API_mutation",
+      "retained_workspace_mutation"
+    ],
+    "verification": "The retrieved archive must match both archive_byte_size and archive_sha256 before inspection. Its manifest inventory must match inventory_sha256. A mismatch is a typed stop, not a recovery cue."
+  },
+  "runs": [
+    {
+      "label": "Froth Fermat",
+      "api_run_id": "aa5a6019-dbc6-4d10-a698-0aee2a70920a",
+      "native_run_id": "ea2267d6328955a1675bd2541d45914876f1427655afc18b25073b26ea892b78",
+      "latest_accepted_sbe_checkpoint": {
+        "checkpoint_id": "777aa6fe-def7-4db5-8d59-325557c97dbc",
+        "generation": 7,
+        "storage_environment": "qa",
+        "storage_namespace": "checkpoint",
+        "storage_object_id": "0896617f-9648-4715-b0e5-d4a6d9c4e20e",
+        "object_key": null,
+        "provider_version_or_etag": "67731025566737d6bb17cdb83c6cea34",
+        "archive_byte_size": 3387528,
+        "archive_sha256": "34b9d3a2d5081770a53e2f991e4c3775b46230893fec88b960d2bd7d4b5ab597",
+        "inventory_sha256": "d46ec99af85351a6f1fd51e4986a6822bbba31eef470bfebc9d0d4201d4f2ae9",
+        "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+        "compatibility_identity": "astrowoof.qa.sbe0441-optional-stage-adoption.v1",
+        "logical_workspace_root": "/work/runs/aa5a6019-dbc6-4d10-a698-0aee2a70920a/sbe",
+        "native_lifecycle_status": "bounded-detached_provider_pending"
+      },
+      "separately_addressable_result_objects": [],
+      "api_retained_native_receipt": {
+        "kind": "database_record_not_an_R2_object",
+        "latest_result_id": "nres_972e366a3cded01e935ec18f",
+        "result_sha256": "972e366a3cded01e935ec18fc7d00b370518df7de574a057bddfac0fe4446e4b",
+        "publication_receipt_id": "nreceipt_82442c5a8db842142f4aa021",
+        "publication_receipt_sha256": "82442c5a8db842142f4aa0215e05a9dfd46a3affe0a44907d9bea438efe1a6f3",
+        "r2_read_authorization": "none"
+      }
+    },
+    {
+      "label": "Ganache Godel",
+      "api_run_id": "c1baf1d2-13d7-477f-8e85-d01f58b485f0",
+      "native_run_id": "41e69bfd48b8b8fab0ef9000dfd1b8a58e4a9ee6f98e159e9673b90c84720d1f",
+      "latest_accepted_sbe_checkpoint": {
+        "checkpoint_id": "ebad0600-bb9a-4598-b103-48c79fd6d9e8",
+        "generation": 6,
+        "storage_environment": "qa",
+        "storage_namespace": "checkpoint",
+        "storage_object_id": "b25e77e7-7b46-4740-a5b3-9a95c8a46cc7",
+        "object_key": null,
+        "provider_version_or_etag": "93376d57ba561871aa1038bfb7d53fd7",
+        "archive_byte_size": 3341117,
+        "archive_sha256": "742717aa5327b1b60f11c78e3cb4e31aaf37677fbb5d8846f8e65b1871579621",
+        "inventory_sha256": "d9d9a825222551b0a68eae56ef0befebf9422f4c904ae7952fe4c09fbc8a58fa",
+        "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+        "compatibility_identity": "astrowoof.qa.sbe0441-optional-stage-adoption.v1",
+        "logical_workspace_root": "/work/runs/c1baf1d2-13d7-477f-8e85-d01f58b485f0/sbe",
+        "native_lifecycle_status": "bounded-detached_provider_pending"
+      },
+      "separately_addressable_result_objects": [],
+      "api_retained_native_receipt": {
+        "kind": "database_record_not_an_R2_object",
+        "latest_result_id": "nres_f580f8b22732cb913c298b93",
+        "result_sha256": "f580f8b22732cb913c298b93646e560b0aec1c4efdc77bcf772f3f55c8b396f5",
+        "publication_receipt_id": "nreceipt_5307a89bb692672f61abf161",
+        "publication_receipt_sha256": "5307a89bb692672f61abf1611ac4ca28351f2c5e477d0508a64aae1f6bb62233",
+        "r2_read_authorization": "none"
+      }
+    }
+  ]
+}

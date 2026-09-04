@@ -1,0 +1,32 @@
+{
+  "schema_version": "astrowoof.investigation.slice0_checkpoint_access_receipts.v1",
+  "purpose": "Sanitized receipt of the exact API-authorized retained-checkpoint reads.",
+  "remote_operation_totals": {"head": 2, "get": 2, "list": 0, "write": 0, "delete": 0},
+  "provider_operation_count": 0,
+  "workspace_execution_count": 0,
+  "workspace_mutation_count": 0,
+  "receipts": [
+    {
+      "label": "Froth Fermat generation 7",
+      "api_run_id": "aa5a6019-dbc6-4d10-a698-0aee2a70920a",
+      "native_run_id": "ea2267d6328955a1675bd2541d45914876f1427655afc18b25073b26ea892b78",
+      "checkpoint_id": "777aa6fe-def7-4db5-8d59-325557c97dbc",
+      "generation": 7,
+      "archive_bytes": 3387528,
+      "archive_sha256": "34b9d3a2d5081770a53e2f991e4c3775b46230893fec88b960d2bd7d4b5ab597",
+      "inventory_sha256": "d46ec99af85351a6f1fd51e4986a6822bbba31eef470bfebc9d0d4201d4f2ae9",
+      "access_manifest_sha256": "4e500f240a34a953b283de82ab413be9c75a7a1702ff2559b90c15b17f6d083a"
+    },
+    {
+      "label": "Ganache Godel generation 6",
+      "api_run_id": "c1baf1d2-13d7-477f-8e85-d01f58b485f0",
+      "native_run_id": "41e69bfd48b8b8fab0ef9000dfd1b8a58e4a9ee6f98e159e9673b90c84720d1f",
+      "checkpoint_id": "ebad0600-bb9a-4598-b103-48c79fd6d9e8",
+      "generation": 6,
+      "archive_bytes": 3341117,
+      "archive_sha256": "742717aa5327b1b60f11c78e3cb4e31aaf37677fbb5d8846f8e65b1871579621",
+      "inventory_sha256": "d9d9a825222551b0a68eae56ef0befebf9422f4c904ae7952fe4c09fbc8a58fa",
+      "access_manifest_sha256": "4ee77562c216db47ae0a5ef76fd63ce02295ada99ca25fb282b97526dcb87e34"
+    }
+  ]
+}

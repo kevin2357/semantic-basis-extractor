@@ -3370,9 +3370,7 @@ def build_story_workspace(
             "directories through their distinct lenses: who the dog is, how "
             "the dog lives, what the dog needs, and how the dog grows. Give "
             "each summary its own central argument, examples, advice, and "
-            "language. Also complete `ASSIGN THEME GROUPS.md`, which creates "
-            "independent structured chapter plans for Interdogpendence aspects "
-            "and Takeaways syntheses."
+            "language."
         )
         gold_step = (
             "Study `SUMMARY GOLD REFERENCE.md` for craft only, then "
@@ -3924,7 +3922,7 @@ def main() -> None:
                     pass_specs = [
                         (index, assignment_plan["passes"][str(index)], False, False)
                         for index in range(1, 6)
-                    ] + [(6, [], True, True)]
+                    ] + [(6, [], True, False)]
                     for (
                         pass_number,
                         priority_ids,

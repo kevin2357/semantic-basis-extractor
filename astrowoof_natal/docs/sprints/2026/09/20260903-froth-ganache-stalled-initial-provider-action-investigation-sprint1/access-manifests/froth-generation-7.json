@@ -1,0 +1,15 @@
+{
+  "api_run_id": "aa5a6019-dbc6-4d10-a698-0aee2a70920a",
+  "approved_operations": {"head_count": 1, "get_count": 1, "list_count": 0, "write_count": 0, "delete_count": 0},
+  "checkpoint_generation": 7,
+  "checkpoint_id": "777aa6fe-def7-4db5-8d59-325557c97dbc",
+  "expected_archive_bytes": 3387528,
+  "expected_archive_sha256": "34b9d3a2d5081770a53e2f991e4c3775b46230893fec88b960d2bd7d4b5ab597",
+  "expected_etag": "67731025566737d6bb17cdb83c6cea34",
+  "expected_inventory_sha256": "d46ec99af85351a6f1fd51e4986a6822bbba31eef470bfebc9d0d4201d4f2ae9",
+  "label": "Froth Fermat generation 7",
+  "native_run_id": "ea2267d6328955a1675bd2541d45914876f1427655afc18b25073b26ea892b78",
+  "object_key": "v1/checkpoint/0896617f96484715b0e5d4a6d9c4e20e",
+  "object_uuid": "0896617f-9648-4715-b0e5-d4a6d9c4e20e",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}
