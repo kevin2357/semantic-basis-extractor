@@ -65,3 +65,16 @@ the eventual fresh release version before publication.
 
 The candidate has not been committed, tagged, published, deployed, or used for
 QA reset. Final release review remains required.
+
+## Final committed-wheel gate
+
+- Source commit: `b2c2296` (`fix: seal zero-action release smoke terminal result`)
+- Version: `0.4.43`
+- Two controlled builds are byte-identical:
+  `6249a0daaee01daa067c4f0c0136bfdc4983ab0294e2ae4b1266e21b8252c894`
+- Final wheel installed into fresh `site-packages`; the public
+  `--require-installed` smoke passed with result
+  `nres_8e75aeb6fefc6bd315c88b52`.
+
+No provider, network, R2, retained-QA, deployment, or publication activity
+occurred. Tag/publish still requires explicit owner authorization.

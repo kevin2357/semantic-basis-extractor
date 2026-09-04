@@ -25,3 +25,9 @@
   Focused terminal/native/smoke suite passed (36 tests, 3 expected optional
   schema skips). The candidate remains uncommitted and unpublished pending
   final release review.
+- 2026-09-03: Committed source as `b2c2296`, then rebuilt `0.4.43` twice with
+  byte-identical SHA-256
+  `6249a0daaee01daa067c4f0c0136bfdc4983ab0294e2ae4b1266e21b8252c894`.
+  The final wheel passed the public provider-free installed smoke from fresh
+  `site-packages`. Awaiting owner authorization for the release record, tag,
+  publication, and push.
