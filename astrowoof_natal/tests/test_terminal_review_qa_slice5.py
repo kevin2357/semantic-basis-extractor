@@ -8,8 +8,11 @@ from importlib.resources import files
 
 from astrowoof_natal_authoring import (
     read_terminal_review_qualification_schema,
+    read_terminal_review_qualification_v02_schema,
     run_terminal_review_qualification,
+    run_terminal_review_qualification_v02,
     validate_terminal_review_qualification,
+    validate_terminal_review_qualification_v02,
 )
 from astrowoof_natal_authoring.terminal_review_qa import _installed_version
 
@@ -43,6 +46,31 @@ class TerminalReviewQualificationTests(unittest.TestCase):
         mutated["checks"]["review_immutable"] = False
         with self.assertRaises(ValueError):
             validate_terminal_review_qualification(mutated)
+
+    def test_detailed_receipt_discloses_and_joins_exact_publication_identity(self) -> None:
+        receipt = run_terminal_review_qualification_v02()
+        validate_terminal_review_qualification_v02(receipt)
+        identity = receipt["publication_identity"]
+        self.assertEqual(
+            identity["result_id"], f"nres_{identity['result_sha256'][:24]}"
+        )
+        self.assertEqual(
+            identity["receipt_id"], f"nreceipt_{identity['receipt_sha256'][:24]}"
+        )
+        self.assertEqual(
+            receipt["qualification"]["checks"]["reconciliation_action_ids"],
+            identity["reconciliation_action_ids"],
+        )
+
+    def test_detailed_receipt_rejects_rehashed_identity_mutation(self) -> None:
+        receipt = run_terminal_review_qualification_v02()
+        receipt["publication_identity"]["result_id"] = "nres_" + "0" * 24
+        body = {key: item for key, item in receipt.items() if key != "receipt_sha256"}
+        receipt["receipt_sha256"] = hashlib.sha256(json.dumps(
+            body, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
+        with self.assertRaises(ValueError):
+            validate_terminal_review_qualification_v02(receipt)
 
     def test_rehashed_semantic_mutations_are_refused(self) -> None:
         for field, value in (
@@ -89,6 +117,12 @@ class TerminalReviewQualificationTests(unittest.TestCase):
             self.skipTest("jsonschema is optional")
         jsonschema.Draft202012Validator(schema).validate(
             run_terminal_review_qualification()
+        )
+
+    def test_detailed_schema_is_packaged(self) -> None:
+        schema = read_terminal_review_qualification_v02_schema()
+        self.assertEqual(
+            "astrowoof.terminal_review_qualification.v2", schema["$id"]
         )
 
 

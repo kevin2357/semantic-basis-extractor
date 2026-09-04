@@ -612,7 +612,13 @@ def _capacity_and_custody(
     dependencies: list[dict[str, Any]], *, observed_at: str,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     """Project orthogonal local capacity and provider custody from durable bytes."""
+    # The finalization record is native evidence; the outer status can be
+    # temporarily projected as provider-pending while retained custody is
+    # reconciled. Do not use a status word alone to reopen a concluded run.
+    from .closure import finalization_conclusion
+
     actions = list((state.get("spend_ledger") or {}).get("actions") or [])
+    conclusion = finalization_conclusion(state)
     provider_bound = [
         item for item in actions
         if item.get("state") in {"PROVIDER_ID_RECORDED", "WAITING"}
@@ -835,6 +841,19 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "release_until_due", False, "known_provider_work_pending",
         )
+    elif conclusion is not None:
+        # A completed finalization conclusion with unresolved locally-created
+        # successor work is contradictory. Retain it for review rather than
+        # selecting that work or fabricating a terminal handoff. Provider
+        # custody above remains eligible only for retrieval/reconciliation.
+        if non_provider_local or prepared:
+            disposition, local_ready, reason = (
+                "retain_for_review", False, "native_review_required",
+            )
+        else:
+            disposition, local_ready, reason = (
+                "terminal", False, "terminal_native_outcome",
+            )
     elif non_provider_local:
         disposition, local_ready, reason = (
             "continue_local_cycle", True, "local_work_ready",

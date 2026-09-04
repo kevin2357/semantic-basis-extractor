@@ -966,6 +966,170 @@ class TestSemanticClosure(SemanticClosureFixture):
                 result["inspection"]["provider_custody"]["action_ids"],
             )
 
+    def test_exact_interactive_reconciliation_does_not_select_qualitative_work_after_delivery(self) -> None:
+        """The public exact-response coordinator must stop at final delivery."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key",
+                transport=ScriptedTransport([]),
+                sleep=lambda _: None,
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider)
+            state["authoring_profile"] = {
+                **(state.get("authoring_profile") or {}),
+                "qa": {
+                "polish": False,
+                "qualitative_critic": True,
+                "qualitative_candidate": False,
+                },
+            }
+            record = state["passes"]["bre_1"]
+            for pass_id, other in state["passes"].items():
+                if pass_id != "bre_1":
+                    other["state"] = "SUBMITTED"
+            attempt_root = root / "run" / "passes" / "bre_1" / "attempt-001"
+            attempt_root.mkdir(parents=True)
+            (attempt_root / "openai-background-response.json").write_text(
+                json.dumps({"id": "resp_terminal_exact", "status": "in_progress"}),
+                encoding="utf-8",
+            )
+            record["state"] = "WAITING_FOR_RESPONSE"
+            record["attempts"] = [{
+                "attempt_number": 1,
+                "state": "WAITING_FOR_RESPONSE",
+                "started_at": "2026-09-04T20:00:00+00:00",
+                "finished_at": None,
+                "response_workspace": str(attempt_root / "response" / "bre_1"),
+                "provider_metadata": None,
+                "qa": None,
+                "error": None,
+            }]
+            binding = {
+                "run_id": state["run_id"], "profile_sha256": "1" * 64,
+                "prepared_state_revision": 1, "stage": "authoring_initial",
+                "route": "bre_1:attempt-001", "request_sha256": "2" * 64,
+                "model": provider.model, "service_level": "interactive",
+                "maximum_output_tokens": provider.max_output_tokens,
+                "commitment_micro_usd": 50000,
+                "price_book_version": PRICE_BOOK_VERSION,
+            }
+            state["spend_ledger"]["actions"] = [{
+                "action_id": "paid_222222222222222222222222",
+                "state": "WAITING", "binding": binding,
+                "authorization": {
+                    "schema_version": AUTHORIZATION_SCHEMA,
+                    "action_id": "paid_222222222222222222222222",
+                    "binding": binding, "authorization_reference": "terminal-exact",
+                },
+                "consumption": {"consumer_id": "worker-fixture", "state_revision": 1},
+                "provider": {"id": "resp_terminal_exact", "kind": "response"},
+                "provider_reconciliation": {
+                    "policy_version": "astrowoof.provider_reconciliation_policy.v0.1",
+                    "provider_retrieval_attempt_count": 0,
+                    "last_attempt_at": None,
+                    "last_outcome": "provider_identity_recorded",
+                    "resume_not_before": "2026-09-04T20:00:15Z",
+                },
+                "reported": None, "reconciliation_reference_ids": [],
+            }]
+            save_state(run_json, state)
+            with tempfile.TemporaryDirectory() as extracted:
+                with zipfile.ZipFile(Path(record["source_zip"])) as archive:
+                    archive.extractall(extracted)
+                authored = authored_field_payload(Path(extracted) / "bre_1")
+            transport = ScriptedTransport([
+                completed_response(authored, response_id="resp_terminal_exact")
+            ])
+            provider.transport = transport
+            before_actions = len(state["spend_ledger"]["actions"])
+
+            def final_delivery(*, state: dict, run_dir: Path, **_kwargs: object) -> None:
+                deck = run_dir / "final-delivery.json"
+                deck.write_text("{}\n", encoding="utf-8")
+                state["subjects"] = {
+                    "fixture": {"state": "DELIVERY_COMPLETE", "deck": str(deck)}
+                }
+
+            with patch(
+                "astrowoof_natal_authoring.closure.finalize_subjects",
+                side_effect=final_delivery,
+            ), patch(
+                "astrowoof_natal_authoring.closure.run_qualitative_review",
+                side_effect=AssertionError("terminal conclusion selected qualitative work"),
+            ):
+                result = run_bounded_authoring_reconciliation(
+                    root / "run", provider=provider, max_attempts=3,
+                    python_executable=Path(sys.executable),
+                    observed_at="2026-09-04T20:01:00Z",
+                    critic_provider=object(),
+                )
+
+            self.assertEqual("terminal", result["outcome"])
+            self.assertNotIn("local_continuation", result)
+            self.assertEqual("terminal", result["inspection"]["execution_capacity"]["disposition"])
+            self.assertIsNone(result["inspection"]["external_authority_request"])
+            self.assertEqual(before_actions, len(load_json(run_json)["spend_ledger"]["actions"]))
+            self.assertEqual(["GET"], [item["method"] for item in transport.calls])
+
+    def test_direct_authoring_cli_does_not_select_qualitative_work_after_delivery(self) -> None:
+        """Exercise the direct public authoring path, not the projection helper."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            state, run_json = self.make_state(
+                root, OpenAIResponsesProvider(
+                    api_key="test-key", require_spend_authorization=True,
+                )
+            )
+            for record in state["passes"].values():
+                record["state"] = "PASS_QA_ACCEPTED"
+                # This is an already-authored run, not an initial-wave request.
+                record["attempts"] = [{"attempt_number": 1, "state": "PASS_QA_ACCEPTED"}]
+            state["service_level"] = "batch"
+            state["authoring_profile"] = {
+                **(state.get("authoring_profile") or {}),
+                "qa": {
+                    "polish": False,
+                    "qualitative_critic": True,
+                    "qualitative_candidate": False,
+                },
+            }
+            save_state(run_json, state)
+
+            def final_delivery(*, state: dict, run_dir: Path, **_kwargs: object) -> None:
+                deck = run_dir / "final-delivery.json"
+                deck.write_text("{}\n", encoding="utf-8")
+                state["subjects"] = {
+                    "fixture": {"state": "DELIVERY_COMPLETE", "deck": str(deck)}
+                }
+
+            arguments = [
+                "astrowoof-semantic-closure", "--run-dir", str(root / "run"),
+                "--resume", "--provider", "openai", "--api-key-env",
+                "SBE_TERMINAL_FIXTURE_KEY", "--model", "gpt-5.6-terra",
+                "--reasoning-effort", "medium", "--max-output-tokens", "100000",
+                "--prompt-cache-mode", "explicit", "--prompt-cache-ttl", "30m",
+                "--service-level", "batch",
+                "--qualitative-critic",
+            ]
+            with patch.dict("os.environ", {"SBE_TERMINAL_FIXTURE_KEY": "test-key"}), \
+                    patch("sys.argv", arguments), redirect_stdout(io.StringIO()), patch(
+                "astrowoof_natal_authoring.closure.finalize_subjects",
+                side_effect=final_delivery,
+            ), patch(
+                "astrowoof_natal_authoring.closure.run_qualitative_review",
+                side_effect=AssertionError("terminal conclusion selected qualitative work"),
+            ):
+                closure_main()
+
+            persisted = load_json(run_json)
+            self.assertEqual("DELIVERY_COMPLETE", persisted["subjects"]["fixture"]["state"])
+            inspection = inspect_lifecycle(root / "run")
+            self.assertNotEqual("continue_local_cycle", inspection["execution_capacity"]["disposition"])
+            self.assertIsNone(inspection["external_authority_request"])
+            self.assertEqual([], persisted["spend_ledger"]["actions"])
+
     def test_packaged_critic_contract_and_fixture_are_versioned(self) -> None:
         resources = SRC / "astrowoof_natal_authoring" / "resources"
         catalog = load_json(resources / "contracts" / "contract-catalog.json")
@@ -3456,6 +3620,83 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertEqual(uploads, transport.upload_calls)
             self.assertEqual(creates, transport.create_calls)
             self.assertEqual(1, transport.retrieve_calls)
+
+    def test_exact_batch_reconciliation_does_not_select_qualitative_work_after_delivery(self) -> None:
+        """Exercise the real Batch coordinator after a terminal conclusion."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            provider = OpenAIResponsesProvider(
+                api_key="test-key", model="gpt-5.6-luna",
+                max_output_tokens=30_000, prompt_cache_mode="disabled",
+                require_spend_authorization=True,
+            )
+            state, run_json = self.make_state(root, provider, cards_per_pass=10)
+            state["service_level"] = "batch"
+            state["authoring_profile"]["qa"] = {
+                "qualitative_critic": True,
+                "qualitative_candidate": False,
+                "polish": False,
+            }
+            save_state(run_json, state)
+            controller = SpendController(
+                state=state, run_json=run_json,
+                state_lock=threading.Lock(), consumer_id="batch-terminal-fixture",
+            )
+            transport = ScriptedBatchTransport(initially_complete=False)
+            with self.assertRaises(AwaitingSpendAuthorization):
+                author_pending_passes_batch(
+                    state=state, provider=provider, transport=transport,
+                    run_dir=root / "run", max_attempts=3,
+                    python_executable=Path(sys.executable), run_json=run_json,
+                    detach=True, sleep=lambda _: None, spend_controller=controller,
+                )
+            action = state["spend_ledger"]["actions"][0]
+            authorize_action(state["spend_ledger"], {
+                "schema_version": AUTHORIZATION_SCHEMA,
+                "action_id": action["action_id"], "binding": action["binding"],
+                "authorization_reference": "batch-terminal-fixture",
+            })
+            save_state(run_json, state)
+            self.assertFalse(author_pending_passes_batch(
+                state=state, provider=provider, transport=transport,
+                run_dir=root / "run", max_attempts=3,
+                python_executable=Path(sys.executable), run_json=run_json,
+                detach=True, sleep=lambda _: None, spend_controller=controller,
+            ))
+            before_actions = len(load_json(run_json)["spend_ledger"]["actions"])
+            creates, uploads = transport.create_calls, transport.upload_calls
+
+            def final_delivery(*, state: dict, run_dir: Path, **_kwargs: object) -> None:
+                deck = run_dir / "final-delivery.json"
+                deck.write_text("{}\n", encoding="utf-8")
+                state["subjects"] = {
+                    "fixture": {"state": "DELIVERY_COMPLETE", "deck": str(deck)}
+                }
+
+            with patch(
+                "astrowoof_natal_authoring.closure.finalize_subjects",
+                side_effect=final_delivery,
+            ), patch(
+                "astrowoof_natal_authoring.closure.run_qualitative_review",
+                side_effect=AssertionError("terminal conclusion selected qualitative work"),
+            ):
+                result = reconcile_authoring_provider_cycle(
+                    root / "run",
+                    observed_at=action["provider_reconciliation"]["resume_not_before"],
+                    provider_adapters=ProviderReconciliationAdapters(
+                        exact_batch_provider=provider,
+                        exact_batch_transport=transport,
+                        python_executable=Path(sys.executable),
+                    ),
+                )
+
+            self.assertEqual("terminal", result["outcome"])
+            self.assertNotIn("local_continuation", result)
+            self.assertEqual("terminal", result["inspection"]["execution_capacity"]["disposition"])
+            self.assertIsNone(result["inspection"]["external_authority_request"])
+            self.assertEqual(before_actions, len(load_json(run_json)["spend_ledger"]["actions"]))
+            self.assertEqual(creates, transport.create_calls)
+            self.assertEqual(uploads, transport.upload_calls)
 
     def test_batch_reconciliation_pending_and_replay_are_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

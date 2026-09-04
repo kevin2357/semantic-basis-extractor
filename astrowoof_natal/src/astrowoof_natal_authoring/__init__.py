@@ -144,8 +144,11 @@ from .terminal_review_contracts import (  # noqa: E402
 )
 from .terminal_review_qa import (  # noqa: E402
     read_terminal_review_qualification_schema,
+    read_terminal_review_qualification_v02_schema,
     run_terminal_review_qualification,
+    run_terminal_review_qualification_v02,
     validate_terminal_review_qualification,
+    validate_terminal_review_qualification_v02,
 )
 from .post_fan_in_qa import (  # noqa: E402
     read_provider_pending_lifecycle_qualification_v2_schema,
@@ -503,8 +506,11 @@ __all__ = [
     "validate_terminal_review_result_v02_against_receipt",
     "validate_zero_action_terminal_review_result_v03_against_receipt",
     "read_terminal_review_qualification_schema",
+    "read_terminal_review_qualification_v02_schema",
     "run_terminal_review_qualification",
+    "run_terminal_review_qualification_v02",
     "validate_terminal_review_qualification",
+    "validate_terminal_review_qualification_v02",
     "validate_lifecycle_inspection_v04",
     "validate_lifecycle_inspection_v05",
     "build_lifecycle_inspection_v06",

@@ -119,6 +119,7 @@ SNAPSHOT_NAME = "workspace-snapshot.json"
 PASS_COUNT = 6
 TERMINAL_STATES = {"PASS_QA_ACCEPTED", "FAILED_REQUIRES_REVIEW"}
 FINAL_SUCCESS_STATES = {"DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS"}
+FINAL_REVIEW_STATES = {"FINAL_QA_WARN", "FINAL_QA_FAILED"}
 WRITABLE_FILE_NAMES = {
     "WRITE WHOLE DOG PROFILE.md",
     "WRITE SUMMARY THESIS PLAN.md",
@@ -7407,6 +7408,27 @@ def finalize_subjects(
         )
 
 
+def finalization_conclusion(state: dict[str, Any]) -> str | None:
+    """Return the committed native finalization conclusion, if one exists.
+
+    This is intentionally derived from complete subject-finalization evidence,
+    not the outer run-status spelling.  That spelling is temporarily projected
+    as provider-pending when durable custody remains, which must not let an
+    optional stage create new work after finalization reached a conclusion.
+    """
+    records = list((state.get("subjects") or {}).values())
+    states = {
+        str(record.get("state") or "")
+        for record in records
+        if isinstance(record, dict)
+    }
+    if records and states and states <= FINAL_SUCCESS_STATES:
+        return "delivery_complete"
+    if states & FINAL_REVIEW_STATES:
+        return "review_required"
+    return None
+
+
 def create_run(
     *,
     input_package: Path,
@@ -8900,7 +8922,21 @@ def main() -> None:
                 max_polish_attempts=args.max_polish_attempts,
                 spend_controller=spend_controller,
             )
-            if args.qualitative_critic and critic_provider is not None:
+            # Persist the finalization evidence before deciding whether this
+            # invocation may select any optional qualitative work.
+            save_state(
+                run_json, state,
+                retire_external_authority_v2=args.service_level == "interactive",
+            )
+            # A finalization conclusion dominates later optional-stage
+            # selection in this invocation. It is evidence-derived rather
+            # than status-derived because retained provider custody may
+            # temporarily project a nonterminal outer status.
+            if (
+                finalization_conclusion(state) is None
+                and args.qualitative_critic
+                and critic_provider is not None
+            ):
                 for record in state.get("subjects", {}).values():
                     if record.get("state") in FINAL_SUCCESS_STATES:
                         run_qualitative_review(

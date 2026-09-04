@@ -934,6 +934,7 @@ def reconcile_batch_provider_cycle(
         SpendController,
         _batch_jsonl_records,
         author_pending_passes_batch,
+        finalization_conclusion,
         finalize_subjects,
         load_json,
         persist_state,
@@ -981,7 +982,7 @@ def reconcile_batch_provider_cycle(
 
     def exhaust_local_continuation(
         state: dict[str, Any], controller: Any,
-    ) -> None:
+    ) -> bool:
         from .spend import (
             AmbiguousProviderSubmission,
             AwaitingSpendAuthorization,
@@ -998,7 +999,15 @@ def reconcile_batch_provider_cycle(
                 max_polish_attempts=int(qa.get("max_polish_attempts") or 2),
                 spend_controller=controller,
             )
-            if bool(qa.get("qualitative_critic")) and critic_provider is not None:
+            # Persist the finalization evidence before any optional-stage
+            # decision can prepare a new provider action.
+            save_state(run_dir / "run.json", state)
+            terminal_dominates = finalization_conclusion(state) is not None
+            if (
+                not terminal_dominates
+                and bool(qa.get("qualitative_critic"))
+                and critic_provider is not None
+            ):
                 for subject_record in state.get("subjects", {}).values():
                     if subject_record.get("state") in {
                         "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS",
@@ -1020,11 +1029,12 @@ def reconcile_batch_provider_cycle(
                             ),
                             spend_controller=controller, run_state=state,
                         )
+            return terminal_dominates
         except (
             AwaitingSpendAuthorization, BudgetExhausted,
             AmbiguousProviderSubmission,
         ):
-            pass
+            return False
 
     with _single_writer(run_dir):
         state = load_json(run_dir / "run.json")
@@ -1072,14 +1082,18 @@ def reconcile_batch_provider_cycle(
                         )):
                             raise
                     state = load_json(run_dir / "run.json")
+                    terminal_dominates = finalization_conclusion(state) is not None
                 else:
-                    exhaust_local_continuation(state, controller)
+                    terminal_dominates = exhaust_local_continuation(state, controller)
                 save_state(run_dir / "run.json", state)
                 after = inspect_lifecycle(
                     run_dir, native_exclusive_access="established",
                     observed_at=instant,
                 )
-                result = empty_result(state, after, "progressed_local")
+                result = empty_result(
+                    state, after,
+                    "terminal" if terminal_dominates else "progressed_local",
+                )
                 result["cycle"]["completed_action_ids"] = [action["action_id"]]
                 member_count = len(replayed["requests"])
                 failed_count = sum(
@@ -1460,8 +1474,9 @@ def reconcile_batch_provider_cycle(
                 )):
                     raise
             state = load_json(run_dir / "run.json")
+            terminal_dominates = finalization_conclusion(state) is not None
         else:
-            exhaust_local_continuation(state, controller)
+            terminal_dominates = exhaust_local_continuation(state, controller)
         save_state(run_dir / "run.json", state)
         if _failure_injector:
             _failure_injector("after_batch_local_continuation")
@@ -1470,7 +1485,10 @@ def reconcile_batch_provider_cycle(
         after = inspect_lifecycle(
             run_dir, native_exclusive_access="established", observed_at=instant,
         )
-        result = empty_result(state, after, "progressed_local")
+        result = empty_result(
+            state, after,
+            "terminal" if terminal_dominates else "progressed_local",
+        )
         result["cycle"].update({
             "provider_retrieval_count": 1,
             "retrieved_action_ids": [action["action_id"]],
@@ -1487,12 +1505,13 @@ def reconcile_batch_provider_cycle(
             "ingested_member_count": member_count - failed_count,
             "failed_member_count": failed_count,
         }]
-        result["local_continuation"] = {
-            "pass_ids": sorted(item["pass_id"] for item in round_record["requests"]),
-            "stages": [action["binding"]["stage"]],
-            "completed_action_ids": [action["action_id"]],
-            "exhausted_before_detach": True,
-        }
+        if not terminal_dominates:
+            result["local_continuation"] = {
+                "pass_ids": sorted(item["pass_id"] for item in round_record["requests"]),
+                "stages": [action["binding"]["stage"]],
+                "completed_action_ids": [action["action_id"]],
+                "exhausted_before_detach": True,
+            }
         return result
 
 
@@ -1514,6 +1533,7 @@ def run_bounded_authoring_reconciliation(
         SNAPSHOT_NAME,
         SpendController,
         author_pending_passes,
+        finalization_conclusion,
         estimated_cost,
         finalize_subjects,
         load_json,
@@ -1832,6 +1852,7 @@ def run_bounded_authoring_reconciliation(
             only_pass_ids=pass_ids,
         )
     qa = (state.get("authoring_profile") or {}).get("qa") or {}
+    terminal_dominates = False
     try:
         finalize_subjects(
             state=state,
@@ -1843,7 +1864,18 @@ def run_bounded_authoring_reconciliation(
             max_polish_attempts=int(qa.get("max_polish_attempts") or 2),
             spend_controller=controller,
         )
-        if bool(qa.get("qualitative_critic")) and critic_provider is not None:
+        # Commit the conclusion before this coordinator considers optional
+        # qualitative work or publishes its successor-facing result.
+        save_state(
+            run_dir / "run.json", state,
+            retire_external_authority_v2=True,
+        )
+        terminal_dominates = finalization_conclusion(state) is not None
+        if (
+            not terminal_dominates
+            and bool(qa.get("qualitative_critic"))
+            and critic_provider is not None
+        ):
             for subject_record in state.get("subjects", {}).values():
                 if subject_record.get("state") in {
                     "DELIVERY_COMPLETE", "DELIVERY_COMPLETE_WITH_WARNINGS",
@@ -1889,14 +1921,16 @@ def run_bounded_authoring_reconciliation(
         )
     artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
     record = json.loads(artifact.read_text(encoding="utf-8"))
-    local_continuation = {
-        "pass_ids": sorted(pass_ids),
-        "stages": sorted(stages),
-        "completed_action_ids": sorted(completed_ids),
-        "exhausted_before_detach": True,
-    }
-    record["local_continuation"] = local_continuation
-    write_json_atomic(artifact, record)
+    local_continuation = None
+    if not terminal_dominates:
+        local_continuation = {
+            "pass_ids": sorted(pass_ids),
+            "stages": sorted(stages),
+            "completed_action_ids": sorted(completed_ids),
+            "exhausted_before_detach": True,
+        }
+        record["local_continuation"] = local_continuation
+        write_json_atomic(artifact, record)
     write_workspace_snapshot(run_dir)
     inspection = inspect_lifecycle(
         run_dir,
@@ -1913,7 +1947,8 @@ def run_bounded_authoring_reconciliation(
         "continue_local_cycle": "progressed_local",
     }[disposition]
     result["inspection"] = inspection
-    result["local_continuation"] = local_continuation
+    if local_continuation is not None:
+        result["local_continuation"] = local_continuation
     result["result_checkpoint"] = {
         "operator_state_revision": inspection["observation"]["operator_state_revision"],
         "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),

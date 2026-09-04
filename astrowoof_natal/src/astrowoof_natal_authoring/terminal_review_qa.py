@@ -35,6 +35,8 @@ from .terminal_review_contracts import (
 
 CONTRACT = "astrowoof.terminal_review_qualification.v1"
 SCHEMA_RESOURCE = "terminal-review-qualification.v1.schema.json"
+DETAILED_CONTRACT = "astrowoof.terminal_review_qualification.v2"
+DETAILED_SCHEMA_RESOURCE = "terminal-review-qualification.v2.schema.json"
 SENTINEL = "PROTECTED_TERMINAL_REVIEW_QUALIFICATION_SENTINEL"
 
 
@@ -174,7 +176,9 @@ def _installed_version() -> str:
         return __version__
 
 
-def run_terminal_review_qualification() -> dict[str, Any]:
+def run_terminal_review_qualification(
+    *, _publication_identity: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="astrowoof-terminal-review-qa-") as temporary:
         run_dir, reported_id, provider_id, providerless_id = _materialize(Path(temporary))
         historical = publish_native_execution_result(
@@ -334,6 +338,23 @@ def run_terminal_review_qualification() -> dict[str, Any]:
             raise ValueError("Terminal-review qualification invariant failed")
         body["receipt_sha256"] = _digest(body)
         validate_terminal_review_qualification(body)
+        if _publication_identity is not None:
+            _publication_identity.update({
+                "result_id": review_result["result_id"],
+                "result_sha256": review_result["result_sha256"],
+                "receipt_id": review_view["receipt"]["receipt_id"],
+                "receipt_sha256": review_view["receipt"]["receipt_sha256"],
+                "snapshot_sha256": review_view["receipt"]["snapshot_sha256"],
+                "checkpoint_basis_sha256": (
+                    review_view["receipt"]["checkpoint_basis_sha256"]
+                ),
+                "terminal_outcome": review_result["outcome"],
+                "terminal_cause": review_result["cause_code"],
+                "custody_finality": review_result["custody_finality"],
+                "reconciliation_action_ids": review_result[
+                    "reconciliation_action_ids"
+                ],
+            })
         return body
 
 
@@ -400,14 +421,90 @@ def read_terminal_review_qualification_schema() -> dict[str, Any]:
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
+def run_terminal_review_qualification_v02() -> dict[str, Any]:
+    """Emit one invocation-specific receipt with its exact public join."""
+    identity: dict[str, Any] = {}
+    qualification = run_terminal_review_qualification(
+        _publication_identity=identity,
+    )
+    body = {
+        "schema_version": DETAILED_CONTRACT,
+        "status": "pass",
+        "qualification": qualification,
+        "publication_identity": identity,
+    }
+    value = {**body, "receipt_sha256": _digest(body)}
+    return validate_terminal_review_qualification_v02(value)
+
+
+def validate_terminal_review_qualification_v02(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != {
+        "schema_version", "status", "qualification", "publication_identity",
+        "receipt_sha256",
+    }:
+        raise ValueError("Detailed terminal-review qualification shape differs")
+    if value.get("schema_version") != DETAILED_CONTRACT or value.get("status") != "pass":
+        raise ValueError("Detailed terminal-review qualification identity differs")
+    qualification = value.get("qualification")
+    validate_terminal_review_qualification(qualification)
+    identity = value.get("publication_identity")
+    expected_keys = {
+        "result_id", "result_sha256", "receipt_id", "receipt_sha256",
+        "snapshot_sha256", "checkpoint_basis_sha256", "terminal_outcome",
+        "terminal_cause", "custody_finality", "reconciliation_action_ids",
+    }
+    if not isinstance(identity, dict) or set(identity) != expected_keys:
+        raise ValueError("Detailed terminal-review identity join differs")
+    sha_fields = {
+        "result_sha256", "receipt_sha256", "snapshot_sha256",
+        "checkpoint_basis_sha256",
+    }
+    if (
+        not isinstance(identity["result_id"], str)
+        or identity["result_id"] != f"nres_{identity['result_sha256'][:24]}"
+        or not isinstance(identity["receipt_id"], str)
+        or identity["receipt_id"] != f"nreceipt_{identity['receipt_sha256'][:24]}"
+        or any(
+            not isinstance(identity[key], str)
+            or len(identity[key]) != 64
+            or any(char not in "0123456789abcdef" for char in identity[key])
+            for key in sha_fields
+        )
+        or identity["terminal_outcome"] != "review_required"
+        or not isinstance(identity["terminal_cause"], str)
+        or not identity["terminal_cause"]
+        or identity["custody_finality"] != "mixed_resolution_required"
+        or identity["reconciliation_action_ids"]
+        != qualification["checks"]["reconciliation_action_ids"]
+    ):
+        raise ValueError("Detailed terminal-review identity semantics differ")
+    body = {key: item for key, item in value.items() if key != "receipt_sha256"}
+    if value.get("receipt_sha256") != _digest(body):
+        raise ValueError("Detailed terminal-review qualification digest differs")
+    return copy.deepcopy(value)
+
+
+def read_terminal_review_qualification_v02_schema() -> dict[str, Any]:
+    resource = files("astrowoof_natal_authoring.resources").joinpath(
+        f"contracts/{DETAILED_SCHEMA_RESOURCE}"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--schema", action="store_true")
+    parser.add_argument("--detailed", action="store_true")
     args = parser.parse_args(argv)
     value = (
-        read_terminal_review_qualification_schema()
-        if args.schema else run_terminal_review_qualification()
+        read_terminal_review_qualification_v02_schema()
+        if args.schema and args.detailed
+        else read_terminal_review_qualification_schema()
+        if args.schema
+        else run_terminal_review_qualification_v02()
+        if args.detailed
+        else run_terminal_review_qualification()
     )
     rendered = json.dumps(value, indent=2, sort_keys=True) + "\n"
     if args.output:
