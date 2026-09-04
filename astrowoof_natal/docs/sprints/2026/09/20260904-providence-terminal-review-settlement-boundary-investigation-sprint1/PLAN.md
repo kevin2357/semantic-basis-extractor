@@ -11,9 +11,10 @@ action; reconciliation inventory is empty and provider creation is forbidden.
 This confirms an API settlement-intake gap, not an SBE vocabulary, custody, or
 publication defect. A new packaged provider-free eight-action qualification now
 proves exact denial, refusal, replay, immutable precursor, and final-custody
-successor semantics. The additive qualification is frozen for candidate
-`0.4.48`; Slice 3 is the installed-wheel and immutable-release preparation
-gate. Runtime work and live settlement remain unapproved.
+successor semantics. The additive qualification is frozen and installed-wheel
+qualified for candidate `0.4.48` from exact release-lock commit `49f9e2e`.
+Voof-paws 4 is ready for final API and owner review. Runtime work and live
+settlement remain unapproved.
 
 ## Goal
 
@@ -222,7 +223,7 @@ No tag, GitHub release, deployment, API mutation, live Providence settlement,
 provider operation, or retained-QA access occurs without the later explicit
 release authorization.
 
-**Voof-paws 4 — pending:** API reviews the exact `0.4.48` candidate wheel SHA,
+**Voof-paws 4 — ready:** API reviews the exact `0.4.48` candidate wheel SHA,
 installed qualification receipt, focused-gate rationale, and release-lock
 identity before owner authorization to tag and publish.
 

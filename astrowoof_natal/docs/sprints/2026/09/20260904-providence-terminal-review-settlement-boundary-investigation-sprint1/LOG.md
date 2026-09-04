@@ -160,3 +160,21 @@
 - Current gate: commit this release-lock evidence, rebuild twice from that exact
   lock with the recorded epoch, repeat installed qualification, then request
   Voof-paws 4 and owner authorization before tagging or publication.
+
+## 2026-09-04 — exact release-lock verification
+
+- Committed candidate evidence as release lock
+  `49f9e2e3b76d71f84a90542f0fedfa2ae06d4e00`.
+- Exported that exact commit and rebuilt independently twice with the recorded
+  epoch; both wheels and the earlier artifact-source wheel are byte-identical
+  at SHA-256
+  `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`.
+- Installed the exact release-lock wheel into a second clean environment with
+  SPC `0.11.1`; `pip check` passed.
+- Repeated the installed v1/v2 qualification, both schema modes, strict public
+  readers/validators, packaged-fixture equality, and generic release smoke
+  from outside the checkout; all passed.
+- Confirmed zero provider/network/spend, R2, retained-QA, API mutation,
+  deployment, recovery, or live-settlement activity.
+- Current gate: Voof-paws 4 and explicit owner authorization. Do not create the
+  immutable tag or GitHub release yet.

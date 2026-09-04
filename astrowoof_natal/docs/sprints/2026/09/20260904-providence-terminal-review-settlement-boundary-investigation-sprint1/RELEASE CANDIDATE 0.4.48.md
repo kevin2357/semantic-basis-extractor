@@ -2,9 +2,9 @@
 
 ## Decision state
 
-Candidate construction from the committed artifact source is green. Exact
-release-lock rebuild and repeated installed qualification remain required
-before Voof-paws 4. Tagging and publication are not yet authorized.
+Candidate construction and exact release-lock verification are green.
+Voof-paws 4 and explicit owner authorization remain required. Tagging and
+publication have not occurred.
 
 ## Candidate coordinates
 
@@ -18,6 +18,8 @@ before Voof-paws 4. Tagging and publication are not yet authorized.
   `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`
 - Recorded `SOURCE_DATE_EPOCH`: `1788559932`
 - SPC version: `0.11.1`
+- Release-lock commit:
+  `49f9e2e3b76d71f84a90542f0fedfa2ae06d4e00`
 
 ## Qualification
 
@@ -36,7 +38,6 @@ before Voof-paws 4. Tagging and publication are not yet authorized.
 
 ## Remaining gate
 
-Commit this record as the release lock, rebuild twice from that exact commit
-using the recorded epoch, prove the wheel remains byte-identical, and repeat
-the installed public qualifications. Then request API technical review and
-explicit owner authorization before creating the immutable tag or release.
+API should review the exact release-lock commit, wheel SHA, focused-gate scope,
+and installed qualification. Explicit owner authorization is then required
+before creating the immutable tag or GitHub release.

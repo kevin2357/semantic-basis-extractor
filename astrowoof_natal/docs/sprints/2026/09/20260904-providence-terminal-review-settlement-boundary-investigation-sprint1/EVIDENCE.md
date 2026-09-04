@@ -91,3 +91,21 @@ live settlement or runtime implementation is authorized.
   `b166f60e376321a8830410a3686add4875d8d610b4cde9957630f01b8d3fc3d9`
 - Provider create/retrieval/transport, spend, R2, retained QA, API mutation,
   deployment, recovery, and live settlement during qualification: zero
+
+## Exact release-lock verification
+
+- Release-lock commit:
+  `49f9e2e3b76d71f84a90542f0fedfa2ae06d4e00`
+- Two clean builds from that exact commit under the recorded epoch: both equal
+  the artifact-source wheel SHA-256
+  `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`
+- Fresh isolated release-lock install and `pip check`: pass
+- Repeated installed v1/v2 CLI, strict readers/validators, packaged fixture,
+  and schema modes: pass
+- Repeated generic installed release smoke: pass; final receipt-file SHA-256
+  `f33885ae175e945cd317ef15c280563feca73457a5d972dd75ec41e94b3b9d75`
+- Final installed v1 receipt SHA-256:
+  `bc163221266b024296b6faf49f5669f50fba5831c19d64175ace09e9d0554c5e`
+- Final invocation-specific v2 receipt SHA-256:
+  `8ba075e528aad103ba4ad88b036cbc2b6a1bfb5069ee67dc75c071898db8ceeb`
+- Tracked diff hygiene: clean; release-lock checkout package content unchanged
