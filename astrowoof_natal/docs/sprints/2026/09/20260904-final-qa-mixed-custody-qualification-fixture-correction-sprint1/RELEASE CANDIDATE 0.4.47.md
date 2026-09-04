@@ -2,9 +2,9 @@
 
 ## Decision state
 
-Candidate construction and installed SBE qualification are complete. Tagging
-and publication are not yet authorized. API must first rerun the exact Sprint
-76 release-pair gate against the wheel below.
+Released. Candidate construction, release-lock rebuild, installed SBE
+qualification, API Sprint 76 release-pair qualification, immutable tagging,
+publication, and fresh-download verification are complete.
 
 ## Immutable candidate coordinates
 
@@ -34,8 +34,9 @@ and publication are not yet authorized. API must first rerun the exact Sprint
 - Provider/network/spend activity: zero.
 - QA, R2, retained-workspace, and API mutation: none.
 
-## Remaining gate
+## Final disposition
 
-API must consume this exact wheel SHA-256 through the previously failing Sprint
-76 release-pair command. A pass authorizes the final owner/reviewer release
-decision; it does not itself create or move the tag.
+API consumed this exact wheel SHA-256 through the previously failing Sprint 76
+release-pair command and passed. The release-lock commit was rebuilt twice and
+requalified before the annotated tag was created. Published and downloaded
+assets match the qualified wheel and checksum manifest exactly.

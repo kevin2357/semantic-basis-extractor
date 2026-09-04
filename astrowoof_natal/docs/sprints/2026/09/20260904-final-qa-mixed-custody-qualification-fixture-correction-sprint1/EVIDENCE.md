@@ -115,3 +115,38 @@ Installed public command results:
 
 The exact API Sprint 76 release-pair gate remains required against this wheel
 before owner authorization to tag and publish.
+
+## Final release-lock provenance
+
+- Release-lock/tag commit:
+  `0d0285297f6c74295939eb24c2a16d29af91a012`
+- Release-lock rebuilds: 2
+- Recorded epoch: `1788547986`
+- Rebuilt wheel A SHA-256:
+  `4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`
+- Rebuilt wheel B SHA-256:
+  `4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`
+- Repeated installed public qualification: pass
+- API Sprint 76 release-pair qualification: pass
+- API provider operations/spend: zero
+
+## Immutable publication
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.47`
+- Tag object: `8f1613fcf7d6fe1bdf0a341f7725685904a6becc`
+- Peeled tag target:
+  `0d0285297f6c74295939eb24c2a16d29af91a012`
+- Release ID: `RE_kwDOToQdE84W06Ac`
+- Published at: `2026-09-04T19:25:51Z`
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.47`
+- Wheel asset ID: `RA_kwDOToQdE84geO2M`
+- Wheel asset bytes: `1,199,948`
+- GitHub wheel digest:
+  `sha256:4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`
+- Checksum asset ID: `RA_kwDOToQdE84geO2N`
+- Checksum asset digest:
+  `sha256:3c77dcc2b56b54b23120453286d92a244f6908f2bcd5db90e88d1aff942e86bf`
+- Fresh-download wheel SHA-256:
+  `4be9dbf1420376ca4213009a978224b1740094c371b351bcb3a75a7a8912e875`
+- Downloaded checksum line matched exactly.

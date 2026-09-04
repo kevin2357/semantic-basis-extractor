@@ -76,3 +76,24 @@
   resolved from that venv's `site-packages`.
 - Installed public mixed-custody, terminal-review, finalization-boundary, and
   generic release-smoke commands all passed provider-free.
+
+## 2026-09-04 — release-lock provenance and publication
+
+- API reran its exact Sprint 76 consumer against the candidate and passed every
+  closed lifecycle/custody/dispatch receipt with zero provider operations or
+  spend.
+- Created release-lock commit
+  `0d0285297f6c74295939eb24c2a16d29af91a012`.
+- Re-exported that exact commit and rebuilt twice with the recorded epoch. Both
+  wheels remained byte-identical to the documented 1,199,948-byte
+  `4be9db…e875` candidate.
+- Repeated the isolated installed mixed-custody, terminal-review,
+  finalization-boundary, and release-smoke qualifications against the
+  release-lock wheel; all passed.
+- Created and pushed annotated tag
+  `astrowoof-natal-authoring-v0.4.47`; remote peeled target is the release-lock
+  commit.
+- Published GitHub Release `RE_kwDOToQdE84W06Ac` with only the exact wheel and
+  `SHA256SUMS.txt`.
+- Downloaded both assets into a fresh directory. Qualified, GitHub-reported,
+  checksum-manifest, and downloaded wheel digests all match.

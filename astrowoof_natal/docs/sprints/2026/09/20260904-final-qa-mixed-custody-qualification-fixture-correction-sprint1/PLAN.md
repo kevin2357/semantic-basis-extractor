@@ -2,9 +2,9 @@
 
 ## Status
 
-Slices 0–1 and Voof-paws 1 complete. Slice 2 source/full-suite qualification is
-complete for fresh version `0.4.47`; deterministic wheel and API release-pair
-qualification remain.
+Complete. SBE `0.4.47` was built and qualified from the exact release-lock
+commit, passed the API release-pair gate, and was immutably tagged, published,
+downloaded, and verified.
 
 ## Scope and invariants
 
