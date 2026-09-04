@@ -155,4 +155,3 @@ authorized checkpoint read before certifying or operating on the retained run.
 
 The provider-free fixture can be designed now, but runtime implementation must
 wait for the exact-artifact gate and API ownership review.
-

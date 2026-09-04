@@ -60,3 +60,34 @@ of Providence.
 Voof-paws 4 will ask API to review the exact installed `0.4.48` wheel,
 qualification receipt, release-lock identity, and focused-gate evidence. No
 live settlement or runtime implementation is authorized.
+
+## Candidate 0.4.48 qualification
+
+- Artifact-source commit: `96dd0ef539e1972ce694f75b60eac7bc3491caa8`
+- Recorded `SOURCE_DATE_EPOCH`: `1788559932`
+- Focused source matrix: 104 passed, 6 expected optional-schema skips
+- Full/broad suite: deliberately not run; this is additive qualification-only
+  package surface with no production lifecycle mutation, and API accepted the
+  focused-gate scope at Voof-paws 3
+- Two committed-source wheel builds: byte-identical
+- Wheel: `astrowoof_natal_authoring-0.4.48-py3-none-any.whl`
+- Wheel bytes: `1,209,061`
+- Wheel SHA-256:
+  `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`
+- Wheel inventory: 262 members; canonical inventory SHA-256
+  `1c089e706022ab302a9b9c0c13f6e15e81a9d246b335447eb3e17952c898d669`
+- Expected qualification module, v1/v2 schemas, packaged fixture, and entry
+  point present; no cache, bytecode, private, temporary, or Git members found
+- Isolated install: SBE `0.4.48`, SPC `0.11.1`, imports from `site-packages`
+- `pip check`: pass
+- Installed v1 semantic output: deterministic, packaged-fixture exact match,
+  receipt SHA-256
+  `bc163221266b024296b6faf49f5669f50fba5831c19d64175ace09e9d0554c5e`
+- Installed v2 outputs: strict validation pass; identity-rich receipts are
+  invocation-specific while embedding the identical v1 semantic receipt
+- Installed v1/v2 schema CLI and Python readers: exact match
+- Generic installed `astrowoof-release-smoke --require-installed`: pass;
+  receipt-file SHA-256
+  `b166f60e376321a8830410a3686add4875d8d610b4cde9957630f01b8d3fc3d9`
+- Provider create/retrieval/transport, spend, R2, retained QA, API mutation,
+  deployment, recovery, and live settlement during qualification: zero

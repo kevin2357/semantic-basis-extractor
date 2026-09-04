@@ -130,4 +130,3 @@ Voof-paws 3 is ready. API should ingest the packaged semantic fixture and review
 the detailed identity surface before SBE performs installed-wheel qualification
 or any release preparation. Runtime ownership remains API; no live Providence
 settlement is approved.
-

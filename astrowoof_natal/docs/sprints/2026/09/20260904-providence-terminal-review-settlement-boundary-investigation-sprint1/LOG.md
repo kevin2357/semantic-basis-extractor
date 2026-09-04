@@ -137,3 +137,26 @@
   enumerated matrix is the recorded passing gate.
 - Current gate: build, inventory, isolated install, and exact release-lock
   reproducibility; pause before tag/publication authorization.
+
+## 2026-09-04 — Slice 3 committed-source candidate qualification
+
+- Committed the final artifact source as
+  `96dd0ef539e1972ce694f75b60eac7bc3491caa8`.
+- Built twice from a clean archive of that commit using
+  `SOURCE_DATE_EPOCH=1788559932`; both 1,209,061-byte wheels matched SHA-256
+  `d1e84055183e2c45eb687aed61c247425008edec53e33f424c57cc89bf89a8e0`.
+- Audited 262 wheel members and found the expected new module, schemas,
+  fixture, and entry point with no forbidden generated/private members.
+- Installed the exact candidate with SPC `0.11.1` into a clean venv, passed
+  `pip check`, and proved imports resolve from `site-packages`.
+- From `C:\tmp`, exercised the installed v1/v2 CLI, both schema modes, strict
+  Python validators/readers, packaged-fixture equality, and generic installed
+  release smoke. The first attempt to write qualification output directly into
+  `C:\tmp` was denied by the execution sandbox; rerunning the same installed
+  commands from `C:\tmp` with output in the release evidence directory passed.
+- Confirmed exact eight-action semantics, singleton denial, immutable
+  precursor, applied-once denial, inert exact replay, refused changed replay,
+  contiguous final successor, and zero provider I/O.
+- Current gate: commit this release-lock evidence, rebuild twice from that exact
+  lock with the recorded epoch, repeat installed qualification, then request
+  Voof-paws 4 and owner authorization before tagging or publication.

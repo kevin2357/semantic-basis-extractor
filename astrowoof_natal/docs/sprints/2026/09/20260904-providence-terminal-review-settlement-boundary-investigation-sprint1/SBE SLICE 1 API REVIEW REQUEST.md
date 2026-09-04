@@ -33,4 +33,3 @@ and confirm:
    Slice 2 without changing runtime semantics or touching Providence.
 
 No live settlement, recovery, provider work, deployment, or release is requested.
-

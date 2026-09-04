@@ -65,4 +65,3 @@ checkpoint read may be used after API supplies an immutable coordinate packet.
 
 No retained workspace access or runtime mutation occurred during this
 assessment.
-
