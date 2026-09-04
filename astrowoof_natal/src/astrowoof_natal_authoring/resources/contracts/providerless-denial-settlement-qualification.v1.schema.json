@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.providerless_denial_settlement_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "sbe_release", "qualification_only", "provider_free", "provider_create_count", "provider_retrieval_count", "provider_transport_count", "fixture", "precursor", "denial", "successor", "assertions", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.providerless_denial_settlement_qualification.v1"},
+    "status": {"const": "pass"},
+    "sbe_release": {"type": "string", "minLength": 1},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "provider_create_count": {"const": 0},
+    "provider_retrieval_count": {"const": 0},
+    "provider_transport_count": {"const": 0},
+    "fixture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route_family", "provider_mechanism", "paid_action_count", "terminally_accounted_action_count", "providerless_denial_action_id", "providerless_denial_stage"],
+      "properties": {
+        "route_family": {"const": "exact_natal"},
+        "provider_mechanism": {"const": "response"},
+        "paid_action_count": {"const": 8},
+        "terminally_accounted_action_count": {"const": 7},
+        "providerless_denial_action_id": {"const": "paid_000000000000000000000108"},
+        "providerless_denial_stage": {"const": "polish"}
+      }
+    },
+    "precursor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "outcome", "cause_code", "custody_finality", "providerless_denial_action_ids", "reconciliation_action_ids", "new_provider_create_permitted"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.native_execution_result.v0.2"},
+        "outcome": {"const": "review_required"},
+        "cause_code": {"const": "native_lifecycle_review_required"},
+        "custody_finality": {"const": "providerless_denial_required"},
+        "providerless_denial_action_ids": {"const": ["paid_000000000000000000000108"]},
+        "reconciliation_action_ids": {"const": []},
+        "new_provider_create_permitted": {"const": false}
+      }
+    },
+    "denial": {
+      "type": "object", "additionalProperties": false,
+      "required": ["request_schema_version", "result_schema_version", "outcome", "action_id", "disposition", "exact_replay_outcome", "refusal_outcomes"],
+      "properties": {
+        "request_schema_version": {"const": "astrowoof.provider_negative_authorization_request.v0.1"},
+        "result_schema_version": {"const": "astrowoof.provider_negative_authorization_result.v0.2"},
+        "outcome": {"const": "applied"},
+        "action_id": {"const": "paid_000000000000000000000108"},
+        "disposition": {"const": "DENIED_PROVIDERLESS"},
+        "exact_replay_outcome": {"const": "idempotent_replay"},
+        "refusal_outcomes": {
+          "type": "object", "additionalProperties": false,
+          "required": ["wrong_action", "wrong_binding", "stale_observation", "changed_replay"],
+          "properties": {
+            "wrong_action": {"const": "immutable_binding_mismatch"},
+            "wrong_binding": {"const": "immutable_binding_mismatch"},
+            "stale_observation": {"const": "stale_observation"},
+            "changed_replay": {"const": "native_state_inconsistent"}
+          }
+        }
+      }
+    },
+    "successor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "outcome", "custody_finality", "providerless_denial_action_ids", "reconciliation_action_ids", "new_provider_create_permitted", "inspection_terminal", "closeout_terminal"],
+      "properties": {
+        "schema_version": {"const": "astrowoof.native_execution_result.v0.2"},
+        "outcome": {"const": "review_required"},
+        "custody_finality": {"const": "final"},
+        "providerless_denial_action_ids": {"const": []},
+        "reconciliation_action_ids": {"const": []},
+        "new_provider_create_permitted": {"const": false},
+        "inspection_terminal": {"const": true},
+        "closeout_terminal": {"const": true}
+      }
+    },
+    "assertions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["precursor_receipt_valid", "precursor_not_final", "precursor_immutable", "denial_applied_once", "exact_replay_inert", "wrong_authority_inert", "successor_receipt_valid", "successor_final", "lineage_contiguous", "zero_provider_io"],
+      "properties": {
+        "precursor_receipt_valid": {"const": true}, "precursor_not_final": {"const": true},
+        "precursor_immutable": {"const": true}, "denial_applied_once": {"const": true},
+        "exact_replay_inert": {"const": true}, "wrong_authority_inert": {"const": true},
+        "successor_receipt_valid": {"const": true}, "successor_final": {"const": true},
+        "lineage_contiguous": {"const": true}, "zero_provider_io": {"const": true}
+      }
+    },
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

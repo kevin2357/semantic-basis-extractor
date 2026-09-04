@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.providerless_denial_settlement_qualification.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "qualification", "publication_identity", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.providerless_denial_settlement_qualification.v2"},
+    "status": {"const": "pass"},
+    "qualification": {"type": "object"},
+    "publication_identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["denial_request_sha256", "denial_action_binding_sha256", "denial_result_artifact_sha256", "denial_result_snapshot_sha256", "precursor_result_id", "precursor_result_sha256", "precursor_action_inventory_sha256", "precursor_receipt_id", "precursor_receipt_sha256", "precursor_snapshot_sha256", "precursor_checkpoint_basis_sha256", "successor_result_id", "successor_result_sha256", "successor_action_inventory_sha256", "successor_receipt_id", "successor_receipt_sha256", "successor_snapshot_sha256", "successor_checkpoint_basis_sha256"],
+      "properties": {
+        "denial_request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "denial_action_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "denial_result_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "denial_result_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "precursor_result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+        "precursor_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "precursor_action_inventory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "precursor_receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+        "precursor_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "precursor_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "precursor_checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "successor_result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+        "successor_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "successor_action_inventory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "successor_receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+        "successor_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "successor_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "successor_checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

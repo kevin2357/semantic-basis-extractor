@@ -1,0 +1,66 @@
+{
+  "assertions": {
+    "denial_applied_once": true,
+    "exact_replay_inert": true,
+    "lineage_contiguous": true,
+    "precursor_immutable": true,
+    "precursor_not_final": true,
+    "precursor_receipt_valid": true,
+    "successor_final": true,
+    "successor_receipt_valid": true,
+    "wrong_authority_inert": true,
+    "zero_provider_io": true
+  },
+  "denial": {
+    "action_id": "paid_000000000000000000000108",
+    "disposition": "DENIED_PROVIDERLESS",
+    "exact_replay_outcome": "idempotent_replay",
+    "outcome": "applied",
+    "refusal_outcomes": {
+      "changed_replay": "native_state_inconsistent",
+      "stale_observation": "stale_observation",
+      "wrong_action": "immutable_binding_mismatch",
+      "wrong_binding": "immutable_binding_mismatch"
+    },
+    "request_schema_version": "astrowoof.provider_negative_authorization_request.v0.1",
+    "result_schema_version": "astrowoof.provider_negative_authorization_result.v0.2"
+  },
+  "fixture": {
+    "paid_action_count": 8,
+    "provider_mechanism": "response",
+    "providerless_denial_action_id": "paid_000000000000000000000108",
+    "providerless_denial_stage": "polish",
+    "route_family": "exact_natal",
+    "terminally_accounted_action_count": 7
+  },
+  "precursor": {
+    "cause_code": "native_lifecycle_review_required",
+    "custody_finality": "providerless_denial_required",
+    "new_provider_create_permitted": false,
+    "outcome": "review_required",
+    "providerless_denial_action_ids": [
+      "paid_000000000000000000000108"
+    ],
+    "reconciliation_action_ids": [],
+    "schema_version": "astrowoof.native_execution_result.v0.2"
+  },
+  "provider_free": true,
+  "provider_create_count": 0,
+  "qualification_only": true,
+  "provider_retrieval_count": 0,
+  "provider_transport_count": 0,
+  "receipt_sha256": "bc163221266b024296b6faf49f5669f50fba5831c19d64175ace09e9d0554c5e",
+  "sbe_release": "0.4.48",
+  "schema_version": "astrowoof.providerless_denial_settlement_qualification.v1",
+  "status": "pass",
+  "successor": {
+    "closeout_terminal": true,
+    "custody_finality": "final",
+    "inspection_terminal": true,
+    "new_provider_create_permitted": false,
+    "outcome": "review_required",
+    "providerless_denial_action_ids": [],
+    "reconciliation_action_ids": [],
+    "schema_version": "astrowoof.native_execution_result.v0.2"
+  }
+}
