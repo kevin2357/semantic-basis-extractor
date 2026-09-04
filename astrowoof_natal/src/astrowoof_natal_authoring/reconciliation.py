@@ -1655,6 +1655,7 @@ def run_bounded_authoring_reconciliation(
         save_state(
             run_dir / "run.json", state,
             preserve_review_status=sealed_review_status,
+            retire_external_authority_v2=True,
         )
         artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
         record = json.loads(artifact.read_text(encoding="utf-8"))
@@ -1879,7 +1880,13 @@ def run_bounded_authoring_reconciliation(
         )):
             raise
     finally:
-        save_state(run_dir / "run.json", state)
+        # This is the first coordinator-owned checkpoint after exact response
+        # adoption/fan-in. Retire only a fully reported v2 intent here, before
+        # the successor inspection can expose another ordinary action set.
+        save_state(
+            run_dir / "run.json", state,
+            retire_external_authority_v2=True,
+        )
     artifact = run_dir / result["result_checkpoint"]["result_artifact"]["logical_path"]
     record = json.loads(artifact.read_text(encoding="utf-8"))
     local_continuation = {

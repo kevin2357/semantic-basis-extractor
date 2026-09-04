@@ -30,6 +30,8 @@ PROVIDER_DISPATCH_RESULT_SCHEMA_V3 = "astrowoof.external_authority_provider_disp
 COMMAND_RESULT_SCHEMA_V2 = "astrowoof.external_authority_v2_command_result.v2"
 PROVIDER_DISPATCH_RESULT_SCHEMA_V4 = "astrowoof.external_authority_provider_dispatch_result.v4"
 COMMAND_RESULT_SCHEMA_V3 = "astrowoof.external_authority_v2_command_result.v3"
+PROVIDER_DISPATCH_RESULT_SCHEMA_V5 = "astrowoof.external_authority_provider_dispatch_result.v5"
+COMMAND_RESULT_SCHEMA_V4 = "astrowoof.external_authority_v2_command_result.v4"
 RETIRED_INVOCATION_SCHEMA_V1 = (
     "astrowoof.external_authority_v2_retired_invocation.v1"
 )
@@ -410,6 +412,75 @@ def read_external_authority_provider_dispatch_result_v4_schema() -> dict[str, An
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def validate_external_authority_provider_dispatch_result_v5(
+    value: Any,
+) -> dict[str, Any]:
+    """Validate the no-dispatch result for an unresolved completed intent.
+
+    This is deliberately distinct from v4: v4 follows a newly committed
+    intent whose lifecycle changed, whereas v5 reports that an older completed
+    intent still occupies the singleton slot. The presented grant is refused
+    without changing native state or entering provider I/O.
+    """
+    if not isinstance(value, dict) or set(value) != _PROVIDER_RESULT_V3_KEYS:
+        raise ValueError("v5 provider dispatch result fields are not exact")
+    if (
+        value.get("schema_version") != PROVIDER_DISPATCH_RESULT_SCHEMA_V5
+        or value.get("outcome") != "pre_provider_refusal"
+        or value.get("reason_code") != "completed_intent_retirement_required"
+        or value.get("provider_io_disposition") != "not_attempted"
+        or value.get("grant_invocation_disposition") != "refused"
+    ):
+        raise ValueError("v5 provider dispatch result semantics are invalid")
+    if not isinstance(value.get("run_id"), str) or not value["run_id"]:
+        raise ValueError("v5 provider dispatch run_id is invalid")
+    for key in ("request_sha256", "grant_sha256", "post_snapshot_sha256"):
+        item = value.get(key)
+        if (
+            not isinstance(item, str) or len(item) != 64
+            or any(char not in "0123456789abcdef" for char in item)
+        ):
+            raise ValueError(f"v5 provider dispatch {key} is invalid")
+    ordered = value.get("ordered_action_ids")
+    if (
+        not isinstance(ordered, list) or not ordered or ordered != sorted(ordered)
+        or len(ordered) != len(set(ordered))
+        or any(
+            not isinstance(item, str) or _ACTION_ID.fullmatch(item) is None
+            for item in ordered
+        )
+        or value.get("provider_bound_action_ids") != []
+        or value.get("ambiguous_action_ids") != []
+        or value.get("refused_action_ids") != ordered
+        or value.get("provider_operation_ids") != []
+        or value.get("prepared_create_records") != []
+    ):
+        raise ValueError("v5 provider dispatch action inventory is invalid")
+    revision = value.get("post_state_revision")
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+        raise ValueError("v5 provider dispatch revision is invalid")
+    body = {key: item for key, item in value.items() if key != "result_sha256"}
+    if value.get("result_sha256") != _digest(body):
+        raise ValueError("v5 provider dispatch result digest mismatch")
+    return deepcopy(value)
+
+
+def build_external_authority_provider_dispatch_result_v5(
+    **fields: Any,
+) -> dict[str, Any]:
+    body = {"schema_version": PROVIDER_DISPATCH_RESULT_SCHEMA_V5, **deepcopy(fields)}
+    return validate_external_authority_provider_dispatch_result_v5({
+        **body, "result_sha256": _digest(body),
+    })
+
+
+def read_external_authority_provider_dispatch_result_v5_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-provider-dispatch-result.v5.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def build_external_authority_v2_command_result_v2(
     *, intent_result: dict[str, Any] | None, dispatch_result: dict[str, Any],
 ) -> dict[str, Any]:
@@ -474,6 +545,51 @@ def build_external_authority_v2_command_result_v3(
     return validate_external_authority_v2_command_result_v3({
         **body, "command_result_sha256": _digest(body),
     })
+
+
+def build_external_authority_v2_command_result_v4(
+    *, dispatch_result: dict[str, Any],
+) -> dict[str, Any]:
+    validate_external_authority_provider_dispatch_result_v5(dispatch_result)
+    body = {
+        "schema_version": COMMAND_RESULT_SCHEMA_V4,
+        "outcome": dispatch_result["outcome"],
+        "intent_result": None,
+        "dispatch_result": deepcopy(dispatch_result),
+    }
+    return validate_external_authority_v2_command_result_v4({
+        **body, "command_result_sha256": _digest(body),
+    })
+
+
+def validate_external_authority_v2_command_result_v4(
+    value: Any,
+) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != {
+        "schema_version", "command_result_sha256", "outcome", "intent_result",
+        "dispatch_result",
+    }:
+        raise ValueError("v4 command result fields are not exact")
+    if value.get("schema_version") != COMMAND_RESULT_SCHEMA_V4:
+        raise ValueError("v4 command result schema is invalid")
+    dispatch = validate_external_authority_provider_dispatch_result_v5(
+        value.get("dispatch_result")
+    )
+    if value.get("intent_result") is not None:
+        raise ValueError("v4 unresolved-intent result cannot carry an intent result")
+    if value.get("outcome") != dispatch["outcome"]:
+        raise ValueError("v4 command outcome does not join dispatch")
+    body = {key: item for key, item in value.items() if key != "command_result_sha256"}
+    if value.get("command_result_sha256") != _digest(body):
+        raise ValueError("v4 command result digest mismatch")
+    return deepcopy(value)
+
+
+def read_external_authority_v2_command_result_v4_schema() -> dict[str, Any]:
+    path = files("astrowoof_natal_authoring.resources.contracts").joinpath(
+        "external-authority-v2-command-result.v4.schema.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def validate_external_authority_v2_command_result_v3(value: Any) -> dict[str, Any]:
@@ -908,6 +1024,7 @@ def retire_completed_external_authority_v2_intent(
             or not isinstance(reconciliation, dict)
             or reconciliation.get("last_outcome") != "completed"
             or reconciliation.get("resume_not_before") is not None
+            or action.get("ambiguity") is not None
             or not isinstance(reported, dict)
             or (
                 not isinstance(reported.get("usage"), dict)
@@ -1006,6 +1123,34 @@ def retire_completed_external_authority_v2_intent(
         record["retirement_state_revision"],
     )
     return deepcopy(record)
+
+
+def is_completed_external_authority_v2_intent_stale(
+    state: Mapping[str, Any], run_dir: Path | str, *, request_sha256: str,
+    grant_sha256: str,
+) -> bool:
+    """Return whether a different, fully completed live v2 intent blocks a grant.
+
+    This is deliberately narrower than ``action_state_or_custody_mismatch``.
+    It reuses the retirement proof on an isolated copy: only an intent that
+    could be retired safely *now*, and whose request/grant differ from the
+    presented authority, is the stale-completed-intent CLI refusal.  Invalid,
+    pending, ambiguous, or otherwise incomplete live intent evidence remains
+    on its existing fail-closed path.
+    """
+    try:
+        record = retire_completed_external_authority_v2_intent(
+            deepcopy(dict(state)), run_dir,
+        )
+    except ExternalAuthorityV2ExecutionError:
+        return False
+    return bool(
+        record is not None
+        and (
+            record["request_sha256"] != request_sha256
+            or record["grant_sha256"] != grant_sha256
+        )
+    )
 
 
 def _validate_dispatchable(actions: Sequence[Mapping[str, Any]]) -> None:

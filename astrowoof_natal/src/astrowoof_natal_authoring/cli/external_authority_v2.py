@@ -16,17 +16,24 @@ from ..application_logging import (
     bind_logging_context,
     configure_logging_from_args,
 )
-from ..closure import OpenAIResponsesProvider, validate_workspace_snapshot
+from ..closure import (
+    OpenAIResponsesProvider,
+    sha256_file,
+    validate_workspace_snapshot,
+)
 from ..execution_events import ExecutionEventEmitter, JsonlEventSink, StdoutJsonlSink
 from ..external_authority_v2 import build_no_grant_dispatch_result_v2
 from ..external_authority_v2_execution import (
     ExternalAuthorityV2ExecutionError,
     build_external_authority_prepared_create,
     build_external_authority_prepared_create_basis,
+    build_external_authority_provider_dispatch_result_v5,
     build_external_authority_v2_command_result_v2,
     build_external_authority_v2_command_result_v3,
+    build_external_authority_v2_command_result_v4,
     commit_external_authority_v2_dispatch_intent,
     dispatch_external_authority_v2_intent,
+    is_completed_external_authority_v2_intent_stale,
     resolve_external_authority_v2_request_payload,
 )
 from ..trace_observability import (
@@ -147,9 +154,65 @@ def main(argv: list[str] | None = None) -> int:
             event_emitter=event_emitter,
         )
     except ExternalAuthorityV2ExecutionError as exc:
+        if (
+            exc.reason_code == "action_state_or_custody_mismatch"
+            and is_completed_external_authority_v2_intent_stale(
+                native_state,
+                run_dir,
+                request_sha256=request["external_authority_request_sha256"],
+                grant_sha256=grant["grant_sha256"],
+            )
+        ):
+            # A fresh grant passed its fence, but an old completed intent still
+            # owns the native singleton slot. Do not convert that native repair
+            # requirement into a dispatch attempt with different identities.
+            dispatch_result = build_external_authority_provider_dispatch_result_v5(
+                outcome="pre_provider_refusal",
+                reason_code="completed_intent_retirement_required",
+                provider_io_disposition="not_attempted",
+                grant_invocation_disposition="refused",
+                run_id=native_state["run_id"],
+                request_sha256=request["external_authority_request_sha256"],
+                grant_sha256=grant["grant_sha256"],
+                ordered_action_ids=request["ordered_action_ids"],
+                provider_bound_action_ids=[],
+                ambiguous_action_ids=[],
+                refused_action_ids=request["ordered_action_ids"],
+                provider_operation_ids=[],
+                prepared_create_records=[],
+                post_state_revision=int(native_state["state_revision"]),
+                post_snapshot_sha256=sha256_file(
+                    run_dir / "workspace-snapshot.json"
+                ),
+            )
+            command_result = build_external_authority_v2_command_result_v4(
+                dispatch_result=dispatch_result,
+            )
+            if event_emitter is not None:
+                event_emitter.emit("external_authority.refused", data={
+                    "reason_code": "completed_intent_retirement_required",
+                    "category": "pre_provider_refusal",
+                    "selected_command": "external_authority_v2_dispatch",
+                    "action_count": len(request["ordered_action_ids"]),
+                })
+            logger.info(
+                "provider_dispatch_classified outcome=pre_provider_refusal "
+                "reason=completed_intent_retirement_required "
+                "provider_io=not_attempted"
+            )
+            _render(command_result, args.output)
+            log_cli_exit(
+                logger, command="external_authority_v2",
+                operation="constrained_dispatch", exit_code=3,
+                outcome=dispatch_result["outcome"],
+                authoritative_transport=(
+                    "output_file" if args.output else "stdout_json"
+                ),
+            )
+            return 3
         if exc.reason_code not in {
             "provider_evidence_present", "provider_submission_ambiguous",
-            "action_state_or_custody_mismatch", "stale_checkpoint_basis",
+            "stale_checkpoint_basis",
             "exact_replay",
         }:
             logger.error(
