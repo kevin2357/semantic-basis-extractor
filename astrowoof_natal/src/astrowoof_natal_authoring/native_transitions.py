@@ -812,6 +812,8 @@ def publish_native_execution_result(
                 "native_publication_repaired result_id=%s receipt_id=%s outcome=%s",
                 orphan["result_id"], receipt["receipt_id"], orphan["outcome"],
             )
+            from .trace_observability import log_publication_evidence_summary
+            log_publication_evidence_summary(logger, state, orphan, receipt)
             return sealed
         route = _native_route(state)
         outcome, cause = _outcome(state)
@@ -965,6 +967,8 @@ def publish_native_execution_result(
             result["outcome"], selected["record_count"], snapshot_sha256,
         )
         from .trace_observability import log_decision_summary
+        from .trace_observability import log_publication_evidence_summary
+        log_publication_evidence_summary(logger, state, result, receipt)
         log_decision_summary(
             logger,
             {

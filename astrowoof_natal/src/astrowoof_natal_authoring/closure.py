@@ -105,6 +105,8 @@ from .trace_observability import (
     log_cli_exit,
     log_decision_summary,
     log_native_state_summary,
+    log_stage_evidence_summary,
+    log_validation_evidence_summary,
     log_workspace_fingerprint,
     sanitize_exception,
 )
@@ -2743,10 +2745,15 @@ def save_state(
     _failure_injector: Callable[[str], None] | None = None,
 ) -> None:
     """Persist state and publish a coordinator-owned quiescent checkpoint."""
+    try:
+        prior_state = load_json(run_json) if run_json.is_file() else {}
+    except Exception:
+        prior_state = {}
     if threading.current_thread() is not threading.main_thread():
         persist_state(
             run_json, state, preserve_review_status=preserve_review_status,
         )
+        _log_durable_evidence_changes(prior_state, state)
         return
     if (
         retire_external_authority_v2
@@ -2777,6 +2784,7 @@ def save_state(
                 run_json, candidate,
                 preserve_review_status=preserve_review_status,
             )
+            _log_durable_evidence_changes(prior_state, candidate)
             if retired is not None and _failure_injector is not None:
                 _failure_injector("after_retirement_state_before_snapshot")
             write_workspace_snapshot(run_json.parent)
@@ -2793,11 +2801,67 @@ def save_state(
     persist_state(
         run_json, state, preserve_review_status=preserve_review_status,
     )
+    _log_durable_evidence_changes(prior_state, state)
     write_workspace_snapshot(run_json.parent)
     logger.info(
         "checkpoint_committed state_revision=%s snapshot=%s",
         state.get("state_revision"), run_json.parent / SNAPSHOT_NAME,
     )
+
+
+def _log_durable_evidence_changes(
+    prior_state: dict[str, Any], state: dict[str, Any],
+) -> None:
+    """Log newly durable evidence classifications without mutating native state."""
+    prior_subjects = prior_state.get("subjects") or {}
+    subjects = state.get("subjects") or {}
+    if not isinstance(prior_subjects, dict) or not isinstance(subjects, dict):
+        return
+    for subject, record in subjects.items():
+        if not isinstance(record, dict):
+            continue
+        prior = prior_subjects.get(subject)
+        prior = prior if isinstance(prior, dict) else {}
+        attempts = record.get("polish_attempts") or []
+        old_attempts = prior.get("polish_attempts") or []
+        if isinstance(attempts, list) and isinstance(old_attempts, list):
+            for index, attempt in enumerate(attempts):
+                if not isinstance(attempt, dict) or attempt.get("state") == "SUBMITTED":
+                    continue
+                old = old_attempts[index] if index < len(old_attempts) else None
+                if not isinstance(old, dict) or old.get("state") != attempt.get("state"):
+                    log_stage_evidence_summary(
+                        logger, attempt, stage="polish", subject_id=subject,
+                    )
+        review = record.get("qualitative_review")
+        old_review = prior.get("qualitative_review")
+        if (
+            isinstance(review, dict)
+            and review.get("state") not in {None, "CRITIC_SUBMITTED", "CANDIDATE_SUBMITTED"}
+            and (
+                not isinstance(old_review, dict)
+                or old_review.get("state") != review.get("state")
+            )
+        ):
+            log_stage_evidence_summary(
+                logger, review, stage="qualitative_review", subject_id=subject,
+            )
+        validation = record.get("validation")
+        old_validation = prior.get("validation")
+        lint = record.get("lint")
+        old_lint = prior.get("lint")
+        if validation != old_validation or lint != old_lint:
+            log_validation_evidence_summary(
+                logger,
+                validation_report=(
+                    validation.get("report")
+                    if isinstance(validation, dict) else None
+                ),
+                lint_report=(
+                    lint.get("report") if isinstance(lint, dict) else None
+                ),
+                subject_id=subject,
+            )
 
 
 @contextmanager

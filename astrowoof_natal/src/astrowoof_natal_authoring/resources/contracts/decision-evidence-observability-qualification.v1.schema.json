@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/decision-evidence-observability-qualification.v1.schema.json",
+  "title": "SBE decision-evidence observability qualification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "sbe_release", "provider_mode", "external_network_calls",
+    "provider_create_calls", "provider_retrieval_calls", "trace_units",
+    "parsed_event_count", "code_distributions_visible", "case_classifications",
+    "privacy", "qualification_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.decision_evidence_observability_qualification.v1"},
+    "sbe_release": {"type": "string", "minLength": 1},
+    "provider_mode": {"const": "provider_free"},
+    "external_network_calls": {"const": 0},
+    "provider_create_calls": {"const": 0},
+    "provider_retrieval_calls": {"const": 0},
+    "trace_units": {"const": [
+      "native_stage_evidence_summary", "native_validation_evidence_summary",
+      "native_publication_evidence_summary"
+    ]},
+    "parsed_event_count": {"const": 3},
+    "code_distributions_visible": {"const": true},
+    "case_classifications": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "logs_sufficient"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "logs_sufficient": {"type": "boolean"}
+        }
+      }
+    },
+    "privacy": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "protected_sentinel_absent", "payloads_absent", "finding_prose_absent",
+        "absolute_workspace_path_absent"
+      ],
+      "properties": {
+        "protected_sentinel_absent": {"const": true},
+        "payloads_absent": {"const": true},
+        "finding_prose_absent": {"const": true},
+        "absolute_workspace_path_absent": {"const": true}
+      }
+    },
+    "qualification_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

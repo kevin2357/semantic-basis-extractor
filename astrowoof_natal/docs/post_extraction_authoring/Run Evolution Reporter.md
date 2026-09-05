@@ -39,6 +39,19 @@ digests.
 The JSON stores sparse cell deltas rather than copying the entire matrix at
 every epoch. Renderers reconstruct the display deterministically.
 
+Current workers also emit three decision-evidence summaries:
+
+- `native_stage_evidence_summary` appears in the local-work lane after an
+  optional-stage attempt is durably classified;
+- `native_validation_evidence_summary` appears in the local-work lane with
+  report digests and closed code counts; and
+- `native_publication_evidence_summary` appears in the checkpoint/publication
+  lane with explicit outcome/cause and result/receipt identities.
+
+The parser preserves these registered fields, including bounded comma/semicolon
+code distributions. It never retains finding prose, prompts, payloads, or
+arbitrary exception text.
+
 ## No-progress candidates
 
 The detector does not equate a repeated status with a loop. It requires:
@@ -68,11 +81,15 @@ source-file digest, parser version, coverage, and report digest.
 
 ```text
 astrowoof-run-report-qa
+astrowoof-decision-evidence-observability-qa
 ```
 
-The qualification is provider-free and network-free. It proves deterministic
-four-format output, privacy-sentinel exclusion, closed receipt validation, and
-no-progress detection. It does not inspect an SBE native workspace.
+Both qualifications are provider-free and network-free. The first proves
+deterministic four-format output, privacy-sentinel exclusion, closed receipt
+validation, and no-progress detection. The second proves the new stage,
+validation, and publication summaries survive packaging and parsing, preserve
+closed code counts, and cover the recent-investigation replay matrix. Neither
+inspects an SBE native workspace.
 
 ## Known boundary
 

@@ -22,15 +22,24 @@ _TRACE_RE = re.compile(
     r"(?P<message>.*)$"
 )
 _JSON_RE = re.compile(r"^(?P<outer>.*?)\s+(?P<json>\{.*\})$")
-_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_.:/@+\-]+$")
+_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_.:/@+,;\-]+$")
 _SAFE_EVENT = re.compile(r"^[a-z][a-z0-9_]{1,79}$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 SAFE_FIELDS = frozenset({
+    "accepted", "acceptance_states", "cause", "edited_field_count",
+    "error_class", "error_fingerprint", "improved", "lint_present",
+    "lint_report_present", "lint_sha256", "lint_status",
+    "lint_warning_codes", "lint_warnings", "omitted_target_count",
+    "optional_stage_states", "receipt_sha256", "rejection_codes", "subject",
+    "subject_states", "validation_error_count", "validation_errors",
+    "validation_present", "validation_report_present", "validation_sha256",
+    "validation_status", "validation_warning_count", "validation_warnings",
+    "warning_components", "warning_count",
     "action_count", "action_id", "action_ids", "action_stages", "action_states", "actions",
     "affected_claim_count", "ambiguous_count", "attempt", "attempt_count", "branch_action_count",
     "authority_request_sha256", "branch_reason", "capacity", "capacity_disposition", "checkpoint_basis_sha256",
-    "checkpoint_generation", "checkpoint_object_id", "command", "context",
+    "checkpoint_generation", "checkpoint_object_id", "command", "command_kind", "context",
     "codes", "created", "custody_count", "deferred_count", "disposition", "duration_ms",
     "eligible_now", "endpoint", "event_count", "exception_class", "exception_fingerprint",
     "execution_branch", "exit_code", "failed_predicates", "fingerprint_sha256",
@@ -46,7 +55,7 @@ SAFE_FIELDS = frozenset({
     "refusal_reason", "release", "report", "reported_count", "request", "request_kind",
     "request_present", "request_sha256", "retry_attempt_count", "retry_conflict",
     "retry_lineage_status", "review_reason_count",
-    "result_class", "result_id", "retry", "revision", "route", "route_family",
+    "result_class", "result_id", "result_schema", "retry", "revision", "route", "route_family",
     "run_id", "sbe_release", "schema", "selected_command", "selected_count", "snapshot", "snapshot_members",
     "snapshot_sha256", "spc_release", "stage", "state", "state_revision", "status",
     "subject_count", "summary_sha256", "terminal", "terminal_outcome", "timeout_s", "to_state", "validation",
@@ -59,6 +68,8 @@ BOUNDARY_EVENTS = frozenset({
     "subprocess_complete", "workspace_fingerprint", "native_state_summary",
     "lifecycle_inspection_complete", "run_state_transition", "checkpoint_committed",
     "native_publication_start", "native_publication_complete", "native_decision_summary",
+    "native_stage_evidence_summary", "native_validation_evidence_summary",
+    "native_publication_evidence_summary",
     "native_invocation_started", "external_authority_request_read_start",
     "external_authority_request_read_complete", "external_authority_intent_retired",
     "external_authority_fence_start", "external_authority_intent_committed",
@@ -319,7 +330,9 @@ def _lane_for(event: Mapping[str, Any]) -> tuple[str, str, str]:
         return "provider", "Provider I/O and custody", "provider"
     if name.startswith("reconciliation_") or name == "completed_provider_result_joined_for_adoption":
         return "reconciliation", "Reconciliation and adoption", "reconciliation"
-    if name.startswith(("polish_", "critic_", "candidate_", "finalization_", "subject_assembly_")):
+    if name.startswith(("polish_", "critic_", "candidate_", "finalization_", "subject_assembly_")) or name in {
+        "native_stage_evidence_summary", "native_validation_evidence_summary",
+    }:
         return "local_work", "QA and local work", "local_work"
     if name.startswith("checkpoint_") or name.startswith("native_publication_"):
         return "checkpoint", "Checkpoint and publication", "checkpoint"
