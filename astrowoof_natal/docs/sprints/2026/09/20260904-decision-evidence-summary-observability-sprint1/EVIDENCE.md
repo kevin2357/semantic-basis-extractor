@@ -2,8 +2,9 @@
 
 ## Current state
 
-Slices 0-5 and the Slice 6 source regression gate are complete. Reproducible
-build and installed-wheel qualification remain pending.
+Slices 0-6 are technically complete through artifact-source build and installed
+qualification. Release-lock provenance rebuild and explicit tag/publication
+approval remain pending.
 
 ## Motivation evidence
 
@@ -39,6 +40,12 @@ build and installed-wheel qualification remain pending.
   version-derived providerless-denial fixture was updated and re-digested first.
 - Complete repository suite: **1,061 passed, 3 expected skips** in 901.827
   seconds, using Windows Python 3.11 against candidate `0.4.50`.
+- Artifact-source commit: `d11bfece886055cb34570ea29cc124214561a529`.
+- Byte-identical artifact-source wheels: SHA-256
+  `e59df304562f967c8a1ae79f59fa20632088ba697cde338df92960e8bd3525c9`,
+  1,217,628 bytes, 266 members.
+- Installed `pip check`, generic release smoke, trace observability, run reporter,
+  and decision-evidence observability qualifications passed.
 
 ## Safety baseline
 

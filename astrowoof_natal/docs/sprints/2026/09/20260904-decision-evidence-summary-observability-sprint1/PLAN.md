@@ -4,7 +4,9 @@
 
 - Slices 0-5 complete; Slice 6 source regression gate complete.
 - Candidate version: `0.4.50` (frozen before release-bound testing).
-- Current gate: artifact-source commit, reproducible builds, and installed-wheel qualification.
+- Artifact-source commit: `d11bfece886055cb34570ea29cc124214561a529`.
+- Artifact-source builds and installed-wheel qualifications: complete.
+- Current gate: release-lock provenance rebuild, then explicit owner approval.
 
 ## Slice 0 — Production decision-boundary inventory
 

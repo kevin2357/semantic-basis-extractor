@@ -1,5 +1,19 @@
 # Log — decision-evidence trace summaries
 
+## Slice 6 — artifact-source build and installed qualification
+
+- Committed artifact source as `d11bfece886055cb34570ea29cc124214561a529`.
+- Built twice with epoch `1788586591`; wheels are byte-identical at
+  `e59df304562f967c8a1ae79f59fa20632088ba697cde338df92960e8bd3525c9`.
+- Audited 266 members; new CLI/schema are present and cache/bytecode/test members
+  are absent.
+- Installed the exact wheel outside checkout source with SPC 0.11.1; `pip check`
+  and generic release smoke passed.
+- Historical trace, run reporter, and new decision-evidence installed
+  qualifications passed.
+- Next: commit the release lock, rebuild from that exact identity, repeat the
+  installed gates, then request owner authorization for immutable publication.
+
 ## Slice 6 — source regression gate
 
 - Froze the fresh candidate identity at `0.4.50` before release-bound tests.
