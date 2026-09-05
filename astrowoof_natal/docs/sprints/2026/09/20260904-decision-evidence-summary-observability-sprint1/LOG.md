@@ -118,3 +118,16 @@
   receive the route-independent publication summary.
 - Final focused observability/reporter/optional-stage/native-publication matrix:
   58 passed, 1 expected optional-schema skip.
+
+## 2026-09-04 MDT — 0.4.50 publication
+
+- Owner explicitly approved commit, push, immutable tag, and publication.
+- Pushed `main` through release-lock commit
+  `5ac6709c9c98bac4da7fcf4b5daf187bdad5418a`.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.50` at that
+  exact commit.
+- Published the qualified wheel and `SHA256SUMS.txt` as GitHub release assets.
+- Independently downloaded both assets and confirmed wheel SHA-256
+  `e59df304562f967c8a1ae79f59fa20632088ba697cde338df92960e8bd3525c9`.
+- Confirmed the remote annotated tag peels to the release-lock commit; no tag
+  movement or asset substitution occurred.

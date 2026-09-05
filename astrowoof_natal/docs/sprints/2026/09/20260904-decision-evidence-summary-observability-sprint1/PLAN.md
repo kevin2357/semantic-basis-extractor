@@ -2,11 +2,12 @@
 
 ## Status
 
-- Slices 0-5 complete; Slice 6 source regression gate complete.
+- Slices 0-6 complete; release published and independently verified.
 - Candidate version: `0.4.50` (frozen before release-bound testing).
 - Artifact-source commit: `d11bfece886055cb34570ea29cc124214561a529`.
 - Artifact-source builds and installed-wheel qualifications: complete.
-- Current gate: release-lock provenance rebuild, then explicit owner approval.
+- Release: `astrowoof-natal-authoring-v0.4.50`, published 2026-09-04 MDT.
+- Published wheel SHA-256: `e59df304562f967c8a1ae79f59fa20632088ba697cde338df92960e8bd3525c9`.
 
 ## Slice 0 — Production decision-boundary inventory
 

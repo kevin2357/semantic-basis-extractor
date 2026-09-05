@@ -2,9 +2,9 @@
 
 ## Current state
 
-Slices 0-6 are technically complete through artifact-source build and installed
-qualification. Release-lock provenance rebuild and explicit tag/publication
-approval remain pending.
+Slices 0-6 and the release gate are complete. Version `0.4.50` was published
+under the immutable annotated tag `astrowoof-natal-authoring-v0.4.50`; the
+published assets were downloaded independently and reverified.
 
 ## Motivation evidence
 
@@ -46,6 +46,13 @@ approval remain pending.
   1,217,628 bytes, 266 members.
 - Installed `pip check`, generic release smoke, trace observability, run reporter,
   and decision-evidence observability qualifications passed.
+- Release-lock commit: `5ac6709c9c98bac4da7fcf4b5daf187bdad5418a`.
+- The annotated release tag peels to that exact release-lock commit.
+- Published wheel: 1,217,628 bytes, SHA-256
+  `e59df304562f967c8a1ae79f59fa20632088ba697cde338df92960e8bd3525c9`.
+- Published checksum asset names and verifies that exact wheel digest.
+- GitHub release publication and independent-download evidence are recorded in
+  `POST-RELEASE - 0.4.50 PUBLICATION EVIDENCE.md`.
 
 ## Safety baseline
 
