@@ -11,5 +11,9 @@ Batch, bounded, provider-bound, authorized, and consumed evidence cannot use the
 exception. The release adds a closed, provider-free packaged qualification
 command and schema for this boundary.
 
-The final committed source identity, controlled build epoch, wheel SHA-256, and
-installed qualification result are recorded in the sprint release evidence.
+The tested artifact source is commit
+`4fd7f9f7c8249c727bf15f276825b2b6fef8bb1e`. Its controlled builds produced
+byte-identical 1,213,701-byte wheels with SHA-256
+`a99c93787514abaf86c1096b2565872ee90be577b635a04858e4672b50e339fa`.
+The final release-lock commit and its repeated qualification are recorded in the
+sprint release evidence.

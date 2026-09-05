@@ -144,3 +144,28 @@ git diff --check: clean
 - No provider, R2, retained-QA, or spend activity occurred.
 - Proceeding to committed-source reproducibility and installed-wheel
   qualification; immutable tagging remains a separate approval boundary.
+
+## Slice 3 — Artifact-source build and installed qualification
+
+- Committed the tested artifact source as
+  `4fd7f9f7c8249c727bf15f276825b2b6fef8bb1e`.
+- Exported that commit cleanly and built twice with
+  `SOURCE_DATE_EPOCH=1788571152`.
+- Both wheels are exactly 1,213,701 bytes with SHA-256
+  `a99c93787514abaf86c1096b2565872ee90be577b635a04858e4672b50e339fa`.
+- A third same-epoch build used for installation reproduced that exact digest.
+- Installed the candidate into a fresh Python 3.12 environment with the local
+  qualified `semantic-projection-core==0.11.1` wheel and the declared
+  `jsonschema` dependency.
+- `pip check` reported no broken requirements; the package imported from the
+  isolated environment's `site-packages` at version `0.4.49`.
+- The installed public `astrowoof-polish-authority-handoff-qa` command passed.
+  Its stdout validated against both the installed packaged schema and Python
+  validator. Receipt SHA-256:
+  `eef7e5123b9895793fe81a1db35c5fa41f89841fcb936b48687a9b6e58812d79`.
+- Receipt activity is provider-free: external network calls 0, provider creates
+  0, provider spend USD 0.
+- A Windows tool-session ACL prevented reopening the first generated wheel from
+  a later process. The qualification therefore rebuilt and installed within one
+  invocation; its digest exactly matched both independently built candidates.
+  This was an environment file-access issue, not package drift.

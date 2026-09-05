@@ -65,8 +65,28 @@ The adjacent lifecycle and persisted-polish-pause checks pass: **8 tests**.
 - Packaged schema/public subset: **13 passed**.
 - Broad/full suite: **1,052 passed, 3 expected skips**, in 921.962 seconds.
 - `git diff --check`: clean for the complete intended release diff.
-- The remaining gate is deterministic double-build and isolated installed-wheel
-  qualification of the exact committed candidate.
+- Artifact-source commit:
+  `4fd7f9f7c8249c727bf15f276825b2b6fef8bb1e`.
+- Controlled artifact-source epoch: `1788571152`.
+- Two independent clean-source builds are byte-identical:
+  - filename: `astrowoof_natal_authoring-0.4.49-py3-none-any.whl`;
+  - size: `1,213,701` bytes; and
+  - SHA-256:
+    `a99c93787514abaf86c1096b2565872ee90be577b635a04858e4672b50e339fa`.
+- A third controlled build used for the isolated install reproduced the same
+  filename, size, and SHA-256.
+- Fresh isolated installation:
+  - package version: `0.4.49`;
+  - import resolved from `site-packages`;
+  - `semantic-projection-core==0.11.1`;
+  - `pip check`: clean;
+  - public qualification CLI: pass;
+  - packaged JSON Schema validation: pass;
+  - packaged Python validator: pass; and
+  - receipt SHA-256:
+    `eef7e5123b9895793fe81a1db35c5fa41f89841fcb936b48687a9b6e58812d79`.
+- The remaining gate is the release-lock rebuild/qualification and final
+  immutable-tag approval.
 
 ## Activity boundary
 
