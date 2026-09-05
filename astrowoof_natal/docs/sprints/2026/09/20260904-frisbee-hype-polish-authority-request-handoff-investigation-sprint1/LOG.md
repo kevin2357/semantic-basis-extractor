@@ -187,3 +187,21 @@ git diff --check: clean
   `eef7e5123b9895793fe81a1db35c5fa41f89841fcb936b48687a9b6e58812d79`.
 - No tag, push, release, or publication has occurred. Paused at the explicit
   owner approval boundary.
+
+## Publication
+
+- Received explicit owner authorization to tag and publish under the maintainer
+  release playbook.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.49` at release-lock
+  commit `b5d7e0f06f0370da3c8e76792e7711eba96edb0e` and pushed `main` plus the tag.
+- Verified the remote peeled tag target equals the qualified release-lock
+  commit.
+- Rebuilt the tagged source with the locked epoch and confirmed final wheel
+  SHA-256
+  `0e9acfde2a93528e8cafced6020487dcef4429cf933ebaecab201d79723818dc`.
+- Published GitHub release `383101567` with exactly the qualified wheel and
+  `SHA256SUMS.txt`.
+- Downloaded both assets into a fresh directory and verified the wheel against
+  the qualified digest, GitHub-reported asset digest, and checksum manifest.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.49`.

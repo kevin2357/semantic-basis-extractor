@@ -107,6 +107,22 @@ The adjacent lifecycle and persisted-polish-pause checks pass: **8 tests**.
 - Final state: technically ready for reviewer/owner approval to create the
   immutable `astrowoof-natal-authoring-v0.4.49` tag at the release-lock commit.
 
+## Immutable publication
+
+- Owner approval received; annotated tag
+  `astrowoof-natal-authoring-v0.4.49` was created and pushed.
+- Local and remote peeled tag target:
+  `b5d7e0f06f0370da3c8e76792e7711eba96edb0e`.
+- GitHub release ID: `383101567`.
+- Published at: `2026-09-05T02:02:52Z`.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.49`.
+- Wheel asset ID: `545217186`; GitHub digest matches the qualified SHA-256.
+- Checksum asset ID: `545217187`.
+- Fresh authenticated download of both assets passed: downloaded wheel digest,
+  GitHub asset digest, qualified candidate digest, and `SHA256SUMS.txt` all equal
+  `0e9acfde2a93528e8cafced6020487dcef4429cf933ebaecab201d79723818dc`.
+
 ## Activity boundary
 
 - External provider calls: **0**
