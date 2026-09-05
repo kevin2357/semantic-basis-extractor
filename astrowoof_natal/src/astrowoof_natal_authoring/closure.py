@@ -6904,6 +6904,9 @@ def polish_subject(
                     break
         except Exception as exc:
             if isinstance(exc, AwaitingSpendAuthorization):
+                action_id = (exc.action or {}).get("action_id")
+                if isinstance(action_id, str) and action_id:
+                    attempt["paid_action_id"] = action_id
                 raise
             if isinstance(exc, (BudgetExhausted, AmbiguousProviderSubmission)):
                 action_state = (exc.action or {}).get("state")
@@ -7408,6 +7411,45 @@ def finalize_subjects(
         )
 
 
+def _subject_has_exact_pre_provider_polish(
+    state: dict[str, Any], subject: str, record: dict[str, Any],
+) -> bool:
+    """Return whether this warning owns one exact prepared polish action."""
+    attempts = record.get("polish_attempts") or []
+    if not isinstance(attempts, list) or not attempts:
+        return False
+    attempt = attempts[-1]
+    if not isinstance(attempt, dict) or attempt.get("state") != "SUBMITTED":
+        return False
+    action_id = attempt.get("paid_action_id")
+    attempt_number = attempt.get("attempt_number")
+    if not isinstance(action_id, str) or not action_id:
+        return False
+    if not isinstance(attempt_number, int) or isinstance(attempt_number, bool):
+        return False
+    expected_route = f"{subject}:polish:{attempt_number:03d}"
+    matches = [
+        action
+        for action in (state.get("spend_ledger") or {}).get("actions", [])
+        if isinstance(action, dict) and action.get("action_id") == action_id
+    ]
+    if len(matches) != 1:
+        return False
+    action = matches[0]
+    binding = action.get("binding") or {}
+    return bool(
+        action.get("state") == "PREPARED"
+        and action.get("authorization") is None
+        and action.get("provider") is None
+        and action.get("consumption") is None
+        and binding.get("stage") == "polish"
+        and binding.get("route") == expected_route
+        and binding.get("service_level") == "interactive"
+        and state.get("route_contract")
+        != "astrowoof.bounded_natal.authoring_run.v2"
+    )
+
+
 def finalization_conclusion(state: dict[str, Any]) -> str | None:
     """Return the committed native finalization conclusion, if one exists.
 
@@ -7416,7 +7458,15 @@ def finalization_conclusion(state: dict[str, Any]) -> str | None:
     as provider-pending when durable custody remains, which must not let an
     optional stage create new work after finalization reached a conclusion.
     """
-    records = list((state.get("subjects") or {}).values())
+    terminal_transition = state.get("terminal_transition") or {}
+    if terminal_transition.get("outcome") == "terminalized":
+        return str(terminal_transition.get("terminal_outcome") or "review_required")
+    subject_items = [
+        (str(subject), record)
+        for subject, record in (state.get("subjects") or {}).items()
+        if isinstance(record, dict)
+    ]
+    records = [record for _subject, record in subject_items]
     states = {
         str(record.get("state") or "")
         for record in records
@@ -7424,7 +7474,18 @@ def finalization_conclusion(state: dict[str, Any]) -> str | None:
     }
     if records and states and states <= FINAL_SUCCESS_STATES:
         return "delivery_complete"
-    if states & FINAL_REVIEW_STATES:
+    committed_review_states = {
+        str(record.get("state") or "")
+        for subject, record in subject_items
+        if str(record.get("state") or "") in FINAL_REVIEW_STATES
+        and not (
+            record.get("state") == "FINAL_QA_WARN"
+            and _subject_has_exact_pre_provider_polish(
+                state, subject, record,
+            )
+        )
+    }
+    if committed_review_states:
         return "review_required"
     return None
 

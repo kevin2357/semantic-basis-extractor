@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.polish_authority_handoff_qualification.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_sha256", "status", "qualification_only", "provider_free", "external_network_call_count", "provider_create_count", "provider_spend_usd", "sbe_version", "positive_action_ids", "negative_cases", "checks"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.polish_authority_handoff_qualification.v1"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "positive_action_ids": {"type": "array", "items": {"type": "string", "pattern": "^paid_[0-9a-f]{24}$"}, "minItems": 1, "maxItems": 1},
+    "negative_cases": {
+      "const": [
+        "batch_service",
+        "mismatched_action",
+        "mismatched_subject",
+        "stale_action",
+        "terminalized",
+        "unrelated_stage"
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_subject_attempt_action_binding_join",
+        "negative_identity_and_terminal_matrix",
+        "ordinary_v2_request_exact_action",
+        "warning_without_polish_is_non_dispatching"
+      ],
+      "properties": {
+        "exact_subject_attempt_action_binding_join": {"const": true},
+        "negative_identity_and_terminal_matrix": {"const": true},
+        "ordinary_v2_request_exact_action": {"const": true},
+        "warning_without_polish_is_non_dispatching": {"const": true}
+      }
+    }
+  }
+}

@@ -2246,6 +2246,10 @@ class TestSemanticClosure(SemanticClosureFixture):
             self.assertNotEqual(original_deck, deck_path.read_bytes())
             self.assertEqual("POLISH_ACCEPTED", record["polish_attempts"][0]["state"])
             self.assertEqual("SUBMITTED", record["polish_attempts"][1]["state"])
+            self.assertEqual(
+                "paid-polish-002",
+                record["polish_attempts"][1]["paid_action_id"],
+            )
             self.assertIs(record, state["subjects"]["bre"])
             self.assertEqual(2, len(state["subjects"]["bre"]["polish_attempts"]))
 

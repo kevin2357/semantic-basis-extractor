@@ -49,8 +49,8 @@
   "qualification_only": true,
   "provider_retrieval_count": 0,
   "provider_transport_count": 0,
-  "receipt_sha256": "bc163221266b024296b6faf49f5669f50fba5831c19d64175ace09e9d0554c5e",
-  "sbe_release": "0.4.48",
+  "receipt_sha256": "6e69607ac5f89201ae235f1a393281945eb62ca35e569663649c056adae8dfa3",
+  "sbe_release": "0.4.49",
   "schema_version": "astrowoof.providerless_denial_settlement_qualification.v1",
   "status": "pass",
   "successor": {
