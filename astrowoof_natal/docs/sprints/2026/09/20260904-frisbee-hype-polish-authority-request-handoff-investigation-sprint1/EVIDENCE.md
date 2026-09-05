@@ -88,6 +88,25 @@ The adjacent lifecycle and persisted-polish-pause checks pass: **8 tests**.
 - The remaining gate is the release-lock rebuild/qualification and final
   immutable-tag approval.
 
+## Release-lock provenance gate
+
+- Release-lock commit:
+  `b5d7e0f06f0370da3c8e76792e7711eba96edb0e`.
+- Controlled release-lock epoch: `1788571606`.
+- Two independent clean-source release-lock builds are byte-identical:
+  - filename: `astrowoof_natal_authoring-0.4.49-py3-none-any.whl`;
+  - size: `1,213,701` bytes; and
+  - final candidate SHA-256:
+    `0e9acfde2a93528e8cafced6020487dcef4429cf933ebaecab201d79723818dc`.
+- A third same-epoch build reproduced the final digest and was installed in a
+  clean environment. `pip check`, installed origin/version/SPC checks, the
+  public CLI, packaged JSON Schema, and packaged Python validator all passed.
+- Installed receipt SHA-256 remained
+  `eef7e5123b9895793fe81a1db35c5fa41f89841fcb936b48687a9b6e58812d79`.
+- External network calls, provider creates, and provider spend remain zero.
+- Final state: technically ready for reviewer/owner approval to create the
+  immutable `astrowoof-natal-authoring-v0.4.49` tag at the release-lock commit.
+
 ## Activity boundary
 
 - External provider calls: **0**

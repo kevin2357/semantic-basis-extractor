@@ -169,3 +169,21 @@ git diff --check: clean
   a later process. The qualification therefore rebuilt and installed within one
   invocation; its digest exactly matched both independently built candidates.
   This was an environment file-access issue, not package drift.
+
+## Slice 3 — Release-lock provenance qualification
+
+- Created release-lock commit
+  `b5d7e0f06f0370da3c8e76792e7711eba96edb0e`.
+- Exported that exact commit and built twice with
+  `SOURCE_DATE_EPOCH=1788571606`.
+- Both final candidate wheels are exactly 1,213,701 bytes with SHA-256
+  `0e9acfde2a93528e8cafced6020487dcef4429cf933ebaecab201d79723818dc`.
+- A third same-epoch build reproduced that digest and was installed to work
+  around the documented tool-session ACL on previously generated files.
+- Final isolated qualification repeated successfully: `pip check`, installed
+  package origin/version, SPC 0.11.1, public CLI, packaged schema, and packaged
+  Python validation all passed.
+- The deterministic receipt remained byte-semantically stable at SHA-256
+  `eef7e5123b9895793fe81a1db35c5fa41f89841fcb936b48687a9b6e58812d79`.
+- No tag, push, release, or publication has occurred. Paused at the explicit
+  owner approval boundary.

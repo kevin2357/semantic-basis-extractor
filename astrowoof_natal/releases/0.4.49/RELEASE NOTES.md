@@ -15,5 +15,7 @@ The tested artifact source is commit
 `4fd7f9f7c8249c727bf15f276825b2b6fef8bb1e`. Its controlled builds produced
 byte-identical 1,213,701-byte wheels with SHA-256
 `a99c93787514abaf86c1096b2565872ee90be577b635a04858e4672b50e339fa`.
-The final release-lock commit and its repeated qualification are recorded in the
-sprint release evidence.
+The final release-lock commit is
+`b5d7e0f06f0370da3c8e76792e7711eba96edb0e`; its controlled reproducible builds
+produce the final candidate SHA-256
+`0e9acfde2a93528e8cafced6020487dcef4429cf933ebaecab201d79723818dc`.
