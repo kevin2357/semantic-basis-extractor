@@ -2,9 +2,10 @@
 
 ## Current gate
 
-SBE's native-input half of Slice 2 is complete. The API-owned historical
-revision replay and one-slot scheduling result remain pending; Voof-paws 2 has
-not been reached. No runtime policy change is authorized.
+SBE's native-input half of Slice 2 is approved. API's historical controls and
+present one-slot scheduling characterization are complete; Voof-paws 2 awaits
+the requested `local_work_ready` API cell before policy selection. No runtime
+policy change is authorized.
 
 ## Findings
 
@@ -25,6 +26,15 @@ not been reached. No runtime policy change is authorized.
 9. In the six-due/four-cap production fixture, canonical due-time/action ordering
    retrieves responses `1,4,5,6`, leaves actions `2,3` untouched and due, and
    truthfully returns `continue_local_cycle / provider_reconciliation_due`.
+10. API's provider-free characterization proves exact `release_until_due`
+    already releases the slot, while actionable reconciliation retains the
+    owner and excludes a ready peer under one-slot allocation-aware selection.
+11. Sprint 58 remains a terminal-precedence negative control, and `8c389b3`
+    remains a retry-ceiling cleanup positive control; neither changed healthy
+    provider-pending scheduling.
+12. The API characterization has not yet exercised the distinct
+    `continue_local_cycle / local_work_ready` permission requested by SBE's
+    reciprocal review.
 
 ## Commands and source checks
 

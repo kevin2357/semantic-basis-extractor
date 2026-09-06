@@ -62,3 +62,17 @@
 - Recorded the native replay input and handed the actual historical revision,
   allocation, and next-claim experiment to the API-owned half of Slice 2.
 - No runtime policy, public schema, provider operation, or QA state changed.
+
+## 2026-09-06 — API review of SBE native input
+
+- API approved SBE's native replay input and its canonical `1,4,5,6` selected /
+  `2,3` due-suffix evidence.
+- API completed the Sprint 58 and `d451a88 -> 8c389b3` controls and confirmed
+  neither is a demonstrated healthy provider-pending regression boundary.
+- The present mechanism is now explicit: exact not-due release admits a peer;
+  actionable continuation retains the incumbent allocation and excludes the
+  peer while the one-slot pool is full.
+- Kept the joint policy gate open because SBE's reciprocal API review requested
+  a distinct `local_work_ready` characterization, which is not yet present in
+  the API test or evidence tree.
+- No runtime policy or public-contract change was approved.

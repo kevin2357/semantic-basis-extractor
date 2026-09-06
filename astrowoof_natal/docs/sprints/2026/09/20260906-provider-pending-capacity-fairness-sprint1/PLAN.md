@@ -2,9 +2,12 @@
 
 ## Status
 
-Slices 0–1 complete and jointly approved. SBE's native-input half of Slice 2 is
-complete; the API-owned historical revision and one-slot scheduling replay is
-pending. No runtime policy change is approved before the replay-result review.
+Slices 0–1 and SBE's native-input half of Slice 2 are approved. API's historical
+controls and present one-slot scheduling characterization are complete: Sprint
+58 and `8c389b3` are not demonstrated healthy-path regression boundaries. The
+joint policy gate awaits the separately requested API
+`continue_local_cycle / local_work_ready` cell before selecting a safe turn
+boundary. No runtime policy change is approved.
 
 ## Objective
 
