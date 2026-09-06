@@ -2,19 +2,21 @@
 
 ## Status
 
-Pre-sprint huddle complete. Plan prepared for reciprocal API review. No runtime
-change is approved. Begin Slice 0 only after both repositories agree on this
-investigation boundary.
+Slices 0–1 complete. Paused at Voof-paws 1 for joint causal review. No runtime
+change or replay-harness implementation is approved yet.
 
 ## Objective
 
-Explain why earlier paired QA runs overlapped their provider-bound lifetimes,
-while recent pairs appear effectively serialized behind one SBE capacity owner,
+Explain why earlier paired QA runs gave the peer its initial fan-out within
+roughly one to two minutes, while later pairs made the peer wait progressively
+longer and the recent Podium/Laurel pair did not fan out until the incumbent's
+terminal boundary,
 and then implement the smallest evidence-backed correction in the repository
 that owns the divergent behavior.
 
-The practical success condition is not simultaneous provider-create calls. It
-is bounded peer access: run B can submit its initial wave while run A still has
+The practical success condition is not simultaneous provider-create calls or a
+claim that all historical overlap vanished. It is bounded peer access: run B
+can submit its initial wave promptly while run A still has
 durable provider custody, without delaying run A past its lawful due boundary,
 creating concurrent writers for one workspace, or duplicating paid work.
 
@@ -30,7 +32,7 @@ creating concurrent writers for one workspace, or duplicating paid work.
   - 2026-09-03 afternoon: B began fan-out while A still reconciled after 15:12.
 - The observed six-create bursts themselves did not overlap. The overlap began
   after the first run detached with durable provider identities.
-- The recent Podium/Laurel witness is effectively serial: Podium began fan-out
+- The recent Podium/Laurel witness is terminal-boundary serialized: Podium began fan-out
   at 03:28:32, reached its terminal command result at 03:36:54, and Laurel did
   not begin fan-out until 03:37:40 America/Denver.
 - SBE still publishes `release_until_due` when retained provider work is not due
@@ -46,8 +48,10 @@ creating concurrent writers for one workspace, or duplicating paid work.
 
 ### Sprint 58 boundary hypothesis
 
-Owner recollection places the behavioral change shortly after API Sprint 58,
-the terminal-result-first lifecycle handoff.
+Owner recollection places the beginning of the peer-latency degradation near API
+Sprint 58, the terminal-result-first lifecycle handoff. Retained evidence now
+shows a near-overlap pair after that sprint, so Sprint 58 is a useful negative
+control rather than a supported hard cutoff.
 
 History anchors:
 
@@ -435,7 +439,8 @@ an investigation/contract contribution with no SBE release.
 
 ## Acceptance criteria
 
-1. The historical evidence ceiling is explicit and no missing run identity is
+1. The historical evidence ceiling is explicit, the regression is described as
+   increased peer latency rather than absolute absence of overlap, and no missing run identity is
    inferred.
 2. A deterministic pre/post replay accepts or rejects the Sprint 58 hypothesis.
 3. The first divergent scheduling predicate is identified and owned.

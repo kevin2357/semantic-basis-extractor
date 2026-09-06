@@ -2,7 +2,13 @@
 
 ## Shared objective
 
-Explain, with final authoritative evidence, why paired QA runs formerly overlapped their provider-bound portions while recent pairs appear effectively serialized behind one SBE capacity owner. Then select the smallest safe correction that improves peer time-to-first-provider-submission without weakening native truth, provider custody, external authority, or workspace single-writer exclusion.
+Explain, with final authoritative evidence, why paired QA runs once gave a peer
+its initial fan-out within roughly one to two minutes, while later peer waits
+grew to five to nine minutes and the recent Podium/Laurel witness waited until
+the incumbent terminal boundary. Provider-bound overlap did not disappear
+absolutely; the regression is degraded peer latency. Then select the smallest
+safe correction without weakening native truth, provider custody, external
+authority, or workspace single-writer exclusion.
 
 This is an investigation gate. Neither repository should implement a fairness change until the older-overlapping and recent-serial timelines are joined at the final command/result and API queue/allocation boundaries.
 
@@ -195,7 +201,11 @@ Approved to proceed with the huddle's Slice 0 provenance and divergence analysis
 
 ### Owner recollection and falsifiable claim
 
-The owner recalls that effective serialization first became noticeable shortly after API Sprint 58's terminal-result-first lifecycle handoff. This is a useful, falsifiable boundary hypothesis--not a causal conclusion. The investigation should test whether the change was introduced by Sprint 58 itself, by an adjacent deployment/configuration change, or merely coincided with a changed native/provider topology.
+The owner recalls that peer fan-out latency began degrading around API Sprint
+58's terminal-result-first lifecycle handoff. This is a useful, falsifiable
+boundary hypothesis--not a causal conclusion and not a claim that overlap became
+zero. The investigation should test Sprint 58, adjacent deployment/configuration
+changes, and changed native/provider topology.
 
 The two repository-history anchors are exact:
 

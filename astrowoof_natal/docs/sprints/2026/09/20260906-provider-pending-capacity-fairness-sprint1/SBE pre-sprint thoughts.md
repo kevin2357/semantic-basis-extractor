@@ -2,7 +2,10 @@
 
 ## Purpose
 
-Determine why paired QA runs previously overlapped their provider-bound work—allowing run B to submit its initial six-action wave while run A was still reconciling—but recent runs appear effectively serialized behind one capacity owner.
+Determine why paired QA runs once gave run B its initial fan-out within roughly
+one to two minutes, while later peers waited five to nine minutes and the recent
+Podium/Laurel pair waited until the incumbent terminal boundary. Provider-bound
+overlap did not vanish absolutely; prompt peer access degraded.
 
 The first objective is causal reconstruction, not a fairness patch. We need to identify whether the observed change came from native disposition, final-result transport, API capacity handling, queue selection, configured timing, or simply a different provider-completion topology.
 
@@ -22,7 +25,10 @@ The locally retained Podium/Laurel window is much more serial:
 - Podium terminal command result: 03:36:54.
 - Laurel initial wave: 03:37:40.
 
-This proves that overlapping provider custody is supported historically, while recent effective serialization is real enough to investigate. It does not prove a specific regression.
+This proves that overlapping provider custody is supported historically. The
+regression to investigate is increasing peer time-to-first-submit, culminating
+in one terminal-boundary-serialized witness; it is not a claim that all overlap
+vanished. It does not prove a specific cause.
 
 ## Native lifecycle behavior observed
 
