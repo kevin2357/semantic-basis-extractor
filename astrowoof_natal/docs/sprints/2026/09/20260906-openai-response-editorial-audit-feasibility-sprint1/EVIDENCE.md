@@ -59,3 +59,48 @@ exact validation/lint reports. These are required inputs, not missing code. Thus
   native workspace/checkpoint or equivalent promoted artifacts; and
 - after those inputs are obtained, replay is local, deterministic,
   provider-free, and uses existing released code.
+
+## Exact checkpoint and replay result
+
+API supplied and authorized one exact conditional read of checkpoint generation
+11. The object matched all frozen coordinates:
+
+- object ETag: `"6148734c493e27681c6ae0987d3f2be3"`;
+- archive bytes: `5,002,462`;
+- archive SHA-256:
+  `b9a916e15daf33c6dbc54958a3e6f6d9c4eea37d043ecebcff42ca490cff6de3`;
+- inventory SHA-256:
+  `b2afa16f27a8d80066a74900bc47dfc5e40ac0a343a9b20d7dedde1de2421bf8`;
+  and
+- all 949 declared members matched their exact paths, byte sizes, and hashes.
+
+The provider-free replay used the six downloaded initial outputs with the
+retained source archives and selected packet, followed by the two downloaded
+polish outputs in lineage order. Results:
+
+- every downloaded authored output equals its retained native authored output;
+- all six reconstructed pass workspaces are text-equivalent to their retained
+  accepted workspaces (raw byte hashes differ only because the Windows replay
+  writes CRLF while the Linux artifact retained LF);
+- the initial assembly contains 50 cards, passes structural validation, and has
+  five total lint/acceptance findings;
+- polish 1 applies 20 edits across 37 eligible targets, reproduces the retained
+  candidate exactly, reduces five findings to one, and is accepted;
+- polish 2 applies two edits across seven eligible targets, reproduces the
+  retained candidate exactly, leaves the finding count at one, and is rejected;
+  and
+- the replay-selected final deck equals the retained final deck exactly as a
+  parsed JSON document.
+
+The surviving warning becomes slightly less severe in polish 2: the repeated
+opening `frisbee fandango may` falls from seven occurrences to six. The current
+acceptance rule compares finding counts, so that within-finding reduction does
+not qualify as improvement. This is a calibration observation, not a replay or
+pipeline defect.
+
+Private derived replay artifacts, including the full decks and reports, are at:
+
+`C:\tmp\astrowoof-frisbee-openai-audit-20260906\production-replay`
+
+The sanitized replay receipt SHA-256 is
+`deabf7c850647c24e463140093a2c244b7366fb67dde9d01a5c76b7b865b4a85`.

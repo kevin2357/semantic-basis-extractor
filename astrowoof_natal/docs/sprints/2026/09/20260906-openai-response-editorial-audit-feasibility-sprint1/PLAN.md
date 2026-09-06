@@ -1,9 +1,10 @@
 # Plan
 
-Status: Slices 0–1 complete. Slice 2 source feasibility assessed. All eight exact
-Frisbee Responses were retrieved read-only and preserved privately. Exact
-production-code reassembly and editorial replay require the retained native input
-packet/source workspaces or their exact equivalent; no code change is required.
+Status: Slices 0–3 complete. All eight exact Frisbee Responses were retrieved
+read-only and preserved privately. The pinned generation-11 checkpoint passed
+archive/inventory verification, and the released production assembly,
+validation, lint, and sparse-polish functions reproduced the complete retained
+deck lineage exactly. No runtime or release change is proposed.
 
 ## Slice 0 — Build the audit manifest from existing evidence
 

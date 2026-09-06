@@ -45,3 +45,21 @@ Located final accepted API checkpoint generation 11 and checkpoint UUID
 `503f8655-6a78-418e-a747-7a00595ebb29` in the trace. The export does not contain
 the R2 object key, ETag, archive digest, or inventory digest, so exact retained
 artifact access is paused pending an API-owned immutable coordinate packet.
+
+## 2026-09-06 — Slices 2–3 exact production replay and conclusion
+
+Received API's frozen generation-11 coordinate packet and performed exactly one
+HEAD plus one conditional GET. The object matched its ETag, byte bound, archive
+digest, and inventory digest. A bounded verifier then validated and restored all
+949 manifest-declared members.
+
+Reconstructed all six initial accepted passes from the downloaded OpenAI
+Responses and retained source archives, assembled them with the retained
+selected packet, ran the production validator/linter, and applied both polish
+Responses in order with the production sparse-polish path. Both polish
+candidates and the selected final deck match the retained native JSON exactly.
+
+Classified the workflow as `assembled_deck_required`: provider retrieval is an
+easy way to recover recent model outputs, but exact editorial auditing needs the
+native assembly basis. The replay itself is deterministic and provider-free once
+those inputs are present. No runtime patch or release is indicated.
