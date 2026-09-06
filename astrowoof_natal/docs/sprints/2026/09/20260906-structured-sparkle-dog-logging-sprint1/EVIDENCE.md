@@ -1,5 +1,19 @@
 # Evidence
 
+## Immutable publication
+
+- Annotated tag `astrowoof-natal-authoring-v0.4.51` peels remotely to the exact
+  approved release-lock commit
+  `3b19a08fa4fa9d166272d1bf562b7a11877664c6`.
+- GitHub Release ID: `383654277`; published `2026-09-06T16:54:29Z`.
+- Wheel asset ID `547435197`: 1,228,560 bytes; GitHub digest and fresh-download
+  SHA-256 both equal
+  `ba39020b6d7f37ab422c99766839067603127d104ea15cde44b7e53e10491b6d`.
+- Checksum asset ID `547435198`: 116 bytes; SHA-256
+  `2360fe58763baca90506822976d8615175a4a40e783a6f0269bc7a40b843e16e`.
+- The freshly downloaded manifest names and matches the downloaded wheel.
+- QA deployment was not performed and remains a separate reviewed API action.
+
 ## Release-lock verification
 
 - Release-lock commit:
@@ -124,8 +138,8 @@
 
 ## Current gate
 
-Slices 0–6 and the reproducible installed-wheel gate are complete. The exact
-candidate is paused at the final release-review boundary.
+Slices 0–6 and immutable `0.4.51` publication are complete. Only separate
+consumer intake/deployment work remains.
 
 ## Source findings
 

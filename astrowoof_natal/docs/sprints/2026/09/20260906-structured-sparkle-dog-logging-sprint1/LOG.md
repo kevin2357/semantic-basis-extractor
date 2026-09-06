@@ -1,5 +1,18 @@
 # Log
 
+## 2026-09-06 — immutable 0.4.51 publication
+
+- Received API technical approval and explicit owner authorization.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.51` at approved
+  release-lock commit `3b19a08` and pushed current `main` plus that tag.
+- Published GitHub Release `383654277` with only the exact qualified wheel and
+  `SHA256SUMS.txt`.
+- Downloaded both assets into a fresh directory and verified wheel bytes,
+  GitHub asset digest, local qualification digest, and manifest line all agree.
+- Verified the remote peeled tag remains
+  `3b19a08fa4fa9d166272d1bf562b7a11877664c6`.
+- Per the approval boundary, no QA deployment was attempted.
+
 ## 2026-09-06 — release-lock verification
 
 - Committed the release lock as `3b19a08` without changing packaged content.
