@@ -31,3 +31,17 @@ Clarified that the sprint may create audit-specific extraction, orchestration,
 diff, and reporting scripts. The constraint is semantic, not procedural: those
 tools should reuse production assembly/validation/lint behavior rather than
 silently substituting a separate acceptance implementation.
+
+## 2026-09-06 — Slice 2 provider-output analysis
+
+Parsed all eight downloaded response bodies with the production output shape.
+The six initial responses are authored-file maps: five responses each cover ten
+cards plus the whole-dog profile, while one covers the four summaries, summary
+plan, and whole-dog profile. Together they account for all 50 cards and four
+summaries. Polish attempt 1 proposes 20 sparse edits; polish attempt 2 proposes
+two. Recorded the exact paths in the Slice 2 findings.
+
+Located final accepted API checkpoint generation 11 and checkpoint UUID
+`503f8655-6a78-418e-a747-7a00595ebb29` in the trace. The export does not contain
+the R2 object key, ETag, archive digest, or inventory digest, so exact retained
+artifact access is paused pending an API-owned immutable coordinate packet.
