@@ -2,8 +2,9 @@
 
 ## Current gate
 
-SBE Slices 0–1 are complete and ready for the first joint review. No runtime
-implementation or replay harness has begun.
+SBE's native-input half of Slice 2 is complete. The API-owned historical
+revision replay and one-slot scheduling result remain pending; Voof-paws 2 has
+not been reached. No runtime policy change is authorized.
 
 ## Findings
 
@@ -19,6 +20,11 @@ implementation or replay harness has begun.
    its allocation.
 7. The regression is increased peer time-to-first-submit, not a proven binary
    loss of all overlap. Exact causality remains open.
+8. SBE's final public documents distinguish not-due release, due retrieval, and
+   deterministic local work without treating any of them as a fairness hint.
+9. In the six-due/four-cap production fixture, canonical due-time/action ordering
+   retrieves responses `1,4,5,6`, leaves actions `2,3` untouched and due, and
+   truthfully returns `continue_local_cycle / provider_reconciliation_due`.
 
 ## Commands and source checks
 
@@ -32,9 +38,12 @@ implementation or replay harness has begun.
 - Enumerated later scheduling/terminal commits through September 6.
 - Confirmed the paced Render export completed without CLI throttling and does
   not contain the immediate cutover cohort.
+- Ran the SBE provider-pending capacity and observation-idempotency modules:
+  66 passed with one expected optional-schema skip.
 
 ## Non-actions
 
 - No provider, R2, QA database, deployment, queue, or retained-run mutation.
 - No runtime source change.
-- No test harness construction before joint review.
+- No public contract or policy change.
+- No API allocation, lease, queue, or claim behavior was simulated by SBE.

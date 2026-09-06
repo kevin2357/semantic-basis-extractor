@@ -775,13 +775,43 @@ class TestProviderPendingCapacityBaseline(unittest.TestCase):
                 },
             )
             self.assertEqual(4, len(calls))
+            self.assertEqual(
+                [
+                    "resp_provider_pending_1",
+                    "resp_provider_pending_4",
+                    "resp_provider_pending_5",
+                    "resp_provider_pending_6",
+                ],
+                calls,
+            )
             self.assertEqual(4, result["cycle"]["provider_retrieval_count"])
+            self.assertEqual(
+                "continue_local_cycle",
+                result["inspection"]["execution_capacity"]["disposition"],
+            )
+            self.assertEqual(
+                "provider_reconciliation_due",
+                result["inspection"]["execution_capacity"]["reason_code"],
+            )
+            self.assertEqual(
+                [
+                    "paid_000000000000000000000002",
+                    "paid_000000000000000000000003",
+                ],
+                result["inspection"]["execution_branch"]["action_ids"],
+            )
             persisted = json.loads((root / "run.json").read_text(encoding="utf-8"))
             untouched = [
                 item for item in persisted["spend_ledger"]["actions"]
                 if item["provider_reconciliation"]["provider_retrieval_attempt_count"] == 0
             ]
-            self.assertEqual(2, len(untouched))
+            self.assertEqual(
+                [
+                    "paid_000000000000000000000002",
+                    "paid_000000000000000000000003",
+                ],
+                [item["action_id"] for item in untouched],
+            )
 
     def test_transport_warning_backs_off_without_losing_provider_custody(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

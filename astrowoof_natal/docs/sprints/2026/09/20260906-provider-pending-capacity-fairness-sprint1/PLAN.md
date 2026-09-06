@@ -2,8 +2,9 @@
 
 ## Status
 
-Slices 0–1 complete. Paused at Voof-paws 1 for joint causal review. No runtime
-change or replay-harness implementation is approved yet.
+Slices 0–1 complete and jointly approved. SBE's native-input half of Slice 2 is
+complete; the API-owned historical revision and one-slot scheduling replay is
+pending. No runtime policy change is approved before the replay-result review.
 
 ## Objective
 
@@ -260,6 +261,18 @@ two-run/one-slot state sequence through pre- and post-boundary behavior.
 4. Advance the deterministic scheduler through claim/defer/release boundaries.
 5. Observe whether B receives a turn before A becomes terminal.
 6. Repeat under the pre-boundary and post-boundary revisions/configurations.
+
+### Required revision order
+
+1. Sprint 58 parent versus release tree with explicit terminal-result absence as
+   a negative control; add a separate sealed-result terminal-precedence cell.
+2. API `d451a88` versus `8c389b3`:
+   - healthy provider-pending behavior must remain equal;
+   - retryable failure at the attempt ceiling must show the intended capacity-
+     release difference.
+3. If neither changes healthy scheduling, exercise only the next observed
+   scheduling predicate selected by the joint review; do not walk commits by
+   title.
 
 ### Failure injection
 

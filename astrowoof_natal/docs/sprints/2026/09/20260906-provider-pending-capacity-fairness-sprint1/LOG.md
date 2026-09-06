@@ -37,3 +37,28 @@
 - Froze negative-control and actual-divergence replay assertions.
 - Paused at Voof-paws 1 for joint review before harness construction or runtime
   mutation.
+
+## 2026-09-06 — Voof-paws 1
+
+- API confirmed the September 2–3 witnesses derive from post-Sprint-58
+  deployment eras.
+- Joint review approved the progressive peer-latency framing and provider-free
+  characterization.
+- Froze the replay order: Sprint 58 absence/terminal negative control, then API
+  `d451a88 → 8c389b3` with separate healthy and retry-ceiling cells.
+- Recorded SBE's reciprocal review in the API sprint.
+- No runtime policy change was authorized.
+
+## 2026-09-06 — Slice 2 SBE native-input freeze
+
+- Confirmed the existing production-path fixture covers not-due release, due
+  reconciliation, completed-evidence local work, and the six-due/four-cap case.
+- Strengthened the bounded-cycle regression to freeze the exact provider
+  retrieval order, exact untouched suffix, and final public scheduling result.
+- The first tightened assertion exposed the real canonical ordering:
+  due-time/action ordering selects responses `1,4,5,6`, not numeric-prefix
+  `1,2,3,4`; the test now records the production truth.
+- Ran 66 focused tests successfully with one expected optional-schema skip.
+- Recorded the native replay input and handed the actual historical revision,
+  allocation, and next-claim experiment to the API-owned half of Slice 2.
+- No runtime policy, public schema, provider operation, or QA state changed.
