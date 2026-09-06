@@ -162,3 +162,11 @@ The large broad-suite stream was routine structured `INFO` diagnostic output;
 it contained no test failures. Reducing that test-only output and investigating
 safe deterministic sharding are deliberately separated into the adjacent
 `20260906-test-suite-output-and-parallel-execution-sprint1` tooling sprint.
+
+The first clean installed candidate exposed a missing Windows `tzdata`
+dependency. After adding that dependency metadata only, the 69-test focused
+matrix passed again and two clean artifact-source builds matched at
+`5048406266195f2ea8988331b2f6c7b7909ba67007676234f1795d703147ef05`.
+The isolated install then passed `pip check`, generic release smoke, run-report
+qualification, run-timeline qualification, and providerless-denial
+qualification.
