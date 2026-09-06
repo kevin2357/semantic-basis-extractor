@@ -1,5 +1,18 @@
 # Log
 
+## 2026-09-06 — Slice 3
+
+- Converted the central bounded trace adapters from prose-only records to
+  explicit catalog events while retaining readable messages.
+- Added positive-permission diagnostics and explicit exit side-effect fields.
+- Structured deterministic finalization failure and not-sealed custody paths.
+- Added the narrow validated JSON parser bridge required by the new default;
+  deferred the complete dual-format migration matrix to Slice 4.
+- Replayed recent investigation-class distinctions using the native structured
+  payloads rather than reparsed key/value prose.
+- Reached Voof-paws 2 with 52 focused tests passing and two expected
+  optional-schema skips.
+
 ## 2026-09-06 — Slice 2
 
 - Replaced the SBE handler's pipe formatter with closed one-line JSON output.

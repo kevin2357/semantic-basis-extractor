@@ -57,17 +57,29 @@ class OperationalContextFilter(logging.Filter):
     """Populate stable defaults without changing the normal LogRecord contract."""
 
     def filter(self, record: logging.LogRecord) -> bool:
-        record.host_id = _host_id.get()
-        record.api_run_id = _api_run_id.get()
-        record.native_run_id = _native_run_id.get()
+        record.host_id = getattr(record, "host_id", None) or _host_id.get()
+        record.api_run_id = getattr(record, "api_run_id", None) or _api_run_id.get()
+        record.native_run_id = (
+            getattr(record, "native_run_id", None) or _native_run_id.get()
+        )
         # Retain the old LogRecord attribute for embedding code that inspects it.
         record.run_id = record.native_run_id
-        record.subject_id = _subject_id.get()
-        record.invocation_id = _invocation_id.get()
-        record.action_id = _action_id.get()
-        record.provider_operation_id = _provider_operation_id.get()
-        record.checkpoint_object_id = _checkpoint_object_id.get()
-        record.current_state = _current_state.get()
+        record.subject_id = getattr(record, "subject_id", None) or _subject_id.get()
+        record.invocation_id = (
+            getattr(record, "invocation_id", None) or _invocation_id.get()
+        )
+        record.action_id = getattr(record, "action_id", None) or _action_id.get()
+        record.provider_operation_id = (
+            getattr(record, "provider_operation_id", None)
+            or _provider_operation_id.get()
+        )
+        record.checkpoint_object_id = (
+            getattr(record, "checkpoint_object_id", None)
+            or _checkpoint_object_id.get()
+        )
+        record.current_state = (
+            getattr(record, "current_state", None) or _current_state.get()
+        )
         return True
 
 

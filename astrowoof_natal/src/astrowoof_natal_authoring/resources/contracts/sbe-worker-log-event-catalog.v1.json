@@ -29,6 +29,14 @@
     "command_exit": {
       "required_fields": ["command", "operation", "exit_code", "outcome", "result_id", "receipt_id", "authoritative_transport", "mutation_status", "publication_status", "provider_io_status"],
       "optional_fields": []
+    },
+    "finalization_contract_invalid": {
+      "required_fields": ["error_class", "exception_fingerprint"],
+      "optional_fields": []
+    },
+    "finalization_contract_error_not_sealed": {
+      "required_fields": ["reason_code", "error_class", "exception_fingerprint"],
+      "optional_fields": []
     }
   }
 }

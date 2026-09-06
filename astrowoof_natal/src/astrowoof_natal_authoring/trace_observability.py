@@ -550,6 +550,38 @@ def _render_code_distribution(value: Mapping[str, Any]) -> str:
     )
 
 
+def _positive_permission(selected: Any, eligible_now: Any) -> str:
+    if eligible_now is not True:
+        return "none"
+    return {
+        "provider_reconciliation_cycle": "provider_retrieval",
+        "ordinary_resume": "native_local_work",
+        "await_external_authority": "external_authority_request",
+        "closeout_terminal": "terminal_delivery",
+        "release_until_due": "scheduler_release",
+    }.get(str(selected), "none")
+
+
+def _event_extra(
+    event_name: str, value: Mapping[str, Any], **correlation: Any,
+) -> dict[str, Any]:
+    """Attach only fields declared for one structured application event."""
+    from .structured_logging_contracts import read_sbe_worker_log_event_catalog
+
+    definition = read_sbe_worker_log_event_catalog()["events"][event_name]
+    names = definition["required_fields"] + definition["optional_fields"]
+    result = {
+        "event_name": event_name,
+        "event_payload": {name: value.get(name) for name in names},
+    }
+    result.update({key: item for key, item in correlation.items() if item is not None})
+    return result
+
+
+def _known_identity(value: Any) -> Any:
+    return None if value in {None, "unknown", "none", "-"} else value
+
+
 def log_workspace_fingerprint(
     logger: logging.Logger, run_dir: Path, state: Mapping[str, Any],
     *, validation_outcome: str, sbe_release: str,
@@ -573,6 +605,11 @@ def log_workspace_fingerprint(
             value["checkpoint_object_id"], value["checkpoint_basis_sha256"],
             value["sbe_release"], value["spc_release"],
             value["fingerprint_sha256"],
+            extra=_event_extra(
+                "workspace_fingerprint", value,
+                native_run_id=_known_identity(value["native_run_id"]),
+                checkpoint_object_id=_known_identity(value["checkpoint_object_id"]),
+            ),
         )
         return value
     except Exception:
@@ -584,6 +621,7 @@ def log_native_state_summary(
 ) -> dict[str, Any] | None:
     try:
         value = native_state_summary(state)
+        payload = {**value, "phase": _safe_scalar(phase)}
         logger.info(
             "native_state_summary phase=%s status=%s revision=%s actions=%s "
             "action_states=%s action_stages=%s providers=%s custody_count=%s "
@@ -599,6 +637,11 @@ def log_native_state_summary(
             value["v2_intent_state"], value["v2_intent_request_sha256"],
             value["v2_intent_grant_sha256"],
             _render_inventory(value["v2_intent_action_inventory"]),
+            extra=_event_extra(
+                "native_state_summary", payload,
+                native_run_id=state.get("run_id"),
+                checkpoint_object_id=state.get("checkpoint_object_id"),
+            ),
         )
         return value
     except Exception:
@@ -611,6 +654,12 @@ def log_decision_summary(
 ) -> dict[str, Any] | None:
     try:
         value = decision_summary(document, command=command, operation=operation)
+        value["positive_permission"] = _positive_permission(
+            value["selected_command"], value["eligible_now"],
+        )
+        value["summary_sha256"] = _canonical_sha256({
+            key: item for key, item in value.items() if key != "summary_sha256"
+        })
         logger.info(
             "native_decision_summary command=%s operation=%s schema=%s outcome=%s "
             "selected_command=%s reason=%s capacity=%s eligible_now=%s "
@@ -634,6 +683,10 @@ def log_decision_summary(
             value["terminal_outcome"], value["terminal"],
             value["external_authority_request_sha256"], value["result_id"],
             value["receipt_id"], value["summary_sha256"],
+            extra=_event_extra(
+                "native_decision_summary", value,
+                native_run_id=_known_identity(value["native_run_id"]),
+            ),
         )
         return value
     except Exception:
@@ -664,6 +717,12 @@ def log_stage_evidence_summary(
             value["validation_report_present"], value["lint_report_present"],
             value["error_class"], value["error_fingerprint"],
             value["summary_sha256"],
+            extra=_event_extra(
+                "native_stage_evidence_summary", value,
+                subject_id=_known_identity(value["subject_id"]),
+                action_id=_known_identity(value["action_id"]),
+                provider_operation_id=_known_identity(value["provider_operation_id"]),
+            ),
         )
         return value
     except Exception:
@@ -695,6 +754,10 @@ def log_validation_evidence_summary(
             _render_code_distribution(value["rejection_codes"]),
             value["lint_report_sha256"],
             value["summary_sha256"],
+            extra=_event_extra(
+                "native_validation_evidence_summary", value,
+                subject_id=_known_identity(value["subject_id"]),
+            ),
         )
         return value
     except Exception:
@@ -724,6 +787,11 @@ def log_publication_evidence_summary(
             value["action_count"], value["action_state_counts"],
             value["provider_identity_count"], value["subject_state_counts"],
             value["optional_stage_state_counts"], value["summary_sha256"],
+            extra=_event_extra(
+                "native_publication_evidence_summary", value,
+                native_run_id=_known_identity(value["native_run_id"]),
+                invocation_id=_known_identity(value["invocation_id"]),
+            ),
         )
         return value
     except Exception:
@@ -735,9 +803,23 @@ def log_cli_exit(
     exit_code: int, outcome: Any, result_id: Any = None,
     receipt_id: Any = None, authoritative_transport: str,
     exception: BaseException | None = None,
+    mutation_status: str = "unknown", publication_status: str = "unknown",
+    provider_io_status: str = "unknown",
 ) -> None:
     try:
         diagnostic = sanitize_exception(exception) if exception is not None else None
+        value = {
+            "command": _safe_scalar(command),
+            "operation": _safe_scalar(operation),
+            "exit_code": int(exit_code),
+            "outcome": _safe_scalar(outcome),
+            "result_id": _safe_scalar(result_id),
+            "receipt_id": _safe_scalar(receipt_id),
+            "authoritative_transport": _safe_scalar(authoritative_transport),
+            "mutation_status": _safe_scalar(mutation_status),
+            "publication_status": _safe_scalar(publication_status),
+            "provider_io_status": _safe_scalar(provider_io_status),
+        }
         logger.info(
             "command_exit command=%s operation=%s exit_code=%s outcome=%s "
             "result_id=%s receipt_id=%s authoritative_transport=%s "
@@ -747,6 +829,7 @@ def log_cli_exit(
             _safe_scalar(authoritative_transport),
             diagnostic["exception_class"] if diagnostic else "none",
             diagnostic["fingerprint"] if diagnostic else "none",
+            extra=_event_extra("command_exit", value),
         )
     except Exception:
         return

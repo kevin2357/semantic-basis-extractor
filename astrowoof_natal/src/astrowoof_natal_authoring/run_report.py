@@ -237,6 +237,48 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
     malformed_trace_lines: list[int] = []
     unknown_events: dict[str, int] = {}
     for line_number, line in enumerate(lines, 1):
+        json_start = line.find("{")
+        structured_value: Any = None
+        if json_start >= 0:
+            try:
+                structured_value = json.loads(line[json_start:])
+            except json.JSONDecodeError:
+                structured_value = None
+        if (
+            isinstance(structured_value, dict)
+            and structured_value.get("schema_version")
+            == "astrowoof.sbe_worker_log.v1"
+            and structured_value.get("record_type") == "application_log"
+        ):
+            try:
+                from .structured_logging_contracts import validate_sbe_worker_log
+
+                validate_sbe_worker_log(structured_value)
+            except (TypeError, ValueError):
+                malformed_trace_lines.append(line_number)
+                continue
+            event_name = structured_value["event_name"]
+            if event_name not in BOUNDARY_EVENTS:
+                unknown_events[event_name] = unknown_events.get(event_name, 0) + 1
+            correlation = structured_value["correlation"]
+            events.append({
+                "event_id": f"evt_{line_number:06d}_{_sha_bytes(line.encode('utf-8'))[:12]}",
+                "source_line": line_number,
+                "raw_sha256": _sha_bytes(line.encode("utf-8")),
+                "outer_timestamp": line[:json_start].strip(),
+                "timestamp": structured_value["timestamp"],
+                "level": structured_value["level"],
+                "host_id": structured_value["producer"]["host_id"] or "-",
+                "run_id": correlation["native_run_id"] or "-",
+                "context_id": correlation["invocation_id"] or "-",
+                "function": structured_value["function"],
+                "current_state": structured_value["current_state"] or "-",
+                "event": event_name,
+                "fields": deepcopy(structured_value["payload"]),
+                "unknown_field_names": [],
+                "registered": event_name in BOUNDARY_EVENTS,
+            })
+            continue
         if "✨🐶" in line:
             match = _TRACE_RE.match(line)
             if not match:

@@ -158,9 +158,10 @@ def run_decision_evidence_observability_qualification() -> dict[str, Any]:
         raise ValueError(f"Decision-evidence trace units are incomplete: {units}")
     validation = events[1]["fields"]
     visible = (
-        "codes:repeated_opening:1" in validation.get("lint_warning_codes", "")
-        and "codes:cross_card_exact_duplicate:1"
-        in validation.get("rejection_codes", "")
+        validation.get("lint_warning_codes", {}).get("counts")
+        == {"repeated_opening": 1}
+        and validation.get("rejection_codes", {}).get("counts")
+        == {"cross_card_exact_duplicate": 1}
     )
     if protected in raw or protected in json.dumps(trace, sort_keys=True):
         raise ValueError("Decision-evidence trace leaked protected material")

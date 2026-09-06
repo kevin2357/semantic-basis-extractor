@@ -9093,6 +9093,14 @@ def main() -> None:
                 "finalization_contract_error_not_sealed reason=custody_not_final "
                 "error_class=%s exception_fingerprint=%s",
                 diagnostic["exception_class"], diagnostic["fingerprint"],
+                extra={
+                    "event_name": "finalization_contract_error_not_sealed",
+                    "event_payload": {
+                        "reason_code": "custody_not_final",
+                        "error_class": diagnostic["exception_class"],
+                        "exception_fingerprint": diagnostic["fingerprint"],
+                    },
+                },
             )
             raise
         diagnostic = sanitize_exception(exc)
@@ -9100,6 +9108,13 @@ def main() -> None:
             "finalization_contract_invalid error_class=%s "
             "exception_fingerprint=%s",
             diagnostic["exception_class"], diagnostic["fingerprint"],
+            extra={
+                "event_name": "finalization_contract_invalid",
+                "event_payload": {
+                    "error_class": diagnostic["exception_class"],
+                    "exception_fingerprint": diagnostic["fingerprint"],
+                },
+            },
         )
         state["terminal_transition"] = {
             "schema_version": (

@@ -2,9 +2,9 @@
 
 ## Status
 
-Slices 0–2 complete. The closed v1 contract is now the configured SBE handler
-format; Slice 3 is adopting explicit cataloged fields at high-value boundaries.
-Voof-paws 2 remains after that adoption work.
+Slices 0–3 complete. The closed v1 contract is the configured SBE handler
+format and high-value bounded evidence is emitted as explicit cataloged fields.
+Work pauses at Voof-paws 2 before full reporter migration hardening.
 
 ## Objective
 

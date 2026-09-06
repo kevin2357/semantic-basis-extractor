@@ -363,7 +363,14 @@ class TraceObservabilityTests(unittest.TestCase):
         )
         logger.error(
             "finalization_contract_invalid error_class=AssemblyContractError "
-            "exception_fingerprint=0123456789abcdef"
+            "exception_fingerprint=0123456789abcdef",
+            extra={
+                "event_name": "finalization_contract_invalid",
+                "event_payload": {
+                    "error_class": "AssemblyContractError",
+                    "exception_fingerprint": "0123456789abcdef",
+                },
+            },
         )
 
         # Render prepends its own envelope timestamp before the SBE marker.
@@ -383,24 +390,24 @@ class TraceObservabilityTests(unittest.TestCase):
         ]
         self.assertEqual(len(stage_events), 4)
         self.assertEqual(
-            [event["fields"]["state"] for event in stage_events],
+            [event["fields"]["attempt_state"] for event in stage_events],
             ["POLISH_ACCEPTED", "POLISH_ACCEPTED", "POLISH_ACCEPTED", "POLISH_ERROR"],
         )
         self.assertEqual(stage_events[-1]["fields"]["error_class"], "ValueError")
-        self.assertIn(
-            ";codes:repeated_opening:3;",
-            validation_events[0]["fields"]["lint_warning_codes"],
+        self.assertEqual(
+            validation_events[0]["fields"]["lint_warning_codes"]["counts"],
+            {"repeated_opening": 3},
         )
-        self.assertIn(
-            ";codes:cross_card_exact_duplicate:1,multi_field_opening_template:1;",
-            validation_events[1]["fields"]["rejection_codes"],
+        self.assertEqual(
+            validation_events[1]["fields"]["rejection_codes"]["counts"],
+            {"cross_card_exact_duplicate": 1, "multi_field_opening_template": 1},
         )
         decisions = [
             event["fields"] for event in events
             if event["event"] == "native_decision_summary"
         ]
         self.assertEqual(
-            {(item["outcome"], item["reason"]) for item in decisions},
+            {(item["outcome"], item["reason_code"]) for item in decisions},
             {
                 ("progressed_local", "completed_provider_evidence_consumed"),
                 ("provider_pending", "provider_reconciliation_due"),
@@ -531,6 +538,23 @@ class TraceObservabilityTests(unittest.TestCase):
         self.assertIn("native_validation_evidence_summary", rendered)
         self.assertIn("native_publication_evidence_summary", rendered)
         self.assertIn("command_exit", rendered)
+        records = [json.loads(line) for line in rendered.splitlines()]
+        self.assertEqual(
+            [record["event_name"] for record in records],
+            [
+                "workspace_fingerprint", "native_state_summary",
+                "native_decision_summary", "native_stage_evidence_summary",
+                "native_validation_evidence_summary",
+                "native_publication_evidence_summary", "command_exit",
+            ],
+        )
+        decision = records[2]
+        self.assertEqual(decision["payload"]["positive_permission"], "none")
+        self.assertIsNone(decision["correlation"]["native_run_id"])
+        self.assertTrue(all(
+            record["message"] != "✨🐶 logging serialization failed"
+            for record in records
+        ))
 
 
 if __name__ == "__main__":

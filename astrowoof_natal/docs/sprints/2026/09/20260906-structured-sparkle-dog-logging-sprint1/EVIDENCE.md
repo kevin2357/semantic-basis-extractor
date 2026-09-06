@@ -1,5 +1,21 @@
 # Evidence
 
+## Slice 3 — high-value decision-point adoption
+
+- Existing bounded workspace, state, lifecycle decision, optional-stage,
+  validation, publication, finalization, and CLI-exit adapters now emit explicit
+  event names and closed payloads.
+- Lifecycle decision records distinguish `positive_permission` from branch,
+  outcome, and capacity labels.
+- Missing identities remain null; record-level correlation can augment bound
+  context but is never recovered from message prose.
+- The reporter has a minimal validated v1 bridge so default JSON output does not
+  break the existing end-to-end trace regression; full migration hardening
+  remains Slice 4.
+- Focused trace/qualification/formatter/contract/event/reporter matrix:
+  52 passed, 2 expected optional-schema skips.
+- No API-relay visibility claim is made before Slice 5's route matrix.
+
 ## Slice 2 — formatter and context implementation
 
 - The configured SBE application handler now emits one closed JSON object per
