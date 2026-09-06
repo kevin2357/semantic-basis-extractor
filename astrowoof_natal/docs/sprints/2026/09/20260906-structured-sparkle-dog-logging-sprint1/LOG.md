@@ -6,13 +6,21 @@
   aligned the release-derived providerless-denial fixture plus receipt digest.
 - Completed the focused matrix: 60 passed with three expected optional-schema
   skips in 16.109 seconds.
-- Completed the broad/full repository suite once: 1,076 passed with 56 expected
-  skips in 1,095.939 seconds.
+- Completed the broad/full repository suite once under Windows Python 3.12.14:
+  1,076 passed with 56 expected skips in 1,095.939 seconds.
 - Added release notes and retained the Better Stack read-only query playbook as
   operator documentation.
 - Observed that source-mode traces use installed package metadata (`0.4.50`);
   reserved authoritative candidate-version proof for the clean installed-wheel
   qualification.
+- Committed artifact source as `527a74c`, built two independent clean-export
+  wheels with epoch `1788712494`, and proved identical bytes, filenames, member
+  inventories, and per-member hashes at `ba39020b…491b6d`.
+- Disqualified one accidental live-root build rather than treating its expected
+  difference as nondeterminism.
+- Installed the exact candidate with SPC 0.11.1 into a fresh environment and
+  passed `pip check`, resource/version checks, generic smoke, and four relevant
+  public provider-free qualifications.
 
 ## 2026-09-06 — Slice 5
 

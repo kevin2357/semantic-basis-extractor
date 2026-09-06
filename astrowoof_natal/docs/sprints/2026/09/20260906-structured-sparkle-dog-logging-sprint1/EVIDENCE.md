@@ -9,10 +9,21 @@
   release-derived-fixture matrix: 60 passed, 3 expected optional-schema skips
   in 16.109 seconds.
 - Broad/full repository suite: 1,076 passed, 56 expected skips in 1,095.939
-  seconds under Windows Python 3.11.
+  seconds under Windows Python 3.12.14.
 - Source-mode traces reported the installed distribution metadata (`0.4.50`),
   as expected from `importlib.metadata`; the clean installed-wheel gate must
   prove runtime version `0.4.51` from `site-packages`.
+- Artifact-source commit `527a74c1289e8ace6909e780d662e69b346691a9`
+  produced two byte-identical clean-export wheels using epoch `1788712494`:
+  1,228,560 bytes, 269 members, SHA-256
+  `ba39020b6d7f37ab422c99766839067603127d104ea15cde44b7e53e10491b6d`.
+- One intervening build accidentally targeted the dirty repository root rather
+  than its clean export. It differed and was explicitly disqualified; it is not
+  part of the reproducibility pair or release candidate.
+- Clean installed qualification proved SBE `0.4.51`, SPC `0.11.1`, `pip check`,
+  packaged log schema/catalog, generic release smoke, trace observability,
+  mixed-log reporting, decision-evidence observability, and providerless-denial
+  qualification.
 - No full-suite rerun is pending and no post-suite runtime/schema/validator/test
   correction has occurred.
 
