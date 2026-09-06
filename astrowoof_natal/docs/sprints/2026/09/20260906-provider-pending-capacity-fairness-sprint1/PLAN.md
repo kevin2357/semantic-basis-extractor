@@ -6,7 +6,9 @@ Slices 0–2 are complete. API's `local_work_ready` correction passes and confir
 that due retrieval and deterministic fan-in are distinct native permissions but
 share the same incumbent-retention behavior. Slice 3 proposes an API-owned
 `N=1` cooperative scheduler turn at the existing durable post-command boundary.
-Voof-paws 3 review is required before runtime mutation.
+Voof-paws 3 approved the API-only direction with exact persisted lifecycle-
+decision joins. API Slice 4 implementation is authorized; no SBE runtime or
+contract change is required.
 
 ## Objective
 

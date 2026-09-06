@@ -4,8 +4,9 @@
 
 Slices 0–2 are complete. The joint causal classification is legitimate native
 actionability plus API incumbent-policy starvation risk. Slice 3's proposed
-API-owned `N=1` post-command rotation awaits Voof-paws 3 approval. No runtime
-policy change is authorized.
+API-owned `N=1` post-command rotation is approved for API implementation with
+exact persisted lifecycle-decision joins. No SBE runtime change is authorized
+or required.
 
 ## Findings
 
@@ -40,6 +41,12 @@ policy change is authorized.
 14. A structural one-peer-command bound is supportable. A strict wall-clock
     bound is not yet supportable because native command duration has no proven
     universal deadline.
+15. Voof-paws 3 requires the exact checkpoint-bound persisted
+    `local_work_ready` or due-reconciliation decision; `ordinary_resume` and
+    `provider_reconciliation_cycle` labels alone cannot authorize rotation.
+16. Atomic defer/release must be followed by proof that B claims before A's
+    ordinary defer matures. Missing/stale/wrong-reason/mismatched decisions fail
+    closed.
 
 ## Commands and source checks
 

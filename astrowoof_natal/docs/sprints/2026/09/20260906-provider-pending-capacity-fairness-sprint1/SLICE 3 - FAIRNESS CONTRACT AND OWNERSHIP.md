@@ -46,14 +46,21 @@ The safe boundary exists only when all of the following are proven:
    backed readiness;
 4. the successor checkpoint generation is newer than the generation on the
    claim, proving a completed native turn rather than a no-op reinspection;
-5. the final capacity disposition is `continue_local_cycle` with an explicitly
-   supported actionable branch;
+5. the final capacity disposition is `continue_local_cycle` and API has
+   persisted the exact validated lifecycle decision bound to that successor:
+   - `SbeLocalWorkLifecycleDecision` with reason `local_work_ready` for
+     `ordinary_resume`; or
+   - the exact provider-pending lifecycle decision proving due reconciliation
+     for `provider_reconciliation_cycle`;
 6. no subprocess/native workspace writer remains active;
 7. at least one other compatible, ready API run is waiting without an active
    capacity allocation; and
 8. the current lease still authorizes the atomic API queue/capacity transition.
 
-At that boundary API may atomically:
+The branch name, dependency count, native status, trace message, or elapsed time
+cannot substitute for that exact persisted decision.
+
+At that boundary API may atomically in one database transaction:
 
 - defer the incumbent job using the ordinary configured defer;
 - release only the incumbent's API execution-capacity allocation; and
@@ -70,8 +77,8 @@ branches:
 
 | Final branch | Native positive permission | Cooperative rotation eligible? |
 |---|---|---|
-| `provider_reconciliation_cycle` | Retrieve the exact ordered due subset | yes, after one durable completed cycle |
-| `ordinary_resume` with `local_work_ready` | Consume the exact advertised deterministic local operation | yes, after one durable completed cycle |
+| `provider_reconciliation_cycle` plus exact persisted due-reconciliation decision | Retrieve the exact ordered due subset | yes, after one durable completed cycle |
+| `ordinary_resume` plus exact persisted `local_work_ready` decision | Consume the exact advertised deterministic local operation | yes, after one durable completed cycle |
 | `release_until_due` | No work before exact due time | existing release path; not this policy |
 | `await_external_authority` | Await a compatible API grant | existing authority-release path |
 | terminal/review/ambiguity/unsupported | Typed disposition-specific handling | no |
@@ -102,6 +109,8 @@ command timeout/cancellation boundary.
 - Claim selection must record both waiting runs and why the chosen run won.
 - Qualification must prove the incumbent's due work is delayed by no more than
   one intervening successful peer command plus queue handoff overhead.
+- The controlled fixture must prove B actually claims before A's ordinary defer
+  matures; releasing A's allocation without a peer claim is not fairness proof.
 - Provider identities and retrieval attempts remain exact; no create or
   retrieval is replayed because of allocation rotation.
 
@@ -113,6 +122,8 @@ Do not rotate through this policy when:
   installed contract version;
 - no newer accepted checkpoint exists;
 - checkpoint/readiness persistence failed;
+- the persisted lifecycle decision is absent, stale, wrong-reason,
+  checkpoint-mismatched, or inconsistent with the returned branch;
 - the command crashed, timed out, lost its lease, or left ambiguity;
 - the result is terminal, review-required, unsupported, or authority-waiting;
 - no compatible ready peer exists;
@@ -159,6 +170,10 @@ Existing typed handling remains authoritative in every excluded case.
 
 - due-retrieval A rotates to ready B after one durable turn;
 - local-work-ready A rotates to ready B after one durable turn;
+- `ordinary_resume` with absent, wrong-reason, stale, or checkpoint-mismatched
+  local-work decision does not rotate;
+- provider reconciliation with absent, stale, or checkpoint-mismatched due-work
+  decision does not rotate;
 - no peer means A retains/reclaims without needless allocation churn;
 - B incompatible/ineligible means no rotation;
 - checkpoint generation unchanged means fail closed/no cooperative release;
@@ -166,6 +181,7 @@ Existing typed handling remains authoritative in every excluded case.
 - terminal and external-authority precedence remain unchanged;
 - A and B alternate under repeated actionable cycles without duplicate work;
 - provider due-time lateness is one peer command plus handoff overhead;
+- B claims before A's configured ordinary defer matures;
 - defer and capacity release roll back together on injected failure;
 - no concurrent writer and no duplicate create/retrieve/adopt.
 
@@ -174,4 +190,3 @@ Existing typed handling remains authoritative in every excluded case.
 API and SBE must approve the existing-boundary/API-only ownership decision,
 the `N=1` structural bound, the lack of a false wall-clock promise, and the
 closed first-release route matrix before API runtime implementation begins.
-

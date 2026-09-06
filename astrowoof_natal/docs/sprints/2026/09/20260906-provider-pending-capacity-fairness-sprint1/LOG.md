@@ -92,3 +92,18 @@
 - Declined to promise a strict wall-clock bound without a proven universal
   command deadline.
 - Paused at Voof-paws 3 before any runtime mutation.
+
+## 2026-09-06 — Voof-paws 3
+
+- API approved the API-owned `N=1` durable post-command rotation direction.
+- Refined eligibility so `ordinary_resume` alone never authorizes rotation:
+  API must join the exact persisted, validated `local_work_ready` decision to
+  this command's newer accepted checkpoint.
+- Applied the analogous exact persisted decision requirement to due provider
+  reconciliation.
+- Required atomic defer plus capacity release and direct proof that B claims
+  before A's ordinary defer matures.
+- Added absent, wrong-reason, stale, and checkpoint-mismatched decision cases to
+  the fail-closed implementation matrix.
+- API Slice 4 implementation is authorized. SBE requires no schema, runtime, or
+  release change.
