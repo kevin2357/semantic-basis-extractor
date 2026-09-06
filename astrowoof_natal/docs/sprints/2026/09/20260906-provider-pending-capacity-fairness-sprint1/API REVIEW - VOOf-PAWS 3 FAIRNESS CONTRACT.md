@@ -18,12 +18,15 @@ reservation, checkpoint, or readiness.
 1. **Do not identify local work from `ordinary_resume` alone.** The compact
    worker result carries `execution_branch`, but `ordinary_resume` is broader
    than the intended first-release case. Rotation for that branch must require
-   the exact persisted, validated `SbeLocalWorkLifecycleDecision` whose reason
-   is `local_work_ready`, whose native/run/checkpoint basis matches the command
-   successor, and whose positive permission remains deterministic local work.
-   Due retrieval must analogously use its exact validated provider-pending
-   lifecycle decision; neither route may be inferred from status prose or a
-   dependency count.
+   the exact persisted, validated `SbeLocalWorkLifecycleDecision` whose
+   `local_work_ready_now` is true and whose v0.7 reason is
+   `ordinary_local_continuation_ready`, whose native/run/checkpoint basis
+   matches the command successor, and whose positive permission remains
+   deterministic local work. When that v0.7 decision retains any provider
+   custody, require the already-established matching v0.8 retry-lineage
+   successor/join as well. Due retrieval must analogously use its exact
+   validated provider-pending lifecycle decision; neither route may be inferred
+   from status prose or a dependency count.
 2. **Bind successor evidence to this command.** “Newer checkpoint” means an
    accepted checkpoint for the claimed API job/run, with generation strictly
    greater than the claim's checkpoint generation, accepted after the command
@@ -51,8 +54,9 @@ reservation, checkpoint, or readiness.
 
 In addition to the proposed matrix, include direct production-boundary cells
 for an `ordinary_resume` result whose persisted local-work decision is absent,
-wrong-reason, stale, or checkpoint-mismatched: each must retain/fail closed,
-not rotate. Include the same exact-binding negative for provider reconciliation.
+wrong-reason, stale, checkpoint-mismatched, or lacks its required v0.8 join:
+each must retain/fail closed, not rotate. Include the same exact-binding
+negative for provider reconciliation.
 
 With those constraints frozen, API is approved to begin Slice 4 implementation.
 No SBE schema, runtime behavior, or release is required for this first API-only

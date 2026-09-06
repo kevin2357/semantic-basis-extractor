@@ -1,0 +1,21 @@
+{
+  "api_run_id": "cfa8f529-4a70-4e4b-a245-15bc03615671",
+  "approved_operations": {
+    "delete_count": 0,
+    "get_count": 1,
+    "head_count": 1,
+    "list_count": 0,
+    "write_count": 0
+  },
+  "checkpoint_generation": 11,
+  "checkpoint_id": "b026f362-7b34-4fb3-8013-0441f758b3ad",
+  "expected_archive_bytes": 4971544,
+  "expected_archive_sha256": "942ccb5c010984ece428edbbe9078ba0e4a467770219eb14dfb1734674074154",
+  "expected_etag": "5a5d631627a711d0e4c4276a4e595404",
+  "expected_inventory_sha256": "8327c9710a139dd034605bb73a4daffc5eb6970394d0bf272d7470059c4e1a98",
+  "label": "Doughmeat Dunsinane generation 11",
+  "native_run_id": "c24a10322bfdd58d70a50e285dcf6d1b0e7013aa42f21e875d3f493235794294",
+  "object_key": "v1/checkpoint/c6c7fb8fdf6f49b48e8cf46af300e9b7",
+  "object_uuid": "c6c7fb8f-df6f-49b4-8e8c-f46af300e9b7",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}

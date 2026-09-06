@@ -1,0 +1,21 @@
+{
+  "api_run_id": "218faa53-d773-4e57-9b29-aa8738196078",
+  "approved_operations": {
+    "delete_count": 0,
+    "get_count": 1,
+    "head_count": 1,
+    "list_count": 0,
+    "write_count": 0
+  },
+  "checkpoint_generation": 11,
+  "checkpoint_id": "dd2d45e2-32d9-4638-8249-60cf96ee538b",
+  "expected_archive_bytes": 4766586,
+  "expected_archive_sha256": "7e92e963e331fbf61e81f3cbcbce866741a27e5c5597a19c12af4f28a4eef4e1",
+  "expected_etag": "790890abffe9859255b8528d7ff8dcac",
+  "expected_inventory_sha256": "97174b9f51bbe44037d9536090674f7391b5e3d2fbd66cbb6d8ec9e178b5bc40",
+  "label": "Lady Macaron MacLean generation 11",
+  "native_run_id": "13326ec073ec9b7bf4c214c1db0964f5e59a2b7ba57351fa77645a87b24d4aef",
+  "object_key": "v1/checkpoint/e56740caaedf44caa83f2e3003a2f77d",
+  "object_uuid": "e56740ca-aedf-44ca-a83f-2e3003a2f77d",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}
