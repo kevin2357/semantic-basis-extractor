@@ -2,8 +2,8 @@
 
 ## Status
 
-Planned. Slice 0 may begin after owner review. Runtime mutation pauses at
-Voof-paws 1 after the current surface and v1 shape are frozen.
+Slice 0 complete. Slice 1 contract freeze is next; runtime mutation pauses at
+Voof-paws 1 after the v1 shape is frozen.
 
 ## Objective
 
@@ -248,4 +248,3 @@ Cross-repository review of relay compatibility and installed qualification.
 | Voof-paws 2 | Do the chosen decision points answer recurring investigations without workspace download? |
 | Voof-paws 3 | Does public-command and API-style relay qualification preserve authority and framing? |
 | Final | Is regression evidence proportionate and the immutable release ready? |
-

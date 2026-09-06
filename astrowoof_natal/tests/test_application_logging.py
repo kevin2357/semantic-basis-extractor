@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import io
+import json
 import logging
 import sys
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 
@@ -58,6 +60,25 @@ class TestApplicationLogging(unittest.TestCase):
         self.assertEqual(first.getvalue(), "")
         self.assertEqual(second.getvalue().count("once"), 1)
         self.assertIn(foreign, logging.getLogger().handlers)
+
+    def test_default_logging_uses_stderr_and_does_not_pollute_stdout(self) -> None:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            configure_logging(level="INFO", host_id="host", force=True)
+            logging.getLogger("fixture").info("command_start command=lifecycle")
+        self.assertEqual("", stdout.getvalue())
+        self.assertIn("✨🐶", stderr.getvalue())
+        self.assertIn("command_start command=lifecycle", stderr.getvalue())
+
+    def test_default_application_log_is_not_an_execution_event_envelope(self) -> None:
+        stream = io.StringIO()
+        configure_logging(level="INFO", host_id="host", stream=stream, force=True)
+        logging.getLogger("fixture").info("command_start command=lifecycle")
+        rendered = stream.getvalue().strip()
+        with self.assertRaises(json.JSONDecodeError):
+            json.loads(rendered)
+        self.assertNotIn('"envelope_type":"execution_event"', rendered)
 
 
 if __name__ == "__main__":
