@@ -21,7 +21,6 @@ _TRACE_RE = re.compile(
     r"(?P<function>[^|]+?)\s+\|\s+(?P<state>[^:]+?)\s+:\s+"
     r"(?P<message>.*)$"
 )
-_JSON_RE = re.compile(r"^(?P<outer>.*?)\s+(?P<json>\{.*\})$")
 _SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_.:/@+,;\-]+$")
 _SAFE_EVENT = re.compile(r"^[a-z][a-z0-9_]{1,79}$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -235,7 +234,10 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
     events: list[dict[str, Any]] = []
     envelopes: list[dict[str, Any]] = []
     malformed_trace_lines: list[int] = []
+    duplicate_trace_lines: list[int] = []
+    unknown_json_record_count = 0
     unknown_events: dict[str, int] = {}
+    seen_trace_records: set[str] = set()
     for line_number, line in enumerate(lines, 1):
         json_start = line.find("{")
         structured_value: Any = None
@@ -257,6 +259,11 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
             except (TypeError, ValueError):
                 malformed_trace_lines.append(line_number)
                 continue
+            record_identity = _sha_bytes(_canonical(structured_value))
+            if record_identity in seen_trace_records:
+                duplicate_trace_lines.append(line_number)
+            else:
+                seen_trace_records.add(record_identity)
             event_name = structured_value["event_name"]
             if event_name not in BOUNDARY_EVENTS:
                 unknown_events[event_name] = unknown_events.get(event_name, 0) + 1
@@ -279,12 +286,36 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
                 "registered": event_name in BOUNDARY_EVENTS,
             })
             continue
+        if isinstance(structured_value, dict):
+            if isinstance(structured_value.get("envelope_type"), str):
+                envelopes.append({
+                    "source_line": line_number,
+                    "outer_timestamp": line[:json_start].strip(),
+                    "envelope_type": structured_value["envelope_type"],
+                    "raw_sha256": _sha_bytes(line.encode("utf-8")),
+                })
+            else:
+                unknown_json_record_count += 1
+            continue
         if "✨🐶" in line:
             match = _TRACE_RE.match(line)
             if not match:
                 malformed_trace_lines.append(line_number)
                 continue
             event_name, fields, unknown_fields = _message(match.group("message"))
+            record_identity = _sha_bytes(
+                "|".join(
+                    match.group(key).strip()
+                    for key in (
+                        "timestamp", "level", "host", "run", "context",
+                        "function", "state", "message",
+                    )
+                ).encode("utf-8")
+            )
+            if record_identity in seen_trace_records:
+                duplicate_trace_lines.append(line_number)
+            else:
+                seen_trace_records.add(record_identity)
             if event_name not in BOUNDARY_EVENTS:
                 unknown_events[event_name] = unknown_events.get(event_name, 0) + 1
             events.append({
@@ -305,19 +336,7 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
                 "registered": event_name in BOUNDARY_EVENTS,
             })
             continue
-        match = _JSON_RE.match(line)
-        if match:
-            try:
-                value = json.loads(match.group("json"))
-            except json.JSONDecodeError:
-                continue
-            if isinstance(value, dict) and isinstance(value.get("envelope_type"), str):
-                envelopes.append({
-                    "source_line": line_number,
-                    "outer_timestamp": match.group("outer"),
-                    "envelope_type": value["envelope_type"],
-                    "raw_sha256": _sha_bytes(line.encode("utf-8")),
-                })
+    events.sort(key=lambda item: (item["timestamp"], item["source_line"]))
     body = {
         "schema_version": "astrowoof.sbe_normalized_trace.v1",
         "parser_version": PARSER_VERSION,
@@ -331,7 +350,10 @@ def parse_trace_text(text: str, *, source_name: str = "worker.log") -> dict[str,
             "parsed_trace_line_count": len(events),
             "malformed_trace_line_numbers": malformed_trace_lines[:128],
             "malformed_trace_overflow": max(0, len(malformed_trace_lines) - 128),
+            "duplicate_trace_line_numbers": duplicate_trace_lines[:128],
+            "duplicate_trace_overflow": max(0, len(duplicate_trace_lines) - 128),
             "json_envelope_count": len(envelopes),
+            "unknown_json_record_count": unknown_json_record_count,
             "unknown_events": [
                 {"event": key, "count": value}
                 for key, value in sorted(unknown_events.items())

@@ -1,5 +1,17 @@
 # Log
 
+## 2026-09-06 — Slice 4
+
+- Hardened the earlier minimal JSON bridge into a dual-format parser.
+- Added deterministic producer-time/source-line ordering.
+- Retained duplicate observations while exposing bounded duplicate-line
+  coverage rather than silently deleting evidence.
+- Separated malformed/truncated recognized records, foreign JSON records, and
+  typed command/execution envelopes.
+- Proved structured message prose cannot override native fields or leak into
+  report artifacts.
+- Completed 56 focused tests with two expected optional-schema skips.
+
 ## 2026-09-06 — Slice 3
 
 - Converted the central bounded trace adapters from prose-only records to

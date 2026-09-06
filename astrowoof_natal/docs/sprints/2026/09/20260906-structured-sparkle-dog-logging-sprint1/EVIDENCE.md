@@ -1,5 +1,16 @@
 # Evidence
 
+## Slice 4 — dual-format reporter migration
+
+- Recognized, validated SBE v1 JSON takes precedence over pipe parsing.
+- Native JSON event/correlation/payload fields are used directly; message prose
+  cannot override them.
+- Mixed pipe/JSON, Render prefix, chronological normalization, exact duplicate
+  accounting, malformed/truncated JSON, foreign JSON, historical pipe, and
+  privacy-boundary fixtures pass.
+- Exact duplicates remain visible but their later line numbers are reported.
+- Focused combined matrix: 56 passed, 2 expected optional-schema skips.
+
 ## Slice 3 — high-value decision-point adoption
 
 - Existing bounded workspace, state, lifecycle decision, optional-stage,

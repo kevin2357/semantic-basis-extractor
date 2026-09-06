@@ -2,9 +2,9 @@
 
 ## Status
 
-Slices 0–3 complete. The closed v1 contract is the configured SBE handler
-format and high-value bounded evidence is emitted as explicit cataloged fields.
-Work pauses at Voof-paws 2 before full reporter migration hardening.
+Slices 0–4 complete. The closed v1 format and high-value fields are live, and
+the reporter accepts historical pipe, structured JSON, and mixed logs. Slice 5
+production-command/API-relay qualification is next.
 
 ## Objective
 

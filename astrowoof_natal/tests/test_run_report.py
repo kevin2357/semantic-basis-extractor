@@ -61,6 +61,50 @@ def fixture_log() -> str:
     ]) + "\n"
 
 
+def _structured_line(
+    timestamp: str, *, outer: str = "", message: str = "✨🐶 command exited",
+) -> str:
+    value = {
+        "schema_version": "astrowoof.sbe_worker_log.v1",
+        "record_type": "application_log",
+        "timestamp": timestamp,
+        "level": "INFO",
+        "event_name": "command_exit",
+        "message": message,
+        "logger": "astrowoof_natal_authoring.fixture",
+        "function": "main",
+        "current_state": "WAITING_FOR_RESPONSE",
+        "correlation": {
+            "api_run_id": "api-run-fixture",
+            "native_run_id": "native-run-fixture",
+            "subject_id": None,
+            "invocation_id": "invocation-fixture",
+            "action_id": None,
+            "provider_operation_id": None,
+            "checkpoint_object_id": "checkpoint-fixture",
+        },
+        "payload": {
+            "command": "provider_reconciliation_cycle",
+            "operation": "inspect",
+            "exit_code": 0,
+            "outcome": "provider_pending",
+            "result_id": None,
+            "receipt_id": None,
+            "authoritative_transport": "output_file",
+            "mutation_status": "unchanged",
+            "publication_status": "not_published",
+            "provider_io_status": "retrieval_only",
+        },
+        "producer": {
+            "service": "sbe-worker", "host_id": "host-fixture",
+            "runtime_version": "0.4.test",
+        },
+        "exception": None,
+    }
+    rendered = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+    return f"{outer} {rendered}".lstrip()
+
+
 class RunReportTests(unittest.TestCase):
     def test_parser_is_deterministic_partitioned_and_privacy_bounded(self):
         text = fixture_log()
@@ -168,6 +212,72 @@ class RunReportTests(unittest.TestCase):
         self.assertEqual(1, trace["coverage"]["parsed_trace_line_count"])
         self.assertEqual(1, trace["coverage"]["json_envelope_count"])
         self.assertEqual([], trace["coverage"]["malformed_trace_line_numbers"])
+
+    def test_mixed_pipe_and_structured_json_prefers_native_json_fields(self):
+        pipe = _line(
+            "2026-09-06T10:00:00", "pipe-run", "main", "WAITING",
+            "command_exit command=legacy exit_code=0 outcome=complete",
+        )
+        structured = _structured_line(
+            "2026-09-06T10:00:01.000Z",
+            outer="2026-09-06 04:00:01 Render:",
+            message="✨🐶 provider_identity_recorded action_id=misleading",
+        )
+        trace = parse_trace_text(pipe + "\n" + structured + "\n")
+        self.assertEqual(2, trace["coverage"]["parsed_trace_line_count"])
+        event = trace["events"][1]
+        self.assertEqual("command_exit", event["event"])
+        self.assertEqual("native-run-fixture", event["run_id"])
+        self.assertEqual("provider_pending", event["fields"]["outcome"])
+        self.assertNotIn("action_id", event["fields"])
+
+    def test_structured_records_are_chronological_and_exact_duplicates_collapse(self):
+        later = _structured_line(
+            "2026-09-06T10:00:02.000Z", outer="relay-a",
+        )
+        earlier = _structured_line(
+            "2026-09-06T10:00:01.000Z", outer="relay-b",
+        )
+        duplicate = _structured_line(
+            "2026-09-06T10:00:02.000Z", outer="relay-c",
+        )
+        trace = parse_trace_text("\n".join([later, earlier, duplicate]) + "\n")
+        self.assertEqual(
+            [
+                "2026-09-06T10:00:01.000Z",
+                "2026-09-06T10:00:02.000Z",
+                "2026-09-06T10:00:02.000Z",
+            ],
+            [event["timestamp"] for event in trace["events"]],
+        )
+        self.assertEqual([3], trace["coverage"]["duplicate_trace_line_numbers"])
+
+    def test_truncated_malformed_and_unknown_json_are_accounted(self):
+        truncated = _structured_line("2026-09-06T10:00:01.000Z")[:-5]
+        malformed = json.loads(_structured_line("2026-09-06T10:00:02.000Z"))
+        del malformed["correlation"]["api_run_id"]
+        unknown = {"schema_version": "other.service.v1", "message": "✨🐶 foreign"}
+        envelope = {"envelope_type": "command_result", "result": {}}
+        text = "\n".join([
+            truncated,
+            json.dumps(malformed, ensure_ascii=False),
+            json.dumps(unknown, ensure_ascii=False),
+            json.dumps(envelope),
+        ]) + "\n"
+        trace = parse_trace_text(text)
+        self.assertEqual([1, 2], trace["coverage"]["malformed_trace_line_numbers"])
+        self.assertEqual(1, trace["coverage"]["unknown_json_record_count"])
+        self.assertEqual(1, trace["coverage"]["json_envelope_count"])
+
+    def test_structured_message_prose_is_not_copied_into_report(self):
+        protected = "PROTECTED-REPORTER-SENTINEL"
+        text = _structured_line(
+            "2026-09-06T10:00:01.000Z", message=f"✨🐶 {protected}",
+        ) + "\n"
+        trace = parse_trace_text(text)
+        report = build_report_from_text(text)
+        self.assertNotIn(protected, json.dumps(trace, sort_keys=True))
+        self.assertNotIn(protected, json.dumps(report, sort_keys=True))
 
     def test_provider_free_qualification_is_closed_and_replayable(self):
         first = run_run_report_qualification()
