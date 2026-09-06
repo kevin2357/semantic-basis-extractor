@@ -21,4 +21,15 @@
 - Regenerated the complete three-run cohort. Accepted wrapper records increased
   from 66 to 138, refused records fell from 72 to zero, and unpaired API markers
   fell from 51 to 19.
-
+- Froze release version `0.4.53` before release-bound testing and regenerated
+  the version-bound providerless-denial fixture digest.
+- Expanded focused gate passed: 52 tests with four expected optional-dependency
+  skips. The broad/full suite was deliberately not run under the focused-patch
+  provision of the maintainer release playbook.
+- Committed/pushed artifact source as `0c183f7`.
+- Built twice from clean exports of `0c183f7` with
+  `SOURCE_DATE_EPOCH=1788730669`; both wheels were 1,248,102 bytes with SHA-256
+  `78db0fae4f7858b831a0c036cb3bf693a9f9bd38cceafb2b0a729cedc22a5f04`.
+- Installed that exact wheel outside the checkout with SPC `0.11.1`; `pip
+  check`, packaged-resource inspection, public timeline QA, and the real-cohort
+  CLI acceptance all passed.

@@ -2,7 +2,8 @@
 
 ## Status
 
-Implementation complete; `0.4.53` focused release qualification is in progress.
+Implementation and first-candidate qualification complete; `0.4.53` is at the
+release-lock provenance gate.
 No cross-repository review pause was required because this restores
 the already-approved interval grammar without changing its public authority
 model.

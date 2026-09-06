@@ -44,3 +44,36 @@ approved interval grammar for those standalone boundaries.
 - No authoring, lifecycle, custody, or command-result contract changed.
 - The timeline remains diagnostic-only.
 
+## Focused release gate
+
+Selected because the final diff changes one diagnostic reducer and its
+enumerable reporter/CLI consumers. It does not change a lifecycle, workspace,
+provider, custody, authority, scheduler, or cross-repository public contract.
+
+```text
+Ran 52 tests in 17.175s
+OK (skipped=4)
+```
+
+The complete repository suite was deliberately not run. This proportionate
+gate is owner-approved subject to the final immutable publication decision.
+
+## First committed-source candidate
+
+- Artifact source commit: `0c183f7`
+- `SOURCE_DATE_EPOCH`: `1788730669`
+- Wheel: `astrowoof_natal_authoring-0.4.53-py3-none-any.whl`
+- Size: `1,248,102` bytes
+- SHA-256: `78db0fae4f7858b831a0c036cb3bf693a9f9bd38cceafb2b0a729cedc22a5f04`
+- Independent clean builds: byte-identical
+- Wheel members: 273; forbidden cache/bytecode/build members: zero
+- Installed SBE: `0.4.53` from `site-packages`
+- Installed SPC: `0.11.1`
+- `pip check`: no broken requirements
+- Provider calls during qualification: zero
+- Timeline qualification receipt SHA-256:
+  `2d65be16c87eb1a6f104868957bc3b1b16980f6ca556aaa9a8aab98cad4d31f0`
+
+Final release-lock rebuild and installed qualification remain before tag
+authorization.
+
