@@ -1,5 +1,21 @@
 # Evidence
 
+## Slice 1 — structured record/privacy contract
+
+- Added packaged closed envelope schema
+  `sbe-worker-log.v1.schema.json`.
+- Added packaged closed payload vocabulary
+  `sbe-worker-log-event-catalog.v1.json`.
+- Added a reader/validator enforcing exact keys, event-specific payload fields,
+  bounded JSON values, nullable correlation, sanitized exception shape, and
+  privacy sentinels.
+- Recorded the invocation-specific API stderr relay matrix; reconciliation is
+  verbatim, while ordinary resume/v2 visibility depends on event-stream
+  configuration.
+- Focused contract + existing logging/event/reporter tests: 29 passed.
+- Runtime formatter, stdout, execution-event JSONL, provider I/O, and native
+  state remain unchanged.
+
 ## Current gate
 
 Slice 0 is complete. The logging surface and desired-field census are ready for
@@ -24,4 +40,3 @@ Slice 1 contract work. No runtime format change has begun.
 - Ordinary application records are distinct from execution-event envelopes.
 - No provider, R2, QA, API database, deployment, or retained workspace was
   accessed or mutated.
-

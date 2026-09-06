@@ -1,0 +1,34 @@
+{
+  "schema_version": "astrowoof.sbe_worker_log_event_catalog.v1",
+  "events": {
+    "application_message": {"required_fields": [], "optional_fields": []},
+    "workspace_fingerprint": {
+      "required_fields": ["validation_outcome", "native_schema", "route_family", "native_status", "state_revision", "logical_root_sha256", "snapshot_sha256", "snapshot_member_count", "checkpoint_generation", "checkpoint_object_id", "checkpoint_basis_sha256", "sbe_release", "spc_release", "fingerprint_sha256"],
+      "optional_fields": []
+    },
+    "native_state_summary": {
+      "required_fields": ["phase", "native_status", "state_revision", "action_inventory", "action_state_counts", "action_stage_counts", "provider_inventory", "provider_custody_count", "prepared_count", "ambiguous_count", "v2_intent_present", "v2_intent_state", "v2_intent_request_sha256", "v2_intent_grant_sha256", "v2_intent_action_inventory"],
+      "optional_fields": []
+    },
+    "native_decision_summary": {
+      "required_fields": ["command", "operation", "schema_version", "outcome", "selected_command", "reason_code", "capacity_disposition", "eligible_now", "positive_permission", "action_inventory", "provider_custody_inventory", "provider_custody_count", "provider_custody_state", "local_dependency_count", "local_work_inventory", "consumed_local_work_count", "retry_attempt_count", "retry_lineage_status", "retry_conflict_classification", "terminal_outcome", "terminal", "external_authority_request_sha256", "result_id", "receipt_id", "summary_sha256"],
+      "optional_fields": []
+    },
+    "native_stage_evidence_summary": {
+      "required_fields": ["stage", "subject_id", "attempt_number", "attempt_state", "action_id", "provider_operation_id", "accepted", "improved", "warning_count", "validation_error_count", "warning_components", "edited_field_count", "omitted_target_count", "validation_report_present", "lint_report_present", "error_class", "error_fingerprint", "summary_sha256"],
+      "optional_fields": []
+    },
+    "native_validation_evidence_summary": {
+      "required_fields": ["subject_id", "validation_present", "validation_status", "validation_error_count", "validation_warning_count", "validation_report_sha256", "lint_present", "lint_status", "lint_warning_count", "lint_warning_codes", "acceptance_states", "rejection_codes", "lint_report_sha256", "summary_sha256"],
+      "optional_fields": []
+    },
+    "native_publication_evidence_summary": {
+      "required_fields": ["native_run_id", "result_schema_version", "command_kind", "outcome", "cause_code", "native_status", "state_revision", "result_id", "result_sha256", "receipt_id", "receipt_sha256", "invocation_id", "checkpoint_basis_sha256", "snapshot_sha256", "action_count", "action_state_counts", "provider_identity_count", "subject_state_counts", "optional_stage_state_counts", "summary_sha256"],
+      "optional_fields": []
+    },
+    "command_exit": {
+      "required_fields": ["command", "operation", "exit_code", "outcome", "result_id", "receipt_id", "authoritative_transport", "mutation_status", "publication_status", "provider_io_status"],
+      "optional_fields": []
+    }
+  }
+}

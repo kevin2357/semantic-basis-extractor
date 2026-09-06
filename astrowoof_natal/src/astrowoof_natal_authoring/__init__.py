@@ -62,6 +62,11 @@ from .run_report_qa import (  # noqa: E402
     run_run_report_qualification,
     validate_run_report_qualification,
 )
+from .structured_logging_contracts import (  # noqa: E402
+    read_sbe_worker_log_event_catalog,
+    read_sbe_worker_log_schema,
+    validate_sbe_worker_log,
+)
 from .theme_group_policy_qa import (  # noqa: E402
     read_theme_group_policy_qualification_schema,
     run_theme_group_policy_qualification,
@@ -704,4 +709,7 @@ __all__ = [
     "read_theme_group_policy_qualification_schema",
     "run_theme_group_policy_qualification",
     "validate_theme_group_policy_qualification",
+    "read_sbe_worker_log_event_catalog",
+    "read_sbe_worker_log_schema",
+    "validate_sbe_worker_log",
 ]

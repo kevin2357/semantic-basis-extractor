@@ -2,8 +2,9 @@
 
 ## Status
 
-Slice 0 complete. Slice 1 contract freeze is next; runtime mutation pauses at
-Voof-paws 1 after the v1 shape is frozen.
+Slices 0–1 complete. Runtime mutation pauses at Voof-paws 1 with the closed v1
+envelope, event catalog, privacy rules, migration decision, and route-specific
+API relay matrix frozen.
 
 ## Objective
 
