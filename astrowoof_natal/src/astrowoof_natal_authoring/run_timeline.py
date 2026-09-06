@@ -533,8 +533,12 @@ def _wrapper_events(text: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
             producer = record["producer"]
             api_run_id = correlation.get("run_id")
             native_run_id = correlation.get("native_run_id")
-            if not isinstance(api_run_id, str) or not api_run_id or not isinstance(native_run_id, str) or not native_run_id:
+            if not isinstance(api_run_id, str) or not api_run_id:
                 raise ValueError("missing run correlation")
+            if native_run_id is not None and (
+                not isinstance(native_run_id, str) or not native_run_id
+            ):
+                raise ValueError("invalid native run correlation")
             accepted.append({
                 "source_line": line_number,
                 "raw_line_sha256": hashlib.sha256(line.encode("utf-8")).hexdigest(),
@@ -625,11 +629,42 @@ def build_run_cohort_timeline(
     wrapper_events, coverage = _wrapper_events(text)
 
     api_by_native: dict[str, str] = {}
+    native_by_api: dict[str, str] = {}
     for event in wrapper_events:
         correlation = event["correlation"]
-        previous = api_by_native.setdefault(correlation["native_run_id"], correlation["api_run_id"])
+        native_run_id = correlation["native_run_id"]
+        if native_run_id is None:
+            continue
+        previous = api_by_native.setdefault(native_run_id, correlation["api_run_id"])
         if previous != correlation["api_run_id"]:
             raise ValueError("Wrapper events contradict API/native run identity")
+        previous_native = native_by_api.setdefault(correlation["api_run_id"], native_run_id)
+        if previous_native != native_run_id:
+            raise ValueError("Wrapper events contradict API/native run identity")
+
+    # API wrapper starts are emitted before the native workspace identity is
+    # known, while their matching completion/release events carry both IDs.
+    # Enrich only from an explicit, bijective API/native join elsewhere in the
+    # accepted export; temporal proximity is never a join rule.
+    enriched_wrapper_events: list[dict[str, Any]] = []
+    unresolved_lines: list[int] = []
+    for event in wrapper_events:
+        correlation = event["correlation"]
+        if correlation["native_run_id"] is None:
+            native_run_id = native_by_api.get(correlation["api_run_id"])
+            if native_run_id is None:
+                unresolved_lines.append(event["source_line"])
+                continue
+            event = deepcopy(event)
+            event["correlation"]["native_run_id"] = native_run_id
+        enriched_wrapper_events.append(event)
+    wrapper_events = enriched_wrapper_events
+    refused_lines = sorted(set(
+        coverage["refused_wrapper_line_numbers"] + unresolved_lines
+    ))
+    coverage["accepted_wrapper_event_count"] = len(wrapper_events)
+    coverage["refused_wrapper_line_numbers"] = refused_lines[:128]
+    coverage["refused_wrapper_overflow"] = max(0, len(refused_lines) - 128)
 
     report_runs = {run["run_id"]: run for run in validated_report["runs"]}
     intervals_by_run: dict[str, list[dict[str, Any]]] = {
@@ -676,12 +711,12 @@ def build_run_cohort_timeline(
 
     pair(
         "worker.job.started", {"worker.job.completed", "worker.job.failed"},
-        ("api_run_id", "native_run_id", "job_id", "attempt_id", "lease_id"),
+        ("api_run_id", "job_id", "attempt_id", "lease_id"),
         "deterministic_work", "Deterministic work",
     )
     cycle_intervals = pair(
         "sbe.cycle.started", {"sbe.cycle.completed"},
-        ("api_run_id", "native_run_id", "job_id", "attempt_id", "lease_id"),
+        ("api_run_id", "job_id", "attempt_id", "lease_id"),
         lambda event: {
             "initial_wave": "initial_provider_wave",
             "provider_reconciliation": "provider_reconciliation",
@@ -697,12 +732,12 @@ def build_run_cohort_timeline(
     )
     pair(
         "worker.lease.acquired", {"worker.lease.released"},
-        ("api_run_id", "native_run_id", "job_id", "lease_id"),
+        ("api_run_id", "job_id", "lease_id"),
         "observed_execution_allocation", "Observed execution-allocation / lease window",
     )
     pair(
         "worker.job.deferred", {"worker.job.claimed"},
-        ("api_run_id", "native_run_id", "job_id"),
+        ("api_run_id", "job_id"),
         "api_deferred_or_queued", "API deferred / queued observation",
     )
 

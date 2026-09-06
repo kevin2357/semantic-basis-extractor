@@ -40,7 +40,10 @@ def _native_line(timestamp: str, run_id: str, event_name: str, message: str) -> 
     )
 
 
-def _wrapper_line(timestamp: str, event_name: str, *, api_run: str, native_run: str, **payload) -> str:
+def _wrapper_line(
+    timestamp: str, event_name: str, *, api_run: str,
+    native_run: str | None, **payload,
+) -> str:
     value = {
         "schema_version": "astrowoof.execution_event.v1",
         "envelope_type": "execution_event",
@@ -51,12 +54,14 @@ def _wrapper_line(timestamp: str, event_name: str, *, api_run: str, native_run: 
             "service": "api-worker", "component": "queue-worker", "instance_id": "worker-one",
         },
         "correlation": {
-            "run_id": api_run, "native_run_id": native_run,
+            "run_id": api_run,
             "job_id": f"job-{api_run}", "attempt_id": f"attempt-{api_run}",
             "lease_id": f"lease-{api_run}", "invocation_id": None, "action_id": None,
         },
         "payload": payload,
     }
+    if native_run is not None:
+        value["correlation"]["native_run_id"] = native_run
     return json.dumps(value, sort_keys=True)
 
 
@@ -220,6 +225,74 @@ def fixture_timeline():
 
 
 class RunCohortTimelineContractTests(unittest.TestCase):
+    def test_deployed_start_without_native_identity_pairs_after_exact_join(self):
+        text = "\n".join([
+            _wrapper_line(
+                "2026-09-06T18:15:00.000Z", "worker.lease.acquired",
+                api_run="api-a", native_run=None,
+            ),
+            _wrapper_line(
+                "2026-09-06T18:15:00.010Z", "sbe.cycle.started",
+                api_run="api-a", native_run=None,
+            ),
+            _native_line(
+                "2026-09-06T18:15:00.020", "native-a",
+                "reconciliation_cycle_start", "selected_count=1",
+            ),
+            _wrapper_line(
+                "2026-09-06T18:15:41.548Z", "sbe.cycle.completed",
+                api_run="api-a", native_run="native-a",
+                execution_branch="provider_reconciliation",
+            ),
+            _wrapper_line(
+                "2026-09-06T18:15:41.549Z", "worker.lease.released",
+                api_run="api-a", native_run="native-a",
+            ),
+        ]) + "\n"
+        report = build_report_from_text(text, source_name="deployed.log")
+        timeline = build_run_cohort_timeline(report, text, source_name="deployed.log")
+        self.assertEqual(4, timeline["adapter_coverage"]["accepted_wrapper_event_count"])
+        self.assertEqual([], timeline["adapter_coverage"]["refused_wrapper_line_numbers"])
+        run = timeline["runs"][0]
+        self.assertEqual("native-a", run["native_run_id"])
+        self.assertEqual(
+            {"observed_execution_allocation", "provider_reconciliation"},
+            {interval["classification"] for interval in run["intervals"]},
+        )
+        self.assertFalse(any(
+            interval["label"].startswith("Unpaired API event")
+            for interval in run["intervals"]
+        ))
+
+    def test_unresolved_or_contradictory_progressive_run_join_fails_closed(self):
+        unresolved = _wrapper_line(
+            "2026-09-06T18:15:00.000Z", "sbe.cycle.started",
+            api_run="api-a", native_run=None,
+        ) + "\n" + _native_line(
+            "2026-09-06T18:15:00.020", "native-a", "command_exit", "outcome=done",
+        ) + "\n"
+        report = build_report_from_text(unresolved, source_name="unresolved.log")
+        with self.assertRaisesRegex(ValueError, "at least one run"):
+            build_run_cohort_timeline(report, unresolved, source_name="unresolved.log")
+
+        contradictory = "\n".join([
+            _wrapper_line(
+                "2026-09-06T18:15:00.000Z", "sbe.cycle.completed",
+                api_run="api-a", native_run="native-a",
+                execution_branch="provider_reconciliation",
+            ),
+            _wrapper_line(
+                "2026-09-06T18:15:01.000Z", "worker.lease.released",
+                api_run="api-a", native_run="native-b",
+            ),
+            _native_line(
+                "2026-09-06T18:15:02.000", "native-a", "command_exit", "outcome=done",
+            ),
+        ]) + "\n"
+        report = build_report_from_text(contradictory, source_name="contradictory.log")
+        with self.assertRaisesRegex(ValueError, "contradict API/native run identity"):
+            build_run_cohort_timeline(report, contradictory, source_name="contradictory.log")
+
     def test_cli_timeline_and_build_emit_valid_shared_axis_artifacts(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
