@@ -11,11 +11,9 @@ binding, route, stage, and provider-identity joins.
 
 ## Status
 
-Slices 0–5A are complete. The retained worker remains suspended. The narrow
-exact-interactive fan-in/adoption correction and provider-free interruption
-matrix are implemented. Slice 5A closes the already-identified SBE half of the
-cross-repository diagnostic gap before the shared release cost is incurred.
-Paused at Voof-paws 5A before Slice 6; no version bump or release work has begun.
+Complete. Slices 0–6 and Slice 5A were implemented, qualified, and published as
+immutable SBE `0.4.33`. The retained worker was not resumed or mutated by this
+sprint.
 
 ## Frozen source fact and resolved hypotheses
 

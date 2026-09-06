@@ -2,11 +2,10 @@
 
 ## Status
 
-Slices 0–6 complete. The narrow Nori-only `0.4.38` candidate is reproducible,
-installed-wheel qualified, and free of reporter package content. Paused for
-final API/owner release review. The exact
-approved read-only checkpoint access is complete; no retained-workspace
-execution/mutation, provider work, release, or recovery action has occurred.
+Complete. The narrow Nori-only correction was published and verified as
+immutable SBE `0.4.38`; reporter work remained excluded. The approved read-only
+checkpoint access completed without retained-workspace execution/mutation,
+provider work, or recovery action.
 
 ## Objective
 

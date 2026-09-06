@@ -1,5 +1,11 @@
 # Plan — external-authority v2 authorization mismatch investigation
 
+## Status
+
+Complete. The narrowed stale-completed-intent refusal, negative custody tests,
+and installed qualification were published and freshly verified as immutable
+SBE `0.4.45`. API intake remained a separate follow-up.
+
 ## Slice 0 — Trace and public-contract inventory — Complete
 
 Map the supplied Hound trace to released `0.4.44` public v2 request, grant,
@@ -73,7 +79,7 @@ public v2 retirement qualification and the source fixture against the installed
 CLI/module boundary. Verify packaged v4/v5 schema readers and no provider or
 retained-QA activity.
 
-## Slice 4 — Release preparation — Pending final approval
+## Slice 4 — Release preparation — Complete
 
 Record the candidate hash, focused and installed qualifications, exact package
 resource checks, known optional-schema environment limitation, and scope. Do

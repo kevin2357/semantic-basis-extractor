@@ -2,13 +2,11 @@
 
 ## Status
 
-Slices 0–3 are complete and API-approved. The v1 schema, strict Python validator, deterministic
-builder, snapshot-validating read-only reader, root exports, and cross-route
-matrix are implemented. Availability-based terminal-result discovery now
-defaults disabled and is available only through an explicit reader opt-in.
-Provider activity, retained-workspace access,
-deployment, version bump, tag, and release have not begun. Paused at
-Sprint complete. SBE `0.4.37` is committed, immutably tagged, published, and
+Sprint complete. The v1 schema, strict Python validator, deterministic builder,
+snapshot-validating read-only reader, root exports, and cross-route matrix are
+implemented. Availability-based terminal-result discovery defaults disabled and
+is available only through an explicit reader opt-in. SBE `0.4.37` is committed,
+immutably tagged, published, and
 post-publication verified. Installed-wheel qualification, affected regression
 coverage, dependency verification, and deterministic rebuild evidence are
 recorded.

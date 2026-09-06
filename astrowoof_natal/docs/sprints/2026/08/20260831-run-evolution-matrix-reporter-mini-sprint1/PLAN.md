@@ -2,10 +2,10 @@
 
 ## Status
 
-Slices 0–5 are implemented and source-qualified. The supplied complete worker
-log has been rendered into all four formats. Release integration is now planned
-as Slice 3 of the Crumpet/Baguette theme-policy feature release; installed-wheel
-qualification remains required before publication.
+Complete. Slices 0–5 were implemented and source-qualified, then packaged,
+installed-wheel qualified, and published with immutable SBE `0.4.39` through
+the Crumpet/Baguette combined release. The supplied complete worker log was
+rendered into all four formats.
 
 ## Objective
 

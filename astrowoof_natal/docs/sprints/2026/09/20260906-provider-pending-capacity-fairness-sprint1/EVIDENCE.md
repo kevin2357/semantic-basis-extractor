@@ -2,11 +2,11 @@
 
 ## Current gate
 
-Slices 0–2 are complete. The joint causal classification is legitimate native
-actionability plus API incumbent-policy starvation risk. Slice 3's proposed
-API-owned `N=1` post-command rotation is approved for API implementation with
-exact persisted lifecycle-decision joins. No SBE runtime change is authorized
-or required.
+Complete across the joint boundary. Slices 0–2 and the joint Slice 3
+classification identified legitimate native actionability plus API
+incumbent-policy starvation risk. API subsequently implemented and qualified
+the approved `N=1` post-command rotation with exact persisted lifecycle-decision
+joins. No SBE runtime change was required.
 
 ## Findings
 

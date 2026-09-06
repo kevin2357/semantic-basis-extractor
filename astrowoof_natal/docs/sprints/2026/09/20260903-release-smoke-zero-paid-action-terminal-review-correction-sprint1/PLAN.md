@@ -1,5 +1,10 @@
 # Plan
 
+## Status
+
+Complete. The explicit zero-paid-action terminal contract and installed smoke
+were published and freshly verified as immutable SBE `0.4.43`.
+
 ## Slice 0 — Reproduce and freeze the terminal boundary
 
 Run the installed/source provider-free release smoke; identify the exact fixture

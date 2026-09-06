@@ -1,7 +1,7 @@
 # Froth / Ganache stalled initial-provider action investigation — plan
 
-**Status:** Slices 0–2 complete; Slice 3 clean-wheel qualification passed
-under candidate version 0.4.42 and awaits final release review. The initial
+**Status:** Complete; Slice 3 was qualified, published, and freshly verified as
+immutable SBE `0.4.42`. The initial
 Slice 2 terminal-review proposal was withdrawn: Ganache's error is a legacy
 theme-group assembly requirement, not a deck-validity condition. Read-only
 checkpoint evidence confirms that Froth is ordinary retained provider custody.
