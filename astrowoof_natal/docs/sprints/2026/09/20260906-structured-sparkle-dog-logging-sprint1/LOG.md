@@ -1,5 +1,33 @@
 # Log
 
+## 2026-09-06 — Slice 6 regression and documentation
+
+- Froze the fresh release identity at `0.4.51` before expensive testing and
+  aligned the release-derived providerless-denial fixture plus receipt digest.
+- Completed the focused matrix: 60 passed with three expected optional-schema
+  skips in 16.109 seconds.
+- Completed the broad/full repository suite once: 1,076 passed with 56 expected
+  skips in 1,095.939 seconds.
+- Added release notes and retained the Better Stack read-only query playbook as
+  operator documentation.
+- Observed that source-mode traces use installed package metadata (`0.4.50`);
+  reserved authoritative candidate-version proof for the clean installed-wheel
+  qualification.
+
+## 2026-09-06 — Slice 5
+
+- Incorporated the API-owned provider-free relay qualification.
+- Froze the exact route matrix: reconciliation relays diagnostic stderr
+  verbatim; ordinary resume and constrained v2 inherit or intentionally
+  suppress it according to event-stream configuration.
+- Confirmed application logs remain unable to impersonate authoritative
+  command-result or execution-event transports.
+- Recorded the API focused result (37 passed) and its honest provenance as an
+  uncommitted test/docs working tree based on current `main` with SBE 0.4.50
+  installed.
+- No provider, R2, QA database, retained workspace, deployment, or
+  configuration activity occurred.
+
 ## 2026-09-06 — Slice 4
 
 - Hardened the earlier minimal JSON bridge into a dual-format parser.

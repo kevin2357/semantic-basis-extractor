@@ -1,5 +1,40 @@
 # Evidence
 
+## Slice 6 — regression and release preparation
+
+- Candidate identity was frozen at `0.4.51` before release-bound testing.
+- The release-derived providerless-denial fixture was aligned to `0.4.51` and
+  its canonical receipt hash recomputed before the broad suite.
+- Focused logging, contract, execution-event, trace, reporter, and
+  release-derived-fixture matrix: 60 passed, 3 expected optional-schema skips
+  in 16.109 seconds.
+- Broad/full repository suite: 1,076 passed, 56 expected skips in 1,095.939
+  seconds under Windows Python 3.11.
+- Source-mode traces reported the installed distribution metadata (`0.4.50`),
+  as expected from `importlib.metadata`; the clean installed-wheel gate must
+  prove runtime version `0.4.51` from `site-packages`.
+- No full-suite rerun is pending and no post-suite runtime/schema/validator/test
+  correction has occurred.
+
+## Slice 5 — production-boundary and API relay qualification
+
+- API reconciliation relays a closed `astrowoof.sbe_worker_log.v1` stderr
+  record verbatim while keeping authoritative reconciliation stdout private to
+  its parser.
+- Ordinary resume and constrained-v2 dispatch inherit diagnostic stderr only
+  when event streaming is enabled; their disabled routes intentionally suppress
+  it. Their authoritative JSONL/output-file transports remain separate.
+- A structured application record cannot satisfy the terminal command-result
+  discriminator.
+- The privacy fixture proves an already-sanitized SBE record remains free of
+  its pre-sanitization sentinel after raw relay and bounded-tail capture. It
+  does not claim API-side generic redaction.
+- API focused result: 37 passed. The evidence was produced from the current
+  API `main`-based working tree with test/docs-only uncommitted changes and SBE
+  0.4.50 installed; it is not represented as an immutable API revision.
+- No provider, R2, QA database, retained workspace, deployment, or
+  configuration access occurred.
+
 ## Slice 4 — dual-format reporter migration
 
 - Recognized, validated SBE v1 JSON takes precedence over pipe parsing.
@@ -61,8 +96,9 @@
 
 ## Current gate
 
-Slice 0 is complete. The logging surface and desired-field census are ready for
-Slice 1 contract work. No runtime format change has begun.
+Slices 0–6 regression and documentation are complete. Reproducible builds and
+clean installed-wheel qualification remain before the final release-review
+boundary.
 
 ## Source findings
 
