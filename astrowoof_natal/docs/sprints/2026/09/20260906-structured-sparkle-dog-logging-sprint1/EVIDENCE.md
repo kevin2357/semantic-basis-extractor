@@ -1,5 +1,21 @@
 # Evidence
 
+## Slice 2 — formatter and context implementation
+
+- The configured SBE application handler now emits one closed JSON object per
+  stderr line; stdout and execution-event transports remain separate.
+- Context now distinguishes caller-supplied API run, native run, subject,
+  invocation, paid action, provider operation, and checkpoint object IDs.
+- Existing `run_id=` bindings remain a compatibility alias for native run ID;
+  no API identity is inferred.
+- Sanitized messages retain `✨🐶`; exceptions exclude raw traceback and use
+  the bounded sanitized representation.
+- Invalid event extras produce one valid nonrecursive fallback record and do
+  not raise through the logging call.
+- Focused formatter/contract/event/reporter tests: 33 passed.
+- High-value helpers intentionally remain `application_message` until Slice 3
+  supplies their cataloged payloads explicitly.
+
 ## Slice 1 — structured record/privacy contract
 
 - Added packaged closed envelope schema

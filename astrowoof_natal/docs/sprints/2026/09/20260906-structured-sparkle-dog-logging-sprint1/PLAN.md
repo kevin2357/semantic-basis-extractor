@@ -2,9 +2,9 @@
 
 ## Status
 
-Slices 0–1 complete. Runtime mutation pauses at Voof-paws 1 with the closed v1
-envelope, event catalog, privacy rules, migration decision, and route-specific
-API relay matrix frozen.
+Slices 0–2 complete. The closed v1 contract is now the configured SBE handler
+format; Slice 3 is adopting explicit cataloged fields at high-value boundaries.
+Voof-paws 2 remains after that adoption work.
 
 ## Objective
 

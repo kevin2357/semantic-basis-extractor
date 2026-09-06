@@ -1,5 +1,18 @@
 # Log
 
+## 2026-09-06 — Slice 2
+
+- Replaced the SBE handler's pipe formatter with closed one-line JSON output.
+- Added nullable correlation context without changing legacy native `run_id=`
+  call sites.
+- Added caller-only `--api-run-id`/`ASTROWOOF_API_RUN_ID` intake.
+- Preserved foreign root handlers, levels, interpolation, stderr destination,
+  and explicit context restoration.
+- Added bounded secret sanitization, exception projection, and nonrecursive
+  serialization fallback tests.
+- Confirmed that semantic trace helpers need explicit Slice 3 event extras;
+  the formatter does not parse their prose to invent structured fields.
+
 ## 2026-09-06 — Slice 1
 
 - Read and incorporated `API REVIEW - PLAN AND SLICE 0.md` in full.

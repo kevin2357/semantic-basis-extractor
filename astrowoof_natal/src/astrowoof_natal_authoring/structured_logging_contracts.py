@@ -54,7 +54,9 @@ def read_sbe_worker_log_event_catalog() -> dict[str, Any]:
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
-def _validate_json_value(value: Any, *, depth: int = 0) -> None:
+def _validate_json_value(
+    value: Any, *, depth: int = 0, maximum_string_length: int = 512,
+) -> None:
     if depth > 3:
         raise ValueError("Structured log payload exceeds maximum depth")
     if value is None or type(value) in {bool, int}:
@@ -64,10 +66,12 @@ def _validate_json_value(value: Any, *, depth: int = 0) -> None:
             raise ValueError("Structured log number must be finite")
         return
     if isinstance(value, str):
-        if len(value) > 512 or "\n" in value or "\r" in value:
+        if len(value) > maximum_string_length or "\n" in value or "\r" in value:
             raise ValueError("Structured log string is invalid or unbounded")
-        if any(pattern.search(value) for pattern in _SENSITIVE_VALUE_PATTERNS):
-            raise ValueError("Structured log contains sensitive content")
+        for pattern in _SENSITIVE_VALUE_PATTERNS:
+            match = pattern.search(value)
+            if match is not None and "[REDACTED]" not in match.group(0):
+                raise ValueError("Structured log contains sensitive content")
         return
     if isinstance(value, list):
         if len(value) > 128:
@@ -108,7 +112,7 @@ def validate_sbe_worker_log(value: Mapping[str, Any]) -> None:
         item = value.get(key)
         if not isinstance(item, str) or not item or len(item) > maximum:
             raise ValueError(f"Structured log {key} is invalid")
-        _validate_json_value(item)
+        _validate_json_value(item, maximum_string_length=maximum)
     if not value["message"].startswith("✨🐶 "):
         raise ValueError("Structured log message lacks the readable marker")
     state = value.get("current_state")
