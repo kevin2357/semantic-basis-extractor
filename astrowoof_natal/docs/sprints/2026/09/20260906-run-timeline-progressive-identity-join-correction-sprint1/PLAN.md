@@ -2,8 +2,8 @@
 
 ## Status
 
-Implementation and first-candidate qualification complete; `0.4.53` is at the
-release-lock provenance gate.
+Complete. SBE `0.4.53` was published under immutable component tag
+`astrowoof-natal-authoring-v0.4.53` and independently downloaded and verified.
 No cross-repository review pause was required because this restores
 the already-approved interval grammar without changing its public authority
 model.

@@ -40,3 +40,10 @@
 - Repeated clean installed qualification from that final candidate; SBE
   `0.4.53`, SPC `0.11.1`, `pip check`, public QA, and real-cohort acceptance all
   passed.
+- Rebuilt twice from documentation-complete release-lock commit `b4c7c9c` using
+  the same recorded epoch; both wheels remained byte-identical at the final
+  `db13b03d...c563246` identity.
+- Published immutable annotated tag `astrowoof-natal-authoring-v0.4.53` and a
+  GitHub Release containing only the exact wheel and `SHA256SUMS.txt`.
+- Freshly downloaded both assets; local, GitHub-reported, manifest, and
+  downloaded wheel hashes agree. The remote peeled tag remains `b4c7c9c`.
