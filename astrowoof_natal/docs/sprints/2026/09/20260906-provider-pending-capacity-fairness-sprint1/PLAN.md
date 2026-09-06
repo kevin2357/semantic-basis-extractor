@@ -2,12 +2,11 @@
 
 ## Status
 
-Slices 0–1 and SBE's native-input half of Slice 2 are approved. API's historical
-controls and present one-slot scheduling characterization are complete: Sprint
-58 and `8c389b3` are not demonstrated healthy-path regression boundaries. The
-joint policy gate awaits the separately requested API
-`continue_local_cycle / local_work_ready` cell before selecting a safe turn
-boundary. No runtime policy change is approved.
+Slices 0–2 are complete. API's `local_work_ready` correction passes and confirms
+that due retrieval and deterministic fan-in are distinct native permissions but
+share the same incumbent-retention behavior. Slice 3 proposes an API-owned
+`N=1` cooperative scheduler turn at the existing durable post-command boundary.
+Voof-paws 3 review is required before runtime mutation.
 
 ## Objective
 

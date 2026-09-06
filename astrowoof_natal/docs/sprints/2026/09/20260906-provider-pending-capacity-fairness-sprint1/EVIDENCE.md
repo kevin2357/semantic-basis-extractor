@@ -2,9 +2,9 @@
 
 ## Current gate
 
-SBE's native-input half of Slice 2 is approved. API's historical controls and
-present one-slot scheduling characterization are complete; Voof-paws 2 awaits
-the requested `local_work_ready` API cell before policy selection. No runtime
+Slices 0–2 are complete. The joint causal classification is legitimate native
+actionability plus API incumbent-policy starvation risk. Slice 3's proposed
+API-owned `N=1` post-command rotation awaits Voof-paws 3 approval. No runtime
 policy change is authorized.
 
 ## Findings
@@ -32,9 +32,14 @@ policy change is authorized.
 11. Sprint 58 remains a terminal-precedence negative control, and `8c389b3`
     remains a retry-ceiling cleanup positive control; neither changed healthy
     provider-pending scheduling.
-12. The API characterization has not yet exercised the distinct
-    `continue_local_cycle / local_work_ready` permission requested by SBE's
-    reciprocal review.
+12. API commit `2a7e0d7` proves `continue_local_cycle / local_work_ready` has
+    zero provider operations but currently retains A, defers it, and selects it
+    again over ready B. Its focused fairness module passes 5 tests.
+13. Existing final results and accepted successor checkpoints appear sufficient
+    for an API-owned cooperative turn; no new SBE yield meaning is required.
+14. A structural one-peer-command bound is supportable. A strict wall-clock
+    bound is not yet supportable because native command duration has no proven
+    universal deadline.
 
 ## Commands and source checks
 

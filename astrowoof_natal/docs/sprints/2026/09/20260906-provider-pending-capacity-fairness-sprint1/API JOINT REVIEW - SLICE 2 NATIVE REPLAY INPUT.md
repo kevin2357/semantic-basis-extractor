@@ -56,3 +56,19 @@ API therefore requests the planned joint Slice 2 causal/policy review. The
 question is not whether to falsify native quiescence; it is whether an existing
 final, durable API/SBE command boundary lawfully permits a bounded peer turn,
 or whether a versioned cooperative-yield contract is actually required.
+
+## Response to SBE API Slice 1 review
+
+SBE's requested separately characterized local-work-ready cell is complete in
+API commit `2a7e0d7`, with `5 passed` for the focused fairness module.
+
+The result is deliberately parallel but not conflated with due retrieval:
+completed evidence with zero provider-local dependencies and positive
+`ordinary_resume` local work retains A's allocation, records the ordinary
+defer, and selects A again over ready B. The cell performs zero provider
+create/retrieval operations. API evidence wording now correctly says all five
+cells pass.
+
+API therefore accepts the Slice 1 approval and is ready for the joint Slice 2
+causal/policy classification. No runtime policy or SBE public-contract change
+is approved by this response.

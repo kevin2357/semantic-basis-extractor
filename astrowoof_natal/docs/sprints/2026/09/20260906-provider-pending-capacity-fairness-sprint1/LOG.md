@@ -76,3 +76,19 @@
   a distinct `local_work_ready` characterization, which is not yet present in
   the API test or evidence tree.
 - No runtime policy or public-contract change was approved.
+
+## 2026-09-06 — Slice 3 policy proposal
+
+- Verified API commit `2a7e0d7` and independently ran its five-test fairness
+  module successfully.
+- Confirmed local-work-ready has zero provider operations but shares current
+  allocation retention and owner-only reclaim behavior with due reconciliation.
+- Classified the cause as legitimate actionable native topology plus unbounded
+  API incumbent allocation retention, not a historical healthy-path regression.
+- Proposed an API-only `N=1` cooperative scheduler turn after a validated final
+  result, newer accepted checkpoint, persisted readiness, and completed writer-
+  free command boundary when a compatible peer is ready.
+- Explicitly retained all native/provider/authorization/spend/workspace custody.
+- Declined to promise a strict wall-clock bound without a proven universal
+  command deadline.
+- Paused at Voof-paws 3 before any runtime mutation.
