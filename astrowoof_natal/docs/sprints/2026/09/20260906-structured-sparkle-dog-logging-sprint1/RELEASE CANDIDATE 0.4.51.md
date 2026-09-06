@@ -54,12 +54,11 @@ Python 3.12.14 with SPC 0.11.1.
 
 ## Cross-repository relay evidence
 
-The API provider-free route matrix passed 37 focused tests. Reconciliation
+The API provider-free route matrix passed 37 focused tests at test/docs-only API
+revision `fa6a359`. Reconciliation
 relays structured stderr verbatim; ordinary resume and constrained v2 inherit or
 intentionally suppress diagnostics according to event-stream configuration.
 Application logs remain unable to satisfy authoritative command-result parsing.
-The API evidence is a test/docs-only working tree based on current `main`, not
-an immutable API revision.
 
 ## Safety and scope
 

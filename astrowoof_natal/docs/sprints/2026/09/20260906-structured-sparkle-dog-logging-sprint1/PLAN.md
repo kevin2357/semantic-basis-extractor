@@ -2,8 +2,9 @@
 
 ## Status
 
-Slices 0–5 complete. Slice 6 regression and documentation are complete; the
-fresh `0.4.51` identity is frozen and release preparation is in progress. The
+Slices 0–6 and release-lock qualification are complete. The fresh `0.4.51`
+identity is frozen and the candidate is paused at final review before explicit
+tag/publication authorization. The
 closed v1 format and high-value fields are live, the reporter accepts historical
 pipe, structured JSON, and mixed logs, and the API-owned relay matrix is
 qualified provider-free.

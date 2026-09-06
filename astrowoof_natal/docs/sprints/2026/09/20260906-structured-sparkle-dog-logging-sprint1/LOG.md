@@ -1,5 +1,17 @@
 # Log
 
+## 2026-09-06 — release-lock verification
+
+- Committed the release lock as `3b19a08` without changing packaged content.
+- Rebuilt twice from independent clean exports using epoch `1788712494`; both
+  wheels exactly matched the first candidate at `ba39020b…491b6d`.
+- Force-reinstalled the release-lock wheel and repeated dependency, version,
+  package-resource, generic-smoke, and four feature qualification checks.
+- All qualification JSON and smoke outputs were byte-identical to their first
+  installed run.
+- Confirmed clean diff hygiene and stopped before tag, publication, or
+  deployment.
+
 ## 2026-09-06 — Slice 6 regression and documentation
 
 - Froze the fresh release identity at `0.4.51` before expensive testing and
@@ -30,9 +42,9 @@
   suppress it according to event-stream configuration.
 - Confirmed application logs remain unable to impersonate authoritative
   command-result or execution-event transports.
-- Recorded the API focused result (37 passed) and its honest provenance as an
-  uncommitted test/docs working tree based on current `main` with SBE 0.4.50
-  installed.
+- Recorded the API focused result (37 passed) and its final test/docs-only API
+  revision `fa6a359`; that environment had SBE 0.4.50 installed while its
+  fixture explicitly modeled the v1 log contract.
 - No provider, R2, QA database, retained workspace, deployment, or
   configuration activity occurred.
 

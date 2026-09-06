@@ -1,5 +1,22 @@
 # Evidence
 
+## Release-lock verification
+
+- Release-lock commit:
+  `3b19a08fa4fa9d166272d1bf562b7a11877664c6`.
+- Two clean exports of that commit, using the recorded epoch `1788712494`,
+  reproduced the candidate exactly: 1,228,560 bytes, 269 members, SHA-256
+  `ba39020b6d7f37ab422c99766839067603127d104ea15cde44b7e53e10491b6d`.
+- Reinstallation from the release-lock wheel passed `pip check`, reported SBE
+  `0.4.51` with SPC `0.11.1` from isolated `site-packages`, and retained both
+  packaged structured-log resources.
+- Generic smoke and all four public qualification artifacts were byte-identical
+  to the first installed qualification.
+- `git diff --check` is clean. One unrelated API-authored fairness review file
+  remains modified in the shared working tree and is excluded from the release
+  commit and candidate artifact.
+- Tag, publication, and deployment have not occurred.
+
 ## Slice 6 — regression and release preparation
 
 - Candidate identity was frozen at `0.4.51` before release-bound testing.
@@ -40,9 +57,9 @@
 - The privacy fixture proves an already-sanitized SBE record remains free of
   its pre-sanitization sentinel after raw relay and bounded-tail capture. It
   does not claim API-side generic redaction.
-- API focused result: 37 passed. The evidence was produced from the current
-  API `main`-based working tree with test/docs-only uncommitted changes and SBE
-  0.4.50 installed; it is not represented as an immutable API revision.
+- API focused result: 37 passed. The test/docs-only qualification is committed
+  as API revision `fa6a359`; its environment had SBE 0.4.50 installed and its
+  fixture explicitly models the new v1 log contract.
 - No provider, R2, QA database, retained workspace, deployment, or
   configuration access occurred.
 
@@ -107,9 +124,8 @@
 
 ## Current gate
 
-Slices 0–6 regression and documentation are complete. Reproducible builds and
-clean installed-wheel qualification remain before the final release-review
-boundary.
+Slices 0–6 and the reproducible installed-wheel gate are complete. The exact
+candidate is paused at the final release-review boundary.
 
 ## Source findings
 
