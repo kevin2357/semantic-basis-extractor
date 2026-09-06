@@ -57,6 +57,18 @@ from .run_report import (  # noqa: E402
     render_report_mermaid,
     validate_run_evolution_report,
 )
+from .run_timeline import (  # noqa: E402
+    build_run_cohort_timeline,
+    read_run_cohort_timeline,
+    read_run_cohort_timeline_schema,
+    render_run_cohort_timeline_html,
+    validate_run_cohort_timeline,
+)
+from .run_timeline_qa import (  # noqa: E402
+    read_run_timeline_qualification_schema,
+    run_run_timeline_qualification,
+    validate_run_timeline_qualification,
+)
 from .run_report_qa import (  # noqa: E402
     read_run_report_qualification_schema,
     run_run_report_qualification,
@@ -703,6 +715,14 @@ __all__ = [
     "render_report_markdown",
     "render_report_mermaid",
     "validate_run_evolution_report",
+    "read_run_cohort_timeline",
+    "build_run_cohort_timeline",
+    "read_run_cohort_timeline_schema",
+    "render_run_cohort_timeline_html",
+    "validate_run_cohort_timeline",
+    "read_run_timeline_qualification_schema",
+    "run_run_timeline_qualification",
+    "validate_run_timeline_qualification",
     "read_run_report_qualification_schema",
     "run_run_report_qualification",
     "validate_run_report_qualification",

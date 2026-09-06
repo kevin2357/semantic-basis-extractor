@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.dev/contracts/sbe-run-cohort-timeline.v1.schema.json",
+  "title": "AstroWoof SBE run cohort timeline v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "timeline_sha256", "diagnostic_only",
+    "canonical_timezone", "source_reports", "log_sources", "adapter_coverage", "runs",
+    "observed_handoffs"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.sbe_run_cohort_timeline.v1"},
+    "timeline_sha256": {"$ref": "#/$defs/sha256"},
+    "diagnostic_only": {"const": true},
+    "canonical_timezone": {"const": "UTC"},
+    "source_reports": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/sourceReport"}
+    },
+    "log_sources": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/logSource"}
+    },
+    "adapter_coverage": {"$ref": "#/$defs/adapterCoverage"},
+    "runs": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/run"}
+    },
+    "observed_handoffs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/handoff"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nullableText": {"type": ["string", "null"], "minLength": 1},
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "logSource": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "sha256", "line_count"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "line_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "sourceReport": {
+      "type": "object", "additionalProperties": false,
+      "required": ["report_sha256", "source_sha256", "trace_sha256", "parser_version"],
+      "properties": {
+        "report_sha256": {"$ref": "#/$defs/sha256"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "trace_sha256": {"$ref": "#/$defs/sha256"},
+        "parser_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "adapterCoverage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "wrapper_candidate_count", "accepted_wrapper_event_count",
+        "refused_wrapper_line_numbers", "refused_wrapper_overflow",
+        "unsupported_wrapper_events"
+      ],
+      "properties": {
+        "wrapper_candidate_count": {"type": "integer", "minimum": 0},
+        "accepted_wrapper_event_count": {"type": "integer", "minimum": 0},
+        "refused_wrapper_line_numbers": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "refused_wrapper_overflow": {"type": "integer", "minimum": 0},
+        "unsupported_wrapper_events": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["event_name", "count"],
+            "properties": {
+              "event_name": {"type": "string", "minLength": 1},
+              "count": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    },
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["service", "component", "instance_id"],
+      "properties": {
+        "service": {"type": "string", "minLength": 1},
+        "component": {"$ref": "#/$defs/nullableText"},
+        "instance_id": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "correlation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "api_run_id", "native_run_id", "job_id", "attempt_id", "lease_id",
+        "invocation_id", "action_id", "event_id"
+      ],
+      "properties": {
+        "api_run_id": {"$ref": "#/$defs/nullableText"},
+        "native_run_id": {"$ref": "#/$defs/nullableText"},
+        "job_id": {"$ref": "#/$defs/nullableText"},
+        "attempt_id": {"$ref": "#/$defs/nullableText"},
+        "lease_id": {"$ref": "#/$defs/nullableText"},
+        "invocation_id": {"$ref": "#/$defs/nullableText"},
+        "action_id": {"$ref": "#/$defs/nullableText"},
+        "event_id": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "boundary_id", "canonical_timestamp", "canonical_timestamp_field",
+        "outer_timestamp", "clock_relation", "source_sha256", "source_line",
+        "raw_line_sha256", "event_name", "evidence_family", "producer",
+        "correlation"
+      ],
+      "properties": {
+        "boundary_id": {"$ref": "#/$defs/sha256"},
+        "canonical_timestamp": {"$ref": "#/$defs/timestamp"},
+        "canonical_timestamp_field": {
+          "enum": ["message.timestamp", "message.observed_at"]
+        },
+        "outer_timestamp": {
+          "anyOf": [{"$ref": "#/$defs/timestamp"}, {"type": "null"}]
+        },
+        "clock_relation": {
+          "enum": ["exact", "within_tolerance", "disagrees", "outer_unavailable"]
+        },
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_line": {"type": "integer", "minimum": 1},
+        "raw_line_sha256": {"$ref": "#/$defs/sha256"},
+        "event_name": {"type": "string", "minLength": 1},
+        "evidence_family": {"enum": ["native_sbe", "api_worker_wrapper"]},
+        "producer": {"$ref": "#/$defs/producer"},
+        "correlation": {"$ref": "#/$defs/correlation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"evidence_family": {"const": "native_sbe"}}},
+          "then": {"properties": {"canonical_timestamp_field": {"const": "message.timestamp"}}}
+        },
+        {
+          "if": {"properties": {"evidence_family": {"const": "api_worker_wrapper"}}},
+          "then": {"properties": {"canonical_timestamp_field": {"const": "message.observed_at"}}}
+        }
+      ]
+    },
+    "interval": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "interval_id", "classification", "status", "label", "start", "end",
+        "duration_ms", "evidence_families", "constituent_boundary_ids",
+        "no_progress_candidate_ids"
+      ],
+      "properties": {
+        "interval_id": {"$ref": "#/$defs/sha256"},
+        "classification": {
+          "enum": [
+            "deterministic_work", "initial_provider_wave",
+            "provider_reconciliation", "external_authority_v2",
+            "local_native_work", "delivery_validation",
+            "observed_execution_allocation", "api_deferred_or_queued",
+            "provider_wait", "terminal_review",
+            "delivered", "failure_or_refusal", "unknown"
+          ]
+        },
+        "status": {"enum": ["complete", "open", "contradictory"]},
+        "label": {"type": "string", "minLength": 1},
+        "start": {"$ref": "#/$defs/boundary"},
+        "end": {"anyOf": [{"$ref": "#/$defs/boundary"}, {"type": "null"}]},
+        "duration_ms": {"type": ["integer", "null"], "minimum": 0},
+        "evidence_families": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": ["native_sbe", "api_worker_wrapper"]}
+        },
+        "constituent_boundary_ids": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "no_progress_candidate_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "finalPosture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["classification", "not_authoritative_current_state", "boundary_ids"],
+      "properties": {
+        "classification": {
+          "enum": ["delivered", "terminal_review", "failure_or_refusal", "in_progress", "unknown"]
+        },
+        "not_authoritative_current_state": {"const": true},
+        "boundary_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "run": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "api_run_id", "native_run_id", "first_timestamp", "last_timestamp",
+        "intervals", "no_progress_candidate_ids", "final_observed_posture"
+      ],
+      "properties": {
+        "api_run_id": {"$ref": "#/$defs/nullableText"},
+        "native_run_id": {"type": "string", "minLength": 1},
+        "first_timestamp": {"$ref": "#/$defs/timestamp"},
+        "last_timestamp": {"$ref": "#/$defs/timestamp"},
+        "intervals": {"type": "array", "items": {"$ref": "#/$defs/interval"}},
+        "no_progress_candidate_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "final_observed_posture": {"$ref": "#/$defs/finalPosture"}
+      }
+    },
+    "handoff": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "handoff_id", "kind", "from_interval_id", "to_interval_id",
+        "duration_ms", "witness_only_not_sla"
+      ],
+      "properties": {
+        "handoff_id": {"$ref": "#/$defs/sha256"},
+        "kind": {"const": "observed_execution_handoff"},
+        "from_interval_id": {"$ref": "#/$defs/sha256"},
+        "to_interval_id": {"$ref": "#/$defs/sha256"},
+        "duration_ms": {"type": "integer", "minimum": 0},
+        "witness_only_not_sla": {"const": true}
+      }
+    }
+  }
+}

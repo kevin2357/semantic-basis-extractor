@@ -1,5 +1,22 @@
 # Better Stack MCP log-query playbook
 
+## Export for a cohort swimlane
+
+Export one contiguous window containing both structured `✨🐶` SBE records
+and API `astrowoof.execution_event.v1` wrapper records. Preserve each complete
+JSON line and its outer Better Stack timestamp. Then run:
+
+```text
+astrowoof-run-report timeline --input "cohort.log" --output-dir cohort-report --display-timezone America/Denver
+```
+
+The resulting timeline uses native `message.timestamp` for SBE evidence and
+API `message.observed_at` for wrapper evidence. Adapter coverage in
+`report.timeline.json` records accepted, refused, and unsupported wrapper
+events, so a partial or future-schema export is visible rather than silently
+treated as complete. The view is diagnostic only; it does not replace Better
+Stack, API records, lifecycle documents, or native command results.
+
 ## Purpose
 
 Use Better Stack as a read-only investigation index for forwarded Render logs.

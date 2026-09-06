@@ -2,8 +2,8 @@
 
 ## Purpose
 
-`astrowoof-run-report` turns an exported SBE worker log into one closed
-diagnostic report and three human-facing views. It is intended for incident
+`astrowoof-run-report` turns an exported worker log into a closed diagnostic
+report and human-facing views. It is intended for incident
 review, run comparison, and spotting likely no-progress cycles without opening
 a native workspace.
 
@@ -23,9 +23,34 @@ The output directory contains:
 - `report.md`: review-friendly sampled matrix; and
 - `report.mmd`: compact Mermaid sequence source.
 
+When the export also contains supported API wrapper execution events, `build`
+additionally emits:
+
+- `report.timeline.json`: the closed shared-time cohort projection; and
+- `report.timeline.html`: a self-contained horizontal cohort swimlane.
+
+Native-only logs retain the original four outputs. To require cohort evidence
+and fail explicitly if it is unavailable, use:
+
+```text
+astrowoof-run-report timeline --input "cohort logs.txt" --output-dir cohort-report --display-timezone America/Denver
+```
+
+An existing timeline artifact can be rendered again without reparsing logs:
+
+```text
+astrowoof-run-report render --report cohort-report/report.timeline.json --format timeline-html --output cohort.html --display-timezone UTC
+```
+
 The HTML viewer works offline. Choose a run, filter lanes, change epoch density,
 select a cell for source-line evidence, or use **No-progress only** to focus on
 candidate windows.
+
+The cohort viewer places every run on one absolute axis. It can highlight a
+run, hide waits, highlight the existing no-progress candidates, and show exact
+source/evidence details for each interval. Lease spans are labeled observed
+execution allocations; neither they nor witnessed cross-run handoffs assert
+global slot ownership or an SLA.
 
 ## Matrix model
 
@@ -81,18 +106,24 @@ source-file digest, parser version, coverage, and report digest.
 
 ```text
 astrowoof-run-report-qa
+astrowoof-run-timeline-qa
 astrowoof-decision-evidence-observability-qa
 ```
 
-Both qualifications are provider-free and network-free. The first proves
+All qualifications are provider-free and network-free. The first proves
 deterministic four-format output, privacy-sentinel exclusion, closed receipt
-validation, and no-progress detection. The second proves the new stage,
+validation, and no-progress detection. The timeline qualification proves the
+public three-run CLI path, closed projection/receipt, shared handoff, incomplete
+evidence, no-progress overlay, two deliveries plus one review, and zero provider
+activity. The decision-evidence qualification proves the new stage,
 validation, and publication summaries survive packaging and parsing, preserve
 closed code counts, and cover the recent-investigation replay matrix. Neither
 inspects an SBE native workspace.
 
-## Known boundary
+## Evidence boundary
 
-This first version parses SBE worker logs only. A joined API/SBE view should be a
-separate contract because API queue/custody truth and SBE native truth have
-different owners. Missing log evidence never proves an event did not occur.
+The matrix is built from SBE evidence. The optional cohort projection joins only
+the approved diagnostic subset of API wrapper execution events and retains the
+owner and canonical timestamp field on every boundary. API observations do not
+become native truth, and native labels do not become scheduler authority.
+Missing log evidence never proves an event did not occur.
