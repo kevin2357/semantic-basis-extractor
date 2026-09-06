@@ -33,3 +33,10 @@
 - Installed that exact wheel outside the checkout with SPC `0.11.1`; `pip
   check`, packaged-resource inspection, public timeline QA, and the real-cohort
   CLI acceptance all passed.
+- Committed the first release-lock record as `9918b2c`, then rebuilt twice from
+  that exact commit with recorded final epoch `1788731058`. Both final wheels
+  were 1,248,102 bytes with SHA-256
+  `db13b03d697114c64375635e4564032afb9155998f53e6d6b9186e127c563246`.
+- Repeated clean installed qualification from that final candidate; SBE
+  `0.4.53`, SPC `0.11.1`, `pip check`, public QA, and real-cohort acceptance all
+  passed.

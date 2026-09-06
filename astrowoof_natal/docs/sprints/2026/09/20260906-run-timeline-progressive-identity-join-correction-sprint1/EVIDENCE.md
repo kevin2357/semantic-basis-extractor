@@ -74,6 +74,21 @@ gate is owner-approved subject to the final immutable publication decision.
 - Timeline qualification receipt SHA-256:
   `2d65be16c87eb1a6f104868957bc3b1b16980f6ca556aaa9a8aab98cad4d31f0`
 
-Final release-lock rebuild and installed qualification remain before tag
-authorization.
+## Final release-lock candidate
 
+- Release-lock precursor commit: `9918b2c`
+- Recorded final `SOURCE_DATE_EPOCH`: `1788731058`
+- Two clean builds from that exact commit: byte-identical
+- Final wheel size: `1,248,102` bytes
+- Final wheel SHA-256:
+  `db13b03d697114c64375635e4564032afb9155998f53e6d6b9186e127c563246`
+- Fresh installed SBE: `0.4.53` from `site-packages`
+- Installed SPC: `0.11.1`
+- `pip check`: no broken requirements
+- Public `astrowoof-run-timeline-qa`: pass
+- Real three-run installed CLI acceptance: pass with 138 accepted wrapper
+  events, zero refused wrapper lines, and all expected cycle/allocation classes
+- Provider calls, R2 access, and retained workspace access: zero
+
+One final byte-identity confirmation from the documentation-complete release
+lock remains before owner authorization to tag and publish.
