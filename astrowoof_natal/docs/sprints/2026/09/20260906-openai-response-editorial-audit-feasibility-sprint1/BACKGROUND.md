@@ -47,4 +47,3 @@ Current OpenAI documentation says stored Responses are retained for at least 30
 days and may be retrieved by exact response ID. This experiment must treat that
 as a time-bounded convenience, not an archival guarantee. A missing response must
 remain `unavailable`; it must not be reconstructed or treated as empty.
-

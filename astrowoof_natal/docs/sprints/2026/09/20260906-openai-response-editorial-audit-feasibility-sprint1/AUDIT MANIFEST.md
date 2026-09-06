@@ -38,4 +38,3 @@ All eight objects are stored, completed background Responses from
 message text each; polish attempt 1 contains approximately 10.7k characters and
 attempt 2 approximately 943 characters. This is consistent with full initial
 authoring artifacts followed by progressively narrower editorial patch payloads.
-
