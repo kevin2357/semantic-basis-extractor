@@ -2,7 +2,9 @@
 
 ## Status
 
-Slices 0–5 complete. Ready for Voof-paws 3 consumer/release review.
+Slices 0–6 complete. The full suite, deterministic release-lock builds, and
+installed public qualifications are green. Ready for final consumer review and
+explicit immutable-tag approval.
 
 ## Objective
 

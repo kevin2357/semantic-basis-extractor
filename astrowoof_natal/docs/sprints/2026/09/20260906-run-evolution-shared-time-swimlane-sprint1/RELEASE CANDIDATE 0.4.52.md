@@ -62,3 +62,17 @@ Commit this record as the release lock, rebuild twice from that exact commit
 and its timestamp, require byte-identical wheels, repeat the installed public
 qualifications, then pause for API review and explicit owner authorization
 before creating `astrowoof-natal-authoring-v0.4.52`.
+
+## Release-lock result
+
+- Release-lock commit used for the first lock pair:
+  `cf5f11224e4623050e6159b46e4dfe96b3c8a7ee`
+- Recorded release-lock epoch: `1788728182`
+- Both clean lock builds: `1,247,759` bytes
+- Both clean lock build SHA-256 values:
+  `f1a1bf73d8fdfde914fe70dae79e6e2330db7ae0c94d83be204d218b200c7895`
+- Reinstallation and all installed qualifications listed above: pass with
+  identical qualification receipt and artifact hashes.
+
+The final evidence commit must reproduce this exact wheel twice with the same
+recorded epoch before tag approval; documentation is outside the wheel payload.

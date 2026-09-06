@@ -124,3 +124,20 @@
 - Observed very high routine `INFO` trace volume; recorded its optimization as
   a separate test-infrastructure sprint so the release candidate is not changed
   during qualification.
+
+## 2026-09-06 — candidate and release-lock qualification
+
+- Clean installed qualification exposed an undeclared Windows `tzdata`
+  dependency required by `zoneinfo`; added the conditional dependency without
+  changing runtime logic or contracts.
+- Repeated the 69-test focused matrix after the metadata correction; all passed
+  with 5 skips.
+- Built the corrected artifact source twice from commit `6c15188` at epoch
+  `1788727982`; both 1,247,759-byte wheels matched at `504840…ef05`.
+- Installed the exact candidate with declared dependencies; `pip check`, generic
+  release smoke, run-report QA, run-timeline QA, and providerless-denial QA all
+  passed.
+- Created release-lock commit `cf5f112` and rebuilt twice at recorded epoch
+  `1788728182`; both wheels matched at `f1a1bf…c7895`.
+- Reinstalled that exact lock wheel and repeated the installed qualifications;
+  all passed with stable receipts and zero provider/R2/QA activity.
