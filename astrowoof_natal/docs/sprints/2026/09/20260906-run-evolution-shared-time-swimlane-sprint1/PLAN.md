@@ -2,9 +2,10 @@
 
 ## Status
 
-Slices 0–6 complete. The full suite, deterministic release-lock builds, and
-installed public qualifications are green. Ready for final consumer review and
-explicit immutable-tag approval.
+Complete. SBE `0.4.52` was built and qualified from the exact release-lock
+commit, published under immutable tag `astrowoof-natal-authoring-v0.4.52`, and
+verified by fresh download. The separate test-output/parallelization sprint
+remains intentionally outside this release.
 
 ## Objective
 
