@@ -1,0 +1,25 @@
+{
+  "api_run_id": "665cd3d2-332a-4ba7-9c0b-bb3fb4e1a177",
+  "approved_operations": {
+    "delete_count": 0,
+    "get_count": 1,
+    "head_count": 1,
+    "list_count": 0,
+    "write_count": 0
+  },
+  "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+  "checkpoint_generation": 10,
+  "checkpoint_id": "24f237ba-9448-4288-912d-992c92261984",
+  "expected_archive_bytes": 5041051,
+  "expected_archive_sha256": "f3b26af43b10eb8e9054a1e28433b824b0fd3612486bd0657544b02122af53ca",
+  "expected_etag": "48477096d5a2fef1d0d3a24a7bd6d762",
+  "expected_inventory_sha256": "aab540b3f5e3875e5e305b2b966f3f2c4b5fdcf101be56c81d1e26c88c3649f4",
+  "expected_media_type": "application/vnd.astrowoof.checkpoint+zip",
+  "expected_protection": "protected-operator",
+  "label": "ordinary-success-generation-10",
+  "native_run_id": "468479aa4a8d818392b2705919817c2ebca44cab78e3868657f8746b5e50f50e",
+  "object_key": "v1/checkpoint/e1379173377a42f7a12bb14663c24eb4",
+  "object_uuid": "e1379173-377a-42f7-a12b-b14663c24eb4",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1",
+  "storage_receipt_contract": "astrowoof.storage-receipt.v1"
+}

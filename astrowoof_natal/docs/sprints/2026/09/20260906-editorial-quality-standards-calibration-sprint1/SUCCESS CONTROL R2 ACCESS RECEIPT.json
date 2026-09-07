@@ -1,0 +1,24 @@
+{
+  "access_manifest_sha256": "ec24002b366beaa8ebbababa405dc48882ee27d29f697d8da312f99f42a58874",
+  "api_run_id": "665cd3d2-332a-4ba7-9c0b-bb3fb4e1a177",
+  "archive_bytes": 5041051,
+  "archive_sha256": "f3b26af43b10eb8e9054a1e28433b824b0fd3612486bd0657544b02122af53ca",
+  "checkpoint_generation": 10,
+  "checkpoint_id": "24f237ba-9448-4288-912d-992c92261984",
+  "etag": "48477096d5a2fef1d0d3a24a7bd6d762",
+  "inventory_sha256": "aab540b3f5e3875e5e305b2b966f3f2c4b5fdcf101be56c81d1e26c88c3649f4",
+  "media_type": "application/vnd.astrowoof.checkpoint+zip",
+  "native_run_id": "468479aa4a8d818392b2705919817c2ebca44cab78e3868657f8746b5e50f50e",
+  "object_key": "v1/checkpoint/e1379173377a42f7a12bb14663c24eb4",
+  "protection": "protected-operator",
+  "provider_operation_counts": {
+    "delete": 0,
+    "get": 1,
+    "head": 1,
+    "list": 0,
+    "write": 0
+  },
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt.v1",
+  "workspace_execution_count": 0,
+  "workspace_mutation_count": 0
+}

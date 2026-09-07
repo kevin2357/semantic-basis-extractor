@@ -1,7 +1,13 @@
 # Plan
 
-Status: Slices 0–1 and Voof-paws 1 complete; Slice 2 production replay in
-progress. No editorial-policy or runtime change is approved before Voof-paws 3.
+Status: Slices 0–2, Voof-paws 2, and Slice 3A tooling are complete. Slice 3
+packet construction includes an independently reconstructed ordinary
+successful-delivery control; owner and independent-model judgments remain
+pending. No editorial-policy or runtime change is approved before Voof-paws 3.
+
+API Slice 0-alpha now also has deterministic private real-corpus inputs for all
+three candidate query shapes. This supports the companion schema experiment but
+does not satisfy or replace the two pending editorial judgments.
 
 ## Goal
 
@@ -23,6 +29,42 @@ change.
   source workspaces, selected packets, and prior candidate decks are required.
 - Unknown or unavailable evidence remains explicit; it is never reconstructed
   from expected behavior.
+
+## Relationship to the joint retention companion
+
+The API companion sprint at
+`astrowoof-api/docs/sprints/2026/09/20260907-editorial-review-evidence-retention-companion-sprint87/`
+now owns the prospective **routine** `editorial_review_packet.v1`, its API
+transport envelope, Better Stack capture boundary, byte ceiling, omission
+semantics, and post-terminal delivery hook.
+
+This calibration sprint retains a different responsibility:
+
+- reproduce and normalize the four historical lineages;
+- determine which evidence a human or independent editorial model actually
+  needs to judge them;
+- perform the blinded calibration exercise; and
+- recommend editorial-policy changes from that evidence.
+
+The private lineage/review packets created here are research artifacts and
+schema inputs. They are not automatically the public/package contract for
+routine capture, and their existence does not authorize API transport or
+Better Stack publication. Conversely, the companion sprint must not narrow the
+private calibration evidence merely to make a small routine log packet fit.
+
+Slice 3 should feed measured evidence back into the companion contract pause:
+
+- canonical UTF-8 size of finding-local review packets;
+- incremental size of complete selected-deck text;
+- minimum useful content for accepted controls with no rejected finding;
+- fields reviewers actually use versus fields needed only for provenance; and
+- any evidence that cannot be represented faithfully within the proposed
+  routine packet ceiling.
+
+If the routine packet excludes complete deck text, this sprint may continue to
+use complete private decks for calibration. Their separately governed durable
+retention is a companion/API storage decision, not a reason to weaken the
+calibration exercise.
 
 ## Slice 0 — Freeze cohort and prepare one evidence-access campaign
 
@@ -122,8 +164,12 @@ introducing human/model judgments.
 
 ## Slice 3 — Independent editorial review packet
 
-Build a bounded, consistently formatted review packet for each meaningful
-candidate transition. Reviewers should see:
+Build a bounded, consistently formatted **private calibration packet** for each
+meaningful candidate transition. This is a research presentation format, not a
+silent freeze of `editorial_review_packet.v1`. Reuse the joint packet's field
+names and ordering where that improves comparability, but do not omit evidence
+needed for judgment merely because the eventual Better Stack packet may have a
+smaller ceiling. Reviewers should see:
 
 - affected text fields and enough neighboring context to judge repetition;
 - prior and candidate versions;
@@ -145,6 +191,50 @@ adoption: `accept`, `accept_with_advisory`, `request_another_polish`,
 
 Store full private review packets outside the repository. Commit only bounded,
 sanitized comparison results unless separately approved.
+
+The approved successful-delivery control is API run
+`665cd3d2-332a-4ba7-9c0b-bb3fb4e1a177`, native run
+`468479aa4a8d818392b2705919817c2ebca44cab78e3868657f8746b5e50f50e`,
+checkpoint generation 10. Its one authorized HEAD and conditional GET are
+complete. The archive, inventory, workspace snapshot, delivery result, and
+publication receipt all validate exactly. It contributes two ordinary accepted
+polish transitions and must remain in the blinded review set.
+
+For each packet, also record canonical UTF-8 size with and without complete
+selected-deck text. Summarize those measurements, plus which fields reviewers
+actually needed, for the companion sprint's joint contract review.
+
+## Slice 3A — Local blinded-review interface
+
+Build a local-only, static review page over the eight frozen finding-local
+packets. It must:
+
+- present exact before/after field text, prior/candidate findings, structural
+  validation, and whole-deck acceptance without revealing source run, subject,
+  historical adoption, or terminal outcome;
+- use the closed judgment vocabulary separately for deck acceptability and
+  candidate adoption;
+- support optional reviewer rationale and `insufficient_context` without
+  forcing a substantive decision;
+- show progress and prevent accidental silent omission at export time;
+- export deterministic JSON containing the frozen packet ID/digest, rubric
+  version, reviewer role supplied locally, judgments, and rationale;
+- perform no network, provider, API, R2, Better Stack, or retained-workspace
+  operation; and
+- keep both packets and exported judgments outside the repository.
+
+Generate the page deterministically from the frozen private packets and add a
+provider-free verification that checks packet order, identity binding, closed
+choices, blinding, HTML escaping, and export round-trip semantics. The separate
+answer key must never be embedded in the page.
+
+Slice 3A is review tooling only. It does not complete Slice 3 until an owner
+judgment and an independent-model judgment have actually been collected.
+
+Slice 3A result: the deterministic eight-sample local review page and its
+receipt are generated under
+`.tmp-editorial-calibration-r2/private-review-ui/`. The page contains no answer
+key, source/run/subject identity, network dependency, or external resource.
 
 ## Slice 4 — Cross-case calibration matrix
 

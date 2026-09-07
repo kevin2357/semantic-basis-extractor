@@ -24,3 +24,12 @@ The approved campaign budget is exhausted. Madeleine used exactly one conditiona
 HEAD and one conditional GET totaling `4,686,611` bytes. The campaign performed
 zero listings, writes, deletes, provider operations, workspace executions, or
 retained-workspace mutations. See `MADELEINE R2 ACCESS RECEIPT.json`.
+
+## Slice 3 successful-delivery control
+
+The separately approved ordinary successful-delivery control consumed exactly
+one HEAD and one conditional GET totaling `5,041,051` bytes. It performed zero
+listings, writes, deletes, provider operations, workspace executions, recovery,
+reconciliation, or retained-workspace mutations. Its separate allowance is now
+exhausted. See `SUCCESS CONTROL R2 ACCESS MANIFEST.json` and
+`SUCCESS CONTROL R2 ACCESS RECEIPT.json`.
