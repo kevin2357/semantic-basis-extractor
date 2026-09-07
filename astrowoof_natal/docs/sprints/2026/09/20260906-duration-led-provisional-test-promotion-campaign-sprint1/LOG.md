@@ -65,3 +65,21 @@
   retaining global/concurrency cases as serial until independently qualified.
 - Explicitly rejected combining decomposition and immediate parallel promotion.
 - Paused before any support extraction, file split, test rename, or promotion.
+
+## 2026-09-07 — paws-point review and Slice 1 audit
+
+- Ingested API's paws-point approval and retained its exact fences: support
+  stays non-discovered/test-only, production patch targets stay direct, the
+  compiled packet remains process-local/immutable, and identity equivalence is
+  proven incrementally before any family move.
+- Audited the two dominant provisional modules independently.
+- Found `test_bounded_lifecycle.py` likely process-isolated already: all writes
+  use owned temporary roots, provider surfaces are fake, and its internal
+  concurrency is behavior under test. Advanced it to collision qualification
+  without proposing a repair.
+- Found the Waffle/Scone finalization witness filesystem-isolated but highly
+  resource-intensive. Advanced it to collision/contention qualification while
+  withholding any promotion decision.
+- Defined self-collision, imported-helper-neighbor, semantic-closure-neighbor,
+  and resource-heavy-neighbor probes with exact outcome and residue checks.
+- Kept both modules provisional and paused before Slice 2.

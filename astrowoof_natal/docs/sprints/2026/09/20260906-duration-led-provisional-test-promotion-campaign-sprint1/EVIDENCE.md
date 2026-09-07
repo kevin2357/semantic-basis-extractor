@@ -2,8 +2,8 @@
 
 ## Status
 
-Slices 0 and 0A complete; paused for review before any promotion or semantic-
-closure decomposition.
+Slices 0, 0A, and 1 complete; paused before collision qualification, promotion,
+or semantic-closure support extraction.
 
 ## Baseline intake
 
@@ -48,7 +48,19 @@ closure decomposition.
 
 ## Promotion batches
 
-None. No manifest classification changed.
+No manifest classification has changed.
+
+Slice 1 audited the two dominant provisional modules:
+
+- `test_bounded_lifecycle.py`: temporary-root-owned, fake-provider,
+  subprocess-free, environment-stable; eligible for collision qualification.
+- `test_waffle_scone_finalization_slice0.py`: temporary-root-owned and
+  provider-free but resource-heavy, with inherited semantic-closure fixture and
+  two full public qualification calls; eligible for collision and contention
+  qualification, not presumptively promotable.
+
+Detailed surface inventory and probes:
+`SLICE 1 - FIRST BATCH STATE SURFACE AUDIT.md`.
 
 ## Whole-suite equivalence
 

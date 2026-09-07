@@ -2,9 +2,12 @@
 
 ## Status
 
-Slices 0 and 0A are complete. The campaign is paused at Campaign paws-point 1
-and the special semantic-closure refactor paws-point. No isolation repair,
-manifest promotion, or test-identity migration has begun.
+Slices 0, 0A, and 1 are complete. Campaign paws-point 1 approved a deliberately
+small two-module state-surface audit, and the special semantic-closure
+refactor paws-point approved support extraction under serial equivalence only.
+The campaign is paused before Slice 2 collision qualification. No isolation
+repair, manifest promotion, support extraction, or test-identity migration has
+begun.
 
 ## Objective
 
