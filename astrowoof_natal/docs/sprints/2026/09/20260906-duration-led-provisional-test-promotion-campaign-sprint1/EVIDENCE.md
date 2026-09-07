@@ -97,6 +97,19 @@ Full record: `SLICE 2 - FIRST COLLISION AND PROMOTION BATCH.md`.
 
 Full record: `SLICE 3 - PROMOTION BATCH 2.md`.
 
+### Slice 3 promotion batch 3 audit
+
+- audited the next three remaining duration leaders, totaling 56.832 frozen
+  isolated seconds;
+- all writable state is temporary-root-owned and all provider behavior is fake,
+  scripted, or explicitly fenced;
+- discovered-test helper imports in two modules are maintenance coupling but
+  remain process-isolated under the runner;
+- no repair or classification change made; and
+- collision qualification remains the next gate.
+
+Full record: `SLICE 3 - PROMOTION BATCH 3 STATE-SURFACE AUDIT.md`.
+
 ## Slice 1A serial-equivalence support extraction
 
 - pre-extraction source checkpoint: `e6b38f3`.

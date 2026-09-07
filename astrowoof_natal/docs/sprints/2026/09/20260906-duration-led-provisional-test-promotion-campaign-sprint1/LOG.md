@@ -145,3 +145,18 @@
 - Two concurrent actual-manifest two-worker runs both passed 301 tests with 42
   skips and exact matching identity/outcome digests.
 - Paused before selecting the next composed-runtime/qualification cohort.
+
+## 2026-09-07 — Slice 3 promotion batch 3 audit
+
+- Incorporated API's approval of promotion batch 2.
+- Selected the next three duration leaders, representing 56.832 seconds of the
+  original provisional tail.
+- Audited temporary paths, package-resource reads, provider fakes/fences,
+  scoped patches, per-test locks, process-local semantic fixture ownership, and
+  discovered-test helper imports.
+- Found no ambient environment/cwd, repository write, database, port, real
+  provider, or uncontrolled subprocess surface.
+- Advanced all three to collision qualification without changing production
+  code, test behavior, or manifest classification.
+- Paused before collision and promotion as required by the Batch 2 review's
+  no-blanket-promotion boundary.
