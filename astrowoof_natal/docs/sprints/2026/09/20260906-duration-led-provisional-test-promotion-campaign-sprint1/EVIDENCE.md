@@ -48,7 +48,7 @@ broader promotion or semantic-closure behavioral-family movement.
 
 ## Promotion batches
 
-No manifest classification has changed.
+Before Slice 2, no manifest classification had changed.
 
 Slice 1 audited the two dominant provisional modules:
 
