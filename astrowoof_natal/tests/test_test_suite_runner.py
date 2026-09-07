@@ -36,6 +36,48 @@ class TestSuiteRunnerTests(unittest.TestCase):
         self.assertEqual(RUNNER.assign_weighted(entries, 2), expected)
         self.assertEqual(RUNNER.assign_weighted(list(reversed(entries)), 2), expected)
 
+    def test_measurement_selection_does_not_promote_provisional_modules(self) -> None:
+        manifest = {
+            "parallel_safe": [
+                {"module": "test_safe.py", "weight_seconds": 1.0}
+            ],
+            "provisional": ["test_z.py", "test_a.py"],
+            "serial_only": ["test_serial.py"],
+        }
+        self.assertEqual(
+            RUNNER.measurement_modules(manifest, "provisional"),
+            ["test_a.py", "test_z.py"],
+        )
+        self.assertEqual(
+            RUNNER.measurement_modules(manifest, "parallel_safe"),
+            ["test_safe.py"],
+        )
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            RUNNER.measurement_modules(manifest, "not-a-class")
+
+    def test_named_measurement_selection_is_closed_to_its_classification(self) -> None:
+        manifest = {
+            "parallel_safe": [
+                {"module": "test_safe.py", "weight_seconds": 1.0}
+            ],
+            "provisional": ["test_z.py", "test_a.py"],
+            "serial_only": ["test_serial.py"],
+        }
+        self.assertEqual(
+            RUNNER.selected_measurement_modules(
+                manifest, "provisional", ["test_z.py"]
+            ),
+            ["test_z.py"],
+        )
+        with self.assertRaisesRegex(ValueError, "not classified"):
+            RUNNER.selected_measurement_modules(
+                manifest, "provisional", ["test_serial.py"]
+            )
+        with self.assertRaisesRegex(ValueError, "duplicate requested"):
+            RUNNER.selected_measurement_modules(
+                manifest, "provisional", ["test_a.py", "test_a.py"]
+            )
+
     def test_environment_removes_live_credentials(self) -> None:
         cleaned = RUNNER.sanitized_environment(
             {

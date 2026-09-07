@@ -2,8 +2,9 @@
 
 ## Status
 
-Planned. Begins only after the test-suite output and parallel-execution sprint
-freezes its authoritative equivalence/isolation result and manifest baseline.
+Slices 0 and 0A are complete. The campaign is paused at Campaign paws-point 1
+and the special semantic-closure refactor paws-point. No isolation repair,
+manifest promotion, or test-identity migration has begun.
 
 ## Objective
 
@@ -33,6 +34,9 @@ parallel set without changing tested semantics or release authority.
    authority chain.
 10. Whole-suite speedup claims use repeated runs from a named source identity
     on the same machine and record worker count and resource pressure.
+11. This campaign may change the recommended worker profile, but it does not
+    reconsider whether the already-adopted manifest/coordinator exists as the
+    supported broad-confidence framework.
 
 ## Slice 0 — freeze baseline and enhance timing evidence
 
@@ -42,9 +46,15 @@ parallel set without changing tested semantics or release authority.
   that no module is unclassified or multiply classified.
 - Extend the runner's diagnostic receipt, if necessary, to capture per-module
   elapsed time for serial/provisional execution without changing test outcomes.
+- Extend the existing `--measure-weights` calibration path explicitly: it
+  currently measures only `parallel_safe` entries and must not classify or run
+  provisional modules through the parallel path merely to time them.
 - Measure every provisional module in a deterministic one-module-at-a-time
   calibration pass using the same quiet/unquiet and sanitized environment rules
   intended for production test runs.
+- Measure `test_semantic_closure.py` separately as a named serial-only
+  scheduling atom. Do not reclassify it through the provisional calibration
+  path.
 - Repeat materially noisy/slow measurements and record median plus range rather
   than trusting one sample.
 - Produce a ranked table with cumulative serial-tail contribution and an
@@ -61,6 +71,52 @@ Deliverables:
 
 **Campaign paws-point 1:** review the ranked inventory and choose the first
 promotion batch before modifying test isolation.
+
+## Slice 0A — semantic-closure module decomposition feasibility
+
+This is the campaign's one explicit exception to the normal “small test-only
+repair” preference. It is an investigation only; implementation requires a
+separate go/no-go decision.
+
+- Measure `test_semantic_closure.py` independently and determine its share of
+  the serial tail. The module is currently `serial_only`, contains 98
+  test methods, and is one indivisible scheduling atom despite covering many
+  distinct behaviors.
+- Map its test classes, shared fixtures/helpers, module/process globals,
+  environment and logger mutation, filesystem roots, subprocesses, provider
+  fakes, concurrency cases, and ordering assumptions.
+- Group its cases into plausible cohesive modules such as initial authority,
+  reconciliation/retry, optional qualitative stages, Batch behavior,
+  persistence/checkpointing, finalization/cleanup, and provider
+  accounting/routing.
+- Determine whether common fixtures/helpers can move to a non-test support
+  module without altering discovery, patch targets, setup/teardown order, or
+  failure sensitivity.
+- Compare three options:
+  1. retain the module intact and serial;
+  2. split it for maintainability but keep every resulting module serial; or
+  3. split it and separately qualify appropriate child modules for parallel
+     execution while retaining truly global/concurrent cases as serial.
+- Estimate implementation size, review burden, likely merge-conflict risk,
+  expected scheduling benefit, and rollback complexity.
+- Define an exact before/after inventory and outcome equivalence proof that
+  accounts for renamed test identities rather than hiding them behind aggregate
+  counts.
+- Reject decomposition if it would require broad production changes, weaken
+  assertions, obscure scenario ownership, or create a fragile shared-fixture
+  abstraction merely to improve timing.
+
+Deliverables:
+
+- independent duration and serial-tail contribution;
+- state-surface and test-family map;
+- proposed file/helper boundaries, if viable;
+- benefit/risk/effort comparison of the three options; and
+- explicit go/no-go recommendation for a larger test-only refactor.
+
+**Special refactor paws-point:** owner/reviewer approval is required before any
+semantic-closure decomposition. All other campaign candidates remain limited
+to small, easily attributable isolation repairs.
 
 ## Slice 1 — state-surface audit of the highest-value batch
 
@@ -140,13 +196,15 @@ After the parallel set becomes materially larger:
 - Quantify absolute and percentage improvement against both the original serial
   baseline and the preceding conservative runner.
 
-**Campaign paws-point 3:** approve or reject adopting the expanded manifest as
-the supported broad-confidence route.
+**Campaign paws-point 3:** approve or reject adopting the expanded
+parallel-safe set and any new recommended worker profile. The underlying
+manifest/coordinator remains the supported broad-confidence framework either
+way.
 
 ## Slice 6 — workflow adoption and closeout
 
-- Update contributor/test documentation and the release playbook with the new
-  supported command, serial fallback, worker ceiling, and reproduction flow.
+- Update the existing runner guide and release playbook with any changed
+  parallel-safe set, recommended worker profile, and reproduction flow.
 - Document how new modules enter provisional classification and how promotion
   evidence is reviewed.
 - Document how timing weights are measured/refreshed without silently changing
@@ -226,6 +284,6 @@ Each provisional module ends the campaign in exactly one class:
 - broad wall time improves materially and repeatably;
 - failures remain exactly reproducible;
 - external systems remain untouched; and
-- release authority remains serial and provenance-bound.
+- release authority remains serial and provenance-bound; and
 - the manifest has a recorded path to pipeline-, tier-, and resource-aware
   distributed growth, whether implemented or explicitly deferred.

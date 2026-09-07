@@ -134,6 +134,35 @@ def assign_weighted(entries: list[dict], worker_count: int) -> list[list[str]]:
     return shards
 
 
+def measurement_modules(document: dict, classification: str) -> list[str]:
+    if classification == "parallel_safe":
+        modules = [entry["module"] for entry in document["parallel_safe"]]
+    elif classification in {"provisional", "serial_only"}:
+        modules = list(document[classification])
+    else:
+        raise ValueError(f"unsupported measurement classification: {classification}")
+    return sorted(modules)
+
+
+def selected_measurement_modules(
+    document: dict,
+    classification: str,
+    requested: list[str] | None,
+) -> list[str]:
+    available = measurement_modules(document, classification)
+    if not requested:
+        return available
+    duplicates = sorted({name for name in requested if requested.count(name) > 1})
+    if duplicates:
+        raise ValueError(f"duplicate requested measurement modules: {duplicates}")
+    unknown = sorted(set(requested) - set(available))
+    if unknown:
+        raise ValueError(
+            f"measurement modules are not classified as {classification}: {unknown}"
+        )
+    return sorted(requested)
+
+
 def serial_groups(document: dict) -> tuple[list[str], list[str]]:
     """Return provisional/serial modules split by quiet logging posture."""
     logging_sensitive = set(document["logging_sensitive"])
@@ -278,6 +307,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--parallel-only", action="store_true")
     parser.add_argument("--measure-weights", type=Path)
+    parser.add_argument(
+        "--measure-class",
+        choices=("parallel_safe", "provisional", "serial_only"),
+        default="parallel_safe",
+    )
+    parser.add_argument("--measure-module", action="append")
     parser.add_argument("--inject-failure-shard", type=int)
     parser.add_argument("modules", nargs="*")
     args = parser.parse_args(argv)
@@ -295,16 +330,20 @@ def main(argv: list[str] | None = None) -> int:
             tempfile.mkdtemp(prefix="astrowoof-test-weights-")
         )
         measurements = []
-        for entry in sorted(manifest["parallel_safe"], key=lambda item: item["module"]):
+        for module in selected_measurement_modules(
+            manifest, args.measure_class, args.measure_module
+        ):
             result = _run_group(
-                name=f"measure-{Path(entry['module']).stem}",
-                modules=[entry["module"]],
+                name=f"measure-{Path(module).stem}",
+                modules=[module],
                 work_root=measure_root,
-                quiet=True,
+                quiet=module not in manifest["logging_sensitive"],
             )
             measurements.append(
                 {
-                    "module": entry["module"],
+                    "classification": args.measure_class,
+                    "module": module,
+                    "protected_logging": module in manifest["logging_sensitive"],
                     "success": result["success"],
                     "test_count": result["test_count"],
                     "skip_count": result["skip_count"],

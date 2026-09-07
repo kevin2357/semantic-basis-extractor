@@ -21,6 +21,9 @@ them in controlled batches.
 
 ## Starting evidence
 
+- The preceding framework sprint closed at commit `d9129f6`; the runner and
+  manifest are now the supported broad-confidence route with one worker as the
+  default profile.
 - The checked-in manifest classifies 129 modules:
   - 38 parallel-safe;
   - 55 provisional;
@@ -35,10 +38,15 @@ them in controlled batches.
 - At least two modules that assert `INFO` logging were correctly kept in an
   explicit unquiet protected group. Logging behavior must not be accidentally
   erased during promotion.
+- The final supported command, invoked without a worker override, passed 1,118
+  tests with 58 skips in 1,122.983 seconds and recorded `worker_count=1`.
+- The final pre-adoption equivalence pair covered 1,115 tests with matching
+  exact test/outcome digests; its two-worker run took 1,091.085 seconds versus
+  964.806 seconds for one worker.
 
-Exact authoritative Slice 4 equivalence results remain owned by the preceding
-test-suite sprint. This campaign consumes that completed evidence; it does not
-rewrite it.
+Exact authoritative equivalence and adoption receipts remain owned by the
+preceding test-suite sprint. This campaign consumes that completed evidence; it
+does not rewrite it.
 
 ## Campaign hypothesis
 
@@ -52,6 +60,14 @@ Promoting the slowest safe modules first should produce substantially more
 wall-clock benefit than uniformly reviewing every provisional module or
 increasing worker count against the original 38-module set.
 
+One named serial-only module warrants separate consideration:
+`test_semantic_closure.py` is approximately 197 KB and contains 98 discovered
+test methods spanning several distinct lifecycle and product areas. The runner sees
+it as one indivisible scheduling atom. The campaign may investigate a larger
+decomposition of that module, but must pause for an explicit go/no-go decision
+before implementing it. This exception does not broaden the refactoring budget
+for other modules.
+
 ## Safety boundaries
 
 - No behavioral assertion may be weakened, skipped, or deleted to improve
@@ -60,6 +76,8 @@ increasing worker count against the original 38-module set.
   logging default changes merely to make a test parallel-safe.
 - Test-only isolation repairs must preserve the scenario and failure mode each
   test proves.
+- Outside the named semantic-closure feasibility study, complicated or broad
+  test refactors are out of scope; retain such modules as provisional/serial.
 - Modules involving shared repository paths, process-global mutation,
   concurrency/locking semantics, build artifacts, installed wheels, release
   receipts, migrations, or live/external systems remain serial unless their
