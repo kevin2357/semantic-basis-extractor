@@ -146,6 +146,19 @@ Full record: `SLICE 3 - PROMOTION BATCH 4 STATE-SURFACE AUDIT.md`.
 
 Full record: `SLICE 3 - PROMOTION BATCH 4 COLLISION QUALIFICATION.md`.
 
+### Slice 3 promotion batch 4 completion
+
+- promoted all three collision-qualified modules after API/owner approval;
+- actual-manifest stress proof repeated twice: 340 tests, 43 skips, success;
+- exact identity SHA-256:
+  `2067cf8cc50b6d0d0e1c24fa21571ed27f3e193bd53cf88343d9949f391ad1a8`;
+- exact outcome SHA-256:
+  `a84bf5dafbed50de93816b7b0665039ed4e6c4f498c67bbcad7a5be493612ba3`;
+- wall seconds: 291.909369 and 291.780719; and
+- manifest after batch: 49 parallel-safe, 44 provisional, 36 serial-only.
+
+Full record: `SLICE 3 - PROMOTION BATCH 4.md`.
+
 ## Slice 1A serial-equivalence support extraction
 
 - pre-extraction source checkpoint: `e6b38f3`.

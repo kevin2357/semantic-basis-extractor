@@ -70,6 +70,14 @@
       "weight_seconds": 11.000368
     },
     {
+      "module": "test_external_authority_v2_route_qualification.py",
+      "weight_seconds": 12.966
+    },
+    {
+      "module": "test_final_qa_mixed_custody_qa.py",
+      "weight_seconds": 16.625
+    },
+    {
       "module": "test_happy_path_qa_slice4b.py",
       "weight_seconds": 44.831
     },
@@ -146,6 +154,10 @@
       "weight_seconds": 19.633
     },
     {
+      "module": "test_post_fan_in_retry_routing_runtime_slice2.py",
+      "weight_seconds": 14.857
+    },
+    {
       "module": "test_post_fan_in_qa_slice4.py",
       "weight_seconds": 9.031192
     },
@@ -204,8 +216,6 @@
     "test_external_authority_v2_contract.py",
     "test_external_authority_v2_execution_gap.py",
     "test_external_authority_v2_intent_fence.py",
-    "test_external_authority_v2_route_qualification.py",
-    "test_final_qa_mixed_custody_qa.py",
     "test_initial_wave_public_contract.py",
     "test_lifecycle_closeout.py",
     "test_lifecycle_consumer.py",
@@ -223,7 +233,6 @@
     "test_post_fan_in_retry_contract_slice1.py",
     "test_post_fan_in_retry_matrix_slice0.py",
     "test_post_fan_in_retry_matrix_slice3.py",
-    "test_post_fan_in_retry_routing_runtime_slice2.py",
     "test_post_fan_in_retry_runtime_slice2.py",
     "test_provider_dispatch_result_cli.py",
     "test_provider_economics_export.py",

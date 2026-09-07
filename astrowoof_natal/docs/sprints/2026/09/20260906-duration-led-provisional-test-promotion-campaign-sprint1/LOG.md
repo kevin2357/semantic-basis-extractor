@@ -199,3 +199,15 @@
   cleanup instability.
 - Left the manifest unchanged at 46/47/36 and paused for the separate promotion
   decision before actual-manifest stress testing.
+
+## 2026-09-07 — Slice 3 promotion batch 4 completion
+
+- Incorporated API and owner promotion approval and corrected the stale
+  five-versus-eight cumulative promotion count.
+- Promoted the three qualified modules with their frozen isolated weights;
+  manifest moved from 46/47/36 to 49/44/36.
+- Ran two concurrent actual-manifest two-worker stress groups. Both passed 340
+  tests with 43 skips and exact matching identity/outcome digests.
+- Recorded the approximately 16.5-second critical-path increase as calibration
+  evidence, not a correctness failure or an inflated speedup claim.
+- Paused before Batch 5 selection.
