@@ -186,3 +186,16 @@
 - Recorded test-helper inheritance as maintenance debt contained by process
   isolation; no pre-collision refactor is justified.
 - Advanced the cohort to collision qualification without changing the manifest.
+
+## 2026-09-07 — Slice 3 promotion batch 4 collision qualification
+
+- Incorporated API's audit approval, which authorized collision testing but
+  explicitly withheld promotion.
+- Ran three repetitions with two independent copies of all three candidates.
+  All 18 workers passed with no skips, failures, or errors.
+- Preserved byte-exact unsupported-route nonmutation and exact v2 local
+  provider-call inventories.
+- Observed modest shared resource contention without correctness, isolation, or
+  cleanup instability.
+- Left the manifest unchanged at 46/47/36 and paused for the separate promotion
+  decision before actual-manifest stress testing.

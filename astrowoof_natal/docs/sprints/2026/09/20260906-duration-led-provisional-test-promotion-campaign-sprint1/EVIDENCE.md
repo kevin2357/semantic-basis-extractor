@@ -136,6 +136,16 @@ Full record: `SLICE 3 - PROMOTION BATCH 3.md`.
 
 Full record: `SLICE 3 - PROMOTION BATCH 4 STATE-SURFACE AUDIT.md`.
 
+### Slice 3 promotion batch 4 collision qualification
+
+- three repetitions, each containing two copies of all three candidates;
+- 18/18 workers passed with no skips, failures, or errors;
+- exact byte-level nonmutation and local provider-call assertions retained;
+- no external activity or shared-artifact escape; and
+- manifest intentionally unchanged pending promotion review.
+
+Full record: `SLICE 3 - PROMOTION BATCH 4 COLLISION QUALIFICATION.md`.
+
 ## Slice 1A serial-equivalence support extraction
 
 - pre-extraction source checkpoint: `e6b38f3`.
