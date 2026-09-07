@@ -122,6 +122,10 @@
       "weight_seconds": 2.461472
     },
     {
+      "module": "test_optional_stage_completed_evidence_adoption_slice2.py",
+      "weight_seconds": 17.683
+    },
+    {
       "module": "test_pass_protocol.py",
       "weight_seconds": 1.136321
     },
@@ -132,6 +136,14 @@
     {
       "module": "test_post_fan_in_authority_routing_contract_slice1.py",
       "weight_seconds": 0.377102
+    },
+    {
+      "module": "test_post_fan_in_retry_composed_runtime_slice3.py",
+      "weight_seconds": 19.516
+    },
+    {
+      "module": "test_post_fan_in_retry_qa_slice4.py",
+      "weight_seconds": 19.633
     },
     {
       "module": "test_post_fan_in_qa_slice4.py",
@@ -204,16 +216,13 @@
     "test_operator_disposition_packaging_slice4.py",
     "test_operator_disposition_reader_slice2.py",
     "test_operator_retirement_contract.py",
-    "test_optional_stage_completed_evidence_adoption_slice2.py",
     "test_payload_recovery_qa.py",
     "test_polish_authority_handoff_qa.py",
     "test_polish_authority_handoff_slice0.py",
     "test_post_fan_in_mixed_custody_slice4b.py",
-    "test_post_fan_in_retry_composed_runtime_slice3.py",
     "test_post_fan_in_retry_contract_slice1.py",
     "test_post_fan_in_retry_matrix_slice0.py",
     "test_post_fan_in_retry_matrix_slice3.py",
-    "test_post_fan_in_retry_qa_slice4.py",
     "test_post_fan_in_retry_routing_runtime_slice2.py",
     "test_post_fan_in_retry_runtime_slice2.py",
     "test_provider_dispatch_result_cli.py",

@@ -160,3 +160,17 @@
   code, test behavior, or manifest classification.
 - Paused before collision and promotion as required by the Batch 2 review's
   no-blanket-promotion boundary.
+
+## 2026-09-07 — Slice 3 promotion batch 3 qualification
+
+- Received owner approval to proceed from audit through collision and promotion
+  and pause at the combined review point.
+- Ran three repetitions containing two independent copies of all three
+  candidates. All 18 workers passed with exact expected skip posture.
+- Promoted all three modules without test or production changes; manifest moved
+  from 43/50/36 to 46/47/36.
+- Repeated the promoted actual-manifest stress proof twice concurrently. Both
+  runs passed 324 tests with 43 skips and matching identity/outcome digests.
+- Four-process critical-path time remained approximately 275.3 seconds despite
+  adding 23 tests to the parallel group.
+- Paused at the requested combined voof-paws.

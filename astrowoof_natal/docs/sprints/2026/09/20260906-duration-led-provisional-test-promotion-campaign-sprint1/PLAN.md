@@ -3,9 +3,9 @@
 ## Status
 
 Slices 0, 0A, 1, 1A, and 2 plus Slice 3 promotion batch 2 are complete. Five
-audited provisional modules have moved to `parallel_safe`, producing a 43/50/36
-manifest. Promotion batch 3's three-module state-surface audit is complete and
-the campaign is paused before its collision/promotion gate. Semantic closure remains serial: support-only extraction passed exact
+audited provisional modules have moved to `parallel_safe`, producing a 46/47/36
+manifest after promotion batch 3. The campaign is paused at the requested
+combined review point before another cohort is selected. Semantic closure remains serial: support-only extraction passed exact
 equivalence, but no behavioral family moved and no test identity changed.
 
 ## Objective
