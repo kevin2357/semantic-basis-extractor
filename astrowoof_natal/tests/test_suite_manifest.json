@@ -14,6 +14,10 @@
       "weight_seconds": 0.748476
     },
     {
+      "module": "test_adversarial_qa.py",
+      "weight_seconds": 24.845
+    },
+    {
       "module": "test_adversarial_route_matrix.py",
       "weight_seconds": 19.590797
     },
@@ -66,6 +70,10 @@
       "weight_seconds": 11.000368
     },
     {
+      "module": "test_happy_path_qa_slice4b.py",
+      "weight_seconds": 44.831
+    },
+    {
       "module": "test_initial_wave.py",
       "weight_seconds": 1.521856
     },
@@ -96,6 +104,10 @@
     {
       "module": "test_lifecycle_contracts.py",
       "weight_seconds": 0.631843
+    },
+    {
+      "module": "test_legacy_local_work_upgrade_qa.py",
+      "weight_seconds": 20.393
     },
     {
       "module": "test_native_transition_contract_proposal.py",
@@ -165,7 +177,6 @@
   "provisional": [
     "test_test_suite_runner.py",
     "test_adversarial_oracle.py",
-    "test_adversarial_qa.py",
     "test_adversarial_runtime_adapter.py",
     "test_axis_aware_policy.py",
     "test_basis_policies.py",
@@ -183,9 +194,7 @@
     "test_external_authority_v2_intent_fence.py",
     "test_external_authority_v2_route_qualification.py",
     "test_final_qa_mixed_custody_qa.py",
-    "test_happy_path_qa_slice4b.py",
     "test_initial_wave_public_contract.py",
-    "test_legacy_local_work_upgrade_qa.py",
     "test_lifecycle_closeout.py",
     "test_lifecycle_consumer.py",
     "test_lifecycle_inspection.py",

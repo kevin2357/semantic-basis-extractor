@@ -130,3 +130,18 @@
   four-process stress case. Both passed 281 tests with 40 skips and identical
   identity/outcome digests.
 - Focused runner/support guard suite passed 16 tests.
+
+## 2026-09-07 — Slice 3 promotion batch 2
+
+- Selected the next three remaining duration leaders: happy-path QA,
+  adversarial QA, and legacy local-work upgrade QA.
+- Audited their temporary paths, process-local receipt, child CLI, environment,
+  provider, repository-write, database, and port surfaces. No repair was needed.
+- Ran three six-process collision repetitions comprising two copies of every
+  candidate. All 60 aggregate test executions passed with six expected
+  optional-schema skips across the three repetitions.
+- Promoted all three candidates; manifest counts moved from 40/53/36 to
+  43/50/36.
+- Two concurrent actual-manifest two-worker runs both passed 301 tests with 42
+  skips and exact matching identity/outcome digests.
+- Paused before selecting the next composed-runtime/qualification cohort.

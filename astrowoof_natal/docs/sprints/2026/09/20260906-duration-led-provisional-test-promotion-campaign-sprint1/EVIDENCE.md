@@ -82,6 +82,21 @@ and outcome digests:
 
 Full record: `SLICE 2 - FIRST COLLISION AND PROMOTION BATCH.md`.
 
+### Slice 3 promotion batch 2
+
+- promoted `test_happy_path_qa_slice4b.py`, `test_adversarial_qa.py`, and
+  `test_legacy_local_work_upgrade_qa.py` after three green six-process
+  collision repetitions;
+- actual-manifest stress proof repeated twice: 301 tests, 42 skips, success;
+- exact identity SHA-256:
+  `9108c5ce651120c48b7e16b9029b798e26e1e17b002214e1b2e6ef026a4112e0`;
+- exact outcome SHA-256:
+  `ec7f2e1eb7a7e5426e4208a384de72fdbdd746552f532a0115592158e17f745f`;
+- wall seconds: 275.519889 and 275.380046; and
+- manifest after batch: 43 parallel-safe, 50 provisional, 36 serial-only.
+
+Full record: `SLICE 3 - PROMOTION BATCH 2.md`.
+
 ## Slice 1A serial-equivalence support extraction
 
 - pre-extraction source checkpoint: `e6b38f3`.

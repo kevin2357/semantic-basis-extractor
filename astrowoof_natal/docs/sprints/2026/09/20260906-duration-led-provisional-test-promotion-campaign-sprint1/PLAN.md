@@ -2,12 +2,11 @@
 
 ## Status
 
-Slices 0, 0A, 1, 1A, and 2 are complete. The first two audited provisional
-modules passed collision qualification and moved to `parallel_safe`, producing
-a 40/53/36 manifest. The campaign is paused at Campaign paws-point 2 before
-any broader promotion batch. Semantic closure remains serial: support-only
-extraction passed exact equivalence, but no behavioral family moved and no test
-identity changed.
+Slices 0, 0A, 1, 1A, and 2 plus Slice 3 promotion batch 2 are complete. Five
+audited provisional modules have moved to `parallel_safe`, producing a 43/50/36
+manifest. The campaign is paused for review before selecting another Slice 3
+cohort. Semantic closure remains serial: support-only extraction passed exact
+equivalence, but no behavioral family moved and no test identity changed.
 
 ## Objective
 
