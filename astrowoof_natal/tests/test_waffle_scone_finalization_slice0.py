@@ -10,7 +10,7 @@ from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 from astrowoof_natal_authoring import closure
 from astrowoof_natal_authoring.native_transitions import (
     publish_native_execution_result,

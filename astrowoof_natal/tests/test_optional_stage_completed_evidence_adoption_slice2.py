@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from astrowoof_natal.tests import test_nori_biscuit_reproduction_slice3 as _nori
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 from astrowoof_natal_authoring import closure
 from astrowoof_natal_authoring.spend import AmbiguousProviderSubmission
 from astrowoof_natal_authoring.post_fan_in_contracts import (

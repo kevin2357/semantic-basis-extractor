@@ -17,7 +17,7 @@ from astrowoof_natal.tests import (
 from astrowoof_natal.tests.test_post_fan_in_retry_authority_routing_slice0 import (
     _resume_arguments,
 )
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 from astrowoof_natal_authoring import (
     ExternalAuthorityV2ExecutionError,
     build_external_authority_grant_v2,

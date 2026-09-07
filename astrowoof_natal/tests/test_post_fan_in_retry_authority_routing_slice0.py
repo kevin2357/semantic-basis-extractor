@@ -13,7 +13,7 @@ from astrowoof_natal_authoring import closure
 from astrowoof_natal_authoring.initial_wave import InitialWaveError
 from astrowoof_natal_authoring.post_fan_in_contracts import inspect_post_fan_in_lifecycle
 from astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 import _binding
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 
 
 class _ReachedOrdinaryAuthoring(RuntimeError):

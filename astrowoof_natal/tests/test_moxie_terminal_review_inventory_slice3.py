@@ -25,7 +25,7 @@ from astrowoof_natal.tests import (
     test_post_fan_in_retry_authority_routing_slice0 as routing,
 )
 from astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 import _binding
-from astrowoof_natal.tests.test_semantic_closure import (
+from astrowoof_natal.tests._semantic_closure_support import (
     SemanticClosureFixture,
     authored_field_payload,
     completed_response,

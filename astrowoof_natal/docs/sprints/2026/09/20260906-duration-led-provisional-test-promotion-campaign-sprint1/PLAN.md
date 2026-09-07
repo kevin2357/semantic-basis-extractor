@@ -2,12 +2,13 @@
 
 ## Status
 
-Slices 0, 0A, and 1 are complete. Campaign paws-point 1 approved a deliberately
+Slices 0, 0A, 1, and 1A are complete. Campaign paws-point 1 approved a deliberately
 small two-module state-surface audit, and the special semantic-closure
 refactor paws-point approved support extraction under serial equivalence only.
-The campaign is paused before Slice 2 collision qualification. No isolation
-repair, manifest promotion, support extraction, or test-identity migration has
-begun.
+The support-only extraction has passed exact serial identity/outcome
+equivalence. The campaign is paused at the semantic-closure move paws-point and
+before Slice 2 collision qualification. No manifest promotion, behavioral
+family move, or test-identity migration has begun.
 
 ## Objective
 
@@ -136,6 +137,33 @@ For each selected high-duration module:
 - record the exact reason and expected timing value for its disposition.
 
 No module changes classification in this slice.
+
+## Slice 1A — semantic-closure support extraction and serial equivalence
+
+This is the approved first implementation phase of the Slice 0A feasibility
+study. It remains separate from provisional promotion and from any test-family
+move.
+
+- Freeze the exact 98-test pre-extraction identity and outcome inventory.
+- Create one non-discovered, test-only support module for the shared compiled
+  packet fixture, response builders, and scripted transport used across test
+  modules.
+- Keep fixture material process-local and immutable by convention; do not add a
+  persisted or cross-process cache.
+- Update consumers to import shared support directly rather than importing the
+  giant discovered test module merely to obtain its fixture.
+- Keep every test method in its existing file/class with its existing identity.
+- Keep production patches pointed at the original production module symbols.
+- Run the original semantic-closure module serially and require an exact
+  identity/outcome match to the frozen pre-extraction receipt.
+- Run all direct consumers of the extracted support to catch import, fixture,
+  patch-target, and setup/teardown drift.
+- Record the support dependency inventory and prove the new support filename is
+  outside `test_*.py` discovery.
+
+**Semantic-closure move paws-point:** pause after support extraction and serial
+equivalence. Moving any behavioral family, renaming any test identity, or
+attempting parallel promotion requires the next explicit approval.
 
 ## Slice 2 — first test-isolation repair and promotion batch
 

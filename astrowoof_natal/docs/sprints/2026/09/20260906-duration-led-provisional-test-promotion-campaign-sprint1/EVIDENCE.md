@@ -2,8 +2,8 @@
 
 ## Status
 
-Slices 0, 0A, and 1 complete; paused before collision qualification, promotion,
-or semantic-closure support extraction.
+Slices 0, 0A, 1, and 1A complete; paused before collision qualification,
+promotion, or semantic-closure behavioral-family movement.
 
 ## Baseline intake
 
@@ -61,6 +61,28 @@ Slice 1 audited the two dominant provisional modules:
 
 Detailed surface inventory and probes:
 `SLICE 1 - FIRST BATCH STATE SURFACE AUDIT.md`.
+
+## Slice 1A serial-equivalence support extraction
+
+- pre-extraction source checkpoint: `e6b38f3`.
+- frozen exact identities: 98.
+- pre/post identity SHA-256:
+  `09e21da6a7941622e1af6388e8ae36973099d2568d82e40d9e602f650c797ed8`.
+- pre/post outcome SHA-256:
+  `36f64afd5edbd4ee1c69a2bf3a2e71500a8cdb445a4ef3a8ff65a86033e60c97`.
+- final post-extraction semantic-closure result after per-test packet
+  isolation: 98 passed, no skips, failures, errors, expected failures, or
+  unexpected successes; 206.185926 seconds.
+- support module: `_semantic_closure_support.py`, excluded from test discovery.
+- direct consumers: 70 unique tests. Quiet negative-control result: 69 passed,
+  one logging-sensitive failure, zero errors. The affected manifest-declared
+  logging-sensitive module then passed all 11 tests unquiet in 40.816739
+  seconds.
+- final direct-consumer supported-posture pair: 59/59 quiet passed in
+  292.218333 seconds; 11/11 logging-sensitive unquiet passed in 50.318792
+  seconds. The two child processes overlapped without shared-state failure.
+- focused runner/support guard: 16 passed.
+- no manifest or production-package change.
 
 ## Whole-suite equivalence
 

@@ -29,7 +29,7 @@ from astrowoof_natal_authoring.external_authority import (
 )
 from astrowoof_natal_authoring.lifecycle import inspect_lifecycle
 from astrowoof_natal_authoring.reconciliation import initial_timing
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 
 
 class TestInitialWaveLineageFence(SemanticClosureFixture):

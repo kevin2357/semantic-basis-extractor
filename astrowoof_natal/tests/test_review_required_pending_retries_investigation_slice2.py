@@ -25,7 +25,7 @@ from astrowoof_natal.tests.test_post_fan_in_retry_matrix_slice0 import (
     _binding,
     _workspace,
 )
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 from astrowoof_natal_authoring.spend import authorize_action
 
 

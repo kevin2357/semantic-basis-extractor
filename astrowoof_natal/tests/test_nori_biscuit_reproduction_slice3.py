@@ -13,8 +13,10 @@ from astrowoof_natal.tests import test_moxie_terminal_review_inventory_slice3 as
 from astrowoof_natal.tests.test_post_fan_in_retry_authority_routing_slice0 import (
     _resume_arguments,
 )
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
-from astrowoof_natal.tests.test_semantic_closure import completed_response
+from astrowoof_natal.tests._semantic_closure_support import (
+    SemanticClosureFixture,
+    completed_response,
+)
 from astrowoof_natal_authoring import closure
 from astrowoof_natal_authoring.native_transitions import (
     read_native_transition_result,

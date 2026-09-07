@@ -83,3 +83,32 @@
 - Defined self-collision, imported-helper-neighbor, semantic-closure-neighbor,
   and resource-heavy-neighbor probes with exact outcome and residue checks.
 - Kept both modules provisional and paused before Slice 2.
+
+## 2026-09-07 — Slice 1A support extraction
+
+- Added the explicitly planned Slice 1A implementation phase under API's
+  approved serial-equivalence fences.
+- Froze all 98 pre-extraction semantic-closure test identities and the empty
+  adverse-outcome inventory in a checked-in JSON document.
+- Extracted the shared process-local compiled-packet fixture, response builders,
+  and scripted transport to non-discovered `_semantic_closure_support.py`.
+- Updated all direct consumers to import the support module rather than loading
+  the giant discovered test module for fixtures.
+- Preserved all 98 semantic-closure test locations and identities; production
+  patch targets remain direct.
+- Exact post-extraction serial run: 98 passed, with matching identity SHA
+  `09e21d...7ed8` and outcome SHA `36f64a...0c97`.
+- Strengthened the fixture from a mutable class packet to one process-local
+  compiled template plus a fresh deep copy owned by every test, then repeated
+  the exact 98-test proof successfully.
+- The direct-consumer quiet probe ran 70 tests with one known logging-posture
+  failure and no errors; its logging-sensitive module then passed all 11 tests
+  in the required unquiet posture.
+- Final supported-posture consumer pair: 59 quiet tests passed and 11 unquiet
+  tests passed in separate concurrent worker processes.
+- Added a permanent runner regression protecting non-discovery and direct
+  support imports.
+- Final focused runner/support guard: 16 passed; identity inventory JSON
+  validated; Python compilation and diff hygiene passed.
+- Paused before any family move, test rename, parallel promotion, or Slice 2
+  collision work.

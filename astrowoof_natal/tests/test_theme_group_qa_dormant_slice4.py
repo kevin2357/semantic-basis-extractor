@@ -8,12 +8,12 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from astrowoof_natal.tests.test_semantic_closure import (
+from astrowoof_natal.tests._semantic_closure_support import (
     ROOT,
     SemanticClosureFixture,
-    build_story_workspace,
-    fill_fake_workspace,
 )
+from astrowoof_natal_authoring.closure import fill_fake_workspace
+from astrowoof_natal_authoring.extractor import build_story_workspace
 from astrowoof_natal_authoring import pass_acceptance
 
 

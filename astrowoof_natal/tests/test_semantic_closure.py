@@ -94,12 +94,7 @@ from astrowoof_natal_authoring.closure import (  # noqa: E402
     _fake_field_value,
 )
 from astrowoof_natal_authoring.extractor import (  # noqa: E402
-    build_candidates,
     build_story_workspace,
-    compile_packet,
-    discover_subject_packages,
-    load_and_validate_contexts,
-    optimize,
     render_compact_v2_full_chart_basis,
 )
 from astrowoof_natal_authoring.validation import BAD_SECOND_PERSON  # noqa: E402
@@ -127,6 +122,12 @@ from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
     InitialWaveError,
     build_wave_authorization,
     validate_initial_wave_binding_bundle_against_wave,
+)
+from astrowoof_natal.tests._semantic_closure_support import (  # noqa: E402
+    SemanticClosureFixture,
+    ScriptedTransport,
+    authored_field_payload,
+    completed_response,
 )
 
 
@@ -159,68 +160,6 @@ def test_spend_policy() -> dict:
 
 
 EXAMPLES = ROOT / "examples"
-
-
-def authored_field_payload(workspace: Path) -> dict:
-    result = {}
-    ordinal = 0
-    for relative_path, fields in writable_fields(workspace).items():
-        result[relative_path] = {}
-        for field in fields:
-            ordinal += 1
-            if field == "context_filter_groups.high_level":
-                value = "Personality"
-            elif field == "context_filter_groups.detail_level":
-                value = "Core Personality"
-            else:
-                value = f"Fresh authored value {ordinal} for {field}."
-            result[relative_path][field] = value
-    return {"files": result}
-
-
-def completed_response(
-    authored: dict,
-    *,
-    response_id: str = "resp_test",
-) -> dict:
-    return {
-        "id": response_id,
-        "status": "completed",
-        "model": "gpt-5.6-terra",
-        "output": [
-            {
-                "type": "message",
-                "content": [
-                    {
-                        "type": "output_text",
-                        "text": json.dumps(authored),
-                    }
-                ],
-            }
-        ],
-        "usage": {
-            "input_tokens": 1000,
-            "input_tokens_details": {"cached_tokens": 200},
-            "output_tokens": 500,
-            "output_tokens_details": {"reasoning_tokens": 100},
-            "total_tokens": 1500,
-        },
-    }
-
-
-class ScriptedTransport:
-    def __init__(self, results: list[dict | Exception]) -> None:
-        self.results = list(results)
-        self.calls: list[dict] = []
-
-    def request_json(self, **kwargs):
-        self.calls.append(kwargs)
-        if not self.results:
-            raise AssertionError("Unexpected transport call")
-        result = self.results.pop(0)
-        if isinstance(result, Exception):
-            raise result
-        return result
 
 
 class ScriptedBatchTransport:
@@ -378,146 +317,6 @@ class ConcurrentTrackingProvider(FakeAuthoringProvider):
         finally:
             with self._lock:
                 self.active -= 1
-
-
-class SemanticClosureFixture(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        packages = discover_subject_packages(EXAMPLES, "bre")
-        contexts, registry, input_audit = load_and_validate_contexts(
-            "bre", packages["bre"]
-        )
-        candidates, analysis = build_candidates(contexts)
-        selected, rejected, _ = optimize(candidates)
-        cls.packet = compile_packet(
-            "bre",
-            contexts,
-            selected,
-            rejected,
-            analysis,
-            registry,
-            input_audit,
-        )
-
-    def make_passes(
-        self,
-        root: Path,
-        *,
-        count: int = 6,
-        cards_per_pass: int = 2,
-    ) -> tuple[dict, list[PassSpec], Path]:
-        bundle = root / "bundle"
-        bundle.mkdir()
-        for number in range(1, count + 1):
-            workspace = root / f"bre_{number}"
-            if number <= 5:
-                build_story_workspace(
-                    workspace,
-                    self.packet,
-                    ROOT,
-                    cards_per_pass,
-                    card_start=(number - 1) * cards_per_pass + 1,
-                    pass_number=number,
-                    pass_count=6,
-                )
-            else:
-                build_story_workspace(
-                    workspace,
-                    self.packet,
-                    ROOT,
-                    0,
-                    card_start=cards_per_pass * 5 + 1,
-                    include_summaries=True,
-                    include_theme_plan=True,
-                    pass_number=6,
-                    pass_count=6,
-                )
-            archive = bundle / f"bre_{number}.zip"
-            with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as handle:
-                for path in sorted(workspace.rglob("*")):
-                    if path.is_file():
-                        handle.write(
-                            path,
-                            (Path(workspace.name) / path.relative_to(workspace)),
-                        )
-        manifest = {
-            "status": "pass",
-            "subject_count": 1,
-            "subjects": [{"subject": "bre", "status": "pass"}],
-        }
-        specs = discover_passes(manifest, bundle) if count == 6 else []
-        return manifest, specs, bundle
-
-    def make_state(
-        self,
-        root: Path,
-        provider: FakeAuthoringProvider,
-        *,
-        max_attempts: int = 3,
-        cards_per_pass: int = 2,
-    ) -> tuple[dict, Path]:
-        manifest, specs, _ = self.make_passes(root, cards_per_pass=cards_per_pass)
-        run_dir = root / "run"
-        run_dir.mkdir()
-        packet_dir = run_dir / "sbe" / "semantic-basis-output" / "bre"
-        packet_dir.mkdir(parents=True)
-        (packet_dir / "bre.selected-authoring-packet.json").write_text(
-            json.dumps(self.packet, indent=2) + "\n", encoding="utf-8"
-        )
-        state = initial_run_state(
-            input_package=EXAMPLES,
-            run_dir=run_dir,
-            provider=provider,
-            max_attempts=max_attempts,
-            sbe_manifest=manifest,
-            specs=specs,
-            profile=(
-                {"spend_policy": test_spend_policy()}
-                if getattr(provider, "name", None) == "openai"
-                else None
-            ),
-        )
-        run_json = run_dir / "run.json"
-        save_state(run_json, state)
-        return state, run_json
-
-    def make_authorized_detached_batch(
-        self, root: Path, transport: ScriptedBatchTransport,
-    ) -> tuple[OpenAIResponsesProvider, dict, Path, dict]:
-        provider = OpenAIResponsesProvider(
-            api_key="test-key", model="gpt-5.6-luna",
-            max_output_tokens=30_000, prompt_cache_mode="disabled",
-            require_spend_authorization=True,
-        )
-        state, run_json = self.make_state(root, provider, cards_per_pass=10)
-        state["service_level"] = "batch"
-        save_state(run_json, state)
-        controller = SpendController(
-            state=state, run_json=run_json,
-            state_lock=threading.Lock(), consumer_id="batch-worker",
-        )
-        with self.assertRaises(AwaitingSpendAuthorization):
-            author_pending_passes_batch(
-                state=state, provider=provider, transport=transport,
-                run_dir=root / "run", max_attempts=3,
-                python_executable=Path(sys.executable), run_json=run_json,
-                detach=True, sleep=lambda _: None,
-                spend_controller=controller,
-            )
-        action = state["spend_ledger"]["actions"][0]
-        authorize_action(state["spend_ledger"], {
-            "schema_version": AUTHORIZATION_SCHEMA,
-            "action_id": action["action_id"], "binding": action["binding"],
-            "authorization_reference": "test-reservation",
-        })
-        save_state(run_json, state)
-        self.assertFalse(author_pending_passes_batch(
-            state=state, provider=provider, transport=transport,
-            run_dir=root / "run", max_attempts=3,
-            python_executable=Path(sys.executable), run_json=run_json,
-            detach=True, sleep=lambda _: None, spend_controller=controller,
-        ))
-        return provider, load_json(run_json), run_json, action
 
 
 class TestSemanticClosure(SemanticClosureFixture):

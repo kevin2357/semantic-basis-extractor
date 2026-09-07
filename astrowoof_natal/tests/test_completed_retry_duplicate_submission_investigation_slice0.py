@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from astrowoof_natal_authoring import closure
 from astrowoof_natal.tests import test_post_fan_in_retry_authority_routing_slice0 as _routing
-from astrowoof_natal.tests.test_semantic_closure import SemanticClosureFixture
+from astrowoof_natal.tests._semantic_closure_support import SemanticClosureFixture
 
 
 class CompletedRetryDuplicateSubmissionInvestigationSlice0Tests(

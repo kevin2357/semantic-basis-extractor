@@ -31,7 +31,7 @@ from astrowoof_natal_authoring.external_authority import (
 )
 from astrowoof_natal_authoring.execution_events import ExecutionEventEmitter
 from astrowoof_natal_authoring.initial_wave import InitialWaveError
-from astrowoof_natal.tests.test_semantic_closure import (
+from astrowoof_natal.tests._semantic_closure_support import (
     ScriptedTransport,
     SemanticClosureFixture,
 )

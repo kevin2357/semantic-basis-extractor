@@ -25,6 +25,26 @@ class TestSuiteRunnerTests(unittest.TestCase):
         manifest = RUNNER.load_manifest(RUNNER.DEFAULT_MANIFEST)
         RUNNER.validate_manifest(manifest)
 
+    def test_semantic_closure_support_is_nondiscovered_and_directly_shared(self) -> None:
+        test_dir = RUNNER.DEFAULT_MANIFEST.parent
+        support = test_dir / "_semantic_closure_support.py"
+        self.assertTrue(support.is_file())
+        self.assertNotIn(
+            support.name,
+            {path.name for path in test_dir.glob("test_*.py")},
+        )
+        stale_import = "test_semantic_closure import"
+        consumers = [
+            path.name
+            for path in test_dir.glob("test_*.py")
+            if path.name not in {
+                "test_semantic_closure.py",
+                "test_test_suite_runner.py",
+            }
+            and stale_import in path.read_text(encoding="utf-8")
+        ]
+        self.assertEqual([], consumers)
+
     def test_weighted_assignment_is_deterministic_and_balances_heavy_modules(self) -> None:
         entries = [
             {"module": "test_heavy.py", "weight_seconds": 10},
