@@ -30,6 +30,10 @@
       "weight_seconds": 0.903821
     },
     {
+      "module": "test_bounded_lifecycle.py",
+      "weight_seconds": 122.434
+    },
+    {
       "module": "test_bounded_basis.py",
       "weight_seconds": 1.490851
     },
@@ -152,6 +156,10 @@
     {
       "module": "test_terminal_review_qa_slice5.py",
       "weight_seconds": 22.394684
+    },
+    {
+      "module": "test_waffle_scone_finalization_slice0.py",
+      "weight_seconds": 122.645
     }
   ],
   "provisional": [
@@ -163,7 +171,6 @@
     "test_basis_policies.py",
     "test_batch_negative_authorization.py",
     "test_bounded_admission.py",
-    "test_bounded_lifecycle.py",
     "test_bounded_product_qa.py",
     "test_bounded_provider.py",
     "test_checkpoint_repair.py",
@@ -208,8 +215,7 @@
     "test_route_parity_resources.py",
     "test_sbe_v03.py",
     "test_spend_enforcement.py",
-    "test_terminal_review_interruption_slice4.py",
-    "test_waffle_scone_finalization_slice0.py"
+    "test_terminal_review_interruption_slice4.py"
   ],
   "serial_only": [
     "test_ambiguous_provider_submission_runtime.py",

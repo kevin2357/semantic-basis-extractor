@@ -112,3 +112,21 @@
   validated; Python compilation and diff hygiene passed.
 - Paused before any family move, test rename, parallel promotion, or Slice 2
   collision work.
+
+## 2026-09-07 — Slice 2 collision and promotion batch
+
+- Incorporated API's Slice 1A approval and preserved its explicit limit: no
+  semantic-closure move, rename, or promotion.
+- Bounded lifecycle passed three self-collisions, imported-helper neighbors, an
+  existing heavy parallel neighbor, and the Waffle/Scone pairing.
+- Waffle/Scone passed three self-collisions, the full semantic-closure neighbor,
+  and a qualification-heavy provisional neighbor.
+- Recorded the owner policy that correctness/isolation controls promotion;
+  modest or noisy current-laptop timing regressions do not independently veto
+  a safe module. Waffle/Scone showed resource contention but no instability.
+- Promoted both candidates, changing manifest counts from 38/55/36 to
+  40/53/36.
+- Ran two complete promoted two-worker parallel groups concurrently as a
+  four-process stress case. Both passed 281 tests with 40 skips and identical
+  identity/outcome digests.
+- Focused runner/support guard suite passed 16 tests.

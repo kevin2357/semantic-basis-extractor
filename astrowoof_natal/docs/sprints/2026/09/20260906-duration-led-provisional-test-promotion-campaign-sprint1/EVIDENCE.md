@@ -2,8 +2,8 @@
 
 ## Status
 
-Slices 0, 0A, 1, and 1A complete; paused before collision qualification,
-promotion, or semantic-closure behavioral-family movement.
+Slices 0, 0A, 1, 1A, and 2 complete; paused at Campaign paws-point 2 before
+broader promotion or semantic-closure behavioral-family movement.
 
 ## Baseline intake
 
@@ -61,6 +61,26 @@ Slice 1 audited the two dominant provisional modules:
 
 Detailed surface inventory and probes:
 `SLICE 1 - FIRST BATCH STATE SURFACE AUDIT.md`.
+
+Slice 2 promoted both candidates after the complete collision matrix:
+
+- bounded lifecycle: three two-copy self-collision repetitions plus imported
+  helper, logging-sensitive, and qualification-heavy neighbor probes passed;
+- Waffle/Scone: three two-copy self-collision repetitions plus full
+  semantic-closure and qualification-heavy neighbor probes passed;
+- no failures, errors, identity drift, protected-content leakage, provider I/O,
+  or external-system activity occurred; and
+- manifest inventory is now 40 parallel-safe, 53 provisional, 36 serial-only.
+
+Two complete promoted two-worker groups were run concurrently as a four-process
+stress case. Both passed 281 tests with 40 skips and exact matching identity
+and outcome digests:
+
+- identity: `84a5d22c08558e8152d4ed3c036223a5f8e2e68b0783c0379f38fc28a910bfb9`;
+- outcome: `b93079452e3c7ec7afdf8f6d3c109b3860c7336cbb37621d1d89762dfdc0eef1`;
+- wall seconds: 226.963869 and 226.712321.
+
+Full record: `SLICE 2 - FIRST COLLISION AND PROMOTION BATCH.md`.
 
 ## Slice 1A serial-equivalence support extraction
 

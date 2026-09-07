@@ -2,13 +2,12 @@
 
 ## Status
 
-Slices 0, 0A, 1, and 1A are complete. Campaign paws-point 1 approved a deliberately
-small two-module state-surface audit, and the special semantic-closure
-refactor paws-point approved support extraction under serial equivalence only.
-The support-only extraction has passed exact serial identity/outcome
-equivalence. The campaign is paused at the semantic-closure move paws-point and
-before Slice 2 collision qualification. No manifest promotion, behavioral
-family move, or test-identity migration has begun.
+Slices 0, 0A, 1, 1A, and 2 are complete. The first two audited provisional
+modules passed collision qualification and moved to `parallel_safe`, producing
+a 40/53/36 manifest. The campaign is paused at Campaign paws-point 2 before
+any broader promotion batch. Semantic closure remains serial: support-only
+extraction passed exact equivalence, but no behavioral family moved and no test
+identity changed.
 
 ## Objective
 
@@ -178,6 +177,9 @@ attempting parallel promotion requires the next explicit approval.
   the full parallel group repeatedly.
 - Promote only modules whose exact outcomes and isolation probes remain stable.
 - Leave rejected candidates provisional/serial with the observed reason.
+- Treat correctness/isolation as the promotion gate. Current-machine timing is
+  calibration evidence, not a veto for a safely parallelizable module unless
+  slowdown is clearly substantial/pathological or exposes resource instability.
 
 **Campaign paws-point 2:** review the first promotion batch and measured gain
 before expanding the technique.
