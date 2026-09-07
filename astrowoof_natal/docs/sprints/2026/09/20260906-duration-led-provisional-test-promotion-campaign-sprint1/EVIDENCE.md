@@ -124,6 +124,18 @@ Full record: `SLICE 3 - PROMOTION BATCH 3 STATE-SURFACE AUDIT.md`.
 
 Full record: `SLICE 3 - PROMOTION BATCH 3.md`.
 
+### Slice 3 promotion batch 4 audit
+
+- audited the next three duration leaders, totaling 44.448 frozen isolated
+  seconds;
+- all writes are confined to unique temporary workspaces and all provider
+  behavior is local/scripted;
+- no ambient or external authority surface was found;
+- no repair or manifest change made; and
+- collision qualification remains the next gate.
+
+Full record: `SLICE 3 - PROMOTION BATCH 4 STATE-SURFACE AUDIT.md`.
+
 ## Slice 1A serial-equivalence support extraction
 
 - pre-extraction source checkpoint: `e6b38f3`.

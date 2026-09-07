@@ -174,3 +174,15 @@
 - Four-process critical-path time remained approximately 275.3 seconds despite
   adding 23 tests to the parallel group.
 - Paused at the requested combined voof-paws.
+
+## 2026-09-07 — Slice 3 promotion batch 4 audit
+
+- Incorporated API's approval of promotion batch 3.
+- Selected and audited the next three duration leaders, totaling 44.448 frozen
+  isolated seconds.
+- Confirmed temporary-root ownership, local provider callables, unique copied
+  workspace paths, byte-level refusal nonmutation, and absence of uncontrolled
+  environment/repository/database/port/logger/subprocess state.
+- Recorded test-helper inheritance as maintenance debt contained by process
+  isolation; no pre-collision refactor is justified.
+- Advanced the cohort to collision qualification without changing the manifest.
