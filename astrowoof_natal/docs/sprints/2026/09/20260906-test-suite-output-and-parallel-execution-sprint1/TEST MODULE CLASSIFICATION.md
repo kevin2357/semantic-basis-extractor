@@ -1,9 +1,12 @@
 # Test module classification — Slice 1
 
-This is the conservative investigatory classification for all 128 modules.
-It is not yet the executable Slice 3 manifest.
+The executable manifest conservatively classifies all 129 current test modules.
+The 129th module is the runner test added in Slice 3. This is now the supported
+broad-confidence manifest; its current default execution profile uses one
+worker. Parallel classifications remain conservative and may expand only with
+recorded isolation/equivalence evidence.
 
-## Parallel-safe candidates (39)
+## Parallel-safe candidates (38)
 
 `test_adversarial_campaign.py`, `test_adversarial_consumer.py`,
 `test_adversarial_explorer.py`, `test_adversarial_route_matrix.py`,
@@ -13,7 +16,6 @@ It is not yet the executable Slice 3 manifest.
 `test_bounded_sprint_baseline.py`, `test_bounded_topology_contract_proposal.py`,
 `test_completed_retry_duplicate_submission_slice3.py`,
 `test_completed_retry_duplicate_submission_slice4.py`,
-`test_decision_evidence_observability_qa.py`,
 `test_external_authority_contract_proposal.py`,
 `test_external_authority_v2_qa.py`, `test_initial_wave.py`,
 `test_initial_wave_authority_round_trip.py`,
@@ -33,7 +35,7 @@ It is not yet the executable Slice 3 manifest.
 `test_providerless_denial_qa.py`, `test_terminal_dominance_slice1.py`,
 `test_terminal_review_contracts.py`, `test_terminal_review_qa_slice5.py`.
 
-## Provisionally isolated (54)
+## Provisionally isolated (55)
 
 `test_adversarial_oracle.py`, `test_adversarial_qa.py`,
 `test_adversarial_runtime_adapter.py`, `test_axis_aware_policy.py`,
@@ -74,13 +76,15 @@ It is not yet the executable Slice 3 manifest.
 `test_review_required_pending_retries_investigation_slice2.py`,
 `test_route_parity_resources.py`, `test_sbe_v03.py`,
 `test_spend_enforcement.py`, `test_terminal_review_interruption_slice4.py`,
+`test_test_suite_runner.py`,
 `test_waffle_scone_finalization_slice0.py`.
 
-## Serial-only initially (35)
+## Serial-only initially (36)
 
 `test_ambiguous_provider_submission_runtime.py`,
 `test_ambiguous_provider_submission_slice0.py`, `test_application_logging.py`,
 `test_completed_retry_duplicate_submission_slice2.py`, `test_deployed_qa.py`,
+`test_decision_evidence_observability_qa.py`,
 `test_execution_events.py`, `test_external_authority_execution.py`,
 `test_external_authority_v2_cli.py`,
 `test_external_authority_v2_intent_retirement_slice5.py`,

@@ -94,7 +94,20 @@ public contracts. It is also required when focused testing reveals unexplained
 collateral behavior or when review cannot bound the blast radius.
 
 The broad gate MUST still begin with the focused gate. Only after the focused
-matrix is green should the complete suite run, normally as:
+matrix is green should the complete suite run through the checked-in manifest
+and coordinator, normally as:
+
+```text
+python astrowoof_natal/scripts/run_test_suite.py
+```
+
+The supported default is currently one worker. It enforces complete manifest
+classification, sanitized child environments, owned output roots, protected
+observability tests, and exact test/outcome receipts. A higher worker count is
+an explicitly qualified execution profile, not an assumption based on CPU
+count. See `Test Suite Runner.md`.
+
+For runner diagnosis, the universal direct-discovery fallback remains:
 
 ```text
 python -m unittest discover -s astrowoof_natal/tests -p "test_*.py"

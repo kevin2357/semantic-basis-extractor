@@ -2,15 +2,15 @@
 
 ## Inventory
 
-The broad discovery currently contains 128 `test_*.py` modules. A conservative
-static first pass classified them as:
+The current broad discovery contains 129 `test_*.py` modules, including the
+runner test added in Slice 3. The corrected conservative classification is:
 
-- 39 parallel-safe candidates: pure contract/schema/fixture computation with
+- 38 parallel-safe candidates: pure contract/schema/fixture computation with
   no detected temp, subprocess, environment, logger, release, or concurrency
   surface;
-- 54 provisionally isolated modules: temporary directories, subprocesses, or
+- 55 provisionally isolated modules: temporary directories, subprocesses, or
   mock-heavy integration surfaces requiring explicit isolation proof; and
-- 35 serial-only modules: logging/process-global mutation, release/build,
+- 36 serial-only modules: logging/process-global mutation, release/build,
   concurrency/locking, or historically sensitive runtime integration.
 
 The classification is investigatory, not yet a supported checked-in runner
@@ -24,7 +24,8 @@ alphabetical discovery hides this dependency. Every shard runner must set one
 explicit, identical `PYTHONPATH` before collection. It must not rely on import
 side effects from another test module.
 
-After adding the explicit source path, the frozen 39-module inventory produced
+After adding the explicit source path, the historical frozen 39-module Slice 1
+inventory produced
 the same 239 tests and 41 skips at all worker counts:
 
 | Workers | Result | Tests | Skips | Wall time | Relative reduction |

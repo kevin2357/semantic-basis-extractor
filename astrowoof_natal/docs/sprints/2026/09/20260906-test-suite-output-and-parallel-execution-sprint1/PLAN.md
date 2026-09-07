@@ -2,9 +2,16 @@
 
 ## Status
 
-Slices 0–1 complete. Quiet logging is recommended for Slice 2, and a
-deterministic two-worker prototype is recommended for Slice 3. Neither is yet
-the documented default broad-suite route.
+Slices 0–6 complete. Quiet runner-bound logging and a deterministic weighted
+runner are implemented. Exact one-worker/two-worker test and outcome
+equivalence is proven, but the conservative two-worker configuration was
+126.279 seconds slower on this laptop because the serial tail dominates. The
+runner and manifest are adopted as the supported broad-confidence framework
+with a one-worker default; two-worker execution remains experimental pending
+duration-led promotion or qualification on stronger hardware. The bounded
+xdist comparison was also slower and did not remove the project-specific
+isolation layer. Sprint closed without a package release; duration-led
+provisional promotion continues in its separate campaign.
 
 ## Objective
 
@@ -171,6 +178,8 @@ Proceed only for the subset approved at Voof-paws 1.
 **Voof-paws 2:** review equivalence and isolation evidence before CI or release
 playbook adoption.
 
+Reached. No CI/default/release-playbook adoption has begun.
+
 ## Slice 5 — process and CI adoption
 
 - Add CI matrix shards only if the same checked-in manifest drives local runs.
@@ -185,6 +194,12 @@ playbook adoption.
 - Update contributor/testing documentation and Control Room issue #16 with
   measured results and any remaining exclusions.
 
+Adoption decision: use the checked-in runner and manifest as the supported
+broad-confidence framework now, with one worker as the default profile. Retain
+direct unittest discovery as the universal fallback. No repository CI workflow
+currently exists to wire; future CI must consume the same manifest/coordinator.
+Two-worker execution is not the default and no current speedup is claimed.
+
 ## Slice 6 — closeout or tooling release decision
 
 - Run focused tests for the test harness/runner itself.
@@ -196,6 +211,10 @@ playbook adoption.
 - If installed package behavior or packaged resources changed unexpectedly,
   stop and apply the full release playbook under a fresh version.
 - Record timing, inventory digests, outcomes, exclusions, and rollback command.
+
+Complete. The supported default command passed 1,118 tests with 58 skips using
+its implicit one-worker profile. This repository-only tooling/docs change does
+not require an SBE package release.
 
 ## Initial test strategy
 

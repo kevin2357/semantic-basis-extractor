@@ -22,14 +22,14 @@ reducing custom code.
 
 ## Measured Slice 1 evidence
 
-The current broad discovery contains 128 `test_*.py` modules. The conservative
-static classification found:
+The current broad discovery contains 129 `test_*.py` modules, including the
+runner test introduced in Slice 3. The corrected conservative classification is:
 
 | Classification | Modules | Current meaning |
 |---|---:|---|
-| Parallel-safe candidate | 39 | Pure contract/schema/fixture computation without a detected shared-state surface |
-| Provisionally isolated | 54 | Uses temporary directories, subprocesses, or mock-heavy integration and requires direct isolation proof |
-| Serial-only | 35 | Uses logging/process globals, build or release outputs, concurrency/locking, or historically sensitive runtime integration |
+| Parallel-safe candidate | 38 | Pure contract/schema/fixture computation without a detected shared-state surface |
+| Provisionally isolated | 55 | Uses temporary directories, subprocesses, or mock-heavy integration and requires direct isolation proof; this includes the Slice 3 runner test added after the original census |
+| Serial-only | 36 | Uses logging/process globals, build or release outputs, concurrency/locking, or historically sensitive runtime integration |
 
 The first direct-module run exposed a real hidden order dependency: some modules
 only imported successfully because earlier alphabetically discovered modules
@@ -134,9 +134,15 @@ comparison on clarity, equivalence, and maintenance cost.
 
 ## Initial supported boundary
 
-The first prototype should use only the 39 candidate modules and two workers.
-The 54 provisional modules should enter only after direct filesystem,
-environment, subprocess, and repeated-equivalence evidence. The 35 serial-only
+The first prototype should use only the 38 candidate modules and two workers.
+The correction from 39/35 to 38/36 occurred during Slice 2: the first quiet
+integrated run proved `test_decision_evidence_observability_qa.py` consumes INFO
+trace records as its test subject. It is therefore protected and serial, not a
+quiet parallel candidate. This was a classification correction, not an
+assertion or runtime change.
+
+The 55 provisional modules should enter only after direct filesystem,
+environment, subprocess, and repeated-equivalence evidence. The 36 serial-only
 modules stay serial unless a later focused investigation proves a narrower
 classification.
 
