@@ -82,4 +82,3 @@ complete-deck versus finding-local-context and byte-ceiling decision. That
 sequence is proportionate: ordinary editorial terminal paths are stable enough
 for a harmless future hook, while every exotic lifecycle route remains
 intentionally out of scope.
-
