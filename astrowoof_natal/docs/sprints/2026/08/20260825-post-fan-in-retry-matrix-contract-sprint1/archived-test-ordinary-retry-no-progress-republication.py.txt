@@ -1,0 +1,76 @@
+"""Archived forensic characterization; intentionally outside test discovery.
+
+Original active location:
+    astrowoof_natal/tests/test_post_fan_in_retry_matrix_slice0.py
+
+Original identity:
+    PostFanInRetrySlice0Tests.
+    test_ordinary_retry_cycle_can_republish_same_decision_without_progress
+
+Archived during the 2026-09-06 duration-led promotion campaign, Batch 10.
+Its green condition demonstrates the historical lifecycle-v0.5 hole: changing
+only revision/snapshot could republish the same semantic ordinary-resume
+decision. It is preserved as incident evidence, not an enduring regression.
+
+Current desired behavior is covered by:
+    test_post_fan_in_retry_runtime_slice2.py::
+      test_noop_progress_refuses_without_mutation
+    test_post_fan_in_retry_runtime_slice2.py::
+      test_completed_fan_in_seals_consumption_then_selects_retry_authority
+
+The active Slice 0 module retains `_workspace` and its three compatibility and
+precedence regressions.
+"""
+
+
+def archived_test_ordinary_retry_cycle_can_republish_same_decision_without_progress(self) -> None:
+    with tempfile.TemporaryDirectory() as temporary:
+        run_dir, _retry_one, retry_two = _workspace(Path(temporary), "exact_natal")
+        run_json = run_dir / "run.json"
+        state = json.loads(run_json.read_text(encoding="utf-8"))
+        payload = {"model": "scripted-provider", "input": "slice-0-retry"}
+        retry = next(
+            item for item in state["spend_ledger"]["actions"]
+            if item["action_id"] == retry_two
+        )
+        retry["binding"]["request_sha256"] = digest(payload)
+        run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+        (run_dir / "public-run.json").write_text(
+            json.dumps(public_run_state(state), indent=2) + "\n", encoding="utf-8"
+        )
+        write_workspace_snapshot(run_dir)
+        before = inspect_lifecycle(
+            run_dir, native_exclusive_access="declared",
+            observed_at="2026-08-25T23:43:00Z",
+        )
+        controller = SpendController(
+            state=state, run_json=run_json, state_lock=threading.Lock(),
+            consumer_id="slice-0-characterization",
+        )
+        before_submit, _provider_created = controller.callbacks(
+            stage="creative_retry", route="pass-1:attempt-003",
+            model="scripted-provider", service_level="interactive",
+            maximum_output_tokens=1000,
+        )
+        with self.assertRaises(AwaitingSpendAuthorization):
+            before_submit(payload)
+        self.assertEqual("PREPARED", retry["state"])
+        self.assertIsNone(retry.get("provider"))
+        state["state_revision"] += 1
+        run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+        (run_dir / "public-run.json").write_text(
+            json.dumps(public_run_state(state), indent=2) + "\n", encoding="utf-8"
+        )
+        write_workspace_snapshot(run_dir)
+        after = inspect_lifecycle(
+            run_dir, native_exclusive_access="declared",
+            observed_at="2026-08-25T23:43:01Z",
+        )
+        self.assertEqual("ordinary_resume", before["execution_branch"]["command"])
+        self.assertEqual("ordinary_resume", after["execution_branch"]["command"])
+        self.assertEqual(before["local_dependencies"], after["local_dependencies"])
+        self.assertNotEqual(
+            before["observation"]["snapshot_sha256"],
+            after["observation"]["snapshot_sha256"],
+        )
+        self.assertEqual([], after["provider_custody"]["next_due_action_ids"])

@@ -30,12 +30,20 @@
       "weight_seconds": 1.451722
     },
     {
+      "module": "test_axis_aware_policy.py",
+      "weight_seconds": 0.68
+    },
+    {
       "module": "test_bounded_authoring.py",
       "weight_seconds": 0.903821
     },
     {
       "module": "test_bounded_lifecycle.py",
       "weight_seconds": 122.434
+    },
+    {
+      "module": "test_bounded_product_qa.py",
+      "weight_seconds": 7.211
     },
     {
       "module": "test_bounded_basis.py",
@@ -54,6 +62,10 @@
       "weight_seconds": 0.326704
     },
     {
+      "module": "test_batch_negative_authorization.py",
+      "weight_seconds": 5.513
+    },
+    {
       "module": "test_completed_retry_duplicate_submission_slice3.py",
       "weight_seconds": 1.435017
     },
@@ -62,8 +74,28 @@
       "weight_seconds": 0.588105
     },
     {
+      "module": "test_checkpoint_repair.py",
+      "weight_seconds": 1.419
+    },
+    {
       "module": "test_external_authority_contract_proposal.py",
       "weight_seconds": 1.245008
+    },
+    {
+      "module": "test_external_authority_empty_inventory_investigation.py",
+      "weight_seconds": 1.585
+    },
+    {
+      "module": "test_external_authority_public.py",
+      "weight_seconds": 1.257
+    },
+    {
+      "module": "test_external_authority_v2_intent_fence.py",
+      "weight_seconds": 4.919
+    },
+    {
+      "module": "test_external_authority_qa.py",
+      "weight_seconds": 9.806
     },
     {
       "module": "test_external_authority_v2_qa.py",
@@ -106,12 +138,28 @@
       "weight_seconds": 1.079227
     },
     {
+      "module": "test_initial_wave_public_contract.py",
+      "weight_seconds": 0.7
+    },
+    {
       "module": "test_intent_retirement_qa_slice6.py",
       "weight_seconds": 9.815972
     },
     {
       "module": "test_lifecycle_contracts.py",
       "weight_seconds": 0.631843
+    },
+    {
+      "module": "test_lifecycle_consumer.py",
+      "weight_seconds": 2.662
+    },
+    {
+      "module": "test_lifecycle_closeout.py",
+      "weight_seconds": 1.546
+    },
+    {
+      "module": "test_lifecycle_inspection.py",
+      "weight_seconds": 0.669
     },
     {
       "module": "test_legacy_local_work_upgrade_qa.py",
@@ -122,12 +170,36 @@
       "weight_seconds": 1.215249
     },
     {
+      "module": "test_native_transition_availability.py",
+      "weight_seconds": 0.716
+    },
+    {
+      "module": "test_negative_authorization.py",
+      "weight_seconds": 4.649
+    },
+    {
       "module": "test_operator_disposition_contract_slice1.py",
       "weight_seconds": 0.714883
     },
     {
+      "module": "test_operator_disposition_packaging_slice4.py",
+      "weight_seconds": 2.868
+    },
+    {
+      "module": "test_operator_disposition_reader_slice2.py",
+      "weight_seconds": 1.043
+    },
+    {
+      "module": "test_operator_disposition_cross_route_slice3.py",
+      "weight_seconds": 0.756
+    },
+    {
       "module": "test_operator_retirement_qa.py",
       "weight_seconds": 2.461472
+    },
+    {
+      "module": "test_operator_retirement_contract.py",
+      "weight_seconds": 3.637
     },
     {
       "module": "test_optional_stage_completed_evidence_adoption_slice2.py",
@@ -138,12 +210,24 @@
       "weight_seconds": 1.136321
     },
     {
+      "module": "test_payload_recovery_qa.py",
+      "weight_seconds": 3.126
+    },
+    {
       "module": "test_pending_lifecycle_qa.py",
       "weight_seconds": 2.721464
     },
     {
+      "module": "test_polish_authority_handoff_qa.py",
+      "weight_seconds": 1.026
+    },
+    {
       "module": "test_post_fan_in_authority_routing_contract_slice1.py",
       "weight_seconds": 0.377102
+    },
+    {
+      "module": "test_post_fan_in_mixed_custody_slice4b.py",
+      "weight_seconds": 1.194
     },
     {
       "module": "test_post_fan_in_retry_composed_runtime_slice3.py",
@@ -156,6 +240,18 @@
     {
       "module": "test_post_fan_in_retry_routing_runtime_slice2.py",
       "weight_seconds": 14.857
+    },
+    {
+      "module": "test_post_fan_in_retry_runtime_slice2.py",
+      "weight_seconds": 3.386
+    },
+    {
+      "module": "test_post_fan_in_retry_matrix_slice3.py",
+      "weight_seconds": 1.029
+    },
+    {
+      "module": "test_post_fan_in_retry_contract_slice1.py",
+      "weight_seconds": 0.734
     },
     {
       "module": "test_post_fan_in_qa_slice4.py",
@@ -182,6 +278,22 @@
       "weight_seconds": 16.426431
     },
     {
+      "module": "test_provider_reconciliation_precedes_authority_slice0.py",
+      "weight_seconds": 0.779
+    },
+    {
+      "module": "test_sbe_v03.py",
+      "weight_seconds": 4.656
+    },
+    {
+      "module": "test_review_required_pending_retries_investigation_slice2.py",
+      "weight_seconds": 1.691
+    },
+    {
+      "module": "test_spend_enforcement.py",
+      "weight_seconds": 1.683
+    },
+    {
       "module": "test_terminal_dominance_slice1.py",
       "weight_seconds": 2.084203
     },
@@ -194,6 +306,10 @@
       "weight_seconds": 22.394684
     },
     {
+      "module": "test_terminal_review_interruption_slice4.py",
+      "weight_seconds": 5.87
+    },
+    {
       "module": "test_waffle_scone_finalization_slice0.py",
       "weight_seconds": 122.645
     }
@@ -202,47 +318,21 @@
     "test_test_suite_runner.py",
     "test_adversarial_oracle.py",
     "test_adversarial_runtime_adapter.py",
-    "test_axis_aware_policy.py",
     "test_basis_policies.py",
-    "test_batch_negative_authorization.py",
     "test_bounded_admission.py",
-    "test_bounded_product_qa.py",
     "test_bounded_provider.py",
-    "test_checkpoint_repair.py",
-    "test_completed_retry_duplicate_submission_investigation_slice0.py",
-    "test_external_authority_empty_inventory_investigation.py",
-    "test_external_authority_public.py",
-    "test_external_authority_qa.py",
+    "test_editorial_review_contract_foundation.py",
+    "test_editorial_review_contract_fixtures.py",
+    "test_editorial_review_contract_qualification.py",
+    "test_editorial_review_runtime.py",
     "test_external_authority_v2_contract.py",
     "test_external_authority_v2_execution_gap.py",
-    "test_external_authority_v2_intent_fence.py",
-    "test_initial_wave_public_contract.py",
-    "test_lifecycle_closeout.py",
-    "test_lifecycle_consumer.py",
-    "test_lifecycle_inspection.py",
-    "test_native_transition_availability.py",
-    "test_negative_authorization.py",
-    "test_operator_disposition_cross_route_slice3.py",
-    "test_operator_disposition_packaging_slice4.py",
-    "test_operator_disposition_reader_slice2.py",
-    "test_operator_retirement_contract.py",
-    "test_payload_recovery_qa.py",
-    "test_polish_authority_handoff_qa.py",
     "test_polish_authority_handoff_slice0.py",
-    "test_post_fan_in_mixed_custody_slice4b.py",
-    "test_post_fan_in_retry_contract_slice1.py",
     "test_post_fan_in_retry_matrix_slice0.py",
-    "test_post_fan_in_retry_matrix_slice3.py",
-    "test_post_fan_in_retry_runtime_slice2.py",
     "test_provider_dispatch_result_cli.py",
     "test_provider_economics_export.py",
-    "test_provider_reconciliation_precedes_authority_slice0.py",
     "test_retry_lineage_contract_slice3.py",
-    "test_review_required_pending_retries_investigation_slice2.py",
-    "test_route_parity_resources.py",
-    "test_sbe_v03.py",
-    "test_spend_enforcement.py",
-    "test_terminal_review_interruption_slice4.py"
+    "test_route_parity_resources.py"
   ],
   "serial_only": [
     "test_ambiguous_provider_submission_runtime.py",

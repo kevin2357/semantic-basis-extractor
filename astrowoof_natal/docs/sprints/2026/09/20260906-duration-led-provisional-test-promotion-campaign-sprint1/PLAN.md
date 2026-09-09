@@ -2,12 +2,14 @@
 
 ## Status
 
-Slices 0, 0A, 1, 1A, and 2 plus Slice 3 promotion batches 2–3 are complete.
-Eight audited provisional modules had moved to `parallel_safe` before Batch 4.
-Batch 4's three modules are promoted and its matching actual-manifest stress
-proof is complete, producing a 49/44/36 manifest. The campaign is paused before
-selecting Batch 5. Semantic closure remains serial: support-only extraction passed exact
+Closed after Batch 11 at owner direction. Batch 11 promoted seven modules and
+passed paired actual-manifest stress with 625 tests, 49 expected skips, matching
+test/outcome/manifest digests, and empty stderr. The final live manifest is
+78/18/36. Semantic closure remains serial: support-only extraction passed exact
 equivalence, but no behavioral family moved and no test identity changed.
+
+No Batch 12 work began. Every remaining objective transfers to
+`../20260909-duration-led-provisional-test-promotion-campaign-sprint2/`.
 
 ## Objective
 
@@ -193,12 +195,24 @@ before expanding the technique.
   outcome comparison.
 - Keep each batch small enough that a regression has a narrow attribution and
   rollback.
+- Adapt cohort size to the remaining duration/risk profile: retain three-module
+  cohorts for expensive or stateful tests, allow roughly four medium-duration
+  modules, and allow five-to-eight simple sub-second modules after one explicit
+  combined state-surface audit.
+- Cap collision concurrency to a host-appropriate level (currently about six
+  child processes). Qualify larger logical cohorts in controlled overlapping
+  waves with representative neighbors rather than launching two copies of the
+  entire cohort simultaneously and mistaking laptop saturation for instability.
+- Require newly discovered modules from concurrent sprints to enter
+  `provisional` immediately. Measure and audit a coherent new test family only
+  after its owning sprint freezes that family; do not promote a moving target.
 - Stop promoting when marginal savings no longer justify isolation complexity,
   resource contention erases the gain, or remaining modules express genuinely
   serial semantics.
 
-The number of batches is evidence-dependent. Each batch receives its own short
-evidence record and manifest diff.
+The number of batches is evidence-dependent, and the campaign need not eliminate
+the provisional class. Each batch receives its own short evidence record and
+manifest diff.
 
 ## Slice 4 — worker-count and scheduling calibration
 

@@ -3,12 +3,10 @@ from __future__ import annotations
 import copy
 import json
 import tempfile
-import threading
 import unittest
 from pathlib import Path
 
 from astrowoof_natal_authoring.closure import (
-    SpendController,
     normalized_path,
     public_run_state,
     write_workspace_snapshot,
@@ -20,7 +18,6 @@ from astrowoof_natal_authoring.lifecycle_contracts import (
 from astrowoof_natal_authoring.temporal_lifecycle import (
     build_lifecycle_inspection_v06,
 )
-from astrowoof_natal_authoring.spend import AwaitingSpendAuthorization, digest
 
 
 def _binding(run_id: str, stage: str, route: str, revision: int) -> dict:
@@ -158,58 +155,6 @@ def _workspace(root: Path, route_family: str) -> tuple[Path, str, str]:
 
 
 class PostFanInRetrySlice0Tests(unittest.TestCase):
-    def test_ordinary_retry_cycle_can_republish_same_decision_without_progress(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            run_dir, _retry_one, retry_two = _workspace(Path(temporary), "exact_natal")
-            run_json = run_dir / "run.json"
-            state = json.loads(run_json.read_text(encoding="utf-8"))
-            payload = {"model": "scripted-provider", "input": "slice-0-retry"}
-            retry = next(
-                item for item in state["spend_ledger"]["actions"]
-                if item["action_id"] == retry_two
-            )
-            retry["binding"]["request_sha256"] = digest(payload)
-            run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-            (run_dir / "public-run.json").write_text(
-                json.dumps(public_run_state(state), indent=2) + "\n", encoding="utf-8"
-            )
-            write_workspace_snapshot(run_dir)
-            before = inspect_lifecycle(
-                run_dir, native_exclusive_access="declared",
-                observed_at="2026-08-25T23:43:00Z",
-            )
-            controller = SpendController(
-                state=state, run_json=run_json, state_lock=threading.Lock(),
-                consumer_id="slice-0-characterization",
-            )
-            before_submit, _provider_created = controller.callbacks(
-                stage="creative_retry", route="pass-1:attempt-003",
-                model="scripted-provider", service_level="interactive",
-                maximum_output_tokens=1000,
-            )
-            with self.assertRaises(AwaitingSpendAuthorization):
-                before_submit(payload)
-            self.assertEqual("PREPARED", retry["state"])
-            self.assertIsNone(retry.get("provider"))
-            state["state_revision"] += 1
-            run_json.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-            (run_dir / "public-run.json").write_text(
-                json.dumps(public_run_state(state), indent=2) + "\n", encoding="utf-8"
-            )
-            write_workspace_snapshot(run_dir)
-            after = inspect_lifecycle(
-                run_dir, native_exclusive_access="declared",
-                observed_at="2026-08-25T23:43:01Z",
-            )
-            self.assertEqual("ordinary_resume", before["execution_branch"]["command"])
-            self.assertEqual("ordinary_resume", after["execution_branch"]["command"])
-            self.assertEqual(before["local_dependencies"], after["local_dependencies"])
-            self.assertNotEqual(
-                before["observation"]["snapshot_sha256"],
-                after["observation"]["snapshot_sha256"],
-            )
-            self.assertEqual([], after["provider_custody"]["next_due_action_ids"])
-
     def test_completed_retry_masks_prepared_retry_with_unqualified_local_resume(self) -> None:
         for route_family in ("exact_natal", "bounded_natal"):
             with self.subTest(route=route_family), tempfile.TemporaryDirectory() as temporary:
