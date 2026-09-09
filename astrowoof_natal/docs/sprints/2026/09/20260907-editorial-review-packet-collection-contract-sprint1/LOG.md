@@ -440,3 +440,26 @@
   gate, the release candidate will receive another complete regression run and
   fresh reproducible-wheel/installed qualification evidence. The first wheel
   SHA is superseded and is not release evidence.
+
+## 2026-09-09 — Slice 4 final candidate qualification
+
+- The post-correction full suite completed successfully: 1,154 tests passed
+  with 59 expected skips. The coordinator could not write its requested
+  `C:\tmp` receipt after completion, so the three complete worker results were
+  preserved and deterministically recomposed into the checked-in recovery
+  receipt. Its recovery annotation records this envelope-only exception.
+- Built twice from clean archive commit `979ac3f` with
+  `SOURCE_DATE_EPOCH=1788995617`. Both 1,377,672-byte wheels are byte-identical
+  at SHA-256
+  `6ade10180b56913fc1a90d88b76f2cd7b84685c026b8acee99a3300d920f9723`.
+- Installed the exact wheel with semantic-projection-core `0.11.1`, jsonschema
+  `4.26.0`, and tzdata `2026.3` in a fresh isolated environment. `pip check`
+  reported no broken requirements and imports resolved from site-packages.
+- The public `astrowoof-editorial-review-qa` command ran twice with byte-identical
+  receipts at SHA-256
+  `3c0d46fac5a13ddc5b4ea51722ac1626a83c9f0b5898f38a93cc5e9564dec50a`.
+  The installed contract/fixture/qualification/runtime matrix passed 35 tests
+  with schema validation enabled.
+- No provider, API, R2, Better Stack, database, retained-QA, or network runtime
+  activity occurred. Dependency installation was the only network-capable
+  packaging step.

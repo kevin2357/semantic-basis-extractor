@@ -252,10 +252,10 @@ assembled deck and canonical digest before any optional stage. Historical
 workspaces without it remain typed no-packet cases; unmodeled reconstruction
 stays excluded.
 
-**Current gate:** Slice 3 runtime construction is complete for the approved
-ordinary-live-exact surface and awaits joint review before packaging. The
-complete packet/projection/artifact set validates, repeated construction is
-byte-identical, and native workspace bytes remain unchanged.
+**Current gate:** Slice 3 runtime construction is approved. Slice 4 source,
+reproducible-wheel, and installed-package qualification is complete for the
+approved ordinary-live-exact surface; the exact candidate now awaits the joint
+installed-consumer handoff before any immutable tag or publication.
 
 ## Slice 4 — Package and installed-wheel qualification
 
@@ -274,6 +274,11 @@ Produce a bounded API consumer handoff with exact wheel and fixture digests.
 
 Pause for API confirmation that its post-commit hook consumes the installed SBE
 artifact without inference or lifecycle coupling.
+
+**Current gate:** paused here with candidate `0.4.54`, wheel SHA-256
+`6ade10180b56913fc1a90d88b76f2cd7b84685c026b8acee99a3300d920f9723`,
+and deterministic installed qualification receipt SHA-256
+`3c0d46fac5a13ddc5b4ea51722ac1626a83c9f0b5898f38a93cc5e9564dec50a`.
 
 ## Slice 5 — Joint provider-free end-to-end qualification
 
