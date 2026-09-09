@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from contextlib import redirect_stdout
+from io import StringIO
 import json
 import socket
 import subprocess
@@ -15,12 +17,31 @@ from astrowoof_natal_authoring.editorial_review_fixtures import (
     validate_editorial_review_fixture_bundle,
 )
 from astrowoof_natal_authoring.editorial_review_qa import (
+    main,
     run_editorial_review_contract_qualification,
     validate_editorial_review_contract_qualification,
+)
+from astrowoof_natal_authoring import (
+    build_editorial_review_runtime_capture,
+    collect_editorial_review_runtime_evidence,
+    read_eligible_editorial_result,
 )
 
 
 class TestEditorialReviewContractQualification(unittest.TestCase):
+    def test_public_runtime_entry_points_are_exported(self):
+        self.assertTrue(callable(build_editorial_review_runtime_capture))
+        self.assertTrue(callable(collect_editorial_review_runtime_evidence))
+        self.assertTrue(callable(read_eligible_editorial_result))
+
+    def test_public_qualification_cli_emits_valid_json(self):
+        output = StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(0, main([]))
+        self.assertTrue(
+            validate_editorial_review_contract_qualification(json.loads(output.getvalue()))
+        )
+
     def test_receipt_is_deterministic_closed_and_payload_free(self):
         left = run_editorial_review_contract_qualification()
         right = run_editorial_review_contract_qualification()

@@ -107,6 +107,11 @@ from .editorial_review_qa import (  # noqa: E402
     run_editorial_review_contract_qualification,
     validate_editorial_review_contract_qualification,
 )
+from .editorial_review_runtime import (  # noqa: E402
+    build_editorial_review_runtime_capture,
+    collect_editorial_review_runtime_evidence,
+    read_eligible_editorial_result,
+)
 from .theme_group_policy_qa import (  # noqa: E402
     read_theme_group_policy_qualification_schema,
     run_theme_group_policy_qualification,
@@ -782,4 +787,7 @@ __all__ = [
     "EDITORIAL_REVIEW_QUALIFICATION_VERSION",
     "run_editorial_review_contract_qualification",
     "validate_editorial_review_contract_qualification",
+    "build_editorial_review_runtime_capture",
+    "collect_editorial_review_runtime_evidence",
+    "read_eligible_editorial_result",
 ]

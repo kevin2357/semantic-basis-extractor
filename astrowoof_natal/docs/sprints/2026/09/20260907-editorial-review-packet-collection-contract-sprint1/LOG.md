@@ -396,3 +396,28 @@
 - Focused runtime/contract plus affected cleanup verification: 33 passed with
   1 expected optional-schema skip. Diff hygiene passes. Slice 3 pauses here for
   joint review before installed-wheel/package work.
+
+## 2026-09-09 — Slice 4 source and release-identity gates
+
+- Incorporated API's unconditional Slice 3 approval and selected the broad/full
+  release gate because immutable assembly retention changes shared workspace
+  persistence and the packet family is a new cross-repository public contract.
+- Froze the fresh unreleased distribution identity at `0.4.54` before release-
+  bound testing and updated the sole version-bound packaged fixture plus its
+  recomputed receipt digest.
+- The initial focused matrix passed 39 tests with 3 expected optional-schema
+  skips. The first manifest-governed full suite passed 1,151 tests with 59
+  expected skips in 890.049 seconds.
+- Package audit then caught that the reviewed runtime builder was importable
+  only from its internal module despite Slice 4 requiring an installed public
+  entry point. Added root-package exports for the exact result reader, evidence
+  collector, and runtime capture builder, plus the provider-free
+  `astrowoof-editorial-review-qa` console command and direct tests.
+- Repeated the affected focused matrix after that package-surface correction:
+  41 tests passed with 3 expected skips. Per the release playbook, the first
+  broad run was preserved as superseded evidence and the complete suite was run
+  again rather than waived.
+- The authoritative post-correction full suite passed 1,153 tests with 59
+  expected skips in 895.755 seconds. Its test inventory digest is
+  `44dacd2b85ca745aaddb65581abc05eb1087c0f128aa235dabb7c9260c1ec30f`.
+- No provider, API, R2, Better Stack, database, or retained-QA activity occurred.

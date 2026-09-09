@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import argparse
 from copy import deepcopy
 from gzip import GzipFile
 from hashlib import sha256
 from importlib.resources import files
 from io import BytesIO
+import json
+from pathlib import Path
 from typing import Any, Callable
 
 from .editorial_review_contracts import (
@@ -171,4 +174,27 @@ def validate_editorial_review_contract_qualification(receipt: dict[str, Any]) ->
     )
 
 
-__all__ = ["QUALIFICATION_VERSION", "run_editorial_review_contract_qualification", "validate_editorial_review_contract_qualification"]
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args(argv)
+    receipt = run_editorial_review_contract_qualification()
+    if not validate_editorial_review_contract_qualification(receipt):
+        raise ValueError("Editorial-review qualification receipt is invalid")
+    rendered = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered, encoding="utf-8")
+    else:
+        print(rendered, end="")
+    return 0
+
+
+__all__ = [
+    "QUALIFICATION_VERSION", "run_editorial_review_contract_qualification",
+    "validate_editorial_review_contract_qualification", "main",
+]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
