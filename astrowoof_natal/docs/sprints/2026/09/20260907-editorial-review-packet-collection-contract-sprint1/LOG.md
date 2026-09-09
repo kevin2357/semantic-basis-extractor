@@ -421,3 +421,22 @@
   expected skips in 895.755 seconds. Its test inventory digest is
   `44dacd2b85ca745aaddb65581abc05eb1087c0f128aa235dabb7c9260c1ec30f`.
 - No provider, API, R2, Better Stack, database, or retained-QA activity occurred.
+
+## 2026-09-09 — Slice 4 installed-package blocker and correction
+
+- The first isolated-wheel qualification exposed a real portability defect:
+  setuptools produced CRLF JSON resources on Windows while the semantic
+  contract pinned their source-checkout LF byte digests. The installed reader
+  therefore refused its own valid packaged schema family before qualification.
+- Corrected resource identity to normalize CRLF to LF before hashing. This
+  preserves the already-reviewed semantic-contract digests and makes the
+  identity stable across checkout and wheel line endings without relaxing JSON
+  schema or semantic validation.
+- Added direct line-ending-equivalence coverage and routed qualification receipt
+  schema hashes through the same function. The affected source matrix passed
+  35 tests with `jsonschema` installed, so no optional validation branch was
+  skipped.
+- Because this changes installed validation behavior after the prior full-suite
+  gate, the release candidate will receive another complete regression run and
+  fresh reproducible-wheel/installed qualification evidence. The first wheel
+  SHA is superseded and is not release evidence.

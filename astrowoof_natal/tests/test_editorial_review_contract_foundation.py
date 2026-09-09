@@ -12,6 +12,7 @@ from astrowoof_natal_authoring.editorial_review_contracts import (
     VALIDATOR_STAGES,
     canonical_editorial_review_json,
     derive_editorial_review_id,
+    editorial_review_resource_sha256,
     editorial_review_sha256,
     native_rule_registry,
     parse_editorial_review_json_strict,
@@ -39,10 +40,17 @@ class TestEditorialReviewContractFoundation(unittest.TestCase):
             raw = files("astrowoof_natal_authoring.resources").joinpath(
                 "contracts", name,
             ).read_bytes()
-            self.assertEqual(sha256(raw).hexdigest(), declared[name])
+            self.assertEqual(editorial_review_resource_sha256(raw), declared[name])
             schema = read_editorial_review_schema(kind)
             self.assertEqual("https://json-schema.org/draft/2020-12/schema", schema["$schema"])
             self.assertFalse(schema["additionalProperties"])
+
+    def test_schema_resource_identity_is_checkout_line_ending_independent(self):
+        raw = b'{\r\n  "type": "object"\r\n}\r\n'
+        self.assertEqual(
+            editorial_review_resource_sha256(raw),
+            editorial_review_resource_sha256(raw.replace(b"\r\n", b"\n")),
+        )
 
     def test_optional_jsonschema_accepts_every_schema_document(self):
         try:

@@ -15,3 +15,8 @@
 The earlier 1,151-test broad pass preceded addition of the required installed
 public exports and qualification console entry point. It remains honest
 superseded evidence and is not the final release-bound regression result.
+
+The 1,153-test result likewise predates correction of an installed-wheel-only,
+line-ending-sensitive schema digest failure. It is preserved as successful
+source evidence but is superseded as the final release-bound regression result;
+a fresh complete run is required after the correction.

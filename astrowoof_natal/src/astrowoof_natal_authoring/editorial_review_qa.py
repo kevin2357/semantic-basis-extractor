@@ -14,7 +14,8 @@ from typing import Any, Callable
 
 from .editorial_review_contracts import (
     SCHEMA_RESOURCES, canonical_editorial_review_json, digest_without,
-    editorial_review_sha256, read_editorial_review_semantic_contract,
+    editorial_review_resource_sha256, editorial_review_sha256,
+    read_editorial_review_semantic_contract,
 )
 from .editorial_review_fixtures import (
     FIXTURE_KINDS, build_editorial_review_capture_status,
@@ -141,7 +142,7 @@ def run_editorial_review_contract_qualification() -> dict[str, Any]:
         fixture_results[kind] = validate_editorial_review_fixture_bundle(fixture).outcome
     resource_root = files("astrowoof_natal_authoring.resources").joinpath("contracts")
     schema_sha256 = {
-        kind: sha256(resource_root.joinpath(name).read_bytes()).hexdigest()
+        kind: editorial_review_resource_sha256(resource_root.joinpath(name).read_bytes())
         for kind, name in SCHEMA_RESOURCES.items()
     }
     capture_reasons = sorted({

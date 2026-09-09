@@ -223,6 +223,11 @@ def _resource_bytes(name: str) -> bytes:
     ).read_bytes()
 
 
+def editorial_review_resource_sha256(raw: bytes) -> str:
+    """Hash packaged text resources independently of checkout line endings."""
+    return sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
+
+
 def read_editorial_review_schema(kind: str) -> dict[str, Any]:
     try:
         name = SCHEMA_RESOURCES[kind]
@@ -253,7 +258,7 @@ def read_editorial_review_semantic_contract() -> dict[str, Any]:
         if name in seen_resources or name not in SCHEMA_RESOURCES.values():
             raise ValueError("Editorial review semantic contract schema resource is invalid")
         seen_resources.add(name)
-        actual = sha256(_resource_bytes(name)).hexdigest()
+        actual = editorial_review_resource_sha256(_resource_bytes(name))
         if actual != item["sha256"]:
             raise ValueError("Editorial review semantic contract schema digest mismatch")
     rules = value.get("rules")
