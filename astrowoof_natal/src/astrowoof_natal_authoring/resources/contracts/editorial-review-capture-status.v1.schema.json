@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_capture_status.v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "capture_id", "outcome", "reason", "native_correlations", "detail_code"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_capture_status.v1"},
+    "capture_id": {"type": "string", "minLength": 1},
+    "outcome": {"const": "not_captured"},
+    "reason": {"enum": ["ineligible_route", "unsupported_result_version", "incomplete_native_evidence", "contradictory_native_evidence", "editorial_request_record_limit_exceeded", "editorial_request_byte_limit_exceeded"]},
+    "native_correlations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["native_run_id", "subject_id", "native_result_id"],
+      "properties": {
+        "native_run_id": {"type": "string", "minLength": 1},
+        "subject_id": {"type": "string", "minLength": 1},
+        "native_result_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "detail_code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"}
+  }
+}

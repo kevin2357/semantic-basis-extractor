@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_validation.v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "validation_id", "owner_kind", "validation_kind", "code", "outcome", "path", "report_id", "report_sha256", "finding_ids"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_validation.v1"},
+    "validation_id": {"type": "string", "minLength": 1},
+    "owner_kind": {"enum": ["decision", "terminal_selection"]},
+    "decision_id": {"type": "string", "minLength": 1},
+    "decision_ordinal": {"type": "integer", "minimum": 0},
+    "terminal_selection_id": {"type": "string", "minLength": 1},
+    "validation_kind": {"enum": ["structural_schema", "deterministic_acceptance", "candidate_adoption", "terminal_disposition"]},
+    "code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"},
+    "outcome": {"enum": ["passed", "failed", "advisory"]},
+    "path": {"type": "string", "minLength": 1},
+    "report_id": {"type": "string", "minLength": 1},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "finding_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  },
+  "oneOf": [
+    {"properties": {"owner_kind": {"const": "decision"}}, "required": ["decision_id", "decision_ordinal"], "not": {"required": ["terminal_selection_id"]}},
+    {"properties": {"owner_kind": {"const": "terminal_selection"}}, "required": ["terminal_selection_id"], "not": {"anyOf": [{"required": ["decision_id"]}, {"required": ["decision_ordinal"]}]}}
+  ]
+}

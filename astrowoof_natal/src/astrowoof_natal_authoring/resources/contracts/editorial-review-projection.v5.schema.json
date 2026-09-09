@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_projection.v5",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "projection_id", "projection_kind", "packet_id", "packet_sha256", "projected_native_id", "projected_native_sha256"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_projection.v5"},
+    "projection_id": {"type": "string", "minLength": 1},
+    "projection_kind": {"enum": ["decision", "finding", "validation"]},
+    "packet_id": {"type": "string", "minLength": 1},
+    "packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "owner_ordinal": {"type": "integer", "minimum": 0},
+    "projected_native_id": {"type": "string", "minLength": 1},
+    "projected_native_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decision": {"$ref": "editorial-review-decision.v5.schema.json"},
+    "finding": {"$ref": "editorial-review-finding.v1.schema.json"},
+    "validation": {"$ref": "editorial-review-validation.v1.schema.json"}
+  },
+  "oneOf": [
+    {"properties": {"projection_kind": {"const": "decision"}}, "required": ["decision", "owner_ordinal"], "not": {"anyOf": [{"required": ["finding"]}, {"required": ["validation"]}]}},
+    {"properties": {"projection_kind": {"const": "finding"}}, "required": ["finding", "owner_ordinal"], "not": {"anyOf": [{"required": ["decision"]}, {"required": ["validation"]}]}},
+    {"properties": {"projection_kind": {"const": "validation"}}, "required": ["validation", "owner_ordinal"], "not": {"anyOf": [{"required": ["decision"]}, {"required": ["finding"]}]}}
+  ]
+}

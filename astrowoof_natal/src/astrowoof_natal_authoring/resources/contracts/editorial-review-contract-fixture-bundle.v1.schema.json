@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_contract_fixture_bundle.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fixture_id", "fixture_kind", "semantic_contract_sha256", "editorial_request", "artifact_batches", "expected", "bundle_sha256"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_contract_fixture_bundle.v1"},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "fixture_kind": {"enum": ["accepted_delivery", "editorial_closeout"]},
+    "semantic_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "editorial_request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["events"],
+      "properties": {"events": {"type": "array", "minItems": 1, "maxItems": 99}}
+    },
+    "artifact_batches": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["batch_ordinal", "events"],
+        "properties": {
+          "batch_ordinal": {"type": "integer", "minimum": 0},
+          "events": {"type": "array"}
+        }
+      }
+    },
+    "expected": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packet_id", "packet_sha256", "event_count", "canonical_request_sha256", "canonical_gzip_sha256", "canonical_gzip_bytes", "artifact_ids", "validation_result"],
+      "properties": {
+        "packet_id": {"type": "string", "minLength": 1},
+        "packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "event_count": {"type": "integer", "minimum": 1, "maximum": 99},
+        "canonical_request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_gzip_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_gzip_bytes": {"type": "integer", "minimum": 1},
+        "artifact_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "validation_result": {
+          "type": "object", "additionalProperties": false,
+          "required": ["outcome"], "properties": {"outcome": {"const": "valid"}}
+        }
+      }
+    },
+    "bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

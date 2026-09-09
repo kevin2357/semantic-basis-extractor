@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_transport.v3",
+  "type": "object", "additionalProperties": false,
+  "required": ["transport_schema_version", "source_kind", "event_kind", "native_content", "native_content_sha256", "correlations", "observed_at"],
+  "properties": {
+    "transport_schema_version": {"const": "editorial_review_transport.v3"},
+    "source_kind": {"enum": ["editorial", "artifact"]},
+    "event_kind": {"enum": ["packet", "projection", "capture_status", "artifact"]},
+    "native_content": {"oneOf": [
+          {"$ref": "editorial-review-packet.v3.schema.json"},
+          {"$ref": "editorial-review-projection.v3.schema.json"},
+      {"$ref": "editorial-review-capture-status.v1.schema.json"},
+      {"$ref": "editorial-review-artifact.v1.schema.json"}
+    ]},
+    "native_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "correlations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["native", "api_observation"],
+      "properties": {
+        "native": {
+          "type": "object", "additionalProperties": false,
+          "required": ["native_run_id", "subject_id"],
+          "properties": {
+            "native_run_id": {"type": "string", "minLength": 1},
+            "subject_id": {"type": "string", "minLength": 1},
+            "packet_id": {"type": "string", "minLength": 1}
+          }
+        },
+        "api_observation": {
+          "type": "object", "additionalProperties": false,
+          "required": ["api_run_id", "api_job_id", "terminal_transition_id"],
+          "properties": {
+            "api_run_id": {"type": "string", "minLength": 1},
+            "api_job_id": {"type": "string", "minLength": 1},
+            "terminal_transition_id": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "observed_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {"if": {"properties": {"source_kind": {"const": "artifact"}}}, "then": {"properties": {"event_kind": {"const": "artifact"}}}},
+    {"if": {"properties": {"source_kind": {"const": "editorial"}}}, "then": {"properties": {"event_kind": {"enum": ["packet", "projection", "capture_status"]}}}}
+  ]
+}

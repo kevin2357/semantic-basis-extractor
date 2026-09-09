@@ -1,0 +1,62 @@
+{
+  "schema_version": "astrowoof.editorial-review.alloy-counterexample-receipt.v1",
+  "tool": {
+    "name": "Alloy Analyzer CLI",
+    "version": "6.2.0",
+    "distribution_sha256": "7379feeb56f5ea77ae20340b051436d05aab014eb1800786bb792a40fed5a576",
+    "solver": "sat4j"
+  },
+  "model": {
+    "path": "tools/editorial_review_counterexamples_v1.als",
+    "sha256": "56d0a3a7b1101889d5df83a1aa398900af6fb4cc89a8c3c258de1841004c43cb"
+  },
+  "scope": {
+    "decisions": 16,
+    "terminal_selections": 2,
+    "findings": 2,
+    "validations": 4,
+    "projections": 22,
+    "deck_upper_bound": 12,
+    "payload_digest_upper_bound": 12,
+    "actions": 4,
+    "bindings": 4,
+    "responses": 4,
+    "artifacts": 2,
+    "artifact_identities": 2,
+    "api_observations": 2
+  },
+  "inhabited_world": {
+    "command": "run FullContract",
+    "result": "SAT"
+  },
+  "assertion_checks": [
+    {"command": "check FullSelectionReachability", "result": "UNSAT"},
+    {"command": "check FullAdoptionOutput", "result": "UNSAT"},
+    {"command": "check FullContinuity", "result": "UNSAT"},
+    {"command": "check FullResponseUniqueness", "result": "UNSAT"},
+    {"command": "check FullFindingOwnership", "result": "UNSAT"},
+    {"command": "check FullValidationOwnership", "result": "UNSAT"},
+    {"command": "check FullProjectionRelation", "result": "UNSAT"},
+    {"command": "check FullArtifactIdentity", "result": "UNSAT"},
+    {"command": "check FullArtifactAbsence", "result": "UNSAT"},
+    {"command": "check FullObservationNonAuthority", "result": "UNSAT"}
+  ],
+  "weakened_rule_counterexamples": [
+    {"command": "run WithoutSelectionCounterexample", "result": "SAT"},
+    {"command": "run WithoutAdoptionCounterexample", "result": "SAT"},
+    {"command": "run WithoutContinuityCounterexample", "result": "SAT"},
+    {"command": "run WithoutResponseUniquenessCounterexample", "result": "SAT"},
+    {"command": "run WithoutFindingOwnershipCounterexample", "result": "SAT"},
+    {"command": "run WithoutValidationOwnershipCounterexample", "result": "SAT"},
+    {"command": "run WithoutProjectionCounterexample", "result": "SAT"},
+    {"command": "run WithoutArtifactIdentityCounterexample", "result": "SAT"},
+    {"command": "run ArtifactCompletenessControlsEligibilityCounterexample", "result": "SAT"},
+    {"command": "run ApiObservationControlsEligibilityCounterexample", "result": "SAT"}
+  ],
+  "interpretation": {
+    "sat_run": "at least one instance exists in the recorded finite scope",
+    "unsat_check": "no counterexample exists in the recorded finite scope",
+    "claim_limit": "bounded relational evidence; not universal proof of runtime code or serialization"
+  },
+  "recommendation": "retain_as_optional_developer_design_check"
+}

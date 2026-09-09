@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_packet.v4",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "packet_id", "packet_sha256", "eligibility", "native_correlations", "producer", "lineage", "initial_assembly", "findings", "validations", "terminal_selection", "artifact_manifest", "summary"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_packet.v4"},
+    "packet_id": {"type": "string", "minLength": 1},
+    "packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "eligibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["route", "terminal_outcome", "final_custody", "native_result_schema_version", "native_result_id", "native_result_sha256", "canonical_receipt_schema_version", "canonical_receipt_id", "canonical_receipt_sha256"],
+      "properties": {
+        "route": {"const": "ordinary_live_exact"},
+        "terminal_outcome": {"enum": ["delivery_complete", "editorial_review_required"]},
+        "final_custody": {"const": "resolved"},
+        "native_result_schema_version": {"type": "string", "minLength": 1},
+        "native_result_id": {"type": "string", "minLength": 1},
+        "native_result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_receipt_schema_version": {"type": "string", "minLength": 1},
+        "canonical_receipt_id": {"type": "string", "minLength": 1},
+        "canonical_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "native_correlations": {
+      "type": "object", "additionalProperties": false,
+      "required": ["native_run_id", "subject_id", "checkpoint_id", "checkpoint_generation", "checkpoint_sha256", "snapshot_id", "snapshot_sha256"],
+      "properties": {
+        "native_run_id": {"type": "string", "minLength": 1},
+        "subject_id": {"type": "string", "minLength": 1},
+        "checkpoint_id": {"type": "string", "minLength": 1},
+        "checkpoint_generation": {"type": "integer", "minimum": 0},
+        "checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "snapshot_id": {"type": "string", "minLength": 1},
+        "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "producer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["package", "version", "compatibility_identity", "profile_identity", "resource_identity", "builder_identity", "prompt_identity"],
+      "properties": {
+        "package": {"const": "astrowoof-natal-authoring"},
+        "version": {"type": "string", "minLength": 1},
+        "wheel_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "compatibility_identity": {"type": "string", "minLength": 1},
+        "profile_identity": {"type": "string", "minLength": 1},
+        "resource_identity": {"type": "string", "minLength": 1},
+        "builder_identity": {"type": "string", "minLength": 1},
+        "prompt_identity": {"type": "string", "minLength": 1}
+      }
+    },
+    "lineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision_count", "first_decision_id", "last_decision_id", "decisions"],
+      "properties": {
+        "decision_count": {"type": "integer", "minimum": 6},
+        "first_decision_id": {"type": "string", "minLength": 1},
+        "last_decision_id": {"type": "string", "minLength": 1},
+        "decisions": {"type": "array", "minItems": 6, "items": {"$ref": "editorial-review-decision.v4.schema.json"}}
+      }
+    },
+    "initial_assembly": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assembly_id", "accepted_pass_winners", "assembled_deck", "report_id", "report_sha256"],
+      "properties": {
+        "assembly_id": {"type": "string", "minLength": 1},
+        "accepted_pass_winners": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/pass_winner"}},
+        "assembled_deck": {"$ref": "#/$defs/deck_ref"},
+        "report_id": {"type": "string", "minLength": 1},
+        "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "findings": {"type": "array", "items": {"$ref": "editorial-review-finding.v1.schema.json"}},
+    "validations": {"type": "array", "items": {"$ref": "editorial-review-validation.v1.schema.json"}},
+    "terminal_selection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["terminal_selection_id", "selection_origin", "selected_deck", "delivery_disposition", "validation_ids"],
+      "properties": {
+        "terminal_selection_id": {"type": "string", "minLength": 1},
+        "selection_origin": {"enum": ["decision", "assembly"]},
+        "selected_deck": {"$ref": "#/$defs/deck_ref"},
+        "selected_by_decision_id": {"type": "string", "minLength": 1},
+        "delivered_deck": {"$ref": "#/$defs/deck_ref"},
+        "delivery_disposition": {"enum": ["delivered", "retained_for_editorial_review"]},
+        "validation_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      },
+      "allOf": [
+        {"if": {"properties": {"selection_origin": {"const": "decision"}}}, "then": {"required": ["selected_by_decision_id"]}, "else": {"not": {"required": ["selected_by_decision_id"]}}},
+        {"if": {"properties": {"delivery_disposition": {"const": "delivered"}}}, "then": {"required": ["delivered_deck"]}, "else": {"not": {"required": ["delivered_deck"]}}}
+      ]
+    },
+    "artifact_manifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decks", "provider_responses"],
+      "properties": {
+        "decks": {"type": "array", "items": {"$ref": "#/$defs/artifact_ref"}},
+        "provider_responses": {"type": "array", "items": {"$ref": "#/$defs/response_artifact_ref"}}
+      }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision_count", "finding_count", "validation_count", "creative_retry_count", "optional_stage_count"],
+      "properties": {
+        "decision_count": {"type": "integer", "minimum": 6},
+        "finding_count": {"type": "integer", "minimum": 0},
+        "validation_count": {"type": "integer", "minimum": 0},
+        "creative_retry_count": {"type": "integer", "minimum": 0},
+        "optional_stage_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "$defs": {
+    "pass_winner": {"type": "object", "additionalProperties": false, "required": ["released_pass_identity", "decision_id", "accepted_workspace_id", "accepted_workspace_sha256", "authored_claim_set_sha256"], "properties": {"released_pass_identity": {"type": "string", "minLength": 1}, "decision_id": {"type": "string", "minLength": 1}, "accepted_workspace_id": {"type": "string", "minLength": 1}, "accepted_workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "authored_claim_set_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "deck_ref": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "artifact_ref": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "artifact_kind", "object_sha256", "artifact_sha256"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "artifact_kind": {"const": "assembled_deck"}, "object_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "response_artifact_ref": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "artifact_kind", "object_sha256", "artifact_sha256", "provider_response_id"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "artifact_kind": {"const": "provider_response"}, "object_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "provider_response_id": {"type": "string", "minLength": 1}}}
+  }
+}

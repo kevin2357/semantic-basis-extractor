@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_validation_result.v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "outcome"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_validation_result.v1"},
+    "outcome": {"enum": ["valid", "invalid"]},
+    "classification": {"enum": ["unsupported_version", "ineligible_route", "incomplete_evidence", "contradictory_evidence", "invalid_schema", "digest_mismatch", "record_limit_exceeded", "byte_limit_exceeded"]},
+    "rule_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*\\.v1$"},
+    "location": {"type": "string", "minLength": 1},
+    "safe_detail_code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"}
+  },
+  "oneOf": [
+    {"properties": {"outcome": {"const": "valid"}}, "not": {"anyOf": [{"required": ["classification"]}, {"required": ["rule_id"]}, {"required": ["location"]}, {"required": ["safe_detail_code"]}]}},
+    {"properties": {"outcome": {"const": "invalid"}}, "required": ["classification", "rule_id", "location", "safe_detail_code"]}
+  ]
+}

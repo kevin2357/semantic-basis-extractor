@@ -237,6 +237,23 @@ def normalized_path(path: Path) -> str:
     return str(path.resolve())
 
 
+def retain_initial_assembled_deck(
+    *, run_dir: Path, final_root: Path, subject: str, deck: dict[str, Any],
+) -> tuple[str, str]:
+    """Persist the immutable pre-optional whole-deck input exactly once."""
+    path = final_root / f"natal.{subject}.initial-assembled-deck.json"
+    expected = spend_digest(deck)
+    if path.exists():
+        if not path.is_file() or spend_digest(load_json(path)) != expected:
+            raise AssemblyContractError(
+                "Initial assembled deck conflicts with retained native evidence"
+            )
+    else:
+        write_json_atomic(path, deck)
+    relative = path.resolve().relative_to(run_dir.resolve()).as_posix()
+    return relative, expected
+
+
 def provider_visible_subject(subject: Any) -> dict[str, Any]:
     """Return the explicit editorial identity view permitted to providers."""
     if not isinstance(subject, dict):
@@ -5470,6 +5487,9 @@ def assemble_subject(
     assembly_report["deterministic_context_filter_repairs"] = filter_repairs
     deck_path = final_root / f"natal.{subject}.cards.json"
     assembly_path = final_root / f"natal.{subject}.assembly-report.json"
+    initial_deck_path, initial_deck_sha256 = retain_initial_assembled_deck(
+        run_dir=run_dir, final_root=final_root, subject=subject, deck=deck,
+    )
     write_json_atomic(deck_path, deck)
     write_json_atomic(assembly_path, assembly_report)
 
@@ -5523,6 +5543,8 @@ def assemble_subject(
         "state": status,
         "packet": normalized_path(packet_path),
         "deck": normalized_path(deck_path),
+        "initial_assembled_deck": initial_deck_path,
+        "initial_assembled_deck_sha256": initial_deck_sha256,
         "assembly_report": normalized_path(assembly_path),
         "validation_report": normalized_path(validation_path),
         "lint_report": normalized_path(lint_path),
@@ -7890,13 +7912,25 @@ def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
 
     retained: list[str] = ["run.json", "public-run.json"]
     for subject, record in subjects.items():
-        for key in (
+        retained_keys = [
             "deck", "assembly_report", "validation_report", "lint_report",
-        ):
-            path = Path(record.get(key, ""))
+        ]
+        if record.get("initial_assembled_deck") is not None:
+            retained_keys.append("initial_assembled_deck")
+        for key in retained_keys:
+            raw_path = Path(record.get(key, ""))
+            path = raw_path if raw_path.is_absolute() else run_dir / raw_path
             if not path.is_file():
                 raise FileNotFoundError(
                     f"Completed {subject} is missing retained {key}: {path}"
+                )
+            if (
+                key == "initial_assembled_deck"
+                and spend_digest(load_json(path))
+                != record.get("initial_assembled_deck_sha256")
+            ):
+                raise ValueError(
+                    f"Completed {subject} has conflicting retained {key}: {path}"
                 )
             retained.append(normalized_path(path))
         delivery = Path(record.get("delivery", ""))

@@ -100,3 +100,31 @@
 - Focused generator tests: 2 passed. No network, provider, API, R2, Better
   Stack, recovery, reconciliation, or retained-workspace operation occurred.
 - Slice 3 remains paused for actual owner and independent-model judgments.
+
+## 2026-09-07 — research and collection implementation split
+
+- Confirmed that the five-run reconstruction appropriately served both the
+  original calibration research and API Sprint 87's early packet-content,
+  query-shape, and size investigation.
+- Froze the divergence point after Slice 3A. This sprint remains responsible
+  for human/model judgments, policy-family comparison, and editorial
+  recommendations only.
+- Moved all prospective public schema/reader, runtime construction, packaged
+  fixtures, installed qualification, API handoff, and release work to
+  `20260907-editorial-review-packet-collection-contract-sprint1`.
+- No production code, public contract, runtime hook, Better Stack write, or
+  release behavior changed as part of this administrative split.
+
+## 2026-09-07 — rubric gate inserted before judgment collection
+
+- Confirmed the owner inspected only the first review page and submitted no
+  judgments.
+- Identified that `astrowoof.editorial_calibration_rubric.v1-draft` is only a
+  placeholder identity; no operative evaluator instructions had been frozen.
+- Added Slice 3B before any use of the blinded tool. It separates deck
+  acceptability from candidate adoption and gives each question its own closed
+  vocabulary.
+- Marked the existing Slice 3A page as a pre-review prototype whose mixed
+  choices must not be used for calibration data.
+- Required owner approval of the written rubric before regenerating the page or
+  asking an independent model to judge samples.

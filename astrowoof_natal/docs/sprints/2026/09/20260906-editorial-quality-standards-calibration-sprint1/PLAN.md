@@ -1,9 +1,9 @@
 # Plan
 
-Status: Slices 0–2, Voof-paws 2, and Slice 3A tooling are complete. Slice 3
-packet construction includes an independently reconstructed ordinary
-successful-delivery control; owner and independent-model judgments remain
-pending. No editorial-policy or runtime change is approved before Voof-paws 3.
+Status: Slices 0–2, Voof-paws 2, and Slice 3A tooling are complete. No review
+answers have been collected. Slice 3B must freeze the real judgment rubric and
+regenerate the review page before owner or independent-model review begins.
+No editorial-policy or runtime change is approved before Voof-paws 3.
 
 API Slice 0-alpha now also has deterministic private real-corpus inputs for all
 three candidate query shapes. This supports the companion schema experiment but
@@ -65,6 +65,29 @@ If the routine packet excludes complete deck text, this sprint may continue to
 use complete private decks for calibration. Their separately governed durable
 retention is a companion/API storage decision, not a reason to weaken the
 calibration exercise.
+
+## Implementation split after Slice 3A
+
+The five-run reconstruction appropriately served both tracks during discovery:
+it exposed the evidence humans/models need for calibration and supplied real
+content, cardinality, query, and size inputs for API Sprint 87. Continuing both
+purposes here would now blur this sprint's original research goal.
+
+All production/package work for routine evidence collection now belongs to the
+separate SBE companion sprint:
+
+`20260907-editorial-review-packet-collection-contract-sprint1`
+
+This calibration sprint retains only owner/human and independent-model
+judgments, cross-case policy comparison, and recommendations for lint,
+candidate adoption, polish exhaustion, terminal review, prompts, and future
+calibration cohorts. It does not own a public packet schema/reader, runtime
+builder, terminal hook, Better Stack transport, installed-wheel qualification,
+or coordinated release.
+
+The collection companion may cite this sprint's measurements and conclusions,
+but routine capture cannot become editorial decision authority or a prerequisite
+for completing the calibration honestly.
 
 ## Slice 0 — Freeze cohort and prepare one evidence-access campaign
 
@@ -236,6 +259,65 @@ receipt are generated under
 `.tmp-editorial-calibration-r2/private-review-ui/`. The page contains no answer
 key, source/run/subject identity, network dependency, or external resource.
 
+The generated page is a pre-review prototype only. Its shared mixed choice
+vocabulary is not an approved judgment rubric and must not be used to collect
+or compare answers.
+
+## Slice 3B — Freeze the judgment rubric and regenerate the review tool
+
+Before any owner or independent-model judgment, write and approve one short,
+closed rubric that both reviewers receive verbatim. It must:
+
+- define **deck acceptability** separately from **candidate adoption**;
+- state that finding counts and deterministic labels are evidence, not automatic
+  verdicts;
+- require reviewers to assess whether the targeted issue disappeared, improved,
+  remained, or worsened, and whether new material regressions appeared;
+- preserve structural validity, authorized edit scope, evidence/binding
+  integrity, and available context as explicit considerations;
+- prohibit guessing source identity, historical production outcome, or the
+  decision the exercise is expected to vindicate;
+- define when insufficient evidence requires `insufficient_context`; and
+- request a concise evidence-based rationale for each decision.
+
+Use question-specific closed vocabularies rather than the Slice 3A prototype's
+mixed list:
+
+Deck acceptability:
+
+- `accept`;
+- `accept_with_advisory`;
+- `request_another_polish`;
+- `terminal_review`; and
+- `insufficient_context`.
+
+Candidate adoption:
+
+- `adopt_candidate`;
+- `retain_prior_candidate`; and
+- `insufficient_context`.
+
+The rubric must define these terms precisely, including that a locally improved
+candidate need not be a globally acceptable deck and that an acceptable deck
+need not imply every optional warning is resolved.
+
+After approval:
+
+1. bind a stable rubric version and SHA-256 to every review packet;
+2. regenerate the local page with separate question-specific controls;
+3. embed the complete rubric visibly in the page;
+4. update the export contract and tests to reject cross-question choices;
+5. prove the packet order, identities, blinding, escaping, completeness gate,
+   and deterministic export remain intact; and
+6. discard any answers produced with the placeholder Slice 3A vocabulary.
+
+### Rubric paws point
+
+Pause for owner review of the written rubric and exact vocabularies before
+regenerating the page or soliciting either reviewer. The independent model must
+receive the identical frozen rubric and packet evidence, without the answer key
+or the owner's judgments.
+
 ## Slice 4 — Cross-case calibration matrix
 
 Compare machine and reviewer decisions across the cohort. At minimum, test these
@@ -288,3 +370,7 @@ After Voof-paws 3, amend this plan or open a focused implementation sprint for:
 
 The exact implementation slices are intentionally not precommitted before the
 calibration result.
+
+Routine evidence collection is no longer one of these possible follow-on
+slices; it belongs to the named implementation companion above. Editorial-policy
+or prompt changes informed by the judgments remain a separate later decision.

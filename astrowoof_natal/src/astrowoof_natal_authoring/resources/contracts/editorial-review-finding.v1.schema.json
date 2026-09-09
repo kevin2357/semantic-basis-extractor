@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_finding.v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "finding_id", "decision_id", "decision_ordinal", "finding_kind", "code", "severity", "phase", "message", "population", "field_context", "evidence_sha256"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_finding.v1"},
+    "finding_id": {"type": "string", "minLength": 1},
+    "decision_id": {"type": "string", "minLength": 1},
+    "decision_ordinal": {"type": "integer", "minimum": 0},
+    "finding_kind": {"enum": ["lint", "deterministic_qa", "editorial", "materialization"]},
+    "code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"},
+    "severity": {"enum": ["advisory", "warning", "error"]},
+    "phase": {"enum": ["initial_acceptance", "post_retry", "post_polish", "post_critic", "post_candidate", "terminal"]},
+    "message": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "population": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode", "evaluated_count", "affected_count", "affected_claim_ids"],
+          "properties": {
+            "mode": {"const": "claim_ids"},
+            "evaluated_count": {"type": "integer", "minimum": 0},
+            "affected_count": {"type": "integer", "minimum": 0},
+            "affected_claim_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode", "evaluated_count", "affected_count"],
+          "properties": {
+            "mode": {"const": "count_only"},
+            "evaluated_count": {"type": "integer", "minimum": 0},
+            "affected_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {"mode": {"const": "not_claim_scoped"}}
+        }
+      ]
+    },
+    "field_context": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["field_path", "before_state", "after_state"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "field_path": {"type": "string", "minLength": 1},
+          "before_state": {"enum": ["present", "field_absent", "context_not_released"]},
+          "before": {"type": "string", "maxLength": 4096},
+          "after_state": {"enum": ["present", "field_absent", "candidate_not_materialized", "context_not_released"]},
+          "after": {"type": "string", "maxLength": 4096}
+        }
+      }
+    },
+    "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

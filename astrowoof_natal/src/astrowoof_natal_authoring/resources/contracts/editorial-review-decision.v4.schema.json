@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.editorial_review_decision.v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "decision_ordinal", "stage", "stage_attempt", "subject_id", "action", "transition", "finding_ids", "validation_ids"],
+  "properties": {
+    "schema_version": {"const": "editorial_review_decision.v4"},
+    "decision_id": {"type": "string", "minLength": 1},
+    "decision_ordinal": {"type": "integer", "minimum": 0},
+    "previous_decision_id": {"type": "string", "minLength": 1},
+    "next_decision_id": {"type": "string", "minLength": 1},
+    "stage": {"enum": ["initial_pass", "creative_retry", "polish", "critic", "candidate"]},
+    "stage_attempt": {"type": "integer", "minimum": 1},
+    "initial_pass_index": {"type": "integer", "minimum": 1, "maximum": 6},
+    "released_pass_identity": {"type": "string", "minLength": 1},
+    "subject_id": {"type": "string", "minLength": 1},
+    "native_event_time": {"type": "string", "format": "date-time"},
+    "native_time_evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_kind", "source_id", "source_sha256", "field_path"],
+      "properties": {
+        "source_kind": {"enum": ["sealed_record", "checkpoint_journal", "provider_receipt"]},
+        "source_id": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "field_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "action": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "maxProperties": 0},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["paid_action_id", "action_kind", "binding_sha256", "request_sha256"],
+          "properties": {
+            "paid_action_id": {"type": "string", "minLength": 1},
+            "action_kind": {"enum": ["initial_pass", "ordinary_creative_retry", "ordinary_optional_stage"]},
+            "binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "provider_response_id": {"type": "string", "minLength": 1},
+            "provider_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          },
+          "dependentRequired": {
+            "provider_response_id": ["provider_response_sha256"],
+            "provider_response_sha256": ["provider_response_id"]
+          }
+        }
+      ]
+    },
+    "transition": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["relation_kind", "attempt_identity", "released_pass_identity", "source_basis_sha256", "candidate_workspace_id", "candidate_workspace_sha256", "authored_claim_set_sha256", "qa_report_sha256", "acceptance_outcome", "materialization_outcome"],
+          "properties": {
+            "relation_kind": {"const": "initial_pass_materialization"},
+            "attempt_identity": {"type": "string", "minLength": 1},
+            "released_pass_identity": {"type": "string", "minLength": 1},
+            "source_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "candidate_workspace_id": {"type": "string", "minLength": 1},
+            "candidate_workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "accepted_workspace_id": {"type": "string", "minLength": 1},
+            "accepted_workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "authored_claim_set_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "qa_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "acceptance_outcome": {"enum": ["accepted", "rejected"]},
+            "materialization_outcome": {"const": "materialized"}
+          },
+          "allOf": [{"if": {"properties": {"acceptance_outcome": {"const": "accepted"}}}, "then": {"required": ["accepted_workspace_id", "accepted_workspace_sha256"]}, "else": {"not": {"anyOf": [{"required": ["accepted_workspace_id"]}, {"required": ["accepted_workspace_sha256"]}]}}}]
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["relation_kind", "attempt_identity", "released_pass_identity", "source_basis_sha256", "candidate_workspace_id", "candidate_workspace_sha256", "authored_claim_set_sha256", "qa_report_sha256", "acceptance_outcome", "materialization_outcome", "predecessor_decision_id", "predecessor_attempt_identity", "predecessor_acceptance_outcome", "predecessor_qa_report_sha256"],
+          "properties": {
+            "relation_kind": {"const": "pass_retry_materialization"},
+            "attempt_identity": {"type": "string", "minLength": 1},
+            "released_pass_identity": {"type": "string", "minLength": 1},
+            "source_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "candidate_workspace_id": {"type": "string", "minLength": 1},
+            "candidate_workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "accepted_workspace_id": {"type": "string", "minLength": 1},
+            "accepted_workspace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "authored_claim_set_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "qa_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "acceptance_outcome": {"enum": ["accepted", "rejected"]},
+            "materialization_outcome": {"const": "materialized"},
+            "predecessor_decision_id": {"type": "string", "minLength": 1},
+            "predecessor_attempt_identity": {"type": "string", "minLength": 1},
+            "predecessor_acceptance_outcome": {"const": "rejected"},
+            "predecessor_qa_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          },
+          "allOf": [{"if": {"properties": {"acceptance_outcome": {"const": "accepted"}}}, "then": {"required": ["accepted_workspace_id", "accepted_workspace_sha256"]}, "else": {"not": {"anyOf": [{"required": ["accepted_workspace_id"]}, {"required": ["accepted_workspace_sha256"]}]}}}]
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["relation_kind", "input_deck", "output_deck", "materialization_outcome", "adoption_outcome"],
+          "properties": {
+            "relation_kind": {"const": "whole_deck_transition"},
+            "input_deck": {"$ref": "#/$defs/deck_ref"},
+            "candidate_deck": {"$ref": "#/$defs/deck_ref"},
+            "output_deck": {"$ref": "#/$defs/deck_ref"},
+            "materialization_outcome": {"enum": ["materialized", "not_materialized", "not_applicable"]},
+            "adoption_outcome": {"enum": ["candidate_adopted", "candidate_not_adopted", "not_applicable", "refused"]}
+          }
+        }
+      ]
+    },
+    "finding_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "validation_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  },
+  "$defs": {
+    "deck_ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"stage": {"enum": ["initial_pass", "creative_retry"]}}},
+      "then": {
+        "required": ["initial_pass_index", "released_pass_identity"],
+        "properties": {"transition": {"properties": {"relation_kind": {"enum": ["initial_pass_materialization", "pass_retry_materialization"]}}}}
+      },
+      "else": {
+        "not": {"anyOf": [{"required": ["initial_pass_index"]}, {"required": ["released_pass_identity"]}]},
+        "properties": {"transition": {"properties": {"relation_kind": {"const": "whole_deck_transition"}}}}
+      }
+    },
+    {"if": {"properties": {"stage": {"const": "initial_pass"}}}, "then": {"properties": {"transition": {"properties": {"relation_kind": {"const": "initial_pass_materialization"}}}}}},
+    {"if": {"properties": {"stage": {"const": "creative_retry"}}}, "then": {"properties": {"transition": {"properties": {"relation_kind": {"const": "pass_retry_materialization"}}}}}},
+    {"if": {"required": ["native_event_time"]}, "then": {"required": ["native_time_evidence"]}, "else": {"not": {"required": ["native_time_evidence"]}}}
+  ]
+}
