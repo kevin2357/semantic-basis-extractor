@@ -14,6 +14,7 @@ RESULT_SCHEMA = "astrowoof.native_execution_result.v0.2"
 ZERO_ACTION_RESULT_SCHEMA = "astrowoof.native_execution_result.v0.3"
 COMMAND_RESULT_SCHEMA = "astrowoof.terminal_review_command_result.v0.1"
 ZERO_ACTION_COMMAND_RESULT_SCHEMA = "astrowoof.terminal_review_command_result.v0.2"
+DELIVERY_COMMAND_RESULT_SCHEMA = "astrowoof.terminal_delivery_command_result.v0.1"
 ACTION_STATES = frozenset({
     "PREPARED", "AUTHORIZED", "SUBMITTING", "PROVIDER_ID_RECORDED", "WAITING",
     "REPORTED", "DENIED_PROVIDERLESS", "BUDGET_EXHAUSTED",
@@ -501,6 +502,62 @@ def build_terminal_review_command_result(
     return value
 
 
+def build_terminal_delivery_command_result(
+    result: dict[str, Any], receipt: dict[str, Any],
+) -> dict[str, Any]:
+    """Carry one exact sealed ordinary-delivery publication to its caller."""
+    from .native_transitions import validate_native_publication_receipt
+
+    validate_native_publication_receipt(receipt, result)
+    if (
+        result.get("schema_version") != "astrowoof.native_execution_result.v0.1"
+        or result.get("outcome") != "delivery_complete"
+        or result.get("cause_code")
+        not in {"delivery_complete", "delivery_complete_with_warnings"}
+    ):
+        raise ValueError("Terminal delivery handoff requires an exact delivery result")
+    value = {
+        "schema_version": DELIVERY_COMMAND_RESULT_SCHEMA,
+        "outcome": "delivery_complete",
+        "exit_code": 0,
+        "native_invocation_id": result["invocation_id"],
+        "result_id": result["result_id"],
+        "result_sha256": result["result_sha256"],
+        "receipt_id": receipt["receipt_id"],
+        "receipt_sha256": receipt["receipt_sha256"],
+    }
+    validate_terminal_delivery_command_result(value)
+    return value
+
+
+def validate_terminal_delivery_command_result(value: dict[str, Any]) -> None:
+    keys = {
+        "schema_version", "outcome", "exit_code", "native_invocation_id",
+        "result_id", "result_sha256", "receipt_id", "receipt_sha256",
+    }
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ValueError("Terminal delivery command result fields are invalid")
+    if (
+        value.get("schema_version") != DELIVERY_COMMAND_RESULT_SCHEMA
+        or value.get("outcome") != "delivery_complete"
+        or value.get("exit_code") != 0
+        or not _INVOCATION_ID.fullmatch(str(value.get("native_invocation_id")))
+        or not _RESULT_ID.fullmatch(str(value.get("result_id")))
+        or not _DIGEST.fullmatch(str(value.get("result_sha256")))
+        or not re.fullmatch(r"^nreceipt_[0-9a-f]{24}$", str(value.get("receipt_id")))
+        or not _DIGEST.fullmatch(str(value.get("receipt_sha256")))
+    ):
+        raise ValueError("Terminal delivery command result is invalid")
+
+
+def validate_terminal_delivery_command_result_against_publication(
+    command_result: dict[str, Any], result: dict[str, Any], receipt: dict[str, Any],
+) -> None:
+    validate_terminal_delivery_command_result(command_result)
+    if command_result != build_terminal_delivery_command_result(result, receipt):
+        raise ValueError("Terminal delivery command result does not join exact publication")
+
+
 def build_zero_action_terminal_review_command_result(
     result: dict[str, Any], receipt: dict[str, Any],
 ) -> dict[str, Any]:
@@ -618,6 +675,13 @@ def read_terminal_review_command_result_schema() -> dict[str, Any]:
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
+def read_terminal_delivery_command_result_schema() -> dict[str, Any]:
+    resource = files("astrowoof_natal_authoring.resources").joinpath(
+        "contracts/terminal-delivery-command-result-v0.1.schema.json"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
 def read_zero_action_terminal_review_command_result_schema() -> dict[str, Any]:
     resource = files("astrowoof_natal_authoring.resources").joinpath(
         "contracts/terminal-review-command-result-v0.2.schema.json"
@@ -627,8 +691,10 @@ def read_zero_action_terminal_review_command_result_schema() -> dict[str, Any]:
 
 __all__ = [
     "RESULT_SCHEMA", "ZERO_ACTION_RESULT_SCHEMA", "COMMAND_RESULT_SCHEMA",
+    "DELIVERY_COMMAND_RESULT_SCHEMA",
     "ZERO_ACTION_COMMAND_RESULT_SCHEMA", "build_terminal_action_dispositions",
-    "build_terminal_review_command_result", "build_zero_action_terminal_review_command_result",
+    "build_terminal_delivery_command_result", "build_terminal_review_command_result",
+    "build_zero_action_terminal_review_command_result",
     "build_terminal_review_result_v02", "read_terminal_review_result_v02_schema",
     "build_zero_action_terminal_review_result_v03",
     "read_zero_action_terminal_review_result_v03_schema",
@@ -638,9 +704,12 @@ __all__ = [
     "validate_zero_action_terminal_review_result_v03_against_receipt",
     "validate_terminal_review_result_v02_against_api_actions",
     "validate_terminal_review_command_result",
+    "validate_terminal_delivery_command_result",
+    "validate_terminal_delivery_command_result_against_publication",
     "validate_zero_action_terminal_review_command_result",
     "validate_terminal_review_command_result_against_publication",
     "validate_zero_action_terminal_review_command_result_against_publication",
     "read_terminal_review_command_result_schema",
+    "read_terminal_delivery_command_result_schema",
     "read_zero_action_terminal_review_command_result_schema",
 ]

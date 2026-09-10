@@ -476,3 +476,47 @@
 - Remote release metadata reports the expected 1,377,672-byte asset and exact
   SHA-256 `6ade10180b56913fc1a90d88b76f2cd7b84685c026b8acee99a3300d920f9723`.
   A fresh download independently matched the same digest and checksum file.
+
+## 2026-09-10 — API Slice 2A exact-delivery handoff follow-up
+
+- Confirmed API's released-consumer discovery: ordinary success already seals
+  an exact v0.1 result and receipt, but structured stdout returned mutable run
+  state and therefore did not carry the exact result ID into the API cycle.
+- Added closed `astrowoof.terminal_delivery_command_result.v0.1` construction,
+  schema, packaged reader, validators, exact-publication join, catalog entry,
+  and root-package exports.
+- Successful ordinary authoring now emits that handoff only under the existing
+  `--events-stdout-jsonl` transport; plain JSON CLI behavior remains unchanged.
+- The handoff performs no discovery or new publication. It exposes the exact
+  invocation/result/receipt identity returned by the publication already made
+  in the same call.
+- Focused contract tests pass 16 with 4 optional-schema skips; the editorial
+  contract/runtime set passes 35 with 1 optional-schema skip. Release identity,
+  package qualification, and API installed-consumer approval remain pending.
+
+## 2026-09-10 — 0.4.55 source and installed-wheel qualification
+
+- Removed the three unreachable test-source name expressions identified by API.
+- Added direct transport-selection coverage proving structured successful
+  delivery returns the exact handoff while plain CLI mode retains legacy state.
+- Froze candidate version `0.4.55` and passed source gates: 16 focused contract,
+  35 editorial contract/runtime, and 14 release-contract tests.
+- Built and installed the candidate wheel in a clean virtual environment with
+  semantic-projection-core `0.11.1`, jsonschema `4.26.0`, and tzdata `2026.3`.
+  `pip check` reported no broken requirements; imports resolved from
+  site-packages; all 51 installed focused/editorial tests passed with no skips.
+- Two fixed-epoch builds are byte-identical: 1,375,499 bytes, SHA-256
+  `5f56c8ee6a1769eaef222765c5a4ae3554cbc2b5472c0af1a55511d0c4585314`.
+- No provider, API, Better Stack, R2, database, or retained-QA operation ran.
+  Commit, immutable tag, and publication remained gated at this point.
+
+## 2026-09-10 — 0.4.55 broad-suite release gate
+
+- Received API package-candidate approval and explicit owner authorization for
+  commit, push, tag, and publication after successful release-lock evidence.
+- The authoritative manifest-governed full suite passed 1,157 tests with 60
+  expected skips and zero failures in 989.694 seconds.
+- Test inventory SHA-256:
+  `2ea5b04a90ea355af63484f53788ed471c8083901834228da0007f92de342a38`.
+- The source candidate is now ready for its scoped release-lock commit and
+  exact-commit reproducible-wheel/installed qualification.

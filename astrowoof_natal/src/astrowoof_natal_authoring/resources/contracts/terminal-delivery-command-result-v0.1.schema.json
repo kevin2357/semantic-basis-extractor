@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/terminal-delivery-command-result-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "outcome", "exit_code", "native_invocation_id", "result_id", "result_sha256", "receipt_id", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "astrowoof.terminal_delivery_command_result.v0.1"},
+    "outcome": {"const": "delivery_complete"},
+    "exit_code": {"const": 0},
+    "native_invocation_id": {"type": "string", "pattern": "^ninv_[0-9a-f]{24}$"},
+    "result_id": {"type": "string", "pattern": "^nres_[0-9a-f]{24}$"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "receipt_id": {"type": "string", "pattern": "^nreceipt_[0-9a-f]{24}$"},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

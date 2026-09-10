@@ -6,14 +6,18 @@ import json
 import unittest
 
 from astrowoof_natal_authoring.terminal_review_contracts import (
+    build_terminal_delivery_command_result,
     build_terminal_review_command_result,
     build_terminal_review_result_v02,
     build_zero_action_terminal_review_command_result,
     build_zero_action_terminal_review_result_v03,
+    read_terminal_delivery_command_result_schema,
     read_terminal_review_command_result_schema,
     read_terminal_review_result_v02_schema,
     read_zero_action_terminal_review_command_result_schema,
     read_zero_action_terminal_review_result_v03_schema,
+    validate_terminal_delivery_command_result,
+    validate_terminal_delivery_command_result_against_publication,
     validate_terminal_review_command_result,
     validate_terminal_review_command_result_against_publication,
     validate_terminal_review_result_v02,
@@ -27,6 +31,7 @@ from astrowoof_natal_authoring.terminal_review_contracts import (
 from astrowoof_natal_authoring.native_transitions import (
     validate_native_publication_receipt,
 )
+from astrowoof_natal_authoring.closure import _ordinary_terminal_output
 
 
 def _binding(stage: str, route: str) -> dict:
@@ -74,6 +79,20 @@ class TerminalReviewContractTests(unittest.TestCase):
         return build_zero_action_terminal_review_result_v03(
             self.base(), self.zero_state(),
         )
+
+    def delivery_result(self) -> dict:
+        result = self.base()
+        result["outcome"] = "delivery_complete"
+        result["cause_code"] = "delivery_complete"
+        basis = {
+            key: value for key, value in result.items()
+            if key not in {"result_id", "result_sha256"}
+        }
+        result["result_sha256"] = hashlib.sha256(json.dumps(
+            basis, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        ).encode()).hexdigest()
+        result["result_id"] = f"nres_{result['result_sha256'][:24]}"
+        return result
 
     def receipt(self, result: dict) -> dict:
         receipt = {
@@ -215,6 +234,70 @@ class TerminalReviewContractTests(unittest.TestCase):
         jsonschema.Draft202012Validator(schema).validate(
             build_terminal_review_command_result(result, self.receipt(result))
         )
+
+    def test_delivery_command_result_carries_exact_sealed_identity(self) -> None:
+        result = self.delivery_result()
+        receipt = self.receipt(result)
+        command = build_terminal_delivery_command_result(result, receipt)
+        validate_terminal_delivery_command_result(command)
+        validate_terminal_delivery_command_result_against_publication(
+            command, result, receipt,
+        )
+        self.assertEqual(result["invocation_id"], command["native_invocation_id"])
+        self.assertEqual(result["result_id"], command["result_id"])
+        self.assertEqual(receipt["receipt_id"], command["receipt_id"])
+
+        changed = copy.deepcopy(command)
+        changed["receipt_sha256"] = "f" * 64
+        validate_terminal_delivery_command_result(changed)
+        with self.assertRaisesRegex(ValueError, "exact publication"):
+            validate_terminal_delivery_command_result_against_publication(
+                changed, result, receipt,
+            )
+
+    def test_delivery_command_result_is_closed_packaged_and_delivery_only(self) -> None:
+        schema = read_terminal_delivery_command_result_schema()
+        self.assertEqual(
+            "astrowoof.terminal_delivery_command_result.v0.1",
+            schema["properties"]["schema_version"]["const"],
+        )
+        result = self.delivery_result()
+        command = build_terminal_delivery_command_result(result, self.receipt(result))
+        try:
+            import jsonschema
+        except ImportError:
+            self.skipTest("jsonschema not installed")
+        jsonschema.Draft202012Validator(schema).validate(command)
+
+        non_delivery = copy.deepcopy(result)
+        non_delivery["outcome"] = "terminal_failure"
+        basis = {
+            key: value for key, value in non_delivery.items()
+            if key not in {"result_id", "result_sha256"}
+        }
+        non_delivery["result_sha256"] = hashlib.sha256(json.dumps(
+            basis, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        ).encode()).hexdigest()
+        non_delivery["result_id"] = f"nres_{non_delivery['result_sha256'][:24]}"
+        with self.assertRaisesRegex(ValueError, "exact delivery result"):
+            build_terminal_delivery_command_result(
+                non_delivery, self.receipt(non_delivery),
+            )
+
+    def test_structured_delivery_emits_handoff_but_plain_cli_retains_state(self) -> None:
+        result = self.delivery_result()
+        sealed = {"result": result, "receipt": self.receipt(result)}
+        state = {"status": "DELIVERY_COMPLETE", "mutable": "legacy-output"}
+        self.assertIs(
+            state,
+            _ordinary_terminal_output(state, sealed, structured=False),
+        )
+        structured = _ordinary_terminal_output(state, sealed, structured=True)
+        self.assertEqual(
+            "astrowoof.terminal_delivery_command_result.v0.1",
+            structured["schema_version"],
+        )
+        self.assertEqual(result["result_id"], structured["result_id"])
 
     def test_schema_is_packaged_and_accepts_candidate(self) -> None:
         schema = read_terminal_review_result_v02_schema()

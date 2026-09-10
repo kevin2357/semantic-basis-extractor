@@ -8087,6 +8087,19 @@ def apply_spend_reconciliations(
     return applied
 
 
+def _ordinary_terminal_output(
+    state: dict[str, Any], sealed: dict[str, Any], *, structured: bool,
+) -> dict[str, Any]:
+    if structured and sealed["result"].get("outcome") == "delivery_complete":
+        from .terminal_review_contracts import (
+            build_terminal_delivery_command_result,
+        )
+        return build_terminal_delivery_command_result(
+            sealed["result"], sealed["receipt"],
+        )
+    return state
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -9252,7 +9265,9 @@ def main() -> None:
             authoritative_transport="stdout_json",
         )
         raise SystemExit(2)
-    output_result(state)
+    output_result(_ordinary_terminal_output(
+        state, sealed, structured=args.events_stdout_jsonl,
+    ))
     log_cli_exit(
         logger, command="semantic_closure", operation="ordinary_authoring",
         exit_code=2 if review_required else 0, outcome=state.get("status"),

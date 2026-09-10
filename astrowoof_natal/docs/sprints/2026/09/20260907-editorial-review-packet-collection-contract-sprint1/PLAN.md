@@ -287,6 +287,13 @@ verified wheel are published.
 
 ## Slice 5 — Joint provider-free end-to-end qualification
 
+**Post-release API Slice 2A finding:** API confirmed that fresh ordinary
+delivery lacks the exact sealed result identity in its structured cycle handoff.
+SBE has implemented a narrow closed delivery-success command result carrying
+the already-sealed exact result/receipt identity, without latest-result
+discovery or lifecycle change. Source qualification is in progress; a fresh
+release and installed consumer review remain gated.
+
 **Maps to API Plan Slice 3 — Joint provider-free end-to-end qualification.**
 
 Support API's fake-receiver campaign for accepted/rejected outcomes plus
