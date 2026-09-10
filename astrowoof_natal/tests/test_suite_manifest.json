@@ -190,6 +190,10 @@
       "weight_seconds": 1.043
     },
     {
+      "module": "test_relocated_operator_disposition_contract_slice1.py",
+      "weight_seconds": 0.1
+    },
+    {
       "module": "test_operator_disposition_cross_route_slice3.py",
       "weight_seconds": 0.756
     },

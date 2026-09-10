@@ -1,0 +1,30 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://astrowoof.example/contracts/operator-disposition-relocation-authority.v1.schema.json",
+  "title":"AstroWoof operator disposition relocation authority v1",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","operation","request_id","api_run_id","job_id","native_run_id","checkpoint_id","checkpoint_generation","checkpoint_contract","compatibility_identity","archive_sha256","inventory_sha256","original_logical_root_sha256","restored_root_sha256","issued_at","expires_at","provider_io_permitted","workspace_mutation_permitted","authority_sha256"],
+  "properties":{
+    "schema_version":{"const":"astrowoof.operator_disposition_relocation_authority.v1"},
+    "operation":{"const":"read_operator_disposition_assessment"},
+    "request_id":{"type":"string","format":"uuid"},
+    "api_run_id":{"type":"string","format":"uuid"},
+    "job_id":{"type":"string","format":"uuid"},
+    "native_run_id":{"type":"string","minLength":1,"maxLength":128},
+    "checkpoint_id":{"type":"string","format":"uuid"},
+    "checkpoint_generation":{"type":"integer","minimum":1},
+    "checkpoint_contract":{"type":"string","minLength":1,"maxLength":128},
+    "compatibility_identity":{"type":"string","minLength":1,"maxLength":128},
+    "archive_sha256":{"$ref":"#/$defs/sha256"},
+    "inventory_sha256":{"$ref":"#/$defs/sha256"},
+    "original_logical_root_sha256":{"$ref":"#/$defs/sha256"},
+    "restored_root_sha256":{"$ref":"#/$defs/sha256"},
+    "issued_at":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "expires_at":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "provider_io_permitted":{"const":false},
+    "workspace_mutation_permitted":{"const":false},
+    "authority_sha256":{"$ref":"#/$defs/sha256"}
+  },
+  "$defs":{"sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}
+}

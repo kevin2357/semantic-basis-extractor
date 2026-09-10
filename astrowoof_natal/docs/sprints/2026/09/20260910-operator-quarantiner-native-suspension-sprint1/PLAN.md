@@ -146,6 +146,8 @@ Pause for SBE/API/owner review with:
 
 ## Later slices, not yet authorized
 
+**Implementation update:** owner authorization was subsequently given after API re-review. Slice 1 authority/wrapper contracts are implemented and awaiting review; the relocated reader remains the next gate.
+
 After Slice 0 review, likely work separates into:
 
 - additive relocated assessment implementation and fixtures;

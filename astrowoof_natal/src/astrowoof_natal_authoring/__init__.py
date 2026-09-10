@@ -38,6 +38,17 @@ from .operator_disposition import (  # noqa: E402
     read_operator_disposition_assessment_schema,
     validate_operator_disposition_assessment,
 )
+from .relocated_operator_disposition import (  # noqa: E402
+    build_relocated_assessment,
+    build_relocation_authority,
+    canonical_logical_root,
+    canonical_root_sha256,
+    read_relocated_assessment_schema,
+    read_relocation_authority_schema,
+    validate_relocated_assessment,
+    validate_relocated_assessment_pair,
+    validate_relocation_authority,
+)
 from .operator_disposition_fixtures import (  # noqa: E402
     read_operator_disposition_fixtures,
     validate_operator_disposition_fixtures,
@@ -526,6 +537,15 @@ __all__ = [
     "read_operator_disposition_assessment",
     "read_operator_disposition_assessment_schema",
     "validate_operator_disposition_assessment",
+    "build_relocated_assessment",
+    "build_relocation_authority",
+    "canonical_logical_root",
+    "canonical_root_sha256",
+    "read_relocated_assessment_schema",
+    "read_relocation_authority_schema",
+    "validate_relocated_assessment",
+    "validate_relocated_assessment_pair",
+    "validate_relocation_authority",
     "read_operator_disposition_fixtures",
     "validate_operator_disposition_fixtures",
     "read_operator_disposition_qualification_schema",
