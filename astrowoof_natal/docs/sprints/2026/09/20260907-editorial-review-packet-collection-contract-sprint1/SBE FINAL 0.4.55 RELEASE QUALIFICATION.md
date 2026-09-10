@@ -30,6 +30,17 @@ JSONL delivery.
   and
 - `pip check`: no broken requirements.
 
-The immutable release must use the final wheel rebuilt reproducibly from the
-release-lock commit. Its exact commit, wheel digest, remote asset digest, and
-fresh downloaded digest will be appended after publication.
+## Immutable publication evidence
+
+- release-lock commit:
+  `22b31476d526ecba0303d511efc0f9b3e507f000`;
+- annotated tag: `astrowoof-natal-authoring-v0.4.55`;
+- two exact-commit fixed-epoch wheels were byte-identical;
+- published wheel size: 1,375,499 bytes;
+- published wheel SHA-256:
+  `e16a538bc7821212a0fe2ddb91e3515aa3b3846b9659c50380c791c8003dd8f2`;
+- GitHub's asset digest matched the qualified digest;
+- a fresh release download independently matched the same digest and the
+  published checksum manifest; and
+- release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.55`.

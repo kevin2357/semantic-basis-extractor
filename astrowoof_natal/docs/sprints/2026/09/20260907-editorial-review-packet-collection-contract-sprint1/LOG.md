@@ -520,3 +520,18 @@
   `2ea5b04a90ea355af63484f53788ed471c8083901834228da0007f92de342a38`.
 - The source candidate is now ready for its scoped release-lock commit and
   exact-commit reproducible-wheel/installed qualification.
+
+## 2026-09-10 — 0.4.55 immutable publication
+
+- Created release-lock commit
+  `22b31476d526ecba0303d511efc0f9b3e507f000` and pushed `main`.
+- Rebuilt twice from that exact commit; both 1,375,499-byte wheels matched at
+  SHA-256 `e16a538bc7821212a0fe2ddb91e3515aa3b3846b9659c50380c791c8003dd8f2`.
+- Reinstalled the exact-lock wheel in the clean qualification environment;
+  `pip check` remained clean and all 51 installed consumer tests passed with
+  schema validation enabled and no skips.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.55` at the
+  release-lock commit, then published the wheel and `SHA256SUMS.txt` as a
+  non-draft, non-prerelease GitHub release.
+- GitHub's reported asset digest and a fresh independent download both matched
+  the qualified wheel digest and checksum manifest.
