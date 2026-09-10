@@ -85,3 +85,10 @@
   A second fresh installed environment repeated every package and feature gate
   successfully. The candidate is paused for API and owner tag/release approval;
   no tag, push, publication, or live provider run occurred.
+- API and Kevin approved exact publication. Pushed `main`, created and pushed
+  annotated tag `astrowoof-natal-authoring-v0.4.58` at the lock commit, and
+  published GitHub release `RE_kwDOToQdE84XCFRP` with only the exact wheel and
+  `SHA256SUMS.txt`.
+- Fresh-download verification reproduced the qualified wheel size and SHA-256,
+  the checksum line, and the remote peeled tag target. Publication evidence is
+  recorded in `POST-RELEASE - 0.4.58 PUBLICATION EVIDENCE.md`.

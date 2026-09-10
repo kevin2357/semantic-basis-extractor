@@ -71,6 +71,7 @@ changes lifecycle and authority selection, the broad/full gate and installed
 provider-free adversarial qualification are required. No controlled live run,
 tag, publication, or retained-workspace access occurs without its later gate.
 
-Status: technically qualified at the pre-tag/release boundary. Exact candidate
-coordinates are recorded in `SBE 0.4.58 RELEASE LOCK QUALIFICATION.md`;
-awaiting API review and explicit owner tag/publication authorization.
+Status: complete through immutable publication and fresh-download verification.
+Exact candidate coordinates are recorded in `SBE 0.4.58 RELEASE LOCK
+QUALIFICATION.md`; published identities are recorded in `POST-RELEASE - 0.4.58
+PUBLICATION EVIDENCE.md`.
