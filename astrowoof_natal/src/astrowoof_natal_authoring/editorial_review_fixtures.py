@@ -519,8 +519,14 @@ def build_editorial_review_fixture_bundle(kind: str) -> dict[str, Any]:
     return bundle
 
 
-def build_editorial_review_capture_status(reason: str) -> dict[str, Any]:
-    """Build a small non-authoritative absence witness for failed capture."""
+def build_editorial_review_runtime_capture_status(
+    reason: str,
+    *,
+    native_run_id: str,
+    subject_id: str,
+    native_result_id: str,
+) -> dict[str, Any]:
+    """Build a closed status from explicit, caller-validated native identity."""
     detail_codes = {
         "ineligible_route": "route_not_supported",
         "unsupported_result_version": "result_version_not_supported",
@@ -534,20 +540,71 @@ def build_editorial_review_capture_status(reason: str) -> dict[str, Any]:
     except KeyError as exc:
         raise ValueError("Unknown editorial review capture-status reason") from exc
     native = {
-        "native_run_id": "native-capture-status-fixture",
-        "subject_id": "subject-capture-status-fixture",
-        "native_result_id": "result-capture-status-fixture",
+        "native_run_id": native_run_id,
+        "subject_id": subject_id,
+        "native_result_id": native_result_id,
     }
+    if not all(isinstance(value, str) and value for value in native.values()):
+        raise ValueError("Capture-status native correlations must be non-empty strings")
     return {
         "schema_version": "editorial_review_capture_status.v1",
         "capture_id": derive_editorial_review_id(
-            "erc", "capture_id.v1", [*native.values(), reason, detail_code],
+            "erc", "capture_id.v1",
+            [native_run_id, native_result_id, reason, detail_code],
         ),
         "outcome": "not_captured",
         "reason": reason,
         "native_correlations": native,
         "detail_code": detail_code,
     }
+
+
+def build_editorial_review_capture_status(reason: str) -> dict[str, Any]:
+    """Build the backwards-compatible synthetic contract-fixture status."""
+    return build_editorial_review_runtime_capture_status(
+        reason,
+        native_run_id="native-capture-status-fixture",
+        subject_id="subject-capture-status-fixture",
+        native_result_id="result-capture-status-fixture",
+    )
+
+
+def validate_editorial_review_capture_status_against_native(
+    status: Mapping[str, Any],
+    *,
+    selected_result_id: str,
+    result: Mapping[str, Any],
+    receipt: Mapping[str, Any],
+    subject_id: str,
+) -> EditorialReviewValidationResult:
+    """Validate one status against its exact selected native publication."""
+    closed = validate_closed_root(status, "capture_status")
+    if closed.outcome != "valid":
+        return closed
+    native = status["native_correlations"]
+    if not (
+        selected_result_id == result.get("result_id") == receipt.get("result_id")
+        and native.get("native_result_id") == selected_result_id
+        and native.get("native_run_id") == result.get("run_id") == receipt.get("run_id")
+        and native.get("subject_id") == subject_id
+    ):
+        return EditorialReviewValidationResult(
+            "invalid", "contradictory_evidence",
+            "packet.provenance.exact_join.v1", "native_correlations",
+            "capture_status_native_join_mismatch",
+        )
+    expected = build_editorial_review_runtime_capture_status(
+        status["reason"],
+        native_run_id=native["native_run_id"],
+        subject_id=native["subject_id"],
+        native_result_id=native["native_result_id"],
+    )
+    if status != expected:
+        return EditorialReviewValidationResult(
+            "invalid", "digest_mismatch", "artifact.id.derivation.v1",
+            "capture_id", "capture_status_identity_mismatch",
+        )
+    return EditorialReviewValidationResult("valid")
 
 
 def read_editorial_review_fixture_bundle(source: bytes | str) -> dict[str, Any]:
@@ -880,9 +937,11 @@ __all__ = [
     "FIXTURE_KINDS", "FIXTURE_RESOURCES", "FIXTURE_SCHEMA_VERSION",
     "build_editorial_review_fixture_bundle",
     "build_editorial_review_capture_status",
+    "build_editorial_review_runtime_capture_status",
     "read_editorial_review_fixture_bundle",
     "read_packaged_editorial_review_fixture",
     "validate_editorial_review_request",
     "validate_editorial_review_fixture_bundle",
+    "validate_editorial_review_capture_status_against_native",
     "validate_editorial_review_packet",
 ]

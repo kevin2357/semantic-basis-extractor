@@ -22,17 +22,23 @@ from astrowoof_natal_authoring.editorial_review_qa import (
     validate_editorial_review_contract_qualification,
 )
 from astrowoof_natal_authoring import (
+    build_editorial_review_capture_status,
     build_editorial_review_runtime_capture,
+    build_editorial_review_runtime_capture_status,
     collect_editorial_review_runtime_evidence,
     read_eligible_editorial_result,
+    validate_editorial_review_capture_status_against_native,
 )
 
 
 class TestEditorialReviewContractQualification(unittest.TestCase):
     def test_public_runtime_entry_points_are_exported(self):
+        self.assertTrue(callable(build_editorial_review_capture_status))
         self.assertTrue(callable(build_editorial_review_runtime_capture))
+        self.assertTrue(callable(build_editorial_review_runtime_capture_status))
         self.assertTrue(callable(collect_editorial_review_runtime_evidence))
         self.assertTrue(callable(read_eligible_editorial_result))
+        self.assertTrue(callable(validate_editorial_review_capture_status_against_native))
 
     def test_public_qualification_cli_emits_valid_json(self):
         output = StringIO()

@@ -47,3 +47,25 @@
   identity domain. Subject remains required content authenticated by the exact
   source join, not by changing the capture-ID formula.
 - Paused at Review Gate 0 before runtime, fixture, schema, or test changes.
+
+## 2026-09-10 — Slices 1–2 implementation and source qualification
+
+- Replaced runtime use of the fixture-style status helper with a new public
+  explicit-correlation constructor and corrected capture-ID derivation to the
+  frozen manifest domain.
+- Preserved the existing public fixture-helper signature for consumer
+  compatibility and added a public exact-source status validator.
+- Added the local caller/result/receipt equality guard plus run and sole-subject
+  validation before every emitted runtime status.
+- Split unsupported service from invalid subject cardinality and threaded one
+  proven correlation context through all later refusal branches.
+- Added distinct-input, no-sentinel, result mismatch, run mismatch, subject
+  ambiguity, subject-only identity-domain, exact-source validation, public
+  export, and supported-service regressions.
+- Passed 39 editorial-review tests with one expected skip, 19 release/smoke
+  tests with one expected skip, and 38 adjacent terminal/native tests with four
+  expected skips. Changed Python files compile and diff hygiene is clean.
+- Preserved API's existing synthetic-helper call and passed its five-test intake
+  guard unchanged against the SBE source overlay.
+- Paused for API/Vafflemutt source-candidate review before versioning or
+  installed-wheel qualification.

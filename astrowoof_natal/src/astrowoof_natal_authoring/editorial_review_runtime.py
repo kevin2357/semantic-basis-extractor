@@ -8,7 +8,8 @@ import json
 from typing import Any, Callable, Mapping
 
 from .editorial_review_fixtures import (
-    build_editorial_review_capture_status,
+    build_editorial_review_runtime_capture_status,
+    validate_editorial_review_capture_status_against_native,
     validate_editorial_review_packet,
 )
 from .native_transitions import NativeTransitionResultView, read_native_transition_result
@@ -31,6 +32,58 @@ REVIEW_RESULT_VERSION = "astrowoof.native_execution_result.v0.2"
 RECEIPT_VERSION = "astrowoof.native_publication_receipt.v0.1"
 
 
+def _exact_capture_source(
+    root: Path,
+    selected_result_id: str,
+    view: NativeTransitionResultView,
+) -> tuple[dict[str, Any], str]:
+    result = view["result"]
+    receipt = view["receipt"]
+    if (
+        receipt.get("schema_version") != RECEIPT_VERSION
+        or selected_result_id != result.get("result_id")
+        or selected_result_id != receipt.get("result_id")
+        or result.get("run_id") != receipt.get("run_id")
+    ):
+        raise ValueError("Selected native result identity is not exact")
+    state = _load(root / "run.json")
+    if state.get("run_id") != result.get("run_id"):
+        raise ValueError("Restored workspace does not match the selected native run")
+    subjects = state.get("subjects") or {}
+    if not isinstance(subjects, dict) or len(subjects) != 1:
+        raise ValueError("Capture status requires one exact native subject")
+    subject_id = next(iter(subjects))
+    if not isinstance(subject_id, str) or not subject_id:
+        raise ValueError("Capture status subject identity is invalid")
+    return state, subject_id
+
+
+def _runtime_capture_status(
+    reason: str,
+    *,
+    selected_result_id: str,
+    result: Mapping[str, Any],
+    receipt: Mapping[str, Any],
+    subject_id: str,
+) -> dict[str, Any]:
+    status = build_editorial_review_runtime_capture_status(
+        reason,
+        native_run_id=result.get("run_id"),
+        subject_id=subject_id,
+        native_result_id=result.get("result_id"),
+    )
+    validation = validate_editorial_review_capture_status_against_native(
+        status,
+        selected_result_id=selected_result_id,
+        result=result,
+        receipt=receipt,
+        subject_id=subject_id,
+    )
+    if validation.outcome != "valid":
+        raise ValueError("Capture status does not join its exact native source")
+    return status
+
+
 def read_eligible_editorial_result(
     run_dir: Path | str,
     result_id: str,
@@ -48,9 +101,7 @@ def read_eligible_editorial_result(
     result: Mapping[str, Any] = view["result"]
     receipt: Mapping[str, Any] = view["receipt"]
     if receipt.get("schema_version") != RECEIPT_VERSION:
-        return "unsupported", build_editorial_review_capture_status(
-            "unsupported_result_version"
-        )
+        raise ValueError("Selected native result identity is not exact")
     version = result.get("schema_version")
     outcome = result.get("outcome")
     route = result.get("route_binding") or {}
@@ -68,7 +119,14 @@ def read_eligible_editorial_result(
         reason = "unsupported_result_version"
     else:
         reason = "ineligible_route"
-    return "unsupported", build_editorial_review_capture_status(reason)
+    _, subject_id = _exact_capture_source(root, result_id, view)
+    return "unsupported", _runtime_capture_status(
+        reason,
+        selected_result_id=result_id,
+        result=result,
+        receipt=receipt,
+        subject_id=subject_id,
+    )
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -124,14 +182,20 @@ def collect_editorial_review_runtime_evidence(
     view = selected
     result = view["result"]
     receipt = view["receipt"]
-    state = _load(root / "run.json")
-    if state.get("run_id") != result.get("run_id"):
-        return "unsupported", build_editorial_review_capture_status(
-            "contradictory_native_evidence"
-        )
-    if state.get("service_level") != "interactive" or len(state.get("subjects") or {}) != 1:
-        return "unsupported", build_editorial_review_capture_status("ineligible_route")
+    state, subject_id = _exact_capture_source(root, result_id, view)
     subject_id, subject = next(iter(state["subjects"].items()))
+
+    def status(status_reason: str) -> dict[str, Any]:
+        return _runtime_capture_status(
+            status_reason,
+            selected_result_id=result_id,
+            result=result,
+            receipt=receipt,
+            subject_id=subject_id,
+        )
+
+    if state.get("service_level") != "interactive":
+        return "unsupported", status("ineligible_route")
     post_checkpoint = result.get("post_checkpoint") or {}
     provenance = state.get("provenance") or {}
     runtime = provenance.get("runtime") or {}
@@ -146,29 +210,21 @@ def collect_editorial_review_runtime_evidence(
         or not isinstance(profile.get("profile_id"), str)
         or not isinstance(resources.get("aggregate_sha256"), str)
     ):
-        return "unsupported", build_editorial_review_capture_status(
-            "contradictory_native_evidence"
-        )
+        return "unsupported", status("contradictory_native_evidence")
     logical_root = receipt["logical_workspace_root"]
     action_rows = (state.get("spend_ledger") or {}).get("actions", [])
     actions = {item.get("action_id"): item for item in action_rows}
     if len(actions) != len(action_rows) or None in actions:
-        return "unsupported", build_editorial_review_capture_status(
-            "contradictory_native_evidence"
-        )
+        return "unsupported", status("contradictory_native_evidence")
     result_dispositions: dict[tuple[str, str], Mapping[str, Any]] = {}
     if branch == "editorial_review":
         dispositions = result.get("action_dispositions")
         if not isinstance(dispositions, list):
-            return "unsupported", build_editorial_review_capture_status(
-                "incomplete_native_evidence"
-            )
+            return "unsupported", status("incomplete_native_evidence")
         for disposition in dispositions:
             key = (disposition.get("action_id"), disposition.get("binding_sha256"))
             if None in key or key in result_dispositions:
-                return "unsupported", build_editorial_review_capture_status(
-                    "contradictory_native_evidence"
-                )
+                return "unsupported", status("contradictory_native_evidence")
             result_dispositions[key] = disposition
     pass_attempts = []
     for record in sorted((state.get("passes") or {}).values(), key=lambda item: item["pass_number"]):
@@ -184,9 +240,7 @@ def collect_editorial_review_runtime_evidence(
             if branch == "editorial_review" and (
                 action["action_id"], binding_digest
             ) not in result_dispositions:
-                return "unsupported", build_editorial_review_capture_status(
-                    "contradictory_native_evidence"
-                )
+                return "unsupported", status("contradictory_native_evidence")
             provider = action.get("provider") or {}
             report_path = workspace.parents[1] / "authoring-pass-acceptance.json"
             authored_path = workspace.parents[1] / "openai-authored-fields.json"
@@ -207,26 +261,18 @@ def collect_editorial_review_runtime_evidence(
                 "provider_response_id": provider.get("id"),
             })
     if len({item["pass_number"] for item in pass_attempts if item["accepted"]}) != 6:
-        return "unsupported", build_editorial_review_capture_status(
-            "incomplete_native_evidence"
-        )
+        return "unsupported", status("incomplete_native_evidence")
     optional_history = bool(subject.get("polish_attempts") or subject.get("qualitative_review"))
     initial_assembled_deck = subject.get("initial_assembled_deck")
     initial_assembled_digest = subject.get("initial_assembled_deck_sha256")
     if optional_history:
         if not isinstance(initial_assembled_deck, str) or not isinstance(initial_assembled_digest, str):
-            return "unsupported", build_editorial_review_capture_status(
-                "incomplete_native_evidence"
-            )
+            return "unsupported", status("incomplete_native_evidence")
         initial_path = _logical_path(root, logical_root, initial_assembled_deck)
         if not initial_path.is_file():
-            return "unsupported", build_editorial_review_capture_status(
-                "incomplete_native_evidence"
-            )
+            return "unsupported", status("incomplete_native_evidence")
         if editorial_review_sha256(_load(initial_path)) != initial_assembled_digest:
-            return "unsupported", build_editorial_review_capture_status(
-                "contradictory_native_evidence"
-            )
+            return "unsupported", status("contradictory_native_evidence")
     return branch, {
         "result": result, "receipt": receipt, "subject_id": subject_id,
         "state_revision": state.get("state_revision"),
@@ -751,13 +797,17 @@ def build_editorial_review_runtime_capture(
         ]
         validation = validate_editorial_review_packet(packet, projections, artifacts)
         if validation.outcome != "valid":
-            return "unsupported", build_editorial_review_capture_status(
-                "contradictory_native_evidence"
+            return "unsupported", _runtime_capture_status(
+                "contradictory_native_evidence",
+                selected_result_id=result_id, result=result, receipt=receipt,
+                subject_id=evidence["subject_id"],
             )
         return branch, {"packet": packet, "projections": projections, "artifacts": artifacts}
     except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError):
-        return "unsupported", build_editorial_review_capture_status(
-            "incomplete_native_evidence"
+        return "unsupported", _runtime_capture_status(
+            "incomplete_native_evidence",
+            selected_result_id=result_id, result=result, receipt=receipt,
+            subject_id=evidence["subject_id"],
         )
 
 

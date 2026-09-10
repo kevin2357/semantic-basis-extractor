@@ -1,7 +1,7 @@
 # Evidence — editorial-review capture-status native identity correction
 
-Status: discovery evidence only; implementation and qualification have not
-started.
+Status: Slice 0 contract decision and Slices 1–2 source qualification complete;
+installed-wheel and API consumer evidence remain pending.
 
 ## Confirmed source facts
 
@@ -26,7 +26,6 @@ no-packet branch and must not rewrite native content or identity.
 
 ## Pending evidence
 
-- focused regression receipt;
 - installed-wheel consumer evidence; and
 - API/Vafflemutt review.
 
@@ -43,3 +42,15 @@ no-packet branch and must not rewrite native content or identity.
 - Confirmed subject-only mutation cannot be authenticated by `capture_id` and
   therefore requires validation against exact native source evidence.
 - Recommended preserving capture-status v1 and semantic contract v5.
+
+## Slices 1–2 evidence
+
+- Runtime construction now requires explicit real correlations and validates
+  them against the exact selected result, receipt, run, and sole subject.
+- Fixture-only sentinels are isolated from the runtime constructor.
+- Subject identity remains required but outside the frozen capture-ID formula.
+- Focused source and adjacent regression gates passed as recorded under
+  `results/SLICE 1-2 SOURCE QUALIFICATION.md`.
+- Successful packet and exact-delivery paths remain covered and green.
+- API's existing five-test intake guard passes unchanged against the source
+  overlay, including its backwards-compatible synthetic status helper call.

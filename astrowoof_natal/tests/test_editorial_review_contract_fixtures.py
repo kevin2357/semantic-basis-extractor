@@ -18,10 +18,12 @@ from astrowoof_natal_authoring.editorial_review_contracts import (
 from astrowoof_natal_authoring.editorial_review_fixtures import (
     FIXTURE_KINDS,
     build_editorial_review_capture_status,
+    build_editorial_review_runtime_capture_status,
     build_editorial_review_fixture_bundle,
     read_editorial_review_fixture_bundle,
     read_packaged_editorial_review_fixture,
     validate_editorial_review_fixture_bundle,
+    validate_editorial_review_capture_status_against_native,
     validate_editorial_review_request,
 )
 
@@ -95,6 +97,35 @@ class TestEditorialReviewPositiveFixtures(unittest.TestCase):
             serialized = json.dumps(status, sort_keys=True)
             for forbidden in ("packet_id", "packet_sha256", "projection_id", "projection_sha256"):
                 self.assertNotIn(forbidden, serialized)
+
+    def test_capture_status_identity_excludes_subject_but_exact_join_requires_it(self):
+        common = {
+            "native_run_id": "run-exact",
+            "native_result_id": "nres_" + "a" * 24,
+        }
+        left = build_editorial_review_runtime_capture_status(
+            "ineligible_route", subject_id="subject-left", **common,
+        )
+        right = build_editorial_review_runtime_capture_status(
+            "ineligible_route", subject_id="subject-right", **common,
+        )
+        self.assertEqual(left["capture_id"], right["capture_id"])
+        result = {"run_id": common["native_run_id"], "result_id": common["native_result_id"]}
+        receipt = dict(result)
+        self.assertEqual(
+            "valid",
+            validate_editorial_review_capture_status_against_native(
+                left, selected_result_id=common["native_result_id"],
+                result=result, receipt=receipt, subject_id="subject-left",
+            ).outcome,
+        )
+        self.assertEqual(
+            "invalid",
+            validate_editorial_review_capture_status_against_native(
+                right, selected_result_id=common["native_result_id"],
+                result=result, receipt=receipt, subject_id="subject-left",
+            ).outcome,
+        )
 
     def test_duplicate_keys_fail_through_public_fixture_reader(self):
         with self.assertRaises(ValueError):

@@ -59,6 +59,7 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
                 "outcome": outcome,
                 "result_id": "nres_" + "1" * 24,
                 "result_sha256": "1" * 64,
+                "run_id": "run-fixture",
                 "route_binding": {
                     "route_family": "exact_natal",
                     "provider_mechanism": "response",
@@ -69,6 +70,8 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
                 "schema_version": "astrowoof.native_publication_receipt.v0.1",
                 "receipt_id": "nreceipt_" + "2" * 24,
                 "receipt_sha256": "2" * 64,
+                "run_id": "run-fixture",
+                "result_id": "nres_" + "1" * 24,
             },
             "journal_range": {},
         }
@@ -78,7 +81,15 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
         def reader(root: Path, result_id: str):
             calls.append((root, result_id))
             return deepcopy(view)
-        result = read_eligible_editorial_result(".", "nres_" + "1" * 24, exact_reader=reader)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "run.json").write_text(json.dumps({
+                "run_id": "run-fixture", "service_level": "interactive",
+                "subjects": {"subject-fixture": {}},
+            }), encoding="utf-8")
+            result = read_eligible_editorial_result(
+                root, "nres_" + "1" * 24, exact_reader=reader,
+            )
         self.assertEqual(1, len(calls))
         return result
 
@@ -117,6 +128,100 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
         branch, value = self.classify(view)
         self.assertEqual("unsupported", branch)
         self.assertEqual("ineligible_route", value["reason"])
+
+    def test_runtime_status_uses_distinct_exact_native_correlations(self):
+        statuses = []
+        for suffix in ("a", "b"):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                result_id = "nres_" + suffix * 24
+                run_id = f"run-{suffix}"
+                subject_id = f"subject-{suffix}"
+                (root / "run.json").write_text(json.dumps({
+                    "run_id": run_id,
+                    "service_level": "interactive",
+                    "subjects": {subject_id: {}},
+                }), encoding="utf-8")
+                view = self.view(
+                    "astrowoof.native_execution_result.v0.3", "review_required"
+                )
+                view["result"].update({"result_id": result_id, "run_id": run_id})
+                view["receipt"].update({"result_id": result_id, "run_id": run_id})
+                branch, status = collect_editorial_review_runtime_evidence(
+                    root, result_id, exact_reader=lambda *_args, value=view: deepcopy(value),
+                )
+                self.assertEqual("unsupported", branch)
+                self.assertEqual("unsupported_result_version", status["reason"])
+                self.assertEqual({
+                    "native_run_id": run_id,
+                    "subject_id": subject_id,
+                    "native_result_id": result_id,
+                }, status["native_correlations"])
+                self.assertNotIn("fixture", json.dumps(status))
+                statuses.append(status)
+        self.assertNotEqual(statuses[0]["capture_id"], statuses[1]["capture_id"])
+
+    def test_runtime_status_refuses_selected_result_or_subject_ambiguity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            selected = "nres_" + "a" * 24
+            view = self.view(
+                "astrowoof.native_execution_result.v0.3", "review_required"
+            )
+            view["result"].update({"result_id": selected, "run_id": "run-exact"})
+            view["receipt"].update({"result_id": "nres_" + "b" * 24, "run_id": "run-exact"})
+            (root / "run.json").write_text(json.dumps({
+                "run_id": "run-exact", "service_level": "interactive",
+                "subjects": {"subject-exact": {}},
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Selected native result identity"):
+                collect_editorial_review_runtime_evidence(
+                    root, selected, exact_reader=lambda *_: deepcopy(view),
+                )
+            view["receipt"]["result_id"] = selected
+            other_selected = "nres_" + "d" * 24
+            with self.assertRaisesRegex(ValueError, "Selected native result identity"):
+                collect_editorial_review_runtime_evidence(
+                    root, other_selected, exact_reader=lambda *_: deepcopy(view),
+                )
+            for subjects in ({}, {"subject-a": {}, "subject-b": {}}):
+                with self.subTest(subjects=subjects):
+                    (root / "run.json").write_text(json.dumps({
+                        "run_id": "run-exact", "service_level": "interactive",
+                        "subjects": subjects,
+                    }), encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "one exact native subject"):
+                        collect_editorial_review_runtime_evidence(
+                            root, selected, exact_reader=lambda *_: deepcopy(view),
+                        )
+            (root / "run.json").write_text(json.dumps({
+                "run_id": "run-other", "service_level": "interactive",
+                "subjects": {"subject-exact": {}},
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "does not match the selected native run"):
+                collect_editorial_review_runtime_evidence(
+                    root, selected, exact_reader=lambda *_: deepcopy(view),
+                )
+
+    def test_unsupported_service_emits_status_only_after_subject_is_proven(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result_id = "nres_" + "c" * 24
+            (root / "run.json").write_text(json.dumps({
+                "run_id": "run-service", "service_level": "batch",
+                "subjects": {"subject-service": {}},
+            }), encoding="utf-8")
+            view = self.view(
+                "astrowoof.native_execution_result.v0.1", "delivery_complete"
+            )
+            view["result"].update({"result_id": result_id, "run_id": "run-service"})
+            view["receipt"].update({"result_id": result_id, "run_id": "run-service"})
+            branch, status = collect_editorial_review_runtime_evidence(
+                root, result_id, exact_reader=lambda *_: deepcopy(view),
+            )
+            self.assertEqual("unsupported", branch)
+            self.assertEqual("ineligible_route", status["reason"])
+            self.assertEqual("subject-service", status["native_correlations"]["subject_id"])
 
     def test_runtime_evidence_collects_six_exact_pass_winners_read_only(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -431,7 +536,7 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
             (root / "run.json").write_text(json.dumps(state), encoding="utf-8")
             view = self.view("astrowoof.native_execution_result.v0.2", "review_required")
             view["result"].update({"run_id": "run-review", "sbe_release": "0.4.test", "post_checkpoint": {"native_state_revision": 9, "checkpoint_basis_sha256": "c" * 64}, "action_dispositions": dispositions})
-            view["receipt"].update({"logical_workspace_root": str(root), "checkpoint_basis_sha256": "c" * 64, "snapshot_sha256": "d" * 64})
+            view["receipt"].update({"run_id": "run-review", "logical_workspace_root": str(root), "checkpoint_basis_sha256": "c" * 64, "snapshot_sha256": "d" * 64})
             branch, _ = collect_editorial_review_runtime_evidence(root, "nres_" + "1" * 24, exact_reader=lambda *_: deepcopy(view))
             self.assertEqual("editorial_review", branch)
             bad = deepcopy(view)
