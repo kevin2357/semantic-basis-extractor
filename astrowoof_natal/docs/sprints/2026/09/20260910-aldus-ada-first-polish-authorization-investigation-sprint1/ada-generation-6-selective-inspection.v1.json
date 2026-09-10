@@ -1,0 +1,54 @@
+{
+  "all_member_identities_valid": true,
+  "archive_member_count": 915,
+  "archive_safety_valid": true,
+  "archive_sha256": "3620eb4eb84b4fe31d60e81369dbec6f89a6897f5c0d0bf2f4fa996e912c955a",
+  "checkpoint_generation": 6,
+  "inventory_sha256": "e0d38510f42dc956b5add027183638b4042b45bbbcab1c40bfb9d0e9b7494068",
+  "native_run_id": "26974e4422013a2fcc2bc9f6ec1bbf93401f7d0dd87926b5a530525f3e19c49c",
+  "native_state": {
+    "state_revision": 54,
+    "status": "AWAITING_SPEND_AUTHORIZATION"
+  },
+  "polish_action": {
+    "action_id": "paid_67c8a2afd008a6fdf317c1b0",
+    "authorization_present": false,
+    "exact_request_sidecar_present": true,
+    "provider_present": false,
+    "reported_present": false,
+    "request_payload_artifact": {
+      "canonical_request_sha256": "c1418a090dd94ed695ab7c600abead86fd0ba0eb53c314687e5511d7c13321f6",
+      "file_sha256": "580b85299db6b788b30f910aaa55c9cfbfabc7d6fb61002c9170d56321549865",
+      "logical_path": "/work/runs/workspace-095518cd-79b5-4494-8d77-85d400fbbfad/sbe/final/dog-660bd579-1878-4d7c-bdf5-b25e4c3e6fc8/polish/attempt-001/openai-request.json",
+      "representation": "canonical_json_object",
+      "schema_version": "astrowoof.provider_request_payload_artifact.v1"
+    },
+    "request_sha256": "c1418a090dd94ed695ab7c600abead86fd0ba0eb53c314687e5511d7c13321f6",
+    "request_sidecar_state_revision": 54,
+    "route": "dog-660bd579-1878-4d7c-bdf5-b25e4c3e6fc8:polish:001",
+    "sidecar_binding_matches_ledger": true,
+    "stage": "polish",
+    "state": "PREPARED",
+    "subject_id": "dog-660bd579-1878-4d7c-bdf5-b25e4c3e6fc8",
+    "terminal_binding_sha256": "a60c082af021cff6a2d086957058815ea3ae5025de31027e30d5daea0740d2b4"
+  },
+  "provider_operation_count": 0,
+  "publication": {
+    "cause_code": "spend_authorization_required",
+    "command_kind": "provider_reconciliation",
+    "custody_finality": null,
+    "invocation_id": "ninv_12dad7edc9de4bdbb2da9d71",
+    "outcome": "awaiting_external_authority",
+    "polish_action_in_result": true,
+    "polish_disposition": null,
+    "providerless_denial_action_ids": null,
+    "receipt_id": "nreceipt_83bab5d85dda4de42f748eaf",
+    "receipt_sha256": "83bab5d85dda4de42f748eaf9e6c30c0bd10d28090ea727850f5a540018f1a11",
+    "result_id": "nres_3b5ee9a244262af1e415e112",
+    "result_sha256": "3b5ee9a244262af1e415e1123f8a20e55e64df526c28977e93929e4b0fd15a83",
+    "schema_version": "astrowoof.native_execution_result.v0.1"
+  },
+  "schema_version": "astrowoof.first_polish_authority_inspection.v1",
+  "workspace_execution_count": 0,
+  "workspace_mutation_count": 0
+}

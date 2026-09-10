@@ -1,0 +1,52 @@
+{
+  "schema_version": "astrowoof.protected_checkpoint_coordinate.v1",
+  "purpose": "bounded_read_only_first_polish_authority_validation",
+  "api_run_id": "cf631433-b898-4214-8c2d-e2b6e37a7d0b",
+  "native_run_id": "26974e4422013a2fcc2bc9f6ec1bbf93401f7d0dd87926b5a530525f3e19c49c",
+  "job_id": "290799eb-fd83-4152-ae21-1474ec96f7ee",
+  "checkpoint_id": "5caed3f7-c668-4946-bc95-df387faaff82",
+  "generation": 6,
+  "stage": "sbe-authoring",
+  "storage": {
+    "bucket": "astrowoof-qa-artifacts",
+    "object_key": "v1/checkpoint/01222aa0f4d942d2b02cccf0c1eab5d2",
+    "object_id": "01222aa0-f4d9-42d2-b02c-ccf0c1eab5d2",
+    "environment": "qa",
+    "namespace": "checkpoint",
+    "storage_contract_version": "astrowoof.storage-receipt.v1",
+    "provider_version_or_etag": "a1075ed1da92381e6ea22bc4f88f5865",
+    "version_id": null,
+    "byte_size": 4571726,
+    "archive_sha256": "3620eb4eb84b4fe31d60e81369dbec6f89a6897f5c0d0bf2f4fa996e912c955a",
+    "inventory_sha256": "e0d38510f42dc956b5add027183638b4042b45bbbcab1c40bfb9d0e9b7494068",
+    "media_type": "application/vnd.astrowoof.checkpoint+zip",
+    "protection_class": "protected-operator",
+    "created_at": "2026-09-10T13:36:20.795721Z"
+  },
+  "workspace": {
+    "logical_restore_path": "/work/runs/cf631433-b898-4214-8c2d-e2b6e37a7d0b/sbe",
+    "logical_workspace_root": "/work/runs/workspace-095518cd-79b5-4494-8d77-85d400fbbfad/sbe",
+    "logical_root_sha256": null,
+    "logical_root_sha256_status": "not persisted by the API checkpoint/result boundary",
+    "snapshot_sha256": "cd463eb86d7617a6e8e39f4a3cfdf1450db40a06240059b53784a81bdaa3b2a8",
+    "checkpoint_basis_sha256": "b3473c94636964b96511962e847fce2f3ef96b2ab181b503055c35b840691487"
+  },
+  "checkpoint_contract": "astrowoof.sbe-workspace-checkpoint.v1",
+  "compatibility_identity": "sbe@qa-sbe0457-httpx-hotfix-rollout.v3",
+  "native_lifecycle_status": "bounded-review_required",
+  "native_state_revision": 54,
+  "sbe_release": "0.4.57",
+  "spc_release": "0.11.1",
+  "expected_terminal_publication": {
+    "persistence_status": "api_persisted",
+    "invocation_id": "ninv_12dad7edc9de4bdbb2da9d71",
+    "result_id": "nres_3b5ee9a244262af1e415e112",
+    "result_sha256": "3b5ee9a244262af1e415e1123f8a20e55e64df526c28977e93929e4b0fd15a83",
+    "receipt_id": "nreceipt_83bab5d85dda4de42f748eaf",
+    "receipt_sha256": "83bab5d85dda4de42f748eaf9e6c30c0bd10d28090ea727850f5a540018f1a11",
+    "command_kind": "provider_reconciliation",
+    "native_outcome": "awaiting_external_authority",
+    "native_cause_code": "spend_authorization_required"
+  },
+  "coordinate_assertion": "This names Ada's accepted generation-6 protected checkpoint and the exact API-persisted publication after first-polish preparation. It authorizes no storage operation by itself."
+}

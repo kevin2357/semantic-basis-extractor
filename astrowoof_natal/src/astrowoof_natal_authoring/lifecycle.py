@@ -607,9 +607,84 @@ def _local_dependencies(state: dict[str, Any]) -> list[dict[str, Any]]:
     return [unique[key] for key in sorted(unique)]
 
 
+def _live_exact_first_polish_authority_request(
+    state: dict[str, Any], run_dir: Path,
+) -> bool:
+    """Prove one exact live first-polish request before terminal selection."""
+    if (state.get("terminal_transition") or {}).get("outcome") == "terminalized":
+        return False
+    if state.get("status") != "AWAITING_SPEND_AUTHORIZATION":
+        return False
+    actions = (state.get("spend_ledger") or {}).get("actions")
+    if not isinstance(actions, list):
+        return False
+    prepared = [
+        action for action in actions
+        if isinstance(action, dict) and action.get("state") == "PREPARED"
+    ]
+    if len(prepared) != 1:
+        return False
+    action = prepared[0]
+    binding = action.get("binding")
+    if not isinstance(binding, dict) or (
+        binding.get("stage") != "polish"
+        or binding.get("service_level") != "interactive"
+        or not isinstance(binding.get("route"), str)
+        or state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"}
+        or state.get("route_contract") == "astrowoof.bounded_natal.authoring_run.v2"
+        or any(
+            action.get(key) is not None
+            for key in (
+                "authorization", "provider", "reported", "negative_authorization",
+                "integrity_review",
+            )
+        )
+    ):
+        return False
+    action_id = action.get("action_id")
+    route = binding["route"]
+    subjects = state.get("subjects")
+    if not isinstance(action_id, str) or not isinstance(subjects, dict):
+        return False
+    eligible_attempt_count = 0
+    for subject_id, subject in subjects.items():
+        if not isinstance(subject, dict) or subject.get("state") != "FINAL_QA_FAILED":
+            continue
+        attempts = subject.get("polish_attempts")
+        if not isinstance(attempts, list):
+            continue
+        for attempt in attempts:
+            if not isinstance(attempt, dict):
+                continue
+            number = attempt.get("attempt_number")
+            if (
+                isinstance(number, int)
+                and number > 0
+                and attempt.get("state") == "SUBMITTED"
+                and attempt.get("paid_action_id") == action_id
+                and route == f"{subject_id}:polish:{number:03d}"
+            ):
+                eligible_attempt_count += 1
+    if eligible_attempt_count != 1:
+        return False
+    try:
+        request = load_json(run_dir / "spend-authorization-requests.json")
+    except (OSError, ValueError):
+        return False
+    return bool(
+        request.get("schema_version")
+        == "astrowoof.provider_spend_authorization_requests.v0.1"
+        and request.get("run_id") == state.get("run_id")
+        and request.get("state_revision") == state.get("state_revision")
+        and request.get("actions")
+        == [{"action_id": action_id, "binding": binding}]
+    )
+
+
 def _capacity_and_custody(
     state: dict[str, Any], observation: dict[str, Any],
     dependencies: list[dict[str, Any]], *, observed_at: str,
+    live_first_polish_request: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     """Project orthogonal local capacity and provider custody from durable bytes."""
     # The finalization record is native evidence; the outer status can be
@@ -841,6 +916,10 @@ def _capacity_and_custody(
         disposition, local_ready, reason = (
             "release_until_due", False, "known_provider_work_pending",
         )
+    elif live_first_polish_request:
+        disposition, local_ready, reason = (
+            "await_external_authority", False, "spend_authorization_required",
+        )
     elif conclusion is not None:
         # A completed finalization conclusion with unresolved locally-created
         # successor work is contradictory. Retain it for review rather than
@@ -1022,11 +1101,14 @@ def inspect_lifecycle(
         for item in subjects
     )
     terminal_transition = state.get("terminal_transition") or {}
-    terminal = complete or status in {
+    live_first_polish_request = _live_exact_first_polish_authority_request(
+        state, run_dir,
+    )
+    terminal = complete or (status in {
         "FINAL_QA_FAILED", "FINAL_QA_REQUIRES_REVIEW",
         "FAILED_REQUIRES_REVIEW", "BUDGET_EXHAUSTED",
         "AMBIGUOUS_PROVIDER_SUBMISSION", "POLICY_STOPPED",
-    }
+    } and not live_first_polish_request)
     # Completed provider evidence may select local fan-in only for a nonterminal
     # run. Nonblocking optional evidence must not reopen a delivered/terminal run.
     local_continuation = bool(dependencies) or (
@@ -1081,6 +1163,7 @@ def inspect_lifecycle(
         }
     capacity, custody, native_route, consumer_authority = _capacity_and_custody(
         state, observation, dependencies, observed_at=observation["observed_at"],
+        live_first_polish_request=live_first_polish_request,
     )
     execution_branch = _execution_branch(
         capacity, custody, dependencies, review_reasons,

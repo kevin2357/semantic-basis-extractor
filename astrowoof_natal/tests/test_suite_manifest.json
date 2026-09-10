@@ -278,6 +278,10 @@
       "weight_seconds": 16.426431
     },
     {
+      "module": "test_first_polish_authority_selection_investigation.py",
+      "weight_seconds": 0.25
+    },
+    {
       "module": "test_provider_reconciliation_precedes_authority_slice0.py",
       "weight_seconds": 0.779
     },

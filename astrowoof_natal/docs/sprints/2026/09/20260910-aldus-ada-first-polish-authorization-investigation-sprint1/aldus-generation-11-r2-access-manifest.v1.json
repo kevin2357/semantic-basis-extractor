@@ -1,0 +1,21 @@
+{
+  "api_run_id": "b2879540-54af-462f-8973-5f2f98b8c078",
+  "approved_operations": {
+    "delete_count": 0,
+    "get_count": 1,
+    "head_count": 1,
+    "list_count": 0,
+    "write_count": 0
+  },
+  "checkpoint_generation": 11,
+  "checkpoint_id": "25f30ea7-dbe3-4d79-8c2a-f1e130b8f0b0",
+  "expected_archive_bytes": 4872013,
+  "expected_archive_sha256": "55a93dc27e6146e8541b16a0cb66a0cd40f67fe07fd505e923253e5a0f3b4a14",
+  "expected_etag": "36ba8fba7ec94a27511df2cdcef1404e",
+  "expected_inventory_sha256": "36027a5134298b389d5a651249bcb26b9bc732c679b003723d8e9659c0925915",
+  "label": "aldus-generation-11",
+  "native_run_id": "65b7940ea2b54120db19291a64bdb84a5f81bce56cd190cc105c61a3f952f63d",
+  "object_key": "v1/checkpoint/14aaf2fee4fe433b9bd37481e91295bb",
+  "object_uuid": "14aaf2fe-e4fe-433b-9bd3-7481e91295bb",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}
