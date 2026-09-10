@@ -4,6 +4,60 @@ Status: feasibility mapping, not the final semantic manifest. Rule IDs are
 proposed stable identifiers and must remain one-to-one across adopted prose,
 Alloy, the future Python validator, and fixture/mutation tests.
 
+## Post-sprint maintenance status — 2026-09-10
+
+This file preserves the Slice 1δ feasibility and counterexample-campaign
+mapping. It is useful design lineage, but it is not a complete map of the
+released editorial-review v5 contract and MUST NOT be treated as current
+executable authority.
+
+The current enforcement hierarchy is:
+
+1. approved prose defines the intended contract;
+2. the packaged semantic manifest enumerates the released rule IDs and their
+   validator/test ownership;
+3. schemas, the Python validator, positive fixtures, rehashed mutations, and
+   consumer tests enforce the contract; and
+4. Alloy supplies optional bounded relational evidence for the subset modeled.
+
+Future editorial-review changes follow the mandatory impact-assessment process
+in the
+[Native Worker Change Playbook](../../../../post_extraction_authoring/Native%20Worker%20Change%20Playbook.md#assess-relational-contract-and-alloy-impact).
+That assessment prevents silent model drift without turning Alloy into a
+production dependency, CI requirement, or universal release gate.
+
+## Retained model lineage
+
+- `editorial_review_counterexamples_v1.als` is the model used by the stable
+  `alloy-counterexample-receipt.v1.json` campaign. Its recorded results and
+  exact finite scope remain historical evidence.
+- `editorial_review_contract_v3.als` is the later design model updated after
+  runtime discovery showed that initial attempts and creative retries are
+  pre-assembly pass materializations rather than whole-deck transitions.
+- The v3 model adds eighteen decisions across two packets, an explicit creative
+  retry and predecessor relation, six accepted pass winners per assembly, and
+  post-assembly whole-deck transitions.
+- For v3, the inhabited world was `SAT` and `NoResponseReuse` was `UNSAT` (no
+  bounded counterexample). Two broader checks were stopped after prolonged
+  solving and are intentionally not claimed as evidence; their executable
+  equivalents passed.
+
+The v3 model covers the relational shape of the following later manifest rules:
+
+| Released rule ID | v3 Alloy coverage | Executable authority |
+| --- | --- | --- |
+| `lineage.initial_pass.materialization.v1` | `InitialPassIdentityAndNoFalseChain` models initial attempts as pass materializations with acceptance-specific workspace presence | semantic manifest, schema, validator, fixtures, mutations |
+| `lineage.pass_retry.predecessor_exact.v1` | `InitialPassIdentityAndNoFalseChain` models same-packet retry/pass/predecessor shape; concrete attempt identity and QA-report digest equality remain outside Alloy | semantic manifest, schema, validator, fixtures, mutations |
+| `assembly.pass_winner.exact_six.v1` | `ExactInitialAssemblyBridge` selects exactly six accepted pass decisions and joins their output to the assembled deck | semantic manifest, schema, validator, fixtures, mutations |
+| `deck.transition.discriminated.v1` | stage facts separate pre-assembly pass materialization from post-assembly polish transitions | semantic manifest, discriminated schema, validator, fixtures, mutations |
+
+Later v4/v5 additions involving concrete native correlation, producer identity,
+artifact bytes/digests, request provenance, serialization, and transport were
+not added to this relational model unless already represented by an abstract
+equality or ownership relation. Their absence is deliberate only where an Alloy
+impact assessment says the relationship is unchanged or executable evidence is
+the more faithful boundary.
+
 | Rule ID | Adopted relationship | Alloy element | Future validator target | Future fixture/mutation target |
 | --- | --- | --- | --- | --- |
 | `lineage.initial_pass.exact_six.v1` | Ordinary v1 has exactly six released initial passes | `ExactV1Topology`, `InitialPassIdentityAndNoFalseChain` | `validate_chronology` | omit/duplicate/swap pass identity |

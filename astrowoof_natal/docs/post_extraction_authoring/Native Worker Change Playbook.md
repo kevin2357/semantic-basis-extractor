@@ -4,7 +4,7 @@
 status: accepted
 owner: semantic-basis-extractor
 scope: safely planning, implementing, qualifying, releasing, and jointly integrating native-worker changes
-last_reviewed: 2026-08-30
+last_reviewed: 2026-09-10
 ```
 
 ## Purpose
@@ -138,6 +138,48 @@ Prefer the smallest policy seam that preserves future extensibility. Shared
 mechanics may be factored into route-neutral functions, but exact-Natal and
 bounded-Natal admission/selection policies should remain explicit. Do not generalize
 away epistemic differences merely to reduce file count.
+
+## Assess relational-contract and Alloy impact
+
+Every change to the editorial-review packet contract or its native production
+semantics MUST record an Alloy impact assessment before implementation. Tests do
+not satisfy this assessment: executable fixtures can detect runtime or validator
+regressions, but they cannot prove that an optional relational model still
+describes the adopted contract.
+
+Treat a change as model-affecting when it alters relationships involving:
+
+- decision chronology, pass attempts, retries, predecessors, or assembly winners;
+- deck materialization, adoption, continuity, terminal selection, or delivery;
+- action, binding, request, or provider-Response uniqueness and ownership;
+- finding, validation, projection, or packet/member ownership;
+- packet-scoped artifact identity or permitted artifact absence; or
+- the boundary that keeps API observation and optional evidence capture from
+  becoming native eligibility or transition authority.
+
+For a model-affecting change, use this order:
+
+1. update and approve the authoritative prose contract;
+2. update the Alloy model and its one-to-one rule mapping;
+3. establish an inhabited world with `SAT` at the exact assertion scope;
+4. run the relevant assertions and deliberate weakened-rule counterexamples;
+5. record the tool, solver, model digest, finite scope, outcomes, timeouts, and
+   explicit claim limits; and
+6. update the schemas, semantic manifest, validator, positive fixtures, rehashed
+   mutations, and runtime/consumer tests.
+
+Alloy remains an optional, bounded developer design aid, not production code,
+runtime validation, CI infrastructure, or a universal release gate. If it is
+unavailable, adds no relational coverage, or a useful check is computationally
+impractical, record that decision and strengthen executable mutations instead.
+Never claim a stopped or timed-out assertion as evidence. A relevant contract
+change should normally update and rerun the model; omitting that work requires an
+explicit sprint rationale rather than silent model drift.
+
+For changes limited to serialization, canonical bytes, digests, compression,
+size ceilings, transport, packaging, logging, or implementation beneath unchanged
+relationships, record `no Alloy impact` with the reason and rely on the applicable
+schema, validator, fixture, mutation, and installed-consumer gates.
 
 ## Preserve extraction and evidence semantics
 

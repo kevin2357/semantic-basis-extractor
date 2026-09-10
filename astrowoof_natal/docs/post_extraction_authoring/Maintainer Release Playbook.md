@@ -198,23 +198,31 @@ Use bounded sprint slices with explicit gates:
 2. **Package and dependency audit.** Inventory modules, entry points, package
    data, subprocesses, external contracts, compatibility shims, and generated
    material that must remain excluded.
-3. **Installable package boundary.** Build and install outside the checkout;
+3. **Relational-contract impact.** For editorial-review packet or production-
+   semantics changes, record whether chronology, ownership, transitions,
+   assembly, selection/delivery, projections, artifact scope, provider joins, or
+   observation authority changed. Update and rerun the optional Alloy model when
+   useful and affected, or record `no Alloy impact` or a justified omission. The
+   executable schemas, manifest, validator, fixtures, mutations, and consumer
+   tests remain the required enforcement boundary. See
+   [Native Worker Change Playbook](Native%20Worker%20Change%20Playbook.md#assess-relational-contract-and-alloy-impact).
+4. **Installable package boundary.** Build and install outside the checkout;
    resolve resources through the package; exercise every supported CLI.
-4. **Stable contracts.** Version input, parameters, authoring profile,
+5. **Stable contracts.** Version input, parameters, authoring profile,
    operator/public state, provenance, and delivery behavior before publication.
-5. **Provenance.** Hash normalized inputs, packaged resources, final artifacts,
+6. **Provenance.** Hash normalized inputs, packaged resources, final artifacts,
    QA, and delivery; copy upstream declarations only when present.
-6. **Packaged deterministic QA.** Run `astrowoof-release-smoke
+7. **Packaged deterministic QA.** Run `astrowoof-release-smoke
    --require-installed` from outside the source tree and exercise retry, resume,
    assembly, delivery integrity, and cleanup.
-7. **Adversarial lifecycle qualification.** For lifecycle, provider-custody, or
+8. **Adversarial lifecycle qualification.** For lifecycle, provider-custody, or
    authority changes, run the installed provider-free adversarial qualification.
    If API translation, leases, capacity, or scheduling are affected, require the
    API joined campaign against the same candidate and catalog.
-8. **Controlled live candidate.** Use a known subject and real provider only
+9. **Controlled live candidate.** Use a known subject and real provider only
    after deterministic gates pass. Record attempts, usage, cost, QA, and any
    defect found.
-9. **Reproducibility and publication.** Build twice with controlled timestamps,
+10. **Reproducibility and publication.** Build twice with controlled timestamps,
    require byte-identical wheels, produce checksums and handoff documents, tag
    the qualified commit, publish assets, download them again, and reverify.
 
