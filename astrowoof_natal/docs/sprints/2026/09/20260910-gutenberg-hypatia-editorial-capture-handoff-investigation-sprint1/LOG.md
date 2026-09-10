@@ -26,3 +26,11 @@
   CLI qualification proves one exact review command plus the ordinary cycle
   result at exit 3, while provider-pending exit 3 emits no terminal command.
   Focused qualification now passes 24 tests with 4 skips.
+- 2026-09-10: API re-review approved Slice 1 for package qualification.
+  Following the Maintainer Release Playbook, selected the broad/full gate
+  because reconciliation, custody-final terminal publication, and API wrapper
+  translation are affected. Candidate identity `0.4.59` was confirmed unused
+  locally and on origin and frozen before release-bound testing. The editorial
+  contracts and optional Alloy model are unchanged: this correction transports
+  an existing exact terminal identity and does not alter packet chronology,
+  ownership, selection, projections, or capture semantics.
