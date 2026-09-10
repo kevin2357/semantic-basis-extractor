@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import io
 import json
+import logging
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +11,7 @@ from unittest.mock import patch
 
 import astrowoof_natal_authoring as public
 
+from astrowoof_natal_authoring.application_logging import configure_logging
 from astrowoof_natal_authoring.closure import (
     normalized_path, write_workspace_snapshot,
 )
@@ -36,6 +40,65 @@ def _ensure_lock(root: Path) -> None:
 
 
 class OperatorDispositionReaderSlice2Tests(unittest.TestCase):
+    def test_existing_sparkle_formatter_observes_in_process_assessment(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            pending_fixtures.TestProviderPendingObservationIdempotencySlice0().materialize(root)
+            _ensure_lock(root)
+            write_workspace_snapshot(root)
+            stream = io.StringIO()
+            handler = configure_logging(stream=stream, force=True)
+            try:
+                result = read_operator_disposition_assessment(root)
+            finally:
+                logging.getLogger().removeHandler(handler)
+
+            records = [json.loads(line) for line in stream.getvalue().splitlines()]
+            events = [record["event_name"] for record in records]
+            self.assertEqual("permitted", result["quarantine_posture"])
+            self.assertEqual("operator_disposition_assessment_started", events[0])
+            self.assertIn("workspace_fingerprint", events)
+            self.assertEqual("operator_disposition_assessment_completed", events[-1])
+            completed = records[-1]
+            self.assertEqual(result["native_run_id"], completed["correlation"]["native_run_id"])
+            self.assertEqual(result["assessment_sha256"], completed["payload"]["assessment_sha256"])
+
+    def test_relocated_workspace_logs_safe_fingerprint_and_bounded_failure(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            original = Path(temporary).resolve() / "original"
+            restored = Path(temporary).resolve() / "request-id" / "sbe"
+            original.mkdir()
+            pending_fixtures.TestProviderPendingObservationIdempotencySlice0().materialize(original)
+            _ensure_lock(original)
+            write_workspace_snapshot(original)
+            shutil.copytree(original, restored)
+            stream = io.StringIO()
+            handler = configure_logging(stream=stream, force=True)
+            try:
+                with self.assertRaisesRegex(ValueError, "original logical absolute path"):
+                    read_operator_disposition_assessment(restored)
+            finally:
+                logging.getLogger().removeHandler(handler)
+
+            records = [json.loads(line) for line in stream.getvalue().splitlines()]
+            self.assertEqual(
+                [
+                    "operator_disposition_assessment_started",
+                    "workspace_fingerprint",
+                    "operator_disposition_assessment_failed",
+                ],
+                [record["event_name"] for record in records],
+            )
+            fingerprint = records[1]
+            self.assertEqual("assessment_preflight", fingerprint["payload"]["validation_outcome"])
+            self.assertNotIn(str(original), json.dumps(fingerprint))
+            self.assertNotIn(str(restored), json.dumps(fingerprint))
+            failure = records[-1]
+            self.assertEqual("initial_snapshot_validation", failure["payload"]["phase"])
+            self.assertEqual("workspace_path_mismatch", failure["payload"]["reason_code"])
+            self.assertNotIn(str(original), json.dumps(failure))
+            self.assertNotIn(str(restored), json.dumps(failure))
+
     def test_root_level_public_reader_surface_is_exported(self):
         for name in (
             "build_operator_disposition_assessment",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 from contextlib import contextmanager
@@ -12,6 +13,9 @@ from datetime import datetime, timezone
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Mapping
+
+
+logger = logging.getLogger(__name__)
 
 
 SCHEMA_VERSION = "astrowoof.operator_disposition_assessment.v1"
@@ -653,15 +657,104 @@ def read_operator_disposition_assessment(
     allow_availability_recovery: bool = False,
 ) -> dict[str, Any]:
     """Assess one exact workspace without provider I/O or native mutation."""
+    trace = {"phase": "workspace_state_load"}
+    logger.info(
+        "operator_disposition_assessment_started phase=workspace_state_load",
+        extra={
+            "event_name": "operator_disposition_assessment_started",
+            "event_payload": {"phase": "workspace_state_load"},
+        },
+    )
+    try:
+        result = _read_operator_disposition_assessment(
+            run_dir,
+            terminal_result_id=terminal_result_id,
+            allow_availability_recovery=allow_availability_recovery,
+            trace=trace,
+        )
+    except (KeyError, OSError, TypeError, ValueError) as error:
+        phase = str(trace["phase"])
+        reason_code = _assessment_failure_reason(phase, error)
+        error_class = type(error).__name__
+        fingerprint = hashlib.sha256(
+            f"{error_class}:{reason_code}:{phase}".encode("utf-8")
+        ).hexdigest()[:16]
+        logger.error(
+            "operator_disposition_assessment_failed phase=%s reason=%s "
+            "error_class=%s error_fingerprint=%s",
+            phase, reason_code, error_class, fingerprint,
+            extra={
+                "event_name": "operator_disposition_assessment_failed",
+                "event_payload": {
+                    "phase": phase,
+                    "reason_code": reason_code,
+                    "error_class": error_class,
+                    "error_fingerprint": fingerprint,
+                },
+            },
+        )
+        raise
+    logger.info(
+        "operator_disposition_assessment_completed custody=%s posture=%s reason=%s",
+        result["native_custody_class"], result["quarantine_posture"],
+        result["reason_code"],
+        extra={
+            "event_name": "operator_disposition_assessment_completed",
+            "native_run_id": result["native_run_id"],
+            "event_payload": {
+                "native_custody_class": result["native_custody_class"],
+                "quarantine_posture": result["quarantine_posture"],
+                "reason_code": result["reason_code"],
+                "state_revision": result["checkpoint"]["state_revision"],
+                "lifecycle_schema_version": result["lifecycle_evidence"]["schema_version"],
+                "assessment_sha256": result["assessment_sha256"],
+            },
+        },
+    )
+    return result
+
+
+def _assessment_failure_reason(phase: str, error: BaseException) -> str:
+    message = str(error)
+    if phase == "initial_snapshot_validation":
+        if "original logical absolute path" in message:
+            return "workspace_path_mismatch"
+        if "missing" in message or "lacks the durable" in message:
+            return "snapshot_unavailable"
+        return "snapshot_changed"
+    return {
+        "workspace_state_load": "native_state_unavailable",
+        "observation_time_normalization": "observation_time_invalid",
+        "lifecycle_inspection": "lifecycle_inspection_unavailable",
+        "lifecycle_normalization": "lifecycle_evidence_unsupported",
+        "terminal_evidence_resolution": "terminal_evidence_invalid",
+        "custody_classification": "custody_classification_unavailable",
+        "final_snapshot_validation": "snapshot_changed_during_assessment",
+        "assessment_construction": "assessment_contract_invalid",
+    }.get(phase, "assessment_unavailable")
+
+
+def _read_operator_disposition_assessment(
+    run_dir: Path | str, *, terminal_result_id: str | None,
+    allow_availability_recovery: bool, trace: dict[str, str],
+) -> dict[str, Any]:
     from . import __version__
     from .closure import load_json, sha256_file, validate_workspace_snapshot
     from .lifecycle import inspect_lifecycle
     from .lifecycle_contracts import validate_lifecycle_inspection_v05
     from .retry_lineage_contracts import inspect_retry_lineage_lifecycle
+    from .trace_observability import log_workspace_fingerprint
 
     root = Path(run_dir).resolve()
     state = load_json(root / "run.json")
+    log_workspace_fingerprint(
+        logger, root, state,
+        validation_outcome="assessment_preflight",
+        sbe_release=__version__,
+    )
+    trace["phase"] = "initial_snapshot_validation"
     validate_workspace_snapshot(root, state)
+    trace["phase"] = "observation_time_normalization"
     raw_observed_at = str(
         state.get("updated_at") or "1970-01-01T00:00:00+00:00"
     )
@@ -675,6 +768,7 @@ def read_operator_disposition_assessment(
     ).isoformat()
     with _read_only_native_fence(root) as fenced:
         access = "established" if fenced else "not_established"
+        trace["phase"] = "lifecycle_inspection"
         try:
             raw_inspection = inspect_retry_lineage_lifecycle(
                 root, observed_at=observed_at, native_exclusive_access=access,
@@ -689,11 +783,14 @@ def read_operator_disposition_assessment(
                 native_exclusive_access=access,
             )
             validate_lifecycle_inspection_v05(raw_inspection)
+        trace["phase"] = "lifecycle_normalization"
         inspection = _normalized_lifecycle(raw_inspection)
+        trace["phase"] = "terminal_evidence_resolution"
         terminal, categories = _terminal_evidence(
             root, inspection, result_id=terminal_result_id,
             allow_availability_recovery=allow_availability_recovery,
         )
+        trace["phase"] = "custody_classification"
         classified = _classify_inspection(
             inspection, terminal, categories, fenced=fenced,
         )
@@ -709,6 +806,7 @@ def read_operator_disposition_assessment(
                 fenced=fenced,
             )
         # Revalidate after every read while the native writer fence is held.
+        trace["phase"] = "final_snapshot_validation"
         validate_workspace_snapshot(root, state)
 
     custody_class, summary, posture, actions, reason, categories = classified
@@ -720,6 +818,7 @@ def read_operator_disposition_assessment(
         "route_contract": route["route_contract"],
         "lifecycle_schema": inspection["schema_version"],
     }
+    trace["phase"] = "assessment_construction"
     return build_operator_disposition_assessment(
         native_run_id=inspection["run_id"],
         route={

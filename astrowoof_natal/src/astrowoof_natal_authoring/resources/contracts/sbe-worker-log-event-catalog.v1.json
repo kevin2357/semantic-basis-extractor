@@ -2,6 +2,18 @@
   "schema_version": "astrowoof.sbe_worker_log_event_catalog.v1",
   "events": {
     "application_message": {"required_fields": [], "optional_fields": []},
+    "operator_disposition_assessment_started": {
+      "required_fields": ["phase"],
+      "optional_fields": []
+    },
+    "operator_disposition_assessment_completed": {
+      "required_fields": ["native_custody_class", "quarantine_posture", "reason_code", "state_revision", "lifecycle_schema_version", "assessment_sha256"],
+      "optional_fields": []
+    },
+    "operator_disposition_assessment_failed": {
+      "required_fields": ["phase", "reason_code", "error_class", "error_fingerprint"],
+      "optional_fields": []
+    },
     "workspace_fingerprint": {
       "required_fields": ["validation_outcome", "native_schema", "route_family", "native_status", "state_revision", "logical_root_sha256", "snapshot_sha256", "snapshot_member_count", "checkpoint_generation", "checkpoint_object_id", "checkpoint_basis_sha256", "sbe_release", "spc_release", "fingerprint_sha256"],
       "optional_fields": []

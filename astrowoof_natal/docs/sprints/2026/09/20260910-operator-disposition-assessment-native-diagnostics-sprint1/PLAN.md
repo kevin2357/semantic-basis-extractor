@@ -6,6 +6,8 @@ Make failures of SBE's in-process, read-only operator-disposition assessment dia
 
 ## Slice 0 — Reproduce and inventory
 
+**Status: complete, pending API review.** The provider-free reproduction and logging ruling are recorded in `SLICE 0 - IN-PROCESS LOGGING AND RESTORE-PATH REPRODUCTION.md`.
+
 Before changing the contract:
 
 - identify the exact exception persisted for Baskerville if it is available through already-authorized evidence;
@@ -22,6 +24,8 @@ No retained-workspace access is authorized by this plan.
 **Gate:** one precise reproduced failure or a documented evidence limitation, an agreed phase/reason matrix, and a concrete ruling on reuse of normal SBE sparkle logging. Do not design a callback before this ruling.
 
 ## Slice 1 — Extend the existing sparkle-log vocabulary
+
+**Status: implemented, pending review.** Three bounded events were added to the existing worker-log catalog.
 
 Define minimal assessment events in the existing SBE worker-log catalog. Candidate fields:
 
@@ -42,6 +46,8 @@ Preserve the existing one-argument reader call. Decide which process owns loggin
 
 ## Slice 2 — Implement bounded native observations
 
+**Status: implemented, pending review.** Entry, safe preflight fingerprint, completion, and phase/reason failure records are covered provider-free.
+
 Instrument only the meaningful assessment boundaries:
 
 - workspace state loaded;
@@ -58,6 +64,8 @@ Observation uses ordinary SBE log calls and must be demonstrably non-mutating an
 **Gate:** focused tests prove phase order, safe field closure, correct final failure classification, and valid structured formatting in CLI and in-process host shapes.
 
 ## Slice 3 — API companion intake
+
+**Status: awaiting API review/implementation.** No SBE callback or alternate transport is needed by current evidence.
 
 Coordinate the smallest API-side patch needed to configure/carry SBE's existing structured logs in the operator-runner process. API may separately emit its own orchestration-level claim, restore, refusal, and completion execution events.
 
