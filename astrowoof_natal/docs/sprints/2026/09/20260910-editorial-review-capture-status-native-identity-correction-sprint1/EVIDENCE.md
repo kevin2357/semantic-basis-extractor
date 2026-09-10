@@ -1,7 +1,7 @@
 # Evidence — editorial-review capture-status native identity correction
 
-Status: Slices 0–3 complete through exact release-lock qualification; final
-API/Vafflemutt pre-tag review and explicit tag/publication authorization remain.
+Status: complete through immutable `0.4.56` publication and fresh-download
+verification.
 
 ## Confirmed source facts
 
@@ -24,10 +24,26 @@ The API finding is substantiated. SBE should provide the narrow public
 correction after Review Gate 0. API should remain paused on emitting the
 no-packet branch and must not rewrite native content or identity.
 
-## Pending evidence
+## Final review and publication evidence
 
-- final API/Vafflemutt pre-tag review; and
-- explicit owner authorization for the immutable tag and GitHub publication.
+- API/Vafflemutt independently verified both lock wheels and technically
+  approved release only at the named lock commit; the owner then explicitly
+  authorized commit, push, tag, and publication.
+- Annotated tag `astrowoof-natal-authoring-v0.4.56` has tag-object identity
+  `682e558fac5d7f39e97902aecc82ee248efc9b63` and peels to the required
+  release-lock commit `a43067f580c5d4b727333a0eb54422191f73fa77`.
+- GitHub Release `RE_kwDOToQdE84XBEtA` was published at
+  `2026-09-10T09:40:05Z` with exactly the wheel and `SHA256SUMS.txt`.
+- Wheel asset ID `554708398` / `RA_kwDOToQdE84hEC2u` reports 1,379,722 bytes
+  and digest
+  `sha256:31a82e5121a3a43c62843f7ee39e8359ecd8485245e6b35f555892a41f4ed551`.
+- Checksum asset ID `554708396` / `RA_kwDOToQdE84hEC2s` reports 116 bytes and
+  digest
+  `sha256:94cac817d6557f0cf15dac50f40a5b7241d43a4ca643199f562953c6b98b1ba2`.
+- Fresh authenticated downloads reproduced both asset sizes and hashes, and
+  the downloaded checksum line names the exact qualified wheel digest.
+- Release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.56`.
 
 ## Slice 0 evidence
 

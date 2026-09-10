@@ -113,3 +113,23 @@
 - Stopped at the requested pre-tag/release boundary. No tag, checksum manifest,
   GitHub Release, asset upload, provider call, or external runtime mutation was
   performed.
+
+## 2026-09-10 — 0.4.56 immutable publication
+
+- Received API/Vafflemutt technical approval and explicit owner authorization
+  to commit, push, tag, and publish, conditional on the exact lock target.
+- Committed the technical approval to `main` without changing the lock target.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.56`; remote
+  tag object `682e558fac5d7f39e97902aecc82ee248efc9b63` peels exactly to
+  `a43067f580c5d4b727333a0eb54422191f73fa77`.
+- Published GitHub Release `RE_kwDOToQdE84XBEtA` at
+  `2026-09-10T09:40:05Z` with only the exact qualified wheel and checksum
+  manifest.
+- GitHub reported the wheel asset at 1,379,722 bytes with the qualified
+  SHA-256 and the checksum asset at 116 bytes with SHA-256
+  `94cac817d6557f0cf15dac50f40a5b7241d43a4ca643199f562953c6b98b1ba2`.
+- Downloaded both assets through fresh authenticated release retrieval. Their
+  sizes and hashes matched GitHub and the qualified originals, and the
+  downloaded checksum line matched the wheel.
+- No tag movement, substituted wheel, API deployment, provider call, Better
+  Stack write, database operation, or retained-run mutation occurred.

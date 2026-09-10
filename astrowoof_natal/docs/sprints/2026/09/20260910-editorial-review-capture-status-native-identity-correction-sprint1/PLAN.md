@@ -1,8 +1,8 @@
 # Plan — editorial-review capture-status native identity correction
 
-Status: Slice 0 and Slices 1–2 approved. Candidate version `0.4.56` is frozen
-for installed-wheel and API consumer qualification. Tag/release and external
-operations remain separately gated.
+Status: complete. Version `0.4.56` was qualified, approved, tagged at the exact
+release-lock commit, published with its checksum, and verified by a fresh
+authenticated download.
 
 ## Goal
 
