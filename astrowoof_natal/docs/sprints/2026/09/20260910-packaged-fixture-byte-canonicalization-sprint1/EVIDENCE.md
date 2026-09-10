@@ -1,6 +1,7 @@
 # Evidence — packaged fixture byte canonicalization
 
-Status: `0.4.57` source correction under focused qualification.
+Status: `0.4.57` source and installed-wheel qualification passed; API digest
+review remains pending.
 
 ## Failure facts
 
@@ -22,3 +23,16 @@ Status: `0.4.57` source correction under focused qualification.
   fixtures.
 - No JSON values, schemas, runtime logic, lifecycle behavior, provider custody,
   or external authority semantics change.
+
+## Qualification evidence
+
+- Source focused matrix: 125 passed, 11 expected skips.
+- Installed focused matrix with jsonschema: 120 passed, no skips.
+- `core.autocrlf=true` and `false` Git archives: byte-identical at SHA-256
+  `a2614283a96a39197773959948fc1db36c1bb27346e736d498f5437738c22eab`.
+- Candidate wheels: byte-identical; 1,375,422 bytes; SHA-256
+  `957f677d46ad01a7a7243e79db611c14fb63763868056aae971d9d50642abc1c`.
+- Installed provider-free adversarial QA and release smoke: passed.
+- API imported installed version `0.4.57` from the isolated `site-packages` and
+  the public catalog reader succeeded. Remaining selected-test failures are
+  strict API consumer expectations for the six changed LF digests.

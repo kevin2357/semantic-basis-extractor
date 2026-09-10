@@ -1,6 +1,7 @@
 # Plan — packaged fixture byte canonicalization
 
-Status: implementation in progress for corrective release `0.4.57`.
+Status: source and installed-wheel candidate qualified; paused for API review of
+the six intentionally changed canonical fixture digests.
 
 ## Goal
 

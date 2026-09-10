@@ -20,3 +20,22 @@
 - Added a public-reader regression requiring every catalog fixture to contain
   no CRLF sequence.
 - No JSON value or runtime semantic changed.
+
+## 2026-09-10 — Focused source and package qualification
+
+- Focused source matrix passed 125 tests with 11 expected optional/install-gate
+  skips; semantic comparison proved all nine fixture JSON values unchanged.
+- Commit `9158e89` was pushed as the reviewable `0.4.57` source candidate.
+- Git archives made with `core.autocrlf=true` and `false` were byte-identical.
+  Every catalog fixture was LF and matched its declared digest in both.
+- Two fixed-epoch wheels were byte-identical at 1,375,422 bytes and SHA-256
+  `957f677d46ad01a7a7243e79db611c14fb63763868056aae971d9d50642abc1c`.
+- The 307-member inventories were identical and contained no forbidden cache,
+  bytecode, build, or distribution residue.
+- Clean installed qualification passed `pip check`, 120 focused tests with
+  schema validation enabled, provider-free adversarial QA, and installed
+  release smoke.
+- API loaded installed SBE `0.4.57` and its public reader returned all 15 cases,
+  proving the published-0.4.56 integrity failure is corrected. API's two
+  selected tests then failed only at its frozen six old digest expectations,
+  which is the intended consumer review/update gate.
