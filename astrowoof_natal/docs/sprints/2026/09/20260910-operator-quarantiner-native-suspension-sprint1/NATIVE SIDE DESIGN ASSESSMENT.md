@@ -2,6 +2,12 @@
 
 ## Executive assessment
 
+### Read-only assessment prerequisite discovered later
+
+Before the cooperative suspension protocol below, the nice assessed-quarantine path needs an additive read-only relocation capability. API restores exact checkpoint bytes into a request-isolated path, while ordinary SBE workspace validation correctly reserves the original stable absolute path for executable authority.
+
+The approved direction is not to weaken that executable invariant. A dedicated relocated assessment reader should validate exact checkpoint bytes under explicit caller authority and return a provenance wrapper around unchanged disposition-assessment v1. It grants no mutation, resume, provider, publication, retirement, or suspension capability. See `SLICE 0 - READ-ONLY RELOCATED ASSESSMENT DESIGN.md`.
+
 The missing capability is not a more permissive quarantine classifier. It is a
 new, exact, cooperative native suspension protocol that can produce stronger
 evidence than today's read-only disposition assessment.

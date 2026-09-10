@@ -28,6 +28,8 @@ SBE's existing structured sparkle formatter also works in-process when deliberat
 
 ## Slice 0 — Read-only relocated assessment design
 
+**Status: approved by API and owner; freeze clarifications incorporated.** The authority, wrapper, capability fence, canonical root/time/digest rules, exact terminal selector, replay rule, and cross-package gate are recorded in `SLICE 0 - READ-ONLY RELOCATED ASSESSMENT DESIGN.md`.
+
 ### Objective
 
 Design the narrowest additive contract that permits SBE to assess a byte-exact, checkpoint-verified workspace restored at a different physical path without granting execution, mutation, publication, provider, or native-authority rights to that relocated copy.
