@@ -8689,6 +8689,7 @@ def main() -> None:
                 qualitative_editor_provider=qualitative_editor_provider,
             ),
             event_emitter=event_emitter,
+            terminal_command_output=output_result,
         )
         output_result(result)
         log_cli_exit(

@@ -3477,6 +3477,7 @@ class TestSemanticClosure(SemanticClosureFixture):
                 "astrowoof_natal_authoring.closure.run_qualitative_review",
                 side_effect=AssertionError("terminal conclusion selected qualitative work"),
             ):
+                terminal_commands = []
                 result = reconcile_authoring_provider_cycle(
                     root / "run",
                     observed_at=action["provider_reconciliation"]["resume_not_before"],
@@ -3485,9 +3486,16 @@ class TestSemanticClosure(SemanticClosureFixture):
                         exact_batch_transport=transport,
                         python_executable=Path(sys.executable),
                     ),
+                    terminal_command_output=terminal_commands.append,
                 )
 
             self.assertEqual("terminal", result["outcome"])
+            self.assertEqual(1, len(terminal_commands))
+            self.assertEqual(
+                "astrowoof.terminal_delivery_command_result.v0.1",
+                terminal_commands[0]["schema_version"],
+            )
+            self.assertEqual("delivery_complete", terminal_commands[0]["outcome"])
             self.assertNotIn("local_continuation", result)
             self.assertEqual("terminal", result["inspection"]["execution_capacity"]["disposition"])
             self.assertIsNone(result["inspection"]["external_authority_request"])

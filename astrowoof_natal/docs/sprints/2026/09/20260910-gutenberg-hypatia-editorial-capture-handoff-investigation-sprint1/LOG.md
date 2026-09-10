@@ -13,3 +13,16 @@
   delivery-validation retry with no lawful invocation identity to rediscover.
   Retained checkpoint access is not needed. Slice 1 will reproduce the two
   seams provider-free while preserving strict no-latest-result behavior.
+- 2026-09-10: Slice 1 SBE producer correction implemented. Detached
+  reconciliation now emits the existing exact terminal review/delivery command
+  contract directly from the same invocation's returned sealed result and
+  receipt. Nonterminal publications emit no terminal handoff. Focused
+  source-tree qualification passed 20 tests with 4 skips. API retains ownership
+  of detached exit-3 consumption and accepted-delivery publication ordering.
+- 2026-09-10: API review requested a real detached CLI/stdout-JSONL regression.
+  It exposed that reconciliation's review publication was still native v0.1,
+  which cannot supply the custody-final terminal-review command. The producer
+  now selects native terminal-review v0.2 for an exact `review_required` cycle.
+  CLI qualification proves one exact review command plus the ordinary cycle
+  result at exit 3, while provider-pending exit 3 emits no terminal command.
+  Focused qualification now passes 24 tests with 4 skips.

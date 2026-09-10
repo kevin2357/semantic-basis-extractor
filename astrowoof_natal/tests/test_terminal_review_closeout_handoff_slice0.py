@@ -361,13 +361,38 @@ class TerminalReviewCloseoutHandoffSlice0Tests(unittest.TestCase):
             )
 
             provider_calls: list[tuple[str, str]] = []
-            reconciliation_code, _ = _run_reconciliation_main(
+            reconciliation_code, reconciliation_envelopes = _run_reconciliation_main(
                 run_dir,
                 observed_at="2026-08-28T09:00:01Z",
                 calls=provider_calls,
                 provider_status="completed",
             )
             self.assertEqual(3, reconciliation_code)
+            command_envelopes = [
+                item for item in reconciliation_envelopes
+                if item.get("schema_version") == "sbe.command_result.v1"
+                and item.get("envelope_type") == "command_result"
+            ]
+            terminal_commands = [
+                item["result"] for item in command_envelopes
+                if (item.get("result") or {}).get("schema_version")
+                == "astrowoof.terminal_review_command_result.v0.1"
+            ]
+            ordinary_results = [
+                item["result"] for item in command_envelopes
+                if (item.get("result") or {}).get("schema_version")
+                == "astrowoof.provider_reconciliation_cycle_result.v0.2"
+            ]
+            self.assertEqual(1, len(terminal_commands))
+            self.assertEqual(1, len(ordinary_results))
+            terminal_publication = read_native_transition_result(
+                run_dir, terminal_commands[0]["result_id"]
+            )
+            validate_terminal_review_command_result_against_publication(
+                terminal_commands[0],
+                terminal_publication["result"],
+                terminal_publication["receipt"],
+            )
             self.assertEqual(1, len(provider_calls))
             self.assertEqual("GET", provider_calls[0][0])
             self.assertTrue(provider_calls[0][1].endswith(
@@ -428,6 +453,46 @@ class TerminalReviewCloseoutHandoffSlice0Tests(unittest.TestCase):
             self.assertTrue(closeout["terminal"]["terminal"])
             self.assertFalse(closeout["terminal"]["provider_continuation_remains"])
             self.assertFalse(closeout["terminal"]["local_continuation_remains"])
+
+    def test_detached_nonterminal_exit_three_emits_no_terminal_command(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, _retry_one, _retry_two = _workspace(
+                Path(temporary), "exact_natal"
+            )
+            state_path = run_dir / "run.json"
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            waiting = next(
+                item for item in state["spend_ledger"]["actions"]
+                if item["state"] == "WAITING"
+            )
+            waiting["provider_reconciliation"] = {
+                "policy_version": "astrowoof.provider_reconciliation_policy.v0.2",
+                "provider_retrieval_attempt_count": 0,
+                "last_attempt_at": None,
+                "last_outcome": None,
+                "resume_not_before": "2026-08-28T09:00:00Z",
+            }
+            closure.save_state(state_path, state)
+            calls: list[tuple[str, str]] = []
+
+            exit_code, envelopes = _run_reconciliation_main(
+                run_dir,
+                observed_at="2026-08-28T09:00:01Z",
+                calls=calls,
+                provider_status="in_progress",
+            )
+
+            self.assertEqual(3, exit_code)
+            self.assertEqual(1, len(calls))
+            terminal_commands = [
+                item for item in envelopes
+                if item.get("envelope_type") == "command_result"
+                and (item.get("result") or {}).get("schema_version") in {
+                    "astrowoof.terminal_review_command_result.v0.1",
+                    "astrowoof.terminal_delivery_command_result.v0.1",
+                }
+            ]
+            self.assertEqual([], terminal_commands)
 
 
 if __name__ == "__main__":

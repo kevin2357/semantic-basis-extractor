@@ -32,6 +32,7 @@ from astrowoof_natal_authoring.native_transitions import (
     validate_native_publication_receipt,
 )
 from astrowoof_natal_authoring.closure import _ordinary_terminal_output
+from astrowoof_natal_authoring.reconciliation import _emit_terminal_command_result
 
 
 def _binding(stage: str, route: str) -> dict:
@@ -93,6 +94,43 @@ class TerminalReviewContractTests(unittest.TestCase):
         ).encode()).hexdigest()
         result["result_id"] = f"nres_{result['result_sha256'][:24]}"
         return result
+
+    def test_reconciliation_emits_exact_review_handoff_from_same_publication(self) -> None:
+        result = self.result()
+        receipt = self.receipt(result)
+        emitted: list[dict] = []
+
+        _emit_terminal_command_result(
+            {"result": result, "receipt": receipt}, emitted.append,
+        )
+
+        self.assertEqual(
+            build_terminal_review_command_result(result, receipt), emitted[0]
+        )
+
+    def test_reconciliation_emits_exact_delivery_handoff_from_same_publication(self) -> None:
+        result = self.delivery_result()
+        receipt = self.receipt(result)
+        emitted: list[dict] = []
+
+        _emit_terminal_command_result(
+            {"result": result, "receipt": receipt}, emitted.append,
+        )
+
+        self.assertEqual(
+            build_terminal_delivery_command_result(result, receipt), emitted[0]
+        )
+
+    def test_reconciliation_emits_nothing_for_nonterminal_publication(self) -> None:
+        result = self.base()
+        result["outcome"] = "provider_pending"
+        emitted: list[dict] = []
+
+        _emit_terminal_command_result(
+            {"result": result, "receipt": {}}, emitted.append,
+        )
+
+        self.assertEqual([], emitted)
 
     def receipt(self, result: dict) -> dict:
         receipt = {

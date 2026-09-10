@@ -1968,6 +1968,7 @@ def reconcile_authoring_provider_cycle(
     observed_at: str,
     provider_adapters: ProviderReconciliationAdapters,
     event_emitter: Any = None,
+    terminal_command_output: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Dispatch one bounded provider cycle from validated native route evidence."""
     from .closure import load_json
@@ -2051,11 +2052,13 @@ def reconcile_authoring_provider_cycle(
         if result["outcome"] != "not_due":
             from . import __version__
             from .native_transitions import publish_native_execution_result
-            publish_native_execution_result(
+            sealed = publish_native_execution_result(
                 run_dir, command_kind="provider_reconciliation",
                 sbe_release=__version__, published_at=observed_at,
                 event_emitter=event_emitter,
+                terminal_review_v02=result["outcome"] == "review_required",
             )
+            _emit_terminal_command_result(sealed, terminal_command_output)
         return result
     if route == "exact_natal" and mechanism == "response":
         provider = provider_adapters.exact_interactive_provider
@@ -2082,9 +2085,30 @@ def reconcile_authoring_provider_cycle(
     ):
         from . import __version__
         from .native_transitions import publish_native_execution_result
-        publish_native_execution_result(
+        sealed = publish_native_execution_result(
             run_dir, command_kind="provider_reconciliation",
             sbe_release=__version__, published_at=observed_at,
             event_emitter=event_emitter,
+            terminal_review_v02=result["outcome"] == "review_required",
         )
+        _emit_terminal_command_result(sealed, terminal_command_output)
     return result
+
+
+def _emit_terminal_command_result(
+    sealed: dict[str, Any],
+    output: Callable[[dict[str, Any]], None] | None,
+) -> None:
+    """Emit the exact same-invocation terminal handoff when one exists."""
+    if output is None:
+        return
+    result = sealed["result"]
+    receipt = sealed["receipt"]
+    if result.get("outcome") == "delivery_complete":
+        from .terminal_review_contracts import build_terminal_delivery_command_result
+
+        output(build_terminal_delivery_command_result(result, receipt))
+    elif result.get("outcome") == "review_required":
+        from .terminal_review_contracts import build_terminal_review_command_result
+
+        output(build_terminal_review_command_result(result, receipt))
