@@ -1,8 +1,8 @@
 # Plan — editorial-review capture-status native identity correction
 
-Status: Slice 0 approved; Slices 1–2 implemented and source-qualified. Paused
-for API/Vafflemutt source-candidate review before a fresh version and installed-
-wheel qualification. Release and external operations remain separately gated.
+Status: Slice 0 and Slices 1–2 approved. Candidate version `0.4.56` is frozen
+for installed-wheel and API consumer qualification. Tag/release and external
+operations remain separately gated.
 
 ## Goal
 

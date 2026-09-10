@@ -69,3 +69,24 @@
   guard unchanged against the SBE source overlay.
 - Paused for API/Vafflemutt source-candidate review before versioning or
   installed-wheel qualification.
+
+## 2026-09-10 — Slice 3 package qualification authorized
+
+- API/Vafflemutt approved the implementation at `742e0fc` for versioning and
+  installed-wheel qualification.
+- Froze fresh candidate version `0.4.56` before release-bound testing/building.
+- Tagging and GitHub publication remain outside the authorized gate.
+
+## 2026-09-10 — 0.4.56 pre-lock package qualification
+
+- Re-ran frozen-version source gates: 39 editorial-review tests with one
+  expected skip and 35 release/smoke/terminal tests with five expected skips.
+- Built two byte-identical fixed-epoch wheels, each 1,376,426 bytes at SHA-256
+  `56be2706c792014468081fdf0fab8d101bf250141e97f349ba4e921d9d0abe82`.
+- Installed the candidate in a clean environment with local SPC `0.11.1`,
+  jsonschema `4.26.0`, and tzdata `2026.3`; `pip check` was clean and package
+  imports resolved from `site-packages`.
+- Passed all 27 installed focused tests without skips, four API functional
+  consumer cells, and an independent API-side `0.4.56` metadata assertion.
+- Ready for the release-lock commit, exact-commit rebuild/reinstallation, and
+  final pre-tag review. No tag or publication occurred.
