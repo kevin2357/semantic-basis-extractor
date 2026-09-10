@@ -5,7 +5,9 @@
 Only Slice 0 is planned. No live quarantine execution, R2 access, provider
 operation, runtime correction, process termination, or cleanup is authorized.
 
-## Slice 0 — Reconstruct the nice assessment boundary
+## Slice 0 — Quarantine seam and stuck-run investigation
+
+### Track A — Reconstruct the nice assessment boundary
 
 ### 0A — Source and contract map
 
@@ -52,12 +54,34 @@ Classify each result at the SBE reader, SBE CLI, API invocation, API parser, or
 API admission layer. A valid semantic refusal is successful transport, not an
 assessment-process failure.
 
-### 0E — Compare with Bakersville/Hopper evidence
+### 0E — Compare with Baskerville/Hopper evidence
 
 When API supplies bounded, sanitized operator output, compare it only with the
 proven deterministic classes. Do not infer equivalence from an outer run status
 or a similar error phrase. Any retained workspace read requires separate exact
 authorization.
+
+### Track B — Explain why Baskerville became stuck
+
+Independently reconstruct the last authoritative lifecycle progression before
+the quarantine request:
+
+- exact API run/job and native run/workspace/checkpoint lineage;
+- last accepted native result and receipt available to API;
+- selected lifecycle action and expected successor transition;
+- provider request/result custody, call-entry ambiguity, and spend posture;
+- pending or completed-unadopted local work;
+- worker lease, capacity, retry, and dispatch state;
+- first timestamp where expected progress ceased;
+- whether progress stopped at native selection, subprocess transport, API
+  admission, scheduling, or an intentional review/authority wait.
+
+Use retained API diagnostics and sanitized logs first. Any R2/workspace read
+requires separate exact authorization. Do not use the later
+`disposition_assessment_unavailable` refusal as evidence of the earlier stuck
+cause unless an exact identity/time join proves a shared defect.
+
+Report Tracks A and B separately before proposing a common cause.
 
 ## Exit gate
 
@@ -70,4 +94,3 @@ Publish one of these conclusions and pause for joint review:
 The review decides whether to make a narrow correction, request exact retained
 evidence, authorize a bounded live exercise, or return to the residual
 not-so-nice suspension/hard-stop design.
-
