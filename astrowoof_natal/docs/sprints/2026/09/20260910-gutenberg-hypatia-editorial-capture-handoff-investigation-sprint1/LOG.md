@@ -57,3 +57,10 @@
   and the exact Python/pip/setuptools/wheel toolchain was added to the release
   qualification. API should test this retained artifact rather than a substitute
   rebuild.
+- 2026-09-10: Owner authorized commit, push, tag, and publication. Main was
+  pushed, annotated tag `astrowoof-natal-authoring-v0.4.59` was created at and
+  remotely verified to peel to release lock
+  `e5127caea466b12340472eee48b2563abfd68650`, and the exact qualified wheel plus
+  `SHA256SUMS.txt` were published. A fresh separate download reproduced the
+  1,376,264-byte wheel and SHA-256 `9211b7a7…d9cbe92`; GitHub's reported digest
+  and the downloaded checksum line agree. Release `0.4.59` is complete.
