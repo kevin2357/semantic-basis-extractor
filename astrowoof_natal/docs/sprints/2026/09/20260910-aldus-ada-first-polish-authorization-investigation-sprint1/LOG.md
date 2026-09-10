@@ -78,3 +78,10 @@
   installed adversarial QA, installed polish handoff QA, and a direct installed
   failed-QA exact-request/duplicate-attempt probe. All provider-free checks
   reported zero external calls and spend.
+- Release-lock commit `ae993c68013b3a9a31b70f95e8eac51dd7f8a52c` was
+  rebuilt twice at epoch `1789054729`. Both exact wheels are 1,376,041 bytes,
+  contain the same 307 members, and have SHA-256
+  `a8b131e36accb6bead912f208271bc81b76827cddcc94f77de5fc8bcbbf61871`.
+  A second fresh installed environment repeated every package and feature gate
+  successfully. The candidate is paused for API and owner tag/release approval;
+  no tag, push, publication, or live provider run occurred.
