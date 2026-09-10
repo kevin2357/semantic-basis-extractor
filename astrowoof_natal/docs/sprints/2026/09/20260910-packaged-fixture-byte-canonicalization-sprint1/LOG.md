@@ -39,3 +39,20 @@
   proving the published-0.4.56 integrity failure is corrected. API's two
   selected tests then failed only at its frozen six old digest expectations,
   which is the intended consumer review/update gate.
+
+## 2026-09-10 — 0.4.57 immutable publication
+
+- API technically approved the candidate and independently confirmed the
+  canonicalization boundary; the owner explicitly authorized tag/release.
+- Per owner direction, no approval or publication document was committed before
+  immutable identity was established.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.57` directly at artifact
+  source `9158e89684adbcef518c843169c2a0236847bc97`.
+- Remote tag object `8c900b55c934318f75c8394959d6b8fc3d00ceee` peels exactly to that
+  artifact-source commit.
+- Published GitHub Release `RE_kwDOToQdE84XBOOW` at
+  `2026-09-10T10:45:43Z` with only the exact wheel and checksum manifest.
+- Fresh authenticated download reproduced the wheel and checksum asset sizes
+  and hashes, and the downloaded checksum line matched the qualified wheel.
+- No tag movement, asset substitution, API deployment, Better Stack write,
+  provider call, database operation, or retained-run mutation occurred.

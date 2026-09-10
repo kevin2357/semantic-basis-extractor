@@ -1,7 +1,7 @@
 # Evidence — packaged fixture byte canonicalization
 
-Status: `0.4.57` source and installed-wheel qualification passed; API digest
-review remains pending.
+Status: complete through immutable `0.4.57` publication and authenticated
+fresh-download verification.
 
 ## Failure facts
 
@@ -36,3 +36,22 @@ review remains pending.
 - API imported installed version `0.4.57` from the isolated `site-packages` and
   the public catalog reader succeeded. Remaining selected-test failures are
   strict API consumer expectations for the six changed LF digests.
+
+## Immutable publication evidence
+
+- artifact-source/tag target:
+  `9158e89684adbcef518c843169c2a0236847bc97`;
+- annotated tag: `astrowoof-natal-authoring-v0.4.57`;
+- tag object: `8c900b55c934318f75c8394959d6b8fc3d00ceee`;
+- GitHub Release ID: `RE_kwDOToQdE84XBOOW`;
+- published at: `2026-09-10T10:45:43Z`;
+- wheel asset ID: `554812481` / `RA_kwDOToQdE84hEcRB`;
+- wheel: 1,375,422 bytes; SHA-256
+  `957f677d46ad01a7a7243e79db611c14fb63763868056aae971d9d50642abc1c`;
+- checksum asset ID: `554812480` / `RA_kwDOToQdE84hEcRA`;
+- checksum asset: 116 bytes; SHA-256
+  `f2cc9e33e78b3f7a3a81962d9a01f67bad808c62b7a8b61929ea553141c8fede`;
+- GitHub-reported digests, qualified local assets, fresh authenticated
+  downloads, and the downloaded checksum line all agree; and
+- release URL:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.57`.

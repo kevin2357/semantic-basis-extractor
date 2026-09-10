@@ -1,7 +1,7 @@
 # Plan — packaged fixture byte canonicalization
 
-Status: source and installed-wheel candidate qualified; paused for API review of
-the six intentionally changed canonical fixture digests.
+Status: complete. Corrective version `0.4.57` was qualified, approved, tagged at
+the exact artifact-source commit, published, and verified after fresh download.
 
 ## Goal
 
