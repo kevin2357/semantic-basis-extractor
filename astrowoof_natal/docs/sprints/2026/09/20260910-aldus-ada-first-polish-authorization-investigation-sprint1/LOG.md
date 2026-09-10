@@ -70,3 +70,11 @@
   one-worker broad coordinator then passed all 1,163 tests with 60 skips and no
   failures in 942.577944 seconds. The exact receipt hashes and no-Alloy-impact
   rationale are recorded in `results/SLICE 4 - 0.4.58 BROAD RELEASE GATE.md`.
+- Committed artifact source as `6a66c7a5d2c162ea5c17cf0a7a5dcad79cefdec1`.
+  Two clean archive builds at epoch `1789054339` produced byte-identical
+  1,376,041-byte wheels with SHA-256 `d509b1747c1fac5bd27dfec257d06be4cf933b79190391edc1df770405cb8d21`
+  and equal 307-member inventories.
+- Clean installed qualification passed `pip check`, installed release smoke,
+  installed adversarial QA, installed polish handoff QA, and a direct installed
+  failed-QA exact-request/duplicate-attempt probe. All provider-free checks
+  reported zero external calls and spend.
