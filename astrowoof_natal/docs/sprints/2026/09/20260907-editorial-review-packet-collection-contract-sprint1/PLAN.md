@@ -280,6 +280,11 @@ artifact without inference or lifecycle coupling.
 and deterministic installed qualification receipt SHA-256
 `3c0d46fac5a13ddc5b4ea51722ac1626a83c9f0b5898f38a93cc5e9564dec50a`.
 
+**Completed:** API technical approval and explicit owner authorization were
+received. Immutable tag `astrowoof-natal-authoring-v0.4.54` was created at
+exact commit `c5af5c34b1afdf2c6a7e828e0f424fbec44fd3d6`; the GitHub release and
+verified wheel are published.
+
 ## Slice 5 — Joint provider-free end-to-end qualification
 
 **Maps to API Plan Slice 3 — Joint provider-free end-to-end qualification.**

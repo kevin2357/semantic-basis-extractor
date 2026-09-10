@@ -463,3 +463,16 @@
 - No provider, API, R2, Better Stack, database, retained-QA, or network runtime
   activity occurred. Dependency installation was the only network-capable
   packaging step.
+
+## 2026-09-09 — 0.4.54 immutable publication
+
+- API granted technical approval for wheel SHA-256 `6ade1018…f9723` and the
+  owner explicitly authorized commit, tag, push, and publication.
+- Pushed `main` through release-lock commit
+  `c5af5c34b1afdf2c6a7e828e0f424fbec44fd3d6`.
+- Created and pushed annotated immutable tag
+  `astrowoof-natal-authoring-v0.4.54` at that exact commit.
+- Published the GitHub release with the wheel and `SHA256SUMS.txt`.
+- Remote release metadata reports the expected 1,377,672-byte asset and exact
+  SHA-256 `6ade10180b56913fc1a90d88b76f2cd7b84685c026b8acee99a3300d920f9723`.
+  A fresh download independently matched the same digest and checksum file.
