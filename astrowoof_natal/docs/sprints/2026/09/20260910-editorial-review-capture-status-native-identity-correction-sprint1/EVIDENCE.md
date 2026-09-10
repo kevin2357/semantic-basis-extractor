@@ -26,9 +26,20 @@ no-packet branch and must not rewrite native content or identity.
 
 ## Pending evidence
 
-- branch-by-branch identity-source matrix;
-- frozen subject-unavailable behavior;
 - focused regression receipt;
 - installed-wheel consumer evidence; and
 - API/Vafflemutt review.
 
+## Slice 0 evidence
+
+- Completed the branch-by-branch identity-source matrix in
+  `SLICE 0 - IDENTITY SOURCE AND FAILURE BOUNDARY.md`.
+- Confirmed the selected result ID needs an explicit caller/result/receipt
+  equality check before status emission.
+- Froze subject-unavailable behavior as no status: zero subjects, multiple
+  subjects, or a run mismatch cannot populate v1 honestly.
+- Confirmed an unsupported service level may emit `ineligible_route` only when
+  exactly one subject is otherwise proven.
+- Confirmed subject-only mutation cannot be authenticated by `capture_id` and
+  therefore requires validation against exact native source evidence.
+- Recommended preserving capture-status v1 and semantic contract v5.

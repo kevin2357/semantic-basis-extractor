@@ -29,3 +29,21 @@
 - Authorized provider-free discovery, implementation, and qualification within
   the existing no-I/O/no-mutation fence. External operations and release remain
   separately gated.
+
+## 2026-09-10 — Slice 0 identity-source audit complete
+
+- Enumerated every runtime status/refusal site and the identity available at
+  that point.
+- Confirmed the native exact reader validates content, receipt, journal,
+  checkpoint, snapshot, and workspace bindings but needs a local explicit
+  caller/result/receipt result-ID equality check for this consumer contract.
+- Froze real correlations as validated result/receipt run identity plus the
+  sole validated workspace subject. A run mismatch or zero/multiple subjects
+  produces no status.
+- Split the conceptual unsupported-service and invalid-subject-count branches:
+  only unsupported service with one proven subject can emit an honest
+  `ineligible_route` status.
+- Preserved capture-status v1 and semantic-contract v5's run/result/reason/detail
+  identity domain. Subject remains required content authenticated by the exact
+  source join, not by changing the capture-ID formula.
+- Paused at Review Gate 0 before runtime, fixture, schema, or test changes.
