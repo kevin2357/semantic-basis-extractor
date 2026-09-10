@@ -90,3 +90,26 @@
   consumer cells, and an independent API-side `0.4.56` metadata assertion.
 - Ready for the release-lock commit, exact-commit rebuild/reinstallation, and
   final pre-tag review. No tag or publication occurred.
+
+## 2026-09-10 — Exact release-lock qualification
+
+- Committed and pushed the release-lock candidate as
+  `a43067f580c5d4b727333a0eb54422191f73fa77`.
+- Applied the Maintainer Release Playbook's conservative broad/full gate
+  because this additive runtime handoff is consumed across repositories.
+- The checked-in coordinator passed 1,161 tests with 60 expected skips in
+  975.036 seconds; classified inventory SHA-256:
+  `888609c217425c0afc20f1ffef5feaf436cc3779def38c7c8aa1f065767d1740`.
+- Exported the exact release-lock commit twice and rebuilt with commit timestamp
+  `1789031187` as `SOURCE_DATE_EPOCH`.
+- Both 307-member wheels were byte-identical at 1,379,722 bytes and SHA-256
+  `31a82e5121a3a43c62843f7ee39e8359ecd8485245e6b35f555892a41f4ed551`;
+  inventory inspection found no cache, bytecode, build, private, or stale
+  generated members.
+- Installed that exact wheel in a fresh environment outside the checkout.
+  `pip check`, import/version/public-symbol checks, 27 focused tests, installed
+  release smoke, installed editorial-review QA, four API functional cells, and
+  the independent API candidate-version assertion all passed.
+- Stopped at the requested pre-tag/release boundary. No tag, checksum manifest,
+  GitHub Release, asset upload, provider call, or external runtime mutation was
+  performed.

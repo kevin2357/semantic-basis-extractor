@@ -14,5 +14,5 @@ Status: passed
 | API functional cells | 4 passed |
 | independent API version assertion | passed |
 
-The final release digest remains pending an exact release-lock commit rebuild.
-
+The final release digest was established by the later exact release-lock
+qualification result.

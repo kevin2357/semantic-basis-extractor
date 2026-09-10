@@ -1,6 +1,6 @@
 # Slice 3 — 0.4.56 package qualification
 
-Status: pre-lock candidate qualification passed; exact-commit rebuild pending.
+Status: exact release-lock qualification passed; final pre-tag review pending.
 
 ## Candidate identity
 
@@ -43,4 +43,3 @@ all four functional cells ran directly against the installed `0.4.56` wheel.
 No API sender, Better Stack, provider, database, retained-run, lifecycle,
 workspace mutation, tag, or GitHub release operation occurred. Publication
 remains gated after exact-commit qualification and final API/owner review.
-

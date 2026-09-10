@@ -1,7 +1,7 @@
 # Evidence — editorial-review capture-status native identity correction
 
-Status: Slices 0–3 complete through pre-lock installed-wheel/API qualification;
-exact-commit rebuild and final pre-tag review remain pending.
+Status: Slices 0–3 complete through exact release-lock qualification; final
+API/Vafflemutt pre-tag review and explicit tag/publication authorization remain.
 
 ## Confirmed source facts
 
@@ -26,8 +26,8 @@ no-packet branch and must not rewrite native content or identity.
 
 ## Pending evidence
 
-- exact release-lock commit rebuild and reinstallation; and
-- final API/Vafflemutt pre-tag review.
+- final API/Vafflemutt pre-tag review; and
+- explicit owner authorization for the immutable tag and GitHub publication.
 
 ## Slice 0 evidence
 
@@ -65,3 +65,23 @@ no-packet branch and must not rewrite native content or identity.
 - All 27 focused installed tests passed without skips.
 - Four API functional consumer cells passed against the installed candidate and
   an independent version assertion confirmed `0.4.56`.
+
+## Exact release-lock evidence
+
+- Release-lock commit:
+  `a43067f580c5d4b727333a0eb54422191f73fa77`.
+- Recorded `SOURCE_DATE_EPOCH`: `1789031187`, the release-lock commit time.
+- The checked-in coordinator's broad/full gate passed 1,161 tests with 60
+  expected skips in 975.036 seconds. Its classified test-inventory SHA-256 was
+  `888609c217425c0afc20f1ffef5feaf436cc3779def38c7c8aa1f065767d1740`.
+- Two clean committed-source exports produced byte-identical wheels with 307
+  identical members, no forbidden cache/bytecode/build/private members, size
+  1,379,722 bytes, and SHA-256
+  `31a82e5121a3a43c62843f7ee39e8359ecd8485245e6b35f555892a41f4ed551`.
+- A fresh exact-wheel environment passed `pip check`, resolved SBE from
+  `site-packages`, exposed version `0.4.56` and both new public symbols, passed
+  all 27 focused tests, installed `astrowoof-release-smoke
+  --require-installed`, installed `astrowoof-editorial-review-qa`, four API
+  functional consumer cells, and the independent API-side version assertion.
+- API's checked-in released-baseline assertion remains `0.4.55` by design and
+  was not rewritten before publication approval.
