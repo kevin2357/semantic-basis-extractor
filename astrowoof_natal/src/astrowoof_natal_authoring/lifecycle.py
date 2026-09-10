@@ -75,13 +75,14 @@ def _observation(
     *,
     native_exclusive_access: str,
     observed_at: str,
+    workspace_validator: Any = None,
 ) -> tuple[dict[str, Any], list[str]]:
     manifest_path = run_dir / SNAPSHOT_NAME
     snapshot_sha256 = _file_sha256(manifest_path) if manifest_path.is_file() else "0" * 64
     valid = True
     reasons: list[str] = []
     try:
-        validate_workspace_snapshot(run_dir, state)
+        (workspace_validator or validate_workspace_snapshot)(run_dir, state)
     except (OSError, ValueError, TypeError, KeyError):
         valid = False
         reasons.append("snapshot_incomplete_or_invalid")
@@ -1040,6 +1041,7 @@ def inspect_lifecycle(
     observed_at: str | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
     allow_unversioned_local_resume: bool = True,
+    workspace_validator: Any = None,
 ) -> dict[str, Any]:
     """Inspect exact native evidence without mutating any workspace member."""
     run_dir = run_dir.resolve()
@@ -1056,6 +1058,7 @@ def inspect_lifecycle(
         state,
         native_exclusive_access=native_exclusive_access,
         observed_at=observed_at or _utc_now(),
+        workspace_validator=workspace_validator,
     )
     actions = [
         _action_record(action, snapshot_valid=observation["inventory_valid"])

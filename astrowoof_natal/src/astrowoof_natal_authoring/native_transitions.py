@@ -984,6 +984,17 @@ def publish_native_execution_result(
 def read_native_transition_result(
     run_dir: Path, result_id: str,
 ) -> NativeTransitionResultView:
+    """Return one immutable result from its authoritative exact-path workspace."""
+    return _read_native_transition_result(
+        run_dir, result_id, workspace_validator=None,
+        expected_logical_root=None,
+    )
+
+
+def _read_native_transition_result(
+    run_dir: Path, result_id: str, *, workspace_validator: Any = None,
+    expected_logical_root: str | None = None,
+) -> NativeTransitionResultView:
     """Return one immutable result and only its validated bounded journal range."""
     if not result_id.startswith("nres_") or len(result_id) != 29:
         raise ValueError("Invalid native execution result ID")
@@ -1010,13 +1021,14 @@ def read_native_transition_result(
         if expected[key] != observed[key]:
             raise ValueError("Native execution result journal binding is invalid")
     state = load_json(run_dir / "run.json")
-    validate_workspace_snapshot(run_dir, state)
+    (workspace_validator or validate_workspace_snapshot)(run_dir, state)
     receipt_path = run_dir / RECEIPT_DIRECTORY / f"{result_id}.json"
     if not receipt_path.is_file():
         raise ValueError("Native execution result has no immutable publication receipt")
     receipt = load_json(receipt_path)
     validate_native_publication_receipt(receipt, result)
-    if receipt.get("logical_workspace_root") != normalized_path(run_dir):
+    logical_root = expected_logical_root or normalized_path(run_dir)
+    if receipt.get("logical_workspace_root") != logical_root:
         raise ValueError("Native publication receipt workspace binding is invalid")
     retained_snapshot = (
         run_dir / RECEIPT_DIRECTORY / f"{result_id}.workspace-snapshot.json"

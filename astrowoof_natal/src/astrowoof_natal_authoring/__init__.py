@@ -44,9 +44,11 @@ from .relocated_operator_disposition import (  # noqa: E402
     canonical_logical_root,
     canonical_root_sha256,
     read_relocated_assessment_schema,
+    read_relocated_operator_disposition_assessment,
     read_relocation_authority_schema,
     validate_relocated_assessment,
     validate_relocated_assessment_pair,
+    validate_relocated_workspace_snapshot,
     validate_relocation_authority,
 )
 from .operator_disposition_fixtures import (  # noqa: E402

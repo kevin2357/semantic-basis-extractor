@@ -8,6 +8,7 @@ import re
 from copy import deepcopy
 from datetime import datetime, timezone
 from importlib.resources import files
+from pathlib import Path
 from typing import Any, Mapping, cast
 from uuid import UUID
 
@@ -27,7 +28,7 @@ _AUTHORITY_KEYS = {
     "native_run_id", "checkpoint_id", "checkpoint_generation",
     "checkpoint_contract", "compatibility_identity", "archive_sha256",
     "inventory_sha256", "original_logical_root_sha256",
-    "restored_root_sha256", "issued_at", "expires_at",
+    "restored_root_sha256", "terminal_result_id", "issued_at", "expires_at",
     "provider_io_permitted", "workspace_mutation_permitted",
     "authority_sha256",
 }
@@ -135,6 +136,8 @@ def validate_relocation_authority(value: object) -> dict[str, Any]:
     _opaque(result["native_run_id"], "native_run_id")
     _opaque(result["checkpoint_contract"], "checkpoint_contract")
     _opaque(result["compatibility_identity"], "compatibility_identity")
+    if result["terminal_result_id"] is not None:
+        _opaque(result["terminal_result_id"], "terminal_result_id")
     generation = result["checkpoint_generation"]
     if not isinstance(generation, int) or isinstance(generation, bool) or generation < 1:
         raise ValueError("checkpoint_generation is invalid")
@@ -241,6 +244,87 @@ def validate_relocated_assessment_pair(
     return auth, result
 
 
+def validate_relocated_workspace_snapshot(
+    run_dir: Path | str, state: Mapping[str, Any], authority: Mapping[str, Any],
+) -> None:
+    """Validate exact copied bytes while preserving the original logical root."""
+    from .closure import (
+        SNAPSHOT_NAME, SNAPSHOT_SCHEMA, load_json, normalized_path,
+        snapshot_inventory,
+    )
+
+    auth = validate_relocation_authority(dict(authority))
+    root = Path(run_dir).resolve()
+    actual_root = normalized_path(root)
+    contract = state.get("workspace_contract") or {}
+    original_root = contract.get("logical_root")
+    if contract.get("mode") != "stable_logical_absolute_path" or not isinstance(
+        original_root, str
+    ):
+        raise ValueError("Run lacks the durable stable-path workspace contract")
+    if canonical_logical_root(original_root) == canonical_logical_root(actual_root):
+        raise ValueError("Relocated workspace must differ from its original root")
+    if canonical_root_sha256(original_root) != auth["original_logical_root_sha256"]:
+        raise ValueError("Original logical root does not match relocation authority")
+    if canonical_root_sha256(actual_root) != auth["restored_root_sha256"]:
+        raise ValueError("Restored root does not match relocation authority")
+    manifest_path = root / SNAPSHOT_NAME
+    if not manifest_path.is_file():
+        raise ValueError("Relocated workspace snapshot is missing")
+    manifest = load_json(manifest_path)
+    if (
+        manifest.get("schema_version") != SNAPSHOT_SCHEMA
+        or manifest.get("logical_root") != original_root
+    ):
+        raise ValueError("Relocated snapshot does not preserve logical identity")
+    expected = manifest.get("members")
+    actual = snapshot_inventory(root, use_process_cache=False)
+    if expected != actual:
+        raise ValueError("Relocated workspace snapshot is incomplete or changed")
+
+
+def read_relocated_operator_disposition_assessment(
+    run_dir: Path | str, *, authority: Mapping[str, Any], assessed_at: str,
+) -> dict[str, Any]:
+    """Assess one API-isolated immutable checkpoint copy without native mutation."""
+    from .closure import load_json
+    from .operator_disposition import _read_operator_disposition_assessment
+
+    auth = validate_relocation_authority(dict(authority))
+    assessed = _instant(assessed_at, "assessed_at")
+    if not _instant(auth["issued_at"], "issued_at") <= assessed <= _instant(
+        auth["expires_at"], "expires_at"
+    ):
+        raise ValueError("Relocated assessment time is outside authority window")
+    root = Path(run_dir).resolve()
+    state = load_json(root / "run.json")
+    if state.get("run_id") != auth["native_run_id"]:
+        raise ValueError("Relocated workspace native identity does not match authority")
+
+    def validator(candidate: Path, candidate_state: Mapping[str, Any]) -> None:
+        validate_relocated_workspace_snapshot(candidate, candidate_state, auth)
+
+    validator(root, state)
+    assessment = _read_operator_disposition_assessment(
+        root,
+        terminal_result_id=auth["terminal_result_id"],
+        allow_availability_recovery=False,
+        workspace_validator=validator,
+        native_exclusive_access="declared",
+        require_exact_terminal_result=True,
+    )
+    # Revalidate authority freshness and copied bytes after all native reads.
+    validate_relocation_authority(auth)
+    if not _instant(auth["issued_at"], "issued_at") <= assessed <= _instant(
+        auth["expires_at"], "expires_at"
+    ):
+        raise ValueError("Relocated assessment time is outside authority window")
+    validator(root, load_json(root / "run.json"))
+    return build_relocated_assessment(
+        authority=auth, assessed_at=assessed_at, assessment=assessment,
+    )
+
+
 def read_relocation_authority_schema() -> dict[str, Any]:
     resource = files("astrowoof_natal_authoring.resources.contracts").joinpath(
         "operator-disposition-relocation-authority.v1.schema.json"
@@ -259,6 +343,7 @@ __all__ = [
     "ASSESSMENT_MODE", "AUTHORITY_SCHEMA", "OPERATION", "WRAPPER_SCHEMA",
     "build_relocated_assessment", "build_relocation_authority",
     "canonical_logical_root", "canonical_root_sha256", "read_relocated_assessment_schema",
-    "read_relocation_authority_schema", "validate_relocated_assessment",
+    "read_relocated_operator_disposition_assessment", "read_relocation_authority_schema",
+    "validate_relocated_assessment", "validate_relocated_workspace_snapshot",
     "validate_relocated_assessment_pair", "validate_relocation_authority",
 ]

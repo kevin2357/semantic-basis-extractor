@@ -465,6 +465,7 @@ def read_lifecycle_inspection_v08_fixture() -> dict[str, Any]:
 def inspect_retry_lineage_lifecycle(
     run_dir: Any, *, observed_at: str,
     native_exclusive_access: str = "not_established",
+    workspace_validator: Any = None,
 ) -> dict[str, Any]:
     """Return v0.8 with custody precedence and closed lineage review facts."""
     from pathlib import Path
@@ -480,6 +481,7 @@ def inspect_retry_lineage_lifecycle(
     legacy = inspect_lifecycle(
         root, observed_at=observed_at,
         native_exclusive_access=native_exclusive_access,
+        workspace_validator=workspace_validator,
     )
     lineage = retry_lineage_inventory_from_state(state)
     custody_ids = legacy["provider_custody"]["action_ids"]

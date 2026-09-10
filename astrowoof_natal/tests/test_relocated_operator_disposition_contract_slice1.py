@@ -33,6 +33,7 @@ class RelocatedOperatorDispositionContractSlice1Tests(unittest.TestCase):
             inventory_sha256="b" * 64,
             original_logical_root_sha256=canonical_root_sha256("/work/runs/original/sbe"),
             restored_root_sha256=canonical_root_sha256("/work/operator/request/sbe"),
+            terminal_result_id=None,
             issued_at="2026-09-10T19:00:00Z",
             expires_at="2026-09-10T19:05:00Z",
             provider_io_permitted=False,

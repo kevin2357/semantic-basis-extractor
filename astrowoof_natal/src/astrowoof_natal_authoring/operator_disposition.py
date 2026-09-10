@@ -416,6 +416,12 @@ def _read_only_native_fence(run_dir: Path):
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
+@contextmanager
+def _declared_read_fence():
+    """Represent an API-isolated immutable copy without taking a native lock."""
+    yield True
+
+
 _TERMINAL_RESULT_OUTCOMES = frozenset({
     "delivery_complete", "review_required", "terminal_failure",
     "budget_exhausted", "policy_stopped", "native_evidence_invalid",
@@ -477,13 +483,16 @@ def _normalized_lifecycle(value: Mapping[str, Any]) -> dict[str, Any]:
 
 def _terminal_evidence(
     run_dir: Path, inspection: Mapping[str, Any], *, result_id: str | None,
-    allow_availability_recovery: bool,
+    allow_availability_recovery: bool, workspace_validator: Any = None,
 ) -> tuple[dict[str, Any] | None, list[str]]:
+    from .closure import load_json
     from .native_transition_availability import (
         NativeTransitionAvailabilityError,
         read_native_transition_result_availability,
     )
-    from .native_transitions import read_native_transition_result
+    from .native_transitions import (
+        _read_native_transition_result, read_native_transition_result,
+    )
 
     categories: list[str] = []
     availability_sha: str | None = None
@@ -497,7 +506,19 @@ def _terminal_evidence(
             discovery_mode = "availability_recovery"
         if selected is None:
             return None, categories
-        view = read_native_transition_result(run_dir, selected)
+        if workspace_validator is None:
+            view = read_native_transition_result(run_dir, selected)
+        else:
+            state = load_json(run_dir / "run.json")
+            logical_root = (state.get("workspace_contract") or {}).get(
+                "logical_root"
+            )
+            if not isinstance(logical_root, str):
+                raise ValueError("Native logical workspace root is unavailable")
+            view = _read_native_transition_result(
+                run_dir, selected, workspace_validator=workspace_validator,
+                expected_logical_root=logical_root,
+            )
     except (NativeTransitionAvailabilityError, OSError, ValueError, KeyError, TypeError):
         return None, ["terminal_evidence_unjoinable"]
 
@@ -652,6 +673,22 @@ def read_operator_disposition_assessment(
     run_dir: Path | str, *, terminal_result_id: str | None = None,
     allow_availability_recovery: bool = False,
 ) -> dict[str, Any]:
+    """Assess one authoritative exact-path workspace."""
+    return _read_operator_disposition_assessment(
+        run_dir, terminal_result_id=terminal_result_id,
+        allow_availability_recovery=allow_availability_recovery,
+        workspace_validator=None, native_exclusive_access=None,
+        require_exact_terminal_result=False,
+    )
+
+
+def _read_operator_disposition_assessment(
+    run_dir: Path | str, *, terminal_result_id: str | None = None,
+    allow_availability_recovery: bool = False,
+    workspace_validator: Any = None,
+    native_exclusive_access: str | None = None,
+    require_exact_terminal_result: bool = False,
+) -> dict[str, Any]:
     """Assess one exact workspace without provider I/O or native mutation."""
     from . import __version__
     from .closure import load_json, sha256_file, validate_workspace_snapshot
@@ -661,7 +698,8 @@ def read_operator_disposition_assessment(
 
     root = Path(run_dir).resolve()
     state = load_json(root / "run.json")
-    validate_workspace_snapshot(root, state)
+    validator = workspace_validator or validate_workspace_snapshot
+    validator(root, state)
     raw_observed_at = str(
         state.get("updated_at") or "1970-01-01T00:00:00+00:00"
     )
@@ -673,11 +711,17 @@ def read_operator_disposition_assessment(
     observed_at = parsed_observed_at.astimezone(timezone.utc).replace(
         microsecond=0
     ).isoformat()
-    with _read_only_native_fence(root) as fenced:
-        access = "established" if fenced else "not_established"
+    fence = (
+        _read_only_native_fence(root)
+        if native_exclusive_access is None
+        else _declared_read_fence()
+    )
+    with fence as fenced:
+        access = native_exclusive_access or ("established" if fenced else "not_established")
         try:
             raw_inspection = inspect_retry_lineage_lifecycle(
                 root, observed_at=observed_at, native_exclusive_access=access,
+                workspace_validator=validator,
             )
         except ValueError:
             # Some historical terminal evidence is valid v0.5 but cannot be
@@ -687,13 +731,17 @@ def read_operator_disposition_assessment(
             raw_inspection = inspect_lifecycle(
                 root, observed_at=observed_at,
                 native_exclusive_access=access,
+                workspace_validator=validator,
             )
             validate_lifecycle_inspection_v05(raw_inspection)
         inspection = _normalized_lifecycle(raw_inspection)
         terminal, categories = _terminal_evidence(
             root, inspection, result_id=terminal_result_id,
             allow_availability_recovery=allow_availability_recovery,
+            workspace_validator=workspace_validator,
         )
+        if require_exact_terminal_result and terminal_result_id and terminal is None:
+            raise ValueError("Authority-bound terminal result is unavailable or unjoinable")
         classified = _classify_inspection(
             inspection, terminal, categories, fenced=fenced,
         )
@@ -709,7 +757,7 @@ def read_operator_disposition_assessment(
                 fenced=fenced,
             )
         # Revalidate after every read while the native writer fence is held.
-        validate_workspace_snapshot(root, state)
+        validator(root, state)
 
     custody_class, summary, posture, actions, reason, categories = classified
     basis = inspection["checkpoint_basis"]
