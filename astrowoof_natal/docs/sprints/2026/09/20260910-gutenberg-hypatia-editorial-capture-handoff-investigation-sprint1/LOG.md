@@ -49,3 +49,11 @@
   Clean installed import, dependency, release-smoke, and adversarial gates all
   passed. The immutable candidate is ready for API installed-wheel review;
   no tag, push, or publication occurred.
+- 2026-09-10: API correctly blocked review after its independent build differed
+  by one byte from the qualified wheel. Both original SBE qualification wheels
+  remain intact and reproduce the recorded digest. A byte-for-byte handoff copy
+  was retained at
+  `C:\tmp\astrowoof_natal_authoring-0.4.59-e5127ca-qualified-py3-none-any.whl`,
+  and the exact Python/pip/setuptools/wheel toolchain was added to the release
+  qualification. API should test this retained artifact rather than a substitute
+  rebuild.

@@ -18,6 +18,29 @@ the ordinary installed-wheel API consumer review and final publication approval.
   `9211b7a7fd2e1a10a42cfe6bf47cafd749fa2076767b2dd7500621a93d9cbe92`
 - wheel members: `307`
 
+## Retained consumer artifact and toolchain
+
+The exact first qualified wheel is retained for API consumer qualification at:
+
+`C:\tmp\astrowoof_natal_authoring-0.4.59-e5127ca-qualified-py3-none-any.whl`
+
+That handoff copy is 1,376,264 bytes and independently rehashes to the candidate
+SHA-256 above. It is a renamed byte-for-byte copy of the first qualification
+wheel, not a rebuild. Publication must use the canonical wheel filename stated
+above.
+
+The reproducibility pair was built with:
+
+- Python `3.12.14`
+- pip `26.2.1`
+- setuptools `84.0.0`
+- wheel `0.48.0`
+- command frontend: `python -m pip wheel --no-deps --no-build-isolation`
+- fixed `SOURCE_DATE_EPOCH=1789062636`
+
+An independent build made with another toolchain may be semantically equivalent
+but is not the qualified publication artifact unless its bytes match this digest.
+
 Two independent clean `git archive` exports of the exact lock commit produced
 identical filenames, sizes, member inventories, and wheel bytes. The wheel has
 zero detected cache, bytecode, private-key, or test members.
