@@ -34,3 +34,10 @@
   contracts and optional Alloy model are unchanged: this correction transports
   an existing exact terminal identity and does not alter packet chronology,
   ownership, selection, projections, or capture semantics.
+- 2026-09-10: The supported broad/full coordinator passed from candidate
+  `0e61a4a53a00d6f808da9c0f42220b4e445f76c6`: 1,167 tests passed, 60
+  skipped, in 977.011 seconds. Test-inventory SHA-256 was
+  `c5c2fcbe8cd3e8a474d4422ce193382c6f3f7da5916c23c9e93e4b7b875bcd3e`.
+  No manifest change was required because all new cases were added to existing
+  classified test modules. Package reproducibility and installed-wheel gates
+  are next; tag and publication remain unauthorized.
