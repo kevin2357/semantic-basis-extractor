@@ -6,7 +6,7 @@ Make failures of SBE's in-process, read-only operator-disposition assessment dia
 
 ## Slice 0 — Reproduce and inventory
 
-**Status: complete, pending API review.** The provider-free reproduction and logging ruling are recorded in `SLICE 0 - IN-PROCESS LOGGING AND RESTORE-PATH REPRODUCTION.md`.
+**Status: complete and reviewed.** The provider-free reproduction and logging ruling are recorded in `SLICE 0 - IN-PROCESS LOGGING AND RESTORE-PATH REPRODUCTION.md`.
 
 Before changing the contract:
 
@@ -25,7 +25,7 @@ No retained-workspace access is authorized by this plan.
 
 ## Slice 1 — Extend the existing sparkle-log vocabulary
 
-**Status: implemented, pending review.** Three bounded events were added to the existing worker-log catalog.
+**Status: implemented and approved.** Three bounded events were added to the existing worker-log catalog.
 
 Define minimal assessment events in the existing SBE worker-log catalog. Candidate fields:
 
@@ -46,7 +46,10 @@ Preserve the existing one-argument reader call. Decide which process owns loggin
 
 ## Slice 2 — Implement bounded native observations
 
-**Status: implemented, pending review.** Entry, safe preflight fingerprint, completion, and phase/reason failure records are covered provider-free.
+**Status: implemented and approved.** Entry, safe preflight fingerprint,
+completion, and phase/reason failure records are covered provider-free. The
+release gate additionally covers lifecycle-inspection failure mapping beyond
+the initial snapshot mismatch.
 
 Instrument only the meaningful assessment boundaries:
 
@@ -65,13 +68,15 @@ Observation uses ordinary SBE log calls and must be demonstrably non-mutating an
 
 ## Slice 3 — API companion intake
 
-**Status: awaiting API review/implementation.** No SBE callback or alternate transport is needed by current evidence.
+**Status: awaiting API implementation.** No SBE callback or alternate transport is needed by current evidence.
 
 Coordinate the smallest API-side patch needed to configure/carry SBE's existing structured logs in the operator-runner process. API may separately emit its own orchestration-level claim, restore, refusal, and completion execution events.
 
 SBE records explain native assessment progress; API records explain durable request disposition. Neither layer impersonates the other.
 
-**Gate:** installed-wheel API consumer tests prove native sparkle records survive the in-process path without subprocess capture, while API execution-event output remains valid.
+**Gate:** installed-wheel API consumer tests prove normal `force=False` host
+initialization preserves native sparkle records in-process alongside valid API
+execution-event stdout, without replacing or duplicating existing host handlers.
 
 ## Slice 4 — Package and provider-free qualification
 

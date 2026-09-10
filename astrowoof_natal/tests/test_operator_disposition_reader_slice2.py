@@ -99,6 +99,39 @@ class OperatorDispositionReaderSlice2Tests(unittest.TestCase):
             self.assertNotIn(str(original), json.dumps(failure))
             self.assertNotIn(str(restored), json.dumps(failure))
 
+    def test_lifecycle_failure_logs_closed_phase_reason_without_exception_prose(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            pending_fixtures.TestProviderPendingObservationIdempotencySlice0().materialize(root)
+            _ensure_lock(root)
+            write_workspace_snapshot(root)
+            stream = io.StringIO()
+            handler = configure_logging(stream=stream, force=True)
+            try:
+                with patch(
+                    "astrowoof_natal_authoring.retry_lineage_contracts."
+                    "inspect_retry_lineage_lifecycle",
+                    side_effect=OSError("private lifecycle detail at C:/sensitive"),
+                ):
+                    with self.assertRaises(OSError):
+                        read_operator_disposition_assessment(root)
+            finally:
+                logging.getLogger().removeHandler(handler)
+
+            records = [json.loads(line) for line in stream.getvalue().splitlines()]
+            failure = records[-1]
+            self.assertEqual(
+                "operator_disposition_assessment_failed", failure["event_name"]
+            )
+            self.assertEqual("lifecycle_inspection", failure["payload"]["phase"])
+            self.assertEqual(
+                "lifecycle_inspection_unavailable",
+                failure["payload"]["reason_code"],
+            )
+            self.assertEqual("OSError", failure["payload"]["error_class"])
+            self.assertNotIn("private lifecycle detail", json.dumps(failure))
+            self.assertNotIn("C:/sensitive", json.dumps(failure))
+
     def test_root_level_public_reader_surface_is_exported(self):
         for name in (
             "build_operator_disposition_assessment",
