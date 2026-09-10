@@ -41,3 +41,11 @@
   No manifest change was required because all new cases were added to existing
   classified test modules. Package reproducibility and installed-wheel gates
   are next; tag and publication remain unauthorized.
+- 2026-09-10: Exact-lock package qualification passed. Two clean archive builds
+  of `e5127caea466b12340472eee48b2563abfd68650` at
+  `SOURCE_DATE_EPOCH=1789062636` produced byte-identical 1,376,264-byte wheels
+  with 307 members and SHA-256
+  `9211b7a7fd2e1a10a42cfe6bf47cafd749fa2076767b2dd7500621a93d9cbe92`.
+  Clean installed import, dependency, release-smoke, and adversarial gates all
+  passed. The immutable candidate is ready for API installed-wheel review;
+  no tag, push, or publication occurred.
