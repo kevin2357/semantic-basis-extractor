@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Packaged JSON participates in byte-level fixture and catalog identities.
+*.json text eol=lf

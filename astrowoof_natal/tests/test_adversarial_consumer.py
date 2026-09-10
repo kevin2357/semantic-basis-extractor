@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import unittest
+from importlib.resources import files
 
 from astrowoof_natal_authoring import (
     read_adversarial_consumer_catalog,
@@ -20,6 +21,13 @@ class AdversarialConsumerCatalogTests(unittest.TestCase):
         ]
         self.assertTrue(packaged)
         self.assertTrue(all(len(item["sha256"]) == 64 for item in packaged))
+        root = files("astrowoof_natal_authoring").joinpath(
+            "resources", "fixtures"
+        )
+        for item in packaged:
+            with self.subTest(case_id=item["case_id"]):
+                fixture = root.joinpath(*item["evidence_ref"].split("/"))
+                self.assertNotIn(b"\r\n", fixture.read_bytes())
 
     def test_joint_inventory_separates_sbe_and_api_owned_cases(self):
         catalog = read_adversarial_consumer_catalog()
