@@ -186,10 +186,6 @@
       "weight_seconds": 2.868
     },
     {
-      "module": "test_operator_disposition_reader_slice2.py",
-      "weight_seconds": 1.043
-    },
-    {
       "module": "test_relocated_operator_disposition_contract_slice1.py",
       "weight_seconds": 0.1
     },
@@ -369,6 +365,7 @@
     "test_moxie_terminal_review_inventory_slice3.py",
     "test_native_transitions.py",
     "test_nori_biscuit_reproduction_slice3.py",
+    "test_operator_disposition_reader_slice2.py",
     "test_post_fan_in_retry_authority_routing_slice0.py",
     "test_provider_pending_capacity.py",
     "test_provider_pending_observation_idempotency.py",
@@ -394,6 +391,7 @@
     "test_execution_events.py",
     "test_external_authority_execution.py",
     "test_external_authority_v2_cli.py",
+    "test_operator_disposition_reader_slice2.py",
     "test_run_report.py",
     "test_run_timeline.py",
     "test_run_timeline_qa.py",

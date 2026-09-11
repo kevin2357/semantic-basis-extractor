@@ -25,3 +25,20 @@
 - Provider/network operations: zero.
 - The Slice 3 capability-fence module remains registered in the maintained test
   suite manifest.
+
+## 2026-09-10 — Broad gate finding
+
+- The first manifest-driven broad run completed 1,184 tests with 60 skips and
+  was not green: one error and one failure occurred in the operator-disposition
+  diagnostics module.
+- Exact cause: the module deliberately configures and removes the root SBE
+  logging handler but had been classified as ordinary parallel-safe work. In
+  full-suite order, prior logging mutation could leave its formatter capture
+  empty or partial.
+- This is a suite-manifest isolation defect, not an operator-assessment runtime
+  or relocation-contract failure. Its weighted parallel-safe entry was removed,
+  and the module is now classified in both `serial_only` and
+  `logging_sensitive` so it runs in the protected observability group.
+- The affected diagnostics and manifest guards then passed: 25 tests.
+- Because the correction changes test-harness classification, the affected
+  focused tests and the complete broad gate must both be rerun.
