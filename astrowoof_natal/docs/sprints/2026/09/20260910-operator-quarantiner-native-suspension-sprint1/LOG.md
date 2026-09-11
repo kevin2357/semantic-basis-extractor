@@ -54,3 +54,21 @@
   correction changed isolation/classification rather than test scope.
 - Receipt:
   `C:\Users\kevin\AppData\Local\Temp\astrowoof-tests-kq8w9xj9\receipt.json`.
+
+## 2026-09-10 — Initial package qualification
+
+- Built two wheels from independent clean archives of candidate source commit
+  `a31540d` with `SOURCE_DATE_EPOCH=1789089091`.
+- Both wheels are 1,383,825 bytes with 310 members and SHA-256
+  `bb514868c972d1444cd5929bf33ee7b8a794f962c5426cb011c71c92f8697155`.
+- Package inventory contains the relocated reader and both relocation schemas;
+  no cache, bytecode, build, dist, or release-work members were present.
+- Installed the exact candidate with clean local SPC `0.11.1`; `pip check`,
+  site-packages/version/export checks, release smoke, adversarial lifecycle QA,
+  and operator-disposition QA passed.
+- Release smoke packaged 195 resources. Adversarial QA covered 22 route cells
+  and 32 invariants. All installed qualifications reported zero provider calls,
+  zero external network calls, and zero spend.
+- These are source-candidate coordinates. The release-lock commit must be
+  rebuilt twice at its own recorded epoch before API receives an immutable
+  wheel.
