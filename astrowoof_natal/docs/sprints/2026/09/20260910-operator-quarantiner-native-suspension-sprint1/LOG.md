@@ -86,3 +86,15 @@
 - Final lock documentation now records these coordinates. One final two-build
   comparison from that documentation commit at the same recorded epoch remains
   before API handoff.
+
+## 2026-09-10 — Final lock reproduction and API handoff
+
+- Final release-lock commit is
+  `350a8bf53582d2052093b6638f9ede97d8115a7d`.
+- Two clean builds from that exact commit at epoch `1789089592` reproduced the
+  recorded 1,383,825-byte wheel and SHA-256
+  `618caee2c2f338cf868cfb024f764217c7b4ef4c83aff283b2bf78cd6e67d627`.
+- The exact retained candidate is ready for API installed-wheel review at the
+  pre-tag/release boundary.
+- Any later tag must target `350a8bf`, never the documentation-only handoff
+  commit.
