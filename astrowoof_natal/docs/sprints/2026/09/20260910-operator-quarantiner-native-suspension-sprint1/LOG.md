@@ -42,3 +42,15 @@
 - The affected diagnostics and manifest guards then passed: 25 tests.
 - Because the correction changes test-harness classification, the affected
   focused tests and the complete broad gate must both be rerun.
+
+## 2026-09-10 — Superseding broad gate
+
+- Reran the complete manifest-driven suite from committed candidate identity
+  `d7c4014` after the diagnostics isolation correction.
+- Result: 1,184 passed, 60 expected skips, 0 failures, in 1,096.672 seconds.
+- Test inventory SHA-256:
+  `2bd1d2a50c8dc738f5027f24f5989f986d64ac877b7d4bc09748b9d2c6aefb29`.
+- The inventory digest exactly matches the first attempt, proving the
+  correction changed isolation/classification rather than test scope.
+- Receipt:
+  `C:\Users\kevin\AppData\Local\Temp\astrowoof-tests-kq8w9xj9\receipt.json`.
