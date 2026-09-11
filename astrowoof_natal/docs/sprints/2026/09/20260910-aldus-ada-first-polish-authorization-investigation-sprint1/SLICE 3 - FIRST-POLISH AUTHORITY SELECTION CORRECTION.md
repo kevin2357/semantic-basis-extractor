@@ -38,6 +38,14 @@ therefore remains fail closed.
 
 No public schema or fixture changed.
 
+## Alloy impact
+
+Retrospective assessment: no model change or rerun is required. This correction
+changes pre-decision authority-selection precedence, not any editorial
+decision, attempt, predecessor, materialization, adoption, continuity,
+selection, delivery, or ownership relationship represented by the model. See
+[0.4.58 and 0.4.59 Alloy impact assessment](../20260907-editorial-review-packet-collection-contract-sprint1/POSTSCRIPT%20-%200.4.58%20AND%200.4.59%20ALLOY%20IMPACT%20ASSESSMENT.md).
+
 ## Qualification
 
 - Initial focused correction group: 15 passed.

@@ -41,6 +41,14 @@ nonterminal publication versions are unchanged.
 - No provider, R2, retained workspace, API state, packet builder, or Better
   Stack operation was used.
 
+## Alloy impact
+
+Retrospective assessment: no model change or rerun is required. This correction
+changes result versioning, same-invocation command serialization, and transport
+identity without changing editorial lineage, deck selection/delivery, or any
+modeled ownership relationship. See
+[0.4.58 and 0.4.59 Alloy impact assessment](../20260907-editorial-review-packet-collection-contract-sprint1/POSTSCRIPT%20-%200.4.58%20AND%200.4.59%20ALLOY%20IMPACT%20ASSESSMENT.md).
+
 ## Provider-free qualification
 
 Focused source-tree qualification passed after the API-requested CLI addition:
