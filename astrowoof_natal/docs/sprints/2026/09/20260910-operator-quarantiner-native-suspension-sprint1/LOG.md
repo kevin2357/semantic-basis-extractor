@@ -72,3 +72,17 @@
 - These are source-candidate coordinates. The release-lock commit must be
   rebuilt twice at its own recorded epoch before API receives an immutable
   wheel.
+
+## 2026-09-10 — Exact release-lock package gate
+
+- Proposed lock source `964c6c8df66a09437972f301edd1671f3a7e31ef` was
+  built twice from clean archives at recorded epoch `1789089592`.
+- Both canonical wheels are 1,383,825 bytes with SHA-256
+  `618caee2c2f338cf868cfb024f764217c7b4ef4c83aff283b2bf78cd6e67d627`.
+- A fresh exact-lock environment passed `pip check`, reported version `0.4.60`
+  from `site-packages`, and exported the relocated reader.
+- Exact-lock installed release smoke, adversarial lifecycle QA, and operator-
+  disposition QA passed with zero provider/network operations and spend.
+- Final lock documentation now records these coordinates. One final two-build
+  comparison from that documentation commit at the same recorded epoch remains
+  before API handoff.
