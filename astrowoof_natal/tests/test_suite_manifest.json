@@ -194,6 +194,10 @@
       "weight_seconds": 0.1
     },
     {
+      "module": "test_relocated_operator_disposition_capability_fence_slice3.py",
+      "weight_seconds": 1.0
+    },
+    {
       "module": "test_relocated_operator_disposition_reader_slice2.py",
       "weight_seconds": 0.5
     },

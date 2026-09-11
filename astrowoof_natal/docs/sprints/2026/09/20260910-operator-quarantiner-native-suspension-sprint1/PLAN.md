@@ -146,10 +146,11 @@ Pause for SBE/API/owner review with:
 
 ## Later slices, not yet authorized
 
-**Implementation update:** Slices 1 and 2 are implemented and approved by API.
-The relocation authority/wrapper contracts and dedicated read-only relocated
-reader are complete. API-host integration, the installed-wheel gate, and the
-full capability-fence matrix are the next gates.
+**Implementation update:** Slices 1 through 3 are implemented and approved by
+API. The relocation authority/wrapper contracts, dedicated read-only relocated
+reader, and native executable/mutation fences are complete. The next work is
+pre-release qualification followed by the released-wheel/API host integration
+gate. Neither has started under this update.
 
 After Slice 0 review, likely work separates into:
 

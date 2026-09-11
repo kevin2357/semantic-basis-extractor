@@ -756,6 +756,22 @@ def publish_native_execution_result(
         if terminal_review_v02 and zero_action_terminal_review_v03:
             raise ValueError("Terminal review result versions are mutually exclusive")
         state = load_json(run_dir / "run.json")
+        # Publication may legitimately snapshot newly changed native state, so
+        # only the stable-location invariant belongs at this pre-write seam.
+        # Full member validation remains after the new snapshot is written.
+        workspace_contract = state.get("workspace_contract") or {}
+        expected_root = workspace_contract.get("logical_root")
+        actual_root = normalized_path(run_dir)
+        if (
+            workspace_contract.get("mode") != "stable_logical_absolute_path"
+            or not expected_root
+        ):
+            raise ValueError("Run lacks the durable stable-path workspace contract")
+        if expected_root != actual_root:
+            raise ValueError(
+                "Run workspace must be restored at its original logical absolute "
+                f"path: expected {expected_root!r}, got {actual_root!r}"
+            )
         bind_logging_context(
             run_id=state.get("run_id"), current_state=state.get("status")
         )
