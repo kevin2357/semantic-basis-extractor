@@ -148,9 +148,9 @@ Pause for SBE/API/owner review with:
 
 **Implementation update:** Slices 1 through 3 are implemented and approved by
 API. The relocation authority/wrapper contracts, dedicated read-only relocated
-reader, and native executable/mutation fences are complete. The next work is
-pre-release qualification followed by the released-wheel/API host integration
-gate. Neither has started under this update.
+reader, and native executable/mutation fences are complete. Candidate identity
+`0.4.60` is frozen on the release branch. Broad/full pre-release qualification
+is in progress; the released-wheel/API host integration gate follows it.
 
 After Slice 0 review, likely work separates into:
 

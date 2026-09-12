@@ -136,7 +136,7 @@ class RelocatedOperatorDispositionCapabilityFenceSlice3Tests(unittest.TestCase):
                 relocated,
                 lambda: publish_native_execution_result(
                     relocated, command_kind="ordinary_authoring",
-                    sbe_release="0.4.59", published_at=OBSERVED_AT,
+                    sbe_release="0.4.60", published_at=OBSERVED_AT,
                 ),
             )
             before = _bytes(relocated)
