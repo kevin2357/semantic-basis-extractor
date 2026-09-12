@@ -22,3 +22,22 @@ same-prefix `.zip` sorts differently from its sibling directory subtree.
 - Corrected source reads the exact retained Bodoni restore and validates its
   wrapper; all 387 files remain byte-identical before and after.
 - No provider operation or external storage read occurred.
+
+## Slice 2 release policy
+
+- API review: approved for package qualification.
+- Candidate version: `0.4.61` (fresh and unreleased).
+- Regression gate: focused matrix followed by the complete checked-in manifest
+  suite, because snapshot inventory is shared persistence infrastructure.
+- Alloy impact: none; portable ordering changes representation traversal only,
+  not lifecycle or relational semantics.
+- Retained-workspace gate: exact local Bodoni copy, public installed reader,
+  pair validation, and byte-for-byte no-rewrite proof.
+
+## Source regression receipt
+
+- Focused matrix: `46 passed`.
+- Complete manifest suite: `1,192` tests, `60` expected skips, zero failures,
+  `1,600.308523` seconds.
+- Test inventory SHA-256:
+  `a65a1b0f50cab9902066571817e2db52b2ccf5ed4add76423451d2512f99f2bf`.

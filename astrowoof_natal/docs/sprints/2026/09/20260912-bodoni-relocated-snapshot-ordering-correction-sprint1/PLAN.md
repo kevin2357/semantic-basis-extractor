@@ -43,8 +43,10 @@ platforms; genuine missing/extra/changed files still fail closed.
 
 ## Slice 2 — Release qualification
 
-**Status: pending API review of Slices 0–1.** Do not build or freeze a release
-candidate before that plan-outlined review gate.
+**Status: authorized and active.** API approved Slices 0–1 and requested the
+candidate/retained-Bodoni installed-wheel gate. Fresh candidate version is
+`0.4.61`. Because snapshot persistence is shared infrastructure, run the full
+manifest suite after the focused matrix; no focused-suite waiver is used.
 
 - Run focused relocation/snapshot tests and relevant package gates.
 - Build an immutable wheel candidate.

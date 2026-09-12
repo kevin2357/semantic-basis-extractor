@@ -40,3 +40,26 @@
   extra, size-drift, and digest-drift regression coverage.
 - Combined focused qualification passed: `46 passed`.
 - Paused before Slice 2 package/release work for API review of Slices 0–1.
+
+## 2026-09-12 — Slice 2 authorized
+
+- API approved Slices 0–1 without requested corrections and authorized package
+  qualification against the retained local Bodoni workspace.
+- Reviewed the maintainer and native-worker release playbooks.
+- Selected fresh unreleased candidate version `0.4.61` before release-bound
+  testing.
+- Selected the broad/full manifest gate because `snapshot_inventory()` is
+  shared persistence infrastructure, despite the correction's narrow code diff.
+- Recorded no Alloy-model impact: inventory enumeration order does not change
+  lifecycle entities, authority, transitions, cardinality, or temporal rules.
+- No R2 read, provider operation, or live QA action is part of Slice 2.
+
+## 2026-09-12 — Source regression gate
+
+- Re-ran the focused matrix after freezing `0.4.61`: `46 passed`.
+- Ran the complete checked-in manifest suite with the supported one-worker
+  profile: `1,192` tests, `60` expected skips, zero failures in
+  `1,600.308523` seconds.
+- Test inventory SHA-256:
+  `a65a1b0f50cab9902066571817e2db52b2ccf5ed4add76423451d2512f99f2bf`.
+- Ready to commit the exact artifact source before reproducible builds.
