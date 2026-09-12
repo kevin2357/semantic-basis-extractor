@@ -31,18 +31,29 @@ Related bounded operator trace, also outside Git:
 
 `C:\tmp\operator-hokusai-quarantine-service.jsonl`
 
-## Checkpoint coordinate packet
+## Corrected checkpoint coordinate packet
 
-The API checked-in catalog returned:
+The original API catalog query selected by run and therefore returned the
+deterministic-domain job's active checkpoint. It was not the checkpoint restored
+by the operator runner. A subsequent exact job-bound join established:
 
-- checkpoint: `b7ceea14-cb07-4366-b944-31bceb2c5159`, generation `4`, active;
-- object: `v1/checkpoint/957a1c32cf724c7ea087fa4abf5ab236`;
-- archive SHA-256: `79b771d0ce02a7c1e20fb6d177e4ac0ae62f1f5608bfb877c0480762792cde86`;
-- inventory SHA-256: `6351e48ca7e6ad27a45d4d38dc4d0bf7861a900f1e822add1df0360ddd982d3b`;
-- size `4,019,115` bytes;
-- catalog logical restore path `/work/deterministic-domain`.
+- exact SBE checkpoint: `c1726aeb-f091-45d4-956a-4f628bb96439`, generation
+  `3`, active;
+- checkpoint and `SbeAuthoringRun` root:
+  `/work/runs/00667fb9-c068-415e-a045-8d4059ac549e/sbe`;
+- archive SHA-256:
+  `6d6a9ebdb6dfcf6172d41c06107c89fbeadd86efeb068fdd208d78af6b189626`;
+- inventory SHA-256:
+  `2ee271fcbec0b326568975aec2c002cb9a0029d49b2135bb0b1fb999cfd2e204`.
 
-No ETag/version is available from PostgreSQL. These coordinates are **not** authorization for R2 HEAD/GET/listing, extraction, or alternate discovery. If exact object inspection remains necessary after local/provider-free reproduction, request a separately explicit one-HEAD/one-GET authorization.
+SBE's frozen trace records native durable root
+`/work/runs/workspace-5d5294a3-6d1d-4fe4-9a36-c0e2b067414a/sbe`. The two roots
+are not canonically equal. API used its API-run root to construct relocation
+authority, and SBE correctly refused it at original-root binding.
+
+No ETag/version is available from PostgreSQL. These coordinates are **not**
+authorization for R2 HEAD/GET/listing, extraction, or alternate discovery. No
+object inspection is materially needed after the exact job-bound join.
 
 ## Live custody context
 

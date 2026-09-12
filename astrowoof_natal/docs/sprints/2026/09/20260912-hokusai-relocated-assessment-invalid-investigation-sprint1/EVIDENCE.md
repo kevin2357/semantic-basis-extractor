@@ -6,11 +6,21 @@
 - The failure happened before an SBE disposition posture was accepted by API.
 - API retained normal provider/workspace/spend custody and made no capacity release as part of the refusal.
 
-## What is not yet established
+## Exact live causal join
 
-- The specific SBE `ValueError`/`TypeError` or rejected join.
-- Whether the durable checkpoint's documented logical root represents a contract mismatch, a harmless catalog representation, or neither.
-- Whether SBE needs a code change, versus API needing a more precise consumer diagnostic classification.
+- Exact restored SBE checkpoint: `c1726aeb-f091-45d4-956a-4f628bb96439`,
+  generation `3`, active.
+- API checkpoint and authoring-row root:
+  `/work/runs/00667fb9-c068-415e-a045-8d4059ac549e/sbe`.
+- Native durable root:
+  `/work/runs/workspace-5d5294a3-6d1d-4fe4-9a36-c0e2b067414a/sbe`.
+- API constructed authority from the first root; SBE correctly rejected it
+  against the second at original-root binding.
+- The earlier `/work/deterministic-domain` packet selected the wrong job's
+  checkpoint through a run-wide catalog query and is irrelevant to the restore.
+
+The live cause is therefore an API identity-source defect. SBE needs no reader,
+schema, release-pair, or diagnostic correction.
 
 ## Slice 0 provider-free evidence
 
@@ -26,6 +36,5 @@
   `14 passed`.
 - The new test module is registered in `test_suite_manifest.json`.
 
-The exact live authority document remains unavailable, so this proves the
-compatible causal boundary but does not fictionalize which non-native root API
-actually supplied.
+The exact job-bound API join supplies the previously missing live identity
+fact. No R2 access is needed.

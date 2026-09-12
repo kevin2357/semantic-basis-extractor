@@ -9,10 +9,12 @@ hashes the logical root preserved by `run.json.workspace_contract`. The same
 workspace is refused with `Original logical root does not match relocation
 authority` when authority instead hashes `/work/deterministic-domain`.
 
-This establishes a closed causal class, not the exact live exception. The live
-authority document and the exact checkpoint returned to the operator runner
-were not persisted in the supplied evidence. No storage read is required to
-resolve that remaining API metadata join.
+API's subsequent exact job-bound join closes the historical identity gap. The
+operator restored checkpoint `c1726aeb-f091-45d4-956a-4f628bb96439`, generation
+`3`, whose checkpoint and authoring-row root was
+`/work/runs/00667fb9-c068-415e-a045-8d4059ac549e/sbe`. API used that root in
+the authority. It is not equal to the native durable allocation root, so the
+live request failed at the reproduced original-root boundary.
 
 ## Three observed root identities
 
@@ -20,7 +22,7 @@ resolve that remaining API metadata join.
 | --- | --- | --- |
 | SBE `0.4.60` worker trace and command result | `/work/runs/workspace-5d5294a3-6d1d-4fe4-9a36-c0e2b067414a/sbe` | Native durable `workspace_contract.logical_root` |
 | API authoring-authority source | `/work/runs/{api_run_id}/sbe` | Path currently constructed for `SbeAuthoringRun.logical_workspace_path` |
-| supplied run-wide checkpoint packet | `/work/deterministic-domain` | A catalogued active checkpoint path whose exact SBE-job relationship is not established |
+| original run-wide checkpoint packet | `/work/deterministic-domain` | Deterministic job checkpoint; not used by the operator restore |
 
 These identities are not canonically equivalent. SBE is correct to refuse an
 authority generated from either non-native value when reading the copied
@@ -62,13 +64,11 @@ provider callback, and no mutation capability.
 
 ## Ownership and next evidence
 
-The leading classification is an API identity-source/join problem, not an SBE
-reader defect. Before any correction design, API should return the exact
-checkpoint selected by `restore_latest(job_id=3c1dc0cd-3169-4542-8f9b-40305d8dcf3b)`
-and the exact `SbeAuthoringRun.logical_workspace_path` used to construct request
-`e80e824c-fe88-4753-9f55-d2ff42aeb1c0`'s authority. A run-wide latest-active
-checkpoint is not a substitute for that join.
+The exact classification is an API identity-source defect, not an SBE reader
+defect. API's job-bound join proves the deployed authority builder used the
+API-run root rather than the native durable allocation root. A run-wide
+latest-active checkpoint is not a substitute for that join; the earlier query
+selected the deterministic job.
 
 No R2 HEAD/GET, provider operation, workspace mutation, retry, or second
 operator execution is needed or authorized. SBE implementation remains gated.
-

@@ -2,15 +2,18 @@
 
 ## Status
 
-**Slice 0 complete; paused for joint review. All implementation remains
-gated.** This sprint is paired with API Sprint 94.
+**Slice 0 approved and complete. No SBE implementation is indicated.** This
+sprint is paired with API Sprint 94, which owns the correction proposal and
+keeps all live execution separately gated.
 
 ## Slice 0 — SBE reader causal classification
 
-**Status: complete.** Provider-free paired controls identify original-root
-binding as the exact compatible failure phase. The exact live authority source
-still requires API's job-bound checkpoint/authoring-row join; no R2 read is
-materially needed. See `SLICE 0 - RELOCATED ROOT IDENTITY CLASSIFICATION.md`.
+**Status: approved and complete.** Provider-free paired controls identify
+original-root binding as the exact compatible failure phase. API's job-bound
+checkpoint/authoring-row join confirms the live authority used the API-run root
+while native state preserved the allocation-root identity. No R2 read is
+materially needed. See `SLICE 0 - RELOCATED ROOT IDENTITY CLASSIFICATION.md`
+and `API REVIEW - SLICE 0 ROOT IDENTITY CLASSIFICATION.md`.
 
 - Source-map the public `read_relocated_operator_disposition_assessment`, `validate_relocated_assessment_pair`, relocation authority construction, and exact snapshot validation paths in released `0.4.60`.
 - Distinguish the exact checkpoint returned by API restoration for SBE job
@@ -38,7 +41,10 @@ any implementation or R2 request.
 
 ## Slice 1 — Conditional correction proposal (not authorized)
 
-If Slice 0 proves a genuine defect or observability ambiguity, propose the narrowest compatible correction. It must preserve strict snapshot/root/digest authority and return no fictional assessment. Include provider-free fixtures and an installed-wheel API consumer gate. Do not implement yet.
+**Not opened on SBE.** Slice 0 proves an API identity-source defect, not an SBE
+reader defect or observability ambiguity. API may propose the narrowest durable
+native-root identity correction while preserving SBE's strict
+snapshot/root/digest authority. Do not change SBE runtime behavior.
 
 ## Slice 2 — Conditional implementation/release qualification (not authorized)
 

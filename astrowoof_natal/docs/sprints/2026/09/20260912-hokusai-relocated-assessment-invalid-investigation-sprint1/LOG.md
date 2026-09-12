@@ -19,3 +19,15 @@
   the historical live value.
 - Performed no R2 access, provider operation, workspace mutation, recovery,
   retry, or live operator execution. Implementation remains gated for review.
+
+## 2026-09-12 — API review and exact live join
+
+- API supplied the exact SBE-job checkpoint and approved Slice 0.
+- Corrected the earlier run-wide catalog packet: `/work/deterministic-domain`
+  belonged to the deterministic job and was not restored by the operator.
+- Confirmed API constructed relocation authority from
+  `/work/runs/00667fb9-c068-415e-a045-8d4059ac549e/sbe`, while native state
+  preserved `/work/runs/workspace-5d5294a3-6d1d-4fe4-9a36-c0e2b067414a/sbe`.
+- Classified the live cause as API-owned original-root identity sourcing. SBE's
+  strict refusal was correct; no SBE implementation or release is indicated.
+- No R2 access, retry, provider action, or QA mutation occurred.
