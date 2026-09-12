@@ -29,8 +29,10 @@ mixing campaign commits into concurrent package-release work.
 
 ## Slice 1 — adaptive promotion batches beginning with Batch 12
 
-**Batch 12 audit complete; collision qualification awaits review.** See
-`SLICE 1 - PROMOTION BATCH 12 STATE-SURFACE AUDIT.md`.
+**Batch 12 collision qualification complete; manifest promotion awaits a
+separate review.** See
+`SLICE 1 - PROMOTION BATCH 12 STATE-SURFACE AUDIT.md` and
+`SLICE 1 - PROMOTION BATCH 12 COLLISION QUALIFICATION.md`.
 
 - Select remaining candidates by descending useful duration and state-surface
   similarity, not a fixed three-module quota.

@@ -29,3 +29,19 @@
   state-surface audit. All four may proceed to bounded collision qualification.
 - Paused before collision execution and manifest mutation for the planned
   campaign paws-point.
+
+## 2026-09-12 — Batch 12 collision qualification
+
+- Incorporated API's independently authored approval at commit `d51e6d5`.
+- Ran the approved three repetitions with two independent copies of each of the
+  four editorial-review modules, in waves capped at six child processes.
+- All 24 worker receipts passed with exact per-module identities and outcomes:
+  `9/0`, `7/0`, `12/1`, and `11/0` tests/skips.
+- The only skip was the expected optional-`jsonschema` schema check. There were
+  zero failures, errors, expected failures, unexpected successes, unexpected
+  skips, nonempty coordinator logs, orphaned Batch 12 children, or repository
+  changes.
+- Retained raw receipts under
+  `C:\tmp\sbe-batch12-collision-20260912` for review.
+- Paused for the separate manifest-promotion decision. No classification has
+  changed and no actual-manifest stress run has begun.
