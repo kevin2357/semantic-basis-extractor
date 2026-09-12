@@ -149,8 +149,10 @@ Pause for SBE/API/owner review with:
 **Implementation update:** Slices 1 through 3 are implemented and approved by
 API. The relocation authority/wrapper contracts, dedicated read-only relocated
 reader, and native executable/mutation fences are complete. Candidate identity
-`0.4.60` is frozen on the release branch. Broad/full pre-release qualification
-is in progress; the released-wheel/API host integration gate follows it.
+`0.4.60` completed broad/full qualification, exact-wheel API consumer/writer
+qualification, immutable publication, and fresh-download verification. The
+read-only relocation release work is complete. Any cooperative native
+suspension remains a separate future contract slice.
 
 After Slice 0 review, likely work separates into:
 

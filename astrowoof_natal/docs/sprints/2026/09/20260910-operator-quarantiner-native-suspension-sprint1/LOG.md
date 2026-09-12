@@ -98,3 +98,15 @@
   pre-tag/release boundary.
 - Any later tag must target `350a8bf`, never the documentation-only handoff
   commit.
+
+## 2026-09-12 — Publication complete
+
+- Merged and pushed the release branch to `main`.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.60`; its remote peeled
+  target is exactly `350a8bf53582d2052093b6638f9ede97d8115a7d`.
+- Published GitHub Release `RE_kwDOToQdE84XGO1y` with only the exact qualified
+  wheel and `SHA256SUMS.txt`.
+- GitHub reported wheel asset digest
+  `618caee2c2f338cf868cfb024f764217c7b4ef4c83aff283b2bf78cd6e67d627`.
+- Fresh authenticated downloads reproduced the 1,383,825-byte wheel digest and
+  exact checksum line. Release `0.4.60` is complete.
