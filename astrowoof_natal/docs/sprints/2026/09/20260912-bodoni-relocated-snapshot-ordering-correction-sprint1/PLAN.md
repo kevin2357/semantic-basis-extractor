@@ -43,7 +43,7 @@ platforms; genuine missing/extra/changed files still fail closed.
 
 ## Slice 2 — Release qualification
 
-**Status: candidate qualified; release lock in progress.** API approved Slices
+**Status: complete; awaiting final API release review.** API approved Slices
 0–1 and requested the candidate/retained-Bodoni installed-wheel gate. Fresh
 candidate version is `0.4.61`. Because snapshot persistence is shared
 infrastructure, the full manifest suite followed the focused matrix; no
@@ -62,3 +62,9 @@ focused-suite waiver was used.
 
 **Exit:** exact native reader works on the real paused-workspace fixture without
 another R2 read or any live run mutation.
+
+Exit satisfied. The immutable release target is
+`477cfa2491f33377f1a873772c5e465c588f0741`; the exact canonical wheel is
+1,383,877 bytes with SHA-256
+`8dd151fced3fc7823ef914c7642798a977eca93d19b1136bf34da55b589ef723`.
+Tag/publication remains separately gated on API review and owner authorization.

@@ -62,3 +62,20 @@ same-prefix `.zip` sorts differently from its sibling directory subtree.
   `known_provider_operation_pending`; authority/wrapper pair validation passed.
 - All 387 retained-workspace files were byte-identical before and after.
 - Provider operations and external storage operations: zero.
+
+## Exact release-lock receipt
+
+- Immutable release target:
+  `477cfa2491f33377f1a873772c5e465c588f0741`.
+- Exact commit epoch: `1789243472`.
+- Source archive: 56,173,686 bytes, SHA-256
+  `7b002bbbd334c8299dd1bbe9b5ae3977c28fad547858ac4df6d55f2ab053722f`.
+- Two independent exact-lock builds produced byte-identical wheels: 1,383,877
+  bytes, SHA-256
+  `8dd151fced3fc7823ef914c7642798a977eca93d19b1136bf34da55b589ef723`.
+- Wheel inventories: 310 members, identical; forbidden-member count zero.
+- Clean exact-lock installation and `pip check`: passed.
+- Exact-lock installed release and lifecycle smokes: passed.
+- Exact-lock installed retained-Bodoni reader: expected assessment, valid
+  authority/wrapper pair, and all 387 files unchanged.
+- Provider operations, R2 reads, and live QA mutations: zero.

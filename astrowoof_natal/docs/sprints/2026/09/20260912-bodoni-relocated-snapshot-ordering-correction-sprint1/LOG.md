@@ -79,3 +79,18 @@
 - No provider, R2, or live QA operation occurred.
 - Ready to freeze the release-lock evidence and repeat the build/install gates
   from the exact lock commit.
+
+## 2026-09-12 — Exact release lock qualified
+
+- Froze and pushed immutable release target
+  `477cfa2491f33377f1a873772c5e465c588f0741`.
+- Exported that exact commit and rebuilt twice using its epoch `1789243472`.
+- Both canonical wheels are byte-identical: 1,383,877 bytes, SHA-256
+  `8dd151fced3fc7823ef914c7642798a977eca93d19b1136bf34da55b589ef723`.
+- Clean installation, dependency check, installed release smoke, installed
+  lifecycle smoke, and exact retained-Bodoni reader all passed.
+- Retained Bodoni remained byte-identical across all 387 files; no provider,
+  R2, or live QA operation occurred.
+- Slice 2 is complete. Paused at API consumer review and immutable
+  tag/publication authorization. Tag only `477cfa2`, never this later evidence
+  commit.
