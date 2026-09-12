@@ -21,6 +21,9 @@ function Get-TextScore {
     if ($Text -match '(?i)(^|[^a-z])(breaks|breakbeat|break beat|nu breaks)([^a-z]|$)') { $score += 60; $reasons.Add('breaks / breakbeat') }
     if ($Text -match '(?i)(^|[^a-z])(mixed set|mix set|dj set|live set|mixtape|mix tape)([^a-z]|$)') { $score += 35; $reasons.Add('explicit set / mixtape') }
     if ($Text -match '(?i)(^|[^a-z])(session|sessions|radio show|podcast)([^a-z]|$)') { $score += 20; $reasons.Add('session / broadcast') }
+    if ($Text -match '(?i)(^|[^a-z])(serato|traktor|rekordbox|virtualdj|virtual dj|ableton|mixxx)([^a-z]|$)') { $score += 45; $reasons.Add('DJ library software') }
+    if ($Text -match '(?i)(^|[^a-z])(jungle|liquid funk|neurofunk|jump up)([^a-z]|$)') { $score += 35; $reasons.Add('DnB-adjacent genre') }
+    if ($Text -match '(?i)(^|[^a-z])(playlist|playlists|crate|crates|record pool)([^a-z]|$)') { $score += 20; $reasons.Add('playlist / DJ crate') }
     if ($Text -match '(?i)(^|[^a-z])(dj|mix|mixed|live)([^a-z]|$)') { $score += 8; $reasons.Add('DJ / mix / live') }
     if ($IsITunes) { $score -= 15; $reasons.Add('iTunes lower priority') }
     [pscustomobject]@{ Score = $score; Reasons = ($reasons -join '; ') }
