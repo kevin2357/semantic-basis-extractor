@@ -2,9 +2,15 @@
 
 ## Status
 
-**Slice 0 investigation active; all implementation is gated.** This sprint is paired with API Sprint 94.
+**Slice 0 complete; paused for joint review. All implementation remains
+gated.** This sprint is paired with API Sprint 94.
 
 ## Slice 0 — SBE reader causal classification
+
+**Status: complete.** Provider-free paired controls identify original-root
+binding as the exact compatible failure phase. The exact live authority source
+still requires API's job-bound checkpoint/authoring-row join; no R2 read is
+materially needed. See `SLICE 0 - RELOCATED ROOT IDENTITY CLASSIFICATION.md`.
 
 - Source-map the public `read_relocated_operator_disposition_assessment`, `validate_relocated_assessment_pair`, relocation authority construction, and exact snapshot validation paths in released `0.4.60`.
 - Distinguish the exact checkpoint returned by API restoration for SBE job

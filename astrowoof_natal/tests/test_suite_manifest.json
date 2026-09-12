@@ -198,6 +198,10 @@
       "weight_seconds": 0.5
     },
     {
+      "module": "test_hokusai_relocated_assessment_investigation_slice0.py",
+      "weight_seconds": 0.5
+    },
+    {
       "module": "test_operator_disposition_cross_route_slice3.py",
       "weight_seconds": 0.756
     },
