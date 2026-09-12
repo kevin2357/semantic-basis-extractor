@@ -43,19 +43,22 @@ platforms; genuine missing/extra/changed files still fail closed.
 
 ## Slice 2 — Release qualification
 
-**Status: authorized and active.** API approved Slices 0–1 and requested the
-candidate/retained-Bodoni installed-wheel gate. Fresh candidate version is
-`0.4.61`. Because snapshot persistence is shared infrastructure, run the full
-manifest suite after the focused matrix; no focused-suite waiver is used.
+**Status: candidate qualified; release lock in progress.** API approved Slices
+0–1 and requested the candidate/retained-Bodoni installed-wheel gate. Fresh
+candidate version is `0.4.61`. Because snapshot persistence is shared
+infrastructure, the full manifest suite followed the focused matrix; no
+focused-suite waiver was used.
 
 - Run focused relocation/snapshot tests and relevant package gates.
-- Build an immutable wheel candidate.
+- Build an immutable wheel candidate twice from the exact artifact source and
+  require byte-identical output.
 - Before release lock, run the candidate implementation against the retained
   local Bodoni restore and prove the reader performs no snapshot-manifest or
   workspace rewrite.
-- Build an immutable wheel candidate. API reruns the public reader and pair
-  intake against the same retained Bodoni copy, checking wrapper validation and
-  post-read workspace identity.
+- Run the public installed reader and pair validation against the retained
+  Bodoni copy, checking post-read workspace identity.
+- Freeze the release-lock evidence, then rebuild twice from that exact commit
+  and repeat the installed qualification before API consumer review.
 
 **Exit:** exact native reader works on the real paused-workspace fixture without
 another R2 read or any live run mutation.

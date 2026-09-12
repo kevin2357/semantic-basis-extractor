@@ -63,3 +63,19 @@
 - Test inventory SHA-256:
   `a65a1b0f50cab9902066571817e2db52b2ccf5ed4add76423451d2512f99f2bf`.
 - Ready to commit the exact artifact source before reproducible builds.
+
+## 2026-09-12 — Pre-lock candidate gate
+
+- Committed and pushed exact artifact source
+  `edeb38034c239b5b5ea22c4f0e58a89e33aa1632`.
+- Built two clean wheels from independent complete source exports with fixed
+  epoch `1789242555`; both are 1,383,877 bytes with SHA-256
+  `c71ee9717d128107ec09092018f280b3af50b4c569b63869f1b850388773dbcc`.
+- Installed the exact candidate and its declared dependencies into a clean
+  environment; `pip check`, release smoke, and lifecycle smoke passed.
+- The installed public relocated reader accepted the retained Bodoni copy with
+  the expected provider-pending disposition, strict pair validation, and all
+  387 files unchanged.
+- No provider, R2, or live QA operation occurred.
+- Ready to freeze the release-lock evidence and repeat the build/install gates
+  from the exact lock commit.

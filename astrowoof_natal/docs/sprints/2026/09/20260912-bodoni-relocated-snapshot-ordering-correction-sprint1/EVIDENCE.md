@@ -41,3 +41,24 @@ same-prefix `.zip` sorts differently from its sibling directory subtree.
   `1,600.308523` seconds.
 - Test inventory SHA-256:
   `a65a1b0f50cab9902066571817e2db52b2ccf5ed4add76423451d2512f99f2bf`.
+
+## Pre-lock candidate receipt
+
+- Exact artifact source: `edeb38034c239b5b5ea22c4f0e58a89e33aa1632`;
+  fixed `SOURCE_DATE_EPOCH=1789242555`.
+- Two clean source exports produced byte-identical canonical wheels:
+  `1,383,877` bytes, SHA-256
+  `c71ee9717d128107ec09092018f280b3af50b4c569b63869f1b850388773dbcc`.
+- Wheel inventories: 310 members, identical; no cache, test, or private
+  checkpoint members.
+- Clean install: SBE `0.4.61`, Semantic Projection Core `0.11.1`, and
+  `pip check` passed after installing declared runtime dependencies.
+- Installed release smoke: passed; resume reached `DELIVERY_COMPLETE` and the
+  zero-action terminal-result identity remained null.
+- Installed lifecycle smoke: passed with installed-runtime enforcement,
+  snapshot validation, and route-parity resources present.
+- Installed public relocated reader against the retained Bodoni generation-3
+  checkpoint returned `provider_pending_known_identity`, `permitted`, and
+  `known_provider_operation_pending`; authority/wrapper pair validation passed.
+- All 387 retained-workspace files were byte-identical before and after.
+- Provider operations and external storage operations: zero.
