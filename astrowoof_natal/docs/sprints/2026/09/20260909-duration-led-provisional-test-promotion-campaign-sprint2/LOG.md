@@ -45,3 +45,27 @@
   `C:\tmp\sbe-batch12-collision-20260912` for review.
 - Paused for the separate manifest-promotion decision. No classification has
   changed and no actual-manifest stress run has begun.
+
+## 2026-09-12 — Batch 12 promotion and stress blocker
+
+- Incorporated API's promotion approval and moved exactly the four editorial-
+  review modules to `parallel_safe` with their measured weights.
+- The focused runner/manifest guard passed 16 tests. The resulting manifest is
+  85 `parallel_safe`, 14 `provisional`, and 37 `serial_only`, with SHA-256
+  `ee50924668beb037f9958f24467c6fa625a60fae9706361bb4ff87a8ba6e6a3b`.
+- Launched the approved pair of complete two-worker `parallel_only`
+  coordinators concurrently. Both produced the same 680-test/51-skip identity
+  and outcome digests, but both failed the same pre-existing frozen BRE packet-
+  digest assertion.
+- Reproduced that assertion immediately in isolation. All semantic counts,
+  candidate/selection digests, QA digest, and QA status match the frozen
+  baseline; only the compiled packet digest differs (`d13a…54a4` expected,
+  `5af5…0f63` current).
+- No extractor change occurred since Batch 11; packaged resources did change.
+  This is strong evidence of a provenance-only stale baseline, not Batch 12
+  collision, but the promotion approval did not authorize changing that
+  unrelated fixture.
+- Paused for a narrow decision on the frozen baseline correction and paired
+  stress rerun. Batch 12 is promoted in the branch but not completion-approved.
+- Deleted the unrelated untracked `hello.md` permissions probe from the normal
+  checkout at owner request.

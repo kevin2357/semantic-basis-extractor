@@ -78,6 +78,22 @@
       "weight_seconds": 1.419
     },
     {
+      "module": "test_editorial_review_contract_fixtures.py",
+      "weight_seconds": 8.450852
+    },
+    {
+      "module": "test_editorial_review_contract_foundation.py",
+      "weight_seconds": 2.274651
+    },
+    {
+      "module": "test_editorial_review_contract_qualification.py",
+      "weight_seconds": 7.621098
+    },
+    {
+      "module": "test_editorial_review_runtime.py",
+      "weight_seconds": 2.123262
+    },
+    {
       "module": "test_external_authority_contract_proposal.py",
       "weight_seconds": 1.245008
     },
@@ -333,10 +349,6 @@
     "test_basis_policies.py",
     "test_bounded_admission.py",
     "test_bounded_provider.py",
-    "test_editorial_review_contract_foundation.py",
-    "test_editorial_review_contract_fixtures.py",
-    "test_editorial_review_contract_qualification.py",
-    "test_editorial_review_runtime.py",
     "test_external_authority_v2_contract.py",
     "test_external_authority_v2_execution_gap.py",
     "test_polish_authority_handoff_slice0.py",
