@@ -2,6 +2,12 @@
 
 ## Slice 0 — Reproduce and classify
 
+**Status: complete.** Exact retained-workspace reproduction proves identical
+member identity and host-dependent ordering only. The compatible canonical key
+is `PurePosixPath(relative).parts`; candidate source reads Bodoni successfully
+without changing any of 387 files. See
+`SLICE 0 - EXACT ORDERING-ONLY REPRODUCTION.md`.
+
 - Use the existing private verified Bodoni archive/local restore only.
 - Reproduce the public relocated-reader refusal provider-free.
 - Prove whether the difference is ordering-only, not path-set, byte-size, or

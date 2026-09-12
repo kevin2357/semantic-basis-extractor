@@ -22,3 +22,12 @@
 - Expanded the plan with duplicate, mixed-case, same-prefix archive/directory,
   genuine drift, no-rewrite, and retained-Bodoni candidate gates.
 - No provider, R2, retained-workspace mutation, or live runner action occurred.
+
+## 2026-09-12 — Slice 0 complete
+
+- Ran the corrected-source reader against the retained Bodoni restore using
+  the frozen checkpoint coordinates.
+- Obtained `provider_pending_known_identity`, `permitted`, and
+  `known_provider_operation_pending`; authority/wrapper pair validation passed.
+- Hashed every restored file before and after the read: all 387 were unchanged.
+- Slice 0 is complete with no external I/O or live-state action.
