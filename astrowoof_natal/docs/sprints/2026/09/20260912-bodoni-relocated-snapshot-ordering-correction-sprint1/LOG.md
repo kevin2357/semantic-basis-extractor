@@ -31,3 +31,12 @@
   `known_provider_operation_pending`; authority/wrapper pair validation passed.
 - Hashed every restored file before and after the read: all 387 were unchanged.
 - Slice 0 is complete with no external I/O or live-state action.
+
+## 2026-09-12 — Slice 1 complete
+
+- Replaced host-`Path` inventory ordering with case-sensitive relative POSIX
+  component ordering while preserving historical Linux manifest order.
+- Added manifest-registered mixed-case, directory/zip, duplicate, missing,
+  extra, size-drift, and digest-drift regression coverage.
+- Combined focused qualification passed: `46 passed`.
+- Paused before Slice 2 package/release work for API review of Slices 0–1.

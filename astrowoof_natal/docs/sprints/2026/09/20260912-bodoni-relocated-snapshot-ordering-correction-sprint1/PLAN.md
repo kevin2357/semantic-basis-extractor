@@ -20,6 +20,11 @@ without changing any of 387 files. See
 
 ## Slice 1 — Canonical inventory correction
 
+**Status: complete.** Snapshot inventory now uses the portable, historically
+compatible POSIX component key. Manifest-registered regressions preserve strict
+duplicate and content-identity refusal. Combined focused suites pass: 46.
+See `SLICE 1 - PORTABLE SNAPSHOT INVENTORY ORDER.md`.
+
 - Derive each workspace-relative POSIX path before sorting and sort by its
   `PurePosixPath(relative).parts` tuple, not host `Path` ordering or a plain
   relative-path string. Preserve case-sensitive component ordering and the
@@ -37,6 +42,9 @@ without changing any of 387 files. See
 platforms; genuine missing/extra/changed files still fail closed.
 
 ## Slice 2 — Release qualification
+
+**Status: pending API review of Slices 0–1.** Do not build or freeze a release
+candidate before that plan-outlined review gate.
 
 - Run focused relocation/snapshot tests and relevant package gates.
 - Build an immutable wheel candidate.

@@ -13,3 +13,12 @@ The first host-order divergence is at member 16, where Windows places a
 lowercase `cards/` subtree before uppercase sibling files. The first
 plain-string-versus-Linux component-order divergence is at member 198, where a
 same-prefix `.zip` sorts differently from its sibling directory subtree.
+
+## Slice 1 qualification
+
+- Portable-order, duplicate, genuine-drift, relocation, checkpoint-repair, and
+  manifest-runner suites: `46 passed`.
+- The new regression module is registered in `test_suite_manifest.json`.
+- Corrected source reads the exact retained Bodoni restore and validates its
+  wrapper; all 387 files remain byte-identical before and after.
+- No provider operation or external storage read occurred.
