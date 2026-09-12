@@ -2,8 +2,10 @@
 
 ## Status
 
-Ready to begin after the concurrent editorial-review packet test family is
-frozen. No Batch 12 candidates have been selected.
+Slices 0 and 1's Batch 12 state-surface audit are complete. The concurrent
+editorial-review packet family is frozen and selected as the coherent Batch 12
+cohort. Paused at the campaign paws-point before bounded collision
+qualification; no manifest promotion has occurred.
 
 ## Objective
 
@@ -12,6 +14,8 @@ prove whole-suite equivalence, and close the adopted test workflow without
 mixing campaign commits into concurrent package-release work.
 
 ## Slice 0 — checkpoint and moving-family intake
+
+**Complete.** See `SLICE 0 - CURRENT TREE AND MOVING FAMILY INTAKE.md`.
 
 - Verify Sprint 1's final 78/18/36 manifest and Batch 11 receipt identities.
 - Re-discover every active test module and require exactly-once classification.
@@ -24,6 +28,9 @@ mixing campaign commits into concurrent package-release work.
   `provisional` classification.
 
 ## Slice 1 — adaptive promotion batches beginning with Batch 12
+
+**Batch 12 audit complete; collision qualification awaits review.** See
+`SLICE 1 - PROMOTION BATCH 12 STATE-SURFACE AUDIT.md`.
 
 - Select remaining candidates by descending useful duration and state-surface
   similarity, not a fixed three-module quota.
