@@ -1,0 +1,11 @@
+# Log
+
+- 2026-09-14: Opened as the SBE companion to API Sprint 97 after both QA runs
+  reached accepted delivery but Better Stack observation remains unconfirmed.
+  Raw unfiltered Render exports and all immutable run coordinates are recorded
+  in `BACKGROUND.md`. No native/runtime change has been made.
+- 2026-09-14: Parsed both nonempty exports completely. Both exact terminal-
+  delivery handoffs survived the publication retry and entered the observer.
+  Both returned `capture_or_preflight` before any HTTP outcome, narrowing the
+  investigation to local SBE capture construction or API request preflight.
+  Expanded the investigatory plan through the joint pre-implementation gate.
