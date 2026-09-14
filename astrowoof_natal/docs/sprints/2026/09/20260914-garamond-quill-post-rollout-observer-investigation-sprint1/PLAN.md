@@ -18,7 +18,7 @@ failed. The observer remains post-authoritative and best effort.
 
 ## Slice 0 — Freeze exact paired terminal and observer timelines
 
-**Status: authorized.** Read-only local evidence only.
+**Status: complete.** Read-only local evidence only.
 
 - Hash and register all four raw Render exports, including the two legitimate
   empty windows.
@@ -33,6 +33,8 @@ failed. The observer remains post-authoritative and best effort.
 the observer entry without inference.
 
 ## Slice 1 — Provider-free capture/preflight exception localization
+
+**Status: complete; live shape not reproduced.**
 
 Use current checked-in source and provider-free fixtures only at first.
 
@@ -59,8 +61,9 @@ checked-in fixtures cannot reproduce the live workspace shape.
 
 ## Slice 2 — Conditional exact-workspace reproduction
 
-**Review/authorization gate.** Run only if Slice 1 cannot reproduce or classify
-the failure.
+**Status: stopped at review/authorization gate.** Slice 1 could not reproduce
+the live failure from checked-in provider-free fixtures, so this conditional
+gate is now the next available investigatory step.
 
 - Obtain exact checkpoint coordinates from API persistence without discovering
   a latest run or result.
@@ -111,4 +114,3 @@ exact provider-free reproduction.
   exact-coordinate review and owner approval.
 - Raw exports and any restored workspace remain outside Git.
 - Do not expose secrets or authored/private payloads in logs or sprint docs.
-

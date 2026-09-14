@@ -28,3 +28,24 @@
 The exact handoff and Sprint 96 carry-forward succeeded. The failure precedes
 HTTP outcome classification and lies inside local capture construction or API
 request preflight.
+
+## Provider-free localization
+
+- SBE's checked-in runtime fixture containing six accepted initial passes and
+  accepted polish completed capture successfully. The exact-correlation and
+  fail-closed ambiguity cases also passed: `3 passed`.
+- API's complete editorial transport module passed provider-free: `15 passed`.
+  This includes successful packet preflight, singleton typed capture-status
+  preflight, successful observer packet dispatch, and successful observer
+  capture-status dispatch.
+- Source tracing shows that exact native-result reading and most runtime
+  evidence collection occur before packet construction's guarded fallback.
+  Errors there can escape to API's broad `capture_or_preflight` classification.
+  A typed fallback can also fail closed while proving exact result, run, or
+  subject identity; those cases are intentionally distinct from a successful
+  unsupported capture-status result.
+
+No provider, R2, Render, Better Stack, native mutation, or QA-state operation
+was used. The retained Garamond/Quill workspace shape is now the smallest
+unexamined input capable of separating primary SBE capture failure from a
+shape-specific API preflight failure.

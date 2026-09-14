@@ -9,3 +9,9 @@
   Both returned `capture_or_preflight` before any HTTP outcome, narrowing the
   investigation to local SBE capture construction or API request preflight.
   Expanded the investigatory plan through the joint pre-implementation gate.
+- 2026-09-14: Completed Slice 0 and provider-free Slice 1. SBE accepted-polish
+  capture and exact/fail-closed status tests passed (`3 passed`); API's complete
+  editorial observer/preflight module passed (`15 passed`). The checked-in
+  fixtures do not reproduce either live failure. Stopped before Slice 2 for
+  exact-coordinate review and separate owner authorization; no retained
+  workspace or external system was accessed.
