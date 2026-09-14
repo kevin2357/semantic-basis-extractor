@@ -24,7 +24,7 @@ Delivery and review retain their distinct authority contracts.
 
 ## Slice 0 — Freeze exact paired timelines and transport inventory
 
-**Status: active.**
+**Status: authorized.** API approved investigation through Slice 2.
 
 - Reduce the three unfiltered worker exports into ordered, hashable timeline
   evidence for the two API run IDs, job IDs, and native run IDs.
@@ -66,11 +66,16 @@ For each path, capture:
 
 The Erasmus A fixture must use the production constructor and logging setup,
 not inject a shortcut worker or call `_observe_editorial_terminal()` directly.
+Each reproduction must independently record function entry with a recording
+observer; an ordinary logger line is not sufficient proof. The Didot case must
+also prove the retry cannot cross-bind another job, native run, or newer result.
 
 **Exit:** provider-free tests either reproduce each missing observer call or
 prove a deployment/configuration/telemetry difference from current source.
 
 ## Slice 2 — Deployed-runtime and claim-lineage reconciliation
+
+**Status: authorized if its entry condition is met.**
 
 Run this slice only if Erasmus A passes locally or if the second claim remains
 unexplained.
