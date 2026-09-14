@@ -61,9 +61,9 @@ checked-in fixtures cannot reproduce the live workspace shape.
 
 ## Slice 2 — Conditional exact-workspace reproduction
 
-**Status: stopped at review/authorization gate.** Slice 1 could not reproduce
-the live failure from checked-in provider-free fixtures, so this conditional
-gate is now the next available investigatory step.
+**Status: complete.** Exact coordinates and owner authorization were supplied;
+API performed the bounded reads and retained hash-verified local archives.
+SBE reproduction identifies an API workspace-identity source defect.
 
 - Obtain exact checkpoint coordinates from API persistence without discovering
   a latest run or result.
@@ -81,6 +81,10 @@ typed fallback, or API preflight as the first failing boundary.
 
 ## Slice 3 — Conditional API configuration and transport verification
 
+**Status: unnecessary.** The observer was enabled and invoked, the supplied
+API/checkpoint root reproduces the failure before preflight, and the same exact
+workspace captures successfully at its native durable contract root.
+
 Run only if capture construction and request preflight succeed provider-free.
 
 - Verify presence and safe shape—not values—of the five deployed observation
@@ -96,6 +100,9 @@ Run only if capture construction and request preflight succeed provider-free.
 exact provider-free reproduction.
 
 ## Slice 4 — Joint ownership and correction decision
+
+**Status: stopped at joint review gate.** Ownership is assigned to API's
+observer workspace-root selection. No implementation is authorized here.
 
 - Assign the defect at the first proven boundary only.
 - Decide whether the minimum correction is SBE evidence collection, typed

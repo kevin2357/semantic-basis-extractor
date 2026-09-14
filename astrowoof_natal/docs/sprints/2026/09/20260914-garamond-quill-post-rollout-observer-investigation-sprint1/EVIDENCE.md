@@ -49,3 +49,29 @@ No provider, R2, Render, Better Stack, native mutation, or QA-state operation
 was used. The retained Garamond/Quill workspace shape is now the smallest
 unexamined input capable of separating primary SBE capture failure from a
 shape-specific API preflight failure.
+
+## Exact-workspace reproduction
+
+API's owner-authorized reads produced two archives whose byte sizes and
+SHA-256 values match the coordinate receipt. The restored snapshot inventories
+also match exactly: Garamond `902/902`, Quill `906/906`, with zero differing
+members.
+
+For both runs, the API-supplied checkpoint root differs from the durable
+logical root inside SBE's workspace contract:
+
+| Run | API/checkpoint root SHA-256 | Durable root SHA-256 | Equal |
+| --- | --- | --- | --- |
+| Garamond | `58ce8f288663ea12cff1cd57e6022a4fe5e468b553bc656ace4d17ceba51111e` | `17713aeeb9bc05bd876676e9a70fab69fffead96fa7fa6a9139f91566b83f07f` | no |
+| Quill | `f47ff9a946335d1b5a5148fd3cc7c4880626c92a3b8388e6b704ae72e4a540cd` | `34e33387a4647ce009469456f69489317c27d4d5a12414d457e02f3018596e7a` | no |
+
+Mounting each exact archive read-only at the API/checkpoint root reproduces a
+`ValueError` in workspace snapshot validation before evidence collection.
+Mounting the identical bytes at the workspace's own durable root succeeds:
+exact read `delivery`, evidence collection `delivery`, and capture construction
+`delivery` with one packet, eight projections, and nine artifacts.
+
+The first proven defect is therefore API's observer workspace-root selection,
+not SBE's exact reader, evidence collection, packet construction, API packet
+preflight, or transport. SBE correctly fails closed when called with a root
+that contradicts native durable identity.

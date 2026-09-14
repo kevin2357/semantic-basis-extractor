@@ -15,3 +15,11 @@
   fixtures do not reproduce either live failure. Stopped before Slice 2 for
   exact-coordinate review and separate owner authorization; no retained
   workspace or external system was accessed.
+- 2026-09-14: API supplied an owner-authorized coordinate/read receipt and two
+  hash-verified local archives. Exact-path reproduction found both inventories
+  complete, but API's stated checkpoint roots differ from the native durable
+  roots recorded in `run.json`. The former reproduces snapshot-validation
+  failure; the latter yields complete delivery captures (`1` packet, `8`
+  projections, `9` artifacts each). Assigned correction ownership to API and
+  stopped at the joint implementation-review gate. No runtime code, provider,
+  publication, lifecycle, or QA state was changed.
