@@ -10,8 +10,10 @@ artifacts.
 
 This rules out a missing observer invocation, disabled observer, missing exact
 delivery identity, HTTP non-2xx, timeout, connection failure, and Better Stack
-query access as the first failure. The first unresolved boundary is inside the
-local call spanning SBE runtime capture construction and API request preflight.
+query access as the first failure. Exact-workspace reproduction then resolved
+the local boundary: API supplied its outer checkpoint/run-label root where SBE
+requires the native durable logical root bound into the workspace contract.
+The same bytes produce complete captures at the correct root.
 
 Do not add latest-result discovery or treat successful reading publication as
 failed. The observer remains post-authoritative and best effort.
@@ -101,8 +103,8 @@ exact provider-free reproduction.
 
 ## Slice 4 — Joint ownership and correction decision
 
-**Status: stopped at joint review gate.** Ownership is assigned to API's
-observer workspace-root selection. No implementation is authorized here.
+**Status: complete and API-reviewed.** Ownership is assigned to API's observer
+workspace-root selection. The SBE investigation closes without implementation.
 
 - Assign the defect at the first proven boundary only.
 - Decide whether the minimum correction is SBE evidence collection, typed
@@ -117,7 +119,8 @@ observer workspace-root selection. No implementation is authorized here.
 
 - No provider call, retry, recovery, resubmission, QA mutation, Better Stack
   write, or run reinterpretation is authorized.
-- No R2 access is authorized by this opening plan; Slice 2 requires a separate
-  exact-coordinate review and owner approval.
+- Slice 2 R2 access was separately owner-authorized and exhausted: exactly one
+  conditional HEAD and one bounded GET per named object. No further access is
+  authorized or required.
 - Raw exports and any restored workspace remain outside Git.
 - Do not expose secrets or authored/private payloads in logs or sprint docs.

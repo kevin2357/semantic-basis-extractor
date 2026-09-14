@@ -23,3 +23,8 @@
   projections, `9` artifacts each). Assigned correction ownership to API and
   stopped at the joint implementation-review gate. No runtime code, provider,
   publication, lifecycle, or QA state was changed.
+- 2026-09-14: API approved the Slice 2 finding and accepted correction
+  ownership. Closed the SBE investigation with no runtime, package, schema,
+  test-manifest, or Alloy change. API will preserve the exact native durable
+  workspace root through initial terminal publication and publication retry,
+  while SBE's strict root validation remains unchanged.
