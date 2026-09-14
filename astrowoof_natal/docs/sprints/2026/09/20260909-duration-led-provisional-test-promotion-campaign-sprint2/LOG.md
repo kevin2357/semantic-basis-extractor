@@ -69,3 +69,25 @@
   stress rerun. Batch 12 is promoted in the branch but not completion-approved.
 - Deleted the unrelated untracked `hello.md` permissions probe from the normal
   checkout at owner request.
+
+## 2026-09-14 — current-main intake and Batch 12 completion candidate
+
+- Merged current `origin/main` at `e0ef9d9`. The parallel Bodoni sprint added
+  `test_snapshot_inventory_portable_order_slice1.py` to `parallel_safe`, making
+  the merged promoted manifest 86/14/37.
+- Confirmed the manifest/runner guard still passed 16 tests while the frozen BRE
+  replay continued to fail alone with exactly the previously documented packet-
+  digest mismatch.
+- With owner approval, changed only the frozen
+  `exact_bre_replay.packet_sha256` from `d13a…54a4` to the independently
+  reproduced `5af5…0f63`. All other frozen semantic and QA fields were already
+  exact matches and remained unchanged.
+- The complete bounded baseline module passed 3 tests; the runner/manifest guard
+  passed 16 tests.
+- Reran two complete two-worker `parallel_only` coordinators concurrently.
+  Both passed 688 tests with 51 expected skips and identical manifest, test-
+  identity, and outcome digests. Coordinator stderr was empty; no failed group
+  or orphaned child remained.
+- Retained receipts beneath
+  `C:\tmp\sbe-batch12-manifest-stress-rerun-20260914` and paused for Batch 12
+  completion review before selecting Batch 13.

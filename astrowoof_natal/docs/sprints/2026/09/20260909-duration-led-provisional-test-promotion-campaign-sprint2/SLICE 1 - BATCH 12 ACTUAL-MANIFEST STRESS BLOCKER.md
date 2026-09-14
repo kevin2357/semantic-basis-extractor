@@ -1,5 +1,14 @@
 # Slice 1 — Batch 12 actual-manifest stress blocker
 
+## Resolution — 2026-09-14
+
+Owner approval authorized the narrow frozen packet-digest correction described
+below. Only `exact_bre_replay.packet_sha256` changed, from `d13a…54a4` to the
+independently reproduced `5af5…0f63`; every semantic/QA baseline field remained
+unchanged. The full baseline module and manifest guards passed, and the paired
+actual-manifest rerun is green. See
+`SLICE 1 - PROMOTION BATCH 12 COMPLETION.md`.
+
 ## Outcome
 
 The authorized Batch 12 manifest promotion is applied and its focused guards

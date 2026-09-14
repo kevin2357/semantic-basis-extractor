@@ -29,13 +29,12 @@ mixing campaign commits into concurrent package-release work.
 
 ## Slice 1 — adaptive promotion batches beginning with Batch 12
 
-**Batch 12 manifest promotion is applied after approval, but actual-manifest
-stress is blocked by a reproducible current-main frozen BRE packet-digest
-mismatch.** See
+**Batch 12 manifest promotion and actual-manifest stress are complete. Paused
+for the separate Batch 12 completion review.** See
 `SLICE 1 - PROMOTION BATCH 12 STATE-SURFACE AUDIT.md` and
 `SLICE 1 - PROMOTION BATCH 12 COLLISION QUALIFICATION.md`, plus
-`SLICE 1 - BATCH 12 ACTUAL-MANIFEST STRESS BLOCKER.md`. Paused for review
-before changing the unrelated baseline or rerunning the paired stress gate.
+`SLICE 1 - BATCH 12 ACTUAL-MANIFEST STRESS BLOCKER.md` and
+`SLICE 1 - PROMOTION BATCH 12 COMPLETION.md`.
 
 - Select remaining candidates by descending useful duration and state-surface
   similarity, not a fixed three-module quota.
