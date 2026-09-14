@@ -68,4 +68,3 @@ owner authorization for one conditional HEAD and one bounded GET per object.
 Run the exact public capture at the contract-bound root inside the established
 read-only, network-disabled container. No provider, retry, reconciliation,
 workspace mutation, or live QA action is needed.
-

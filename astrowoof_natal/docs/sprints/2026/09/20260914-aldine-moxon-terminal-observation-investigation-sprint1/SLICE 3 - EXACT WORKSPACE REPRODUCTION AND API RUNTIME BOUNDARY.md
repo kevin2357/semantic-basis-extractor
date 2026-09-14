@@ -79,4 +79,3 @@ runtime/configuration side and should remain provider-free where possible:
    shape in the deployed worker;
 4. preserve best-effort, post-authoritative semantics and perform no live
    Better Stack write merely to diagnose the failure.
-
