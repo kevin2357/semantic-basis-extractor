@@ -29,7 +29,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Protocol
 
 from . import __version__
@@ -2967,8 +2967,14 @@ def snapshot_inventory(
     run_dir: Path, *, use_process_cache: bool = True
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
-    for path in sorted(item for item in run_dir.rglob("*") if item.is_file()):
-        relative = path.relative_to(run_dir).as_posix()
+    candidates = (
+        (path.relative_to(run_dir).as_posix(), path)
+        for path in run_dir.rglob("*")
+        if path.is_file()
+    )
+    for relative, path in sorted(
+        candidates, key=lambda item: PurePosixPath(item[0]).parts,
+    ):
         if (
             relative == SNAPSHOT_NAME
             or relative.startswith("native-publication-receipts/")
