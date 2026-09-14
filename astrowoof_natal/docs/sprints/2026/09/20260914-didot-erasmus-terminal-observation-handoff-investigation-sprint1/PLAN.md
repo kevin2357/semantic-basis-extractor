@@ -26,6 +26,9 @@ Delivery and review retain their distinct authority contracts.
 
 **Status: authorized.** API approved investigation through Slice 2.
 
+**Completion: complete.** See
+`SLICE 0 - EXACT TIMELINES AND TRANSPORT INVENTORY.md`.
+
 - Reduce the three unfiltered worker exports into ordered, hashable timeline
   evidence for the two API run IDs, job IDs, and native run IDs.
 - Record the exact Didot delivery result/receipt/invocation and exact Erasmus
@@ -43,6 +46,9 @@ Delivery and review retain their distinct authority contracts.
 explicit first-loss boundary.
 
 ## Slice 1 — Faithful provider-free API route reproduction
+
+**Completion: complete.** See
+`SLICE 1 - PROVIDER-FREE ROUTE REPRODUCTION.md`.
 
 Use checked-in SBE fixtures or sealed synthetic publications only; perform no
 provider, Better Stack, R2, retained-workspace, or live QA operation.
@@ -75,7 +81,10 @@ prove a deployment/configuration/telemetry difference from current source.
 
 ## Slice 2 — Deployed-runtime and claim-lineage reconciliation
 
-**Status: authorized if its entry condition is met.**
+**Status: complete to the authorized evidence boundary.** See
+`SLICE 2 - DEPLOYED RUNTIME AND CLAIM LINEAGE.md`. Identifying the external
+reactivation writer requires API/operator evidence absent from the worker
+export and is deferred to joint review or separately authorized evidence.
 
 Run this slice only if Erasmus A passes locally or if the second claim remains
 unexplained.

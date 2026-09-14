@@ -13,3 +13,13 @@
   requirements to prove observer function entry independently of logging and
   to reject Didot retry cross-binding across job, native-run, or newer-result
   identity. Slice 3 remains a separate ownership/idempotency review gate.
+- 2026-09-14: Slice 0 froze both exact timelines. Didot's first loss is API
+  publication-retry carry-forward; Erasmus has two distinct terminal claims.
+- 2026-09-14: Slice 1 ran six provider-free current-API tests successfully.
+  Transport and projection preserve the review command, the command-bearing
+  worker route enters observation, and generic sealed preflight remains
+  fail-closed.
+- 2026-09-14: Slice 2 bound QA to API `e412caf` and the immutable 0.4.61 SBE
+  worker image. The deployed source contains the observer path. Erasmus's later
+  claim was a new post-close attempt requiring a reactivation not visible in
+  this export. Stopped at the Slice 3 joint contract/ownership review gate.

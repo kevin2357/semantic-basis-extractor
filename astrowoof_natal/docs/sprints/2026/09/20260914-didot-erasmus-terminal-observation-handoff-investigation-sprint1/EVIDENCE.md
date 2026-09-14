@@ -36,6 +36,17 @@ sealed result ID. Current source also shows the Erasmus command-bearing close
 should select ordinary-review observation, while a later sealed-preflight
 review result alone does not satisfy that command-bound selection condition.
 
+## Slice qualification summary
+
+- Six current-source provider-free API tests passed: three transport/projection
+  cases and three production-worker/observer cases.
+- QA is bound to API `e412caf58dc4e47908559227ef69ecf37ba3ed23`
+  and SBE-worker image digest
+  `sha256:c4979464eeb15f45a3f814fd011ef525088af186ab0121e11c82d72b26c2bca1`.
+- Both observer implementation commits are ancestors of that API revision.
+- Erasmus attempts 11 and 12 are distinct claims with distinct attempt and
+  lease identities; attempt 12 began after attempt 11's non-retryable close.
+
 ## Export identities
 
 | Export | Bytes | SHA-256 |
