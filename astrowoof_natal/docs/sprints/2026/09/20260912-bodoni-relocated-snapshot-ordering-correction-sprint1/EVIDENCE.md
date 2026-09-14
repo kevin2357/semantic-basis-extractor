@@ -79,3 +79,19 @@ same-prefix `.zip` sorts differently from its sibling directory subtree.
 - Exact-lock installed retained-Bodoni reader: expected assessment, valid
   authority/wrapper pair, and all 387 files unchanged.
 - Provider operations, R2 reads, and live QA mutations: zero.
+
+## Publication receipt
+
+- Annotated tag: `astrowoof-natal-authoring-v0.4.61`.
+- Tag object: `faa2c26509dce0c37f8dc70ac1042c9dd935616e`.
+- Remote peeled target:
+  `477cfa2491f33377f1a873772c5e465c588f0741`.
+- GitHub Release ID: `RE_kwDOToQdE84XJ2_N`.
+- Published at: `2026-09-14T14:24:23Z`.
+- Wheel asset ID: `RA_kwDOToQdE84hlyca`; API asset ID `563554074`.
+- Checksum asset ID: `RA_kwDOToQdE84hlycb`; API asset ID `563554075`.
+- Freshly downloaded wheel: 1,383,877 bytes, SHA-256
+  `8dd151fced3fc7823ef914c7642798a977eca93d19b1136bf34da55b589ef723`.
+- Freshly downloaded `SHA256SUMS.txt`: 116 bytes, SHA-256
+  `9bfbd41ab6782160fbeddf261c008e32c733db9405703bf8ce9c207f79e5cf04`;
+  its declared wheel digest matches the qualified and downloaded wheel.

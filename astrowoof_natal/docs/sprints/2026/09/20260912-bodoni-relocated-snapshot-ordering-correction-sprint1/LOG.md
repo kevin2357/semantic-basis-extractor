@@ -94,3 +94,19 @@
 - Slice 2 is complete. Paused at API consumer review and immutable
   tag/publication authorization. Tag only `477cfa2`, never this later evidence
   commit.
+
+## 2026-09-14 — Published and verified
+
+- Recorded API technical approval and explicit owner authorization.
+- Fast-forwarded and pushed `main` through the reviewed sprint evidence.
+- Created annotated component tag
+  `astrowoof-natal-authoring-v0.4.61`; remote tag object `faa2c265...` peels to
+  exact release target `477cfa249...`.
+- Published GitHub Release `RE_kwDOToQdE84XJ2_N` with only the exact qualified
+  canonical wheel and `SHA256SUMS.txt`.
+- Read back asset IDs, sizes, and GitHub-reported SHA-256 digests.
+- Downloaded both assets into a fresh directory. The wheel remains 1,383,877
+  bytes with SHA-256 `8dd151fc...ef723`; the downloaded checksum manifest
+  declares the same digest.
+- Reverified the remote peeled tag target after publication. No tag movement,
+  provider operation, R2 read, QA deployment, or live mutation occurred.
