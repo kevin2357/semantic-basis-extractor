@@ -25,10 +25,10 @@ job under a distinct attempt and lease. Ordinary
 `ExecutionQueueService.fail(..., retryable=False)` sets the job to `failed`,
 fails the run/reading, and schedules no claim.
 
-The second claim therefore requires a later state mutation or explicit recovery
-outside that ordinary close. It was not overlapping: attempt 12 began after
-attempt 11's lease release. The SBE-worker-only export does not identify the
-reactivation writer.
+The subsequent bounded database audit corrected this provisional conclusion.
+Attempt 11 remained active despite terminal-looking events, expired, and was
+requeued by ordinary expired-lease collection. See Slice 3 for the exact source
+omission. There was no external operator reactivation.
 
 ## Observer classification
 
@@ -52,9 +52,8 @@ Slice 3 should jointly decide:
   publication retry;
 - whether API should durably retain a validated Erasmus review command at first
   ingress so observation is idempotent and recoverable after reactivation;
-- which API control-plane operation reactivated Erasmus, using API/operator
-  audit evidence if further read authority is granted.
+- ensure terminal events are emitted only after the matching queue transition
+  commits.
 
 No SBE schema change is supported. No live access, mutation, provider call, R2
 read, or deployment occurred.
-

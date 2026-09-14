@@ -23,3 +23,9 @@
   worker image. The deployed source contains the observer path. Erasmus's later
   claim was a new post-close attempt requiring a reactivation not visible in
   this export. Stopped at the Slice 3 joint contract/ownership review gate.
+- 2026-09-14: API approved Slices 0–2 and authorized one bounded read-only
+  control-plane audit. QA persistence showed attempt 11 was actually
+  `lease_expired`; its command-bearing review branch emitted terminal events
+  without calling `queue.fail()`. Expired-lease collection lawfully created
+  attempt 12. Recorded the API-owned Didot and Erasmus corrections and stopped
+  at the Slice 3 implementation review gate. R2 was not accessed.

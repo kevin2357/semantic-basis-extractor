@@ -106,6 +106,9 @@ claim-lineage defect, or telemetry-only loss. No live mutation is required.
 
 ## Slice 3 — Narrow contract and ownership decision
 
+**Status: complete; awaiting joint review.** See
+`SLICE 3 - BOUNDED CONTROL PLANE AUDIT AND OWNERSHIP DECISION.md`.
+
 - Didot: define an exact API-owned carry-forward for the already-ingested
   delivery result across publication retry. It must remain bound to the same
   native run/job and must not use latest-result discovery.
@@ -113,6 +116,10 @@ claim-lineage defect, or telemetry-only loss. No live mutation is required.
   Decide whether observation must occur exactly during the first command-bearing
   close or whether API may persist that validated command as durable observation
   authority for a later preflight. Do not derive it from generic terminal state.
+- Bounded persistence evidence resolves that choice for the observed failure:
+  the command-bearing branch omitted its terminal queue write, so lease expiry
+  created the later claim. Correct the first close; do not preserve command
+  authority merely to accommodate the erroneous successor.
 - Preserve post-authoritative, best-effort semantics: observer success or
   failure cannot change publication, terminal closeout, custody, queue state,
   capacity, spend, or cleanup.

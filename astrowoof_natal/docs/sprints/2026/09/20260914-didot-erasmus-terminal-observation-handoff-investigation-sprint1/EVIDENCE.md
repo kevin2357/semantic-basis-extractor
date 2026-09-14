@@ -45,7 +45,13 @@ review result alone does not satisfy that command-bound selection condition.
   `sha256:c4979464eeb15f45a3f814fd011ef525088af186ab0121e11c82d72b26c2bca1`.
 - Both observer implementation commits are ancestors of that API revision.
 - Erasmus attempts 11 and 12 are distinct claims with distinct attempt and
-  lease identities; attempt 12 began after attempt 11's non-retryable close.
+  lease identities; attempt 12 began after attempt 11's terminal-looking event
+  sequence.
+- Bounded QA persistence audit corrected the event-only interpretation:
+  attempt 11 was durably `lease_expired`, not failed. Its command-bearing
+  branch omitted `queue.fail()`, expired-lease collection scheduled attempt 12,
+  and attempt 12 committed the final failure. No operator reactivation or R2
+  inspection was involved.
 
 ## Export identities
 
