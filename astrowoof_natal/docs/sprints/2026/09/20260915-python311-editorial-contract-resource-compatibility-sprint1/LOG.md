@@ -41,3 +41,24 @@
 - Made no production source, test, manifest, version, package, or remote
   runtime change.
 - Paused at Gate A for review of the reproduction and correction scope.
+
+## 2026-09-15 — Gate A approval and Slice 1 implementation
+
+- API approved the exact live helper correction and required the eleven latent
+  call sites to remain a separate tested compatibility sweep.
+- Replaced only `editorial_review_contracts._resource_bytes()` with chained
+  single-component traversal.
+- Added focused byte-identity and missing-resource coverage to the already
+  manifested `test_editorial_review_contract_foundation.py` module.
+- Corrected that focused test's own Python 3.11-incompatible resource lookup.
+- Left all eleven separately inventoried production/qualification call sites
+  unchanged.
+- Focused foundation tests passed on Python 3.11.15 and 3.12.14: 13 run with 1
+  optional skip on each runtime.
+- Broader editorial-contract tests passed on Python 3.12.14: 29 run with 1
+  optional skip.
+- The same broader suite on Python 3.11.15 produced eight errors, all at the
+  separately inventoried `editorial_review_fixtures.py:628` variadic resource
+  lookup.
+- Stopped without broadening source scope. Candidate-wheel qualification is
+  blocked pending review and the separately requested compatibility sweep.

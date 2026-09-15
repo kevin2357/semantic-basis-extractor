@@ -69,7 +69,20 @@ explicit multi-argument calls plus one starred-component call.
 Acceptance: Python 3.11 and 3.12 read identical resource bytes, while genuine
 resource failures retain their prior behavior.
 
+Status: narrow implementation and focused qualification complete. Only the
+live helper and its focused existing test module changed. No new test module
+was created; `test_editorial_review_contract_foundation.py` was already present
+in `test_suite_manifest.json`. The focused module passes on Python 3.11 and
+3.12. The broader editorial-contract suite exposes eight Python 3.11 errors at
+the separately inventoried `editorial_review_fixtures.py:628` call, so package
+qualification is paused rather than silently widening this slice.
+
 ## Slice 2 — Public capture and package qualification
+
+Prerequisite: complete and review the separately scoped Python 3.11 resource
+compatibility sweep sufficiently to make the required provider-free package
+qualification executable. Slice 2 must not absorb those changes without their
+own evidence and review.
 
 1. Exercise the public delivery and terminal-review capture routes through
    typed-status construction on Python 3.11.

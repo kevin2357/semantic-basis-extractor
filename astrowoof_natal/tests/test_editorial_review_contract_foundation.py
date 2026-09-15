@@ -8,8 +8,10 @@ import unittest
 
 from astrowoof_natal_authoring.editorial_review_contracts import (
     EditorialReviewValidationResult,
+    SEMANTIC_CONTRACT_RESOURCE,
     SCHEMA_RESOURCES,
     VALIDATOR_STAGES,
+    _resource_bytes,
     canonical_editorial_review_json,
     derive_editorial_review_id,
     editorial_review_resource_sha256,
@@ -37,13 +39,31 @@ class TestEditorialReviewContractFoundation(unittest.TestCase):
         declared = {item["resource"]: item["sha256"] for item in contract["schemas"]}
         self.assertEqual(set(declared), set(SCHEMA_RESOURCES.values()))
         for kind, name in SCHEMA_RESOURCES.items():
-            raw = files("astrowoof_natal_authoring.resources").joinpath(
-                "contracts", name,
-            ).read_bytes()
+            raw = (
+                files("astrowoof_natal_authoring.resources")
+                .joinpath("contracts")
+                .joinpath(name)
+                .read_bytes()
+            )
             self.assertEqual(editorial_review_resource_sha256(raw), declared[name])
             schema = read_editorial_review_schema(kind)
             self.assertEqual("https://json-schema.org/draft/2020-12/schema", schema["$schema"])
             self.assertFalse(schema["additionalProperties"])
+
+    def test_contract_resource_reader_is_python311_compatible_and_fail_closed(self):
+        expected = (
+            files("astrowoof_natal_authoring.resources")
+            .joinpath("contracts")
+            .joinpath(SEMANTIC_CONTRACT_RESOURCE)
+            .read_bytes()
+        )
+        self.assertEqual(expected, _resource_bytes(SEMANTIC_CONTRACT_RESOURCE))
+        self.assertEqual(
+            "306fcf0e55c56f5fe48b18eaced64dbb3338ab783a5722a801f7759af96e52e5",
+            sha256(expected).hexdigest(),
+        )
+        with self.assertRaises(FileNotFoundError):
+            _resource_bytes("__missing__.json")
 
     def test_schema_resource_identity_is_checkout_line_ending_independent(self):
         raw = b'{\r\n  "type": "object"\r\n}\r\n'

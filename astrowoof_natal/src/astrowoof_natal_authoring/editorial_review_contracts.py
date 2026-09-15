@@ -218,9 +218,12 @@ def derive_artifact_id(packet_id: str, kind: str, object_sha256: str) -> str:
 
 
 def _resource_bytes(name: str) -> bytes:
-    return files("astrowoof_natal_authoring.resources").joinpath(
-        CONTRACT_PREFIX, name,
-    ).read_bytes()
+    return (
+        files("astrowoof_natal_authoring.resources")
+        .joinpath(CONTRACT_PREFIX)
+        .joinpath(name)
+        .read_bytes()
+    )
 
 
 def editorial_review_resource_sha256(raw: bytes) -> str:
