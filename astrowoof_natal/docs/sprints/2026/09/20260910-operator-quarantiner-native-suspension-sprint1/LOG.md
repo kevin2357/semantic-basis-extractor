@@ -110,3 +110,13 @@
   `618caee2c2f338cf868cfb024f764217c7b4ef4c83aff283b2bf78cd6e67d627`.
 - Fresh authenticated downloads reproduced the 1,383,825-byte wheel digest and
   exact checksum line. Release `0.4.60` is complete.
+
+## 2026-09-15 — Scope closeout and handoff
+
+- Marked this sprint closed around its delivered `0.4.60` relocated read-only
+  assessment scope.
+- Removed prospective cooperative-suspension and hard-stop work from the active
+  plan. No such runtime behavior was implemented or released by this sprint.
+- Moved that work into
+  `20260915-native-cooperative-suspension-hard-stop-handoff-sprint1`, informed
+  by API Sprint 92's newer Gate A and durable force-fence decisions.

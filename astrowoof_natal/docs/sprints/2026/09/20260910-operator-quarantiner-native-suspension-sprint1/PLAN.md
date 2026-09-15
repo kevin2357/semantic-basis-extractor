@@ -2,7 +2,14 @@
 
 ## Status and authority
 
-The plan is revised after the live Baskerville assessed-quarantine refusal and provider-free SBE/API reconstruction. Only Slice 0 is authorized.
+**Closed.** Slices 0–3 delivered the relocated read-only assessment capability
+in immutable SBE `0.4.60`. The live Baskerville assessed-quarantine failure was
+reproduced provider-free and corrected without weakening executable workspace
+identity.
+
+Prospective cooperative-suspension and hard-stop work has moved to
+`20260915-native-cooperative-suspension-hard-stop-handoff-sprint1`. It is not
+part of this sprint or the `0.4.60` release.
 
 This plan authorizes no live workspace read, provider operation, quarantine execution, capacity release, process termination, native mutation, or suspension-contract implementation.
 
@@ -144,7 +151,7 @@ Pause for SBE/API/owner review with:
 6. API/SBE ownership split; and
 7. proposed provider-free cross-package gate.
 
-## Later slices, not yet authorized
+## Delivered slices
 
 **Implementation update:** Slices 1 through 3 are implemented and approved by
 API. The relocation authority/wrapper contracts, dedicated read-only relocated
@@ -154,16 +161,14 @@ qualification, immutable publication, and fresh-download verification. The
 read-only relocation release work is complete. Any cooperative native
 suspension remains a separate future contract slice.
 
-After Slice 0 review, likely work separates into:
+Delivered work comprised the additive relocation authority and wrapper,
+dedicated read-only reader, executable/mutation capability fence, provider-free
+fixtures, installed-wheel qualification, and cross-package API handoff.
 
-- additive relocated assessment implementation and fixtures;
-- API installed-wheel integration and host logging initialization;
-- assessed quarantine qualification;
-- cooperative native suspension at safe lifecycle boundaries; and
-- API-owned force containment/hard-stop behavior that never claims clean native custody without evidence.
-
-Read-only relocation solves assessment availability only. It does not itself quarantine, suspend, terminate, release capacity, or settle provider custody.
+Read-only relocation solves assessment availability only. It does not itself
+quarantine, suspend, terminate, release capacity, or settle provider custody.
+Those concerns are deliberately owned by the new companion sprint.
 
 ## Exit gate
 
-Stop after the design and provider-free test plan. Implementation requires explicit review approval.
+Complete. No work remains in this sprint.
