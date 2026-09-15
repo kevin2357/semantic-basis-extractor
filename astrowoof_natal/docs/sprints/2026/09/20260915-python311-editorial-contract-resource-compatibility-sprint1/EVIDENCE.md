@@ -63,10 +63,32 @@ assembly, or packet validation.
 This join makes Python 3.11 resource traversal the primary reproduction target,
 not merely a speculative secondary check.
 
+## Slice 0 reproduction evidence
+
+Official container identities used:
+
+- `python:3.11.15-slim`, image digest
+  `sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff`;
+- `python:3.12.14-slim`, image digest
+  `sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea`.
+
+The read-only probe confirmed:
+
+- Python 3.11 `joinpath` signature: `(self, child)`;
+- Python 3.12 `joinpath` signature: `(self, *descendants)`;
+- current two-descendant helper: `TypeError` on 3.11, success on 3.12;
+- chained traversal on both: 11,604 bytes, SHA-256
+  `306fcf0e55c56f5fe48b18eaced64dbb3338ab783a5722a801f7759af96e52e5`;
+- direct, chained, and successful current-helper bytes are identical;
+- missing resource: `FileNotFoundError` on both; and
+- malformed JSON: `ValueError` on both.
+
+An AST inventory found ten explicit multi-argument calls and one additional
+starred-component call across seven source modules. See the Slice 0 report for
+classification.
+
 ## Evidence limits
 
-The diagnostics intentionally omit exception prose and unsafe path/content
-material. They prove the phase and approved SBE frame, but the exact Python
-error text remains unobserved. A provider-free Python 3.11 reproduction is
-required before freezing the correction.
-
+The live diagnostics intentionally omit exception prose and unsafe path/content
+material. Provider-free reproduction now confirms the exception class and
+runtime boundary without needing that prose. No live workspace was read.

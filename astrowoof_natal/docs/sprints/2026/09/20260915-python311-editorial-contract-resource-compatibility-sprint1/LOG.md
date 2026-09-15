@@ -24,3 +24,20 @@
   is indicated by the current evidence.
 - Production source, version, package, release, deployment, and live witness
   remain unauthorized pending review of the reproduction.
+
+## 2026-09-15 — Slice 0 complete
+
+- Pulled official Python 3.11.15 and 3.12.14 slim container images.
+- Mounted the repository read-only and ran the retained provider-free probe.
+- Reproduced `TypeError` from the current two-descendant call on Python 3.11;
+  the same call succeeds on Python 3.12.
+- Proved chained traversal returns byte-identical semantic-contract content on
+  both runtimes: 11,604 bytes and SHA-256
+  `306fcf0e55c56f5fe48b18eaced64dbb3338ab783a5722a801f7759af96e52e5`.
+- Proved missing and malformed resources remain `FileNotFoundError` and
+  `ValueError`, respectively.
+- Inventoried ten explicit multi-argument `joinpath` calls and one dynamic
+  starred-component call across seven source modules.
+- Made no production source, test, manifest, version, package, or remote
+  runtime change.
+- Paused at Gate A for review of the reproduction and correction scope.

@@ -39,16 +39,20 @@ Acceptance: the live failure is reproduced provider-free on Python 3.11, the
 3.12 contrast is demonstrated, and the narrow compatible expression returns
 identical contract bytes.
 
+Status: complete. The exact live call shape raises `TypeError` on Python
+3.11.15 and succeeds on 3.12.14. Chained traversal returns the same 11,604
+bytes and SHA-256 on both; missing and malformed inputs remain failures. The
+related-call inventory found eleven potentially incompatible sites across
+seven modules.
+
 ## Review Gate A — Reproduction and correction fence
 
 Joint API/SBE review confirms the runtime diagnosis, affected surface, and
 byte-preserving correction before production implementation.
 
-Status: API approved Slice 0's provider-free reproduction only. The approved
-work must use real packaged resources on Python 3.11, contrast Python 3.12,
-prove chained traversal selects byte-identical content, inventory related call
-sites, and preserve failure for missing or malformed resources. Production
-implementation remains gated on review of those results.
+Status: reached again with Slice 0 evidence. Production implementation remains
+gated on review of the reproduction and a scope ruling for the ten additional
+explicit multi-argument calls plus one starred-component call.
 
 ## Slice 1 — Narrow source correction and focused regression
 
