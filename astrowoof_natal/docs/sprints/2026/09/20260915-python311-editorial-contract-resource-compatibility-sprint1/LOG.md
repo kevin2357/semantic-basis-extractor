@@ -109,3 +109,19 @@
   the release playbook.
 - No provider, application-network, R2, Better Stack, or authoritative
   workspace operation occurred.
+
+## 2026-09-15 — Artifact-source wheel and installed gates
+
+- Committed artifact source `3e065e759ab8cb92b88cd9415b4e9d6254c114ad`
+  with epoch `1789481170` before wheel construction.
+- Two detached clean worktrees produced byte-identical 0.4.63 wheels:
+  1,385,639 bytes, 310 members, SHA-256
+  `fe0fba0c0be87ec25257a9b9c8c5f6e0166f9544df99fc8f940b20109ea1e355`.
+- Package inventory contained required contracts/fixtures and zero forbidden
+  tests, caches, bytecode, or private members.
+- Exact build-A wheel passed clean installed gates on Python 3.11.15 and
+  3.12.14: version/site-packages origin, `pip check`, release smoke, lifecycle
+  smoke, editorial QA, and 15 public capture/diagnostics tests.
+- Retained the exact qualification recipe as
+  `qualify_installed_candidate.sh`.
+- Prepared the release-lock candidate record; no tag or publication occurred.

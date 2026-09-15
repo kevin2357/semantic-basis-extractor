@@ -116,6 +116,11 @@ Status: source-regression sub-boundary complete. The frozen 0.4.63 tree passed
 1,200-test full suite on Python 3.12.14. Artifact-source commit, reproducible
 wheel construction, and installed qualification remain.
 
+Artifact-source status: complete at
+`3e065e759ab8cb92b88cd9415b4e9d6254c114ad`. Two builds are byte-identical and
+clean installed qualification passes on Python 3.11.15 and 3.12.14. The
+release-lock record is ready to commit and exact-lock qualification remains.
+
 ## Review Gate B — Release decision
 
 Review source, Python 3.11/3.12, installed-wheel, package-byte, and API-host
