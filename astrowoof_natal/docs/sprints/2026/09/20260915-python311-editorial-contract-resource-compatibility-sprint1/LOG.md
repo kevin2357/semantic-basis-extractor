@@ -62,3 +62,16 @@
   lookup.
 - Stopped without broadening source scope. Candidate-wheel qualification is
   blocked pending review and the separately requested compatibility sweep.
+
+## 2026-09-15 — Slice 1 approval and release block
+
+- API approved Slice 1 as implemented and confirmed its byte/failure
+  preservation on Python 3.11 and 3.12.
+- API prohibited candidate-wheel or Gate B advancement while the broader
+  Python 3.11 editorial-contract suite retains eight errors.
+- Control Room child `astrowoof-api#23` was designated as the companion
+  packaged-resource compatibility sweep.
+- Opened sibling SBE sprint
+  `20260915-python311-packaged-resource-traversal-compatibility-sweep-sprint1`.
+- This live-defect sprint remains paused before Slice 2 until that sweep passes
+  the declared-minimum-runtime qualification gate.

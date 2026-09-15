@@ -84,6 +84,10 @@ compatibility sweep sufficiently to make the required provider-free package
 qualification executable. Slice 2 must not absorb those changes without their
 own evidence and review.
 
+Companion sprint:
+`../20260915-python311-packaged-resource-traversal-compatibility-sweep-sprint1/`.
+Control Room parentage: `kevin2357/astrowoof-api#23`.
+
 1. Exercise the public delivery and terminal-review capture routes through
    typed-status construction on Python 3.11.
 2. Prove exact result/root binding, eligibility, packet assembly, validation,
