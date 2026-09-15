@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Planned; Slice 0 may begin after review.** This sprint is provider-free by
+**Slice 0 complete; paused at Voof-paws A.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -27,6 +27,12 @@ home for prospective native cooperative suspension.
 
 **Exit:** a source-linked matrix names each safe point, evidence available
 there, maximum bounded deferral where knowable, and truthful result class.
+
+**Result:** recorded in
+`SLICE 0 - NATIVE SAFE-POINT AND PROVIDER-BOUNDARY INVENTORY.md`. Exact
+interactive ordinary-v2 dispatch and response reconciliation are the strongest
+first implementation cells; initial-wave fan-out, bounded, legacy direct, and
+Batch require separate contract/qualification decisions.
 
 **Voof-paws A:** API/SBE review of the inventory before contract field names
 freeze.
