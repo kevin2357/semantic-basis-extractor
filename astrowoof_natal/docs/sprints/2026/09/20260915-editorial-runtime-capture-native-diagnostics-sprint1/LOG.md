@@ -42,3 +42,7 @@
   carries already-published version `0.4.61`; no version bump, release-bound
   suite, release lock, tag, publication, deployment, live witness, network,
   provider, R2, or Better Stack action occurred.
+- Received API Gate B approval and selected fresh, unused candidate version
+  `0.4.62`. The release-bound gate includes the full maintained suite,
+  reproducible exact-source builds, installed smoke and dependency checks, and
+  a rerun of API-host coexistence before returning for pre-tag review.

@@ -119,6 +119,10 @@ Status: reached. Fresh release identity, release-bound suites, tag,
 publication, deployment, and live witness remain unstarted and require the
 next review/authorization.
 
+Gate B review approved preparation of fresh candidate `0.4.62`. Release-bound
+qualification may proceed through the final pre-tag review; tag, publication,
+deployment, and live witness remain unauthorized.
+
 ## Alloy ruling
 
 Expected outcome is no model change: the work adds non-authoritative
