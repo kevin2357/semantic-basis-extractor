@@ -2,8 +2,16 @@
 
 ## Status
 
-Only Slice 0 is planned. No live quarantine execution, R2 access, provider
-operation, runtime correction, process termination, or cleanup is authorized.
+Closed as superseded. This sprint reproduced the external
+`disposition_assessment_unavailable` signature, but the reset historical state
+could not establish why Baskerville originally became stuck. The subsequent
+operator-quarantiner native-suspension and disposition-assessment diagnostics
+sprints replaced its Track A work with the relocated read-only assessment
+contract and bounded native diagnostics. No common cause between the original
+stuck run and the later assessment refusal was claimed.
+
+No live quarantine execution, R2 access, provider operation, process
+termination, or cleanup was performed by this sprint.
 
 ## Slice 0 — Quarantine seam and stuck-run investigation
 
@@ -84,6 +92,11 @@ cause unless an exact identity/time join proves a shared defect.
 Report Tracks A and B separately before proposing a common cause.
 
 ## Exit gate
+
+**Disposition: closed by supersession.** The production assessment boundary was
+addressed in the successor sprints. Track B's historical cause remains unknown
+because its authoritative database and R2 evidence had already been reset; it
+is not an active SBE investigation without new evidence.
 
 Publish one of these conclusions and pause for joint review:
 

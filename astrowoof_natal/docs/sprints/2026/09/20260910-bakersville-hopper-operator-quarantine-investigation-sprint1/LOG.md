@@ -14,4 +14,9 @@
   release her capacity. This reproduces the remembered external failure
   signature, but does not yet classify the unavailable-assessment seam or
   explain why Baskerville originally became stuck.
+- 2026-09-15: Closed this sprint as superseded. Successor native-suspension and
+  disposition-assessment diagnostics sprints established the relocated
+  read-only assessment and observability designs. Baskerville's original stuck
+  cause remains unproven because the historical database/workspace evidence was
+  reset; no retrospective common cause is asserted.
 

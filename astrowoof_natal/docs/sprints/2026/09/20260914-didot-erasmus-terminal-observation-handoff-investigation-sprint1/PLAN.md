@@ -1,5 +1,10 @@
 # Plan — Didot / Erasmus Terminal Observation Handoff Investigation
 
+**Final status: closed on SBE; corrections transferred to API.** The bounded
+control-plane audit proved two API-owned defects and no SBE schema, runtime,
+package, or Alloy change. API approved the ownership decision recorded in
+`API REVIEW - SLICE 3 OWNERSHIP DECISION.md`.
+
 ## Working classification
 
 The paired absence of observer logs is one symptom with two different native
@@ -106,7 +111,7 @@ claim-lineage defect, or telemetry-only loss. No live mutation is required.
 
 ## Slice 3 — Narrow contract and ownership decision
 
-**Status: complete; awaiting joint review.** See
+**Status: complete and jointly approved.** See
 `SLICE 3 - BOUNDED CONTROL PLANE AUDIT AND OWNERSHIP DECISION.md`.
 
 - Didot: define an exact API-owned carry-forward for the already-ingested
@@ -134,8 +139,12 @@ fixtures before implementation.
 
 ## Slice 4 — Implementation and qualification proposal
 
-Implementation is not authorized by this opening plan. If Slice 3 is approved,
-the implementation slice should include:
+**Disposition: not required in SBE.** API accepted both corrections. Any API
+implementation and rollout proceeds in its own sprint; this SBE investigation
+does not remain open for that work.
+
+Implementation was not authorized by this opening plan. The approved API work
+should include:
 
 - production-path regressions for all three Slice 1 routes;
 - exact identity, duplicate, missing, conflicting, and wrong-native-run

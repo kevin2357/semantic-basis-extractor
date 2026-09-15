@@ -14,6 +14,8 @@ posture.
 
 ## Slice 0 — Identity-source and failure-boundary freeze
 
+Status: complete and approved.
+
 Trace every status-producing branch through `read_eligible_editorial_result`,
 `collect_editorial_review_runtime_evidence`, and
 `build_editorial_review_runtime_capture`.
@@ -48,6 +50,8 @@ join, subject-unavailable behavior, and v1 preservation decision before code.
 
 ## Slice 1 — Separate fixture and runtime construction
 
+Status: complete and approved.
+
 - Replace runtime dependence on fixture sentinels with a public, provider-free
   constructor requiring explicit native correlations.
 - Keep fixture convenience isolated and visibly fixture-only.
@@ -57,6 +61,8 @@ join, subject-unavailable behavior, and v1 preservation decision before code.
 - Preserve deterministic canonical construction and the closed v1 schema.
 
 ## Slice 2 — Thread exact correlations through runtime refusals
+
+Status: complete and approved.
 
 - Carry the exact validated result/view identity through every eligible,
   unsupported, incomplete, and contradictory branch.
@@ -68,6 +74,9 @@ join, subject-unavailable behavior, and v1 preservation decision before code.
   separately reviewed deterministic fixture digest necessarily changes.
 
 ## Slice 3 — Focused qualification and consumer review
+
+Status: complete. Source, installed-candidate, broad-suite, and API consumer
+qualification passed.
 
 Add provider-free regressions proving:
 
@@ -94,6 +103,9 @@ push, tag, GitHub release, API sender, Better Stack write, deployment, provider
 operation, or retained-run access requires its own explicit authorization.
 
 ## Slice 4 — Optional patch release
+
+Status: complete through immutable `0.4.56` publication and fresh-download
+verification.
 
 If jointly approved, freeze a fresh unreleased patch version (expected
 `0.4.56`), select a proportionate regression gate from the final diff, perform

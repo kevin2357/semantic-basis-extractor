@@ -29,3 +29,6 @@
   without calling `queue.fail()`. Expired-lease collection lawfully created
   attempt 12. Recorded the API-owned Didot and Erasmus corrections and stopped
   at the Slice 3 implementation review gate. R2 was not accessed.
+- 2026-09-15: Reconciled the plan with API's recorded Slice 3 approval. Closed
+  the SBE investigation and transferred both corrections to API. No SBE code,
+  schema, package, release, or Alloy work remains.
