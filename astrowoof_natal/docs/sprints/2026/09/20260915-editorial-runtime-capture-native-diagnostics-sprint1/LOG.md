@@ -65,3 +65,15 @@
 - Prepared the release-lock source record. The exact release-lock commit must
   now be rebuilt twice at the same recorded epoch and requalified before final
   API pre-tag review.
+- Committed release-lock target
+  `e79a67104fb7704c7f9fdc25724c8062ad0042b6` and exported it twice into
+  independent clean source roots.
+- Both exact-lock builds reproduced the expected canonical wheel exactly:
+  1,385,622 bytes, 310 members, SHA-256
+  `eea9d74ec0ab39cc804ceedb4b00ce8af8cb17ce99c89d6b6276372ba00ab1bb`.
+- The exact-lock wheel passed API-host dependency checking, real `force=False`
+  coexistence, installed release smoke, installed lifecycle smoke, and the
+  15-test installed editorial runtime/diagnostics matrix.
+- Reached final pre-tag review. Tag only `e79a671...`; this later evidence
+  commit must never become the release target. No tag, publication, deployment,
+  or live witness occurred.
