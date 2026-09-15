@@ -64,3 +64,15 @@
   replay, and unrelated-run qualification matrix.
 - Paused at joint Gate B. No schemas, readers, runtime hooks, signaling, process
   control, provider work, or capacity release were implemented.
+
+## 2026-09-15 — Alloy spike added
+
+- Added a post-Gate-B, pre-implementation Alloy spike for the joined API/SBE
+  protocol.
+- SBE will own one canonical model; API will review and bind evidence to its
+  exact commit and digest rather than maintaining a drifting duplicate.
+- Scoped the model to identities, ordering, append-only evidence, authority,
+  custody, precedence, replay, and cross-run isolation.
+- Explicitly excluded filesystem, subprocess, provider-timing, hashing, schema,
+  packaging, and deployment claims from the model's proof boundary.
+- Added a separate Voof-paws B2 before contract implementation.

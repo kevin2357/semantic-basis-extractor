@@ -106,9 +106,65 @@ provider-free race matrix.
 **Voof-paws B / joint Gate B:** mandatory API/SBE/owner review. No runtime
 implementation before approval.
 
+## Slice 1A — Shared Alloy protocol spike
+
+**Position:** begin only after the prose Gate B contract is jointly approved;
+complete before Slice 2 implementation.
+
+SBE owns one canonical bounded Alloy model for the joined API/SBE protocol.
+Do not create independent per-repository models. API reviews the shared model
+against its force-fence and supervision transitions and records the exact model
+commit and SHA-256 in its sprint evidence.
+
+Model the minimum relational system needed to exercise:
+
+- runs, jobs, attempts, leases, worker boots, supervision invocations, control
+  roots, force fences, requests, native results, process observations, and
+  append-only resolution successors;
+- ordinary authority revocation versus exact process exit;
+- provider, spend, workspace/native, worker-execution, and run-allocation
+  custody as distinct facts;
+- request freshness, launch generation, exact identity joins, duplicate replay,
+  stale channels, and unrelated-run isolation;
+- provider-call entry, durable provider identity, native publication, ordinary
+  terminal/delivery publication, and suspension observation ordering; and
+- supported ordinary-v2 dispatch/reconciliation versus unsupported routes.
+
+Assert at minimum:
+
+1. a force fence cannot be undone into ordinary authority;
+2. stale or mismatched requests cannot affect a successor invocation;
+3. fence, request, result, process observation, and resolution history is
+   append-only and contiguous;
+4. process exit alone cannot release run allocation or provider/spend/workspace/
+   native custody;
+5. no partial evidence combination grants complete settlement authority;
+6. an ordinary terminal/delivery result committed before suspension observation
+   remains dominant;
+7. exact replay is inert while conflicting replay refuses; and
+8. no event for one run changes another run's authority or custody.
+
+Run bounded checks across deliberately small but nontrivial scopes and retain
+every counterexample or unsat assertion receipt. Translate any counterexample
+into a prose-contract correction and a provider-free implementation fixture.
+Record the scope limits explicitly: Alloy does not prove filesystem atomicity,
+path/reparse behavior, Python subprocess supervision, provider timing, hashes,
+JSON validation, packaging, or deployed topology.
+
+**Exit:** one reviewed `.als` source, analyzer command/version, scenario and
+assertion inventory, bounded result receipt, model SHA-256, API reciprocal
+review, and a mapping from each assertion/counterexample to Gate B clauses and
+future provider-free tests.
+
+**Voof-paws B2:** joint API/SBE review of the exact Alloy model and results.
+No schema/reader or runtime implementation begins before this checkpoint.
+
 ## Slice 2 — Provider-free contract fixtures and readers
 
 - Implement schemas, canonical builders/readers, and privacy-bounded fixtures.
+- Derive fixtures from the approved Alloy assertions and any counterexamples;
+  retain a traceability map without claiming the bounded model proves runtime
+  behavior.
 - Cover exact, stale invocation, wrong run/checkpoint/worker boot, expired,
   duplicate, conflicting, and digest-corrupt requests.
 - Cover every outcome and ordinary-result-precedence race.
