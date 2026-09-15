@@ -123,6 +123,10 @@ Gate B review approved preparation of fresh candidate `0.4.62`. Release-bound
 qualification may proceed through the final pre-tag review; tag, publication,
 deployment, and live witness remain unauthorized.
 
+Final API and owner review subsequently authorized the exact locked candidate.
+Release `0.4.62` is published and download-verified; deployment and live witness
+remain outside this sprint and were not performed.
+
 ## Alloy ruling
 
 Expected outcome is no model change: the work adds non-authoritative

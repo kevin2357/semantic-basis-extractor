@@ -77,3 +77,16 @@
 - Reached final pre-tag review. Tag only `e79a671...`; this later evidence
   commit must never become the release target. No tag, publication, deployment,
   or live witness occurred.
+- Received final API technical approval and explicit owner authorization for
+  commit/push/tag/publication of the exact locked `0.4.62` candidate.
+- Committed and pushed the API approval separately, then created annotated tag
+  `astrowoof-natal-authoring-v0.4.62` at exact target `e79a671...`. Remote tag
+  object `0b588646...` peels to the required release target.
+- Published GitHub release `RE_kwDOToQdE84XMNZH` with only the canonical wheel
+  and `SHA256SUMS.txt`. GitHub reports wheel asset `565534452`, 1,385,622 bytes,
+  and the exact qualified SHA-256.
+- Freshly downloaded both assets into an independent directory. Wheel size,
+  wheel SHA-256, checksum-asset SHA-256, and checksum line all matched the
+  published/qualified coordinates.
+- Release `0.4.62` is complete. No deployment, API pin change, Better Stack/R2
+  access, provider work, spend, or live witness occurred.
