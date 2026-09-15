@@ -36,3 +36,21 @@ API issue `kevin2357/astrowoof-api#23` requires:
 No additional live logs, Better Stack data, R2 objects, or retained workspaces
 are required for the initial provider-free sweep.
 
+## Slice 0 concrete-runtime correction
+
+The post-hot-fix AST inventory contains nine explicit multi-argument calls and
+one starred-component call. Real accessor execution on both official runtimes
+showed:
+
+- four namespace-package calls fail only on Python 3.11: editorial fixture
+  reader, external-authority fixture reader, and two provider-economics
+  readers;
+- the generic accessor succeeds on Python 3.11 and 3.12 because it starts from
+  the regular top-level package;
+- all five adversarial explicit/starred calls likewise succeed on both
+  runtimes; and
+- independently selected resource bytes/digests are recorded in the Slice 0
+  matrix.
+
+This corrects the inherited “eleven remaining” count and prevents unnecessary
+changes based solely on syntax rather than concrete traversable behavior.

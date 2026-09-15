@@ -26,17 +26,20 @@ Predecessor:
 
 ## Scope
 
-The initial static inventory contains ten explicit multi-argument calls and
-one starred-component call across seven modules:
+The predecessor's initial static inventory contained ten explicit
+multi-argument calls—including its now-corrected live helper—and one
+starred-component call across seven modules. Ten call shapes remain after that
+correction: nine explicit and one starred. Slice 0 further classified only four
+remaining calls as incompatible with their concrete Python 3.11 traversable:
 
 - `editorial_review_fixtures.py:628`;
-- `resource_access.py:16`;
-- `adversarial_consumer.py:64,65,70`;
-- `adversarial_trace.py:577,781`;
 - `external_authority_v2.py:276`;
-- `provider_economics.py:570,578`; and
-- the predecessor's already corrected
-  `editorial_review_contracts.py:221` control.
+- `provider_economics.py:570,578`.
+
+The six remaining calls in `resource_access.py`, `adversarial_consumer.py`, and
+`adversarial_trace.py` use the regular top-level package's compatible `pathlib`
+traversable and succeed on Python 3.11. They remain in the matrix as no-change
+controls.
 
 The sweep must classify real callers before editing, exercise real packaged
 resources rather than permissive mocks, and preserve exact bytes and failure
@@ -53,4 +56,3 @@ behavior on Python 3.11 and 3.12.
   declared runtime.
 - No version bump, candidate wheel, tag, publication, deployment, or live
   witness before explicit later gates.
-

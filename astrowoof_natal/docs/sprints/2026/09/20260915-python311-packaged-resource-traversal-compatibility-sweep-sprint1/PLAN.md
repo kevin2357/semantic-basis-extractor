@@ -41,13 +41,19 @@ Acceptance: every inventoried call has a disposition, real witness, expected
 resource identity, and proposed test boundary; no production source has
 changed.
 
+Status: complete. Ten call shapes remain after the predecessor fix. Concrete
+Python 3.11/3.12 execution classifies four namespace-package calls for repair
+and six regular-package calls as already compatible no-change controls. The
+full caller, resource digest, path-semantics, and test matrix is recorded in
+`SLICE 0 - CONCRETE TRAVERSABLE CALLER MATRIX.md`.
+
 ## Review Gate A — Inventory and sweep scope
 
 Joint API/SBE review approves the complete inventory, supported-path ruling,
 test matrix, and treatment of the generic accessor before implementation.
 
-Status: reached for initial-plan review. No inventory execution or source
-change has started.
+Status: reached with the completed concrete-runtime matrix. No production or
+test source has changed.
 
 ## Slice 1 — Blocking editorial fixture reader
 
@@ -64,18 +70,16 @@ bytes or validation semantics.
 
 ## Slice 2 — Generic accessor and remaining justified callers
 
-1. Correct `resource_access.py` only after exercising representative callers
-   for contracts, schemas, fixtures, references, and nested paths.
-2. Correct remaining supported fixture, adversarial, authority, and economics
-   readers according to the approved inventory.
-3. Add caller-specific real-resource and missing/malformed preservation tests.
-4. Prove no supported Python 3.11 source path retains variadic or dynamically
-   multi-component `joinpath` use.
-5. Explicitly document rather than silently alter any unsupported historical
-   path.
-6. Run source-tree focused suites, manifest enforcement, provider-free broad
+1. Correct the external-authority v2 fixture reader and both provider-economics
+   readers according to the approved namespace-package inventory.
+2. Add caller-specific real-resource and missing/malformed preservation tests.
+3. Retain `resource_access.py` and the adversarial readers unchanged as
+   concrete Python 3.11-compatible controls.
+4. Prove no supported Python 3.11 namespace-package path retains variadic or
+   dynamically multi-component `joinpath` use.
+5. Run source-tree focused suites, manifest enforcement, provider-free broad
    qualification, and the final static inventory on Python 3.11 and 3.12.
-7. Hand back the exact reviewed compatibility commit and qualification evidence
+6. Hand back the exact reviewed compatibility commit and qualification evidence
    to the predecessor live-defect sprint.
 
 Acceptance: every changed accessor has two-runtime byte/failure evidence and
