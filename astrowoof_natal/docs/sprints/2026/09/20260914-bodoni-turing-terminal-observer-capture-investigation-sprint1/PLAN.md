@@ -1,5 +1,7 @@
 # Plan — Bodoni/Turing terminal-observer capture investigation
 
+**Status: closed on SBE; remaining observability correction transferred to API.**
+
 ## Objective
 
 Explain why exact terminal-review authority reached the API observer but local
@@ -116,3 +118,10 @@ Ownership ruling: API-only observability correction. No SBE runtime change,
 package qualification, release, or Alloy revision is justified by the retained
 witnesses. API's production-sink tests should cover `ValueError`, `KeyError`,
 and typed `unsupported`, including digest-only mirrored root evidence.
+
+## Closeout
+
+SBE Slices 0–2 are complete. API accepted ownership of the remaining live-only
+diagnostic gap. This sprint authorizes no SBE implementation, version bump,
+package qualification, release, additional retained-workspace access, provider
+operation, Better Stack write, or live-run action.
