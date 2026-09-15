@@ -93,9 +93,23 @@ workspaces make the public function return a typed status, and source parity is
 clean.
 
 API should first correct its proven failure-event token/schema mismatch and add
-a production-emitter regression. A subsequent witness should safely retain the
-exception class and capture phase. If API can also record a content-free digest
-of the actual call-time root, it can distinguish root substitution without
-logging the path. Only then should another SBE change be considered.
+a production-emitter regression. The same unnormalized CamelCase exception
+class is attached to both the `capture failed` phase and the later
+`editorial.observation.completed` payload, so one reason-token violation
+explains both missing structured events.
+
+The API correction should also emit one independent mirrored warning when
+capture returns unavailable. It should include only route, normalized exception
+token, failure phase, exact public result ID, and a SHA-256 of the call-time
+workspace-root string. It must exclude the root itself and all exception prose
+or native contents.
+
+Provider-free production-sink coverage should inject `ValueError`, `KeyError`,
+and a normal typed `unsupported` result. It should prove that the two exception
+routes emit accepted failed/completed events without entering packet/POST work,
+that typed unsupported retains its ordinary status path, and that the mirrored
+root reference is digest-only. A subsequent witness can then distinguish root
+substitution from another early-reader failure. Only then should another SBE
+change be considered.
 
 No SBE release is justified by Slice 2 as presently classified.

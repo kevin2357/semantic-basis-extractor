@@ -111,3 +111,8 @@ run provider-free focused and broad qualification, and assess whether the change
 alters the Alloy lifecycle model. A capture/error-normalization or observability
 change alone is expected to require a documented no-model-change ruling rather
 than a model revision.
+
+Ownership ruling: API-only observability correction. No SBE runtime change,
+package qualification, release, or Alloy revision is justified by the retained
+witnesses. API's production-sink tests should cover `ValueError`, `KeyError`,
+and typed `unsupported`, including digest-only mirrored root evidence.
