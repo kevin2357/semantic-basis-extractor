@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from hashlib import sha256
 import json
-from typing import Any, Callable, Mapping
+import logging
+import re
+import traceback
+from collections.abc import Callable, Mapping
+from hashlib import sha256
+from pathlib import Path
+from typing import Any
 
-from .editorial_review_fixtures import (
-    build_editorial_review_runtime_capture_status,
-    validate_editorial_review_capture_status_against_native,
-    validate_editorial_review_packet,
-)
-from .native_transitions import NativeTransitionResultView, read_native_transition_result
 from .editorial_review_contracts import (
     canonical_editorial_review_json,
     derive_artifact_id,
@@ -25,11 +23,133 @@ from .editorial_review_contracts import (
     digest_without,
     editorial_review_sha256,
 )
-
+from .editorial_review_fixtures import (
+    build_editorial_review_runtime_capture_status,
+    validate_editorial_review_capture_status_against_native,
+    validate_editorial_review_packet,
+)
+from .native_transitions import (
+    NativeTransitionResultView,
+    read_native_transition_result,
+)
 
 DELIVERY_RESULT_VERSION = "astrowoof.native_execution_result.v0.1"
 REVIEW_RESULT_VERSION = "astrowoof.native_execution_result.v0.2"
 RECEIPT_VERSION = "astrowoof.native_publication_receipt.v0.1"
+
+logger = logging.getLogger(__name__)
+
+_CAPTURE_PHASES = {
+    "root_normalization", "exact_result_reader", "eligibility_classification",
+    "exact_source_proof", "pre_assembly_evidence_collection",
+    "guarded_packet_assembly", "packet_validation",
+    "typed_status_construction", "final_return",
+}
+_CAPTURE_BRANCHES = {"unknown", "delivery", "editorial_review", "unsupported"}
+_CAPTURE_FRAME_FILES = {
+    "editorial_review_contracts.py", "editorial_review_fixtures.py",
+    "editorial_review_runtime.py", "native_transitions.py",
+}
+_SAFE_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,127}$")
+
+
+def _root_reference_sha256(value: Any) -> str:
+    try:
+        return sha256(str(value).encode("utf-8")).hexdigest()
+    except Exception:  # noqa: BLE001 - diagnostics must not affect native work
+        return "unknown"
+
+
+def _capture_log(
+    event_name: str,
+    payload: dict[str, Any],
+    *,
+    native_run_id: Any = None,
+    subject_id: Any = None,
+    level: int = logging.INFO,
+) -> None:
+    """Emit one fail-silent, content-free capture diagnostic."""
+    try:
+        logger.log(
+            level,
+            "%s phase=%s branch=%s",
+            event_name,
+            payload.get("phase", "unknown"),
+            payload.get("branch", "unknown"),
+            extra={
+                "event_name": event_name,
+                "native_run_id": (
+                    native_run_id if isinstance(native_run_id, str) else None
+                ),
+                "subject_id": subject_id if isinstance(subject_id, str) else None,
+                "event_payload": payload,
+            },
+        )
+    except Exception:  # noqa: BLE001 - diagnostics must not affect native work
+        return
+
+
+def _capture_phase(trace: dict[str, Any] | None, phase: str) -> None:
+    if trace is not None and phase in _CAPTURE_PHASES:
+        trace["phase"] = phase
+
+
+def _capture_phase_completed(trace: dict[str, Any] | None, phase: str) -> None:
+    if trace is None or phase not in _CAPTURE_PHASES:
+        return
+    trace["phase"] = phase
+    _capture_log(
+        "editorial_runtime_capture_phase_completed",
+        {
+            "phase": phase,
+            "branch": trace.get("branch", "unknown"),
+            "result_id": trace["result_id"],
+            "root_reference_sha256": trace["root_reference_sha256"],
+        },
+        native_run_id=trace.get("native_run_id"),
+        subject_id=trace.get("subject_id"),
+    )
+
+
+def _capture_failure(trace: dict[str, Any], error: BaseException) -> None:
+    source_module = "unknown"
+    source_function = "unknown"
+    source_line = 1
+    try:
+        for frame in reversed(traceback.extract_tb(error.__traceback__)):
+            candidate = Path(frame.filename).name
+            if candidate in _CAPTURE_FRAME_FILES:
+                source_module = candidate
+                source_function = frame.name if _SAFE_NAME.fullmatch(frame.name) else "unknown"
+                source_line = frame.lineno if frame.lineno > 0 else 1
+                break
+        error_class = type(error).__name__
+        if not _SAFE_NAME.fullmatch(error_class):
+            error_class = "Exception"
+        phase = trace.get("phase", "root_normalization")
+        branch = trace.get("branch", "unknown")
+        fingerprint = sha256(
+            f"{source_module}:{source_function}:{source_line}:{error_class}:{phase}".encode()
+        ).hexdigest()[:16]
+        _capture_log(
+            "editorial_runtime_capture_failed",
+            {
+                "phase": phase,
+                "branch": branch if branch in _CAPTURE_BRANCHES else "unknown",
+                "result_id": trace["result_id"],
+                "root_reference_sha256": trace["root_reference_sha256"],
+                "error_class": error_class,
+                "source_module": source_module,
+                "source_function": source_function,
+                "source_line": source_line,
+                "error_fingerprint": fingerprint,
+            },
+            native_run_id=trace.get("native_run_id"),
+            subject_id=trace.get("subject_id"),
+            level=logging.ERROR,
+        )
+    except Exception:  # noqa: BLE001 - diagnostics must not affect native work
+        return
 
 
 def _exact_capture_source(
@@ -96,8 +216,23 @@ def read_eligible_editorial_result(
     not discover results and returns no partial packet when the validated result
     falls outside the closed capture surface.
     """
+    return _read_eligible_editorial_result(
+        run_dir, result_id, exact_reader=exact_reader, diagnostic_trace=None,
+    )
+
+
+def _read_eligible_editorial_result(
+    run_dir: Path | str,
+    result_id: str,
+    *,
+    exact_reader: Callable[[Path, str], NativeTransitionResultView],
+    diagnostic_trace: dict[str, Any] | None,
+) -> tuple[str, NativeTransitionResultView | dict[str, Any]]:
     root = Path(run_dir).resolve()
+    _capture_phase(diagnostic_trace, "exact_result_reader")
     view = exact_reader(root, result_id)
+    _capture_phase_completed(diagnostic_trace, "exact_result_reader")
+    _capture_phase(diagnostic_trace, "eligibility_classification")
     result: Mapping[str, Any] = view["result"]
     receipt: Mapping[str, Any] = view["receipt"]
     if receipt.get("schema_version") != RECEIPT_VERSION:
@@ -106,6 +241,9 @@ def read_eligible_editorial_result(
     outcome = result.get("outcome")
     route = result.get("route_binding") or {}
     if version == DELIVERY_RESULT_VERSION and outcome == "delivery_complete":
+        if diagnostic_trace is not None:
+            diagnostic_trace["branch"] = "delivery"
+        _capture_phase_completed(diagnostic_trace, "eligibility_classification")
         return "delivery", view
     if (
         version == REVIEW_RESULT_VERSION
@@ -114,19 +252,34 @@ def read_eligible_editorial_result(
         and route.get("provider_mechanism") == "response"
         and result.get("custody_finality") == "final"
     ):
+        if diagnostic_trace is not None:
+            diagnostic_trace["branch"] = "editorial_review"
+        _capture_phase_completed(diagnostic_trace, "eligibility_classification")
         return "editorial_review", view
     if version not in {DELIVERY_RESULT_VERSION, REVIEW_RESULT_VERSION}:
         reason = "unsupported_result_version"
     else:
         reason = "ineligible_route"
-    _, subject_id = _exact_capture_source(root, result_id, view)
-    return "unsupported", _runtime_capture_status(
+    if diagnostic_trace is not None:
+        diagnostic_trace["branch"] = "unsupported"
+    _capture_phase_completed(diagnostic_trace, "eligibility_classification")
+    _capture_phase(diagnostic_trace, "exact_source_proof")
+    state, subject_id = _exact_capture_source(root, result_id, view)
+    if diagnostic_trace is not None:
+        diagnostic_trace.update({
+            "native_run_id": state.get("run_id"), "subject_id": subject_id,
+        })
+    _capture_phase_completed(diagnostic_trace, "exact_source_proof")
+    _capture_phase(diagnostic_trace, "typed_status_construction")
+    status = _runtime_capture_status(
         reason,
         selected_result_id=result_id,
         result=result,
         receipt=receipt,
         subject_id=subject_id,
     )
+    _capture_phase_completed(diagnostic_trace, "typed_status_construction")
+    return "unsupported", status
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -173,29 +326,54 @@ def collect_editorial_review_runtime_evidence(
     exact_reader: Callable[[Path, str], NativeTransitionResultView] = read_native_transition_result,
 ) -> tuple[str, dict[str, Any]]:
     """Collect bounded identity evidence after exact-result eligibility succeeds."""
+    return _collect_editorial_review_runtime_evidence(
+        run_dir, result_id, exact_reader=exact_reader, diagnostic_trace=None,
+    )
+
+
+def _collect_editorial_review_runtime_evidence(
+    run_dir: Path | str,
+    result_id: str,
+    *,
+    exact_reader: Callable[[Path, str], NativeTransitionResultView],
+    diagnostic_trace: dict[str, Any] | None,
+) -> tuple[str, dict[str, Any]]:
     root = Path(run_dir).resolve()
-    branch, selected = read_eligible_editorial_result(
+    branch, selected = _read_eligible_editorial_result(
         root, result_id, exact_reader=exact_reader,
+        diagnostic_trace=diagnostic_trace,
     )
     if branch == "unsupported":
         return branch, selected
     view = selected
     result = view["result"]
     receipt = view["receipt"]
+    _capture_phase(diagnostic_trace, "exact_source_proof")
     state, subject_id = _exact_capture_source(root, result_id, view)
+    if diagnostic_trace is not None:
+        diagnostic_trace.update({
+            "branch": branch, "native_run_id": state.get("run_id"),
+            "subject_id": subject_id,
+        })
+    _capture_phase_completed(diagnostic_trace, "exact_source_proof")
+    _capture_phase(diagnostic_trace, "pre_assembly_evidence_collection")
     subject_id, subject = next(iter(state["subjects"].items()))
 
     def status(status_reason: str) -> dict[str, Any]:
-        return _runtime_capture_status(
+        _capture_phase(diagnostic_trace, "typed_status_construction")
+        value = _runtime_capture_status(
             status_reason,
             selected_result_id=result_id,
             result=result,
             receipt=receipt,
             subject_id=subject_id,
         )
+        _capture_phase_completed(diagnostic_trace, "typed_status_construction")
+        return value
 
     if state.get("service_level") != "interactive":
-        return "unsupported", status("ineligible_route")
+        value = status("ineligible_route")
+        return "unsupported", value
     post_checkpoint = result.get("post_checkpoint") or {}
     provenance = state.get("provenance") or {}
     runtime = provenance.get("runtime") or {}
@@ -210,7 +388,8 @@ def collect_editorial_review_runtime_evidence(
         or not isinstance(profile.get("profile_id"), str)
         or not isinstance(resources.get("aggregate_sha256"), str)
     ):
-        return "unsupported", status("contradictory_native_evidence")
+        value = status("contradictory_native_evidence")
+        return "unsupported", value
     logical_root = receipt["logical_workspace_root"]
     action_rows = (state.get("spend_ledger") or {}).get("actions", [])
     actions = {item.get("action_id"): item for item in action_rows}
@@ -273,7 +452,7 @@ def collect_editorial_review_runtime_evidence(
             return "unsupported", status("incomplete_native_evidence")
         if editorial_review_sha256(_load(initial_path)) != initial_assembled_digest:
             return "unsupported", status("contradictory_native_evidence")
-    return branch, {
+    evidence = {
         "result": result, "receipt": receipt, "subject_id": subject_id,
         "state_revision": state.get("state_revision"),
         "native_correlations": {
@@ -298,6 +477,8 @@ def collect_editorial_review_runtime_evidence(
         "polish_attempts": list(subject.get("polish_attempts") or []),
         "qualitative_review": subject.get("qualitative_review"),
     }
+    _capture_phase_completed(diagnostic_trace, "pre_assembly_evidence_collection")
+    return branch, evidence
 
 
 def _artifact(packet_id: str, packet: Mapping[str, Any], kind: str,
@@ -346,12 +527,60 @@ def build_editorial_review_runtime_capture(
     refused as incomplete until their persisted stage evidence is translated;
     they are never approximated by a partial packet.
     """
+    trace = {
+        "phase": "root_normalization",
+        "branch": "unknown",
+        "result_id": result_id if isinstance(result_id, str) else "unknown",
+        "root_reference_sha256": _root_reference_sha256(run_dir),
+    }
+    _capture_log(
+        "editorial_runtime_capture_started",
+        {
+            "phase": "root_normalization", "branch": "unknown",
+            "result_id": trace["result_id"],
+            "root_reference_sha256": trace["root_reference_sha256"],
+        },
+    )
+    try:
+        result = _build_editorial_review_runtime_capture(
+            run_dir, result_id, exact_reader=exact_reader, diagnostic_trace=trace,
+        )
+        branch, body = result
+        trace.update({"phase": "final_return", "branch": branch})
+        _capture_log(
+            "editorial_runtime_capture_completed",
+            {
+                "phase": "final_return", "branch": branch,
+                "result_id": trace["result_id"],
+                "root_reference_sha256": trace["root_reference_sha256"],
+                "outcome": "packet" if branch != "unsupported" else "unsupported",
+                "reason": body.get("reason") if isinstance(body, dict) else None,
+            },
+            native_run_id=trace.get("native_run_id"),
+            subject_id=trace.get("subject_id"),
+        )
+        return result
+    except Exception as error:
+        _capture_failure(trace, error)
+        raise
+
+
+def _build_editorial_review_runtime_capture(
+    run_dir: Path | str,
+    result_id: str,
+    *,
+    exact_reader: Callable[[Path, str], NativeTransitionResultView],
+    diagnostic_trace: dict[str, Any],
+) -> tuple[str, dict[str, Any]]:
     root = Path(run_dir).resolve()
-    branch, evidence = collect_editorial_review_runtime_evidence(
+    _capture_phase_completed(diagnostic_trace, "root_normalization")
+    branch, evidence = _collect_editorial_review_runtime_evidence(
         root, result_id, exact_reader=exact_reader,
+        diagnostic_trace=diagnostic_trace,
     )
     if branch == "unsupported":
         return branch, evidence
+    _capture_phase(diagnostic_trace, "guarded_packet_assembly")
     try:
         result = evidence["result"]
         receipt = evidence["receipt"]
@@ -795,25 +1024,36 @@ def build_editorial_review_runtime_capture(
             *[_projection(packet, "finding", item, item["decision_ordinal"]) for item in findings],
             *[_projection(packet, "validation", item, item["decision_ordinal"]) for item in validations],
         ]
+        _capture_phase_completed(diagnostic_trace, "guarded_packet_assembly")
+        _capture_phase(diagnostic_trace, "packet_validation")
         validation = validate_editorial_review_packet(packet, projections, artifacts)
+        _capture_phase_completed(diagnostic_trace, "packet_validation")
         if validation.outcome != "valid":
-            return "unsupported", _runtime_capture_status(
+            _capture_phase(diagnostic_trace, "typed_status_construction")
+            status = _runtime_capture_status(
                 "contradictory_native_evidence",
                 selected_result_id=result_id, result=result, receipt=receipt,
                 subject_id=evidence["subject_id"],
             )
+            _capture_phase_completed(diagnostic_trace, "typed_status_construction")
+            return "unsupported", status
         return branch, {"packet": packet, "projections": projections, "artifacts": artifacts}
     except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError):
-        return "unsupported", _runtime_capture_status(
+        _capture_phase(diagnostic_trace, "typed_status_construction")
+        status = _runtime_capture_status(
             "incomplete_native_evidence",
             selected_result_id=result_id, result=result, receipt=receipt,
             subject_id=evidence["subject_id"],
         )
+        _capture_phase_completed(diagnostic_trace, "typed_status_construction")
+        return "unsupported", status
 
 
 __all__ = [
-    "DELIVERY_RESULT_VERSION", "RECEIPT_VERSION", "REVIEW_RESULT_VERSION",
-    "read_eligible_editorial_result",
-    "collect_editorial_review_runtime_evidence",
+    "DELIVERY_RESULT_VERSION",
+    "RECEIPT_VERSION",
+    "REVIEW_RESULT_VERSION",
     "build_editorial_review_runtime_capture",
+    "collect_editorial_review_runtime_evidence",
+    "read_eligible_editorial_result",
 ]

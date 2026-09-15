@@ -2,6 +2,22 @@
   "schema_version": "astrowoof.sbe_worker_log_event_catalog.v1",
   "events": {
     "application_message": {"required_fields": [], "optional_fields": []},
+    "editorial_runtime_capture_started": {
+      "required_fields": ["phase", "branch", "result_id", "root_reference_sha256"],
+      "optional_fields": []
+    },
+    "editorial_runtime_capture_phase_completed": {
+      "required_fields": ["phase", "branch", "result_id", "root_reference_sha256"],
+      "optional_fields": []
+    },
+    "editorial_runtime_capture_completed": {
+      "required_fields": ["phase", "branch", "result_id", "root_reference_sha256", "outcome", "reason"],
+      "optional_fields": []
+    },
+    "editorial_runtime_capture_failed": {
+      "required_fields": ["phase", "branch", "result_id", "root_reference_sha256", "error_class", "source_module", "source_function", "source_line", "error_fingerprint"],
+      "optional_fields": []
+    },
     "operator_disposition_assessment_started": {
       "required_fields": ["phase"],
       "optional_fields": []

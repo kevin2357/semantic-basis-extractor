@@ -362,6 +362,7 @@
     "test_external_authority_v2_cli.py",
     "test_external_authority_v2_intent_retirement_slice5.py",
     "test_external_authority_v2_payload_digest_recovery_slice0.py",
+    "test_editorial_runtime_capture_diagnostics.py",
     "test_external_authority_v2_sequential_intent_slice3.py",
     "test_final_qa_mixed_custody_slice3.py",
     "test_initial_wave_lineage_fence.py",
@@ -392,6 +393,7 @@
   "logging_sensitive": [
     "test_application_logging.py",
     "test_decision_evidence_observability_qa.py",
+    "test_editorial_runtime_capture_diagnostics.py",
     "test_execution_events.py",
     "test_external_authority_execution.py",
     "test_external_authority_v2_cli.py",
