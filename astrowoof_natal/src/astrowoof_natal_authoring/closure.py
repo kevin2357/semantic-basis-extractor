@@ -2978,6 +2978,8 @@ def snapshot_inventory(
         if (
             relative == SNAPSHOT_NAME
             or relative.startswith("native-publication-receipts/")
+            or relative.startswith("native-suspension-results/")
+            or relative == "native-suspension-index.v1.json"
             or relative.endswith(".lock")
             or path.name.startswith(".") and path.name.endswith(".tmp")
         ):
@@ -8129,6 +8131,8 @@ def main() -> None:
         "--observed-at",
         help="Frozen UTC decision instant for --provider-reconciliation-cycle.",
     )
+    parser.add_argument("--supervision-envelope", type=Path)
+    parser.add_argument("--suspension-control-root", type=Path)
     parser.add_argument(
         "--bounded-provider-reconciliation",
         action="store_true",
@@ -8659,6 +8663,10 @@ def main() -> None:
             ProviderReconciliationAdapters,
             reconcile_authoring_provider_cycle,
         )
+        from .native_suspension_runtime import (
+            CooperativeSuspensionPublished,
+            NativeSuspensionControlObserver,
+        )
 
         preliminary_state = load_json(args.run_dir / "run.json")
         event_emitter = (
@@ -8677,26 +8685,51 @@ def main() -> None:
             else None
         )
         batch_provider = openai_provider_for_attempt(provider, 1)
-        result = reconcile_authoring_provider_cycle(
-            args.run_dir,
-            observed_at=args.observed_at or utc_now(),
-            provider_adapters=ProviderReconciliationAdapters(
-                exact_interactive_provider=provider,
-                exact_batch_provider=provider,
-                exact_batch_transport=UrllibOpenAIBatchTransport(
-                    api_key=batch_provider.api_key,
-                    base_url=batch_provider.base_url,
-                    timeout_seconds=min(batch_provider.http_timeout_seconds, 40.0),
+        if bool(args.supervision_envelope) != bool(args.suspension_control_root):
+            parser.error(
+                "--supervision-envelope and --suspension-control-root are an exact pair"
+            )
+        cycle_observed_at = args.observed_at or utc_now()
+        suspension_observer = None
+        if args.supervision_envelope is not None:
+            suspension_observer = NativeSuspensionControlObserver(
+                envelope_path=args.supervision_envelope,
+                control_root=args.suspension_control_root,
+                observed_at=cycle_observed_at,
+            )
+        try:
+            result = reconcile_authoring_provider_cycle(
+                args.run_dir,
+                observed_at=cycle_observed_at,
+                provider_adapters=ProviderReconciliationAdapters(
+                    exact_interactive_provider=provider,
+                    exact_batch_provider=provider,
+                    exact_batch_transport=UrllibOpenAIBatchTransport(
+                        api_key=batch_provider.api_key,
+                        base_url=batch_provider.base_url,
+                        timeout_seconds=min(
+                            batch_provider.http_timeout_seconds, 40.0,
+                        ),
+                    ),
+                    max_attempts=args.max_attempts,
+                    python_executable=args.python_executable,
+                    polish_provider=polish_provider,
+                    critic_provider=critic_provider,
+                    qualitative_editor_provider=qualitative_editor_provider,
                 ),
-                max_attempts=args.max_attempts,
-                python_executable=args.python_executable,
-                polish_provider=polish_provider,
-                critic_provider=critic_provider,
-                qualitative_editor_provider=qualitative_editor_provider,
-            ),
-            event_emitter=event_emitter,
-            terminal_command_output=output_result,
-        )
+                event_emitter=event_emitter,
+                terminal_command_output=output_result,
+                suspension_observer=suspension_observer,
+            )
+        except CooperativeSuspensionPublished as exc:
+            output_result(exc.publication["command_result"])
+            log_cli_exit(
+                logger, command="semantic_closure",
+                operation="cooperative_suspend", exit_code=0,
+                outcome=exc.publication["command_result"]["outcome"],
+                authoritative_transport="stdout_json",
+            )
+            return
         output_result(result)
         log_cli_exit(
             logger, command="semantic_closure", operation="provider_reconciliation",

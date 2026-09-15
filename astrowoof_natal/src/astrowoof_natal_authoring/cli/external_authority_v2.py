@@ -9,6 +9,7 @@ import logging
 import os
 from pathlib import Path
 from typing import Any
+from datetime import datetime, timezone
 
 from .. import __version__
 from ..application_logging import (
@@ -40,6 +41,10 @@ from ..trace_observability import (
     log_cli_exit,
     log_decision_summary,
     log_native_state_summary,
+)
+from ..native_suspension_runtime import (
+    CooperativeSuspensionPublished,
+    NativeSuspensionControlObserver,
 )
 
 
@@ -85,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path)
     parser.add_argument("--events-jsonl", type=Path)
     parser.add_argument("--events-stdout-jsonl", action="store_true")
+    parser.add_argument("--supervision-envelope", type=Path)
+    parser.add_argument("--suspension-control-root", type=Path)
     add_logging_arguments(parser)
     args = parser.parse_args(argv)
     configure_logging_from_args(args)
@@ -96,6 +103,19 @@ def main(argv: list[str] | None = None) -> int:
     if args.events_stdout_jsonl and args.output is None:
         parser.error("--events-stdout-jsonl requires --output")
     native_state = _load(run_dir / "run.json")
+    if bool(args.supervision_envelope) != bool(args.suspension_control_root):
+        parser.error(
+            "--supervision-envelope and --suspension-control-root are an exact pair"
+        )
+    suspension_observer = None
+    if args.supervision_envelope is not None:
+        suspension_observer = NativeSuspensionControlObserver(
+            envelope_path=args.supervision_envelope,
+            control_root=args.suspension_control_root,
+            observed_at=datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ).replace("+00:00", "Z"),
+        )
     bind_logging_context(
         run_id=str(native_state.get("run_id") or "-"),
         current_state=str(native_state.get("status") or "-"),
@@ -152,7 +172,20 @@ def main(argv: list[str] | None = None) -> int:
             run_dir, request=request, inspection=inspection, grant=grant,
             authorization_documents=documents,
             event_emitter=event_emitter,
+            suspension_observer=suspension_observer,
         )
+    except CooperativeSuspensionPublished as exc:
+        command_result = exc.publication["command_result"]
+        _render(command_result, args.output)
+        log_cli_exit(
+            logger, command="external_authority_v2",
+            operation="cooperative_suspend", exit_code=0,
+            outcome=command_result["outcome"],
+            result_id=command_result["result_id"],
+            receipt_id=command_result["receipt_id"],
+            authoritative_transport="output_file" if args.output else "stdout_json",
+        )
+        return 0
     except ExternalAuthorityV2ExecutionError as exc:
         if (
             exc.reason_code == "action_state_or_custody_mismatch"
@@ -302,7 +335,20 @@ def main(argv: list[str] | None = None) -> int:
             run_dir, request_sha256=request["external_authority_request_sha256"],
             grant_sha256=grant["grant_sha256"], prepare=prepare, create=create,
             event_emitter=event_emitter,
+            suspension_observer=suspension_observer,
         )
+    except CooperativeSuspensionPublished as exc:
+        command_result = exc.publication["command_result"]
+        _render(command_result, args.output)
+        log_cli_exit(
+            logger, command="external_authority_v2",
+            operation="cooperative_suspend", exit_code=0,
+            outcome=command_result["outcome"],
+            result_id=command_result["result_id"],
+            receipt_id=command_result["receipt_id"],
+            authoritative_transport="output_file" if args.output else "stdout_json",
+        )
+        return 0
     except ExternalAuthorityV2ExecutionError as exc:
         logger.error(
             "command_refused command=external_authority_v2 phase=dispatch "

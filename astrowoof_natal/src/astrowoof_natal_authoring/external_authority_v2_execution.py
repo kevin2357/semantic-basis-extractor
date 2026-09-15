@@ -1211,6 +1211,7 @@ def commit_external_authority_v2_dispatch_intent(
     grant: dict[str, Any], authorization_documents: Sequence[Mapping[str, Any]],
     failure_injector: Callable[[str], None] | None = None,
     event_emitter: Any | None = None,
+    suspension_observer: Callable[[str, Path, dict[str, Any], str | None], None] | None = None,
 ) -> dict[str, Any]:
     """Atomically publish grant+inventory+authorization+intent before provider I/O."""
     from .closure import (
@@ -1230,6 +1231,10 @@ def commit_external_authority_v2_dispatch_intent(
         except ValueError as exc:
             raise ExternalAuthorityV2ExecutionError("snapshot_invalid", str(exc)) from exc
         _inject(failure_injector, "after_snapshot_validation")
+        from .native_transitions import checkpoint_basis
+        writer_basis = checkpoint_basis(
+            root, int(state.get("state_revision") or 0)
+        )["checkpoint_basis_sha256"]
         if normalized_path(root) != inspection["checkpoint_basis"]["observation"]["logical_workspace_root"]:
             raise ExternalAuthorityV2ExecutionError(
                 "stale_checkpoint_basis", "logical workspace root does not join inspection",
@@ -1329,6 +1334,10 @@ def commit_external_authority_v2_dispatch_intent(
         write_workspace_snapshot(root)
         validate_workspace_snapshot(root, candidate)
         _inject(failure_injector, "after_complete_intent_checkpoint")
+        if suspension_observer is not None:
+            suspension_observer(
+                "dispatch_after_intent_checkpoint", root, candidate, writer_basis,
+            )
         if event_emitter is not None:
             event_emitter.emit("external_authority.intent_committed", data={
                 "request_sha256": request["external_authority_request_sha256"],
@@ -1361,6 +1370,7 @@ def dispatch_external_authority_v2_intent(
     prepare: Callable[[dict[str, Any], dict[str, Any]], Mapping[str, Any]] | None = None,
     failure_injector: Callable[[str], None] | None = None,
     event_emitter: Any | None = None,
+    suspension_observer: Callable[[str, Path, dict[str, Any], str | None], None] | None = None,
 ) -> dict[str, Any]:
     """Dispatch a frozen ordinary-action intent, checkpointing each ID in order.
 
@@ -1751,6 +1761,7 @@ def dispatch_external_authority_v2_intent(
     result_reason: str | None = None
     provider_io_performed = False
     for action_id in ordered_ids[cursor:]:
+        action_predecessor_basis: str | None = None
         # A failure before this point proves the provider call was not entered.
         _inject(failure_injector, f"before_provider_create:{action_id}")
         prepared_create: dict[str, Any] | None = None
@@ -1777,6 +1788,10 @@ def dispatch_external_authority_v2_intent(
             _inject(failure_injector, f"after_provider_prepare:{action_id}")
         with _exclusive_lifecycle_lock(root):
             state, intent, current_ids = load_intent_state()
+            if suspension_observer is not None:
+                suspension_observer(
+                    "dispatch_before_provider_post", root, state, None,
+                )
             if current_ids != ordered_ids:
                 raise ExternalAuthorityV2ExecutionError(
                     "member_inventory_mismatch", "native intent inventory changed during dispatch",
@@ -1900,6 +1915,10 @@ def dispatch_external_authority_v2_intent(
             persist_state(run_json, state)
             write_workspace_snapshot(root)
             validate_workspace_snapshot(root, state)
+            from .native_transitions import checkpoint_basis
+            action_predecessor_basis = checkpoint_basis(
+                root, int(state.get("state_revision") or 0)
+            )["checkpoint_basis_sha256"]
             action_for_create = (
                 prepared_create if prepared_create is not None else deepcopy(action)
             )
@@ -1944,6 +1963,11 @@ def dispatch_external_authority_v2_intent(
                     persist_state(run_json, state)
                     write_workspace_snapshot(root)
                     validate_workspace_snapshot(root, state)
+                    if suspension_observer is not None:
+                        suspension_observer(
+                            "dispatch_after_provider_return", root, state,
+                            action_predecessor_basis,
+                        )
             ambiguous_ids.append(action_id)
             result_reason = result_reason or "provider_transport_failed_without_identity"
             if prepared_create is not None:
@@ -2031,6 +2055,11 @@ def dispatch_external_authority_v2_intent(
                     "provider_operation_id": provider_id,
                 }, action_id=action_id)
             _inject(failure_injector, f"after_identity_checkpoint:{action_id}")
+            if suspension_observer is not None:
+                suspension_observer(
+                    "dispatch_after_identity_checkpoint", root, state,
+                    action_predecessor_basis,
+                )
 
     with _exclusive_lifecycle_lock(root):
         state, intent, current_ids = load_intent_state()

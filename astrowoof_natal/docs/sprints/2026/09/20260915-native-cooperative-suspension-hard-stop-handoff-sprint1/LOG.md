@@ -158,3 +158,34 @@
 - Exact replay continues to return the already published identities rather
   than append another fixture result.
 - Runtime integration remains blocked at Voof-paws C pending re-review.
+
+## 2026-09-15 — Voof-paws C approved and Slice 3 safe-point integration
+
+- Incorporated API's executable-contract re-review and opened only the
+  previously approved exact-interactive ordinary-v2 cells.
+- Added the immutable envelope/control-root argument pair to the public v2
+  dispatch and reconciliation commands. Missing pairs, relocated roots,
+  unexpected control members, stale requests, and identity mismatches refuse
+  before the request can affect provider work.
+- Serialized request observation under the existing native writer locks at
+  dispatch intent, provider-call entry, provider identity/ambiguity, and
+  reconciliation retrieval/response-publication boundaries.
+- Checkpointed the observation record before publishing a separate immutable
+  suspension result/index, receipt, retained snapshot/basis, and exact command
+  result. Suspension artifacts remain excluded from the executable snapshot,
+  like the existing native publication receipts, avoiding circular identity.
+- Made interrupted publication restart-safe: a restart after observation but
+  before result publication reconstructs the same canonical result, while
+  exact replay returns it and a second request for the invocation conflicts.
+- Required ordinary terminal/delivery dominance to pass the existing native
+  result reader, including result, journal, receipt, retained evidence, and
+  workspace validation; a forged result-index entry cannot suppress the stop.
+- Preserved provider-entry ambiguity as `provider_boundary_ambiguous`; did not
+  synthesize provider identity, retry work, signal/kill a process, or release
+  API/provider/spend/workspace/native custody.
+- Kept bounded interactive, exact Batch, and bounded Batch reconciliation
+  explicitly unsupported when a suspension observer is supplied.
+- Verification: Slice 3 module 11 passed; combined contract/v2/reconciliation
+  matrix 112 passed with 2 expected optional skips. No provider, network, API,
+  R2, process-control, packaging, release, or deployment activity occurred.
+- Paused at Voof-paws D before installed/package or API supervision work.

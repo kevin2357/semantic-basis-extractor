@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 2 executable contracts complete; paused at Voof-paws C.** This sprint is provider-free by
+**Slice 3 safe-point integration complete; paused at Voof-paws D.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -219,6 +219,17 @@ the existing result-then-receipt-then-command-envelope publication pattern.
 **Exit:** production-boundary provider-free tests cover direct, ordinary v2,
 bounded, and Batch routes only where Slice 0 proved support; exclusions remain
 explicit.
+
+**Result:** exact-interactive ordinary-v2 dispatch and response reconciliation
+now observe the capability-limited request only under their existing native
+writer lock. Observation occurs before provider entry and after durable intent,
+provider-identity, ambiguous-return, or retrieved-response checkpoints. The
+request observation itself is checkpointed before immutable result, receipt,
+retained evidence, and exact command-result publication. Exact restart/replay
+repairs or returns the same result; a distinct request conflicts; a prior valid
+ordinary result dominates. Bounded and Batch reconciliation remain explicitly
+unsupported. Focused Slice 3: 11 passed. Neighboring v2/reconciliation matrix:
+112 passed, 2 expected skips.
 
 **Voof-paws D:** runtime review before packaging.
 

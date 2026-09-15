@@ -380,6 +380,7 @@ def reconcile_provider_cycle(
     endpoint_base_url: str | None = None,
     provider_secret: str | None = None,
     event_emitter: Any = None,
+    suspension_observer: Callable[[str, Path, dict[str, Any], str | None], None] | None = None,
 ) -> dict[str, Any]:
     """Poll one bounded wave of due known interactive provider operations.
 
@@ -409,6 +410,14 @@ def reconcile_provider_cycle(
             state.get("state_revision"), instant,
         )
         validate_workspace_snapshot(run_dir, state)
+        from .native_transitions import checkpoint_basis
+        retrieval_predecessor_basis = checkpoint_basis(
+            run_dir, int(state.get("state_revision") or 0)
+        )["checkpoint_basis_sha256"]
+        if suspension_observer is not None:
+            suspension_observer(
+                "reconciliation_before_provider_get", run_dir, state, None,
+            )
         before = inspect_lifecycle(
             run_dir,
             native_exclusive_access="established",
@@ -878,6 +887,11 @@ def reconcile_provider_cycle(
             "diagnostic_artifacts": diagnostic_artifacts,
         })
         write_workspace_snapshot(run_dir)
+        if suspension_observer is not None:
+            suspension_observer(
+                "reconciliation_after_response_checkpoint", run_dir, state,
+                retrieval_predecessor_basis,
+            )
         after = inspect_lifecycle(
             run_dir,
             native_exclusive_access="established",
@@ -1527,6 +1541,9 @@ def run_bounded_authoring_reconciliation(
     critic_provider: Any = None,
     qualitative_editor_provider: Any = None,
     _failure_injector: Callable[[str], None] | None = None,
+    suspension_observer: Callable[
+        [str, Path, dict[str, Any], str | None], None
+    ] | None = None,
 ) -> dict[str, Any]:
     """Retrieve one due interactive wave and exhaust route-local continuation."""
     from .closure import (
@@ -1624,6 +1641,7 @@ def run_bounded_authoring_reconciliation(
             endpoint_base_url=getattr(retrieval_provider, "base_url", None),
             provider_secret=getattr(retrieval_provider, "api_key", None),
             event_emitter=event_emitter,
+            suspension_observer=suspension_observer,
         )
     finally:
         retrieval_provider.http_timeout_seconds = original_timeout
@@ -1969,6 +1987,9 @@ def reconcile_authoring_provider_cycle(
     provider_adapters: ProviderReconciliationAdapters,
     event_emitter: Any = None,
     terminal_command_output: Callable[[dict[str, Any]], None] | None = None,
+    suspension_observer: Callable[
+        [str, Path, dict[str, Any], str | None], None
+    ] | None = None,
 ) -> dict[str, Any]:
     """Dispatch one bounded provider cycle from validated native route evidence."""
     from .closure import load_json
@@ -1994,6 +2015,8 @@ def reconcile_authoring_provider_cycle(
         mechanism = "batch" if state.get("service_level") == "batch" else "response"
 
     if route == "bounded_natal" and mechanism == "batch":
+        if suspension_observer is not None:
+            raise ValueError("Cooperative suspension is unsupported for bounded Batch")
         if (
             provider_adapters.bounded_batch_provider is None
             or provider_adapters.bounded_batch_transport is None
@@ -2009,6 +2032,8 @@ def reconcile_authoring_provider_cycle(
         )
         return result
     if route == "exact_natal" and mechanism == "batch":
+        if suspension_observer is not None:
+            raise ValueError("Cooperative suspension is unsupported for exact Batch")
         if (
             provider_adapters.exact_batch_provider is None
             or provider_adapters.exact_batch_transport is None
@@ -2063,6 +2088,8 @@ def reconcile_authoring_provider_cycle(
     if route == "exact_natal" and mechanism == "response":
         provider = provider_adapters.exact_interactive_provider
     elif route == "bounded_natal" and mechanism == "response":
+        if suspension_observer is not None:
+            raise ValueError("Cooperative suspension is unsupported for bounded interactive")
         provider = provider_adapters.bounded_interactive_provider
     else:
         raise ValueError("Native route/provider mechanism is unsupported")
@@ -2078,6 +2105,7 @@ def reconcile_authoring_provider_cycle(
         polish_provider=provider_adapters.polish_provider,
         critic_provider=provider_adapters.critic_provider,
         qualitative_editor_provider=provider_adapters.qualitative_editor_provider,
+        suspension_observer=suspension_observer,
     )
     if (
         result["outcome"] != "not_due"
