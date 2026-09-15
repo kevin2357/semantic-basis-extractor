@@ -625,9 +625,13 @@ def read_packaged_editorial_review_fixture(kind: str) -> dict[str, Any]:
         name = FIXTURE_RESOURCES[kind]
     except KeyError as exc:
         raise ValueError("Unknown editorial review fixture kind") from exc
-    raw = files("astrowoof_natal_authoring.resources").joinpath(
-        "fixtures", "editorial_review", name,
-    ).read_bytes()
+    raw = (
+        files("astrowoof_natal_authoring.resources")
+        .joinpath("fixtures")
+        .joinpath("editorial_review")
+        .joinpath(name)
+        .read_bytes()
+    )
     return read_editorial_review_fixture_bundle(raw)
 
 

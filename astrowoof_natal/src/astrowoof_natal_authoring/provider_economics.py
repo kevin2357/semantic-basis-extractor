@@ -567,16 +567,20 @@ def read_provider_economics_schema() -> dict[str, Any]:
 def read_provider_economics_fixture(name: str) -> dict[str, Any]:
     if name not in PROVIDER_ECONOMICS_FIXTURE_NAMES:
         raise ValueError(f"unsupported provider economics fixture: {name}")
-    path = resources.files("astrowoof_natal_authoring.resources.fixtures").joinpath(
-        "provider-economics", name
+    path = (
+        resources.files("astrowoof_natal_authoring.resources.fixtures")
+        .joinpath("provider-economics")
+        .joinpath(name)
     )
     value = json.loads(path.read_text(encoding="utf-8"))
     return validate_provider_economics_revision(value)
 
 
 def read_provider_economics_mutation_corpus() -> dict[str, Any]:
-    path = resources.files("astrowoof_natal_authoring.resources.fixtures").joinpath(
-        "provider-economics", "mutation-corpus.v1.json"
+    path = (
+        resources.files("astrowoof_natal_authoring.resources.fixtures")
+        .joinpath("provider-economics")
+        .joinpath("mutation-corpus.v1.json")
     )
     value = json.loads(path.read_text(encoding="utf-8"))
     expected = {"schema_version", "mutations"}

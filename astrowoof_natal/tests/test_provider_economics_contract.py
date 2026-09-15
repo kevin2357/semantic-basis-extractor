@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+from importlib.resources import files
 import json
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 from astrowoof_natal_authoring.provider_economics import (
     MAX_RETRIEVAL_REFERENCES,
@@ -104,8 +109,14 @@ def revise(previous, **sections):
 
 class ProviderEconomicsContractTests(unittest.TestCase):
     def test_packaged_positive_fixtures_and_sequences(self):
+        root = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+            "provider-economics"
+        )
         loaded = {name: read_provider_economics_fixture(name) for name in PROVIDER_ECONOMICS_FIXTURE_NAMES}
         self.assertEqual(set(loaded), PROVIDER_ECONOMICS_FIXTURE_NAMES)
+        for name, value in loaded.items():
+            raw = root.joinpath(name).read_bytes()
+            self.assertEqual(json.loads(raw), value)
         validate_provider_economics_revision_sequence([
             loaded["interactive-settlement.v1.json"],
             loaded["interactive-editorial-finalization.v1.json"],
@@ -118,6 +129,14 @@ class ProviderEconomicsContractTests(unittest.TestCase):
 
     def test_packaged_mutation_corpus_refuses(self):
         corpus = read_provider_economics_mutation_corpus()
+        raw = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
+            "provider-economics"
+        ).joinpath("mutation-corpus.v1.json").read_bytes()
+        self.assertEqual(
+            "5149b0707452b84cf1161d12b6b0403b30d5ecd70d0c18495bfc8f8e0141303b",
+            hashlib.sha256(raw).hexdigest(),
+        )
+        self.assertEqual(json.loads(raw), corpus)
         for mutation in corpus["mutations"]:
             with self.subTest(mutation=mutation["id"]):
                 value = copy.deepcopy(read_provider_economics_fixture(mutation["fixture"]))
@@ -136,6 +155,27 @@ class ProviderEconomicsContractTests(unittest.TestCase):
     def test_fixture_reader_is_closed(self):
         with self.assertRaisesRegex(ValueError, "unsupported"):
             read_provider_economics_fixture("../../run.json")
+
+    def test_fixture_readers_preserve_missing_and_malformed_failures(self):
+        fixture_name = "providerless-no-work.v1.json"
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with patch(
+                "astrowoof_natal_authoring.provider_economics.resources.files",
+                return_value=root,
+            ):
+                with self.assertRaises(FileNotFoundError):
+                    read_provider_economics_fixture(fixture_name)
+                with self.assertRaises(FileNotFoundError):
+                    read_provider_economics_mutation_corpus()
+                directory = root / "provider-economics"
+                directory.mkdir(parents=True)
+                (directory / fixture_name).write_bytes(b"{")
+                (directory / "mutation-corpus.v1.json").write_bytes(b"{")
+                with self.assertRaises(ValueError):
+                    read_provider_economics_fixture(fixture_name)
+                with self.assertRaises(ValueError):
+                    read_provider_economics_mutation_corpus()
 
     def test_schema_and_python_validation(self):
         schema = read_provider_economics_schema()

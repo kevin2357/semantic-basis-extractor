@@ -32,3 +32,19 @@
 - Corrected the inherited count: eleven total original shapes included the
   predecessor's now-fixed helper; ten remain, only four requiring changes.
 - Made no production or test change and paused at Gate A.
+
+## 2026-09-15 — Gate A approval and Slices 1–2
+
+- API approved repairs only for the four proven namespace-package failures and
+  approved the other six calls as no-change controls.
+- Chained each affected resource component without changing names, bytes,
+  parsing, validation, or failure translation.
+- Extended three existing manifested test modules; no manifest change was
+  required.
+- Focused tests passed on Python 3.11.15 and 3.12.14: 29 tests with 2 optional
+  skips on each runtime.
+- Final static inventory reports six known-compatible regular-package calls and
+  zero unsupported namespace-package paths.
+- Owner assigned broad/full-suite and wheel qualification to the predecessor
+  release-driving sprint, so neither was duplicated here.
+- Prepared the source-only compatibility handback.

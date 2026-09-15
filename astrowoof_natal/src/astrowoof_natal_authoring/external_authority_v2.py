@@ -273,8 +273,10 @@ def read_external_authority_dispatch_result_v2_schema() -> dict[str, Any]:
 
 
 def read_external_authority_v2_fixture() -> dict[str, Any]:
-    path = files("astrowoof_natal_authoring.resources.fixtures").joinpath(
-        "external-authority-v2", "ordinary-action-set.v1.json"
+    path = (
+        files("astrowoof_natal_authoring.resources.fixtures")
+        .joinpath("external-authority-v2")
+        .joinpath("ordinary-action-set.v1.json")
     )
     value = json.loads(path.read_text(encoding="utf-8"))
     expected = {

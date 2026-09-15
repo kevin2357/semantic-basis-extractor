@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from hashlib import sha256
+from importlib.resources import files
 import json
 import os
 from pathlib import Path
@@ -9,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from astrowoof_natal_authoring.editorial_review_contracts import (
     canonical_editorial_review_json,
@@ -17,6 +19,7 @@ from astrowoof_natal_authoring.editorial_review_contracts import (
 )
 from astrowoof_natal_authoring.editorial_review_fixtures import (
     FIXTURE_KINDS,
+    FIXTURE_RESOURCES,
     build_editorial_review_capture_status,
     build_editorial_review_runtime_capture_status,
     build_editorial_review_fixture_bundle,
@@ -47,6 +50,33 @@ class TestEditorialReviewPositiveFixtures(unittest.TestCase):
                 self.assertEqual("valid", validate_editorial_review_fixture_bundle(left).outcome)
                 self.assertEqual(left, read_editorial_review_fixture_bundle(canonical_editorial_review_json(left)))
                 self.assertEqual(left, read_packaged_editorial_review_fixture(kind))
+
+    def test_packaged_fixture_bytes_are_exact_and_fail_closed(self):
+        expected_digests = {
+            "accepted_delivery": "54bdae8913e29277de99cd6c69fb1cb5bec2ccf176394cf1a6dc069803c8147e",
+            "editorial_closeout": "11b46b4dc8749eb56ec8ec99834e670f1e6272e11316e493866c4ffdad5bd303",
+        }
+        root = files("astrowoof_natal_authoring.resources")
+        for kind, name in FIXTURE_RESOURCES.items():
+            raw = root.joinpath("fixtures").joinpath("editorial_review").joinpath(name).read_bytes()
+            self.assertEqual(expected_digests[kind], sha256(raw).hexdigest())
+            self.assertEqual(
+                read_editorial_review_fixture_bundle(raw),
+                read_packaged_editorial_review_fixture(kind),
+            )
+        with tempfile.TemporaryDirectory() as temporary:
+            temporary_root = Path(temporary)
+            with patch(
+                "astrowoof_natal_authoring.editorial_review_fixtures.files",
+                return_value=temporary_root,
+            ):
+                with self.assertRaises(FileNotFoundError):
+                    read_packaged_editorial_review_fixture("accepted_delivery")
+                target = temporary_root / "fixtures" / "editorial_review" / FIXTURE_RESOURCES["accepted_delivery"]
+                target.parent.mkdir(parents=True)
+                target.write_bytes(b"{")
+                with self.assertRaises(ValueError):
+                    read_packaged_editorial_review_fixture("accepted_delivery")
 
     def test_accepted_world_has_initial_retry_optional_and_delivery_continuity(self):
         bundle = build_editorial_review_fixture_bundle("accepted_delivery")

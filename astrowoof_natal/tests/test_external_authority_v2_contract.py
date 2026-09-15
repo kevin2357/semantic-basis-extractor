@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import copy
 import hashlib
+from importlib.resources import files
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from astrowoof_natal.tests.test_external_authority_v2_execution_gap import make_ordinary_run
@@ -128,7 +130,18 @@ class ExternalAuthorityV2ContractSlice1(unittest.TestCase):
             jsonschema.Draft202012Validator(result_schema).validate(result)
 
     def test_packaged_fixture_is_closed_and_privacy_minimized(self):
+        raw = (
+            files("astrowoof_natal_authoring.resources.fixtures")
+            .joinpath("external-authority-v2")
+            .joinpath("ordinary-action-set.v1.json")
+            .read_bytes()
+        )
+        self.assertEqual(
+            "397fc28f6c21be20cae5bce5c52784512efe046334860a3e21702c691082e03d",
+            hashlib.sha256(raw).hexdigest(),
+        )
         value = read_external_authority_v2_fixture()
+        self.assertEqual(json.loads(raw), value)
         self.assertEqual("ordinary_action_set", value["request"]["request_kind"])
         serialized = json.dumps(value, sort_keys=True)
         for sentinel in (
@@ -136,6 +149,21 @@ class ExternalAuthorityV2ContractSlice1(unittest.TestCase):
             "prompt", "response_text", "subject_params",
         ):
             self.assertNotIn(sentinel, serialized.lower())
+
+    def test_packaged_fixture_missing_and_malformed_fail(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with patch(
+                "astrowoof_natal_authoring.external_authority_v2.files",
+                return_value=root,
+            ):
+                with self.assertRaises(FileNotFoundError):
+                    read_external_authority_v2_fixture()
+                target = root / "external-authority-v2" / "ordinary-action-set.v1.json"
+                target.parent.mkdir(parents=True)
+                target.write_bytes(b"{")
+                with self.assertRaises(ValueError):
+                    read_external_authority_v2_fixture()
 
 
 if __name__ == "__main__":

@@ -68,6 +68,9 @@ test source has changed.
 Acceptance: the predecessor release block is removed without changing fixture
 bytes or validation semantics.
 
+Status: complete. Both real v5 fixtures and missing/malformed controls pass on
+Python 3.11.15 and 3.12.14.
+
 ## Slice 2 — Generic accessor and remaining justified callers
 
 1. Correct the external-authority v2 fixture reader and both provider-economics
@@ -77,8 +80,9 @@ bytes or validation semantics.
    concrete Python 3.11-compatible controls.
 4. Prove no supported Python 3.11 namespace-package path retains variadic or
    dynamically multi-component `joinpath` use.
-5. Run source-tree focused suites, manifest enforcement, provider-free broad
-   qualification, and the final static inventory on Python 3.11 and 3.12.
+5. Run source-tree focused suites and the final static inventory on Python 3.11
+   and 3.12. Broad/full-suite qualification belongs to the predecessor's
+   combined release gate and is not duplicated here.
 6. Hand back the exact reviewed compatibility commit and qualification evidence
    to the predecessor live-defect sprint.
 
@@ -87,6 +91,10 @@ the static inventory is empty for supported paths. This companion sprint does
 not build a release candidate. The predecessor sprint's Slice 2 exclusively
 owns wheel construction, installed-wheel/package/API qualification, and the
 release decision.
+
+Status: complete pending commit handback. The four approved repairs pass 29
+focused tests on each runtime; all six no-change controls remain untouched; and
+the final inventory contains zero unsupported namespace-package paths.
 
 ## Alloy ruling
 
