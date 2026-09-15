@@ -46,3 +46,22 @@
   `0.4.62`. The release-bound gate includes the full maintained suite,
   reproducible exact-source builds, installed smoke and dependency checks, and
   a rerun of API-host coexistence before returning for pre-tag review.
+- Froze artifact source commit `4a17b44368d4e15280b73cbd78c3879d01796b5f`
+  with fixed epoch `1789468315` and ran the 43-test focused matrix successfully.
+- The complete maintained suite passed 1,196 tests with three expected skips,
+  zero failures, inventory SHA-256
+  `d85f093e8ebc4e98bbc4508eec4b9f2b5d5e3424b0e468a6c73d47df13110aab`,
+  and wall time 1,405.908561 seconds.
+- Built two independent clean source exports. Both produced a 310-member,
+  1,385,622-byte wheel with SHA-256
+  `eea9d74ec0ab39cc804ceedb4b00ce8af8cb17ce99c89d6b6276372ba00ab1bb`.
+- Exact installed candidate passed API-host dependency checking, release smoke,
+  lifecycle smoke, the 15-test installed editorial matrix, and the real
+  `force=False` API-host coexistence probe. Provider/network/storage operations,
+  spend, and authoritative workspace mutation were zero.
+- One first smoke run used an isolated directory named `site`; all functional
+  checks completed but `--require-installed` correctly rejected the nonstandard
+  path. Reinstallation under `Lib/site-packages` produced a fully passing smoke.
+- Prepared the release-lock source record. The exact release-lock commit must
+  now be rebuilt twice at the same recorded epoch and requalified before final
+  API pre-tag review.
