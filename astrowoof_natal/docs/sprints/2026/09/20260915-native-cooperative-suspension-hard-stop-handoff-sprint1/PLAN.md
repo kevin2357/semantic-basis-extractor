@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 0 approved; Slice 1 Gate B contract work is next.** This sprint is provider-free by
+**Slice 1 contract drafted; paused at joint Gate B.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -96,6 +96,12 @@ release decision.
 
 **Exit:** complete prose contract, schemas/projections proposal, race table, and
 provider-free fixture plan.
+
+**Result:** recorded in
+`SLICE 1 - GATE B COOPERATIVE SUSPENSION CONTRACT.md`. It freezes the proposed
+four-document identity split, atomic control-file channel, exact safe points,
+ordinary-result precedence, append-only evidence chain, resource join, and
+provider-free race matrix.
 
 **Voof-paws B / joint Gate B:** mandatory API/SBE/owner review. No runtime
 implementation before approval.

@@ -45,3 +45,22 @@
   held.
 - Authorized Slice 1 contract work only. Gate B still blocks runtime mutation,
   signaling, process control, and release behavior.
+
+## 2026-09-15 — Slice 1 Gate B proposal
+
+- Drafted the closed four-document v1 contract: API pre-launch supervision
+  envelope and suspension request; SBE native suspension result and receipt.
+- Froze an atomic request-isolated control-file channel whose canonical absolute
+  root is envelope-bound and rejected by relocated workspaces before parsing.
+- Enumerated exact ordinary-v2 dispatch and response-reconciliation safe points,
+  provider/local-work outcomes, and the unavoidable provider-entry ambiguity.
+- Preserved exact ordinary terminal/delivery result precedence over a later stop
+  observation and prohibited latest-result discovery as command authority.
+- Defined append-only request/result/process-observation/resolution evidence and
+  exact replay behavior across restart and stale channels.
+- Recorded the resource join: exact child exit may reclaim worker execution
+  only; run allocation and provider/spend/workspace/native custody remain held.
+- Added the provider-free identity, channel, lifecycle-race, crash, publication,
+  replay, and unrelated-run qualification matrix.
+- Paused at joint Gate B. No schemas, readers, runtime hooks, signaling, process
+  control, provider work, or capacity release were implemented.
