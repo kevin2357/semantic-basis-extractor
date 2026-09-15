@@ -348,7 +348,8 @@
     "test_provider_dispatch_result_cli.py",
     "test_provider_economics_export.py",
     "test_retry_lineage_contract_slice3.py",
-    "test_route_parity_resources.py"
+    "test_route_parity_resources.py",
+    "test_terminal_review_capture_binding_join.py"
   ],
   "serial_only": [
     "test_ambiguous_provider_submission_runtime.py",

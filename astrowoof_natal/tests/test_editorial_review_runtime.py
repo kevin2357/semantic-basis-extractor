@@ -20,6 +20,9 @@ from astrowoof_natal_authoring.closure import (
     write_workspace_snapshot,
 )
 from astrowoof_natal_authoring.assembly import AssemblyContractError
+from astrowoof_natal_authoring.terminal_review_contracts import (
+    build_terminal_action_dispositions,
+)
 
 
 class TestEditorialReviewRuntimeIngress(unittest.TestCase):
@@ -509,7 +512,6 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
             root = Path(directory)
             passes = {}
             actions = []
-            dispositions = []
             for number in range(1, 7):
                 pass_id = f"subject_1_{number}"
                 attempt_root = root / "passes" / pass_id / "attempt-001"
@@ -519,20 +521,33 @@ class TestEditorialReviewRuntimeIngress(unittest.TestCase):
                 (attempt_root / "openai-authored-fields.json").write_text("{}", encoding="utf-8")
                 report = {"status": "accept"}
                 (attempt_root / "authoring-pass-acceptance.json").write_text(json.dumps(report), encoding="utf-8")
-                action_id = f"paid_{number}"
-                binding = {"request_sha256": "a" * 64, "ordinal": number}
-                from astrowoof_natal_authoring.editorial_review_contracts import (
-                    canonical_editorial_review_json,
-                )
-                from hashlib import sha256
-                digest = sha256(canonical_editorial_review_json(binding)).hexdigest()
-                actions.append({"action_id": action_id, "binding": binding, "provider": {"id": f"resp_{number}"}})
-                dispositions.append({"action_id": action_id, "binding_sha256": digest})
+                action_id = f"paid_{number:024x}"
+                binding = {
+                    "action_id": action_id,
+                    "stage": "authoring_initial",
+                    "route": f"subject_1_{number}:attempt-001",
+                    "request_sha256": f"{number:x}" * 64,
+                    "profile_sha256": "a" * 64,
+                    "maximum_output_tokens": 100000,
+                    "commitment_micro_usd": 100000 + number,
+                    "price_book_version": "test-price-book.v1",
+                    "model": "test-model",
+                    "prepared_state_revision": 1,
+                    "run_id": "run-review",
+                    "service_level": "interactive",
+                }
+                actions.append({
+                    "action_id": action_id, "state": "REPORTED",
+                    "binding": binding, "provider": {"id": f"resp_{number}"},
+                    "consumption": {"consumer_id": f"consumer_{number}"},
+                    "reported": {"usage": {"total_tokens": number}},
+                })
                 passes[pass_id] = {
                     "pass_id": pass_id, "pass_number": number, "source_sha256": str(number) * 64,
                     "attempts": [{"attempt_number": 1, "state": "PASS_QA_ACCEPTED", "response_workspace": str(workspace), "paid_action_id": action_id, "qa": {"accepted": True, "report": report}}],
                 }
-            state = {"run_id": "run-review", "state_revision": 9, "service_level": "interactive", "passes": passes, "subjects": {"subject_1": {"deck": "deck.json", "assembly_report": "assembly.json"}}, "spend_ledger": {"actions": actions}, "authoring_profile": {"profile_id": "profile-1"}, "provenance": {"runtime": {"distribution": "astrowoof-natal-authoring", "version": "0.4.test"}, "resources": {"aggregate_sha256": "b" * 64}}}
+            state = {"run_id": "run-review", "route": "exact_natal.v1", "state_revision": 9, "service_level": "interactive", "passes": passes, "subjects": {"subject_1": {"deck": "deck.json", "assembly_report": "assembly.json"}}, "spend_ledger": {"actions": actions}, "authoring_profile": {"profile_id": "profile-1"}, "provenance": {"runtime": {"distribution": "astrowoof-natal-authoring", "version": "0.4.test"}, "resources": {"aggregate_sha256": "b" * 64}}}
+            dispositions = build_terminal_action_dispositions(state)
             (root / "run.json").write_text(json.dumps(state), encoding="utf-8")
             view = self.view("astrowoof.native_execution_result.v0.2", "review_required")
             view["result"].update({"run_id": "run-review", "sbe_release": "0.4.test", "post_checkpoint": {"native_state_revision": 9, "checkpoint_basis_sha256": "c" * 64}, "action_dispositions": dispositions})

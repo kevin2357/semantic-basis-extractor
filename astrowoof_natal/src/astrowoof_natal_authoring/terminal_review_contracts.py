@@ -93,6 +93,11 @@ def _binding(action: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
+def terminal_action_binding_sha256(action: dict[str, Any]) -> str:
+    """Digest the canonical closed binding projection sealed by result v0.2."""
+    return _digest(_binding(action))
+
+
 def _route_family(state: dict[str, Any]) -> str:
     return "bounded_natal" if state.get("route") in {"bounded_natal.v1", "bounded_natal.v2"} else "exact_natal"
 
@@ -124,7 +129,7 @@ def build_terminal_action_dispositions(state: dict[str, Any]) -> list[dict[str, 
         row = {
             "ordinal": ordinal,
             "action_id": binding["action_id"],
-            "binding_sha256": _digest(binding),
+            "binding_sha256": terminal_action_binding_sha256(action),
             "stage": binding["stage"],
             "route": binding["route"],
             "route_family": _route_family(state),
@@ -471,12 +476,13 @@ def validate_terminal_review_result_v02_against_api_actions(
         raise ValueError("API action inventory differs from the terminal result")
     for row in result["action_dispositions"]:
         supplied = by_id[row["action_id"]]
-        binding = _binding({"action_id": row["action_id"], "binding": supplied["binding"]})
         if (
             supplied["native_run_id"] != result["run_id"]
             or supplied["route_family"] != row["route_family"]
             or supplied["stage"] != row["stage"]
-            or _digest(binding) != row["binding_sha256"]
+            or terminal_action_binding_sha256({
+                "action_id": row["action_id"], "binding": supplied["binding"],
+            }) != row["binding_sha256"]
             or supplied["provider_operation_id"] != row["provider_operation_id"]
         ):
             raise ValueError("Terminal result does not join immutable API action evidence")
@@ -693,6 +699,7 @@ __all__ = [
     "RESULT_SCHEMA", "ZERO_ACTION_RESULT_SCHEMA", "COMMAND_RESULT_SCHEMA",
     "DELIVERY_COMMAND_RESULT_SCHEMA",
     "ZERO_ACTION_COMMAND_RESULT_SCHEMA", "build_terminal_action_dispositions",
+    "terminal_action_binding_sha256",
     "build_terminal_delivery_command_result", "build_terminal_review_command_result",
     "build_zero_action_terminal_review_command_result",
     "build_terminal_review_result_v02", "read_terminal_review_result_v02_schema",

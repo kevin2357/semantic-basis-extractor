@@ -59,7 +59,7 @@ Gate C reached. See
 `SLICE 2 - CAUSAL REPRODUCTION AND CORRECTION FENCE.md`. Investigation is
 complete; API and owner approved the narrow correction.
 
-## Slice 3 — Shared terminal projection and exact consumer joins
+## Slice 3 — Shared terminal projection and exact consumer joins (complete)
 
 - Expose one canonical terminal-action binding projection/digest helper from
   the existing v0.2 contract implementation without changing its projected
@@ -73,7 +73,11 @@ complete; API and owner approved the narrow correction.
 - Do not accept either digest opportunistically, rewrite historical results,
   or weaken action-ID/cardinality/duplicate/conflict checks.
 
-## Slice 4 — Provider-free regression and focused qualification
+Status: implemented within the approved boundary. Producer bytes and the
+closed projection remain unchanged; packet decisions retain complete-binding
+digests.
+
+## Slice 4 — Provider-free regression and focused qualification (complete)
 
 - Cover realistic complete bindings containing the four proven extra fields.
 - Prove no-polish and multi-polish review captures reach canonical packet,
@@ -91,3 +95,6 @@ complete; API and owner approved the narrow correction.
 **Review gate D:** pause after implementation, focused tests, manifest check,
 and diff review. Versioning, broad/package qualification, release, deployment,
 and live witness remain separate gates.
+
+Gate D reached. See
+`SLICE 3-4 - SHARED DIGEST CORRECTION AND FOCUSED QUALIFICATION.md`.

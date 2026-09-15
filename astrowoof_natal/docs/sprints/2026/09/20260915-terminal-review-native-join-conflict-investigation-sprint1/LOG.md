@@ -49,3 +49,18 @@
 - Froze one additional implementation fence: terminal disposition membership
   uses the projected digest, while packet decisions retain their existing
   complete-ledger binding digest and delivery bytes.
+
+## 2026-09-15 — Slices 3–4 complete
+
+- Added one shared terminal binding digest helper and used it in the producer,
+  terminal/API validator, and both editorial-review disposition joins.
+- Preserved complete-ledger binding digests in packet decisions and made no
+  delivery-path or sealed-projection change.
+- Added a manifest-registered realistic no-polish/two-polish regression with
+  inventory-derived artifact assertions and strict negative cases.
+- Focused qualification passed: 82 tests on Python 3.12; 36 tests with four
+  expected skips on Python 3.11.
+- Corrected public capture against the two retained witnesses now produces
+  valid review packets with 9 and 11 inventory-derived artifacts respectively.
+- Reached Gate D. No version bump, broad/package qualification, release,
+  deployment, provider operation, or live witness occurred.

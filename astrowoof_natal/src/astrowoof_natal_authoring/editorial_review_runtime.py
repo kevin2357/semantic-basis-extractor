@@ -32,6 +32,7 @@ from .native_transitions import (
     NativeTransitionResultView,
     read_native_transition_result,
 )
+from .terminal_review_contracts import terminal_action_binding_sha256
 
 DELIVERY_RESULT_VERSION = "astrowoof.native_execution_result.v0.1"
 REVIEW_RESULT_VERSION = "astrowoof.native_execution_result.v0.2"
@@ -417,7 +418,7 @@ def _collect_editorial_review_runtime_evidence(
             binding = action.get("binding") or {}
             binding_digest = sha256(canonical_editorial_review_json(binding)).hexdigest()
             if branch == "editorial_review" and (
-                action["action_id"], binding_digest
+                action["action_id"], terminal_action_binding_sha256(action)
             ) not in result_dispositions:
                 return "unsupported", status("contradictory_native_evidence")
             provider = action.get("provider") or {}
@@ -668,7 +669,7 @@ def _build_editorial_review_runtime_capture(
             binding = action_state.get("binding") or {}
             binding_digest = sha256(canonical_editorial_review_json(binding)).hexdigest()
             if branch == "editorial_review" and (
-                action_state["action_id"], binding_digest
+                action_state["action_id"], terminal_action_binding_sha256(action_state)
             ) not in disposition_keys:
                 raise ValueError("Optional-stage action disposition is contradictory")
             return {

@@ -32,3 +32,19 @@ The authoritative coordinate, identity, digest, and authorization packet is reco
 - Result: 2 tests passed in 0.001 seconds.
 - Detailed correction fence:
   `SLICE 2 - CAUSAL REPRODUCTION AND CORRECTION FENCE.md`.
+
+## Slices 3–4
+
+- Shared digest helper: `terminal_action_binding_sha256()`.
+- Consumer joins corrected: initial pass and optional stage.
+- Packet complete-binding digest: preserved.
+- New test module: `test_terminal_review_capture_binding_join.py`, registered
+  in `test_suite_manifest.json`.
+- Python 3.12 focused matrix: 82 passed.
+- Python 3.11 focused matrix: 36 passed, 4 expected skips.
+- Retained witness A: valid packet, 9 projections, 9 artifacts (7 provider
+  responses and 2 distinct decks).
+- Retained witness B: valid packet, 13 projections, 11 artifacts (8 provider
+  responses and 3 distinct decks).
+- Detailed qualification:
+  `SLICE 3-4 - SHARED DIGEST CORRECTION AND FOCUSED QUALIFICATION.md`.
