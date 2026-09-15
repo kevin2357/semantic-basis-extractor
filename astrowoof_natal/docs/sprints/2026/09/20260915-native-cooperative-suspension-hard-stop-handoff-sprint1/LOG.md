@@ -127,3 +127,21 @@
   `UNSAT`, and seven deliberately weakened bad-world witnesses `SAT`, including
   duplicate-receipt and cross-invocation transport mutations.
 - Returned to Voof-paws B2; Slice 2 remains blocked pending re-review.
+
+## 2026-09-15 — Gate B2 approved and Slice 2 contracts
+
+- Incorporated API's Gate B2 approval and preserved the runtime-integration
+  fence.
+- Added closed provider-free readers for supervision, request, result, receipt,
+  command-result, and complete fixture-bundle documents.
+- Packaged the full schema family, one complete C1-to-C2 positive fixture, and
+  six new public catalog entries.
+- Resolved a prose-only circular-hash dependency: result seals independently,
+  receipt binds result, and command envelope binds both final digests.
+- Covered all six outcomes, exact replay/new-key conflict, stale and mismatched
+  identities, C1/C2 lineage, relocated root identities, prior ordinary-result
+  suppression, transport mutations, and bundle-wide cardinality provider-free.
+- Focused result: 10 tests passed with one expected optional-schema skip; 24
+  passed total when paired with the neighboring release-contract module.
+- Paused at Voof-paws C before any coordinator, CLI, control-file, process,
+  provider, API, R2, or release behavior.

@@ -221,9 +221,10 @@ The SBE result binds:
 from later result/receipt publication time. At most one canonical semantic
 suspension result may exist for one exact request identity. Exact replay returns
 that same result and receipt; it cannot append a second outcome for the request.
-Each canonical suspension result has exactly one canonical receipt and exactly
-one command-result transport binding; all three repeat the same invocation and
-result identity joins.
+The result hashes independently and does not embed the later receipt digest.
+Each canonical suspension result has exactly one canonical receipt that binds
+the result ID/digest, and exactly one command-result transport that binds both
+final result and receipt IDs/digests. All three repeat the same invocation join.
 
 ### Closed outcomes
 
@@ -264,7 +265,9 @@ Suspension publication reuses the existing native writer, journal, checkpoint,
 result-index, sealed-result, and receipt discipline. The suspension result is a
 new additive public type, not a reinterpretation of lifecycle status.
 
-The exact command-result envelope binds `supervision_invocation_id`,
+The result is sealed first without a receipt digest. Its canonical publication
+receipt then binds the result ID/digest and checkpoint identity. The exact
+command-result envelope binds `supervision_invocation_id`,
 `native_publication_invocation_id`, result ID/digest, receipt ID/digest,
 checkpoint digest, outcome, and exit code. It is written to the configured
 authoritative output and may also be emitted on stdout under the existing CLI

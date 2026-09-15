@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 1A Alloy spike complete; paused at Voof-paws B2.** This sprint is provider-free by
+**Slice 2 executable contracts complete; paused at Voof-paws C.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -195,6 +195,12 @@ cardinality.
 
 **Exit:** focused contract suite and API-consumable fixture bundle pass with
 zero provider/network/spend activity.
+
+**Result:** closed Python readers, one complete schema family, the public
+contract catalog entries, and a packaged joined fixture bundle are implemented.
+Focused source and neighboring release-contract tests pass. The executable
+translation also resolved the result/receipt circular-hash wording by following
+the existing result-then-receipt-then-command-envelope publication pattern.
 
 **Voof-paws C:** API review of the packaged contract before coordinator changes.
 
