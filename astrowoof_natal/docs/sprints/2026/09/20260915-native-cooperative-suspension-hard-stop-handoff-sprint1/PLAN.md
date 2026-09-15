@@ -169,10 +169,12 @@ No schema/reader or runtime implementation begins before this checkpoint.
 **Result:** the bounded shared model is recorded in
 `tools/native_cooperative_suspension_v1.als`, with stable receipt, rule mapping,
 and findings in `SLICE 1A - SHARED ALLOY PROTOCOL SPIKE.md`. Four valid worlds
-are satisfiable, nine assertions have no bounded counterexample, and five
+are satisfiable, ten assertions have no bounded counterexample, and seven
 weakened rules each admit the intended bad world. The spike tightened
 one-result-per-request cardinality, observation-time ordinary-result
-precedence, and non-branching resolution history.
+precedence, non-branching resolution history, invocation-wide request conflict,
+publication suppression after prior ordinary results, and exact receipt/output
+cardinality.
 
 ## Slice 2 — Provider-free contract fixtures and readers
 

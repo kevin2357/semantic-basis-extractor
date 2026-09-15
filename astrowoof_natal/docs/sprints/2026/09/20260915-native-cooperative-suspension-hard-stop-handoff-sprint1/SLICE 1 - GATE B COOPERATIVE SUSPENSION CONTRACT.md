@@ -142,9 +142,13 @@ Required fields:
 | `requested_at`, `expires_at`, `grace_deadline` | UTC instants; request must be fresh and cannot extend the envelope grace |
 | `request_sha256` | canonical digest over all preceding fields |
 
-An exact duplicate is idempotent. A second differing request for the same
-supervision invocation is `suspension_refused/request_conflict`. A request for
-an earlier launch generation is stale and must never affect the current child.
+An exact duplicate is idempotent and remains the same canonical request
+identity. Any distinct second request for the same supervision invocation is
+`suspension_refused/request_conflict`, even if it uses a new idempotency key.
+Changing the key, digest, actor/reason, checkpoint, or any other bound field
+cannot create a second valid stop command or alter the first result. A request
+for an earlier launch generation is stale and must never affect the current
+child.
 
 Absence means continue ordinary behavior; malformed, conflicting, or identity-
 mismatched presence means fail closed before further provider/local work and
@@ -217,6 +221,9 @@ The SBE result binds:
 from later result/receipt publication time. At most one canonical semantic
 suspension result may exist for one exact request identity. Exact replay returns
 that same result and receipt; it cannot append a second outcome for the request.
+Each canonical suspension result has exactly one canonical receipt and exactly
+one command-result transport binding; all three repeat the same invocation and
+result identity joins.
 
 ### Closed outcomes
 
@@ -265,10 +272,12 @@ transport rules.
 
 Precedence is strict:
 
-1. a valid ordinary terminal/delivery result committed before the result's
+1. a valid ordinary terminal/delivery result committed before the request's
    recorded native `observed_at` safe point remains authoritative and is
    returned unchanged, including when it was committed after API admitted the
-   force fence but before SBE observed the request;
+   force fence but before SBE observed the request; SBE must not mint a
+   suspension result, receipt, or suspension command-result envelope for that
+   observation;
 2. otherwise, an exact suspension result produced by this invocation outranks
    exit code and diagnostic logs;
 3. API availability/latest-result discovery is not permitted for ordinary
@@ -285,8 +294,11 @@ acyclic and non-branching per fence: an evidence record has at most one direct
 successor, and every non-root record has exactly one same-fence predecessor.
 No record changes the original request, fence, or ambiguity in place.
 
-Exact replay returns the same result/receipt identities and performs no provider
-or workspace mutation. A stale or conflicting replay refuses. Restarted workers
+Exact replay returns the same result/receipt/command-result identities and
+performs no provider or workspace mutation. A distinct later request for the
+same invocation is a conflict regardless of idempotency key and can publish
+only its typed conflict refusal; it cannot alter, downgrade, or replace the
+first canonical request's result. A stale replay refuses. Restarted workers
 cannot honor a prior control root or request because worker boot, invocation ID,
 generation, command digest, and control-root identity no longer all join.
 

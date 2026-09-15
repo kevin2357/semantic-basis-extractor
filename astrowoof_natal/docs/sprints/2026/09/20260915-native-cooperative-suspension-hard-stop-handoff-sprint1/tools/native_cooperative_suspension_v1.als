@@ -55,6 +55,12 @@ sig SuspensionRequest {
   at: one Moment
 }
 
+sig SuspensionObservation {
+  request: one SuspensionRequest,
+  checkpoint: one Checkpoint,
+  at: one Moment
+}
+
 abstract sig SuspensionOutcome {}
 one sig Suspended, Deferred, Refused, ProviderAmbiguous,
         PublicationAmbiguous extends SuspensionOutcome {}
@@ -62,10 +68,22 @@ one sig Suspended, Deferred, Refused, ProviderAmbiguous,
 sig SuspensionResult {
   invocation: one Invocation,
   request: one SuspensionRequest,
+  observation: one SuspensionObservation,
   observedCheckpoint: one Checkpoint,
   outcome: one SuspensionOutcome,
-  observedAt: one Moment,
   at: one Moment
+}
+
+
+sig SuspensionReceipt {
+  invocation: one Invocation,
+  result: one SuspensionResult
+}
+
+sig SuspensionCommandResult {
+  invocation: one Invocation,
+  result: one SuspensionResult,
+  receipt: one SuspensionReceipt
 }
 
 sig OrdinaryResult {
@@ -108,8 +126,12 @@ fact IdentitySpine {
   all q: SuspensionRequest |
     q.fence.invocation = q.invocation and
     q.admissionCheckpoint = q.fence.observedCheckpoint
+  all x: SuspensionObservation |
+    x.checkpoint.ownerRun = x.request.invocation.ownerRun
   all s: SuspensionResult |
     s.request.invocation = s.invocation and
+    s.observation.request = s.request and
+    s.observedCheckpoint = s.observation.checkpoint and
     s.observedCheckpoint.ownerRun = s.invocation.ownerRun
   all o: OrdinaryResult | o.checkpoint.ownerRun = o.invocation.ownerRun
   all r: Resolution |
@@ -138,8 +160,9 @@ fact CheckpointLineage {
 
 fact EventOrdering {
   all q: SuspensionRequest | time/lte[q.fence.at, q.at]
+  all x: SuspensionObservation | time/lte[x.request.at, x.at]
   all s: SuspensionResult |
-    time/lte[s.request.at, s.observedAt] and time/lte[s.observedAt, s.at]
+    time/lte[s.observation.at, s.at]
   all r: Resolution |
     time/lte[r.fence.at, r.at] and
     (some r.predecessor implies time/lt[r.predecessor.at, r.at]) and
@@ -161,13 +184,19 @@ pred exactReplay[q1, q2: SuspensionRequest] {
 }
 
 pred conflictingReplay[q1, q2: SuspensionRequest] {
-  q1.invocation = q2.invocation and q1.key = q2.key and q1.digest != q2.digest
+  q1.invocation = q2.invocation and q1 != q2
+}
+
+pred canonicalRequest[q: SuspensionRequest] {
+  no earlier: SuspensionRequest |
+    earlier.invocation = q.invocation and time/lt[earlier.at, q.at]
 }
 
 pred BaseWorld {
   some ForceFence
   all i: Invocation | one f: ForceFence | f.invocation = i
   all f: ForceFence | some q: SuspensionRequest | q.fence = f
+  all q: SuspensionRequest | one x: SuspensionObservation | x.request = q
   all f: ForceFence | some r: Resolution | r.fence = f
 }
 
@@ -179,19 +208,31 @@ pred FullContract {
   // or its exact contiguous successor.
   all s: SuspensionResult |
     (s.outcome != Refused implies
+      canonicalRequest[s.request] and
       s.request.freshness = Current and supported[s.invocation] and
       sameOrContiguousSuccessor[s.request.admissionCheckpoint, s.observedCheckpoint])
 
-  // Replays are inert: an exact replay shares one semantic result; a conflict
-  // can produce only a refusal.
+  // Exact replay is the same canonical request atom. Every distinct later
+  // request for the invocation is a conflict regardless of idempotency key.
   all disj q1, q2: SuspensionRequest |
-    exactReplay[q1, q2] implies q1 = q2
-  all disj q1, q2: SuspensionRequest |
-    conflictingReplay[q1, q2] implies
-      all s: SuspensionResult | s.request in q1 + q2 implies s.outcome = Refused
+    q1.invocation = q2.invocation implies
+      q1.at != q2.at and not exactReplay[q1, q2]
+  all q: SuspensionRequest |
+    not canonicalRequest[q] implies
+      all s: SuspensionResult | s.request = q implies s.outcome = Refused
 
   // One canonical request can publish at most one semantic native result.
   all q: SuspensionRequest | lone { s: SuspensionResult | s.request = q }
+  all s: SuspensionResult | one p: SuspensionReceipt |
+    p.result = s and p.invocation = s.invocation
+  all s: SuspensionResult | one c: SuspensionCommandResult |
+    c.result = s and c.invocation = s.invocation and
+    c.receipt.result = s and c.receipt.invocation = s.invocation
+  all p: SuspensionReceipt | p.invocation = p.result.invocation
+  all c: SuspensionCommandResult |
+    c.invocation = c.result.invocation and
+    c.receipt.result = c.result and
+    c.receipt.invocation = c.invocation
 
   // A resolution history is a single append-only chain per fence, not merely
   // an acyclic predecessor graph.
@@ -209,9 +250,12 @@ pred FullContract {
   // An already-published ordinary result dominates later suspension evidence.
   all r: Resolution |
     (some r.selectedOrdinary implies no r.selectedSuspension)
-  all r: Resolution, o: OrdinaryResult, s: SuspensionResult |
-    s.request.fence = r.fence and time/lte[s.at, r.at] and
-    o.invocation = r.fence.invocation and time/lt[o.at, s.observedAt] implies
+  all o: OrdinaryResult, x: SuspensionObservation |
+    o.invocation = x.request.invocation and time/lt[o.at, x.at] implies
+      no s: SuspensionResult | s.observation = x
+  all r: Resolution, o: OrdinaryResult, x: SuspensionObservation |
+    x.request.fence = r.fence and time/lte[x.at, r.at] and
+    o.invocation = r.fence.invocation and time/lt[o.at, x.at] implies
       r.selectedOrdinary = o and no r.selectedSuspension
 
   // A fence is irreversible for the exact invocation.
@@ -235,10 +279,11 @@ pred ValidTwoRunWorld {
 pred ValidConflictReplayWorld {
   FullContract
   some disj q1, q2: SuspensionRequest |
+    canonicalRequest[q1] and time/lt[q1.at, q2.at] and
     conflictingReplay[q1, q2] and
     some s1, s2: SuspensionResult |
-      s1.request = q1 and s2.request = q2 and
-      s1.outcome = Refused and s2.outcome = Refused
+      s1.request = q1 and s2.request = q2 and s1.outcome = Suspended and
+      s2.outcome = Refused
 }
 
 pred ValidSuccessorObservationWorld {
@@ -250,10 +295,11 @@ pred ValidSuccessorObservationWorld {
 
 pred ValidPriorOrdinaryDominanceWorld {
   FullContract
-  some r: Resolution, o: OrdinaryResult, s: SuspensionResult |
-    s.request.fence = r.fence and time/lte[s.at, r.at] and
-    o.invocation = r.fence.invocation and time/lt[o.at, s.observedAt] and
-    r.selectedOrdinary = o and no r.selectedSuspension
+  some r: Resolution, o: OrdinaryResult, x: SuspensionObservation |
+    x.request.fence = r.fence and time/lte[x.at, r.at] and
+    o.invocation = r.fence.invocation and time/lt[o.at, x.at] and
+    r.selectedOrdinary = o and no r.selectedSuspension and
+    no s: SuspensionResult | s.observation = x
 }
 
 assert FenceNeverRestoresOrdinaryAuthority {
@@ -286,10 +332,9 @@ assert PartialEvidenceCannotSettleCustody {
 }
 
 assert PriorOrdinaryResultDominates {
-  FullContract implies all r: Resolution, o: OrdinaryResult, s: SuspensionResult |
-    s.request.fence = r.fence and time/lte[s.at, r.at] and
-    o.invocation = r.fence.invocation and time/lt[o.at, s.observedAt]
-      implies r.selectedOrdinary = o and no r.selectedSuspension
+  FullContract implies all o: OrdinaryResult, x: SuspensionObservation |
+    o.invocation = x.request.invocation and time/lt[o.at, x.at] implies
+      no s: SuspensionResult | s.observation = x
 }
 
 assert OneCanonicalResultPerRequest {
@@ -297,11 +342,21 @@ assert OneCanonicalResultPerRequest {
     lone { s: SuspensionResult | s.request = q }
 }
 
+assert ExactReceiptAndCommandResultBinding {
+  FullContract implies
+    (all s: SuspensionResult | one p: SuspensionReceipt | p.result = s) and
+    (all s: SuspensionResult | one c: SuspensionCommandResult |
+      c.result = s and c.receipt.result = s and c.invocation = s.invocation)
+}
+
 assert ReplayIsInertOrRefused {
   FullContract implies all disj q1, q2: SuspensionRequest |
-    (exactReplay[q1, q2] implies q1 = q2) and
-    (conflictingReplay[q1, q2] implies
-      all s: SuspensionResult | s.request in q1 + q2 implies s.outcome = Refused)
+    q1.invocation = q2.invocation implies
+      (not exactReplay[q1, q2] and
+       (time/lt[q1.at, q2.at] implies
+         all s: SuspensionResult | s.request = q2 implies s.outcome = Refused) and
+       (time/lt[q2.at, q1.at] implies
+         all s: SuspensionResult | s.request = q1 implies s.outcome = Refused))
 }
 
 assert CrossRunIsolation {
@@ -335,7 +390,7 @@ pred PriorOrdinaryResultLosesWitness {
   BaseWorld
   some r: Resolution, o: OrdinaryResult, s: SuspensionResult |
     s.request.fence = r.fence and time/lte[s.at, r.at] and
-    o.invocation = r.fence.invocation and time/lt[o.at, s.observedAt] and
+    o.invocation = r.fence.invocation and time/lt[o.at, s.observation.at] and
     r.selectedSuspension = s and no r.selectedOrdinary
 }
 
@@ -345,20 +400,41 @@ pred ConflictingResultsForOneRequestWitness {
     s1.request = s2.request and s1.outcome != s2.outcome
 }
 
+pred DuplicateReceiptWitness {
+  BaseWorld
+  some s: SuspensionResult | #{ p: SuspensionReceipt | p.result = s } > 1
+}
+
+pred CrossInvocationCommandResultWitness {
+  BaseWorld
+  some c: SuspensionCommandResult |
+    c.invocation != c.result.invocation or
+    c.receipt.result != c.result or
+    c.receipt.invocation != c.invocation
+}
+
 run ValidTwoRunWorld for 8 but exactly 2 Run, exactly 2 Invocation,
   exactly 2 ForceFence, exactly 2 SuspensionRequest, exactly 2 SuspensionResult,
-  exactly 1 OrdinaryResult, exactly 1 ProcessExit, exactly 3 Resolution,
+  exactly 2 SuspensionObservation, exactly 2 SuspensionReceipt,
+  exactly 2 SuspensionCommandResult, exactly 1 OrdinaryResult,
+  exactly 1 ProcessExit, exactly 3 Resolution,
   exactly 2 Checkpoint, exactly 8 Moment
 run ValidConflictReplayWorld for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 2 SuspensionRequest, exactly 2 SuspensionResult,
-  exactly 1 Resolution, exactly 1 Checkpoint, exactly 8 Moment
+  exactly 2 SuspensionObservation, exactly 2 SuspensionReceipt,
+  exactly 2 SuspensionCommandResult, exactly 1 Resolution,
+  exactly 1 Checkpoint, exactly 8 Moment
 run ValidSuccessorObservationWorld for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 1 SuspensionRequest, exactly 1 SuspensionResult,
-  exactly 1 Resolution, exactly 2 Checkpoint, exactly 8 Moment
+  exactly 1 SuspensionObservation, exactly 1 SuspensionReceipt,
+  exactly 1 SuspensionCommandResult, exactly 1 Resolution,
+  exactly 2 Checkpoint, exactly 8 Moment
 run ValidPriorOrdinaryDominanceWorld for 8 but exactly 1 Run, exactly 1 Invocation,
-  exactly 1 ForceFence, exactly 1 SuspensionRequest, exactly 1 SuspensionResult,
-  exactly 1 OrdinaryResult, exactly 1 Resolution, exactly 1 Checkpoint,
-  exactly 8 Moment
+  exactly 1 ForceFence, exactly 1 SuspensionRequest,
+  exactly 1 SuspensionObservation, exactly 0 SuspensionResult,
+  exactly 0 SuspensionReceipt, exactly 0 SuspensionCommandResult,
+  exactly 1 OrdinaryResult, exactly 1 Resolution,
+  exactly 1 Checkpoint, exactly 8 Moment
 
 check FenceNeverRestoresOrdinaryAuthority for 8
 check StaleOrMismatchedRequestCannotSuspend for 8
@@ -369,6 +445,7 @@ check PriorOrdinaryResultDominates for 8
 check ReplayIsInertOrRefused for 8
 check CrossRunIsolation for 8
 check OneCanonicalResultPerRequest for 8
+check ExactReceiptAndCommandResultBinding for 8
 
 run ForkedResolutionWitness for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 1 SuspensionRequest, exactly 3 Resolution,
@@ -381,9 +458,19 @@ run StaleRequestSuspendsWitness for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 Resolution, exactly 1 Checkpoint, exactly 8 Moment
 run PriorOrdinaryResultLosesWitness for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 1 SuspensionRequest, exactly 1 SuspensionResult,
-  exactly 1 OrdinaryResult, exactly 1 Resolution, exactly 1 Checkpoint,
-  exactly 8 Moment
+  exactly 1 SuspensionObservation, exactly 1 OrdinaryResult,
+  exactly 1 Resolution, exactly 1 Checkpoint, exactly 8 Moment
 run ConflictingResultsForOneRequestWitness for 8 but exactly 1 Run,
   exactly 1 Invocation, exactly 1 ForceFence, exactly 1 SuspensionRequest,
-  exactly 2 SuspensionResult, exactly 1 Resolution, exactly 1 Checkpoint,
+  exactly 1 SuspensionObservation, exactly 2 SuspensionResult,
+  exactly 1 Resolution, exactly 1 Checkpoint, exactly 8 Moment
+run DuplicateReceiptWitness for 8 but exactly 1 Run, exactly 1 Invocation,
+  exactly 1 ForceFence, exactly 1 SuspensionRequest,
+  exactly 1 SuspensionObservation, exactly 1 SuspensionResult,
+  exactly 2 SuspensionReceipt, exactly 1 Resolution, exactly 1 Checkpoint,
   exactly 8 Moment
+run CrossInvocationCommandResultWitness for 8 but exactly 2 Run,
+  exactly 2 Invocation, exactly 2 ForceFence, exactly 2 SuspensionRequest,
+  exactly 2 SuspensionObservation, exactly 1 SuspensionResult,
+  exactly 1 SuspensionReceipt, exactly 1 SuspensionCommandResult,
+  exactly 2 Resolution, exactly 2 Checkpoint, exactly 8 Moment

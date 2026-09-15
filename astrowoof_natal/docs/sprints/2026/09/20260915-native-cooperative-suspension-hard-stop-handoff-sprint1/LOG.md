@@ -111,3 +111,19 @@
   scope, and proof limits.
 - Paused at Voof-paws B2. No schema, reader, runtime, process-control, provider,
   API, R2, or release action occurred.
+
+## 2026-09-15 — Gate B2 corrections
+
+- Read API's B2 hold and agreed with both identified relational gaps.
+- Made request conflict invocation-wide: a distinct later request refuses even
+  when its idempotency key differs, while the first canonical result remains
+  unchanged.
+- Split safe-point observation from suspension-result publication and made a
+  prior ordinary result suppress suspension result/receipt/transport creation
+  entirely.
+- Added compact one-result-to-one-receipt-to-one-command-result relations with
+  exact same-invocation binding.
+- Reran the complete campaign: four valid scenarios `SAT`, ten protected checks
+  `UNSAT`, and seven deliberately weakened bad-world witnesses `SAT`, including
+  duplicate-receipt and cross-invocation transport mutations.
+- Returned to Voof-paws B2; Slice 2 remains blocked pending re-review.

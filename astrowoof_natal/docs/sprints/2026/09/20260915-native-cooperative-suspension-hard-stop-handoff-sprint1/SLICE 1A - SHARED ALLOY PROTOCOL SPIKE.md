@@ -3,8 +3,8 @@
 ## Result
 
 The bounded model is useful and ready for Voof-paws B2. Four complete protocol
-worlds are satisfiable, all nine full-contract assertions have no
-counterexample in scope, and five deliberately weakened rules each produce a
+worlds are satisfiable, all ten full-contract assertions have no
+counterexample in scope, and seven deliberately weakened rules each produce a
 bad-world witness. No schema, reader, coordinator, process-control, provider,
 R2, API, or release work occurred.
 
@@ -16,7 +16,7 @@ R2, API, or release work occurred.
 - Solver: CLI-default `sat4j`
 - Model: `tools/native_cooperative_suspension_v1.als`
 - Model SHA-256:
-  `5ef682675f8dbdf60462406c2c18187dfa2843751fe73c611417773ebaa47a36`
+  `96cc83a08f44d42a2f026e7d65fb6687e88d26d9d42acbfa2c6329ccc4c9f926`
 - Stable result summary: `alloy-protocol-spike-receipt.v1.json`
 - Rule/fixture traceability: `ALLOY RULE MAPPING.md`
 - Private raw analyzer receipt:
@@ -34,21 +34,24 @@ All four returned `SAT`:
 
 1. two isolated runs with suspension, ordinary-result, resolution-successor,
    exit, and worker-execution-release evidence;
-2. conflicting same-key request replay producing refusals;
+2. a valid first request followed by a distinct same-invocation request with a
+   different key, producing a typed conflict refusal without changing the first
+   result;
 3. force-fence checkpoint C1 followed by exact contiguous safe-point C2; and
 4. an ordinary result committed before suspension observation dominating the
    resolution.
 
-The satisfiable scenarios prevent the nine `UNSAT` checks from being mistaken
+The satisfiable scenarios prevent the ten `UNSAT` checks from being mistaken
 for proofs over an impossible full-contract world.
 
 ## Full-contract checks
 
-All nine checks returned `UNSAT`, meaning no counterexample was found in the
+All ten checks returned `UNSAT`, meaning no counterexample was found in the
 finite scope: irreversible fence, stale/mismatched refusal, contiguous
 non-branching resolution, worker-only release after exit, no partial-evidence
 settlement, ordinary-result precedence, replay behavior, cross-run isolation,
-and one canonical result per request.
+one canonical result per request, and exact one-to-one same-invocation
+receipt/command-result transport binding.
 
 Every command used an overall scope of eight with exactly eight ordered moments.
 The inhabited scenarios additionally pin one or two runs/invocations and exact
@@ -71,9 +74,26 @@ The spike earned three concrete contract tightenings:
    non-branching, same-fence resolution history.
 
 The model also made the already intended same-run checkpoint-lineage join
-explicit. Five weakened predicates demonstrate concrete bad worlds for forked
+explicit. Seven weakened predicates demonstrate concrete bad worlds for forked
 resolution, exit-as-total-settlement, stale-request suspension, lost ordinary
-precedence, and conflicting outcomes for one request.
+precedence, conflicting outcomes for one request, duplicate receipts, and
+cross-invocation command-result binding.
+
+## Gate B2 review corrections
+
+API's first B2 review found two remaining relational gaps. Both are now closed:
+
+- conflict is invocation-wide, so any distinct later request refuses even when
+  its idempotency key changes; the valid conflict world keeps the first
+  suspended result intact and refuses only the later request; and
+- an ordinary result committed before the recorded safe-point observation now
+  suppresses suspension-result publication itself. The valid precedence world
+  contains an observation and ordinary resolution but exactly zero suspension
+  results, receipts, or suspension command-result envelopes.
+
+Compact `SuspensionReceipt` and `SuspensionCommandResult` relations now require
+exactly one same-invocation receipt and transport binding per result. The full
+campaign was rerun after these changes.
 
 ## Limits and decision
 

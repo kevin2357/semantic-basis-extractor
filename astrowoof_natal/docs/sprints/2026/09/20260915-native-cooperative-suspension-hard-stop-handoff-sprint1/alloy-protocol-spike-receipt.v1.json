@@ -10,7 +10,7 @@
   },
   "model": {
     "path": "tools/native_cooperative_suspension_v1.als",
-    "sha256": "5ef682675f8dbdf60462406c2c18187dfa2843751fe73c611417773ebaa47a36",
+    "sha256": "96cc83a08f44d42a2f026e7d65fb6687e88d26d9d42acbfa2c6329ccc4c9f926",
     "overall_scope": 8,
     "ordered_moments": 8
   },
@@ -29,14 +29,17 @@
     "PriorOrdinaryResultDominates": "UNSAT",
     "ReplayIsInertOrRefused": "UNSAT",
     "CrossRunIsolation": "UNSAT",
-    "OneCanonicalResultPerRequest": "UNSAT"
+    "OneCanonicalResultPerRequest": "UNSAT",
+    "ExactReceiptAndCommandResultBinding": "UNSAT"
   },
   "weakened_rule_witnesses": {
     "ForkedResolutionWitness": "SAT",
     "ExitSettlesAllCustodyWitness": "SAT",
     "StaleRequestSuspendsWitness": "SAT",
     "PriorOrdinaryResultLosesWitness": "SAT",
-    "ConflictingResultsForOneRequestWitness": "SAT"
+    "ConflictingResultsForOneRequestWitness": "SAT",
+    "DuplicateReceiptWitness": "SAT",
+    "CrossInvocationCommandResultWitness": "SAT"
   },
   "provider_operations": 0,
   "external_state_access": 0,
