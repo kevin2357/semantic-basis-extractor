@@ -85,3 +85,27 @@
   optional skips on each.
 - Original Slice 2 may resume with the combined broad/full-suite, wheel, and
   installed-wheel/API-host gates after review of the handoff.
+
+## 2026-09-15 — Release playbook review and identity freeze
+
+- Re-read `Maintainer Release Playbook.md` before release-bound work.
+- Confirmed local tag and GitHub release identity
+  `astrowoof-natal-authoring-v0.4.63` are unused.
+- Selected fresh distribution version `0.4.63` and updated `pyproject.toml`
+  before beginning the release-bound full suite, as required by the playbook.
+- Repository search found no non-sprint version-derived fixture or test
+  expectation requiring an accompanying `0.4.62` to `0.4.63` update.
+- Tag, publication, deployment, and live witness remain unauthorized.
+
+## 2026-09-15 — Slice 2A source regression
+
+- Focused editorial capture matrix passed on Python 3.11.15 and 3.12.14: 45
+  tests with 1 optional skip on each runtime.
+- Manifest-controlled full suite passed on Python 3.12.14: 1,200 tests, 60
+  expected skips, zero failures, 1,133.50017 seconds.
+- Test inventory SHA-256:
+  `3831ed792e633b43128e611e93738d8da0af9a0ed4b22f192faa853828ce9b9e`.
+- Recorded compact source-regression evidence under `results/` as required by
+  the release playbook.
+- No provider, application-network, R2, Better Stack, or authoritative
+  workspace operation occurred.

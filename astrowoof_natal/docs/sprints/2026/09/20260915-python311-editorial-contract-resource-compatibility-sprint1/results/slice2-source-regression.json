@@ -1,0 +1,27 @@
+{
+  "schema_version": "astrowoof.sbe_release_source_regression.v1",
+  "version": "0.4.63",
+  "python_311_focused": {
+    "interpreter": "CPython 3.11.15",
+    "tests": 45,
+    "skips": 1,
+    "failures": 0
+  },
+  "python_312_focused": {
+    "interpreter": "CPython 3.12.14",
+    "tests": 45,
+    "skips": 1,
+    "failures": 0
+  },
+  "manifest_full_suite": {
+    "interpreter": "CPython 3.12.14",
+    "tests": 1200,
+    "skips": 60,
+    "failures": 0,
+    "wall_seconds": 1133.50017,
+    "test_inventory_sha256": "3831ed792e633b43128e611e93738d8da0af9a0ed4b22f192faa853828ce9b9e"
+  },
+  "provider_operations": 0,
+  "network_application_operations": 0,
+  "workspace_mutations": 0
+}

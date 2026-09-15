@@ -92,6 +92,10 @@ Prerequisite status: satisfied by qualified source commit `235791de`. The
 companion ran focused two-runtime source tests only; this sprint still owns and
 has not yet run the combined broad/full-suite and wheel gates.
 
+Release identity status: fresh version `0.4.63` selected after re-reading the
+release playbook and confirming its component tag/GitHub release are unused.
+The version is frozen before the release-bound full suite.
+
 1. Exercise the public delivery and terminal-review capture routes through
    typed-status construction on Python 3.11.
 2. Prove exact result/root binding, eligibility, packet assembly, validation,
@@ -106,6 +110,11 @@ has not yet run the combined broad/full-suite and wheel gates.
 Acceptance: the declared minimum Python runtime can complete both public
 capture routes from the installed candidate without changing contracts or
 performing provider operations.
+
+Status: source-regression sub-boundary complete. The frozen 0.4.63 tree passed
+45 focused tests on both Python 3.11.15 and 3.12.14 and the manifest-controlled
+1,200-test full suite on Python 3.12.14. Artifact-source commit, reproducible
+wheel construction, and installed qualification remain.
 
 ## Review Gate B — Release decision
 
