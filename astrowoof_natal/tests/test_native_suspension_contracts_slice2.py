@@ -302,6 +302,22 @@ class NativeSuspensionContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicated"):
             validate_suspension_fixture_bundle(duplicate)
 
+    def test_bundle_rejects_second_resealed_result_for_same_request(self):
+        envelope, request, result, receipt, command = _docs()
+        first = {"name": "canonical", "envelope": envelope, "request": request,
+                 "result": result, "receipt": receipt, "command_result": command}
+        second = copy.deepcopy(first)
+        second["name"] = "conflicting-second-result"
+        second["result"]["reason_code"] = "different-semantic-conclusion"
+        _rebind(second["result"], second["receipt"], second["command_result"])
+        bundle = seal_document({
+            "schema_version": "astrowoof.native_suspension_fixture_bundle.v1",
+            "bundle_sha256": "", "cases": [first, second],
+        }, "bundle_sha256")
+
+        with self.assertRaisesRegex(ValueError, "request identity is duplicated"):
+            validate_suspension_fixture_bundle(bundle)
+
     def test_packaged_fixture_bundle_contains_full_joined_documents(self):
         bundle = read_native_suspension_fixture_bundle()
         self.assertEqual(["suspended-checkpointed"], [

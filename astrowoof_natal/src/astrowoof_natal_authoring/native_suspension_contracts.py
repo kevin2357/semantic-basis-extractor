@@ -455,6 +455,7 @@ def validate_suspension_fixture_bundle(value: object) -> dict[str, Any]:
     doc = _closed(value, keys, "Suspension fixture bundle")
     if doc["schema_version"] != FIXTURE_BUNDLE_SCHEMA or not isinstance(doc["cases"], list):
         raise ValueError("Suspension fixture bundle is invalid")
+    seen_requests: set[tuple[str, str]] = set()
     seen_results: set[str] = set()
     seen_receipts: set[str] = set()
     for case in doc["cases"]:
@@ -472,8 +473,12 @@ def validate_suspension_fixture_bundle(value: object) -> dict[str, Any]:
             case["command_result"], result=res, receipt=rec,
             request=req, envelope=env,
         )
+        request_identity = (req["request_id"], req["request_sha256"])
+        if request_identity in seen_requests:
+            raise ValueError("Suspension bundle request identity is duplicated")
         if res["result_id"] in seen_results or rec["receipt_id"] in seen_receipts:
             raise ValueError("Suspension bundle transport identity is duplicated")
+        seen_requests.add(request_identity)
         seen_results.add(res["result_id"])
         seen_receipts.add(rec["receipt_id"])
     if doc["bundle_sha256"] != _digest_without(doc, "bundle_sha256"):

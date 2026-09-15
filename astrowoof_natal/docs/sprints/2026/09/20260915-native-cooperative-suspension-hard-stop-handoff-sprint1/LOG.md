@@ -145,3 +145,16 @@
   passed total when paired with the neighboring release-contract module.
 - Paused at Voof-paws C before any coordinator, CLI, control-file, process,
   provider, API, R2, or release behavior.
+
+## 2026-09-15 — Voof-paws C cardinality correction
+
+- Read API's executable-contract review and reproduced the bundle-level gap:
+  transport IDs were unique, but a second coherently re-sealed result could
+  still target the same exact request.
+- Made the bundle reader reject a repeated `(request_id, request_sha256)`
+  identity before admitting another result/receipt/command triple.
+- Added a provider-free mutation that changes the semantic conclusion and
+  recomputes every downstream digest and identity; the bundle now refuses it.
+- Exact replay continues to return the already published identities rather
+  than append another fixture result.
+- Runtime integration remains blocked at Voof-paws C pending re-review.

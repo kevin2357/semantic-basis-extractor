@@ -49,10 +49,12 @@ The focused tests cover:
   identity;
 - prior ordinary-result evidence suppressing suspension publication;
 - recomputed-digest receipt and command-result join mutations; and
-- global result/receipt uniqueness in the full fixture bundle.
+- global request/result/receipt uniqueness in the full fixture bundle,
+  including rejection of a fully re-sealed second semantic result for the
+  same exact request.
 
-Focused source result: **10 tests passed, 1 expected optional `jsonschema`
-skip**. The neighboring release-contract module also passed, for **24 tests
+Focused source result: **11 tests passed, 1 expected optional `jsonschema`
+skip**. The neighboring release-contract module also passed, for **25 tests
 passed total with the same one skip**.
 
 ## Alloy traceability
