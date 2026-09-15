@@ -98,3 +98,21 @@ and live witness remain separate gates.
 
 Gate D reached. See
 `SLICE 3-4 - SHARED DIGEST CORRECTION AND FOCUSED QUALIFICATION.md`.
+
+## Slice 5 — Release-bound regression and package qualification (in progress)
+
+- Freeze fresh distribution version `0.4.64` before release-bound testing.
+- Retain the focused Python 3.11 coverage required by API review.
+- Run the complete manifest-controlled repository suite on the maintained host
+  interpreter.
+- Commit the exact tested artifact source, build twice from clean committed
+  source with one recorded `SOURCE_DATE_EPOCH`, and require byte identity.
+- Inspect wheel contents and qualify the exact candidate from clean installed
+  Python 3.11 and 3.12 environments, including release smoke, lifecycle smoke,
+  editorial-review QA, and the feature-specific public runtime regressions.
+- Record `no Alloy impact`: this correction aligns an existing exact digest
+  join and changes no modeled chronology, authority, custody, selection,
+  packet scope, or transition semantics.
+
+**Review gate E:** pause with exact release-lock commit and wheel coordinates
+for API consumer review and explicit owner tag/publication authorization.

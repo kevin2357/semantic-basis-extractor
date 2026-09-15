@@ -1,0 +1,26 @@
+{
+  "schema_version": "astrowoof.sbe_source_regression_receipt.v1",
+  "version": "0.4.64",
+  "python_311": {
+    "runtime": "CPython 3.11.15",
+    "test_count": 66,
+    "skip_count": 5,
+    "failure_count": 0,
+    "wall_seconds": 133.679,
+    "network": "disabled",
+    "source_mount": "read_only"
+  },
+  "python_312": {
+    "runtime": "CPython 3.12.14",
+    "test_count": 1202,
+    "skip_count": 60,
+    "failure_count": 0,
+    "wall_seconds": 1155.208057,
+    "worker_count": 1,
+    "test_inventory_sha256": "2b7ef2cce804a16a13fb51b0d5729f06674a468739cfc460993d0473b577436a"
+  },
+  "provider_operations": 0,
+  "network_operations": 0,
+  "authoritative_workspace_mutations": 0,
+  "alloy_impact": "none"
+}

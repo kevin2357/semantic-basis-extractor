@@ -64,3 +64,30 @@
   valid review packets with 9 and 11 inventory-derived artifacts respectively.
 - Reached Gate D. No version bump, broad/package qualification, release,
   deployment, provider operation, or live witness occurred.
+
+## 2026-09-15 — Gate D approved and release identity frozen
+
+- API approved the implementation and retained-workspace qualification in
+  `API REVIEW - GATE D IMPLEMENTATION AND QUALIFICATION.md`.
+- Re-read the maintainer release playbook and selected the required broad/full
+  manifest gate followed by clean reproducible-wheel and installed-runtime
+  qualification.
+- Confirmed `0.4.64`, its component-scoped tag, and GitHub release identity are
+  unused; froze `pyproject.toml` to `0.4.64` before release-bound testing.
+- No version-derived fixture or test expectation outside historical sprint and
+  release records requires an update.
+- Recorded no Alloy impact because the correction aligns an existing terminal
+  digest join without changing modeled pipeline relationships.
+
+## 2026-09-15 — Release-bound source gates passed
+
+- Network-disabled, read-only Python 3.11.15 focused editorial/terminal matrix:
+  66 tests, 5 expected skips, zero failures, 133.679 seconds.
+- Manifest-controlled full suite on Python 3.12.14: 1,202 tests, 60 expected
+  skips, zero failures, 1,155.208057 seconds.
+- Full-suite test inventory SHA-256:
+  `2b7ef2cce804a16a13fb51b0d5729f06674a468739cfc460993d0473b577436a`.
+- Provider, API, R2, Better Stack, deployment, and authoritative workspace
+  operations: zero.
+- The exact source is ready for the committed artifact-source boundary and
+  reproducible package qualification.
