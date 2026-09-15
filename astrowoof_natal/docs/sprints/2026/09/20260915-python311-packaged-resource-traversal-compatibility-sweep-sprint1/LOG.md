@@ -48,3 +48,11 @@
 - Owner assigned broad/full-suite and wheel qualification to the predecessor
   release-driving sprint, so neither was duplicated here.
 - Prepared the source-only compatibility handback.
+
+## 2026-09-15 — Exact commit handback
+
+- Committed and pushed the qualified four-repair source boundary as
+  `235791de` (`fix: support namespace resources on Python 3.11`).
+- Recorded its exact two-runtime focused evidence and returned release-gate
+  ownership to the predecessor sprint.
+- Companion sprint complete; no wheel or release action occurred here.

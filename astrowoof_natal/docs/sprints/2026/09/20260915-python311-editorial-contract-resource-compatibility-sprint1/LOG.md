@@ -75,3 +75,13 @@
   `20260915-python311-packaged-resource-traversal-compatibility-sweep-sprint1`.
 - This live-defect sprint remains paused before Slice 2 until that sweep passes
   the declared-minimum-runtime qualification gate.
+
+## 2026-09-15 — Compatibility sweep handback received
+
+- Companion sweep qualified and pushed exact source commit `235791de`.
+- Four proven namespace-package readers were corrected; six compatible
+  regular-package controls remained unchanged.
+- Focused source tests passed on Python 3.11.15 and 3.12.14: 29 tests with 2
+  optional skips on each.
+- Original Slice 2 may resume with the combined broad/full-suite, wheel, and
+  installed-wheel/API-host gates after review of the handoff.

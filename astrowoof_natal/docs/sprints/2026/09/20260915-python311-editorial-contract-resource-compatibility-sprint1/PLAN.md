@@ -88,6 +88,10 @@ Companion sprint:
 `../20260915-python311-packaged-resource-traversal-compatibility-sweep-sprint1/`.
 Control Room parentage: `kevin2357/astrowoof-api#23`.
 
+Prerequisite status: satisfied by qualified source commit `235791de`. The
+companion ran focused two-runtime source tests only; this sprint still owns and
+has not yet run the combined broad/full-suite and wheel gates.
+
 1. Exercise the public delivery and terminal-review capture routes through
    typed-status construction on Python 3.11.
 2. Prove exact result/root binding, eligibility, packet assembly, validation,

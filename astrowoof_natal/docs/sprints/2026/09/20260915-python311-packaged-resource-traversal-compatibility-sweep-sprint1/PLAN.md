@@ -96,6 +96,10 @@ Status: complete pending commit handback. The four approved repairs pass 29
 focused tests on each runtime; all six no-change controls remain untouched; and
 the final inventory contains zero unsupported namespace-package paths.
 
+Final status: complete. Qualified source commit `235791de` is pushed and
+handed back to the predecessor sprint. Broad/full-suite and wheel qualification
+remain unstarted here by design.
+
 ## Alloy ruling
 
 Expected outcome is no Alloy update because this sweep changes implementation
