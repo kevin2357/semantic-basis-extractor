@@ -110,24 +110,27 @@ result returned by the current invocation, never from latest-result discovery.
 | Exact/Bounded Batch | Low/complex | Defer unless Gate B explicitly scopes aggregate/member semantics |
 | Terminal/delivery publication | High | Precedence rule required in first implementation |
 
-## Voof-paws A questions
+## Voof-paws A decisions
 
-1. Does API agree that the first cooperative implementation may be exact
-   interactive ordinary-v2 plus response reconciliation, while other routes
-   fail closed as unsupported rather than pretending shared coverage?
-2. For initial-wave fan-out, should a stop observed after any POST entry produce
-   a mixed-custody suspension result after all in-flight member calls reach a
-   bounded return, or should initial-wave cooperative suspension be deferred in
-   v1 entirely?
-3. Will API's pre-launch envelope expose one stable supervision invocation ID
-   separately from SBE's native publication invocation ID, with both included in
-   a suspension result?
-4. Does API prefer a request-isolated atomic file channel for the first
-   provider-free implementation, or is it prepared to own an inherited pipe
-   across all subprocess adapters?
-5. What exact observation proves a worker execution resource reclaimable after
-   cooperative exit, while leaving run allocation and native/provider custody
-   untouched?
+API approved Slice 0 with these answers:
 
-Slice 1 contract field names remain paused until these questions and the route
-scope are jointly reviewed.
+1. v1 is limited to exact interactive ordinary-v2 dispatch and response
+   reconciliation. Unsupported routes fail closed; they do not inherit coverage
+   by analogy.
+2. Initial-wave fan-out is deferred entirely. Partial-wave cancellation needs a
+   separate aggregate protocol.
+3. API creates one stable pre-launch supervision invocation ID, distinct from
+   SBE logging and native-publication invocation IDs.
+4. v1 uses an atomic, request-isolated control-file channel outside the
+   executable workspace rather than an inherited pipe.
+5. API may reclaim only worker-execution capacity after observing exact,
+   envelope-bound child exit. Run allocation and provider, spend, workspace,
+   checkpoint, and native custody remain held.
+
+The control channel's canonical absolute control-root identity must be bound
+into the pre-launch envelope. A relocated workspace must reject the control
+capability before parsing any request; byte-valid relocation authority does not
+confer suspension capability.
+
+Voof-paws A is approved. Slice 1 may freeze the Gate B contract, but no runtime
+mutation, signal handling, process control, or capacity release is authorized.

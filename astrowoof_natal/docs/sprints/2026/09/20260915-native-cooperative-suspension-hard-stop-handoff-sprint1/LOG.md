@@ -29,3 +29,19 @@
   cooperative suspension.
 - Paused at Voof-paws A before freezing Gate B fields or implementing runtime
   behavior.
+
+## 2026-09-15 — Voof-paws A approved
+
+- API approved exact interactive ordinary-v2 dispatch and response
+  reconciliation as the complete v1 cooperative route scope.
+- Deferred initial-wave fan-out pending a separate aggregate partial-wave
+  cancellation protocol; legacy direct, bounded, and Batch remain unsupported.
+- Selected a distinct API-created pre-launch supervision invocation ID and an
+  atomic request-isolated control-file channel outside the executable workspace.
+- Required the envelope to bind the canonical absolute control root and
+  relocated copies to reject the capability before request parsing.
+- Froze resource handling: exact envelope-bound child exit may reclaim only
+  worker-execution capacity. Run allocation and all native/external custody stay
+  held.
+- Authorized Slice 1 contract work only. Gate B still blocks runtime mutation,
+  signaling, process control, and release behavior.

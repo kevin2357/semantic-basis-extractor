@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 0 complete; paused at Voof-paws A.** This sprint is provider-free by
+**Slice 0 approved; Slice 1 Gate B contract work is next.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -34,8 +34,9 @@ interactive ordinary-v2 dispatch and response reconciliation are the strongest
 first implementation cells; initial-wave fan-out, bounded, legacy direct, and
 Batch require separate contract/qualification decisions.
 
-**Voof-paws A:** API/SBE review of the inventory before contract field names
-freeze.
+**Voof-paws A:** approved. v1 scope is exact interactive ordinary-v2 dispatch
+and response reconciliation; initial-wave fan-out and all other routes remain
+fail-closed/deferred.
 
 ## Slice 1 — Gate B request, channel, and result contract
 
@@ -54,6 +55,10 @@ freshness, idempotency, acknowledgement, duplicate/conflict behavior, parent
 crash, child restart, stale channel, and relocated-copy refusal. Prohibit
 credentials, provider payloads, arbitrary commands, and generalized workspace
 authority.
+
+v1 uses an atomic request-isolated control-file channel outside the executable
+workspace. Bind its canonical absolute control-root identity into the pre-launch
+envelope and reject relocated workspaces before request parsing.
 
 ### 1C — Native request/result pair
 

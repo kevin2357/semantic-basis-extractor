@@ -22,8 +22,11 @@ added after launch but cannot replace the envelope.
 A credible first design is a request-isolated, worker-owned control directory
 outside the executable workspace. Its identity is passed at launch; API writes
 one canonical digest-bound request atomically; SBE reads it only at declared
-safe points. An inherited pipe is another candidate. A signal may wake the
-child but is neither request authority nor a transaction boundary.
+safe points. Voof-paws A selected this control-file design for v1 rather than an
+inherited pipe. The pre-launch envelope binds the canonical absolute control
+root, and relocated copies reject the capability before request parsing. A
+signal may wake the child but is neither request authority nor a transaction
+boundary.
 
 Relocated assessment copies must be unable to use the channel. Restart and
 replay must not cause a new invocation to honor a stale request.
@@ -52,7 +55,10 @@ scheduling while API performs settlement.
 
 ## Pause points
 
-Voof-paws A follows the source/safe-point inventory. Voof-paws B is the joint
-Gate B contract review and is mandatory before runtime mutation, signal
-handling, or process-control integration. Later implementation and release
-gates remain separate.
+Voof-paws A approved exact interactive ordinary-v2 dispatch and response
+reconciliation as the complete v1 route scope. Initial-wave fan-out, bounded,
+legacy direct, and Batch remain unsupported/deferred.
+
+Voof-paws B is the joint Gate B contract review and is mandatory before runtime
+mutation, signal handling, or process-control integration. Later implementation
+and release gates remain separate.
