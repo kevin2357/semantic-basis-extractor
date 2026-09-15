@@ -1,0 +1,16 @@
+{
+  "archive_bytes": 5098057,
+  "archive_sha256": "1d20a6e2edd219788d21553580e77771840f5863f0dee54e4ea931a40d7b10e7",
+  "etag_sha256": "857c7abeacd12414b3b3427fce50447bf7ed786993b3b1a1df010b8114b1a4c9",
+  "inventory_sha256": "d034d78f5558ab2ddadd2b57037105e24a9b1a31870b6b4c50df66abbee639d3",
+  "label": "terminal-review-witness-b",
+  "manifest_sha256": "2074f8d98968afc1e01edbbe8dc9635160bae49f033ee5474dc96bd5b5fe8c5d",
+  "provider_operation_counts": {
+    "delete": 0,
+    "get": 1,
+    "head": 1,
+    "list": 0,
+    "write": 0
+  },
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt.v1"
+}

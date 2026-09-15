@@ -16,7 +16,7 @@ change source merely because static inspection suggests a digest-domain split.
 
 Gate A passed. See `SLICE 0 - NATIVE JOIN SURFACE AND DIGEST DOMAIN.md`.
 
-## Slice 1 — Bounded read-only witness comparison
+## Slice 1 — Bounded read-only witness comparison (complete)
 
 - Perform the owner-authorized one conditional HEAD and one bounded GET per named object.
 - Verify archive and inventory digests before extracting only relevant terminal evidence.
@@ -33,7 +33,9 @@ Gate A passed. See `SLICE 0 - NATIVE JOIN SURFACE AND DIGEST DOMAIN.md`.
 **Gate B:** both archives and inventories match their pinned coordinates, and
 the exact first failing join is established independently for each witness.
 
-## Slice 2 — Causal recommendation and provider-free reproduction
+Gate B passed. See `SLICE 1 - EXACT RETAINED BINDING JOIN FINDING.md`.
+
+## Slice 2 — Causal recommendation and provider-free reproduction (complete)
 
 - State the exact causal conflict, ownership, and safe correction boundary.
 - Build a provider-free reproduction using realistic complete ledger bindings,
@@ -52,3 +54,7 @@ the exact first failing join is established independently for each witness.
 **Review gate C:** pause after exact witness proof and provider-free
 reproduction. Runtime implementation, versioning, package qualification,
 release, deployment, and live witness require subsequent approval.
+
+Gate C reached. See
+`SLICE 2 - CAUSAL REPRODUCTION AND CORRECTION FENCE.md`. Investigation is
+complete and paused for joint review before implementation.
