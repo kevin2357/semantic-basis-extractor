@@ -37,7 +37,9 @@ release target only after exact-source rebuild and installed qualification.
 
 After committing this record:
 
-1. record the release-lock commit and its timestamp as the exact build epoch;
+1. retain artifact-source epoch `1789481170` as the exact build epoch so the
+   already-qualified candidate bytes remain immutable across documentation-only
+   lock commits;
 2. create two detached clean worktrees at that commit;
 3. build independently and require the same canonical filename, size, SHA-256,
    member inventory, and package-data checks;
@@ -47,3 +49,16 @@ After committing this record:
 Do not tag, publish, deploy, or run a live witness without later explicit owner
 authorization.
 
+## Build-metadata correction
+
+An initial exact-lock diagnostic used release-lock timestamp `1789481675` while
+also requiring the artifact-source SHA above. Its two builds were mutually
+identical at 1,385,639 bytes and SHA-256
+`f5a0846d78846b539639201289405e6a58c629ddb31edf1d21fcc2efe30e4d00`,
+proving reproducibility but not the frozen candidate identity because ZIP member
+timestamps necessarily changed.
+
+The normative epoch is therefore the already-qualified artifact-source epoch
+`1789481170`, matching the established release procedure used for 0.4.62. The
+diagnostic wheel is nonqualifying and must not be published. No package-affecting
+content changed, so only the build pair and installed-wheel gate require rerun.

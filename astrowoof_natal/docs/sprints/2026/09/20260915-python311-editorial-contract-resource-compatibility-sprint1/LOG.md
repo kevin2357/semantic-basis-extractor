@@ -125,3 +125,16 @@
 - Retained the exact qualification recipe as
   `qualify_installed_candidate.sh`.
 - Prepared the release-lock candidate record; no tag or publication occurred.
+
+## 2026-09-15 — Exact-lock epoch correction
+
+- First exact-lock diagnostic pair used release-lock timestamp `1789481675` and
+  produced mutually identical 1,385,639-byte wheels at SHA-256
+  `f5a0846d78846b539639201289405e6a58c629ddb31edf1d21fcc2efe30e4d00`.
+- This differed from the artifact-source candidate solely because the build
+  epoch changed, contradicting the same record's frozen SHA requirement.
+- Corrected the normative exact-lock epoch to artifact-source epoch
+  `1789481170`, consistent with the established 0.4.62 procedure.
+- The `f5a0846d...` diagnostic wheels are nonpublishable. Runtime, tests,
+  resources, and package-affecting content did not change; the full suite was
+  not rerun under the playbook's release-metadata correction policy.
