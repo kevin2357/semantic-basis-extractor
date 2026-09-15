@@ -1,6 +1,6 @@
 # Plan
 
-## Slice 0 — Freeze provenance and map the join surface (active)
+## Slice 0 — Freeze provenance and map the join surface (complete)
 
 - Bind each API/native/result/receipt identity to the exact checkpoint packet in `BACKGROUND.md`.
 - Map every reader join that can produce `native_join_conflict` on ordinary terminal-review v0.2 evidence.
@@ -13,6 +13,8 @@
 
 **Gate A:** freeze the finite candidate matrix before retained access. Do not
 change source merely because static inspection suggests a digest-domain split.
+
+Gate A passed. See `SLICE 0 - NATIVE JOIN SURFACE AND DIGEST DOMAIN.md`.
 
 ## Slice 1 — Bounded read-only witness comparison
 
