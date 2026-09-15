@@ -65,6 +65,22 @@
 - Paused at joint Gate B. No schemas, readers, runtime hooks, signaling, process
   control, provider work, or capacity release were implemented.
 
+## 2026-09-15 — Gate B API review incorporated
+
+- Recast the force-fence admission checkpoint as an immutable predecessor
+  anchor rather than an observation-time equality requirement.
+- Required SBE to bind both admission checkpoint C1 and an exact same-lineage
+  safe-point checkpoint C2, accepting only equality or a validated contiguous
+  successor and rejecting forks/non-successors.
+- Froze dedicated ordered CLI arguments for the immutable envelope file and
+  canonical control root, including wrong-location and substitution failures.
+- Added closed `suspension_deferred` continuation modes so API never infers
+  process exit or release.
+- Clarified that malformed/conflicting/unsupported control input prohibits new
+  native/provider work even when a typed refusal cannot safely be published.
+- API is aligned and ready to review the canonical Alloy spike. Runtime
+  implementation remains blocked.
+
 ## 2026-09-15 — Alloy spike added
 
 - Added a post-Gate-B, pre-implementation Alloy spike for the joined API/SBE

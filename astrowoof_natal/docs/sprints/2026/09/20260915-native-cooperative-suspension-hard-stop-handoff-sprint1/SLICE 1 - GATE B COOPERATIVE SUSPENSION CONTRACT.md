@@ -2,7 +2,7 @@
 
 ## Status
 
-**Proposed for joint Gate B review.** This freezes a closed v1 protocol for
+**Gate B clarification incorporated; ready for the shared Alloy spike.** This freezes a closed v1 protocol for
 exact interactive ordinary-v2 dispatch and response reconciliation only. It
 does not authorize implementation, signaling, process termination, capacity
 release, live execution, provider work, R2 access, or workspace mutation.
@@ -136,7 +136,7 @@ Required fields:
 | `api_run_id`, `job_id`, `attempt_id`, `lease_id`, `native_run_id` | exact repeated target identities |
 | `command_kind`, `command_sha256` | exact command binding |
 | `executable_workspace_root_sha256`, `control_root_sha256` | digest-bound capability identities; raw paths are not repeated |
-| `checkpoint_basis_sha256` | exact checkpoint observed by API when admitted, or explicit `null` only for a contract-defined pre-checkpoint posture; v1 implementations may refuse null |
+| `admission_checkpoint_basis_sha256` | exact checkpoint observed by API while atomically admitting the force fence and publishing this request; it is an anchored predecessor, not an observation-time equality gate |
 | `actor_id`, `reason_code`, `environment` | audit-safe values; no free-form secrets or subject content |
 | `emergency_containment_confirmed` | exact `true` |
 | `requested_at`, `expires_at`, `grace_deadline` | UTC instants; request must be fresh and cannot extend the envelope grace |
@@ -150,6 +150,21 @@ Absence means continue ordinary behavior; malformed, conflicting, or identity-
 mismatched presence means fail closed before further provider/local work and
 attempt to publish a typed refusal only when the native publication boundary is
 itself safe.
+
+The child receives the immutable envelope-file path and canonical control-root
+path through two dedicated ordered CLI arguments. It opens only the exact
+envelope at that canonical location and then applies the control-root validation
+order above. An envelope digest alone is not path authority. Argument
+substitution, a byte-valid envelope at a different location, and path/digest
+disagreement all fail closed.
+
+The request's admission checkpoint is an immutable lineage anchor. When SBE
+later observes the request, normal already-authorized work may have published a
+successor checkpoint. SBE may honor the request only if the observation-time
+checkpoint is the same checkpoint or a validated contiguous successor in the
+same authoritative run/workspace lineage. Missing, contradictory, forked, or
+non-successor evidence refuses or produces the applicable ambiguity; SBE never
+synthesizes the lineage.
 
 ## 4. Observation safe points
 
@@ -225,6 +240,12 @@ The result explicitly does **not** assert process exit, API lease or capacity
 release, run-allocation release, provider cancellation, spend settlement,
 terminalization, or cleanup authority.
 
+Every `suspension_deferred` result also carries one closed continuation mode:
+`continue_to_named_safe_point`, `exit_after_result_publication`, or
+`await_separate_api_action`. The first names the next permissible safe point
+and its bounded deadline; the latter two prohibit ordinary continuation. API
+must not infer child exit or any resource release from a deferred result.
+
 ## 6. Publication and command-result precedence
 
 Suspension publication reuses the existing native writer, journal, checkpoint,
@@ -279,8 +300,11 @@ Provider-free fixtures must cover:
 
 - request absent, exact, duplicate, conflicting, expired, wrong generation,
   wrong worker boot, wrong command, wrong run/checkpoint, and corrupt digest;
+- admission checkpoint C1 followed by a valid contiguous safe-point checkpoint
+  C2, plus missing, forked, contradictory, and non-successor C2 cases;
 - control-root relocation, nesting, replacement, link/reparse ambiguity, and
-  unexpected members;
+  unexpected members; envelope/control CLI argument substitution; and a
+  byte-valid envelope at the wrong canonical location;
 - stop before intent, after intent, before POST, after possible POST/before ID,
   after ID, before GET, after GET/before adoption, after adoption, before
   publication, and after ordinary result publication;
@@ -291,6 +315,11 @@ Provider-free fixtures must cover:
   and after receipt;
 - unrelated run/workspace/control root/process isolation; and
 - zero provider calls for every provider-free qualification cell.
+
+Malformed, conflicting, or unsupported control input prohibits all **new**
+native/provider work for the fenced invocation. If SBE cannot safely publish a
+refusal, API's durable fenced ambiguity remains authoritative; rejection of the
+control input never selects ordinary retry, reconciliation, or successor work.
 
 ## 10. Unsupported v1 behavior
 

@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 1 contract drafted; paused at joint Gate B.** This sprint is provider-free by
+**Slice 1 Gate B clarification incorporated; Slice 1A Alloy spike is next.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -48,6 +48,10 @@ identity, command digest, request-isolated control identity, timestamps, and
 grace deadline. Define exact post-launch PID/start-marker/process-group evidence
 as API-owned observations, not SBE authority.
 
+Treat API's admission checkpoint as an anchored predecessor. Observation may
+occur at the same checkpoint or an exact contiguous successor in the same
+authoritative lineage; do not require observation-time equality.
+
 ### 1B — Capability-limited control channel
 
 Choose and specify the launch-bound channel. Define atomic request publication,
@@ -59,6 +63,9 @@ authority.
 v1 uses an atomic request-isolated control-file channel outside the executable
 workspace. Bind its canonical absolute control-root identity into the pre-launch
 envelope and reject relocated workspaces before request parsing.
+
+Pass the immutable envelope-file path and control-root path through dedicated
+ordered CLI arguments. Validate canonical location as well as bytes/digests.
 
 ### 1C — Native request/result pair
 
@@ -168,6 +175,9 @@ No schema/reader or runtime implementation begins before this checkpoint.
 - Cover exact, stale invocation, wrong run/checkpoint/worker boot, expired,
   duplicate, conflicting, and digest-corrupt requests.
 - Cover every outcome and ordinary-result-precedence race.
+- Cover admission checkpoint C1 to safe-point successor C2, plus forked and
+  non-successor lineage; exact CLI path substitution; and all deferred
+  continuation modes.
 - Prove append-only continuity and reject a recomputed-digest semantic mutation.
 - Prove the channel/request grants no relocated assessment, execution, provider,
   publication, or generic filesystem capability.
