@@ -138,3 +138,16 @@
 - The `f5a0846d...` diagnostic wheels are nonpublishable. Runtime, tests,
   resources, and package-affecting content did not change; the full suite was
   not rerun under the playbook's release-metadata correction policy.
+
+## 2026-09-15 — Exact-lock qualification complete
+
+- Corrected immutable release target:
+  `ceb0dc5a28b81cff91a4a985edb4cf6ff3217e24`.
+- Two clean target worktrees built with normative epoch `1789481170` and both
+  reproduced the artifact-source candidate exactly: 1,385,639 bytes, 310
+  members, SHA-256
+  `fe0fba0c0be87ec25257a9b9c8c5f6e0166f9544df99fc8f940b20109ea1e355`.
+- Exact lock build A passed the full installed qualification recipe on Python
+  3.11.15 and 3.12.14.
+- Prepared final SBE pre-tag coordinates for API consumer review.
+- No tag, publication, deployment, or live witness occurred.

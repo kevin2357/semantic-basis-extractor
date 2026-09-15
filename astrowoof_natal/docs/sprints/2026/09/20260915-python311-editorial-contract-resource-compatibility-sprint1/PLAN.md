@@ -121,6 +121,11 @@ Artifact-source status: complete at
 clean installed qualification passes on Python 3.11.15 and 3.12.14. The
 release-lock record is ready to commit and exact-lock qualification remains.
 
+Final status: exact-lock qualification complete for target
+`ceb0dc5a28b81cff91a4a985edb4cf6ff3217e24` and retained wheel SHA-256
+`fe0fba0c0be87ec25257a9b9c8c5f6e0166f9544df99fc8f940b20109ea1e355`.
+Paused for API consumer and final owner pre-tag review.
+
 ## Review Gate B — Release decision
 
 Review source, Python 3.11/3.12, installed-wheel, package-byte, and API-host
