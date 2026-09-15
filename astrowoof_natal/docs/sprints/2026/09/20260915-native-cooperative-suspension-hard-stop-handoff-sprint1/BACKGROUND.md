@@ -63,4 +63,3 @@ API durable force fence
 ```
 
 No single item in that chain grants complete settlement authority.
-

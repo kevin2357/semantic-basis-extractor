@@ -152,4 +152,3 @@ spend, R2 access, live process termination, or unrelated mutation.
 
 **Exit:** immutable release/handoff evidence is complete, or the sprint closes
 honestly without a release if no SBE runtime change is needed.
-

@@ -56,4 +56,3 @@ Voof-paws A follows the source/safe-point inventory. Voof-paws B is the joint
 Gate B contract review and is mandatory before runtime mutation, signal
 handling, or process-control integration. Later implementation and release
 gates remain separate.
-
