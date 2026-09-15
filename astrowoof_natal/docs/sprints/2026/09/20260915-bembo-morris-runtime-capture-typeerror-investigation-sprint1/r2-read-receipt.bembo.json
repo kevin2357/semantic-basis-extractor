@@ -1,0 +1,10 @@
+{
+  "archive_bytes": 4900517,
+  "archive_sha256": "86942cf64c69ed1493d540265962c2622f2bab8a2dd3d3e5db87513f07a2fd8f",
+  "etag_sha256": "0500d24e9b2f2af8af8dce2b83190406a7b7ac912d73c4a94250ae46bb2d586c",
+  "inventory_sha256": "dc911fd935614e6f7e39128c1e6de4d31c46bd490d26c24f6c9f8285ec36a337",
+  "label": "bembo",
+  "manifest_sha256": "4904d39e462c8ba879f0ca2e6de230cb1ec7d2a79fe637c3165462d83c5f9257",
+  "provider_operation_counts": {"delete": 0, "get": 1, "head": 1, "list": 0, "write": 0},
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt.v1"
+}

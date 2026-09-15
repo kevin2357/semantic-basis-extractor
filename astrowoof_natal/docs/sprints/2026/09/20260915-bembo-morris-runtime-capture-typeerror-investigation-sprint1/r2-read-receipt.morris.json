@@ -1,0 +1,10 @@
+{
+  "archive_bytes": 4796908,
+  "archive_sha256": "d0f1d47f38ad91712cd5661435da690dd958acfe78408f53e01b841e747197e5",
+  "etag_sha256": "b84ca947000f645aa827fe7cd879c6c019eee71bc13bb604ec1a6a2e0557195f",
+  "inventory_sha256": "90f6e7205e55b75e4850b92a4b58a44cc8efffe579fcad7558aeac860f2b98ef",
+  "label": "morris",
+  "manifest_sha256": "74425e8d46bf6233f763017fdce2784d5d20e631defbb2494837423040b500aa",
+  "provider_operation_counts": {"delete": 0, "get": 1, "head": 1, "list": 0, "write": 0},
+  "schema_version": "astrowoof.investigation.r2_read_only_access_receipt.v1"
+}
