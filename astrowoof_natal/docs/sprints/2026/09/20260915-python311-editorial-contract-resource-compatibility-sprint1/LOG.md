@@ -151,3 +151,17 @@
   3.11.15 and 3.12.14.
 - Prepared final SBE pre-tag coordinates for API consumer review.
 - No tag, publication, deployment, or live witness occurred.
+
+## 2026-09-15 — 0.4.63 published and independently reverified
+
+- API independently verified the retained 1,385,639-byte wheel at SHA-256
+  `fe0fba0c0be87ec25257a9b9c8c5f6e0166f9544df99fc8f940b20109ea1e355`
+  and passed all nine provider-free installed-wheel consumer gates.
+- Owner explicitly authorized commit, push, annotated tag, and publication.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.63`; its remote peeled
+  target is exactly `ceb0dc5a28b81cff91a4a985edb4cf6ff3217e24`.
+- Published only the canonical wheel and `SHA256SUMS.txt` assets.
+- Freshly downloaded both public assets into a new verification directory.
+  The downloaded wheel remained 1,385,639 bytes with the exact qualified
+  SHA-256, and the downloaded checksum named that exact canonical wheel.
+- No tag movement, provider operation, deployment, or live witness occurred.
