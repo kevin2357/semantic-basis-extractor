@@ -108,3 +108,16 @@
   occurred. Dependency installation was the only network use.
 - Next boundary is an exact release-lock commit, two rebuilds using that
   commit's timestamp, and repeated installed qualification.
+
+## 2026-09-15 — Exact release-lock qualification passed
+
+- Release-lock target:
+  `e5ad4cdf3ea3d3fa23d7cc2ab0ad55b0ef15f0ef`.
+- Normative epoch: `1789492879`.
+- Two detached clean exact-lock builds produced byte-identical canonical
+  wheels: 1,385,707 bytes, 310 members, SHA-256
+  `b2f50fb57497c2bdbcadb548b0895fe0b772cba87346189d1daeadac1028984a`.
+- The exact lock-A wheel repeated all clean installed gates on official Python
+  3.11.15 and 3.12.14, including 17 public runtime/diagnostic tests on each.
+- Gate E reached. Tag, publication, deployment, and live witness remain gated
+  on API consumer review and explicit owner authorization.

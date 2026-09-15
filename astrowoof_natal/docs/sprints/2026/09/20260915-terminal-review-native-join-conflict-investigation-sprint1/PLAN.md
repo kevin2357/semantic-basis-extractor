@@ -99,7 +99,7 @@ and live witness remain separate gates.
 Gate D reached. See
 `SLICE 3-4 - SHARED DIGEST CORRECTION AND FOCUSED QUALIFICATION.md`.
 
-## Slice 5 — Release-bound regression and package qualification (in progress)
+## Slice 5 — Release-bound regression and package qualification (complete)
 
 - Freeze fresh distribution version `0.4.64` before release-bound testing.
 - Retain the focused Python 3.11 coverage required by API review.
@@ -116,3 +116,7 @@ Gate D reached. See
 
 **Review gate E:** pause with exact release-lock commit and wheel coordinates
 for API consumer review and explicit owner tag/publication authorization.
+
+Gate E reached. Exact release-lock target:
+`e5ad4cdf3ea3d3fa23d7cc2ab0ad55b0ef15f0ef`; exact retained wheel SHA-256:
+`b2f50fb57497c2bdbcadb548b0895fe0b772cba87346189d1daeadac1028984a`.
