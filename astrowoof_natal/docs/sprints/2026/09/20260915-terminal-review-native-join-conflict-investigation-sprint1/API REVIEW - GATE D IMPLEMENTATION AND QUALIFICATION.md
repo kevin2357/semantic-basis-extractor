@@ -28,4 +28,3 @@ Before tag/publication, run the ordinary broad maintained suite and the
 installed-wheel qualification. Retain the focused 3.11 coverage because the
 live worker remains a 3.11 consumer. No additional API change is needed for
 this SBE-only correction.
-
