@@ -73,27 +73,19 @@ bytes or validation semantics.
    multi-component `joinpath` use.
 5. Explicitly document rather than silently alter any unsupported historical
    path.
+6. Run source-tree focused suites, manifest enforcement, provider-free broad
+   qualification, and the final static inventory on Python 3.11 and 3.12.
+7. Hand back the exact reviewed compatibility commit and qualification evidence
+   to the predecessor live-defect sprint.
 
 Acceptance: every changed accessor has two-runtime byte/failure evidence and
-the static inventory is empty for supported paths.
-
-## Slice 3 — Installed-wheel and release-pair qualification
-
-1. Build and install the candidate wheel in clean Python 3.11 and 3.12
-   environments.
-2. Exercise the changed public/resource surfaces from installed bytes.
-3. Rerun focused suites, manifest enforcement, provider-free broad suite,
-   package-content checks, and build-twice identity under the release playbook.
-4. Return to the predecessor sprint's public delivery and terminal-review
-   capture Gate B qualification.
-5. Obtain API installed-wheel review before any tag/publication decision.
-
-Acceptance: the declared minimum runtime has no supported variadic-resource
-traversal dependency and both sprints can jointly enter release review.
+the static inventory is empty for supported paths. This companion sprint does
+not build a release candidate. The predecessor sprint's Slice 2 exclusively
+owns wheel construction, installed-wheel/package/API qualification, and the
+release decision.
 
 ## Alloy ruling
 
 Expected outcome is no Alloy update because this sweep changes implementation
 compatibility only. Stop and reassess if any resource identity, contract,
 authority, lifecycle, custody, packet, or transition semantic changes.
-

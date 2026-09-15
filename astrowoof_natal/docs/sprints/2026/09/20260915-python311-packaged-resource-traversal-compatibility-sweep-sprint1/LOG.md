@@ -10,3 +10,10 @@
 - Made no change to the eleven inventoried resource call sites.
 - Paused at Review Gate A before caller tracing, tests, or implementation.
 
+## 2026-09-15 — Qualification ownership correction
+
+- Removed the companion sprint's redundant candidate-wheel slice.
+- Assigned source-tree qualification, static-inventory closure, and exact-commit
+  handback to this sweep's final implementation slice.
+- Preserved the predecessor live-defect sprint as the sole owner of candidate
+  wheel construction, installed-wheel/API gates, and release qualification.
