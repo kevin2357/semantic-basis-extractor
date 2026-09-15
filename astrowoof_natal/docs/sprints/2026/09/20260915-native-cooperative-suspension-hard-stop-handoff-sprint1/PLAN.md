@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 1 Gate B clarification incorporated; Slice 1A Alloy spike is next.** This sprint is provider-free by
+**Slice 1A Alloy spike complete; paused at Voof-paws B2.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -165,6 +165,14 @@ future provider-free tests.
 
 **Voof-paws B2:** joint API/SBE review of the exact Alloy model and results.
 No schema/reader or runtime implementation begins before this checkpoint.
+
+**Result:** the bounded shared model is recorded in
+`tools/native_cooperative_suspension_v1.als`, with stable receipt, rule mapping,
+and findings in `SLICE 1A - SHARED ALLOY PROTOCOL SPIKE.md`. Four valid worlds
+are satisfiable, nine assertions have no bounded counterexample, and five
+weakened rules each admit the intended bad world. The spike tightened
+one-result-per-request cardinality, observation-time ordinary-result
+precedence, and non-branching resolution history.
 
 ## Slice 2 — Provider-free contract fixtures and readers
 

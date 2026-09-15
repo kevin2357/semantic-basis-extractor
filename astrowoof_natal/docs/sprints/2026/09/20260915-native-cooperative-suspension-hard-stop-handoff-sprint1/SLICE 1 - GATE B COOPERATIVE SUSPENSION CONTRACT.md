@@ -213,6 +213,11 @@ The SBE result binds:
 - closed outcome/reason; and
 - exact receipt identity/digest after receipt construction.
 
+`observed_at` is the serialized native safe-point observation instant, distinct
+from later result/receipt publication time. At most one canonical semantic
+suspension result may exist for one exact request identity. Exact replay returns
+that same result and receipt; it cannot append a second outcome for the request.
+
 ### Closed outcomes
 
 | Outcome | Meaning |
@@ -260,8 +265,10 @@ transport rules.
 
 Precedence is strict:
 
-1. a valid ordinary terminal/delivery result committed before suspension
-   observation remains authoritative and is returned unchanged;
+1. a valid ordinary terminal/delivery result committed before the result's
+   recorded native `observed_at` safe point remains authoritative and is
+   returned unchanged, including when it was committed after API admitted the
+   force fence but before SBE observed the request;
 2. otherwise, an exact suspension result produced by this invocation outranks
    exit code and diagnostic logs;
 3. API availability/latest-result discovery is not permitted for ordinary
@@ -273,8 +280,10 @@ Precedence is strict:
 
 The API force fence remains immutable. Each SBE suspension result names its
 request/envelope predecessor. Each later API process observation or resolution
-names the immediately preceding evidence digest. No record changes the original
-request, fence, or ambiguity in place.
+names the immediately preceding evidence digest. The successor relation is
+acyclic and non-branching per fence: an evidence record has at most one direct
+successor, and every non-root record has exactly one same-fence predecessor.
+No record changes the original request, fence, or ambiguity in place.
 
 Exact replay returns the same result/receipt identities and performs no provider
 or workspace mutation. A stale or conflicting replay refuses. Restarted workers

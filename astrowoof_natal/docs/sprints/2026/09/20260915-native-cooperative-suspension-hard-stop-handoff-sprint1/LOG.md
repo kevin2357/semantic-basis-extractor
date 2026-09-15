@@ -92,3 +92,22 @@
 - Explicitly excluded filesystem, subprocess, provider-timing, hashing, schema,
   packaging, and deployment claims from the model's proof boundary.
 - Added a separate Voof-paws B2 before contract implementation.
+
+## 2026-09-15 — Slice 1A Alloy campaign
+
+- Restored the pinned official Alloy Analyzer CLI `6.2.0`; the downloaded
+  distribution matched the prior recorded SHA-256 exactly.
+- Built one content-free shared API/SBE protocol model with exact identity,
+  checkpoint lineage, timing, replay, resolution, custody, and cross-run joins.
+- Corrected an initial vacuity bug where optional model relations accidentally
+  made every scenario impossible, then required satisfiable full-contract
+  worlds before interpreting assertion results.
+- Obtained four satisfiable valid scenarios, nine `UNSAT` assertion checks, and
+  five satisfiable deliberately weakened bad-world witnesses.
+- Tightened Gate B prose based on counterexamples: one canonical result per
+  request; ordinary-result precedence at native `observed_at`; and acyclic,
+  non-branching same-fence resolution successors.
+- Recorded the exact model digest, stable receipt, rule-to-fixture map, finite
+  scope, and proof limits.
+- Paused at Voof-paws B2. No schema, reader, runtime, process-control, provider,
+  API, R2, or release action occurred.
