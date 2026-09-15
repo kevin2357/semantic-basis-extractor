@@ -121,3 +121,20 @@
   3.11.15 and 3.12.14, including 17 public runtime/diagnostic tests on each.
 - Gate E reached. Tag, publication, deployment, and live witness remain gated
   on API consumer review and explicit owner authorization.
+
+## 2026-09-15 — 0.4.64 published and independently reverified
+
+- API independently verified the exact candidate and passed four SHA-bound,
+  provider-free consumer cells; owner explicitly authorized commit, push, tag,
+  and publication.
+- Committed and pushed API approval on `main` without moving the immutable
+  release target.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.64`; remote peeled tag
+  target is exactly `e5ad4cdf3ea3d3fa23d7cc2ab0ad55b0ef15f0ef`.
+- Published GitHub release `RE_kwDOToQdE84XNQ-n` with only the canonical wheel
+  and checksum manifest.
+- Freshly downloaded both assets and verified the wheel at 1,385,707 bytes and
+  SHA-256 `b2f50fb57497c2bdbcadb548b0895fe0b772cba87346189d1daeadac1028984a`.
+- GitHub's wheel digest and the downloaded checksum line agree exactly.
+- SBE release work is complete; API intake/deployment and live witness remain
+  separate.

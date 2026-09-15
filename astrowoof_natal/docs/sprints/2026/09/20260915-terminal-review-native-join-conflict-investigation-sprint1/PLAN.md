@@ -120,3 +120,18 @@ for API consumer review and explicit owner tag/publication authorization.
 Gate E reached. Exact release-lock target:
 `e5ad4cdf3ea3d3fa23d7cc2ab0ad55b0ef15f0ef`; exact retained wheel SHA-256:
 `b2f50fb57497c2bdbcadb548b0895fe0b772cba87346189d1daeadac1028984a`.
+
+## Slice 6 — Immutable publication and verification (complete)
+
+- API independently qualified the exact wheel in four SHA-bound provider-free
+  consumer cells and the owner explicitly authorized tag/publication.
+- Created and pushed annotated tag `astrowoof-natal-authoring-v0.4.64` at the
+  exact release-lock commit, not a later documentation commit.
+- Published only the exact qualified wheel and `SHA256SUMS.txt`.
+- Downloaded both assets into a fresh directory and verified wheel size,
+  SHA-256, checksum line, and GitHub-reported asset digest.
+- Recorded publication evidence in
+  `POST-RELEASE - 0.4.64 PUBLICATION EVIDENCE.md`.
+
+Release complete. API intake/deployment and live witness remain separate
+consumer-owned work.
