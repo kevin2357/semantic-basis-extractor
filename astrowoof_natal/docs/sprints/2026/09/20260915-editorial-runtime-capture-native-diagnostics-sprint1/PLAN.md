@@ -92,6 +92,9 @@ sequence and unchanged functional result/exception behavior.
 
 ## Slice 3 — Host coexistence and package qualification
 
+Status: complete as a disposable pre-version-bump package gate; see
+`SLICE 3 - INSTALLED WHEEL API HOST COEXISTENCE.md`.
+
 1. Run the actual SBE application formatter with `force=True` for deterministic
    unit qualification.
 2. Have API install the candidate wheel and prove normal `force=False`
@@ -111,6 +114,10 @@ native diagnostics while ordinary capture behavior remains unchanged.
 Review the implementation and installed-wheel/API-host evidence before any
 version bump, tag, publication, deployment, or live witness. A later live test
 requires its own API rollout and owner approval; this sprint grants neither.
+
+Status: reached. Fresh release identity, release-bound suites, tag,
+publication, deployment, and live witness remain unstarted and require the
+next review/authorization.
 
 ## Alloy ruling
 
