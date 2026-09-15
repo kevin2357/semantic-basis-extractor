@@ -57,4 +57,37 @@ release, deployment, and live witness require subsequent approval.
 
 Gate C reached. See
 `SLICE 2 - CAUSAL REPRODUCTION AND CORRECTION FENCE.md`. Investigation is
-complete and paused for joint review before implementation.
+complete; API and owner approved the narrow correction.
+
+## Slice 3 — Shared terminal projection and exact consumer joins
+
+- Expose one canonical terminal-action binding projection/digest helper from
+  the existing v0.2 contract implementation without changing its projected
+  fields or any producer bytes.
+- Use that helper for the producer, terminal-result validation, and both
+  editorial-review disposition membership checks: initial pass attempts and
+  optional-stage actions.
+- Preserve the distinct complete-ledger binding digest already carried by
+  editorial packet decisions. The correction must not substitute the terminal
+  projection digest into packet content or alter successful-delivery bytes.
+- Do not accept either digest opportunistically, rewrite historical results,
+  or weaken action-ID/cardinality/duplicate/conflict checks.
+
+## Slice 4 — Provider-free regression and focused qualification
+
+- Cover realistic complete bindings containing the four proven extra fields.
+- Prove no-polish and multi-polish review captures reach canonical packet,
+  projection, and artifact construction from producer-generated dispositions.
+- Derive expected artifact counts and identities from each fixture's actual
+  contributing actions and distinct deck inventory; do not hard-code the
+  successful delivery control's eleven-row count.
+- Prove every sealed projection field mutation plus missing, wrong, duplicate,
+  and conflicting dispositions remains fail-closed.
+- Prove extra non-contract ledger fields do not redefine terminal identity and
+  successful-delivery packet bytes remain unchanged.
+- Add any new test module to `test_suite_manifest.json`; prefer extending an
+  existing classified module when that keeps the regression cohesive.
+
+**Review gate D:** pause after implementation, focused tests, manifest check,
+and diff review. Versioning, broad/package qualification, release, deployment,
+and live witness remain separate gates.

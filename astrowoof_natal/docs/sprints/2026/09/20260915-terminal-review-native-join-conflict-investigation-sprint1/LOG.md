@@ -38,3 +38,14 @@
 - Ruled out an Alloy update because no modeled semantic transition changes.
 - Investigation complete; paused at Gate C before runtime implementation,
   versioning, package work, release, deployment, or live witness.
+
+## 2026-09-15 — Gate C approved
+
+- API approved the narrow SBE correction and preserved the exact digest-domain
+  boundary.
+- Added API's qualification nuance: artifact assertions derive from each
+  fixture's real action and distinct-deck inventory rather than assuming the
+  delivery control's eleven rows.
+- Froze one additional implementation fence: terminal disposition membership
+  uses the projected digest, while packet decisions retain their existing
+  complete-ledger binding digest and delivery bytes.
