@@ -74,3 +74,37 @@ an immutable pre-launch supervision capability in the envelope, then a later
 operator force fence in the request. Result, receipt, and command-result
 artifacts bind both identities. The old `0.4.65` hash must never be substituted
 for the corrected candidate.
+
+## Corrected `0.4.66` candidate
+
+Renewed Gate B2 approved the explicit capability → launch → fence → request
+model before packaging. The executable schema, packaged fixture, runtime
+publication, receipt, and command-result layers independently bind both the
+pre-launch supervision capability and later immutable force fence.
+
+| Evidence | Exact value |
+| --- | --- |
+| Candidate artifact-source commit | `24f2c674` |
+| Candidate version | `0.4.66` |
+| `SOURCE_DATE_EPOCH` | `1789534964` |
+| Wheel size | `1,406,483` bytes |
+| Wheel SHA-256 | `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf` |
+| Pinned SPC | `0.11.1`, SHA-256 `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612` |
+| Qualification semantic SHA-256 | `fa068c29d7b5cfff28d49e6361a1a9b187ca31afb6b70c4aa11bede70defccb2` |
+| Qualification file SHA-256 | `145bb7ce0a0aa8d7d735cb3afb2bf46cbefb7eb4705be9f70cee25780f14bc48` |
+| Qualification schema file SHA-256 | `a47a7da72dbab7d8db2d3befa057404ac8d7e112755c55784129ee3497cb8096` |
+
+Evidence:
+
+- Expanded source contract/v2/reconciliation matrix: 84 passed, 4 expected
+  optional skips.
+- Two clean-source builds produced byte-identical filenames, sizes, member
+  inventories, and wheel hashes.
+- Clean venv installation resolved version `0.4.66` and package imports from
+  `site-packages`; `pip check` was clean.
+- Installed public qualification and packaged JSON Schema validation passed.
+- All counters remained zero for provider create/retrieve, network, spend,
+  live process termination, and API resource release.
+
+This is a provider-free API candidate handoff, not tag, publication,
+deployment, live process control, or joined Slice 4B authorization.

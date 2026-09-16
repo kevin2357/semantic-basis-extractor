@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 4A contract correction active.** API Slice 3B discovered that the
+**Corrected Slice 4A candidate qualified; paused for API Slice 3B intake.** API Slice 3B discovered that the
 original candidate incorrectly required an operator force fence before child
 launch. The corrected v1 chronology binds a pre-launch supervision capability
 in the immutable envelope and binds the later real operator force fence in the
@@ -272,6 +272,12 @@ adapter integration, tagging, or publication. No tag/publication occurred.
 capability-then-fence ordering provider-free. Every result, receipt, and command
 result must bind both identities independently.
 
+**Corrected result:** renewed Gate B2 approved the refreshed Alloy campaign.
+Prospective `0.4.66` was built reproducibly from committed source with the
+recorded epoch, installed into a clean environment, and passed its packaged
+schema/fixture/public qualification boundary provider-free. API must bind only
+the corrected wheel recorded in the Slice 4A result.
+
 ## API companion Slice 3B — Real adapter integration
 
 API owns this intervening step. It creates the pre-launch supervision envelope
@@ -282,8 +288,8 @@ decisions.
 
 **Exit:** the real API subprocess adapter is available for joined qualification.
 
-**Status:** paused while SBE replaces the rejected pre-launch-fence contract;
-API must consume only the corrected candidate.
+**Status:** corrected candidate ready for API intake; API must consume only the
+`0.4.66` candidate and must not substitute the superseded `0.4.65` wheel.
 
 ## Slice 4B — Joined cross-package supervision qualification
 

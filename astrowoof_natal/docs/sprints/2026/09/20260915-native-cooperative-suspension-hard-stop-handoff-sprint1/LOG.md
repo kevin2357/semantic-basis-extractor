@@ -287,3 +287,21 @@
   `f8c0a9afc7c258541d7d30b8596f6f73415c05c08074ba7ce003119f069d4064`.
 - No candidate wheel was rebuilt. Renewed API review remains required before
   corrected Slice 4A packaging.
+
+## 2026-09-16 — Renewed Gate B2 and corrected Slice 4A candidate
+
+- API approved the refreshed model and authorized a fresh prospective
+  `0.4.66` candidate under the normal executable/package gates.
+- Expanded source contract/v2/reconciliation matrix: 84 passed, 4 expected
+  optional skips.
+- Built twice from committed source `24f2c674` with
+  `SOURCE_DATE_EPOCH=1789534964`; both wheels were 1,406,483 bytes with SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- Installed the exact wheel and pinned SPC `0.11.1` into a fresh venv; `pip
+  check`, version/import-origin checks, public qualification, public Python
+  validation, packaged fixture validation, and JSON Schema validation passed.
+- Qualification semantic SHA-256:
+  `fa068c29d7b5cfff28d49e6361a1a9b187ca31afb6b70c4aa11bede70defccb2`.
+  All provider/network/spend/process-termination/API-release counters were zero.
+- No tag, publication, deployment, live API/R2/provider action, signal, or
+  resource release occurred. Slice 4B remains blocked on API's real adapter.
