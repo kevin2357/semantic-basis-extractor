@@ -66,3 +66,19 @@
   initial admission, exactly authorized retry, and ambiguity retention remained SAT.
 - Pause at Gate C. Model C is optional because Models A/B already cover the core
   counterfactual question.
+
+## 2026-09-16 — Slice 3 Model C adapter result and closeout
+
+- Owner approved the optional, offline public-evidence adapter model. It models
+  ownership and exact pairing only; it deliberately omits JSON, stdout, exceptions,
+  and concrete package behavior.
+- All four permissive adapter failures were SAT: a terminal result falling into
+  generic retry, generic authorization synthesizing a dispatch, an exact
+  request/grant pair falling into generic retry, and a terminal result reopening as
+  dispatch.
+- The four corrected-boundary checks found no counterexample through scope 3, while
+  valid terminal persistence, valid exact authority dispatch, and safe refusal of
+  generic-only authorization remained SAT.
+- Model C makes the adapter obligation clearer but does not add a new fundamental
+  invariant beyond Models A/B. Close the counterfactual at this compact boundary;
+  retain the models as design aids, not as proof of Python/package/runtime behavior.

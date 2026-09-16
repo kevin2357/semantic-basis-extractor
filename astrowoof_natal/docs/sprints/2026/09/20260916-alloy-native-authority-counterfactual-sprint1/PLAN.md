@@ -40,7 +40,7 @@ separates seven witnesses into Model A (three command/custody cases) and Model B
 Gate B: review whether Model A found the intended bad traces without excluding valid
 reconciliation or normal terminal settlement.
 
-Status: complete and awaiting review. Model A found all three historical permissive
+Status: complete. Model A found all three historical permissive
 shapes in exact one-atom traces; the corrected checks found no counterexample through
 scope 3, while valid terminal closeout and reconciliation remained satisfiable.
 
@@ -57,7 +57,7 @@ scope 3, while valid terminal closeout and reconciliation remained satisfiable.
 Gate C: review the exact scope and whether all counterexamples map to a real
 historical contract distinction rather than a made-up abstraction.
 
-Status: complete and awaiting review. Model B found four intended permissive
+Status: complete. Model B found four intended permissive
 authority counterexamples, found no corrected-boundary counterexample through scope
 4, and retained SAT examples for valid initial admission, exact retry, and ambiguity
 retention.
@@ -73,6 +73,14 @@ their individual invariants.
    never synthesized native authority.
 3. Produce a concise counterfactual conclusion: likely early catches, limits, and
    recommended future use (retain as design aid, expand, or stop).
+
+Status: complete. Model C found four permissive public-adapter failures in
+one-atom traces and no corrected-boundary counterexample through scope 3. It
+confirmed the adapter as a useful translation-boundary lens, but added no new
+production rule beyond the Model A/B requirements: exact terminal evidence stays
+terminal, exact request/grant pairs alone authorize dispatch, and generic
+authorization never substitutes for native authority. The sprint therefore stops
+at the three compact models; no production change or broader model is proposed.
 
 ## Tooling gate
 
