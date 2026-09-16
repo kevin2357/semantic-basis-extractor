@@ -86,3 +86,18 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   unconsumed.
 - Do not retry the same API call. GitHub requires a default-branch dispatcher, so
   a distinct owner decision is required before Slice 1 can proceed.
+
+## 2026-09-16 — First hosted smoke setup finding
+
+- After the owner approved the default-branch dispatcher, run `35063312210` began
+  against `12df955c` and passed checkout, Python setup, exact SPC download/SHA
+  admission, offline install, JSON Schema install, and `pip check`.
+- The first failure occurred only in the post-install provenance print: the workflow
+  imported the hyphenated distribution name as `semantic_projection_core` instead of
+  the actual `semantic_projection` package.
+- The run therefore did not reach manifest preflight, runner controls, or the
+  two-worker smoke. No external application operation occurred.
+- Corrected the import and moved `.ci-results` creation before installation so an
+  early future failure can still produce its compact artifact.
+- The correction is mechanical and keeps dependency identity, permissions, trigger,
+  test selection, and hosted-minute budget unchanged.

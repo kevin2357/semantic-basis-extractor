@@ -153,6 +153,35 @@ The workflow source remains correct on the pilot branch, but a separate owner
 decision is now required to make a manual-only dispatcher reachable from the
 default branch or to choose a different explicitly authorized trigger design.
 
+## First hosted smoke — mechanical setup correction
+
+Run `35063312210` was the first scheduled hosted witness after the dispatcher
+reached the default branch. It proved the following before failure:
+
+- exact pilot commit checkout (`12df955c`);
+- Python 3.12.14 setup;
+- public SPC Release download and exact SHA admission;
+- offline local SPC wheel installation;
+- installation of `jsonschema==4.26.0` and transitive public test dependencies;
+- successful `pip check`; and
+- no provider, R2, Better Stack, Render, database, or other application operation.
+
+The failure was a CI provenance-print typo after `pip check`:
+
+```text
+ModuleNotFoundError: No module named 'semantic_projection_core'
+```
+
+The package distribution name is `semantic-projection-core`; its documented and
+source-used import package is `semantic_projection`. This is not an SPC installation
+failure. The workflow now imports `semantic_projection` while still obtaining the
+distribution version through `importlib.metadata`.
+
+Because `.ci-results` had been created later in the same step, the early exception
+also left no directory for the `if: always()` artifact action. The correction creates
+the compact evidence root before any installation command. No test, runner smoke,
+or artifact-upload behavior was exercised in this failed attempt.
+
 ## Remaining feasibility questions for Gate A
 
 1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.
