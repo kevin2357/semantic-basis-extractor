@@ -3,14 +3,14 @@
   "tool": {
     "name": "Alloy Analyzer CLI",
     "version": "6.2.0",
-    "distribution_sha256": "7379feeb56f5ea77ae20340b051436d05aab014eb1800786bb792a40fed5a576",
+    "distribution_sha256": "6b8c1cb5bc93bedfc7c61435c4e1ab6e688a242dc702a394628d9a9801edb78d",
     "solver": "sat4j",
     "symmetry": 20,
     "repeat": 1
   },
   "model": {
     "path": "tools/native_cooperative_suspension_v1.als",
-    "sha256": "96cc83a08f44d42a2f026e7d65fb6687e88d26d9d42acbfa2c6329ccc4c9f926",
+    "sha256": "f8c0a9afc7c258541d7d30b8596f6f73415c05c08074ba7ce003119f069d4064",
     "overall_scope": 8,
     "ordered_moments": 8
   },
@@ -18,7 +18,8 @@
     "ValidTwoRunWorld": "SAT",
     "ValidConflictReplayWorld": "SAT",
     "ValidSuccessorObservationWorld": "SAT",
-    "ValidPriorOrdinaryDominanceWorld": "SAT"
+    "ValidPriorOrdinaryDominanceWorld": "SAT",
+    "ValidFenceToObservationOrdinaryDominanceWorld": "SAT"
   },
   "assertion_checks": {
     "FenceNeverRestoresOrdinaryAuthority": "UNSAT",
@@ -30,7 +31,9 @@
     "ReplayIsInertOrRefused": "UNSAT",
     "CrossRunIsolation": "UNSAT",
     "OneCanonicalResultPerRequest": "UNSAT",
-    "ExactReceiptAndCommandResultBinding": "UNSAT"
+    "ExactReceiptAndCommandResultBinding": "UNSAT",
+    "CapabilityLaunchFenceRequestOrdering": "UNSAT",
+    "MismatchedCapabilityRequestCannotSuspend": "UNSAT"
   },
   "weakened_rule_witnesses": {
     "ForkedResolutionWitness": "SAT",
@@ -39,12 +42,14 @@
     "PriorOrdinaryResultLosesWitness": "SAT",
     "ConflictingResultsForOneRequestWitness": "SAT",
     "DuplicateReceiptWitness": "SAT",
-    "CrossInvocationCommandResultWitness": "SAT"
+    "CrossInvocationCommandResultWitness": "SAT",
+    "FenceBeforeLaunchWitness": "SAT",
+    "CapabilitySubstitutionSuspendsWitness": "SAT"
   },
   "provider_operations": 0,
   "external_state_access": 0,
   "notes": [
-    "SAT scenarios prove the bounded contract world is inhabited.",
+    "SAT scenarios prove the bounded contract world is inhabited, including ordinary-result dominance in the post-fence/pre-observation interval.",
     "UNSAT checks mean no counterexample exists within the recorded finite scope.",
     "SAT weakened witnesses prove each protected rule excludes a concrete bad world."
   ]

@@ -16,8 +16,10 @@ assertion tied to Gate B prose and to a future provider-free executable test.
 | `CrossRunIsolation` | evidence cannot affect a different run | wrong-run result, exit, and resolution joins |
 | `OneCanonicalResultPerRequest` | one request cannot acquire a second semantic outcome | duplicate publication with changed outcome and recomputed digests |
 | `ExactReceiptAndCommandResultBinding` | every result has one same-invocation receipt and command-result binding | missing, duplicate, cross-result, and cross-invocation transport joins |
+| `CapabilityLaunchFenceRequestOrdering` | capability strictly precedes launch; the exact operator fence strictly follows launch; request strictly follows fence | valid capability/launch/fence/request chronology plus pre-launch-fence negative witness |
+| `MismatchedCapabilityRequestCannotSuspend` | substituted, stale, or unrelated capability/fence joins cannot produce a non-refusal result | exact request with substituted capability and recomputed digest |
 
-The seven `*Witness` predicates deliberately omit their corresponding rule and
+The nine `*Witness` predicates deliberately omit their corresponding rule and
 must remain satisfiable. They are negative-design evidence, not valid protocol
 fixtures.
 

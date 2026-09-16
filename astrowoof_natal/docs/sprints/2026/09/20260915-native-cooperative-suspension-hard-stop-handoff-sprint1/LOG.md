@@ -269,3 +269,21 @@
   deployment, or release operation occurred.
 - Slice 4A remains open pending a fresh prospective `0.4.66` candidate and
   installed qualification.
+
+## 2026-09-16 — Corrected Alloy launch-order campaign
+
+- Extended the shared model with explicit supervision capability and launch
+  events, exact fence-to-capability binding, and strict
+  capability-before-launch-before-fence-before-request ordering.
+- Added a dedicated ordinary-result-dominance world for the interval after
+  fence admission and before native observation.
+- The first run found a cross-run resolution counterexample: a mismatched
+  request's typed refusal could still be selected across its unrelated fence
+  in the abstract resolution relation. Tightened selected-suspension resolution
+  to require the exact capability/fence join.
+- Final bounded Alloy 6.2.0 campaign: five inhabited scenarios SAT, twelve
+  full-contract checks UNSAT, and nine deliberately weakened bad-world
+  witnesses SAT. Model SHA-256:
+  `f8c0a9afc7c258541d7d30b8596f6f73415c05c08074ba7ce003119f069d4064`.
+- No candidate wheel was rebuilt. Renewed API review remains required before
+  corrected Slice 4A packaging.

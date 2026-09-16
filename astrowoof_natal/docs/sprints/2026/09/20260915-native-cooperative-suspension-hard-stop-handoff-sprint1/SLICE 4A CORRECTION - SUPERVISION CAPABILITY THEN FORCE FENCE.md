@@ -46,10 +46,12 @@ fact before accepting the request/result chain.
 
 ## Alloy scope lesson
 
-The Gate B2 model ordered force fence before request, but intentionally did not
-model `Popen` or an explicit launch instant. It therefore could not distinguish
+The original Gate B2 model ordered force fence before request, but intentionally
+did not model `Popen` or an explicit launch instant. It therefore could not distinguish
 “capability exists before launch” from “operator fence exists only after
 launch.” This is a recorded abstraction limit, not evidence that the rejected
-chronology was valid. A later model revision should add capability and launch
-events before claiming coverage of this ordering rule; the executable closed
-schemas and provider-free chronology tests are the present correction gate.
+chronology was valid. The canonical model now includes separate capability,
+launch, force-fence, request, and observation events. Its refreshed bounded
+campaign covers the strict ordering, substituted-capability refusal, and the
+post-fence/pre-observation ordinary-result race; executable closed schemas and
+provider-free chronology tests remain independently mandatory.

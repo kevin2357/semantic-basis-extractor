@@ -17,6 +17,15 @@ sig ControlRoot {}
 sig RequestKey {}
 sig Digest {}
 
+sig SupervisionCapability {
+  ownerRun: one Run,
+  job: one Job,
+  attempt: one Attempt,
+  lease: one Lease,
+  boot: one WorkerBoot,
+  at: one Moment
+}
+
 abstract sig Route {}
 one sig OrdinaryV2Dispatch, ProviderReconciliation, UnsupportedRoute extends Route {}
 
@@ -33,11 +42,14 @@ sig Invocation {
   boot: one WorkerBoot,
   generation: one LaunchGeneration,
   controlRoot: one ControlRoot,
-  route: one Route
+  route: one Route,
+  capability: one SupervisionCapability,
+  launchedAt: one Moment
 }
 
 sig ForceFence {
   invocation: one Invocation,
+  capability: one SupervisionCapability,
   observedCheckpoint: one Checkpoint,
   at: one Moment
 }
@@ -47,6 +59,7 @@ one sig Current, Stale extends Freshness {}
 
 sig SuspensionRequest {
   invocation: one Invocation,
+  capability: one SupervisionCapability,
   fence: one ForceFence,
   key: one RequestKey,
   digest: one Digest,
@@ -117,14 +130,22 @@ sig OrdinaryAuthorityGrant {
 }
 
 fact IdentitySpine {
+  all c: SupervisionCapability |
+    c.job.ownerRun = c.ownerRun and
+    c.attempt.job = c.job and
+    c.lease.attempt = c.attempt
   all i: Invocation |
     i.job.ownerRun = i.ownerRun and
     i.attempt.job = i.job and
-    i.lease.attempt = i.attempt
+    i.lease.attempt = i.attempt and
+    i.capability.ownerRun = i.ownerRun and
+    i.capability.job = i.job and
+    i.capability.attempt = i.attempt and
+    i.capability.lease = i.lease and
+    i.capability.boot = i.boot
 
   all f: ForceFence | f.observedCheckpoint.ownerRun = f.invocation.ownerRun
   all q: SuspensionRequest |
-    q.fence.invocation = q.invocation and
     q.admissionCheckpoint = q.fence.observedCheckpoint
   all x: SuspensionObservation |
     x.checkpoint.ownerRun = x.request.invocation.ownerRun
@@ -149,6 +170,7 @@ fact ImmutableIdentityUniqueness {
     i1.ownerRun = i2.ownerRun implies
       i1.generation != i2.generation and i1.controlRoot != i2.controlRoot
   all disj f1, f2: ForceFence | f1.invocation != f2.invocation
+  all disj i1, i2: Invocation | i1.capability != i2.capability
 }
 
 fact CheckpointLineage {
@@ -159,7 +181,6 @@ fact CheckpointLineage {
 }
 
 fact EventOrdering {
-  all q: SuspensionRequest | time/lte[q.fence.at, q.at]
   all x: SuspensionObservation | time/lte[x.request.at, x.at]
   all s: SuspensionResult |
     time/lte[s.observation.at, s.at]
@@ -169,6 +190,12 @@ fact EventOrdering {
     (some r.selectedSuspension implies time/lte[r.selectedSuspension.at, r.at]) and
     (some r.selectedOrdinary implies time/lte[r.selectedOrdinary.at, r.at]) and
     (some r.exitEvidence implies time/lte[r.exitEvidence.at, r.at])
+}
+
+pred exactCapabilityAndFence[q: SuspensionRequest] {
+  q.capability = q.invocation.capability
+  q.fence.invocation = q.invocation
+  q.fence.capability = q.capability
 }
 
 pred sameOrContiguousSuccessor[anchor, observed: Checkpoint] {
@@ -194,6 +221,7 @@ pred canonicalRequest[q: SuspensionRequest] {
 
 pred BaseWorld {
   some ForceFence
+  all i: Invocation | one i.capability
   all i: Invocation | one f: ForceFence | f.invocation = i
   all f: ForceFence | some q: SuspensionRequest | q.fence = f
   all q: SuspensionRequest | one x: SuspensionObservation | x.request = q
@@ -203,14 +231,29 @@ pred BaseWorld {
 pred FullContract {
   BaseWorld
 
+  // API creates the harmless request-channel capability before launch. A real
+  // operator fence is admitted only for that exact running invocation and
+  // capability. The request is a later immutable join of both predecessors.
+  all i: Invocation | time/lt[i.capability.at, i.launchedAt]
+  all f: ForceFence |
+    f.capability = f.invocation.capability and
+    time/lt[f.invocation.launchedAt, f.at]
+  all q: SuspensionRequest |
+    time/lt[q.fence.at, q.at]
+
   // Only a current, identity-exact request on a supported route can produce a
   // non-refusal result, and observation is limited to the admission checkpoint
   // or its exact contiguous successor.
   all s: SuspensionResult |
     (s.outcome != Refused implies
       canonicalRequest[s.request] and
+      exactCapabilityAndFence[s.request] and
       s.request.freshness = Current and supported[s.invocation] and
       sameOrContiguousSuccessor[s.request.admissionCheckpoint, s.observedCheckpoint])
+
+  all q: SuspensionRequest |
+    not exactCapabilityAndFence[q] implies
+      all s: SuspensionResult | s.request = q implies s.outcome = Refused
 
   // Exact replay is the same canonical request atom. Every distinct later
   // request for the invocation is a conflict regardless of idempotency key.
@@ -250,6 +293,9 @@ pred FullContract {
   // An already-published ordinary result dominates later suspension evidence.
   all r: Resolution |
     (some r.selectedOrdinary implies no r.selectedSuspension)
+  all r: Resolution |
+    some r.selectedSuspension implies
+      exactCapabilityAndFence[r.selectedSuspension.request]
   all o: OrdinaryResult, x: SuspensionObservation |
     o.invocation = x.request.invocation and time/lt[o.at, x.at] implies
       no s: SuspensionResult | s.observation = x
@@ -300,6 +346,29 @@ pred ValidPriorOrdinaryDominanceWorld {
     o.invocation = r.fence.invocation and time/lt[o.at, x.at] and
     r.selectedOrdinary = o and no r.selectedSuspension and
     no s: SuspensionResult | s.observation = x
+}
+
+pred ValidFenceToObservationOrdinaryDominanceWorld {
+  FullContract
+  some f: ForceFence, q: SuspensionRequest, x: SuspensionObservation,
+       o: OrdinaryResult, r: Resolution |
+    q.fence = f and x.request = q and r.fence = f and
+    o.invocation = f.invocation and
+    time/lt[f.at, o.at] and time/lt[o.at, x.at] and
+    r.selectedOrdinary = o and no r.selectedSuspension and
+    no s: SuspensionResult | s.observation = x
+}
+
+assert CapabilityLaunchFenceRequestOrdering {
+  FullContract implies
+    (all i: Invocation | time/lt[i.capability.at, i.launchedAt]) and
+    (all f: ForceFence | time/lt[f.invocation.launchedAt, f.at]) and
+    (all q: SuspensionRequest | time/lt[q.fence.at, q.at])
+}
+
+assert MismatchedCapabilityRequestCannotSuspend {
+  FullContract implies all s: SuspensionResult |
+    not exactCapabilityAndFence[s.request] implies s.outcome = Refused
 }
 
 assert FenceNeverRestoresOrdinaryAuthority {
@@ -413,6 +482,18 @@ pred CrossInvocationCommandResultWitness {
     c.receipt.invocation != c.invocation
 }
 
+pred FenceBeforeLaunchWitness {
+  BaseWorld
+  some f: ForceFence | time/lte[f.at, f.invocation.launchedAt]
+}
+
+pred CapabilitySubstitutionSuspendsWitness {
+  BaseWorld
+  some s: SuspensionResult |
+    s.request.capability != s.request.invocation.capability and
+    s.outcome = Suspended
+}
+
 run ValidTwoRunWorld for 8 but exactly 2 Run, exactly 2 Invocation,
   exactly 2 ForceFence, exactly 2 SuspensionRequest, exactly 2 SuspensionResult,
   exactly 2 SuspensionObservation, exactly 2 SuspensionReceipt,
@@ -430,6 +511,14 @@ run ValidSuccessorObservationWorld for 8 but exactly 1 Run, exactly 1 Invocation
   exactly 1 SuspensionCommandResult, exactly 1 Resolution,
   exactly 2 Checkpoint, exactly 8 Moment
 run ValidPriorOrdinaryDominanceWorld for 8 but exactly 1 Run, exactly 1 Invocation,
+  exactly 1 SupervisionCapability,
+  exactly 1 ForceFence, exactly 1 SuspensionRequest,
+  exactly 1 SuspensionObservation, exactly 0 SuspensionResult,
+  exactly 0 SuspensionReceipt, exactly 0 SuspensionCommandResult,
+  exactly 1 OrdinaryResult, exactly 1 Resolution,
+  exactly 1 Checkpoint, exactly 8 Moment
+run ValidFenceToObservationOrdinaryDominanceWorld for 8 but exactly 1 Run,
+  exactly 1 Invocation, exactly 1 SupervisionCapability,
   exactly 1 ForceFence, exactly 1 SuspensionRequest,
   exactly 1 SuspensionObservation, exactly 0 SuspensionResult,
   exactly 0 SuspensionReceipt, exactly 0 SuspensionCommandResult,
@@ -446,6 +535,8 @@ check ReplayIsInertOrRefused for 8
 check CrossRunIsolation for 8
 check OneCanonicalResultPerRequest for 8
 check ExactReceiptAndCommandResultBinding for 8
+check CapabilityLaunchFenceRequestOrdering for 8
+check MismatchedCapabilityRequestCannotSuspend for 8
 
 run ForkedResolutionWitness for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 1 SuspensionRequest, exactly 3 Resolution,
@@ -474,3 +565,12 @@ run CrossInvocationCommandResultWitness for 8 but exactly 2 Run,
   exactly 2 SuspensionObservation, exactly 1 SuspensionResult,
   exactly 1 SuspensionReceipt, exactly 1 SuspensionCommandResult,
   exactly 2 Resolution, exactly 2 Checkpoint, exactly 8 Moment
+run FenceBeforeLaunchWitness for 8 but exactly 1 Run, exactly 1 Invocation,
+  exactly 1 SupervisionCapability, exactly 1 ForceFence,
+  exactly 1 SuspensionRequest, exactly 1 Resolution,
+  exactly 1 Checkpoint, exactly 8 Moment
+run CapabilitySubstitutionSuspendsWitness for 8 but exactly 1 Run,
+  exactly 1 Invocation, exactly 2 SupervisionCapability,
+  exactly 1 ForceFence, exactly 1 SuspensionRequest,
+  exactly 1 SuspensionObservation, exactly 1 SuspensionResult,
+  exactly 1 Resolution, exactly 1 Checkpoint, exactly 8 Moment
