@@ -41,13 +41,73 @@ Source inspection confirms that the coordinator:
 - records test count, skip count, inventory digest, outcome digest, per-group
   commands, durations, stdout, stderr, and return codes.
 
-## Feasibility unknowns for Gate A
+## SPC clean-runner acquisition evidence
 
-1. Exact clean-runner acquisition of SPC 0.11.1 is not yet established.
-2. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.
-3. No workflow permissions, timeout, artifact, or concurrency policy exists.
-4. Hosted 1/2/4-worker durations and exact digest equivalence are unmeasured.
-5. The serial tail's hosted duration is unmeasured.
+API uses a versioned GitHub Release wheel rather than Git checkout:
+
+- repository: `kevin2357/semantic-projection-core`;
+- release tag: `semantic-projection-core-v0.11.1`;
+- asset: `semantic_projection_core-0.11.1-py3-none-any.whl`;
+- SHA-256:
+  `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612`;
+- download authority: ephemeral repository-scoped `${{ github.token }}`;
+- admission: exact SHA comparison before use; and
+- installation: `pip --no-index --no-deps` from the admitted local wheel.
+
+Independent repository evidence agrees:
+
+- API `pyproject.toml` embeds the same release URL and SHA-256 fragment;
+- `docker/deterministic-domain-worker/requirements.lock` records the same version
+  and hash;
+- `.github/workflows/publish-worker-images.yml` downloads the exact tag/filename
+  and verifies the same digest; and
+- the operations field guide names the same canonical wheel identity.
+
+This resolves the package-source ambiguity without a long-lived secret, sibling
+checkout, or floating dependency. The pilot will not rely on the remote download
+alone: it must hash the admitted file before installation.
+
+Direct read-only GitHub Release metadata verification on 2026-09-16 confirmed:
+
+| Field | Verified value |
+| --- | --- |
+| Release state | published; neither draft nor prerelease |
+| Tag | `semantic-projection-core-v0.11.1` |
+| Wheel filename | `semantic_projection_core-0.11.1-py3-none-any.whl` |
+| Wheel size | 161,706 bytes |
+| Release API digest | `sha256:dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612` |
+| Additional asset | `SHA256SUMS.txt` |
+
+The release metadata digest agrees with the qualified API runtime lock and the
+planned local admission check.
+
+## Frozen Gate A workflow contract
+
+| Control | Pilot decision |
+| --- | --- |
+| Trigger | `workflow_dispatch` only |
+| Runner | `ubuntu-latest` |
+| Timing Python | 3.12; a later bounded 3.11 smoke is optional |
+| Permissions | `contents: read` only |
+| Git credential persistence | disabled after checkout |
+| SPC download | `gh release download` with ephemeral `GH_TOKEN=${{ github.token }}` only in the download step |
+| SPC admission/install | exact SHA check, then local `pip --no-index --no-deps` install |
+| Job timeout | 30 minutes |
+| Aggregate first-measurement budget | 30 hosted minutes maximum |
+| Concurrency | branch-scoped; cancel superseded pilot runs |
+| Artifact retention | 7 days; compact receipts and failure logs only |
+| Application/provider operations | zero expected and permitted |
+
+The aggregate budget includes all jobs for the initial workflow revision. If the
+smoke plus 1/2/4-worker comparison cannot finish inside it, do not begin the
+whole-suite confirmation; retain what is safe, record the shortfall, and return to
+review.
+
+## Remaining feasibility questions for Gate A
+
+1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.
+2. Hosted 1/2/4-worker durations and exact digest equivalence are unmeasured.
+3. The serial tail's hosted duration is unmeasured.
 
 ## Evidence to retain from implementation
 

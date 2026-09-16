@@ -50,13 +50,17 @@ The pilot succeeds when it produces reviewable evidence for all of the following
 
 ## Slice 0 — Clean-runner dependency and workflow contract
 
-1. Establish where the exact SPC 0.11.1 wheel/source can be obtained by a clean
-   hosted runner.
-2. Prefer, in order:
-   - an authenticated-free immutable official artifact already intended for CI;
-   - an exact immutable release asset with digest verification; or
-   - a narrowly scoped read-only GitHub credential explicitly approved by the
-     owner.
+1. Download the exact SPC 0.11.1 wheel from its canonical GitHub Release using the
+   ephemeral repository-scoped `${{ github.token }}` and the API-proven coordinates:
+   - repository: `kevin2357/semantic-projection-core`;
+   - tag: `semantic-projection-core-v0.11.1`;
+   - filename: `semantic_projection_core-0.11.1-py3-none-any.whl`; and
+   - SHA-256:
+     `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612`.
+2. Admit the wheel into a workflow-local directory only after exact SHA comparison.
+   Install it with `pip --no-index --no-deps`, then verify installed version/origin
+   and run `pip check`. Do not pass `${{ github.token }}` into the test steps or
+   persistent environment.
 3. Reject editable sibling checkout assumptions, floating branches, unverified
    downloads, broad personal tokens, and copied local wheels without provenance.
 4. Freeze the workflow contract:
@@ -76,16 +80,26 @@ The pilot succeeds when it produces reviewable evidence for all of the following
 
 Acceptance:
 
-- exact dependency provenance is documented;
+- exact dependency provenance, asset coordinates, and digest are documented;
+- download, admission, and offline installation are separate workflow steps;
 - the workflow permissions/triggers/runtime/timeout/retention contract is frozen;
 - no unresolved secret or package-source ambiguity remains; and
 - no workflow has been dispatched yet.
+
+Status: complete. API's existing immutable-release intake pattern supplied the
+exact SPC asset coordinates, and direct GitHub metadata confirms its published
+release state, filename, size, and SHA-256. The manual-only, least-privilege,
+30-hosted-minute pilot contract is frozen in `EVIDENCE.md`.
 
 ## Review Gate A — Feasibility and authority
 
 Owner/API review confirms the SPC acquisition route, permissions, trigger, runtime,
 minutes ceiling, and evidence-retention design. If exact dependency acquisition
 requires materially broader authority than expected, stop rather than improvising.
+
+Status: passed. No broader authority is required: the exact public release asset is
+admitted with an ephemeral repository-scoped token limited to its download step;
+the pilot has `contents: read` only and a 30 hosted-minute aggregate ceiling.
 
 ## Slice 1 — Manual smoke workflow
 

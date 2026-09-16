@@ -54,11 +54,19 @@ pilot therefore introduces a repository automation surface, even if it changes n
 production Python. The workflow must be reviewed and committed like code.
 
 The package declares Python `>=3.11` and pins
-`semantic-projection-core==0.11.1`. A clean hosted runner does not inherit the
-owner's local wheels or sibling worktrees, so the exact legal installation source
-for that companion dependency is the first feasibility question. The sprint must
-not silently substitute an editable sibling checkout, an unpinned package, or a
-credential-bearing private index.
+`semantic-projection-core==0.11.1`. API's existing image-publication workflow
+already establishes the clean-runner source for that companion dependency: the
+canonical GitHub Release asset
+`semantic_projection_core-0.11.1-py3-none-any.whl` from tag
+`semantic-projection-core-v0.11.1`. Its qualified SHA-256 is
+`dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612`.
+
+The API workflow downloads that exact asset with the ephemeral repository-scoped
+`${{ github.token }}`, admits it only after SHA verification, and installs it
+offline with `pip --no-index --no-deps`. The SBE pilot should reproduce that
+already-qualified intake pattern rather than inherit local wheels or sibling
+worktrees. It must not substitute an editable checkout, floating branch, unpinned
+package, or credential-bearing private index.
 
 ## Questions this pilot should answer
 
