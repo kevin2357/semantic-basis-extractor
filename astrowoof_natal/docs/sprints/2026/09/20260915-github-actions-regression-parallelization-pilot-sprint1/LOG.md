@@ -162,3 +162,12 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   identified wheel's declared dependency on `packaging`. Add only pinned public
   `packaging==26.3` (`d7193f7c...9b23cd1c`, 129,956 bytes) with the same local-wheel
   SHA admission; do not suppress `pip check`.
+
+## 2026-09-16 — Narrow source assertion correction
+
+- The final corrected hosted setup ran all 650 parallel-safe tests in 87.592867
+  seconds with exactly two failures and no errors.
+- Correct the mutation-corpus assertion from superseded `5149b070...e0141303b` to
+  the exact current canonical LF fixture digest `668e4571...e54712b13`.
+- Retain the frozen BRE replay mismatch for a separate historical-provenance review;
+  it is not safe to overwrite a frozen baseline merely to green the CI pilot.

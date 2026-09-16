@@ -133,7 +133,7 @@ class ProviderEconomicsContractTests(unittest.TestCase):
             "provider-economics"
         ).joinpath("mutation-corpus.v1.json").read_bytes()
         self.assertEqual(
-            "5149b0707452b84cf1161d12b6b0403b30d5ecd70d0c18495bfc8f8e0141303b",
+            "668e45712018a6c66345f401f745a2112f2c10f1e03dfaba06832b7e54712b13",
             hashlib.sha256(raw).hexdigest(),
         )
         self.assertEqual(json.loads(raw), corpus)
