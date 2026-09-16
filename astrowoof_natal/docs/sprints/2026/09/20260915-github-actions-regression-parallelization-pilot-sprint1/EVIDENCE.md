@@ -260,5 +260,8 @@ Those need ordinary source/baseline review. Neither is evidence of a parallel-ru
 defect.
 
 The first assertion is now corrected: its expected SHA-256 is updated to the
-Git-tracked canonical LF fixture bytes. The BRE frozen replay stays unchanged pending
-its separate provenance comparison.
+Git-tracked canonical LF fixture bytes. The BRE frozen replay was then proven
+path-root dependent only: normalizing its two absolute input-path collections to
+filenames yields identical old/current digest `fd06e6...4c28cd`. The frozen test now
+normalizes only those volatile test-projection fields, and the baseline records that
+reproducible digest. Production packet bytes and source hash values remain unchanged.

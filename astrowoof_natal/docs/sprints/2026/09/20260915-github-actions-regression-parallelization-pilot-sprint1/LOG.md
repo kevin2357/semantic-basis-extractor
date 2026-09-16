@@ -171,3 +171,13 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   the exact current canonical LF fixture digest `668e4571...e54712b13`.
 - Retain the frozen BRE replay mismatch for a separate historical-provenance review;
   it is not safe to overwrite a frozen baseline merely to green the CI pilot.
+
+## 2026-09-16 — BRE frozen baseline provenance correction
+
+- Compared the frozen baseline commit and current source directly. Candidate,
+  selected, QA, cards, coverage, and all source hashes match; only absolute checkout
+  paths in two packet source collections differ.
+- Normalizing those two test-only collections to filenames produces identical old and
+  current digest `fd06e6fdbf9a715e7ae153d7098077ed518d633c1a21f7ee5e179b946b4c28cd`.
+- Update the frozen test projection and its stored digest accordingly. Do not alter
+  production packet structure or source provenance values.
