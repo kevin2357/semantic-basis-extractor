@@ -131,8 +131,20 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   artifact. Both use seven-day retention; no application provider or service call
   occurred.
 - All 15 provider-economics errors are one missing-local-distribution-metadata setup
-  condition, not a parallelism error. The workflow now installs the checked-out SBE
-  package offline with `--no-deps --no-build-isolation` after admitted dependencies.
+  condition, not a parallelism error. An attempted offline local-package install
+  could not import `setuptools.build_meta` because hosted Python omits setuptools;
+  retain the existing workflow until a precisely reviewed build-tool admission is
+  authorized.
 - Two independent SHA baseline failures remain: the mutation corpus's superseded
   expected digest and the frozen BRE replay packet digest. Preserve them for normal
   source review; do not alter their assertions in this CI-pilot setup work.
+
+## 2026-09-16 — Build-tool admission boundary
+
+- A bounded follow-up (`35064737867`) attempted to install the checkout without
+  dependencies or build isolation to supply SBE distribution metadata. Hosted
+  Python 3.12 does not include `setuptools`, so `setuptools.build_meta` was
+  unavailable before test execution.
+- Reverted that unadmitted setup change. Adding an unpinned build-tool download
+  would broaden the pilot's dependency policy, so pause at Gate B for a precise
+  build-tool admission decision rather than improvising.

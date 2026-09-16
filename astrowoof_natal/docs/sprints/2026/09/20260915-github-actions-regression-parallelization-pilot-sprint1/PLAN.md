@@ -148,6 +148,14 @@ Review the exact workflow diff and first run. Confirm permissions, package
 provenance, logs, artifact contents, redaction, and reproduction commands before a
 full measurement run.
 
+Status: reached. Hosted runs prove exact SPC admission, Python 3.12 setup,
+credential sanitation controls, complete two-worker execution, compact receipt
+retention, and failure-only worker diagnostics. The 650-test smoke takes about
+91 seconds, but it is red for two source-baseline digest mismatches and for a
+metadata-only test setup condition. Do not begin parallel-count measurement until
+owner review decides whether to admit a precisely pinned build-tool pair for local
+SBE metadata and how to disposition the two SHA-baseline failures.
+
 ## Slice 2 — Hosted parallel-count experiment
 
 1. On one hosted runner and one exact commit, execute the complete
@@ -240,7 +248,8 @@ or release-lock qualification.
 - optional tiny repository-only comparison helper with focused tests; and
 - final adoption/manual-only/rejection decision.
 
-## Initial status
+## Current status
 
-Sprint initialized. No workflow exists and no hosted run has started. Pause at
-Review Gate A after the dependency source and workflow contract are reviewed.
+Pause at Review Gate B. The manual-only pilot is viable and has no application I/O,
+but it is not yet a green measurement harness. No Slice 2 worker-count comparison
+or adoption decision is authorized by the current evidence.
