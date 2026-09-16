@@ -380,3 +380,20 @@
 - API's candidate-overlay focused suite passed: 68 tests.
 - Exact-death/PID-reuse, parent-crash, and worker-execution reclamation remain
   API-owned later-resolution work and are not claimed by this receipt.
+
+## 2026-09-16 — Slice 5 release regression gate
+
+- Selected the broad/full gate because the release changes shared v2
+  orchestration, reconciliation, native writer locking, and a cross-repository
+  public contract.
+- The manifest guard initially found the three new suspension modules
+  unclassified. They were conservatively added to `provisional`; no parallel
+  safety claim was made.
+- The superseding focused matrix, including the manifest runner tests, passed
+  74 tests with no failures.
+- The committed one-worker broad/full run at artifact-source commit `3907602c`
+  passed 1,229 tests with three expected skips and no failures in 1,308.851010
+  seconds. Test inventory SHA-256:
+  `ae272ce3009640bad4259db697e1c00bb92bfcdbf2ac754a59b87f1cc60591f0`.
+- No runtime, schema, validator, package-data, or test-harness logic changed
+  after that successful broad run.

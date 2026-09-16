@@ -332,3 +332,10 @@ spend, R2 access, live process termination, or unrelated mutation.
 
 **Exit:** immutable release/handoff evidence is complete, or the sprint closes
 honestly without a release if no SBE runtime change is needed.
+
+**Status (2026-09-16):** release-lock preparation in progress. The focused
+matrix passed 74 tests. The committed broad/full manifest run passed 1,229
+tests with three expected skips and no failures in 1,308.851 seconds. The
+remaining gate is exact release-lock reproducibility plus installed and joined
+qualification, followed by reviewer and explicit owner tag/publication
+approval.
