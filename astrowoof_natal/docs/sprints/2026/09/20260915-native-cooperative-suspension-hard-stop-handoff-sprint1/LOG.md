@@ -189,3 +189,20 @@
   matrix 112 passed with 2 expected optional skips. No provider, network, API,
   R2, process-control, packaging, release, or deployment activity occurred.
 - Paused at Voof-paws D before installed/package or API supervision work.
+
+## 2026-09-16 — Voof-paws D approved; Slice 4 dependency split
+
+- API approved Slice 3 without correction: exact interactive ordinary-v2
+  scope, writer-lock observation, checkpointed handoff, and strict separation
+  from API fencing/process/release authority all remain intact.
+- Read the API companion branch after its durable force-fence Slice 3A. Its
+  API-owned authority fence is complete, but the real subprocess adapter does
+  not yet create/pass the supervision envelope and control root or consume the
+  suspension result; that work is intentionally deferred to API Slice 3B.
+- Identified a release-pair dependency cycle in the original Slice 4 wording:
+  SBE awaited the real API adapter while API awaited an exact packaged SBE
+  candidate.
+- Split Slice 4 into 4A SBE packaged-candidate qualification, intervening API
+  Slice 3B real-adapter integration, and 4B joined release-pair qualification.
+- Opened Slice 4A only. No API implementation, provider/R2/process action,
+  resource release, tag, publication, or deployment is authorized.

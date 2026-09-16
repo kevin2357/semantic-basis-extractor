@@ -233,7 +233,40 @@ unsupported. Focused Slice 3: 11 passed. Neighboring v2/reconciliation matrix:
 
 **Voof-paws D:** runtime review before packaging.
 
-## Slice 4 — Cross-package supervision qualification
+## Slice 4A — SBE packaged-candidate supervision qualification
+
+Break the release-pair dependency cycle by qualifying SBE's packaged boundary
+before API wires that exact candidate into its subprocess adapter.
+
+- Build/install a controlled candidate wheel from the reviewed Slice 3 commit.
+- Exercise the installed SBE CLI with the approved immutable
+  envelope/control-root shape, without importing source-tree modules.
+- Cover cooperative exit, absent request, stale/relocated control identity,
+  duplicate replay, conflicting request, interruption/restart repair, prior
+  ordinary-result precedence, and unrelated-run isolation where the public
+  installed boundary can prove them.
+- Prove the installed artifact contains all schemas, readers, fixtures, and
+  public command surfaces required by API Slice 3B.
+- Prove zero provider calls, spend mutation, R2 access, live process
+  termination, or API resource release.
+- Record the candidate wheel SHA-256, installed version, source commit, command
+  lines, receipts, and explicit limits. This is candidate evidence, not release
+  authorization.
+
+**Exit:** API can bind Slice 3B to one exact packaged SBE candidate and add the
+real supervision/control/result adapter without reconstructing SBE semantics.
+
+## API companion Slice 3B — Real adapter integration
+
+API owns this intervening step. It creates the pre-launch supervision envelope
+and request-isolated control root, passes the two dedicated SBE arguments,
+consumes the exact suspension command result, joins exact child exit, and
+retains all non-execution custody. SBE does not implement or simulate these API
+decisions.
+
+**Exit:** the real API subprocess adapter is available for joined qualification.
+
+## Slice 4B — Joined cross-package supervision qualification
 
 - Exercise the installed SBE CLI from API's real subprocess adapter and
   launch-envelope/control-channel shape.
