@@ -305,3 +305,20 @@
   All provider/network/spend/process-termination/API-release counters were zero.
 - No tag, publication, deployment, live API/R2/provider action, signal, or
   resource release occurred. Slice 4B remains blocked on API's real adapter.
+
+## 2026-09-16 — Corrected Slice 4A release-lock provenance
+
+- Candidate lock commit: `7e4fa13f`.
+- Rebuilt twice from that exact commit with the recorded epoch. Both wheels
+  reproduced the preliminary candidate exactly: 1,406,483 bytes, SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- Installed the lock-build wheel into a second clean venv. `pip check`, exact
+  version/import origin, public qualification, packaged fixture reader, public
+  validator, and JSON Schema validation all passed.
+- Final lock-build qualification semantic SHA-256:
+  `e37f8a5c6ace407deb0ce37022dea2571312f56de5485d27af7e849bce76f71b`;
+  file SHA-256:
+  `cbba5107d75fd96ab229b2957494384bfc6fa333d7e825562a0c8d2a0393d76c`.
+- The second disposable qualification has fresh timestamp-bound artifact IDs,
+  as designed; the schema, packaged fixture, joins, status, checks, and all six
+  zero-activity counters remained valid.

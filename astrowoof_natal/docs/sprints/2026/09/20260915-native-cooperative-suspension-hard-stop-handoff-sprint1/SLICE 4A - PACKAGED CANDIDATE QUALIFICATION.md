@@ -85,13 +85,14 @@ pre-launch supervision capability and later immutable force fence.
 | Evidence | Exact value |
 | --- | --- |
 | Candidate artifact-source commit | `24f2c674` |
+| Candidate release-lock commit | `7e4fa13f` |
 | Candidate version | `0.4.66` |
 | `SOURCE_DATE_EPOCH` | `1789534964` |
 | Wheel size | `1,406,483` bytes |
 | Wheel SHA-256 | `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf` |
 | Pinned SPC | `0.11.1`, SHA-256 `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612` |
-| Qualification semantic SHA-256 | `fa068c29d7b5cfff28d49e6361a1a9b187ca31afb6b70c4aa11bede70defccb2` |
-| Qualification file SHA-256 | `145bb7ce0a0aa8d7d735cb3afb2bf46cbefb7eb4705be9f70cee25780f14bc48` |
+| Final lock-build qualification semantic SHA-256 | `e37f8a5c6ace407deb0ce37022dea2571312f56de5485d27af7e849bce76f71b` |
+| Final lock-build qualification file SHA-256 | `cbba5107d75fd96ab229b2957494384bfc6fa333d7e825562a0c8d2a0393d76c` |
 | Qualification schema file SHA-256 | `a47a7da72dbab7d8db2d3befa057404ac8d7e112755c55784129ee3497cb8096` |
 
 Evidence:
@@ -100,9 +101,14 @@ Evidence:
   optional skips.
 - Two clean-source builds produced byte-identical filenames, sizes, member
   inventories, and wheel hashes.
+- Two further builds from exact release-lock commit `7e4fa13f`, using the same
+  recorded epoch, reproduced that exact wheel SHA-256 and size.
 - Clean venv installation resolved version `0.4.66` and package imports from
   `site-packages`; `pip check` was clean.
-- Installed public qualification and packaged JSON Schema validation passed.
+- Installed public qualification and packaged JSON Schema validation passed
+  again from the release-lock wheel. Qualification receipt identity changes
+  per disposable execution timestamp; its closed semantics and zero-I/O safety
+  assertions remained exact.
 - All counters remained zero for provider create/retrieve, network, spend,
   live process termination, and API resource release.
 
