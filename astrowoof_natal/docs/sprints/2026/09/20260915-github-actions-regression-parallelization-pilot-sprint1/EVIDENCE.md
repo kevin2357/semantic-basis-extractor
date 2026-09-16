@@ -258,3 +258,7 @@ Two real SHA-baseline failures remain deliberately out of this pilot slice:
 
 Those need ordinary source/baseline review. Neither is evidence of a parallel-runner
 defect.
+
+The first assertion is now corrected: its expected SHA-256 is updated to the
+Git-tracked canonical LF fixture bytes. The BRE frozen replay stays unchanged pending
+its separate provenance comparison.
