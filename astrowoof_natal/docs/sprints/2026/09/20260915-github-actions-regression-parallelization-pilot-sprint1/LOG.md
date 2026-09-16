@@ -148,3 +148,13 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - Reverted that unadmitted setup change. Adding an unpinned build-tool download
   would broaden the pilot's dependency policy, so pause at Gate B for a precise
   build-tool admission decision rather than improvising.
+
+## 2026-09-16 — Owner-approved pinned build-tool admission
+
+- Owner approved the next CI harness step. Admit `setuptools==84.0.0`
+  (`51a52592...2b0c670`, 818,216 bytes) and `wheel==0.48.0`
+  (`3217dcc8...1287ab`, 33,320 bytes) by exact public-wheel SHA before installing
+  either from the local wheelhouse.
+- The checkout install remains `--no-deps --no-build-isolation`; it supplies only
+  the SBE metadata required by source-based tests. It is neither a package publish
+  nor a new runtime/deployment dependency.
