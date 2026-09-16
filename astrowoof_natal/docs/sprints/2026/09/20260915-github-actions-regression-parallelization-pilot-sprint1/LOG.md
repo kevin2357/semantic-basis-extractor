@@ -207,3 +207,15 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   300,000; Windows CRLF expansion had masked it locally.
 - Lower the test's coarse truncation floor to 250,000 bytes, retain all exact
   identity/content assertions, and rerun one final four-worker full suite.
+
+## 2026-09-16 — Final hosted confirmation and closeout
+
+- Run `35068640946` passed the complete Linux suite from `c0d734ae`: 1,202 tests,
+  3 expected skips, 4 workers, and 209.001030 coordinator seconds. All six worker
+  groups passed; the compact receipt is retained as the Actions artifact.
+- Select four workers for this manual workflow. The preceding parallel-only
+  comparison showed 4=79.058307s versus 1=184.096436s, 2=104.275341s, and
+  curiosity-only 16=81.548776s.
+- Close with the manual-diagnostic disposition. Do not add PR triggering, branch
+  protection, or any substitution for existing release qualification without a
+  separately reviewed owner decision.

@@ -301,3 +301,25 @@ The correction changes the deliberately coarse completeness/truncation floor to
 250,000 bytes, leaving meaningful headroom below the smallest valid LF fixture. It
 does not change packaged resources, fixture JSON semantics, or the runner. A single
 fresh four-worker full confirmation remains required before Gate D.
+
+## Final four-worker hosted confirmation and disposition
+
+Run `35068640946` passed from commit `c0d734ae60e2820c6e615c641dcddb30d0a2190a`
+on GitHub-hosted Ubuntu/Python 3.12. It admitted the exact SPC and build-tool
+wheels, passed `pip check` and credential-sanitization preflight, and made zero
+provider or application-service operations. The compact receipt records 1,202
+tests, 3 platform-expected skips, four workers, and 209.001030 coordinator seconds.
+
+All six groups passed: parallel-1 164/73.436843s, parallel-2 174/69.885914s,
+parallel-3 131/65.200388s, parallel-4 181/80.260352s, serial-quiet
+439/115.975274s, and serial-observability 113/12.745713s. The manifest SHA-256 is
+`b592f1a7de3cb583518a49dd25a4dd9ddf96cf695e0d099f250d23c9cd9b1aca`; the full test
+inventory SHA-256 is `2b7ef2cce804a16a13fb51b0d5729f06674a468739cfc460993d0473b577436a`.
+
+Disposition: **retain manual diagnostic**. Four workers are the evidence-backed
+setting (79.058307 seconds for the parallel-only comparison versus 184.096436 at
+one, 104.275341 at two, and 81.548776 at curiosity-only sixteen). The serial quiet
+tail dominates the full run, and no PR trigger, branch protection, or release
+authority is changed by this pilot. GitHub reported an advisory that
+`actions/upload-artifact@v4` is currently forced from Node 20 to Node 24; retain it
+as a routine workflow-maintenance observation, not a pilot failure.
