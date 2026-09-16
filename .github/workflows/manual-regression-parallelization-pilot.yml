@@ -88,16 +88,72 @@ jobs:
           python -c "import importlib.util, pathlib; path=pathlib.Path('astrowoof_natal/scripts/run_test_suite.py'); spec=importlib.util.spec_from_file_location('runner', path); runner=importlib.util.module_from_spec(spec); spec.loader.exec_module(runner); runner.validate_manifest(runner.load_manifest(runner.DEFAULT_MANIFEST)); print('manifest=valid')"
           python -m unittest astrowoof_natal.tests.test_test_suite_runner
 
-      - name: Run complete two-worker parallel-safe smoke
+      - name: Compare complete parallel-safe worker counts
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p ci-results/smoke ci-work
-          python astrowoof_natal/scripts/run_test_suite.py \
-            --parallel-only \
-            --workers 2 \
-            --work-root ci-work/smoke \
-            --receipt ci-results/smoke/receipt.json
+          for workers in 1 2 4 16; do
+            mkdir -p "ci-results/comparison/${workers}" "ci-work/comparison-${workers}"
+            python astrowoof_natal/scripts/run_test_suite.py \
+              --parallel-only \
+              --workers "${workers}" \
+              --work-root "ci-work/comparison-${workers}" \
+              --receipt "ci-results/comparison/${workers}/receipt.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          fields = (
+              "manifest_sha256",
+              "test_count",
+              "skip_count",
+              "test_inventory_sha256",
+              "outcome_inventory_sha256",
+          )
+          receipts = {
+              workers: json.loads(
+                  Path(f"ci-results/comparison/{workers}/receipt.json").read_text(
+                      encoding="utf-8"
+                  )
+              )
+              for workers in (1, 2, 4, 16)
+          }
+          baseline = receipts[1]
+          for workers, receipt in receipts.items():
+              if not receipt["success"]:
+                  raise SystemExit(f"worker count {workers} failed")
+              mismatched = [
+                  field for field in fields if receipt[field] != baseline[field]
+              ]
+              if mismatched:
+                  raise SystemExit(
+                      f"worker count {workers} mismatched fields: {mismatched}"
+                  )
+          summary = {
+              "schema_version": "astrowoof.github-actions-regression-comparison.v1",
+              "comparison_fields": list(fields),
+              "eligible_worker_counts": [1, 2, 4],
+              "curiosity_only_worker_counts": [16],
+              "receipts": {
+                  str(workers): {
+                      "wall_seconds": receipts[workers]["wall_seconds"],
+                      "test_count": receipts[workers]["test_count"],
+                      "skip_count": receipts[workers]["skip_count"],
+                      "test_inventory_sha256": receipts[workers][
+                          "test_inventory_sha256"
+                      ],
+                      "outcome_inventory_sha256": receipts[workers][
+                          "outcome_inventory_sha256"
+                      ],
+                  }
+                  for workers in (1, 2, 4, 16)
+              },
+          }
+          Path("ci-results/comparison/summary.json").write_text(
+              json.dumps(summary, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
 
       - name: Upload compact pilot evidence
         if: always()

@@ -159,8 +159,8 @@ SBE metadata and how to disposition the two SHA-baseline failures.
 ## Slice 2 — Hosted parallel-count experiment
 
 1. On one hosted runner and one exact commit, execute the complete
-   `parallel_safe` class sequentially at `--workers 1`, `2`, and `4`, each with a
-   unique `--work-root` and `--receipt`.
+   `parallel_safe` class sequentially at `--workers 1`, `2`, `4`, and an explicitly
+   curiosity-only `16`, each with a unique `--work-root` and `--receipt`.
 2. Preserve the same Python process environment and installed dependencies across
    all three cells so only worker count changes.
 3. Compare and require exact equality of:
@@ -175,8 +175,10 @@ SBE metadata and how to disposition the two SHA-baseline failures.
 6. Treat a single fastest observation as provisional. If the leading count is only
    marginally faster or results are noisy, repeat only the leading pair within the
    approved minutes ceiling.
-7. Select a hosted worker count only when it is both equivalent and materially
-   useful. Otherwise retain one worker.
+7. Select only among worker counts `1`, `2`, and `4` when a count is both equivalent
+   and materially useful. Record `16` for curiosity/performance characterization
+   only; it cannot become the recommended count in this pilot. Otherwise retain one
+   worker.
 
 Acceptance:
 

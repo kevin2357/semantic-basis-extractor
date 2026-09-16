@@ -181,3 +181,11 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   current digest `fd06e6fdbf9a715e7ae153d7098077ed518d633c1a21f7ee5e179b946b4c28cd`.
 - Update the frozen test projection and its stored digest accordingly. Do not alter
   production packet structure or source provenance values.
+
+## 2026-09-16 — Green hosted smoke and worker-count expansion
+
+- Run `35066766893` is the first green hosted pilot smoke: 650 tests, zero skips,
+  111.227796 coordinator seconds, and exact retained receipt inventories.
+- Owner requested a 16-worker curiosity observation. Extend Slice 2 to compare
+  `1`, `2`, `4`, and `16` sequentially with isolated roots and strict digest checks.
+  Only `1`/`2`/`4` remain eligible for a pilot recommendation.
