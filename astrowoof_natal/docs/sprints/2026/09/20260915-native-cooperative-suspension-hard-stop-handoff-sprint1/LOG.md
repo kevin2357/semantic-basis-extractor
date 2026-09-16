@@ -227,3 +227,26 @@
 - Next: commit the exact candidate source, build/install a controlled wheel,
   and run the public qualification from site-packages. No tag/publication or API
   integration is authorized yet.
+
+## 2026-09-16 — Slice 4A installed candidate complete
+
+- Built prospective SBE `0.4.65` from source commit `5f5d9aa6` with
+  `SOURCE_DATE_EPOCH=1789531794`.
+- Candidate wheel: 1,407,338 bytes; SHA-256
+  `6c5db7b3134805f74343b841ea50ace128c313ab8ac292196fdf483fa6b1ce6b`.
+- Downloaded the immutable SPC `0.11.1` release wheel; its known SHA-256
+  `dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612`
+  matched prior release evidence.
+- Rejected an initial system-site venv as clean evidence when `pip check`
+  exposed the host runtime's missing `jsonschema` dependency.
+- Created a fresh venv, installed pinned SPC plus declared dependencies and the
+  candidate wheel, and obtained a clean `pip check`.
+- Proved SBE `0.4.65` imported from the fresh venv's `site-packages`; the
+  installed qualification/schema console commands passed. Root public Python
+  validation and packaged JSON Schema validation both accepted the receipt.
+- Qualification SHA-256:
+  `0282608bd9c0df8c3a4761b3f39a48df9bbdf9ead43c15cbe8cc3b4f16d134dd`.
+  All safety counters were zero.
+- Slice 4A is complete. Paused for API Slice 3B real-adapter integration before
+  joined Slice 4B. No tag, publication, deployment, live API/R2/provider work,
+  signal, process termination, or resource release occurred.

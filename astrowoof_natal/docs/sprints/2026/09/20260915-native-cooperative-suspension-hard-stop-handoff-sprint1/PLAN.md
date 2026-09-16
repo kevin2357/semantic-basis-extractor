@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 4A source/package surface complete; exact installed candidate qualification active.** This sprint is provider-free by
+**Slice 4A complete; paused for API companion Slice 3B.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 
@@ -256,6 +256,11 @@ before API wires that exact candidate into its subprocess adapter.
 **Exit:** API can bind Slice 3B to one exact packaged SBE candidate and add the
 real supervision/control/result adapter without reconstructing SBE semantics.
 
+**Result:** candidate source commit `5f5d9aa6`, prospective SBE `0.4.65`, wheel
+SHA-256 `6c5db7b3134805f74343b841ea50ace128c313ab8ac292196fdf483fa6b1ce6b`.
+Clean installed qualification, public receipt validation, packaged JSON Schema,
+and `pip check` passed with pinned SPC `0.11.1`. No tag/publication occurred.
+
 ## API companion Slice 3B — Real adapter integration
 
 API owns this intervening step. It creates the pre-launch supervision envelope
@@ -265,6 +270,8 @@ retains all non-execution custody. SBE does not implement or simulate these API
 decisions.
 
 **Exit:** the real API subprocess adapter is available for joined qualification.
+
+**Status:** waiting on API.
 
 ## Slice 4B — Joined cross-package supervision qualification
 
