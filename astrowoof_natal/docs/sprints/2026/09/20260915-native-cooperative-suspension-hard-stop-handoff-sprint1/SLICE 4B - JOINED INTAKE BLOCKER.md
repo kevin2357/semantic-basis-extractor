@@ -95,3 +95,17 @@ the minimum of envelope grace and force-fence grace. The ordering predicate
 Slice 4B remains open at a second API correction paws-point. No SBE code or candidate rebuild
 is indicated by this finding. Unsupported reconciliation and initial-wave
 routes remain deferred exactly as already scoped.
+
+## Resolution at `613c0e0`
+
+API now preserves the pre-launch envelope value in `grace_deadline` and writes
+the force-fence deadline only to the effective `expires_at` field. The real
+joined harness consequently passes against the installed SBE 0.4.66
+candidate. A second launch using the same capability, force fence, control
+root, and workspace replays the exact same sealed result rather than minting a
+successor.
+
+This closes the intake/chronology blocker. It does not claim API's later
+execution-resolution responsibilities: parent crash, exact child-death
+attestation, PID reuse, and worker-capacity reclamation remain held for that
+API-owned phase.

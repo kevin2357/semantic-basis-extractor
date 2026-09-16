@@ -361,3 +361,22 @@
   candidate change is indicated.
 - The failed qualification was provider-free and local. No R2, spend, live
   process termination, API resource release, or external mutation occurred.
+
+## 2026-09-16 — Slice 4B joined intake and replay passed
+
+- API revision `613c0e01a7d473bf1aa0009e7902c23c98f6e093` corrected the
+  request chronology without weakening either reader: `grace_deadline` remains
+  the immutable pre-launch value and `expires_at` carries the tighter fence
+  deadline.
+- The real API external-authority-v2 adapter invoked the installed SBE 0.4.66
+  CLI from wheel SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- The first launch returned an exact
+  `astrowoof.native_suspension_command_result.v1`; a child-restart replay
+  returned the identical result and reused the same request path.
+- Provider operations, spend, R2 access, live process termination, and API
+  resource release were all zero. The force fence remained unresolved and the
+  run allocation remained held.
+- API's candidate-overlay focused suite passed: 68 tests.
+- Exact-death/PID-reuse, parent-crash, and worker-execution reclamation remain
+  API-owned later-resolution work and are not claimed by this receipt.

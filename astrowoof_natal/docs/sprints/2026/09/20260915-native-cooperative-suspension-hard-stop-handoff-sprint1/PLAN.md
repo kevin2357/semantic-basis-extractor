@@ -306,15 +306,16 @@ decisions.
   suspension result alone grants complete release.
 - Record installed SBE/API version and wheel identity in receipts.
 
-**Current gate (2026-09-16):** API revision `e2e9d32` closes the first joined
-intake blocker with a schema-discriminated public suspension reader. The real
-joined subprocess then exposed a request-builder mismatch: API writes the
-effective earlier fence expiry into both `expires_at` and `grace_deadline`,
-while the approved v1 contract requires `grace_deadline` to repeat the
-immutable envelope bound and uses only `expires_at` for the tighter effective
-deadline. SBE therefore correctly refuses the request as not joining its
-supervision invocation. Slice 4B remains open pending that narrow API builder
-correction; neither validator should be weakened.
+**Current gate (2026-09-16):** API revision `613c0e0` closes both joined-intake
+blockers: it discriminates the native suspension command result and preserves
+the immutable pre-launch `grace_deadline` while tightening only `expires_at`.
+The real installed SBE 0.4.66 CLI now passes the joined API adapter path and an
+exact child-restart replay. Both launches converge on the same sealed result;
+the provider boundary is not entered and API retains the unresolved force
+fence and run allocation. API's focused companion matrix passes 68 tests.
+Parent-crash, exact-death/PID-reuse, and execution-capacity reclamation remain
+API-owned resolution work; they are not simulated or claimed by this intake
+qualification.
 
 **Exit:** joined provider-free qualification passes with zero provider calls,
 spend, R2 access, live process termination, or unrelated mutation.

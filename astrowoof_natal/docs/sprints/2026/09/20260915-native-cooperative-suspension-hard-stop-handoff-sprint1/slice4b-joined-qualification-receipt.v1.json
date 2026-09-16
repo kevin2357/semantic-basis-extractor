@@ -1,0 +1,27 @@
+{
+  "api_resource_release_count": 0,
+  "api_revision": "613c0e01a7d473bf1aa0009e7902c23c98f6e093",
+  "checks": {
+    "child_restart_replays_exact_result": true,
+    "exact_sbe_publication_join": true,
+    "force_fence_remains_immutable_unresolved": true,
+    "no_provider_operations": true,
+    "provider_boundary_not_entered": true,
+    "real_api_callback_published_one_request_per_launch": true,
+    "real_api_parent_returned_suspension_command": true,
+    "replay_reuses_exact_request_path": true,
+    "run_allocation_remains_held": true
+  },
+  "command_result_schema": "astrowoof.native_suspension_command_result.v1",
+  "live_process_termination_count": 0,
+  "provider_free": true,
+  "provider_operation_count": 0,
+  "provider_spend_usd": 0,
+  "r2_access_count": 0,
+  "result_id": "nsusp_9aae73917b6e57046f194061",
+  "result_sha256": "9aae73917b6e57046f194061dc7588a7a3854260f440d4328a5bd65de27d5208",
+  "sbe_version": "0.4.66",
+  "sbe_wheel_sha256": "ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf",
+  "schema_version": "astrowoof.native_suspension_joined_qualification.v1",
+  "status": "pass"
+}

@@ -17,6 +17,7 @@ from sqlalchemy.pool import StaticPool
 from astrowoof_api.domain.reading_execution import ForceFencedAuthorityError
 from astrowoof_api.persistence.base import Base, load_all_models
 from astrowoof_api.persistence.models.reading_execution import (
+    SbeAuthoringRun,
     SbeCapacityAllocation,
     SbeForceFenceDisposition,
     SbeNativeSupervisionInvocation,
@@ -37,6 +38,7 @@ from astrowoof_natal_authoring.external_authority_v2_qa import (
 from astrowoof_natal_authoring.native_suspension_runtime import (
     read_native_suspension_publication,
 )
+from astrowoof_natal_authoring.native_transitions import checkpoint_basis
 from test_sbe_force_fence import _active_target
 
 
@@ -65,9 +67,18 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
             workspace = root / "workspace"
             _pending_workspace(workspace, "exact_natal")
             _reconcile_4_plus_2(workspace)
+            native_run_id = json.loads(
+                (workspace / "run.json").read_text(encoding="utf-8")
+            )["run_id"]
             inspection, request, authorizations, grant = _ordinary_authority(
                 workspace, "exact_natal", "polish"
             )
+            native_revision = json.loads(
+                (workspace / "run.json").read_text(encoding="utf-8")
+            )["state_revision"]
+            admission_basis = checkpoint_basis(workspace, native_revision)[
+                "checkpoint_basis_sha256"
+            ]
             documents: dict[str, Path] = {}
             for name, value in (
                 ("inspection", inspection),
@@ -82,6 +93,12 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
 
             with factory() as session:
                 run_row, job, attempt, lease = _active_target(session)
+                authoring = session.scalar(
+                    select(SbeAuthoringRun).where(SbeAuthoringRun.run_id == run_row.id)
+                )
+                assert authoring is not None
+                authoring.native_run_id = native_run_id
+                session.flush()
                 identity = SbeNativeSupervisionService.new_prelaunch_identity(
                     workspace=workspace
                 )
@@ -106,11 +123,11 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
                     attempt_id=attempt.id,
                     lease_id=lease.id,
                     lease_token_sha256=lease.lease_token_digest,
-                    native_run_id="force-fence-native",
+                    native_run_id=native_run_id,
                     worker_boot_id="slice4b-worker",
                     command_kind="external_authority_v2_dispatch",
                     command_sha256=command_sha,
-                    admission_checkpoint_basis_sha256="c" * 64,
+                    admission_checkpoint_basis_sha256=admission_basis,
                     workspace=workspace,
                     identity=identity,
                     now=now,
@@ -190,6 +207,17 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
                         suspension_launch=launch_paths,
                         on_force_fenced=publish_request,
                     )
+                    replay = runtime.external_authority_v2(
+                        executable=str(executable),
+                        workspace=workspace,
+                        inspection=documents["inspection"],
+                        request=documents["request"],
+                        grant=documents["grant"],
+                        authorizations=(documents["authorization"],),
+                        output=output,
+                        suspension_launch=launch_paths,
+                        on_force_fenced=publish_request,
+                    )
                 finally:
                     orchestration.time.sleep = original_sleep
                     if old_key is None:
@@ -219,7 +247,11 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
                         "schema_version"
                     )
                     == "astrowoof.native_suspension_command_result.v1",
-                    "real_api_callback_published_one_request": len(request_writes) == 1,
+                    "real_api_callback_published_one_request_per_launch": len(request_writes)
+                    == 2,
+                    "child_restart_replays_exact_result": replay == command,
+                    "replay_reuses_exact_request_path": len(request_writes) == 2
+                    and request_writes[0] == request_writes[1],
                     "exact_sbe_publication_join": publication["command_result"] == command,
                     "provider_boundary_not_entered": publication["result"].get(
                         "provider_boundary"
@@ -236,7 +268,7 @@ def run(*, executable: Path, wheel: Path) -> dict[str, object]:
                     "status": "pass" if all(checks.values()) else "fail",
                     "provider_free": True,
                     "checks": checks,
-                    "api_revision": "e2e9d3234477956745efe12a48439e6262fec761",
+                    "api_revision": "613c0e01a7d473bf1aa0009e7902c23c98f6e093",
                     "sbe_version": "0.4.66",
                     "sbe_wheel_sha256": _sha(wheel),
                     "command_result_schema": command["schema_version"],
