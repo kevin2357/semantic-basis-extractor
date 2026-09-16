@@ -1,0 +1,16 @@
+{
+  "approved_operations": {
+    "delete_count": 0,
+    "get_count": 1,
+    "head_count": 1,
+    "list_count": 0,
+    "write_count": 0
+  },
+  "expected_archive_bytes": 5470437,
+  "expected_archive_sha256": "aabaebd72ff1cf52a02b77419845367e880c05369242d514b34b18954217747f",
+  "expected_inventory_sha256": "e52faf73c4e89ee03e711446f119eda161a2696003d9699b9ab1d260f85ede3a",
+  "label": "tschichold-generation-15-checkpoint",
+  "object_key": "v1/checkpoint/27e5815cb2af4200a1bb45aed25ae17b",
+  "object_uuid": "27e5815c-b2af-4200-a1bb-45aed25ae17b",
+  "schema_version": "astrowoof.investigation.r2_access_manifest.v1"
+}
