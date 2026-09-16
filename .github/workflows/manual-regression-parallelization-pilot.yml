@@ -1,0 +1,85 @@
+name: Manual SBE regression parallelization pilot
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sbe-regression-pilot-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out exact dispatched revision
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Download and admit pinned SPC release wheel
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-wheelhouse
+          gh release download semantic-projection-core-v0.11.1 \
+            --repo kevin2357/semantic-projection-core \
+            --pattern 'semantic_projection_core-0.11.1-py3-none-any.whl' \
+            --dir .ci-wheelhouse
+          echo 'dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612  .ci-wheelhouse/semantic_projection_core-0.11.1-py3-none-any.whl' \
+            | sha256sum --check
+
+      - name: Install admitted test dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --upgrade pip
+          python -m pip install --disable-pip-version-check --no-index --no-deps \
+            .ci-wheelhouse/semantic_projection_core-0.11.1-py3-none-any.whl
+          python -m pip install --disable-pip-version-check 'jsonschema==4.26.0'
+          python -m pip check
+          mkdir -p .ci-results/provenance
+          python --version | tee .ci-results/provenance/python-version.txt
+          python -m pip freeze --all | tee .ci-results/provenance/installed-packages.txt
+          python -m pip check | tee .ci-results/provenance/pip-check.txt
+          python -c "import importlib.metadata, semantic_projection_core; print(importlib.metadata.version('semantic-projection-core')); print(semantic_projection_core.__file__)" \
+            | tee .ci-results/provenance/spc-version-and-origin.txt
+
+      - name: Validate manifest and credential sanitation controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -c "import importlib.util, pathlib; path=pathlib.Path('astrowoof_natal/scripts/run_test_suite.py'); spec=importlib.util.spec_from_file_location('runner', path); runner=importlib.util.module_from_spec(spec); spec.loader.exec_module(runner); runner.validate_manifest(runner.load_manifest(runner.DEFAULT_MANIFEST)); print('manifest=valid')"
+          python -m unittest astrowoof_natal.tests.test_test_suite_runner
+
+      - name: Run complete two-worker parallel-safe smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-results/smoke .ci-work
+          python astrowoof_natal/scripts/run_test_suite.py \
+            --parallel-only \
+            --workers 2 \
+            --work-root .ci-work/smoke \
+            --receipt .ci-results/smoke/receipt.json
+
+      - name: Upload compact pilot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbe-regression-pilot-smoke-${{ github.run_id }}
+          path: .ci-results/
+          if-no-files-found: error
+          retention-days: 7

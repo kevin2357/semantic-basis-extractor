@@ -56,3 +56,21 @@
 ## Next action
 
 Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
+
+## 2026-09-16 — Slice 1 source implementation
+
+- Added `manual-regression-parallelization-pilot.yml` as the repository's first
+  SBE GitHub Actions workflow.
+- Kept it manual-only and least-privilege; the checkout credential is not persisted
+  and the ephemeral release-download token exists only in that one step.
+- Preserved exact SPC SHA admission before its offline local install, then recorded
+  Python, installed-package, and `pip check` provenance in compact evidence.
+- Corrected the inherited plan language: `--parallel-only` intentionally runs every
+  classified parallel-safe module, so the smoke is the complete 82-module two-worker
+  group rather than a synthetic subset.
+- Added manifest/control-test preflight and a two-worker real coordinator smoke.
+- Upload scope is `.ci-results` only with seven-day retention and `if: always()`;
+  owned work roots and pip cache are not uploaded.
+- Locally validated manifest completeness and all 16 existing runner-control tests.
+- No hosted workflow run has started. Commit/push is the next boundary; manual
+  dispatch remains separately owner-controlled.

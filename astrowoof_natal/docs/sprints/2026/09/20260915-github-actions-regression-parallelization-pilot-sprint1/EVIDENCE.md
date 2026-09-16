@@ -103,6 +103,37 @@ smoke plus 1/2/4-worker comparison cannot finish inside it, do not begin the
 whole-suite confirmation; retain what is safe, record the shortfall, and return to
 review.
 
+## Slice 1 source evidence
+
+`/.github/workflows/manual-regression-parallelization-pilot.yml` now implements
+the Gate A contract without dispatching a hosted run:
+
+- manual `workflow_dispatch` trigger only;
+- `contents: read` permission only;
+- branch/ref-scoped cancellation and a 30-minute job timeout;
+- exact SHA-admitted SPC download, then separate local offline install;
+- ephemeral `GH_TOKEN` only in the release-download step;
+- checkout with `persist-credentials: false`;
+- Python 3.12 provenance plus `pip check` capture;
+- manifest validation and all 16 existing test-suite-runner control tests;
+- the complete 82-module `parallel_safe` class at two workers; and
+- seven-day upload of `.ci-results` only, on both success and failure.
+
+No workflow dispatch, repository setting change, secret use outside the ephemeral
+download step, provider operation, or application-service operation has occurred.
+
+Local source-path validation completed with the bundled Python runtime:
+
+| Check | Result |
+| --- | --- |
+| Manifest validation | `manifest=valid` |
+| `test_test_suite_runner` | 16 passed |
+| `git diff --check` | passed |
+
+The local check validates runner syntax and controls. It does not attest hosted
+action resolution, the clean dependency installation, or GitHub artifact upload;
+those remain the first manual dispatch's purpose.
+
 ## Remaining feasibility questions for Gate A
 
 1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.

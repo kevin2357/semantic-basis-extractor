@@ -114,8 +114,11 @@ the pilot has `contents: read` only and a 30 hosted-minute aggregate ceiling.
    - focused `test_test_suite_runner.py`; and
    - a sanitation assertion proving representative denied variables do not reach a
      child worker.
-6. Run a small `parallel_only` smoke at two workers and write an explicit receipt
-   under a workflow-owned results directory.
+6. Run the complete already-classified `parallel_safe` inventory with
+   `--parallel-only --workers 2` and write an explicit receipt under a
+   workflow-owned results directory. The coordinator intentionally offers no
+   parent-level subset selector; this preserves the real manifest/shard boundary
+   that Slice 2 will measure.
 7. Upload the receipt plus failure logs with `if: always()` and a short retention
    period. Exclude temporary workspaces, caches, source archives, and authored
    fixtures copied by tests.
@@ -130,6 +133,11 @@ Acceptance:
 - artifact upload occurs on success and failure without leaking secrets or large
   work roots; and
 - the workflow has no external application operations.
+
+Status: source implementation complete and locally validated. The workflow is
+manual-only and has not been dispatched. Its exact hosted dependency admission,
+action execution, and artifact behavior remain unproven until the first owner-led
+manual run.
 
 ## Review Gate B — Smoke and artifact usability
 
