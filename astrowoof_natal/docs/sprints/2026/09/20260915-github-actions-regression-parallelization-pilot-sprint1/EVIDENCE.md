@@ -242,10 +242,11 @@ All 15 provider-economics errors share one cause: the runner exposes source thro
 had admitted SPC but had not installed the checked-out SBE distribution, so no SBE
 metadata existed. The owner approved a precisely reviewed build-tool pair:
 public `setuptools==84.0.0` (818,216 bytes,
-`51a52592...2b0c670`) and `wheel==0.48.0` (33,320 bytes,
-`3217dcc8...1287ab`). The workflow downloads each, verifies its exact SHA-256, then
-installs it only from the local wheelhouse before the checkout's offline metadata
-install.
+`51a52592...2b0c670`), `wheel==0.48.0` (33,320 bytes,
+`3217dcc8...1287ab`), and wheel's declared `packaging==26.3` dependency (129,956
+bytes, `d7193f7c...9b23cd1c`). The workflow downloads each, verifies its exact
+SHA-256, then installs it only from the local wheelhouse before the checkout's
+offline metadata install.
 
 Two real SHA-baseline failures remain deliberately out of this pilot slice:
 

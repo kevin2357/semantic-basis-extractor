@@ -158,3 +158,7 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - The checkout install remains `--no-deps --no-build-isolation`; it supplies only
   the SBE metadata required by source-based tests. It is neither a package publish
   nor a new runtime/deployment dependency.
+- The first admission run proved build/install success, then `pip check` correctly
+  identified wheel's declared dependency on `packaging`. Add only pinned public
+  `packaging==26.3` (`d7193f7c...9b23cd1c`, 129,956 bytes) with the same local-wheel
+  SHA admission; do not suppress `pip check`.
