@@ -257,8 +257,8 @@ or release-lock qualification.
 
 ## Current status
 
-Slice 3 found one pre-existing cross-platform release-contract assertion: its
-300 KiB fixture floor is satisfied only after Windows CRLF expansion, while the
-smallest canonical-LF fixture is 299,878 bytes on Linux. Correct that coarse
-truncation guard, rerun one final four-worker whole suite, then proceed to Gate D.
-The manual-only pilot remains provider-free and has no application I/O.
+Complete. The final Linux full-suite confirmation passed at four workers after a
+narrow cross-platform correction to the smoke fixture's coarse size guard. Retain
+the workflow as a manual diagnostic: it produces useful, provider-free Linux
+evidence, but it is not authorized to become a pull-request gate or to replace any
+local, installed-wheel, API-consumer, or release-lock qualification.
