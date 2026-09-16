@@ -4,6 +4,7 @@ import hashlib
 import json
 import sys
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 
@@ -41,6 +42,19 @@ def canonical_sha256(value: object) -> str:
         ensure_ascii=False,
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def baseline_packet_projection(packet: dict) -> dict:
+    """Remove checkout-root variance from frozen packet comparison only."""
+    projected = deepcopy(packet)
+    source = projected["source"]
+    source["input_files"] = {
+        key: Path(value).name for key, value in source["input_files"].items()
+    }
+    source["registry_merge"]["input_files"] = [
+        Path(value).name for value in source["registry_merge"]["input_files"]
+    ]
+    return projected
 
 
 class TestBoundedSprintBaseline(unittest.TestCase):
@@ -84,7 +98,10 @@ class TestBoundedSprintBaseline(unittest.TestCase):
             canonical_sha256([candidate.as_dict() for candidate in selected]),
         )
         self.assertEqual(expected["rejected_count"], len(rejected))
-        self.assertEqual(expected["packet_sha256"], canonical_sha256(packet))
+        self.assertEqual(
+            expected["packet_sha256"],
+            canonical_sha256(baseline_packet_projection(packet)),
+        )
         self.assertEqual(expected["qa_sha256"], canonical_sha256(qa))
         self.assertEqual(expected["qa_status"], qa["status"])
 
