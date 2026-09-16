@@ -24,3 +24,13 @@
 - Gate A passes: proposed relations are grounded in public result/inspection/request
   contracts and API-owned custody/authorization facts. Tool acquisition remains the
   next separate approval boundary.
+
+## 2026-09-16 — Tooling proposal prepared
+
+- Confirmed through AlloyTools’ official release information that Alloy 6.2.0 has a
+  Windows AMD64 archive and CLI-capable distribution. Local inspection found neither
+  an Analyzer nor Java.
+- Recorded a tightly bounded proposal: one official archive download to `C:\tmp`,
+  SHA-256 recording, disposable extraction, and offline bounded model execution only.
+- No archive was downloaded and no tool was installed; owner authorization remains
+  required before proceeding to Model A.

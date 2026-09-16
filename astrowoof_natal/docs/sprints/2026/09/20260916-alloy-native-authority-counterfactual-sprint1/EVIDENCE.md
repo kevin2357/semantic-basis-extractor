@@ -41,6 +41,7 @@ must therefore be additive and clearly labelled counterfactual.
 
 ## Tooling observation
 
-At sprint creation, no local Alloy command or Analyzer JAR was found on this host.
-Do not download or install one until the plan’s tooling gate is explicitly approved.
-
+At sprint creation, no local Alloy command, Analyzer JAR, or `java` command was found
+on this host. The exact temporary-tool proposal is recorded in
+`TOOLING GATE - ALLOY ANALYZER PROPOSAL.md`. Do not download or install it until the
+plan’s tooling gate is explicitly approved.
