@@ -4,7 +4,7 @@
 status: accepted
 owner: semantic-basis-extractor
 scope: safely planning, implementing, qualifying, releasing, and jointly integrating native-worker changes
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-15
 ```
 
 ## Purpose
@@ -37,6 +37,8 @@ For any non-trivial native change, read these first:
 7. [Provider Disclosure and Durable Workspace Contract](Provider%20Disclosure%20and%20Durable%20Workspace%20Contract.md)
 8. [Maintainer Release Playbook](Maintainer%20Release%20Playbook.md)
 9. [Adversarial Lifecycle Simulation Playbook](Adversarial%20Lifecycle%20Simulation%20Playbook.md)
+10. [Networkless Read-Only Retained Workspace Reproduction](Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md),
+    when an investigation may execute downloaded historical workspace bytes
 
 Also read the current release notes, compatibility statement, API handoff, known
 limitations, manifest, and packaged contract catalog. For a shared boundary, read
@@ -125,6 +127,9 @@ For a change beyond a small isolated defect:
    `results/` index.
 2. Reproduce the issue provider-free when possible. Preserve the original run as
    forensic evidence; create a sanitized fixture rather than repairing history.
+   When exact historical bytes are necessary, use the separately authorized,
+   hash-verified, networkless read-only container procedure rather than executing
+   directly from an ordinary host directory.
 3. Inventory the legal, stale, duplicate, interrupted, malformed, terminal, and
    legacy paths.
 4. Freeze closed vocabularies, schema versions, idempotency/replay tuples, ownership,
@@ -293,6 +298,10 @@ because they did not determine the run-level disposition.
   requested result ID.
 - Keep inspection/export provider-free and workspace-read-only. Any explicit output
   path must resolve outside the run directory.
+- For executable retained-workspace diagnosis, mount a verified disposable copy
+  read-only at its contract-bound absolute root inside a networkless, read-only,
+  capability-free ephemeral container. Follow
+  [Networkless Read-Only Retained Workspace Reproduction](Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md).
 
 Failure between files is expected. Readers expose a result only when the complete
 publication validates. Exact provenance-bound orphan reconstruction may project a

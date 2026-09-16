@@ -47,6 +47,10 @@ therefore treated only as a timing control, not evidence of a process failure.
 All isolated containers exited zero and were removed after their output was
 collected.
 
+The staged fresh-container method from this reproduction is retained as a worked
+provenance example in the durable
+[networkless retained-workspace reproduction playbook](../../../../post_extraction_authoring/Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md).
+
 | Witness | Exact reader | Eligibility | Evidence collection | Implementation capture | Package export |
 | --- | --- | --- | --- | --- | --- |
 | Bembo | returned | `delivery` | `delivery` | `delivery` packet | `delivery` packet |

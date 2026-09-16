@@ -36,6 +36,10 @@ An initial deliberately relocated mount failed in
 control result, not the live diagnosis. Mounting each workspace at its exact
 coordinate-pinned logical root removed that relocation artifact.
 
+This exact-root namespace technique and its required containment are now recorded
+in the durable
+[networkless retained-workspace reproduction playbook](../../../../post_extraction_authoring/Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md).
+
 ## Exact-root results
 
 | Witness | Exact logical root | Public capture result |

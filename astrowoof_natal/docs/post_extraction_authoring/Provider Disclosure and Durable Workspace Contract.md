@@ -43,6 +43,12 @@ Relocation and path rebasing are not supported for v0.9 runs. A resumable run
 must be restored under the exact logical absolute path recorded in
 `run.json.workspace_contract.logical_root`.
 
+Forensic execution of a separately authorized retained copy does not relax this
+rule. A disposable copy may be mounted read-only at that exact logical path inside
+a networkless ephemeral container solely for provider-free diagnosis. This is
+path-namespace recreation, not rebasing or resume authority. See
+[Networkless Read-Only Retained Workspace Reproduction](Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md).
+
 The complete snapshot boundary is every regular file below the run directory,
 including state and spend files; extracted SBE outputs and pass archives; all
 attempt requests, provider identifiers, responses, authored fields, and QA;

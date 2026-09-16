@@ -38,6 +38,9 @@ also read-only. The container used `--network none`, `--read-only`,
 `--cap-drop ALL`, and `no-new-privileges`. No provider call, Better Stack
 write, retry, resume, reconciliation, or workspace mutation occurred.
 
+This investigation is one of the provenance examples summarized in the durable
+[networkless retained-workspace reproduction playbook](../../../../post_extraction_authoring/Networkless%20Read-Only%20Retained%20Workspace%20Reproduction.md).
+
 ## Reproduction matrix
 
 | Phase | Aldine v0.2 review | Moxon v0.1 delivery |
