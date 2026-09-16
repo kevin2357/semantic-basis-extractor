@@ -322,3 +322,23 @@
 - The second disposable qualification has fresh timestamp-bound artifact IDs,
   as designed; the schema, packaged fixture, joins, status, checks, and all six
   zero-activity counters remained valid.
+
+## 2026-09-16 — Slice 4B joined-intake blocker
+
+- Opened Slice 4B against API branch revision `f5da771` and the exact locked
+  SBE `0.4.66` installation from wheel SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- Confirmed API has the real pre-launch capability, later force-fence request
+  builder/writer, and supervised external-authority-v2 child poll.
+- Ran the exact installed SBE fixture command through API's current public
+  child-output consumer. SBE accepted
+  `astrowoof.native_suspension_command_result.v1`; API's
+  `validate_provider_dispatch_command_result` rejected it as
+  `SbeProviderContractError: SBE provider dispatch result is invalid` because
+  that reader is closed to external-authority command schemas v2-v4 only.
+- This is a real release-pair consumer gap, not an SBE contract failure. No
+  test-only discriminator was introduced. Cooperative-exit classification,
+  exact result persistence, and execution-capacity disposition cannot be
+  qualified until API adds a closed suspension-result intake branch.
+- The probe was local and provider-free. It performed no provider call, spend,
+  R2 access, process termination, API resource release, or live mutation.

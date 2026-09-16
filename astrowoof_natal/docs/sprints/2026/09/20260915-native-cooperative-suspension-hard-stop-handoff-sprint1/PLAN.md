@@ -2,7 +2,8 @@
 
 ## Status and authority
 
-**Corrected Slice 4A candidate qualified; paused for API Slice 3B intake.** API Slice 3B discovered that the
+**Slice 4B opened; joined intake is blocked on API suspension-result
+discrimination.** API Slice 3B discovered that the
 original candidate incorrectly required an operator force fence before child
 launch. The corrected v1 chronology binds a pre-launch supervision capability
 in the immutable envelope and binds the later real operator force fence in the
@@ -304,6 +305,17 @@ decisions.
 - Prove neither fence alone, process death alone, assessment alone, nor native
   suspension result alone grants complete release.
 - Record installed SBE/API version and wheel identity in receipts.
+
+**Current gate (2026-09-16):** API revision `f5da771` can prepare the
+capability, construct and publish the later exact request, and supervise the
+child poll. Its real `external_authority_v2` parent still passes every child
+output to `validate_provider_dispatch_command_result`, however. The exact
+installed `0.4.66` fixture command
+`astrowoof.native_suspension_command_result.v1` is consequently rejected as
+`SbeProviderContractError` before API can classify cooperative exit or retain
+the result identity. Slice 4B remains open until API adds a closed,
+schema-discriminated native-suspension intake path; a test-only substitute is
+not acceptable joined evidence.
 
 **Exit:** joined provider-free qualification passes with zero provider calls,
 spend, R2 access, live process termination, or unrelated mutation.
