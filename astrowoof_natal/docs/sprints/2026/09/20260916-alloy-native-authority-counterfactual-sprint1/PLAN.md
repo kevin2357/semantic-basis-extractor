@@ -22,6 +22,10 @@
 Gate A: confirm that every proposed relation/state is justified by public contract
 meaning rather than log prose or private workspace inference.
 
+Status: complete. `SLICE 0 - HISTORICAL WITNESS ABSTRACTION AND AUTHORITY MAP.md`
+separates seven witnesses into Model A (three command/custody cases) and Model B
+(four exact-authority cases), and records the formal-versus-empirical boundary.
+
 ## Slice 1 — Model A: terminal ingress, custody, and command selection
 
 1. Add a small `.als` model with closed command/disposition vocabularies.
@@ -73,4 +77,3 @@ Owner approval is required before that external/tooling change.
 - one abstraction matrix/receipt per model;
 - optional additive `.als` models under `tools/`;
 - a concise closeout distinguishing formal conclusions from empirical ones.
-
