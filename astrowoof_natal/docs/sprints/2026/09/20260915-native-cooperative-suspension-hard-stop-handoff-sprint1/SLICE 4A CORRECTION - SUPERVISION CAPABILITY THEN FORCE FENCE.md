@@ -43,3 +43,13 @@ never released. The correction will use a fresh prospective `0.4.66` version
 to prevent ambiguous same-version wheel substitution. API Slice 3B must bind
 only the corrected wheel and must independently validate the real force-fence
 fact before accepting the request/result chain.
+
+## Alloy scope lesson
+
+The Gate B2 model ordered force fence before request, but intentionally did not
+model `Popen` or an explicit launch instant. It therefore could not distinguish
+“capability exists before launch” from “operator fence exists only after
+launch.” This is a recorded abstraction limit, not evidence that the rejected
+chronology was valid. A later model revision should add capability and launch
+events before claiming coverage of this ordering rule; the executable closed
+schemas and provider-free chronology tests are the present correction gate.
