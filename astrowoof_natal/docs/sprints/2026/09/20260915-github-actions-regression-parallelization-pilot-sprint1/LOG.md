@@ -189,3 +189,11 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - Owner requested a 16-worker curiosity observation. Extend Slice 2 to compare
   `1`, `2`, `4`, and `16` sequentially with isolated roots and strict digest checks.
   Only `1`/`2`/`4` remain eligible for a pilot recommendation.
+
+## 2026-09-16 — Hosted worker-count result
+
+- Run `35067134359` passed all four 650-test cells with identical manifest and
+  inventory digests. Times: 1=184.096436s, 2=104.275341s, 4=79.058307s,
+  curiosity-only 16=81.548776s.
+- Select four workers for the one full-suite confirmation. Sixteen did not win, but
+  it was a charming and informative experiment.

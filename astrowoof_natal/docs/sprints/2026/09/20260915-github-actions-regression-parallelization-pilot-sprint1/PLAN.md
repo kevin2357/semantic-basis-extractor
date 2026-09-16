@@ -193,6 +193,11 @@ Review exact receipt equivalence, timing variability, hosted minutes consumed, a
 the proposed count. Approve one whole-suite confirmation or stop the pilot as not
 beneficial.
 
+Status: passed. On run `35067134359`, all worker counts were receipt-equivalent:
+1=184.096436s, 2=104.275341s, 4=79.058307s, and curiosity-only 16=81.548776s.
+Four is materially faster than the eligible alternatives; 16 is slower and excluded
+from selection. Proceed with one four-worker full-suite confirmation.
+
 ## Slice 3 — Whole-suite hosted confirmation
 
 1. Run the full coordinator once using the selected count, preserving the
