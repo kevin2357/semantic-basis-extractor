@@ -41,6 +41,20 @@ jobs:
           echo 'dc345cd3253de333a5428e4fc7e24816447a065215ef288ba76527960a7da612  .ci-wheelhouse/semantic_projection_core-0.11.1-py3-none-any.whl' \
             | sha256sum --check
 
+      - name: Download and admit pinned local build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-wheelhouse
+          python -m pip download --disable-pip-version-check --only-binary=:all: --no-deps \
+            --dest .ci-wheelhouse \
+            'setuptools==84.0.0' \
+            'wheel==0.48.0'
+          echo '51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670  .ci-wheelhouse/setuptools-84.0.0-py3-none-any.whl' \
+            | sha256sum --check
+          echo '3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab  .ci-wheelhouse/wheel-0.48.0-py3-none-any.whl' \
+            | sha256sum --check
+
       - name: Install admitted test dependencies
         shell: bash
         run: |
@@ -50,12 +64,18 @@ jobs:
           python -m pip install --disable-pip-version-check --no-index --no-deps \
             .ci-wheelhouse/semantic_projection_core-0.11.1-py3-none-any.whl
           python -m pip install --disable-pip-version-check 'jsonschema==4.26.0'
+          python -m pip install --disable-pip-version-check --no-index --no-deps \
+            .ci-wheelhouse/setuptools-84.0.0-py3-none-any.whl \
+            .ci-wheelhouse/wheel-0.48.0-py3-none-any.whl
+          python -m pip install --disable-pip-version-check --no-deps --no-build-isolation .
           python -m pip check
           python --version | tee ci-results/provenance/python-version.txt
           python -m pip freeze --all | tee ci-results/provenance/installed-packages.txt
           python -m pip check | tee ci-results/provenance/pip-check.txt
           python -c "import importlib.metadata, semantic_projection; print(importlib.metadata.version('semantic-projection-core')); print(semantic_projection.__file__)" \
             | tee ci-results/provenance/spc-version-and-origin.txt
+          python -c "import importlib.metadata; print(importlib.metadata.version('astrowoof-natal-authoring'))" \
+            | tee ci-results/provenance/sbe-version.txt
 
       - name: Validate manifest and credential sanitation controls
         shell: bash

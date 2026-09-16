@@ -240,10 +240,12 @@ All 15 provider-economics errors share one cause: the runner exposes source thro
 `PYTHONPATH`, but the code correctly calls
 `metadata.version("astrowoof-natal-authoring")` for a public cohort field. The pilot
 had admitted SPC but had not installed the checked-out SBE distribution, so no SBE
-metadata existed. A future workflow revision could install the local checkout after
-admitting a precisely reviewed build-tool pair. The attempted offline build failed
-because the hosted Python image does not include `setuptools`; do not broaden that
-toolchain input without an explicit dependency decision.
+metadata existed. The owner approved a precisely reviewed build-tool pair:
+public `setuptools==84.0.0` (818,216 bytes,
+`51a52592...2b0c670`) and `wheel==0.48.0` (33,320 bytes,
+`3217dcc8...1287ab`). The workflow downloads each, verifies its exact SHA-256, then
+installs it only from the local wheelhouse before the checkout's offline metadata
+install.
 
 Two real SHA-baseline failures remain deliberately out of this pilot slice:
 
