@@ -57,6 +57,11 @@ scope 3, while valid terminal closeout and reconciliation remained satisfiable.
 Gate C: review the exact scope and whether all counterexamples map to a real
 historical contract distinction rather than a made-up abstraction.
 
+Status: complete and awaiting review. Model B found four intended permissive
+authority counterexamples, found no corrected-boundary counterexample through scope
+4, and retained SAT examples for valid initial admission, exact retry, and ambiguity
+retention.
+
 ## Slice 3 — Optional adapter refinement and conclusion
 
 Only proceed if Models A/B expose useful findings that are not already obvious from

@@ -55,3 +55,14 @@
   reconciliation remained SAT, avoiding a vacuous “nothing can happen” model.
 - Recorded model/receipt hashes and the full interpretation in the Slice 1 artifact.
   Pause at Gate B before the independent Model B authority model.
+
+## 2026-09-16 — Slice 2 Model B result
+
+- Added and ran the content-free exact-continuation model offline with Alloy 6.2.0.
+- Its first execution exposed a scoped quantifier syntax error; corrected only the
+  parentheses that bound the expressions. No model concept changed.
+- All four historical permissive authority shapes were SAT. Under the corrected
+  boundary, five `check` commands found no counterexample through scope 4; valid
+  initial admission, exactly authorized retry, and ambiguity retention remained SAT.
+- Pause at Gate C. Model C is optional because Models A/B already cover the core
+  counterfactual question.
