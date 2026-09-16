@@ -196,6 +196,15 @@ an evidence-retention configuration defect, not a test or dependency result. The
 pilot now uses non-hidden `ci-results/` and `ci-work/` roots. A fresh bounded run is
 needed to retain the receipt and identify the actual test failure.
 
+The retained receipt identifies a confirmed stale test expectation:
+`test_packaged_mutation_corpus_refuses` expects SHA-256
+`5149b070...e0141303b`, while the Git-tracked LF fixture hashes to
+`668e4571...e54712b13`. This is fixture-digest expectation drift, independent of
+the hosted runner. The receipt also names several additional failing identities but
+not their tracebacks. The pilot therefore adds a second, failure-only artifact for
+the worker `stdout.log` and `stderr.log` files. Worker environments remove provider,
+R2, Render, database, and application credentials before subprocess launch.
+
 ## Remaining feasibility questions for Gate A
 
 1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.

@@ -113,3 +113,14 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - Replaced only pilot-local `.ci-results` and `.ci-work` names with non-hidden
   `ci-results` and `ci-work`. This preserves runner behavior while making the
   provider-free receipt and provenance files eligible for the seven-day artifact.
+
+## 2026-09-16 — Receipt interpretation and bounded failure diagnostics
+
+- The retained receipt identifies a real stale expectation in
+  `test_packaged_mutation_corpus_refuses`: expected digest
+  `5149b070...e0141303b` differs from the current Git/LF fixture digest
+  `668e4571...e54712b13`.
+- Other worker errors require their actual captured traceback to classify. Add a
+  seven-day, failure-only artifact containing only the runner-produced worker
+  `stdout.log`/`stderr.log` files. The coordinator removes application/provider
+  credential variables before launching those workers.

@@ -83,3 +83,14 @@ jobs:
           path: ci-results/
           if-no-files-found: error
           retention-days: 7
+
+      - name: Upload bounded worker failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbe-regression-pilot-failure-logs-${{ github.run_id }}
+          path: |
+            ci-work/**/stdout.log
+            ci-work/**/stderr.log
+          if-no-files-found: warn
+          retention-days: 7
