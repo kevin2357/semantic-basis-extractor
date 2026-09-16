@@ -397,3 +397,50 @@
   `ae272ce3009640bad4259db697e1c00bb92bfcdbf2ac754a59b87f1cc60591f0`.
 - No runtime, schema, validator, package-data, or test-harness logic changed
   after that successful broad run.
+
+## 2026-09-16 — Slice 5 release-lock qualification complete
+
+- Release-lock commit: `a9cb1745da5604869591efd9120e1bd8de76c2f7`.
+- Two clean exports built with `SOURCE_DATE_EPOCH=1789534964` produced the
+  exact same 1,406,483-byte wheel and SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- Wheel inventories matched exactly: 316 members and no cache/bytecode members.
+- Reinstalled the exact lock wheel into the isolated qualification environment;
+  `pip check`, version `0.4.66`, and `site-packages` provenance passed.
+- Installed release smoke, adversarial lifecycle QA, packaged schema command,
+  native suspension qualification, and joined API child-restart replay all
+  passed.
+- Native suspension qualification semantic SHA-256:
+  `5b19552a05ea43221a258ef039ef00f1737915c262c5f74ec5b638094c927b3c`.
+- Receipt file SHA-256 values: release smoke
+  `14282cfe06fdd56cb18a7c441b5a5efe13e659e44a2514aa6f359e4ade920b6a`;
+  adversarial QA
+  `86bd36e984b91d988bbcd1983a36192918f157f07c1fdac207b5a753c746367e`;
+  native suspension
+  `e6b4ed8b794ba5a1483afd9f300f15e7905b13cc6b0f08db14c6d778fed4176f`;
+  joined API/SBE
+  `cafff210c8b25e5a1ff949fa53d67067937376b9946418cda7ecc522f3aa320b`.
+- All suspension/joined counters remained zero for provider I/O/spend, R2,
+  live process termination, and API resource release. Custody remained held.
+- Tag/publication remains blocked on final reviewer approval and explicit owner
+  authorization. The tag target is the existing release-lock commit; this
+  review record is intentionally not a new lock commit.
+
+## 2026-09-16 — SBE 0.4.66 published and verified
+
+- API technical approval was recorded as `8b7d930`; the owner explicitly
+  authorized commit, tag, release, and publication.
+- Created annotated tag `astrowoof-natal-authoring-v0.4.66`; local and remote
+  peeled target both resolve to release-lock commit
+  `a9cb1745da5604869591efd9120e1bd8de76c2f7`.
+- GitHub Release:
+  `https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.66`;
+  release ID `RE_kwDOToQdE84XOpFI`; published `2026-09-16T07:31:24Z`.
+- Published wheel asset ID `RA_kwDOToQdE84h0nHy`, 1,406,483 bytes, GitHub
+  digest and fresh-download SHA-256 both
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+- Published checksum asset ID `RA_kwDOToQdE84h0nHx`, 117 bytes, GitHub digest
+  and fresh-download SHA-256 both
+  `5c1b08b7343515639f0ac55dd189988ba288c6dcfe54013248551bd203b27e94`.
+- The downloaded checksum line names the exact downloaded wheel and reproduces
+  its SHA-256. The immutable tag was not moved.

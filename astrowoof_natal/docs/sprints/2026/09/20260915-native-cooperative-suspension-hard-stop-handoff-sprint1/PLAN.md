@@ -333,9 +333,11 @@ spend, R2 access, live process termination, or unrelated mutation.
 **Exit:** immutable release/handoff evidence is complete, or the sprint closes
 honestly without a release if no SBE runtime change is needed.
 
-**Status (2026-09-16):** release-lock preparation in progress. The focused
+**Status (2026-09-16): complete.** The focused
 matrix passed 74 tests. The committed broad/full manifest run passed 1,229
 tests with three expected skips and no failures in 1,308.851 seconds. The
-remaining gate is exact release-lock reproducibility plus installed and joined
-qualification, followed by reviewer and explicit owner tag/publication
-approval.
+two clean release-lock builds reproduce the exact qualified wheel, and the
+installed smoke, adversarial, native-suspension, and joined API replay gates
+all pass. Reviewer and owner approval were granted. Immutable tag
+`astrowoof-natal-authoring-v0.4.66` targets release-lock commit `a9cb1745`; the
+published wheel and checksum manifest were freshly downloaded and verified.
