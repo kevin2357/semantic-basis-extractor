@@ -231,7 +231,12 @@ class TestReleaseContracts(unittest.TestCase):
             target = Path(temporary)
             materialize_fixture(target)
             self.assertEqual(set(FIXTURE_FILES), {path.name for path in target.iterdir()})
-            self.assertTrue(all((target / name).stat().st_size > 300_000 for name in FIXTURE_FILES))
+            # ``write_text`` uses the platform's native newline translation.  The
+            # canonical LF rendering of the smallest fixture is just under 300 KiB
+            # on Linux, while Windows CRLF materialization happens to clear that
+            # old threshold.  Keep this as a coarse truncation guard, not a
+            # platform-dependent serialization assertion.
+            self.assertTrue(all((target / name).stat().st_size > 250_000 for name in FIXTURE_FILES))
             identities = {
                 json.loads((target / name).read_text(encoding="utf-8"))
                 ["source_identity"]["source_chart_id"]

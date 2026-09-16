@@ -257,6 +257,8 @@ or release-lock qualification.
 
 ## Current status
 
-Pause at Review Gate B. The manual-only pilot is viable and has no application I/O,
-but it is not yet a green measurement harness. No Slice 2 worker-count comparison
-or adoption decision is authorized by the current evidence.
+Slice 3 found one pre-existing cross-platform release-contract assertion: its
+300 KiB fixture floor is satisfied only after Windows CRLF expansion, while the
+smallest canonical-LF fixture is 299,878 bytes on Linux. Correct that coarse
+truncation guard, rerun one final four-worker whole suite, then proceed to Gate D.
+The manual-only pilot remains provider-free and has no application I/O.

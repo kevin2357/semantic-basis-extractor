@@ -197,3 +197,13 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   curiosity-only 16=81.548776s.
 - Select four workers for the one full-suite confirmation. Sixteen did not win, but
   it was a charming and informative experiment.
+
+## 2026-09-16 — Full-suite Linux portability finding
+
+- Full four-worker run `35067962527` completed setup and test execution, then
+  failed only in the serial quiet `test_packaged_smoke_fixture_is_complete` check.
+- The failure is deterministic platform newline translation, not parallelism: the
+  LF rendering of the smallest fixture is 299,878 bytes and the old floor was
+  300,000; Windows CRLF expansion had masked it locally.
+- Lower the test's coarse truncation floor to 250,000 bytes, retain all exact
+  identity/content assertions, and rerun one final four-worker full suite.
