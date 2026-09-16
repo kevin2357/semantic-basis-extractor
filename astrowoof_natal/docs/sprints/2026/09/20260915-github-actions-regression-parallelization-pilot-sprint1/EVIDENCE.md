@@ -230,5 +230,27 @@ For each workflow revision/run, record:
 - any cancellation, timeout, retry, or infrastructure failure separately from test
   failures.
 
-No hosted evidence exists yet. This register will be updated from immutable Actions
-run output rather than recollection.
+Hosted evidence now exists and is recorded above; this register will continue to be
+updated from immutable Actions run output rather than recollection.
+
+## Final hosted diagnostic classification
+
+Run `35064335349` retained both compact evidence and failure-only worker traces.
+All 15 provider-economics errors share one cause: the runner exposes source through
+`PYTHONPATH`, but the code correctly calls
+`metadata.version("astrowoof-natal-authoring")` for a public cohort field. The pilot
+had admitted SPC but had not installed the checked-out SBE distribution, so no SBE
+metadata existed. The workflow now installs the local checkout with
+`--no-deps --no-build-isolation`, after the pinned dependencies are admitted. This
+is offline local metadata setup—not a build or publication.
+
+Two real SHA-baseline failures remain deliberately out of this pilot slice:
+
+- `test_packaged_mutation_corpus_refuses` expects superseded digest
+  `5149b070...e0141303b`; Git-tracked canonical LF bytes hash to
+  `668e4571...e54712b13`.
+- `test_frozen_exact_bre_replay` expects `d13a7d...ca54a4`; the current replay
+  produces `524f08...64cf60`.
+
+Those need ordinary source/baseline review. Neither is evidence of a parallel-runner
+defect.

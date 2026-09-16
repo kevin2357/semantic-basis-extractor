@@ -72,8 +72,8 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - Upload scope is `.ci-results` only with seven-day retention and `if: always()`;
   owned work roots and pip cache are not uploaded.
 - Locally validated manifest completeness and all 16 existing runner-control tests.
-- No hosted workflow run has started. Commit/push is the next boundary; manual
-  dispatch remains separately owner-controlled.
+- Hosted execution is recorded in the following dated entries; all dispatches remain
+  manual-only and owner-controlled.
 
 ## 2026-09-16 — Manual dispatch platform refusal
 
@@ -124,3 +124,15 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   seven-day, failure-only artifact containing only the runner-produced worker
   `stdout.log`/`stderr.log` files. The coordinator removes application/provider
   credential variables before launching those workers.
+
+## 2026-09-16 — Final hosted trace classification
+
+- Run `35064335349` retained a compact evidence artifact and bounded failure-log
+  artifact. Both use seven-day retention; no application provider or service call
+  occurred.
+- All 15 provider-economics errors are one missing-local-distribution-metadata setup
+  condition, not a parallelism error. The workflow now installs the checked-out SBE
+  package offline with `--no-deps --no-build-isolation` after admitted dependencies.
+- Two independent SHA baseline failures remain: the mutation corpus's superseded
+  expected digest and the frozen BRE replay packet digest. Preserve them for normal
+  source review; do not alter their assertions in this CI-pilot setup work.
