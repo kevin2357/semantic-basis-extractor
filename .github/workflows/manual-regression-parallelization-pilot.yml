@@ -45,17 +45,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p .ci-results/provenance
+          mkdir -p ci-results/provenance
           python -m pip install --disable-pip-version-check --upgrade pip
           python -m pip install --disable-pip-version-check --no-index --no-deps \
             .ci-wheelhouse/semantic_projection_core-0.11.1-py3-none-any.whl
           python -m pip install --disable-pip-version-check 'jsonschema==4.26.0'
           python -m pip check
-          python --version | tee .ci-results/provenance/python-version.txt
-          python -m pip freeze --all | tee .ci-results/provenance/installed-packages.txt
-          python -m pip check | tee .ci-results/provenance/pip-check.txt
+          python --version | tee ci-results/provenance/python-version.txt
+          python -m pip freeze --all | tee ci-results/provenance/installed-packages.txt
+          python -m pip check | tee ci-results/provenance/pip-check.txt
           python -c "import importlib.metadata, semantic_projection; print(importlib.metadata.version('semantic-projection-core')); print(semantic_projection.__file__)" \
-            | tee .ci-results/provenance/spc-version-and-origin.txt
+            | tee ci-results/provenance/spc-version-and-origin.txt
 
       - name: Validate manifest and credential sanitation controls
         shell: bash
@@ -68,18 +68,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p .ci-results/smoke .ci-work
+          mkdir -p ci-results/smoke ci-work
           python astrowoof_natal/scripts/run_test_suite.py \
             --parallel-only \
             --workers 2 \
-            --work-root .ci-work/smoke \
-            --receipt .ci-results/smoke/receipt.json
+            --work-root ci-work/smoke \
+            --receipt ci-results/smoke/receipt.json
 
       - name: Upload compact pilot evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sbe-regression-pilot-smoke-${{ github.run_id }}
-          path: .ci-results/
+          path: ci-results/
           if-no-files-found: error
           retention-days: 7

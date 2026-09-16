@@ -182,6 +182,20 @@ also left no directory for the `if: always()` artifact action. The correction cr
 the compact evidence root before any installation command. No test, runner smoke,
 or artifact-upload behavior was exercised in this failed attempt.
 
+## Second hosted smoke — runner reached, receipt not retained
+
+Corrected run `35063615326` reached the complete two-worker parallel-safe smoke on
+Python 3.12 and ran 650 tests in 79.734923 seconds. The coordinator returned
+`success: false`, so at least one worker result was unsuccessful. Its stdout only
+contains the aggregate receipt summary; detailed failed identities live in the
+receipt and worker logs.
+
+The `if: always()` upload then found no files because GitHub's artifact action
+excludes hidden paths by default and the configured root was `.ci-results`. This is
+an evidence-retention configuration defect, not a test or dependency result. The
+pilot now uses non-hidden `ci-results/` and `ci-work/` roots. A fresh bounded run is
+needed to retain the receipt and identify the actual test failure.
+
 ## Remaining feasibility questions for Gate A
 
 1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.

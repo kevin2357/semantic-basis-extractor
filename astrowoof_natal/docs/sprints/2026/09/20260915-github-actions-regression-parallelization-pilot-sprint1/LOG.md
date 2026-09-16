@@ -101,3 +101,15 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
   early future failure can still produce its compact artifact.
 - The correction is mechanical and keeps dependency identity, permissions, trigger,
   test selection, and hosted-minute budget unchanged.
+
+## 2026-09-16 — First executable smoke evidence-retention correction
+
+- Corrected run `35063615326` passed all setup and preflight controls and reached
+  the 82-module, two-worker parallel-safe execution.
+- The coordinator completed 650 tests in 79.734923 seconds but returned unsuccessful.
+  Its compact receipt was the required detailed result, yet the upload action did
+  not retain it because `.ci-results` is a hidden directory and artifact upload
+  excludes hidden paths by default.
+- Replaced only pilot-local `.ci-results` and `.ci-work` names with non-hidden
+  `ci-results` and `ci-work`. This preserves runner behavior while making the
+  provider-free receipt and provenance files eligible for the seven-day artifact.
