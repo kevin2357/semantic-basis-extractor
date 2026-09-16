@@ -206,3 +206,24 @@
   Slice 3B real-adapter integration, and 4B joined release-pair qualification.
 - Opened Slice 4A only. No API implementation, provider/R2/process action,
   resource release, tag, publication, or deployment is authorized.
+
+## 2026-09-16 — Slice 4A source/package qualification surface
+
+- Added a public installed qualification command,
+  `astrowoof-native-suspension-qa`, and a closed packaged receipt schema.
+- The qualification creates a disposable exact-interactive ordinary-v2
+  workspace, launches the public v2 CLI as a real child process, consumes its
+  exact output file, validates the immutable result/receipt/retained evidence,
+  and repeats the command to prove replay identity.
+- Added unrelated-workspace refusal and packaged schema/fixture readability
+  checks. The qualification records zero provider create/retrieve, spend,
+  network, live process termination, and API resource release.
+- Exported the public contract readers/validators and qualification reader from
+  the package root so API Slice 3B need not import private runtime helpers.
+- Bumped the prospective candidate version to `0.4.65` before package testing.
+- Source evidence: 3 qualification tests passed with 1 expected optional-schema
+  skip; combined suspension/v2/reconciliation matrix 115 passed with 3 expected
+  skips.
+- Next: commit the exact candidate source, build/install a controlled wheel,
+  and run the public qualification from site-packages. No tag/publication or API
+  integration is authorized yet.

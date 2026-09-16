@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrowoof.example/contracts/native-suspension-qualification.v1.schema.json",
+  "title": "AstroWoof native suspension installed qualification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "qualification_sha256", "status", "qualification_only",
+    "provider_free", "external_network_call_count", "provider_create_count",
+    "provider_retrieve_count", "provider_spend_usd",
+    "live_process_termination_count", "api_resource_release_count", "sbe_version",
+    "checks", "result_id", "result_sha256", "receipt_id", "receipt_sha256",
+    "command_result_sha256", "contract_schema_sha256", "fixture_bundle_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.native_suspension_qualification.v1"},
+    "qualification_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"},
+    "qualification_only": {"const": true},
+    "provider_free": {"const": true},
+    "external_network_call_count": {"const": 0},
+    "provider_create_count": {"const": 0},
+    "provider_retrieve_count": {"const": 0},
+    "provider_spend_usd": {"const": 0},
+    "live_process_termination_count": {"const": 0},
+    "api_resource_release_count": {"const": 0},
+    "sbe_version": {"type": "string", "minLength": 1},
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "installed_cli_exact_exit_zero", "checkpointed_suspension_result",
+        "exact_output_join", "exact_replay_is_inert", "no_provider_identity_or_io",
+        "unrelated_workspace_refuses", "packaged_contract_resources_readable"
+      ],
+      "properties": {
+        "installed_cli_exact_exit_zero": {"const": true},
+        "checkpointed_suspension_result": {"const": true},
+        "exact_output_join": {"const": true},
+        "exact_replay_is_inert": {"const": true},
+        "no_provider_identity_or_io": {"const": true},
+        "unrelated_workspace_refuses": {"const": true},
+        "packaged_contract_resources_readable": {"const": true}
+      }
+    },
+    "result_id": {"type": "string", "pattern": "^nsusp_[0-9a-f]{24}$"},
+    "result_sha256": {"$ref": "#/$defs/sha256"},
+    "receipt_id": {"type": "string", "pattern": "^nsuspr_[0-9a-f]{24}$"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"},
+    "command_result_sha256": {"$ref": "#/$defs/sha256"},
+    "contract_schema_sha256": {"$ref": "#/$defs/sha256"},
+    "fixture_bundle_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

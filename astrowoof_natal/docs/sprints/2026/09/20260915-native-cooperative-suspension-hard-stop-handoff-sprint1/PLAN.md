@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-**Slice 3 safe-point integration complete; paused at Voof-paws D.** This sprint is provider-free by
+**Slice 4A source/package surface complete; exact installed candidate qualification active.** This sprint is provider-free by
 default and authorizes no live QA/R2/API mutation, provider call, process kill,
 service restart, capacity release, package publication, or deployment.
 

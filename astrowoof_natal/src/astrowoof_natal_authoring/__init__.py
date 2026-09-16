@@ -31,6 +31,21 @@ from .native_transition_availability import (  # noqa: E402
     read_native_transition_result_availability_schema,
     validate_native_transition_result_availability,
 )
+from .native_suspension_contracts import (  # noqa: E402
+    read_native_suspension_contract_schema,
+    read_native_suspension_fixture_bundle,
+    validate_suspension_fixture_bundle as validate_native_suspension_fixture_bundle,
+    validate_supervision_invocation,
+    validate_suspension_command_result,
+    validate_suspension_receipt,
+    validate_suspension_request,
+    validate_suspension_result,
+)
+from .native_suspension_qa import (  # noqa: E402
+    read_native_suspension_qualification_schema,
+    run_native_suspension_qualification,
+    validate_native_suspension_qualification,
+)
 from .operator_disposition import (  # noqa: E402
     build_operator_disposition_assessment,
     logical_workspace_root_id,
@@ -555,6 +570,17 @@ __all__ = [
     "validate_operator_disposition_qualification",
     "validate_native_publication_receipt",
     "validate_native_transition_result_availability",
+    "read_native_suspension_contract_schema",
+    "read_native_suspension_fixture_bundle",
+    "validate_native_suspension_fixture_bundle",
+    "validate_supervision_invocation",
+    "validate_suspension_request",
+    "validate_suspension_result",
+    "validate_suspension_receipt",
+    "validate_suspension_command_result",
+    "read_native_suspension_qualification_schema",
+    "run_native_suspension_qualification",
+    "validate_native_suspension_qualification",
     "read_bounded_route_parity_traces",
     "read_route_parity_oracle",
     "read_deployed_qa_schema",
