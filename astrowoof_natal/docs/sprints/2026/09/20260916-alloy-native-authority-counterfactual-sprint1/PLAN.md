@@ -40,6 +40,10 @@ separates seven witnesses into Model A (three command/custody cases) and Model B
 Gate B: review whether Model A found the intended bad traces without excluding valid
 reconciliation or normal terminal settlement.
 
+Status: complete and awaiting review. Model A found all three historical permissive
+shapes in exact one-atom traces; the corrected checks found no counterexample through
+scope 3, while valid terminal closeout and reconciliation remained satisfiable.
+
 ## Slice 2 — Model B: exact external authority and create permission
 
 1. Add a separate small `.als` model for inventory/request/grant/dispatch/intent.

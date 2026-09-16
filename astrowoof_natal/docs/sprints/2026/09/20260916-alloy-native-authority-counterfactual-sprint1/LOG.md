@@ -34,3 +34,24 @@
   SHA-256 recording, disposable extraction, and offline bounded model execution only.
 - No archive was downloaded and no tool was installed; owner authorization remains
   required before proceeding to Model A.
+
+## 2026-09-16 — Temporary Analyzer verified
+
+- Owner approved temporary `C:\tmp` use. The proposed archive was already present,
+  so it was not overwritten; SHA-256 and contents were verified before extraction.
+- Extracted only to `C:\tmp\alloy-6.2.0`. Its bundled `alloy.exe` reports version
+  6.2.0 and exposes offline `exec`; it includes its own runtime, so no system Java
+  installation is needed.
+- Began Model A as a deliberately small, content-free control-plane model.
+
+## 2026-09-16 — Slice 1 Model A result
+
+- Ran the offline Alloy 6.2.0 CLI against the terminal-ingress/custody/command model.
+- All three deliberately permissive historical shapes were SAT: terminal plus
+  generic retry, duplicate settlement, and pending provider identity plus ordinary
+  resume.
+- Under the three corrected adapter rules, all three bounded `check` commands found
+  no counterexample through scope 3. Valid terminal closeout and pending
+  reconciliation remained SAT, avoiding a vacuous “nothing can happen” model.
+- Recorded model/receipt hashes and the full interpretation in the Slice 1 artifact.
+  Pause at Gate B before the independent Model B authority model.

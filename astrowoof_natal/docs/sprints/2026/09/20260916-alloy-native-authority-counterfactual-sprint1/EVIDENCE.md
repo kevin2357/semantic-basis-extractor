@@ -45,3 +45,13 @@ At sprint creation, no local Alloy command, Analyzer JAR, or `java` command was 
 on this host. The exact temporary-tool proposal is recorded in
 `TOOLING GATE - ALLOY ANALYZER PROPOSAL.md`. Do not download or install it until the
 plan’s tooling gate is explicitly approved.
+
+## Approved temporary Analyzer acquisition
+
+Owner authorized temporary use under `C:\tmp`. An existing archive was found rather
+than overwritten, verified as 48,418,541 bytes with SHA-256
+`7379FEEB56F5EA77AE20340B051436D05AAB014EB1800786BB792A40FED5A576`, and inspected
+before extraction. It contains the official bundled `bin/alloy.exe`, native solvers,
+and Java runtime; `alloy.exe version` reports `6.2.0` and `alloy.exe help` exposes
+offline `exec`. It was extracted only to `C:\tmp\alloy-6.2.0`; no PATH, system Java,
+package manager, or repository binary changed.
