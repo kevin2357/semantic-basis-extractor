@@ -265,3 +265,12 @@ path-root dependent only: normalizing its two absolute input-path collections to
 filenames yields identical old/current digest `fd06e6...4c28cd`. The frozen test now
 normalizes only those volatile test-projection fields, and the baseline records that
 reproducible digest. Production packet bytes and source hash values remain unchanged.
+
+## First green hosted smoke
+
+Run `35066766893` passed all setup, safety, and two-worker parallel-safe checks on
+commit `eb2f3685`. Its receipt records 650 tests, zero skips, coordinator wall time
+111.227796 seconds, manifest SHA-256 `b592f1...9b1aca`, test inventory SHA-256
+`2311a4...ab770cb`, and outcome inventory SHA-256 `cbb29c...d72eb1`. No failure-log
+artifact was needed. The next manual run compares 1/2/4 counts plus user-requested
+curiosity-only 16, preserving strict receipt equality before any timing conclusion.
