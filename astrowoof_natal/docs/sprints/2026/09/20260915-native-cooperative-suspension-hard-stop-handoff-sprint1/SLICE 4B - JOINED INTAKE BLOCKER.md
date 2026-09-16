@@ -40,15 +40,18 @@ sbe fixture valid astrowoof.native_suspension_fixture_bundle.v1
 SbeProviderContractError: SBE provider dispatch result is invalid
 ```
 
-## Required API correction before joined qualification
+## First API correction
 
-The real parent must discriminate on the closed top-level schema and:
+API revision `e2e9d32` now discriminates on the closed top-level schema and:
 
-- preserve the existing provider-dispatch reader unchanged for its v2-v4
+- preserves the existing provider-dispatch reader unchanged for its v2-v4
   command families;
-- use SBE's packaged public suspension reader/validator for exactly
+- uses SBE's packaged public suspension reader/validator for exactly
   `astrowoof.native_suspension_command_result.v1`;
-- retain the exact result, receipt, request, capability, and force-fence joins;
+- retains the exact result, receipt, request, capability, and force-fence joins.
+
+The later API disposition must still:
+
 - treat child exit plus validated suspension evidence as inputs to a later
   API-owned execution-capacity disposition, never as allocation/provider/
   spend/workspace custody release; and
@@ -59,8 +62,36 @@ The callback which publishes the request also remains a caller-owned join. The
 joined qualification must use the real durable re-read/builder/writer path,
 not a callback that merely writes canned fixture bytes.
 
+## Second joined finding at `e2e9d32`
+
+The executable joined harness used API's real capability, fence, request
+builder/writer, subprocess parent, new suspension reader, and the exact locked
+SBE CLI. It reached SBE's first post-intent safe point without provider I/O,
+then refused the API-built request:
+
+```text
+ValueError: Suspension request does not join supervision invocation
+```
+
+The differing field is `grace_deadline`. The approved contract deliberately
+has two bounds:
+
+- `grace_deadline` repeats the immutable pre-launch envelope deadline; and
+- `expires_at` is the tighter effective request deadline, including an earlier
+  operator-fence deadline.
+
+API's builder currently assigns the minimum effective expiry to both fields.
+Its own unit tests check internal construction but do not pass the resulting
+request through SBE's public request validator, so they did not expose the
+cross-package mismatch.
+
+The narrow correction is to retain the envelope's canonical
+`grace_deadline` in the repeated field while continuing to set `expires_at` to
+the minimum of envelope grace and force-fence grace. The ordering predicate
+`requested_at < expires_at <= grace_deadline` then remains intact.
+
 ## Decision
 
-Slice 4B remains open at a review paws-point. No SBE code or candidate rebuild
+Slice 4B remains open at a second API correction paws-point. No SBE code or candidate rebuild
 is indicated by this finding. Unsupported reconciliation and initial-wave
 routes remain deferred exactly as already scoped.

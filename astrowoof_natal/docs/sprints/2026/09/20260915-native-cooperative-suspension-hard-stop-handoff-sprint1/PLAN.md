@@ -306,16 +306,15 @@ decisions.
   suspension result alone grants complete release.
 - Record installed SBE/API version and wheel identity in receipts.
 
-**Current gate (2026-09-16):** API revision `f5da771` can prepare the
-capability, construct and publish the later exact request, and supervise the
-child poll. Its real `external_authority_v2` parent still passes every child
-output to `validate_provider_dispatch_command_result`, however. The exact
-installed `0.4.66` fixture command
-`astrowoof.native_suspension_command_result.v1` is consequently rejected as
-`SbeProviderContractError` before API can classify cooperative exit or retain
-the result identity. Slice 4B remains open until API adds a closed,
-schema-discriminated native-suspension intake path; a test-only substitute is
-not acceptable joined evidence.
+**Current gate (2026-09-16):** API revision `e2e9d32` closes the first joined
+intake blocker with a schema-discriminated public suspension reader. The real
+joined subprocess then exposed a request-builder mismatch: API writes the
+effective earlier fence expiry into both `expires_at` and `grace_deadline`,
+while the approved v1 contract requires `grace_deadline` to repeat the
+immutable envelope bound and uses only `expires_at` for the tighter effective
+deadline. SBE therefore correctly refuses the request as not joining its
+supervision invocation. Slice 4B remains open pending that narrow API builder
+correction; neither validator should be weakened.
 
 **Exit:** joined provider-free qualification passes with zero provider calls,
 spend, R2 access, live process termination, or unrelated mutation.

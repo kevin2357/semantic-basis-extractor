@@ -342,3 +342,22 @@
   qualified until API adds a closed suspension-result intake branch.
 - The probe was local and provider-free. It performed no provider call, spend,
   R2 access, process termination, API resource release, or live mutation.
+
+## 2026-09-16 — Slice 4B schema intake correction and deadline-join finding
+
+- API revision `e2e9d32` added an exact top-level suspension-command
+  discriminator and delegated its named evidence set to SBE's packaged public
+  validator. The prior provider-dispatch-only intake blocker is closed.
+- Added a sprint-local joined qualification harness which uses API's real
+  in-memory durable models/services, exact fence admission and typed authority
+  loss, real request builder/writer, real supervised subprocess parent, and
+  the locked installed SBE `0.4.66` CLI.
+- The child reached the post-intent safe point with zero provider calls, then
+  correctly refused the API-built request because request `grace_deadline`
+  did not repeat the pre-launch envelope value. API currently copies its
+  tighter effective `expires_at` into that repeated field.
+- Required correction: preserve envelope `grace_deadline`; use
+  `min(envelope grace, fence grace)` only for `expires_at`. No SBE contract or
+  candidate change is indicated.
+- The failed qualification was provider-free and local. No R2, spend, live
+  process termination, API resource release, or external mutation occurred.
