@@ -92,7 +92,8 @@ def _write_control(run_dir: Path, control: Path) -> tuple[Path, dict[str, Any], 
         "created_at": stamp(now - timedelta(minutes=1)),
         "launch_not_after": stamp(now + timedelta(minutes=1)),
         "grace_deadline": stamp(now + timedelta(minutes=4)),
-        "force_fence_id": "qualification-fence", "force_fence_sha256": "c" * 64,
+        "supervision_capability_id": "qualification-capability",
+        "supervision_capability_sha256": "d" * 64,
         "envelope_sha256": "",
     }, "envelope_sha256")
     request = seal_document({
@@ -101,8 +102,11 @@ def _write_control(run_dir: Path, control: Path) -> tuple[Path, dict[str, Any], 
         "idempotency_key": "qualification-idempotency",
         "supervision_invocation_id": envelope["supervision_invocation_id"],
         "launch_generation": 1, "envelope_sha256": envelope["envelope_sha256"],
-        "force_fence_id": envelope["force_fence_id"],
-        "force_fence_sha256": envelope["force_fence_sha256"],
+        "supervision_capability_id": envelope["supervision_capability_id"],
+        "supervision_capability_sha256": envelope[
+            "supervision_capability_sha256"
+        ],
+        "force_fence_id": "qualification-fence", "force_fence_sha256": "c" * 64,
         "api_run_id": envelope["api_run_id"], "job_id": envelope["job_id"],
         "attempt_id": envelope["attempt_id"], "lease_id": envelope["lease_id"],
         "native_run_id": envelope["native_run_id"],

@@ -65,12 +65,14 @@ _ENVELOPE_KEYS = frozenset({
     "lease_token_sha256", "native_run_id", "worker_boot_id", "command_kind",
     "command_sha256", "executable_workspace_root",
     "executable_workspace_root_sha256", "control_root", "control_root_sha256",
-    "created_at", "launch_not_after", "grace_deadline", "force_fence_id",
-    "force_fence_sha256", "envelope_sha256",
+    "created_at", "launch_not_after", "grace_deadline",
+    "supervision_capability_id", "supervision_capability_sha256",
+    "envelope_sha256",
 })
 _REQUEST_KEYS = frozenset({
     "schema_version", "operation", "request_id", "idempotency_key",
     "supervision_invocation_id", "launch_generation", "envelope_sha256",
+    "supervision_capability_id", "supervision_capability_sha256",
     "force_fence_id", "force_fence_sha256", "api_run_id", "job_id",
     "attempt_id", "lease_id", "native_run_id", "command_kind",
     "command_sha256", "executable_workspace_root_sha256",
@@ -89,6 +91,8 @@ _ACTION_KEYS = frozenset({
 _RESULT_KEYS = frozenset({
     "schema_version", "result_id", "result_sha256", "request_id",
     "request_sha256", "supervision_invocation_id", "envelope_sha256",
+    "supervision_capability_id", "supervision_capability_sha256",
+    "force_fence_id", "force_fence_sha256",
     "native_publication_invocation_id", "native_run_id",
     "logical_workspace_root_sha256", "command_kind", "safe_point",
     "observed_at", "admission_checkpoint_basis_sha256",
@@ -100,12 +104,16 @@ _RESULT_KEYS = frozenset({
 _RECEIPT_KEYS = frozenset({
     "schema_version", "receipt_id", "receipt_sha256",
     "supervision_invocation_id", "native_run_id", "result_id",
-    "result_sha256", "request_id", "request_sha256", "checkpoint_basis_sha256",
+    "result_sha256", "request_id", "request_sha256",
+    "supervision_capability_id", "supervision_capability_sha256",
+    "force_fence_id", "force_fence_sha256", "checkpoint_basis_sha256",
     "snapshot_sha256", "published_at",
 })
 _COMMAND_KEYS = frozenset({
     "schema_version", "command_result_sha256", "outcome", "exit_code",
-    "supervision_invocation_id", "native_publication_invocation_id",
+    "supervision_invocation_id", "supervision_capability_id",
+    "supervision_capability_sha256", "force_fence_id", "force_fence_sha256",
+    "native_publication_invocation_id",
     "result_id", "result_sha256", "receipt_id", "receipt_sha256",
     "checkpoint_basis_sha256",
 })
@@ -203,7 +211,8 @@ def validate_supervision_invocation(value: object) -> dict[str, Any]:
         raise ValueError("Unsupported supervision invocation schema")
     for field in (
         "supervision_invocation_id", "api_run_id", "job_id", "attempt_id",
-        "lease_id", "native_run_id", "worker_boot_id", "force_fence_id",
+        "lease_id", "native_run_id", "worker_boot_id",
+        "supervision_capability_id",
     ):
         _identifier(doc[field], field)
     if isinstance(doc["launch_generation"], bool) or not isinstance(
@@ -215,7 +224,7 @@ def validate_supervision_invocation(value: object) -> dict[str, Any]:
     for field in (
         "lease_token_sha256", "command_sha256",
         "executable_workspace_root_sha256", "control_root_sha256",
-        "force_fence_sha256",
+        "supervision_capability_sha256",
     ):
         _sha(doc[field], field)
     executable = _absolute_path(doc["executable_workspace_root"], "executable root")
@@ -243,17 +252,22 @@ def validate_suspension_request(
     env = validate_supervision_invocation(envelope)
     if doc["schema_version"] != REQUEST_SCHEMA or doc["operation"] != "cooperative_suspend":
         raise ValueError("Unsupported suspension request")
-    for field in ("request_id", "idempotency_key", "actor_id", "reason_code", "environment"):
+    for field in (
+        "request_id", "idempotency_key", "actor_id", "reason_code",
+        "environment", "force_fence_id",
+    ):
         _identifier(doc[field], field)
     repeated = (
         "supervision_invocation_id", "launch_generation", "envelope_sha256",
-        "force_fence_id", "force_fence_sha256", "api_run_id", "job_id",
+        "supervision_capability_id", "supervision_capability_sha256",
+        "api_run_id", "job_id",
         "attempt_id", "lease_id", "native_run_id", "command_kind",
         "command_sha256", "executable_workspace_root_sha256",
         "control_root_sha256", "grace_deadline",
     )
     if any(doc[field] != env[field] for field in repeated):
         raise ValueError("Suspension request does not join supervision invocation")
+    _sha(doc["force_fence_sha256"], "force fence")
     _sha(doc["admission_checkpoint_basis_sha256"], "admission checkpoint")
     if doc["emergency_containment_confirmed"] is not True:
         raise ValueError("Emergency containment confirmation is required")
@@ -332,6 +346,10 @@ def validate_suspension_result(
         "request_id": req["request_id"], "request_sha256": req["request_sha256"],
         "supervision_invocation_id": env["supervision_invocation_id"],
         "envelope_sha256": env["envelope_sha256"],
+        "supervision_capability_id": env["supervision_capability_id"],
+        "supervision_capability_sha256": env["supervision_capability_sha256"],
+        "force_fence_id": req["force_fence_id"],
+        "force_fence_sha256": req["force_fence_sha256"],
         "native_run_id": env["native_run_id"], "command_kind": env["command_kind"],
         "admission_checkpoint_basis_sha256": req["admission_checkpoint_basis_sha256"],
     }
@@ -408,6 +426,10 @@ def validate_suspension_receipt(
         "native_run_id": res["native_run_id"], "result_id": res["result_id"],
         "result_sha256": res["result_sha256"], "request_id": res["request_id"],
         "request_sha256": res["request_sha256"],
+        "supervision_capability_id": res["supervision_capability_id"],
+        "supervision_capability_sha256": res["supervision_capability_sha256"],
+        "force_fence_id": res["force_fence_id"],
+        "force_fence_sha256": res["force_fence_sha256"],
         "checkpoint_basis_sha256": res["post_publication_checkpoint"]["checkpoint_basis_sha256"],
         "snapshot_sha256": res["post_publication_checkpoint"]["snapshot_sha256"],
     }
@@ -434,6 +456,10 @@ def validate_suspension_command_result(
         raise ValueError("Unsupported suspension command result schema")
     joins = {
         "outcome": res["outcome"], "supervision_invocation_id": res["supervision_invocation_id"],
+        "supervision_capability_id": res["supervision_capability_id"],
+        "supervision_capability_sha256": res["supervision_capability_sha256"],
+        "force_fence_id": res["force_fence_id"],
+        "force_fence_sha256": res["force_fence_sha256"],
         "native_publication_invocation_id": res["native_publication_invocation_id"],
         "result_id": res["result_id"], "result_sha256": res["result_sha256"],
         "receipt_id": rec["receipt_id"], "receipt_sha256": rec["receipt_sha256"],

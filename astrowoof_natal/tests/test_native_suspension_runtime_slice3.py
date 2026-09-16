@@ -56,7 +56,8 @@ def _control(run_dir: Path, control: Path, command: str):
         "created_at": "2026-09-15T12:00:00Z",
         "launch_not_after": "2026-09-15T12:01:00Z",
         "grace_deadline": "2026-09-15T12:05:00Z",
-        "force_fence_id": "fence-one", "force_fence_sha256": "c" * 64,
+        "supervision_capability_id": "capability-one",
+        "supervision_capability_sha256": "d" * 64,
         "envelope_sha256": "",
     }, "envelope_sha256")
     request = seal_document({
@@ -65,6 +66,10 @@ def _control(run_dir: Path, control: Path, command: str):
         "idempotency_key": "idem-one",
         "supervision_invocation_id": envelope["supervision_invocation_id"],
         "launch_generation": 1, "envelope_sha256": envelope["envelope_sha256"],
+        "supervision_capability_id": envelope["supervision_capability_id"],
+        "supervision_capability_sha256": envelope[
+            "supervision_capability_sha256"
+        ],
         "force_fence_id": "fence-one", "force_fence_sha256": "c" * 64,
         "api_run_id": "api-one", "job_id": "job-one", "attempt_id": "attempt-one",
         "lease_id": "lease-one", "native_run_id": state["run_id"],

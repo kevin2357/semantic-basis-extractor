@@ -75,7 +75,7 @@ child through a dedicated CLI argument. Required fields:
 | `control_root` | canonical absolute, request-isolated control root outside the executable workspace |
 | `control_root_sha256` | canonical digest over that absolute control-root identity |
 | `created_at`, `launch_not_after`, `grace_deadline` | UTC instants with strict ordering |
-| `force_fence_id`, `force_fence_sha256` | exact admitted API fence binding |
+| `supervision_capability_id`, `supervision_capability_sha256` | exact pre-launch API supervision capability; permits only later publication/reading of the request channel and is not authority revocation |
 | `envelope_sha256` | digest of every preceding canonical field |
 
 The envelope is immutable. API may append PID, process-group, start-marker, and
@@ -132,7 +132,8 @@ Required fields:
 | `operation` | exact `cooperative_suspend` |
 | `request_id`, `idempotency_key` | nonempty immutable API identities |
 | `supervision_invocation_id`, `launch_generation`, `envelope_sha256` | exact launch-envelope join |
-| `force_fence_id`, `force_fence_sha256` | exact durable-fence join |
+| `supervision_capability_id`, `supervision_capability_sha256` | exact join to the pre-launch envelope capability |
+| `force_fence_id`, `force_fence_sha256` | exact later durable operator-fence join; this fact does not exist at child launch |
 | `api_run_id`, `job_id`, `attempt_id`, `lease_id`, `native_run_id` | exact repeated target identities |
 | `command_kind`, `command_sha256` | exact command binding |
 | `executable_workspace_root_sha256`, `control_root_sha256` | digest-bound capability identities; raw paths are not repeated |

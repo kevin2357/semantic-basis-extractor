@@ -291,6 +291,12 @@ class NativeSuspensionControlObserver:
             "request_id": request["request_id"], "request_sha256": request["request_sha256"],
             "supervision_invocation_id": envelope["supervision_invocation_id"],
             "envelope_sha256": envelope["envelope_sha256"],
+            "supervision_capability_id": envelope["supervision_capability_id"],
+            "supervision_capability_sha256": envelope[
+                "supervision_capability_sha256"
+            ],
+            "force_fence_id": request["force_fence_id"],
+            "force_fence_sha256": request["force_fence_sha256"],
             "native_publication_invocation_id": publication_id,
             "native_run_id": envelope["native_run_id"],
             "logical_workspace_root_sha256": hashlib.sha256(normalized_path(run_dir).encode()).hexdigest(),
@@ -338,6 +344,12 @@ class NativeSuspensionControlObserver:
             "native_run_id": envelope["native_run_id"],
             "result_id": result["result_id"], "result_sha256": result["result_sha256"],
             "request_id": request["request_id"], "request_sha256": request["request_sha256"],
+            "supervision_capability_id": result["supervision_capability_id"],
+            "supervision_capability_sha256": result[
+                "supervision_capability_sha256"
+            ],
+            "force_fence_id": result["force_fence_id"],
+            "force_fence_sha256": result["force_fence_sha256"],
             "checkpoint_basis_sha256": post_basis["checkpoint_basis_sha256"],
             "snapshot_sha256": sha256_file(run_dir / SNAPSHOT_NAME),
             "published_at": publication_observed_at,
@@ -370,6 +382,12 @@ class NativeSuspensionControlObserver:
             "schema_version": COMMAND_RESULT_SCHEMA, "command_result_sha256": "",
             "outcome": result["outcome"], "exit_code": 0,
             "supervision_invocation_id": envelope["supervision_invocation_id"],
+            "supervision_capability_id": result["supervision_capability_id"],
+            "supervision_capability_sha256": result[
+                "supervision_capability_sha256"
+            ],
+            "force_fence_id": result["force_fence_id"],
+            "force_fence_sha256": result["force_fence_sha256"],
             "native_publication_invocation_id": publication_id,
             "result_id": result["result_id"], "result_sha256": result["result_sha256"],
             "receipt_id": receipt["receipt_id"], "receipt_sha256": receipt["receipt_sha256"],
@@ -411,6 +429,10 @@ def read_native_suspension_publication(
         "schema_version": COMMAND_RESULT_SCHEMA, "command_result_sha256": "",
         "outcome": result["outcome"], "exit_code": 0,
         "supervision_invocation_id": result["supervision_invocation_id"],
+        "supervision_capability_id": result["supervision_capability_id"],
+        "supervision_capability_sha256": result["supervision_capability_sha256"],
+        "force_fence_id": result["force_fence_id"],
+        "force_fence_sha256": result["force_fence_sha256"],
         "native_publication_invocation_id": result["native_publication_invocation_id"],
         "result_id": result["result_id"], "result_sha256": result["result_sha256"],
         "receipt_id": receipt["receipt_id"], "receipt_sha256": receipt["receipt_sha256"],

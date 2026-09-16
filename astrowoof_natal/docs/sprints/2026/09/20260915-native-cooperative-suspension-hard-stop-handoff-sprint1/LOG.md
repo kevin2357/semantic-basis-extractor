@@ -250,3 +250,22 @@
 - Slice 4A is complete. Paused for API Slice 3B real-adapter integration before
   joined Slice 4B. No tag, publication, deployment, live API/R2/provider work,
   signal, process termination, or resource release occurred.
+
+## 2026-09-16 — API Slice 3B ordering discovery reopens Slice 4A
+
+- API correctly refused to synthesize a force fence before child launch. The
+  original envelope required a fact that can lawfully arise only after an
+  operator fences an already-running lease.
+- Superseded prospective `0.4.65` wheel
+  `6c5db7b3134805f74343b841ea50ace128c313ab8ac292196fdf483fa6b1ce6b`.
+  It was never tagged or published and is not eligible for adapter intake.
+- Corrected the unpublished v1 contract family in place: the launch envelope
+  binds a pre-launch supervision capability; the later request binds that
+  capability plus the independently admitted immutable force fence; result,
+  receipt, and command result bind both.
+- Regenerated the packaged fixture from the corrected closed documents.
+- Focused executable contract/runtime/qualification matrix: 26 passed, 2
+  expected optional-schema skips. No provider, API, R2, spend, process-kill,
+  deployment, or release operation occurred.
+- Slice 4A remains open pending a fresh prospective `0.4.66` candidate and
+  installed qualification.

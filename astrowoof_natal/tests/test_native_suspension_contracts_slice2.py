@@ -52,7 +52,8 @@ def _docs(*, suffix="one", outcome="suspended_checkpointed"):
         "created_at": "2026-09-15T12:00:00Z",
         "launch_not_after": "2026-09-15T12:01:00Z",
         "grace_deadline": "2026-09-15T12:05:00Z",
-        "force_fence_id": "fence-one", "force_fence_sha256": SHA_C,
+        "supervision_capability_id": "capability-one",
+        "supervision_capability_sha256": SHA_D,
         "envelope_sha256": "",
     }, "envelope_sha256")
     request = seal_document({
@@ -62,8 +63,11 @@ def _docs(*, suffix="one", outcome="suspended_checkpointed"):
         "supervision_invocation_id": envelope["supervision_invocation_id"],
         "launch_generation": envelope["launch_generation"],
         "envelope_sha256": envelope["envelope_sha256"],
-        "force_fence_id": envelope["force_fence_id"],
-        "force_fence_sha256": envelope["force_fence_sha256"],
+        "supervision_capability_id": envelope["supervision_capability_id"],
+        "supervision_capability_sha256": envelope[
+            "supervision_capability_sha256"
+        ],
+        "force_fence_id": "fence-one", "force_fence_sha256": SHA_C,
         "api_run_id": envelope["api_run_id"], "job_id": envelope["job_id"],
         "attempt_id": envelope["attempt_id"], "lease_id": envelope["lease_id"],
         "native_run_id": envelope["native_run_id"],
@@ -85,6 +89,12 @@ def _docs(*, suffix="one", outcome="suspended_checkpointed"):
         "request_id": request["request_id"], "request_sha256": request["request_sha256"],
         "supervision_invocation_id": envelope["supervision_invocation_id"],
         "envelope_sha256": envelope["envelope_sha256"],
+        "supervision_capability_id": envelope["supervision_capability_id"],
+        "supervision_capability_sha256": envelope[
+            "supervision_capability_sha256"
+        ],
+        "force_fence_id": request["force_fence_id"],
+        "force_fence_sha256": request["force_fence_sha256"],
         "native_publication_invocation_id": "native-publication-one",
         "native_run_id": envelope["native_run_id"],
         "logical_workspace_root_sha256": SHA_D,
@@ -122,6 +132,12 @@ def _docs(*, suffix="one", outcome="suspended_checkpointed"):
         "native_run_id": envelope["native_run_id"],
         "result_id": result["result_id"], "result_sha256": result["result_sha256"],
         "request_id": request["request_id"], "request_sha256": request["request_sha256"],
+        "supervision_capability_id": result["supervision_capability_id"],
+        "supervision_capability_sha256": result[
+            "supervision_capability_sha256"
+        ],
+        "force_fence_id": result["force_fence_id"],
+        "force_fence_sha256": result["force_fence_sha256"],
         "checkpoint_basis_sha256": SHA_D, "snapshot_sha256": SHA_C,
         "published_at": "2026-09-15T12:02:30Z",
     }
@@ -131,6 +147,12 @@ def _docs(*, suffix="one", outcome="suspended_checkpointed"):
         "schema_version": "astrowoof.native_suspension_command_result.v1",
         "command_result_sha256": "", "outcome": result["outcome"], "exit_code": 0,
         "supervision_invocation_id": envelope["supervision_invocation_id"],
+        "supervision_capability_id": result["supervision_capability_id"],
+        "supervision_capability_sha256": result[
+            "supervision_capability_sha256"
+        ],
+        "force_fence_id": result["force_fence_id"],
+        "force_fence_sha256": result["force_fence_sha256"],
         "native_publication_invocation_id": result["native_publication_invocation_id"],
         "result_id": result["result_id"], "result_sha256": result["result_sha256"],
         "receipt_id": receipt["receipt_id"], "receipt_sha256": receipt["receipt_sha256"],
@@ -169,6 +191,29 @@ class NativeSuspensionContractTests(unittest.TestCase):
         self.assertEqual(command, validate_suspension_command_result(
             command, result=result, receipt=receipt, request=request, envelope=envelope,
         ))
+
+    def test_prelaunch_capability_and_later_force_fence_are_distinct(self):
+        envelope, request, result, receipt, command = _docs()
+        self.assertNotIn("force_fence_id", envelope)
+        self.assertNotIn("force_fence_sha256", envelope)
+        self.assertEqual(
+            envelope["supervision_capability_id"],
+            request["supervision_capability_id"],
+        )
+        self.assertEqual("fence-one", request["force_fence_id"])
+
+        changed = copy.deepcopy(result)
+        changed["force_fence_id"] = "fence-other"
+        changed["force_fence_sha256"] = SHA_D
+        _rebind(changed, receipt, command)
+        with self.assertRaisesRegex(ValueError, "identity join"):
+            validate_suspension_result(changed, request=request, envelope=envelope)
+
+        changed = copy.deepcopy(request)
+        changed["supervision_capability_id"] = "capability-other"
+        changed["request_sha256"] = _digest_without(changed, "request_sha256")
+        with self.assertRaisesRegex(ValueError, "join"):
+            validate_suspension_request(changed, envelope=envelope)
 
     def test_request_replay_is_exact_or_invocation_wide_conflict(self):
         envelope, request, *_ = _docs()
@@ -274,7 +319,7 @@ class NativeSuspensionContractTests(unittest.TestCase):
             ("native_run_id", "native-run-other"),
             ("job_id", "job-other"), ("lease_id", "lease-other"),
             ("command_sha256", SHA_D), ("control_root_sha256", SHA_D),
-            ("force_fence_sha256", SHA_D),
+            ("supervision_capability_sha256", SHA_C),
         ):
             changed = copy.deepcopy(request)
             changed[field] = replacement

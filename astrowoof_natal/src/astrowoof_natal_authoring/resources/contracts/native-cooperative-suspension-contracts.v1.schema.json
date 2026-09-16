@@ -28,7 +28,7 @@
     },
     "supervision_invocation": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "supervision_invocation_id", "launch_generation", "api_run_id", "job_id", "attempt_id", "lease_id", "lease_token_sha256", "native_run_id", "worker_boot_id", "command_kind", "command_sha256", "executable_workspace_root", "executable_workspace_root_sha256", "control_root", "control_root_sha256", "created_at", "launch_not_after", "grace_deadline", "force_fence_id", "force_fence_sha256", "envelope_sha256"],
+      "required": ["schema_version", "supervision_invocation_id", "launch_generation", "api_run_id", "job_id", "attempt_id", "lease_id", "lease_token_sha256", "native_run_id", "worker_boot_id", "command_kind", "command_sha256", "executable_workspace_root", "executable_workspace_root_sha256", "control_root", "control_root_sha256", "created_at", "launch_not_after", "grace_deadline", "supervision_capability_id", "supervision_capability_sha256", "envelope_sha256"],
       "properties": {
         "schema_version": {"const": "astrowoof.native_supervision_invocation.v1"},
         "supervision_invocation_id": {"type": "string", "minLength": 1},
@@ -42,18 +42,19 @@
         "executable_workspace_root_sha256": {"$ref": "#/$defs/sha256"}, "control_root": {"type": "string", "minLength": 1},
         "control_root_sha256": {"$ref": "#/$defs/sha256"}, "created_at": {"type": "string"},
         "launch_not_after": {"type": "string"}, "grace_deadline": {"type": "string"},
-        "force_fence_id": {"type": "string", "minLength": 1}, "force_fence_sha256": {"$ref": "#/$defs/sha256"},
+        "supervision_capability_id": {"type": "string", "minLength": 1}, "supervision_capability_sha256": {"$ref": "#/$defs/sha256"},
         "envelope_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "suspension_request": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "operation", "request_id", "idempotency_key", "supervision_invocation_id", "launch_generation", "envelope_sha256", "force_fence_id", "force_fence_sha256", "api_run_id", "job_id", "attempt_id", "lease_id", "native_run_id", "command_kind", "command_sha256", "executable_workspace_root_sha256", "control_root_sha256", "admission_checkpoint_basis_sha256", "actor_id", "reason_code", "environment", "emergency_containment_confirmed", "requested_at", "expires_at", "grace_deadline", "request_sha256"],
+      "required": ["schema_version", "operation", "request_id", "idempotency_key", "supervision_invocation_id", "launch_generation", "envelope_sha256", "supervision_capability_id", "supervision_capability_sha256", "force_fence_id", "force_fence_sha256", "api_run_id", "job_id", "attempt_id", "lease_id", "native_run_id", "command_kind", "command_sha256", "executable_workspace_root_sha256", "control_root_sha256", "admission_checkpoint_basis_sha256", "actor_id", "reason_code", "environment", "emergency_containment_confirmed", "requested_at", "expires_at", "grace_deadline", "request_sha256"],
       "properties": {
         "schema_version": {"const": "astrowoof.native_suspension_request.v1"}, "operation": {"const": "cooperative_suspend"},
         "request_id": {"type": "string", "minLength": 1}, "idempotency_key": {"type": "string", "minLength": 1},
         "supervision_invocation_id": {"type": "string", "minLength": 1}, "launch_generation": {"type": "integer", "minimum": 1},
-        "envelope_sha256": {"$ref": "#/$defs/sha256"}, "force_fence_id": {"type": "string", "minLength": 1},
+        "envelope_sha256": {"$ref": "#/$defs/sha256"}, "supervision_capability_id": {"type": "string", "minLength": 1},
+        "supervision_capability_sha256": {"$ref": "#/$defs/sha256"}, "force_fence_id": {"type": "string", "minLength": 1},
         "force_fence_sha256": {"$ref": "#/$defs/sha256"}, "api_run_id": {"type": "string", "minLength": 1},
         "job_id": {"type": "string", "minLength": 1}, "attempt_id": {"type": "string", "minLength": 1},
         "lease_id": {"type": "string", "minLength": 1}, "native_run_id": {"type": "string", "minLength": 1},
@@ -67,11 +68,13 @@
     },
     "suspension_result": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "result_id", "result_sha256", "request_id", "request_sha256", "supervision_invocation_id", "envelope_sha256", "native_publication_invocation_id", "native_run_id", "logical_workspace_root_sha256", "command_kind", "safe_point", "observed_at", "admission_checkpoint_basis_sha256", "observed_checkpoint", "post_publication_checkpoint", "provider_boundary", "local_work_posture", "actions", "ordinary_result_preceded_observation", "outcome", "reason_code", "continuation_mode", "next_safe_point", "continuation_deadline"],
+      "required": ["schema_version", "result_id", "result_sha256", "request_id", "request_sha256", "supervision_invocation_id", "envelope_sha256", "supervision_capability_id", "supervision_capability_sha256", "force_fence_id", "force_fence_sha256", "native_publication_invocation_id", "native_run_id", "logical_workspace_root_sha256", "command_kind", "safe_point", "observed_at", "admission_checkpoint_basis_sha256", "observed_checkpoint", "post_publication_checkpoint", "provider_boundary", "local_work_posture", "actions", "ordinary_result_preceded_observation", "outcome", "reason_code", "continuation_mode", "next_safe_point", "continuation_deadline"],
       "properties": {
         "schema_version": {"const": "astrowoof.native_suspension_result.v1"}, "result_id": {"type": "string", "pattern": "^nsusp_[0-9a-f]{24}$"},
         "result_sha256": {"$ref": "#/$defs/sha256"}, "request_id": {"type": "string"}, "request_sha256": {"$ref": "#/$defs/sha256"},
         "supervision_invocation_id": {"type": "string"}, "envelope_sha256": {"$ref": "#/$defs/sha256"},
+        "supervision_capability_id": {"type": "string"}, "supervision_capability_sha256": {"$ref": "#/$defs/sha256"},
+        "force_fence_id": {"type": "string"}, "force_fence_sha256": {"$ref": "#/$defs/sha256"},
         "native_publication_invocation_id": {"type": "string"}, "native_run_id": {"type": "string"},
         "logical_workspace_root_sha256": {"$ref": "#/$defs/sha256"}, "command_kind": {"enum": ["external_authority_v2_dispatch", "provider_reconciliation"]},
         "safe_point": {"enum": ["dispatch_after_intent_checkpoint", "dispatch_before_provider_post", "dispatch_after_provider_return", "dispatch_after_identity_checkpoint", "reconciliation_before_provider_get", "reconciliation_after_response_checkpoint", "reconciliation_before_local_adoption", "reconciliation_after_adoption_checkpoint", "reconciliation_before_result_publication"]}, "observed_at": {"type": "string"}, "admission_checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
@@ -86,21 +89,25 @@
     },
     "suspension_receipt": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "receipt_id", "receipt_sha256", "supervision_invocation_id", "native_run_id", "result_id", "result_sha256", "request_id", "request_sha256", "checkpoint_basis_sha256", "snapshot_sha256", "published_at"],
+      "required": ["schema_version", "receipt_id", "receipt_sha256", "supervision_invocation_id", "native_run_id", "result_id", "result_sha256", "request_id", "request_sha256", "supervision_capability_id", "supervision_capability_sha256", "force_fence_id", "force_fence_sha256", "checkpoint_basis_sha256", "snapshot_sha256", "published_at"],
       "properties": {
         "schema_version": {"const": "astrowoof.native_suspension_receipt.v1"}, "receipt_id": {"type": "string", "pattern": "^nsuspr_[0-9a-f]{24}$"},
         "receipt_sha256": {"$ref": "#/$defs/sha256"}, "supervision_invocation_id": {"type": "string"}, "native_run_id": {"type": "string"},
         "result_id": {"type": "string"}, "result_sha256": {"$ref": "#/$defs/sha256"}, "request_id": {"type": "string"},
-        "request_sha256": {"$ref": "#/$defs/sha256"}, "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
+        "request_sha256": {"$ref": "#/$defs/sha256"}, "supervision_capability_id": {"type": "string"},
+        "supervision_capability_sha256": {"$ref": "#/$defs/sha256"}, "force_fence_id": {"type": "string"},
+        "force_fence_sha256": {"$ref": "#/$defs/sha256"}, "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"},
         "snapshot_sha256": {"$ref": "#/$defs/sha256"}, "published_at": {"type": "string"}
       }
     },
     "command_result": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "command_result_sha256", "outcome", "exit_code", "supervision_invocation_id", "native_publication_invocation_id", "result_id", "result_sha256", "receipt_id", "receipt_sha256", "checkpoint_basis_sha256"],
+      "required": ["schema_version", "command_result_sha256", "outcome", "exit_code", "supervision_invocation_id", "supervision_capability_id", "supervision_capability_sha256", "force_fence_id", "force_fence_sha256", "native_publication_invocation_id", "result_id", "result_sha256", "receipt_id", "receipt_sha256", "checkpoint_basis_sha256"],
       "properties": {
         "schema_version": {"const": "astrowoof.native_suspension_command_result.v1"}, "command_result_sha256": {"$ref": "#/$defs/sha256"},
         "outcome": {"type": "string"}, "exit_code": {"enum": [0, 2]}, "supervision_invocation_id": {"type": "string"},
+        "supervision_capability_id": {"type": "string"}, "supervision_capability_sha256": {"$ref": "#/$defs/sha256"},
+        "force_fence_id": {"type": "string"}, "force_fence_sha256": {"$ref": "#/$defs/sha256"},
         "native_publication_invocation_id": {"type": "string"}, "result_id": {"type": "string"}, "result_sha256": {"$ref": "#/$defs/sha256"},
         "receipt_id": {"type": "string"}, "receipt_sha256": {"$ref": "#/$defs/sha256"}, "checkpoint_basis_sha256": {"$ref": "#/$defs/sha256"}
       }

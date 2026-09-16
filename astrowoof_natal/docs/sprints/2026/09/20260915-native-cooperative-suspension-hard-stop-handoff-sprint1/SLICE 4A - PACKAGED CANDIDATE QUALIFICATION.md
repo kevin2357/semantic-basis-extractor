@@ -35,7 +35,7 @@ validators, and qualification reader/validator for API Slice 3B.
   optional skips.
 - `compileall` and `git diff --check` are required before the candidate commit.
 
-## Installed candidate result
+## Superseded installed candidate result
 
 | Evidence | Exact value |
 | --- | --- |
@@ -63,5 +63,14 @@ host-runtime dependency impurity (SPC installed without `jsonschema`). It was
 not accepted as clean evidence. The final receipt above comes from a fresh venv
 with the immutable SPC wheel and declared dependencies installed explicitly.
 
-Slice 4A is complete. This is an exact candidate handoff for API Slice 3B, not
-tag, publication, deployment, or joined Slice 4B authorization.
+API Slice 3B rejected this candidate after discovering that the envelope
+required an already-admitted operator force fence before `Popen`, while the
+real API admits that fence only after an operator acts on a running lease. The
+wheel remains useful evidence that the old bytes were reproducible and
+installable, but it is not a valid integration or release candidate.
+
+Slice 4A is reopened for a corrected candidate. The replacement contract uses
+an immutable pre-launch supervision capability in the envelope, then a later
+operator force fence in the request. Result, receipt, and command-result
+artifacts bind both identities. The old `0.4.65` hash must never be substituted
+for the corrected candidate.
