@@ -135,9 +135,12 @@ Acceptance:
 - the workflow has no external application operations.
 
 Status: source implementation complete and locally validated. The workflow is
-manual-only and has not been dispatched. Its exact hosted dependency admission,
-action execution, and artifact behavior remain unproven until the first owner-led
-manual run.
+manual-only and was not schedulable from its feature branch: GitHub requires a
+`workflow_dispatch` file to exist on the repository default branch before dispatch
+for another ref. The initial authorized dispatch received HTTP 404 before any job
+allocation, consuming zero hosted minutes. Its exact hosted dependency admission,
+action execution, and artifact behavior remain unproven until an owner selects a
+default-branch dispatcher or another explicit trigger design.
 
 ## Review Gate B — Smoke and artifact usability
 

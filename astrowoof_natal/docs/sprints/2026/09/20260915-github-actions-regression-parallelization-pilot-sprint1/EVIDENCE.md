@@ -134,6 +134,25 @@ The local check validates runner syntax and controls. It does not attest hosted
 action resolution, the clean dependency installation, or GitHub artifact upload;
 those remain the first manual dispatch's purpose.
 
+## Slice 1 dispatch attempt
+
+On 2026-09-16, an authorized manual dispatch requested
+`manual-regression-parallelization-pilot.yml` at
+`codex/github-actions-regression-pilot`. GitHub returned:
+
+```text
+HTTP 404: workflow manual-regression-parallelization-pilot.yml not found on the default branch
+```
+
+GitHub Actions requires a `workflow_dispatch` workflow to exist on the repository
+default branch before it can be dispatched for another ref. This was an API-level
+refusal before job allocation: no hosted runner started, no dependency was
+downloaded, no artifact was created, and zero hosted minutes were consumed.
+
+The workflow source remains correct on the pilot branch, but a separate owner
+decision is now required to make a manual-only dispatcher reachable from the
+default branch or to choose a different explicitly authorized trigger design.
+
 ## Remaining feasibility questions for Gate A
 
 1. The compatible GitHub-hosted Ubuntu/Python combination is not yet exercised.

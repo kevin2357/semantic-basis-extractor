@@ -74,3 +74,15 @@ Proceed to Slice 1 only after this Slice 0 evidence is committed and pushed.
 - Locally validated manifest completeness and all 16 existing runner-control tests.
 - No hosted workflow run has started. Commit/push is the next boundary; manual
   dispatch remains separately owner-controlled.
+
+## 2026-09-16 — Manual dispatch platform refusal
+
+- Owner authorized the first manual dispatch from
+  `codex/github-actions-regression-pilot`.
+- GitHub refused before scheduling with HTTP 404 because the workflow file is not
+  present on the repository default branch.
+- No hosted runner, dependency download, test, artifact, provider operation, or
+  application-service operation occurred. The full 30 hosted-minute budget remains
+  unconsumed.
+- Do not retry the same API call. GitHub requires a default-branch dispatcher, so
+  a distinct owner decision is required before Slice 1 can proceed.
