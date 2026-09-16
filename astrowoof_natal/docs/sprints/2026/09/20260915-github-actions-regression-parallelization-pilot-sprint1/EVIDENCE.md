@@ -274,3 +274,11 @@ commit `eb2f3685`. Its receipt records 650 tests, zero skips, coordinator wall t
 `2311a4...ab770cb`, and outcome inventory SHA-256 `cbb29c...d72eb1`. No failure-log
 artifact was needed. The next manual run compares 1/2/4 counts plus user-requested
 curiosity-only 16, preserving strict receipt equality before any timing conclusion.
+
+## Hosted worker-count comparison
+
+Run `35067134359` passed all four digest-equivalent cells: one worker took
+184.096436s, two took 104.275341s, four took 79.058307s, and curiosity-only sixteen
+took 81.548776s. Four is the selected eligible count: 57% faster than one and 24%
+faster than two. Sixteen is slightly slower than four, so it is recorded as a useful
+oversubscription observation rather than an adoption candidate.
