@@ -282,3 +282,22 @@ Run `35067134359` passed all four digest-equivalent cells: one worker took
 took 81.548776s. Four is the selected eligible count: 57% faster than one and 24%
 faster than two. Sixteen is slightly slower than four, so it is recorded as a useful
 oversubscription observation rather than an adoption candidate.
+
+## Whole-suite confirmation: platform-sensitive smoke-fixture floor
+
+Run `35067962527` executed the full four-worker coordinator on Linux with all
+admitted dependency, provenance, and credential-sanitization checks passing. The
+parallel groups and serial observability group passed. The serial quiet tail found
+one failure: `TestReleaseContracts.test_packaged_smoke_fixture_is_complete`.
+
+This is not a scheduler or dependency-admission failure. `materialize_fixture()`
+writes JSON through `Path.write_text()`: on Windows the native CRLF translation
+makes all four outputs exceed the historical 300,000-byte floor, but Linux preserves
+canonical LF. The smallest generated output (`natal.bre.woof.d2d.json`) is 299,878
+UTF-8 bytes with LF, while its Windows materialization is 307,867 bytes. All four
+files are present and carry the expected source identity.
+
+The correction changes the deliberately coarse completeness/truncation floor to
+250,000 bytes, leaving meaningful headroom below the smallest valid LF fixture. It
+does not change packaged resources, fixture JSON semantics, or the runner. A single
+fresh four-worker full confirmation remains required before Gate D.
