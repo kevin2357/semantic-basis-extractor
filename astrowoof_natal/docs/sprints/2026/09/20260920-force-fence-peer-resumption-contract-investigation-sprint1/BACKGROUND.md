@@ -37,11 +37,13 @@ assumed.
 - local archives:
   `C:\tmp\quarantiner_failed_test_workspaces\Q3A-001-jenson-jammie\`
 
-## Explicit exclusion
+## Single-slot positive control
 
 Q3A-003 Plantin / Granjon is not a lost-resumption witness. Plantin's force
 fence deliberately retained the sole active SBE allocation under the Q3
-contract, so Granjon's inability to claim it is explained by policy.
+contract, so Granjon's inability to claim it is explained by policy. It is
+therefore a useful positive control for the same scarce-capacity containment
+classification now under review for Q5-003 and Q3A-001.
 
 ## API companion
 
