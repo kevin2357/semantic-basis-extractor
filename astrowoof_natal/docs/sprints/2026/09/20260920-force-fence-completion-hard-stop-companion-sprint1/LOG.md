@@ -113,3 +113,14 @@
   precedence, replay, and refusal behavior.
 - Recorded the API activation/parent-exit obligations. No SBE source, schema,
   release, provider, R2, capacity, or deployment change was needed.
+## 2026-09-20 — API Slice 2B joint review
+
+- Reviewed API commit `e2ae114` and the cooperative reconciliation handoff.
+  The pre-launch/fence/request/closed-reader/finalizer structure is aligned
+  with the Gate B model.
+- Requested two narrow consumer-proof corrections before Joint Slice 3:
+  actual-argv-to-persisted-digest regression at `Popen`, and a durable,
+  identity-bound direct-child exit receipt in place of parent-exit booleans.
+- The installed-wheel replay remains required because seven API reader cells
+  are currently skipped pending the immutable SBE `0.4.66` wheel resource.
+  No SBE source, release, provider, R2, capacity, or deployment action occurred.
