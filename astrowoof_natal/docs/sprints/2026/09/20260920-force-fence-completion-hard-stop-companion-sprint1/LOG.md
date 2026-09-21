@@ -91,3 +91,15 @@
   assertions are UNSAT, and five deliberately weakened bad worlds are SAT.
 - The revised proposal awaits only Gate B re-review.  No runtime, schema,
   provider, R2, capacity, or deployment action occurred.
+## 2026-09-20 — Gate B approval and API model alignment
+
+- API approved Gate B at `a69fb9a`; the approval is recorded in `API Agent
+  Gate B Re-review.md`.  Runtime/schema design, but not runtime mutation, is
+  now authorized under proof-specific provider-free gates.
+- Added the review's non-blocking direct identity refinement: an invocation
+  has at most one force fence.
+- Reviewed API's side-effect-free completion model (`f01a0c1`, 17 focused
+  cells).  Its final-proof and custody boundaries align.  Its later Slice 2
+  transaction must make active named allocation identity a real validation,
+  and must distinguish releasing target capacity from claiming actual peer
+  admission when an independent global-budget block still exists.

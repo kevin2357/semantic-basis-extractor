@@ -61,7 +61,7 @@ request, child-exit, and completion integration.
 
 ## Joint Slice 2 — model and adversarial fixtures
 
-**Complete — Gate B re-review pending.**
+**Active — Gate B approved; proof-specific runtime/schema design is open.**
 
 - Build a compact formal state model and deterministic fixtures for normal,
   late, stale, replayed, ordinary-result-precedence, parent-loss, blocked
@@ -74,7 +74,10 @@ request, child-exit, and completion integration.
   explicit recovery records, old-boot exclusion, late-artifact rejection, and
   post-replacement peer admission.
 
-**Gate B:** joint model approval.
+**Gate B:** approved.  The direct one-fence-per-invocation fact requested in
+API's non-blocking re-review note is incorporated.  Before any final API
+transition, distinguish target capacity release from actual peer admission
+when an independent global-budget block remains.
 
 ## Slice 3 — approved runtime support and qualification
 

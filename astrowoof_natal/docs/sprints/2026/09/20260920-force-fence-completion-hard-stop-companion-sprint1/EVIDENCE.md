@@ -7,9 +7,10 @@
 | Sprint 107 Q5-003 | Live unresolved retained-allocation/peer-block witness. | Diagnostic only. |
 | Focused native suspension suite | `test_native_suspension_runtime_slice3`: 11 passing tests with checkout `src` on `2026-09-20`. | Slice 0 provider-free verification. |
 | Slice 0-1 route/contract record | `SLICE 0-1 ROUTE INVENTORY AND CONTRACT PROPOSAL.md`. | Gate A input. |
-| Joint Gate A reviews | API review in this sprint and `SBE Agent Gate A Review.md` in API Sprint 110. | Approved; Joint Slice 2 opened. |
+| Joint Gate A reviews | API review in this sprint and `SBE Agent Gate A Review.md` in API Sprint 110. | Approved. |
 | API Slice 1 provider-free model | `API Slice 1 Provider-Free Model Handoff.md`, API commit `f01a0c1`, focused model suite: 17 passed. | Joint Gate B input. |
-| SBE Slice 2 bounded model | `tools/force_fence_completion_hard_stop_v1.als`, SHA-256 `5cb019887bd65bcffc6596ca6ce4a9d6332772527c0a1a1725684be0a74ba8f4`. | Gate B re-review pending. |
+| SBE Slice 2 bounded model | `tools/force_fence_completion_hard_stop_v1.als`. | Gate B approved; direct one-fence-per-invocation refinement added before runtime work. |
+| API Gate B re-review | `API Agent Gate B Re-review.md`, API commit `a69fb9a`. | Approved; proof-specific runtime/schema design authorized. |
 
 ## Design clarification — completion proof classes
 

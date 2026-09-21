@@ -69,6 +69,9 @@ sig PeerAdmission { completion: one Completion, peer: one Invocation, at: one Mo
 
 fact IdentityAndTime {
   all f: ForceFence | time/lt[f.target.launchedAt, f.at]
+  // Mirrors API's idempotency boundary: one active invocation cannot acquire
+  // a second independent force-fence history.
+  all i: Invocation | lone f: ForceFence | f.target = i
   all o: ChildObservation | time/lte[o.invocation.launchedAt, o.at]
   all c: CooperativeResult |
     c.invocation = c.fence.target and time/lte[c.fence.at, c.at]

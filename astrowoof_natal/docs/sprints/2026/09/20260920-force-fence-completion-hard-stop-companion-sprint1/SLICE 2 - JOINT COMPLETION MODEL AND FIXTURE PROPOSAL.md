@@ -51,7 +51,7 @@ No completion proof releases provider, spend, workspace, or native custody.
 
 - Analyzer: Alloy Analyzer CLI `6.2.0`, solver `sat4j`.
 - Model SHA-256:
-  `5cb019887bd65bcffc6596ca6ce4a9d6332772527c0a1a1725684be0a74ba8f4`.
+  `ba3b8da96a41eefb97815da9cf14a3c9c1b329096e6de343f44dae2b0b4105c3`.
 - Scope: up to eight atoms, with exactly eight ordered moments in every
   explicit run.
 - Private machine-local output: `tools/.tmp-alloy-output/receipt.json`.
