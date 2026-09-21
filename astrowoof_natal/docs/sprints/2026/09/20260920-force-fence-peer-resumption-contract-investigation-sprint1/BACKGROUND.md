@@ -49,5 +49,7 @@ classification now under review for Q5-003 and Q3A-001.
 
 `C:\dev\github\astrowoof-api\docs\sprints\2026\09\20260920-force-fence-peer-resumption-investigation-sprint109\`
 
-The API sprint maps authoritative claim/availability/capacity state. Neither
-side may propose implementation until the paired classification gate.
+The API sprint maps authoritative claim/availability/capacity state. This
+companion closed after establishing that the historical witnesses used only a
+durable-only force-fence command. They did not invoke the later resolution
+route required to complete quarantine and release capacity.

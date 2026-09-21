@@ -2,10 +2,13 @@
 
 ## Status
 
-**Active — read-only companion.** This sprint first distinguishes a peer that
-is due in the queue from one that is admissible under the deployed active-SBE
-capacity policy. API owns any scheduler or operator-policy follow-up; SBE's
-role is to determine whether its lifecycle/readiness contract contributed.
+**Closed — 2026-09-20.** The witnesses exercised only the durable emergency
+force-fence primitive, which intentionally retains the active allocation and
+does not attempt native suspension, final quarantine, or capacity release.
+They are therefore not evidence of an SBE readiness/resumption gap or an API
+queue defect. The required product follow-up is a separately scoped,
+route-capable transition from active containment to either completed
+`operator_quarantined`/released capacity or an explicit unresolved state.
 
 ## Slice 0 — exact per-witness SBE chronology
 
@@ -31,6 +34,11 @@ API mutation authority.
 
 **Exit:** either SBE signal compatibility or one narrow SBE/API ambiguity.
 
+**Disposition:** closed by the Slice 0 evidence and source/contract review.
+The peer had already received SBE's explicit local-continuation handoff. The
+fenced target's route was deliberately outside the activated cooperative
+resolution path, and the Q5 oracle expressly prohibited that path.
+
 ## Slice 2 — paired classification gate
 
 Review API Slice 0 alongside this sprint and jointly classify the cause as:
@@ -43,3 +51,8 @@ Review API Slice 0 alongside this sprint and jointly classify the cause as:
 
 Use Q3A-003 as the single-slot containment positive control where relevant.
 Do not start runtime/schema work before that gate.
+
+**Disposition:** closed. The correct classification is intended
+scarce-capacity containment under a deliberately durable-only test, paired
+with an incomplete end-to-end product route for an actively fenced
+reconciliation run. No SBE package or source change is indicated here.
