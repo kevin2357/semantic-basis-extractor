@@ -33,7 +33,9 @@ CONTRACT PROPOSAL.md`.**
 
 ## Slice 1 — proposed producer/result contract
 
-**Complete — awaiting Gate A review.**
+**Complete — Gate A approved.** The first cooperative reconciliation cell
+reuses the existing v1 suspension handoff; API owns the required parent launch,
+request, child-exit, and completion integration.
 
 - Propose closed result kinds for safe completion and all non-completion
   outcomes.
@@ -59,7 +61,7 @@ CONTRACT PROPOSAL.md`.**
 
 ## Joint Slice 2 — model and adversarial fixtures
 
-**Blocked on Gate A.**
+**Active — Gate A approved.**
 
 - Build a compact formal state model and deterministic fixtures for normal,
   late, stale, replayed, ordinary-result-precedence, parent-loss, blocked

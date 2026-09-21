@@ -7,6 +7,7 @@
 | Sprint 107 Q5-003 | Live unresolved retained-allocation/peer-block witness. | Diagnostic only. |
 | Focused native suspension suite | `test_native_suspension_runtime_slice3`: 11 passing tests with checkout `src` on `2026-09-20`. | Slice 0 provider-free verification. |
 | Slice 0-1 route/contract record | `SLICE 0-1 ROUTE INVENTORY AND CONTRACT PROPOSAL.md`. | Gate A input. |
+| Joint Gate A reviews | API review in this sprint and `SBE Agent Gate A Review.md` in API Sprint 110. | Approved; Joint Slice 2 opened. |
 
 ## Design clarification — completion proof classes
 

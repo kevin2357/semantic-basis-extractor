@@ -36,6 +36,18 @@
   `test_native_suspension_runtime_slice3` — 11 passed.
 - No provider, R2, workspace, runtime, or release mutation occurred.
 
+## 2026-09-20 — Gate A accepted
+
+- API accepted the SBE route inventory and v1-handoff reuse proposal.
+- The joint review confirmed that API must add the reconciliation parent
+  activation/exit-completion extension; no new SBE schema is required for the
+  first cooperative response-reconciliation cell.
+- API incorporated the clarification that peer admission is required after
+  final outcomes only, while unresolved cases remain exact escalation without
+  capacity release.
+- Joint Slice 2 model/fixture work is now authorized. No runtime or custody
+  mutation occurred.
+
 ## 2026-09-20 — API pre-sprint review aligned
 
 - Incorporated the API review's wording correction: platform-proven worker
