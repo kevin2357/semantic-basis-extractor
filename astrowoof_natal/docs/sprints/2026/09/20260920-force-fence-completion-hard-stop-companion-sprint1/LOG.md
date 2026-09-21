@@ -154,3 +154,14 @@
   reconciliation cell. Controlled replacement/collateral qualification and
   live QA are API/operator gates and do not require further SBE work unless
   their evidence identifies a distinct native seam.
+
+## 2026-09-21 — post-closure replacement boundary review
+
+- Reviewed API Slice 3B discovery (`c556ef4`). It correctly refuses to treat
+  platform replacement as an API-finalizer-only validation exercise.
+- Clarified ownership: worker-wide child inventory, no-new-child fencing,
+  old-boot retirement/no-overlap, and new-boot/platform-operation readback are
+  API worker/control-plane facts. A single SBE child cannot authenticate them.
+- Recorded the minimal provider-free API worker-lifecycle protocol in
+  `SBE POST-CLOSURE REVIEW - API REPLACEMENT CONTROL-PLANE DISCOVERY.md`.
+  No SBE source, schema, package, provider, R2, or live action is requested.
