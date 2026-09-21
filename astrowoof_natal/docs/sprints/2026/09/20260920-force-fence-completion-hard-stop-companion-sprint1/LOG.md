@@ -137,3 +137,20 @@
   `SBE RE-REVIEW - API R1 R2 AND 0.4.66 WHEELGATE.md`. No SBE source, schema,
   or package correction is required; the immutable published 0.4.66 wheel
   remains the exact post-correction joined-replay target.
+
+## 2026-09-21 — Joint Slice 3A wheelgate accepted and companion closure
+
+- API corrected the direct-child proof scope at `82a0953`; the cooperative
+  route no longer records or requires an invented process-group assertion.
+- API installed only the published immutable SBE `0.4.66` wheel, SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`, in
+  an isolated target. The released SBE joined harness passed and recorded
+  exact result/replay identity with zero provider operations, spend, R2 access,
+  live process termination, or pre-completion API resource release.
+- The API cooperative completion matrix then passed **164 tests** against that
+  same installed wheel, including the direct-child proof and fail-closed
+  evidence cases.
+- This completes all SBE companion obligations for the first interactive
+  reconciliation cell. Controlled replacement/collateral qualification and
+  live QA are API/operator gates and do not require further SBE work unless
+  their evidence identifies a distinct native seam.

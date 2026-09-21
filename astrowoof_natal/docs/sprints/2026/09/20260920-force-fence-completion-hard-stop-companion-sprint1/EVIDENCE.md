@@ -13,6 +13,8 @@
 | API Gate B re-review | `API Agent Gate B Re-review.md`, API commit `a69fb9a`. | Approved; proof-specific runtime/schema design authorized. |
 | Slice 2A reconciliation activation | `SLICE 2A - RECONCILIATION ACTIVATION QUALIFICATION.md`; focused native suspension suite: 11 passed on 2026-09-20. | SBE first-cell producer support complete; no source/release change. |
 | API Slice 2B handoff | API commit `e2ae114`; SBE review `SBE REVIEW - API SLICE 2B COOPERATIVE RECONCILIATION HANDOFF.md`. | Revision requested: exact argv/parent-exit proof, then installed-wheel joint replay. |
+| API R1/R2 direct-child proof correction | API commit `82a0953`; actual-argv digest is captured at `Popen`, and cooperative completion retains only a direct-child exit proof rather than a process-group assertion. | SBE re-review accepted the correction; no SBE change or rebuild required. |
+| Joint Slice 3A immutable-wheel replay | Published SBE `0.4.66`, SHA-256 `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`; API isolated install, joined harness receipt, and 164-test cooperative matrix. | Passed provider-free; confirms exact closed publication/replay with zero provider, R2, live-termination, or pre-completion API-release side effects. |
 
 ## Design clarification — completion proof classes
 

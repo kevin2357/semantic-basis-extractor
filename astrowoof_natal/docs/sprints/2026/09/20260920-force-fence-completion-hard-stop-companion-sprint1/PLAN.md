@@ -2,8 +2,12 @@
 
 ## Status
 
-**Active — contract/model discovery only.** No runtime action, new release,
-or API resource release is authorized before joint Gate A/B approval.
+**Complete — first cooperative reconciliation completion cell qualified.**
+SBE's existing `0.4.66` v1 suspension producer/reader was reused without a
+new schema, runtime change, or release. API's exact parent/transaction
+consumer passed the immutable-wheel provider-free replay. Controlled platform
+replacement, collateral posture, and live QA remain separate API/operator
+work, not open SBE companion-sprint work.
 
 ## Slice 0 — post-fence route and evidence inventory
 
@@ -81,12 +85,14 @@ when an independent global-budget block remains.
 
 ## Slice 3 — approved runtime support and qualification
 
-**SBE producer activation complete for the first interactive reconciliation
-cell; joint consumer qualification remains.** See `SLICE 2A - RECONCILIATION
-ACTIVATION QUALIFICATION.md`.
+**Complete — joint immutable-wheel qualification accepted.** See
+`SLICE 2A - RECONCILIATION ACTIVATION QUALIFICATION.md` and the API-side
+`SLICE 3A - IMMUTABLE WHEEL QUALIFICATION.md`.
 
 - Reuse only the existing v1 reconciliation producer/reader paths; no new SBE
   result schema or capacity action is approved or required.
-- API must qualify its parent/transaction consumer against the exact v1
-  handoff. After that, run the joint provider-free transcript gate and preserve
-  all unsupported paths as unresolved.
+- API qualified its parent/transaction consumer against the exact v1 handoff
+  using published SBE `0.4.66`, SHA-256
+  `ec30e79780b7a4ffc47510ec25f5b6cb3b09639a8b6a2ec6b2def0661f871daf`.
+  The joined replay and API cooperative matrix passed provider-free. Unsupported
+  SBE paths remain typed unresolved and were not widened by this work.
