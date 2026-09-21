@@ -103,3 +103,13 @@
   transaction must make active named allocation identity a real validation,
   and must distinguish releasing target capacity from claiming actual peer
   admission when an independent global-budget block still exists.
+## 2026-09-20 — Slice 2A reconciliation activation qualification
+
+- Reran `test_native_suspension_runtime_slice3` with checkout source:
+  **11 passed** provider-free.
+- Confirmed that the existing v1 observer already supports interactive response
+  reconciliation at `reconciliation_before_provider_get` and
+  `reconciliation_after_response_checkpoint`, including exact publication,
+  precedence, replay, and refusal behavior.
+- Recorded the API activation/parent-exit obligations. No SBE source, schema,
+  release, provider, R2, capacity, or deployment change was needed.

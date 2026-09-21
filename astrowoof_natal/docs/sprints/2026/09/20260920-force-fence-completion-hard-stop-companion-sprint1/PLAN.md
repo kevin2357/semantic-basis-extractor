@@ -81,6 +81,12 @@ when an independent global-budget block remains.
 
 ## Slice 3 — approved runtime support and qualification
 
-- Implement only approved producer/reader paths.
-- Qualify installed wheel with API's completion consumer and provider-free
-  transcripts. Preserve all unsupported paths as unresolved.
+**SBE producer activation complete for the first interactive reconciliation
+cell; joint consumer qualification remains.** See `SLICE 2A - RECONCILIATION
+ACTIVATION QUALIFICATION.md`.
+
+- Reuse only the existing v1 reconciliation producer/reader paths; no new SBE
+  result schema or capacity action is approved or required.
+- API must qualify its parent/transaction consumer against the exact v1
+  handoff. After that, run the joint provider-free transcript gate and preserve
+  all unsupported paths as unresolved.

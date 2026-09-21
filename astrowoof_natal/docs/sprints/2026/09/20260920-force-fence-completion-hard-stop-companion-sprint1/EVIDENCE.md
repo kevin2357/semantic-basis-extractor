@@ -11,6 +11,7 @@
 | API Slice 1 provider-free model | `API Slice 1 Provider-Free Model Handoff.md`, API commit `f01a0c1`, focused model suite: 17 passed. | Joint Gate B input. |
 | SBE Slice 2 bounded model | `tools/force_fence_completion_hard_stop_v1.als`. | Gate B approved; direct one-fence-per-invocation refinement added before runtime work. |
 | API Gate B re-review | `API Agent Gate B Re-review.md`, API commit `a69fb9a`. | Approved; proof-specific runtime/schema design authorized. |
+| Slice 2A reconciliation activation | `SLICE 2A - RECONCILIATION ACTIVATION QUALIFICATION.md`; focused native suspension suite: 11 passed on 2026-09-20. | SBE first-cell producer support complete; no source/release change. |
 
 ## Design clarification — completion proof classes
 
