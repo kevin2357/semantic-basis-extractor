@@ -7,6 +7,9 @@ or API resource release is authorized before joint Gate A/B approval.
 
 ## Slice 0 — post-fence route and evidence inventory
 
+**Complete — Gate A input recorded in `SLICE 0-1 ROUTE INVENTORY AND
+CONTRACT PROPOSAL.md`.**
+
 - Map every active native route into one of three completion classes:
   cooperative SBE safe-stop proof, API-parent-owned exact child/process-group
   exit proof, API/platform-proven worker replacement, or unresolved
@@ -29,6 +32,8 @@ or API resource release is authorized before joint Gate A/B approval.
   that control-plane proof.
 
 ## Slice 1 — proposed producer/result contract
+
+**Complete — awaiting Gate A review.**
 
 - Propose closed result kinds for safe completion and all non-completion
   outcomes.
@@ -53,6 +58,8 @@ or API resource release is authorized before joint Gate A/B approval.
 **Gate A:** API review before schema/reader/runtime changes.
 
 ## Joint Slice 2 — model and adversarial fixtures
+
+**Blocked on Gate A.**
 
 - Build a compact formal state model and deterministic fixtures for normal,
   late, stale, replayed, ordinary-result-precedence, parent-loss, blocked

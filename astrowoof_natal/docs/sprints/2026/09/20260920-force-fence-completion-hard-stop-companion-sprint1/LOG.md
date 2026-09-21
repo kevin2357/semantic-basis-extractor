@@ -17,6 +17,25 @@
   added safe-point, blocking-call, and process-exit topology to Slice 0.
 - No runtime or custody mutation occurred.
 
+## 2026-09-20 — Slices 0-1 complete; Gate A requested
+
+- Source inventory established that the existing suspension observer already
+  accepts `provider_reconciliation` and enforces reconciliation-only safe-point
+  names.
+- The response reconciliation path exposes two safe points:
+  `reconciliation_before_provider_get` and the durable
+  `reconciliation_after_response_checkpoint`. The latter follows response
+  retrieval, persisted state, and workspace snapshot publication.
+- The existing v1 suspension result/receipt/command-result handoff is suitable
+  for those exact cooperative response-reconciliation stops; no new SBE result
+  schema is proposed at this gate.
+- Batch reconciliation and any route without an observed safe point remain
+  unresolved SBE escalation cases. They may reach final isolation only through
+  API-parent or API/platform proof, never a missing SBE result.
+- Provider-free verification against this checkout's source path:
+  `test_native_suspension_runtime_slice3` — 11 passed.
+- No provider, R2, workspace, runtime, or release mutation occurred.
+
 ## 2026-09-20 — API pre-sprint review aligned
 
 - Incorporated the API review's wording correction: platform-proven worker

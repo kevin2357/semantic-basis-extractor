@@ -5,6 +5,8 @@
 | API Sprint 109 Slice 0 | Current force-fence/capacity admission facts. | Baseline. |
 | SBE 0.4.66 qualification | Existing exact cooperative-suspension evidence and non-release scope. | Baseline. |
 | Sprint 107 Q5-003 | Live unresolved retained-allocation/peer-block witness. | Diagnostic only. |
+| Focused native suspension suite | `test_native_suspension_runtime_slice3`: 11 passing tests with checkout `src` on `2026-09-20`. | Slice 0 provider-free verification. |
+| Slice 0-1 route/contract record | `SLICE 0-1 ROUTE INVENTORY AND CONTRACT PROPOSAL.md`. | Gate A input. |
 
 ## Design clarification — completion proof classes
 
