@@ -1,0 +1,16 @@
+# Evidence register — force-fence completion hard-stop companion
+
+| Item | Purpose | Status |
+| --- | --- | --- |
+| API Sprint 109 Slice 0 | Current force-fence/capacity admission facts. | Baseline. |
+| SBE 0.4.66 qualification | Existing exact cooperative-suspension evidence and non-release scope. | Baseline. |
+| Sprint 107 Q5-003 | Live unresolved retained-allocation/peer-block witness. | Diagnostic only. |
+
+## Design clarification — completion proof classes
+
+| Class | Exact evidence | Capacity consequence |
+| --- | --- | --- |
+| Cooperative native stop | SBE safe-point result/receipt bound to exact capability, fence, request, invocation, and native run. | API may complete quarantine and release only local SBE capacity. |
+| Supervisor-proven hard stop | API worker parent proves the exact supervised child/process group has exited after approved containment escalation. | API may complete quarantine and release only local SBE capacity. |
+| Platform-proven worker replacement | API records the exact worker-replacement operation, old boot retirement/no-overlap proof, new boot identity, and old-boot artifact exclusion. | API may complete quarantine and release only local SBE capacity after collateral policy is satisfied. |
+| Unresolved escalation | SBE cannot safely stop, or evidence is stale, missing, contradictory, or silent. | Not final; no release. It names the exact next safe-stop or parent-exit proof required. |
