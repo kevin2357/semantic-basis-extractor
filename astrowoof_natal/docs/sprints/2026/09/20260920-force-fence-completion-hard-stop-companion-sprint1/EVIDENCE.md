@@ -8,6 +8,8 @@
 | Focused native suspension suite | `test_native_suspension_runtime_slice3`: 11 passing tests with checkout `src` on `2026-09-20`. | Slice 0 provider-free verification. |
 | Slice 0-1 route/contract record | `SLICE 0-1 ROUTE INVENTORY AND CONTRACT PROPOSAL.md`. | Gate A input. |
 | Joint Gate A reviews | API review in this sprint and `SBE Agent Gate A Review.md` in API Sprint 110. | Approved; Joint Slice 2 opened. |
+| API Slice 1 provider-free model | `API Slice 1 Provider-Free Model Handoff.md`, API commit `f01a0c1`, focused model suite: 17 passed. | Joint Gate B input. |
+| SBE Slice 2 bounded model | `tools/force_fence_completion_hard_stop_v1.als`, SHA-256 `29ba974351d198d3724174527a5f61cd7a1db015483b23ccf6bc0483072cf07b`. | Gate B pending. |
 
 ## Design clarification — completion proof classes
 

@@ -65,3 +65,19 @@
   admission fence and explicit collateral policy before a worker-scoped
   replacement can support final peer progress.
 - No runtime or custody mutation occurred.
+## 2026-09-20 — Joint Slice 2 bounded model
+
+- Read API's provider-free Gate B handoff (`f01a0c1`, 17 focused tests passed)
+  and incorporated its critical rule: a cooperative SBE safe-stop does not by
+  itself release capacity; API must additionally prove exact child/process
+  group exit.
+- Added `tools/force_fence_completion_hard_stop_v1.als`.  The model preserves
+  SBE's existing v1 result/receipt/command identity as cooperative evidence,
+  separates child liveness from scheduling allocation and retained custody,
+  and makes replacement a full target/worker-control-plane proof class.
+- Ran Alloy Analyzer CLI `6.2.0` / `sat4j` over the stated eight-moment bounded
+  campaign.  Four valid worlds were SAT; five full-contract checks were UNSAT;
+  four deliberately weakened bad worlds were SAT.
+- No source/runtime, provider, R2, API capacity, or deployment action occurred.
+- Slice 2 is complete and awaits the joint Gate B review in
+  `SLICE 2 - JOINT COMPLETION MODEL AND FIXTURE PROPOSAL.md`.

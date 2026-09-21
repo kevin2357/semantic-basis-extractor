@@ -61,7 +61,7 @@ request, child-exit, and completion integration.
 
 ## Joint Slice 2 — model and adversarial fixtures
 
-**Active — Gate A approved.**
+**Complete — Gate B review pending.**
 
 - Build a compact formal state model and deterministic fixtures for normal,
   late, stale, replayed, ordinary-result-precedence, parent-loss, blocked
