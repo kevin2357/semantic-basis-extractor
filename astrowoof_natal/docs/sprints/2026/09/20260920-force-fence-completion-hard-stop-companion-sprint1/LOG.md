@@ -81,3 +81,13 @@
 - No source/runtime, provider, R2, API capacity, or deployment action occurred.
 - Slice 2 is complete and awaits the joint Gate B review in
   `SLICE 2 - JOINT COMPLETION MODEL AND FIXTURE PROPOSAL.md`.
+## 2026-09-20 — Gate B model corrections
+
+- Incorporated API's Gate B review: explicit inhabitable ordinary precedence;
+  platform replacement's independent retirement/no-overlap proof; monotonic
+  child exit through completion; and one cooperative result per exact force
+  fence.
+- Reran the Alloy campaign.  Five valid worlds are SAT, seven full-contract
+  assertions are UNSAT, and five deliberately weakened bad worlds are SAT.
+- The revised proposal awaits only Gate B re-review.  No runtime, schema,
+  provider, R2, capacity, or deployment action occurred.

@@ -2,9 +2,9 @@
 
 ## Result
 
-The bounded model is inhabited for all four intended scheduling outcomes and
-has no counterexample in scope for the five release-safety rules.  It also
-produces four deliberately bad worlds when those rules are not applied.  This
+The bounded model is inhabited for all five intended scheduling outcomes and
+has no counterexample in scope for the seven release-safety rules.  It also
+produces five deliberately bad worlds when those rules are not applied.  This
 is a design artifact only: it does not add a wire schema, SBE runtime action,
 API capacity release, deployment, provider operation, or workspace access.
 
@@ -51,24 +51,31 @@ No completion proof releases provider, spend, workspace, or native custody.
 
 - Analyzer: Alloy Analyzer CLI `6.2.0`, solver `sat4j`.
 - Model SHA-256:
-  `29ba974351d198d3724174527a5f61cd7a1db015483b23ccf6bc0483072cf07b`.
+  `5cb019887bd65bcffc6596ca6ce4a9d6332772527c0a1a1725684be0a74ba8f4`.
 - Scope: up to eight atoms, with exactly eight ordered moments in every
   explicit run.
 - Private machine-local output: `tools/.tmp-alloy-output/receipt.json`.
 
-The four required worlds are satisfiable:
+The five required worlds are satisfiable:
 
 1. cooperative result/receipt/command plus parent exit, then peer admission;
 2. parent-only exact exit, then peer admission;
 3. collateral-safe worker replacement, then peer admission; and
 4. unresolved escalation retaining the target allocation with no peer
-   admission induced by it.
+   admission induced by it; and
+5. ordinary-result precedence as an explicit non-final, non-quarantine
+   disposition.
 
 The following checks returned `UNSAT` (no counterexample at the stated bounded
 scope):
 
 - unresolved escalation cannot release the target allocation;
-- final completion needs an exact stopped-child observation;
+- cooperative and parent finality need a current exact stopped-child
+  observation: an earlier exit cannot be followed by a later live observation
+  before completion;
+- replacement finality has its own no-writing proof: target/old-boot binding,
+  no-new-child admission fence, retirement/no-overlap, and new-boot readback;
+- ordinary precedence cannot become quarantine completion;
 - replacement fences admission before retirement and records every live
   collateral child;
 - a late old-boot artifact cannot establish a replacement completion; and
@@ -77,9 +84,27 @@ scope):
 
 The intentionally weakened model admits `SAT` witnesses for premature
 silence-release, un-inventoried collateral replacement, an old-boot late
-artifact treated as cooperative finality, and peer admission despite a global
-block.  Those witnesses are a guard against accidentally dropping a rule in a
-future implementation.
+artifact treated as cooperative finality, peer admission despite a global
+block, and an earlier exit followed by a later live child before allocation
+release.  Those witnesses are a guard against accidentally dropping a rule in
+a future implementation.
+
+## Gate B revision — API review corrections incorporated
+
+The API Gate B review required and this revision adds:
+
+1. `OrdinaryPrecedence`, an explicit non-final/non-quarantine disposition and
+   an inhabited ordinary-result world.  An ordinary result that wins the
+   race excludes cooperative publication instead of leaving the model with an
+   impossible completion classification.
+2. `replacementSafeNonwritingAt`, so replacement finality depends on its own
+   target/old-boot, admission-fence, retirement/no-overlap, and new-boot proof
+   rather than an unrelated target child observation.
+3. `currentExitAt`, which requires an exit observation with no same-invocation
+   live observation from that exit through completion.  The weakened
+   earlier-exit/later-live witness is SAT; the full contract rejects it.
+4. `lone` cooperative-result cardinality per exact force fence, with the
+   existing exact one-to-one receipt and command envelope constraints retained.
 
 ## Deterministic fixture matrix for Gate B
 

@@ -50,7 +50,8 @@ one sig ProviderCustody, SpendCustody, WorkspaceCustody, NativeCustody extends C
 sig RetainedCustody { owner: one Run, kind: one Custody }
 
 abstract sig CompletionKind {}
-one sig CooperativeFinal, ParentFinal, ReplacementFinal, Escalating extends CompletionKind {}
+one sig CooperativeFinal, ParentFinal, ReplacementFinal, OrdinaryPrecedence,
+        Escalating extends CompletionKind {}
 sig Completion {
   fence: one ForceFence,
   kind: one CompletionKind,
@@ -88,6 +89,9 @@ fact IdentityAndTime {
 }
 
 pred ExactEvidenceAndInventory {
+  // A force-fenced invocation can publish at most one cooperative result.
+  // Receipt and command envelope are then exact one-to-one consequences.
+  all f: ForceFence | lone { c: CooperativeResult | c.fence = f }
   all c: CooperativeResult | one r: CooperativeReceipt | r.result = c
   all c: CooperativeResult | one x: CooperativeCommand |
     x.result = c and x.receipt.result = c
@@ -99,6 +103,13 @@ pred ExactEvidenceAndInventory {
     rr.collateral in rr.replacement.inventory
   all r: Replacement, i: r.inventory - r.target |
     one rr: RecoveryRecord | rr.replacement = r and rr.collateral = i
+  // The replacement admission fence closes old-boot launch admission before
+  // inventory.  Retirement/no-overlap means no old-boot child is later live.
+  all r: Replacement |
+    no i: Invocation | i.boot = r.oldBoot and time/gt[i.launchedAt, r.admission.at]
+  all r: Replacement | no o: ChildObservation |
+    o.invocation.boot = r.oldBoot and o.state = ChildLive and
+    time/lte[r.retiredAt, o.at]
   // Once old boot is retired, no artifact from it can establish completion.
   all c: Completion, a: LateArtifact |
     some c.replacement and a.invocation.boot = c.replacement.oldBoot and
@@ -106,8 +117,24 @@ pred ExactEvidenceAndInventory {
       no c.cooperative and no c.parentExit
 }
 
-pred childExitedAt[i: Invocation, t: Moment] {
-  some o: ChildObservation | o.invocation = i and o.state = ChildExited and time/lte[o.at, t]
+pred currentExitAt[i: Invocation, t: Moment] {
+  some exited: ChildObservation |
+    exited.invocation = i and exited.state = ChildExited and time/lte[exited.at, t] and
+    no live: ChildObservation |
+      live.invocation = i and live.state = ChildLive and
+      time/lte[exited.at, live.at] and time/lte[live.at, t]
+}
+
+pred replacementSafeNonwritingAt[r: Replacement, t: Moment] {
+  time/lte[r.retiredAt, t]
+  time/lte[r.newBootAt, t]
+  no o: ChildObservation |
+    o.invocation.boot = r.oldBoot and o.state = ChildLive and time/lte[r.retiredAt, o.at]
+}
+
+pred safeNonwritingAt[c: Completion] {
+  c.kind in CooperativeFinal + ParentFinal implies currentExitAt[c.fence.target, c.at]
+  c.kind = ReplacementFinal implies replacementSafeNonwritingAt[c.replacement, c.at]
 }
 
 pred final[c: Completion] { c.kind in CooperativeFinal + ParentFinal + ReplacementFinal }
@@ -116,16 +143,19 @@ fact CompletionClassification {
   all c: Completion |
     (c.kind = CooperativeFinal) iff
       some c.cooperative and some c.parentExit and no c.replacement and no c.ordinary and
-      childExitedAt[c.fence.target, c.at]
+      safeNonwritingAt[c]
   all c: Completion |
     (c.kind = ParentFinal) iff
       some c.parentExit and no c.cooperative and no c.replacement and no c.ordinary and
-      childExitedAt[c.fence.target, c.at]
+      safeNonwritingAt[c]
   all c: Completion |
     (c.kind = ReplacementFinal) iff
       some c.replacement and no c.cooperative and no c.parentExit and no c.ordinary and
-      c.replacement.target = c.fence.target and
-      childExitedAt[c.fence.target, c.at]
+      c.replacement.target = c.fence.target and safeNonwritingAt[c]
+  all c: Completion |
+    (c.kind = OrdinaryPrecedence) iff
+      some c.ordinary and no c.cooperative and no c.parentExit and no c.replacement and
+      c.ordinary.invocation = c.fence.target
   all c: Completion |
     (c.kind = Escalating) iff no c.cooperative and no c.parentExit and no c.replacement and no c.ordinary
 }
@@ -155,12 +185,11 @@ pred FullContract {
   ExactEvidenceAndInventory
   CapacityAndCustodyBoundary
   PeerAdmissionBoundary
-  // An ordinary result committed before the cooperative safe-stop observation
-  // wins the race.  It must be settled through ordinary lifecycle handling,
-  // never repurposed as a quarantine completion.
-  all o: OrdinaryResult, c: Completion |
-    o.invocation = c.fence.target and some c.cooperative and
-    time/lt[o.at, c.cooperative.at] implies c.kind != CooperativeFinal
+  // An ordinary result committed before a would-be cooperative observation
+  // wins the race. SBE therefore publishes no cooperative result; the force
+  // fence receives the explicit non-final, non-quarantine disposition.
+  no o: OrdinaryResult, cooperative: CooperativeResult |
+    o.invocation = cooperative.invocation and time/lt[o.at, cooperative.at]
 }
 
 pred ValidCooperativePeerWorld {
@@ -187,6 +216,12 @@ pred ValidEscalationWorld {
   no PeerAdmission
 }
 
+pred ValidOrdinaryPrecedenceWorld {
+  FullContract
+  some c: Completion | c.kind = OrdinaryPrecedence
+  no PeerAdmission
+}
+
 assert UnresolvedNeverReleasesCapacity {
   FullContract implies all c: Completion |
     c.kind = Escalating implies
@@ -195,7 +230,18 @@ assert UnresolvedNeverReleasesCapacity {
 
 assert FinalRequiresExactStoppedChild {
   FullContract implies all c: Completion |
-    final[c] implies childExitedAt[c.fence.target, c.at]
+    c.kind in CooperativeFinal + ParentFinal implies currentExitAt[c.fence.target, c.at]
+}
+
+assert ReplacementHasIndependentNonwritingProof {
+  FullContract implies all c: Completion |
+    c.kind = ReplacementFinal implies replacementSafeNonwritingAt[c.replacement, c.at]
+}
+
+assert OrdinaryPrecedenceCannotQuarantine {
+  FullContract implies all c: Completion |
+    c.kind = OrdinaryPrecedence implies not final[c] and no c.cooperative and
+    no c.parentExit and no c.replacement
 }
 
 assert ReplacementFencesBeforeInventoryAndAccountsForCollateral {
@@ -243,6 +289,13 @@ pred BlockedPeerAdmissionWitness {
   some a: PeerAdmission, b: GlobalBlock | b.blockedRun = a.peer.ownerRun
 }
 
+pred EarlierExitLaterLiveReleasesWitness {
+  some c: Completion, exited, live: ChildObservation |
+    final[c] and exited.invocation = c.fence.target and live.invocation = c.fence.target and
+    exited.state = ChildExited and live.state = ChildLive and
+    time/lt[exited.at, live.at] and time/lte[live.at, c.at]
+}
+
 run ValidCooperativePeerWorld for 8 but exactly 2 Run, exactly 2 Invocation,
   exactly 1 ForceFence, exactly 1 CooperativeResult, exactly 1 CooperativeReceipt,
   exactly 1 CooperativeCommand, exactly 1 ParentExit, exactly 0 Replacement,
@@ -262,9 +315,16 @@ run ValidEscalationWorld for 8 but exactly 1 Run, exactly 1 Invocation,
   exactly 1 ForceFence, exactly 0 CooperativeResult, exactly 0 CooperativeReceipt,
   exactly 0 CooperativeCommand, exactly 0 ParentExit, exactly 0 Replacement,
   exactly 1 Completion, exactly 0 PeerAdmission, exactly 8 Moment
+run ValidOrdinaryPrecedenceWorld for 8 but exactly 1 Run, exactly 1 Invocation,
+  exactly 1 ForceFence, exactly 0 CooperativeResult, exactly 0 CooperativeReceipt,
+  exactly 0 CooperativeCommand, exactly 0 ParentExit, exactly 0 Replacement,
+  exactly 1 OrdinaryResult, exactly 1 Completion, exactly 0 PeerAdmission,
+  exactly 8 Moment
 
 check UnresolvedNeverReleasesCapacity for 8
 check FinalRequiresExactStoppedChild for 8
+check ReplacementHasIndependentNonwritingProof for 8
+check OrdinaryPrecedenceCannotQuarantine for 8
 check ReplacementFencesBeforeInventoryAndAccountsForCollateral for 8
 check RetiredBootArtifactsCannotFinalize for 8
 check PeerAdmissionNeedsFinalTargetAndNoIndependentBlock for 8
@@ -277,3 +337,6 @@ run LateOldBootArtifactFinalizesWitness for 8 but exactly 1 Run, exactly 1 Invoc
   exactly 1 Replacement, exactly 1 Completion, exactly 1 LateArtifact, exactly 8 Moment
 run BlockedPeerAdmissionWitness for 8 but exactly 2 Run, exactly 2 Invocation,
   exactly 1 Completion, exactly 1 PeerAdmission, exactly 1 GlobalBlock, exactly 8 Moment
+run EarlierExitLaterLiveReleasesWitness for 8 but exactly 1 Run, exactly 1 Invocation,
+  exactly 1 ForceFence, exactly 1 Completion, exactly 2 ChildObservation,
+  exactly 8 Moment
