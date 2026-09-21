@@ -124,3 +124,16 @@
 - The installed-wheel replay remains required because seven API reader cells
   are currently skipped pending the immutable SBE `0.4.66` wheel resource.
   No SBE source, release, provider, R2, capacity, or deployment action occurred.
+
+## 2026-09-21 — API R1/R2 re-review
+
+- Approved R1: API now proves that the exact argv supplied to `Popen` hashes
+  to the digest sealed in its prelaunch supervision envelope.
+- Found one remaining R2 API-only contradiction: the direct-child completion
+  route still persists and requires a `child_process_group_alive: false`
+  assertion even though it creates and manages no process group. This cannot
+  be treated as evidence for the direct-child proof scope.
+- Recorded the narrowly scoped correction in
+  `SBE RE-REVIEW - API R1 R2 AND 0.4.66 WHEELGATE.md`. No SBE source, schema,
+  or package correction is required; the immutable published 0.4.66 wheel
+  remains the exact post-correction joined-replay target.
