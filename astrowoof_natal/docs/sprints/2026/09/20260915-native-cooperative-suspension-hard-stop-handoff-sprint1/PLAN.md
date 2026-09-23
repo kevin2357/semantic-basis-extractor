@@ -2,14 +2,13 @@
 
 ## Status and authority
 
-**Slice 4B opened; joined intake is blocked on API suspension-result
-discrimination.** API Slice 3B discovered that the
-original candidate incorrectly required an operator force fence before child
-launch. The corrected v1 chronology binds a pre-launch supervision capability
-in the immutable envelope and binds the later real operator force fence in the
-suspension request. This sprint is provider-free by
-default and authorizes no live QA/R2/API mutation, provider call, process kill,
-service restart, capacity release, package publication, or deployment.
+**Complete — 2026-09-16.** The corrected v1 chronology binds a pre-launch
+supervision capability in the immutable envelope and a later real operator
+force fence in the suspension request. Slice 4B joined intake, Slice 5 release
+qualification, and publication all completed: immutable SBE `0.4.66` is the
+released public artifact. Later worker replacement, process-death, capacity
+reclamation, and live-QA work are API/operator-owned and are not open work in
+this sprint.
 
 The prior `20260910-operator-quarantiner-native-suspension-sprint1` is closed
 around its released relocated-assessment scope. This plan is the sole active

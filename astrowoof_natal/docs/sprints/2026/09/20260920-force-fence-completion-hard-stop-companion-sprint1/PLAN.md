@@ -65,7 +65,8 @@ request, child-exit, and completion integration.
 
 ## Joint Slice 2 — model and adversarial fixtures
 
-**Active — Gate B approved; proof-specific runtime/schema design is open.**
+**Complete — Gate B approved and its proof-specific cooperative completion
+cell qualified provider-free.**
 
 - Build a compact formal state model and deterministic fixtures for normal,
   late, stale, replayed, ordinary-result-precedence, parent-loss, blocked
