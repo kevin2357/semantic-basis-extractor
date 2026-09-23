@@ -2,7 +2,10 @@
 
 ## Status
 
-Active — inventory and classification only.
+**Slices 0alpha and 0 complete — 2026-09-23.** The combined inventory is in
+`SBE Recovery Surface Inventory.md`. The audit found no native production path
+keyed to Aster, Bramble, or another named historical run. Slice 1 remains open
+for the API join and an explicit supported-artifact version decision.
 
 ## Slice 0α — Incident-driven native change-set reconnaissance
 
@@ -34,6 +37,8 @@ removes a production-only bridge.
 
 **Exit:** an API-sprint-to-SBE-companion map and evidence-backed native records
 for every identified production change, with no removal recommendation.
+
+**Completed:** see `SBE Recovery Surface Inventory.md`.
 
 ## Slice 0 — Native recovery inventory
 
