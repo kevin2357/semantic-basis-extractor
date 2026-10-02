@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from hashlib import sha256
+from importlib.metadata import PackageNotFoundError, version as distribution_version
 from importlib.resources import files
 import json
 import math
@@ -21,6 +22,7 @@ PROCESSING_PROFILE_CATALOG_SCHEMA = "astrowoof.processing_profile_catalog.v1"
 PROMPT_RELEASE_SCHEMA = "astrowoof.prompt_release.v1"
 PROMPT_RELEASE_CATALOG_SCHEMA = "astrowoof.prompt_release_catalog.v1"
 WORKER_COMPATIBILITY_SCHEMA = "astrowoof.worker_compatibility.v1"
+PROCESSING_PROFILE_BINDING_SCHEMA = "astrowoof.processing_profile_binding.v1"
 PROFILE_CATALOG_RESOURCE = "processing-profile-catalog.v1.json"
 PROMPT_RELEASE_CATALOG_RESOURCE = "prompt-release-catalog.v1.json"
 
@@ -428,6 +430,73 @@ def resolve_installed_processing_profile(profile_id: str) -> dict[str, Any]:
     return profile
 
 
+def resolve_sbe_authoring_binding(
+    *,
+    profile_id: str,
+    profile_sha256: str,
+    generation_manifest_sha256: str,
+    route_family: str,
+    environment: str,
+    installed_version: Callable[[str], str] = distribution_version,
+) -> dict[str, Any]:
+    """Resolve the closed SBE half of an API-approved profile handoff.
+
+    The caller provides references only.  This function loads the installed
+    bundle itself, checks its canonical identity and package requirements, and
+    returns a safe durable binding rather than a profile payload.
+    """
+    _require_identifier(profile_id, label="processing profile ID")
+    _require_digest(profile_sha256, label="processing profile digest")
+    _require_digest(
+        generation_manifest_sha256, label="generation manifest digest",
+    )
+    _require_identifier(route_family, label="processing profile route family")
+    _require_identifier(environment, label="processing profile environment")
+    profile = resolve_installed_processing_profile(profile_id)
+    if profile["profile_sha256"] != profile_sha256:
+        raise ValueError("processing profile digest does not match installed profile")
+    route = profile["route"]
+    if route["family"] != route_family:
+        raise ValueError("processing profile route family mismatch")
+    if route["execution_mode"] != "live":
+        raise ValueError("processing profile execution mode is unsupported")
+    if environment not in profile["allowed_environments"]:
+        raise ValueError("processing profile is not allowed in this environment")
+    release = read_prompt_release(profile["prompt_release"]["release_id"])
+    if environment not in release["allowed_environments"]:
+        raise ValueError("prompt release is not allowed in this environment")
+    descriptor = profile["worker_compatibility"]["sbe_authoring"]
+    for requirement in descriptor["required_distributions"]:
+        try:
+            actual = installed_version(requirement["distribution"])
+        except PackageNotFoundError as exc:
+            raise ValueError("required SBE distribution is not installed") from exc
+        if actual != requirement["version"]:
+            raise ValueError("required SBE distribution version mismatch")
+    return {
+        "schema_version": PROCESSING_PROFILE_BINDING_SCHEMA,
+        "processing_profile_id": profile["profile_id"],
+        "processing_profile_sha256": profile["profile_sha256"],
+        "generation_manifest_sha256": generation_manifest_sha256,
+        "route": {
+            "family": route["family"],
+            "execution_mode": route["execution_mode"],
+            "sbe_contract": route["sbe_contract"],
+        },
+        "selection_policy": profile["selection_policy"],
+        "prompt_release": {
+            "release_id": release["release_id"],
+            "release_version": release["release_version"],
+            "release_sha256": release["release_sha256"],
+        },
+        "worker_compatibility": {
+            "worker_role": descriptor["worker_role"],
+            "compatibility_sha256": descriptor["compatibility_sha256"],
+            "required_distributions": deepcopy(descriptor["required_distributions"]),
+        },
+    }
+
+
 def processing_profile_supports_tuple(
     profile: Mapping[str, Any], *, route_family: str, execution_mode: str,
     selection_policy: str,
@@ -445,11 +514,12 @@ def processing_profile_supports_tuple(
 __all__ = [
     "PROCESSING_PROFILE_SCHEMA", "PROCESSING_PROFILE_CATALOG_SCHEMA",
     "PROMPT_RELEASE_SCHEMA", "PROMPT_RELEASE_CATALOG_SCHEMA",
-    "WORKER_COMPATIBILITY_SCHEMA",
+    "WORKER_COMPATIBILITY_SCHEMA", "PROCESSING_PROFILE_BINDING_SCHEMA",
     "canonical_processing_profile_json", "processing_profile_sha256",
     "prompt_release_sha256", "worker_compatibility_sha256",
     "validate_worker_compatibility", "validate_processing_profile",
     "validate_prompt_release", "read_processing_profile_catalog",
     "read_processing_profile", "read_prompt_release_catalog", "read_prompt_release",
-    "resolve_installed_processing_profile", "processing_profile_supports_tuple",
+    "resolve_installed_processing_profile", "resolve_sbe_authoring_binding",
+    "processing_profile_supports_tuple",
 ]

@@ -14,6 +14,7 @@ from astrowoof_natal_authoring.processing_profiles import (
     read_prompt_release,
     read_prompt_release_catalog,
     resolve_installed_processing_profile,
+    resolve_sbe_authoring_binding,
     validate_processing_profile,
     validate_prompt_release,
     validate_worker_compatibility,
@@ -139,6 +140,37 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             read_processing_profile("astrowoof.bounded_natal.live.future.v1")
         with self.assertRaisesRegex(ValueError, "not installed"):
             read_prompt_release("astrowoof.authoring.future.v1")
+
+    def test_sbe_binding_requires_exact_installed_profile_and_packages(self) -> None:
+        profile = read_processing_profile(PROFILE_ID)
+        versions = {
+            item["distribution"]: item["version"]
+            for item in profile["worker_compatibility"]["sbe_authoring"]["required_distributions"]
+        }
+        binding = resolve_sbe_authoring_binding(
+            profile_id=PROFILE_ID,
+            profile_sha256=profile["profile_sha256"],
+            generation_manifest_sha256="a" * 64,
+            route_family="exact_natal",
+            environment="qa",
+            installed_version=versions.__getitem__,
+        )
+        self.assertEqual(PROFILE_ID, binding["processing_profile_id"])
+        self.assertEqual("sbe_authoring", binding["worker_compatibility"]["worker_role"])
+        self.assertEqual("astrowoof.authoring.compat.v1", binding["prompt_release"]["release_id"])
+
+        with self.assertRaisesRegex(ValueError, "digest"):
+            resolve_sbe_authoring_binding(
+                profile_id=PROFILE_ID, profile_sha256="b" * 64,
+                generation_manifest_sha256="a" * 64, route_family="exact_natal",
+                environment="qa", installed_version=versions.__getitem__,
+            )
+        with self.assertRaisesRegex(ValueError, "version mismatch"):
+            resolve_sbe_authoring_binding(
+                profile_id=PROFILE_ID, profile_sha256=profile["profile_sha256"],
+                generation_manifest_sha256="a" * 64, route_family="exact_natal",
+                environment="qa", installed_version=lambda _name: "0.0.0",
+            )
 
 
 if __name__ == "__main__":

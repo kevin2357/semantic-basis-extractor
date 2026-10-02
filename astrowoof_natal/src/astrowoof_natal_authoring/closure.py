@@ -58,6 +58,10 @@ from .execution_events import (
 )
 from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 from .pass_protocol import bind_logical_pass_request
+from .processing_profiles import (
+    resolve_installed_processing_profile,
+    resolve_sbe_authoring_binding,
+)
 from .initial_wave import (
     INITIAL_WAVE_BINDING_BUNDLE_FILENAME,
     InitialWaveError,
@@ -2295,6 +2299,7 @@ def initial_run_state(
     service_level: str = "interactive",
     input_contract: dict[str, Any] | None = None,
     profile: dict[str, Any] | None = None,
+    processing_profile_binding: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     now = utc_now()
     state = {
@@ -2309,6 +2314,7 @@ def initial_run_state(
         "input_package": normalized_path(input_package),
         "input_contract": input_contract,
         "authoring_profile": profile,
+        "processing_profile_binding": processing_profile_binding,
         "run_dir": normalized_path(run_dir),
         "workspace_contract": {
             "mode": "stable_logical_absolute_path",
@@ -7598,6 +7604,7 @@ def create_run(
     full_chart_basis_format: str = "legacy",
     exact_natal_policy: str = LEGACY_ATOMIC_POLICY_ID,
     profile: dict[str, Any] | None = None,
+    processing_profile_binding: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], Path]:
     if run_dir.exists() and any(run_dir.iterdir()):
         raise FileExistsError(
@@ -7630,12 +7637,17 @@ def create_run(
         service_level=service_level,
         input_contract=input_contract,
         profile=profile,
+        processing_profile_binding=processing_profile_binding,
     )
     state["provenance"] = initial_provenance(
         input_root=input_package.resolve(),
         input_contract=input_contract,
         authoring_profile=profile,
     )
+    if processing_profile_binding is not None:
+        state["provenance"]["processing_profile_binding"] = deepcopy(
+            processing_profile_binding
+        )
     state["prompt_cache"] = prompt_cache_manifest(specs)
     run_json = run_dir / "run.json"
     save_state(run_json, state)
@@ -8018,7 +8030,63 @@ def cleanup_completed_run(run_dir: Path, *, dry_run: bool) -> dict[str, Any]:
     return report
 
 
-def profile_from_args(args: argparse.Namespace) -> dict[str, Any]:
+_PROCESSING_PROFILE_HANDOFF_FIELDS = (
+    "processing_profile_id", "processing_profile_sha256",
+    "generation_manifest_sha256", "processing_profile_route_family",
+)
+
+
+def resolve_processing_profile_args(
+    args: argparse.Namespace,
+    *,
+    environment: str | None = None,
+) -> dict[str, Any] | None:
+    """Resolve an API reference handoff and replace profile-owned CLI knobs.
+
+    All four references are an atomic handoff.  The environment comes only
+    from the deployed worker, never a command-line selector.
+    """
+    supplied = [getattr(args, field, None) is not None for field in _PROCESSING_PROFILE_HANDOFF_FIELDS]
+    if not any(supplied):
+        return None
+    if not all(supplied):
+        raise ValueError("processing profile handoff fields are an exact set")
+    binding = resolve_sbe_authoring_binding(
+        profile_id=args.processing_profile_id,
+        profile_sha256=args.processing_profile_sha256,
+        generation_manifest_sha256=args.generation_manifest_sha256,
+        route_family=args.processing_profile_route_family,
+        environment=environment or os.environ.get("ASTROWOOF_ENVIRONMENT", ""),
+    )
+    profile = resolve_installed_processing_profile(binding["processing_profile_id"])
+    sbe = profile["sbe"]
+    if binding["route"]["sbe_contract"] != SCHEMA_VERSION:
+        raise ValueError("processing profile SBE contract mismatch")
+    for name in (
+        "provider", "provider_service_level", "routing_policy", "model",
+        "reasoning_effort", "retry_model", "retry_reasoning_effort",
+        "split_assignment_policy", "full_chart_basis_format", "max_workers",
+        "max_attempts", "max_output_tokens", "poll_interval_seconds",
+        "response_timeout_seconds", "http_timeout_seconds",
+        "max_transport_retries", "transport_backoff_seconds",
+        "prompt_cache_mode", "prompt_cache_ttl", "polish",
+        "max_polish_attempts", "polish_model", "polish_reasoning_effort",
+        "qualitative_critic", "critic_model", "critic_reasoning_effort",
+        "qualitative_candidate", "qualitative_editor_model",
+        "qualitative_editor_reasoning_effort",
+    ):
+        target = "service_level" if name == "provider_service_level" else name
+        setattr(args, target, sbe[name])
+    args.exact_natal_policy = profile["selection_policy"]
+    args.foreground = not sbe["background"]
+    return binding
+
+
+def profile_from_args(
+    args: argparse.Namespace,
+    *,
+    processing_profile_binding: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Freeze behavior-affecting run options into a versioned profile."""
     return authoring_profile(
         extraction={
@@ -8058,6 +8126,7 @@ def profile_from_args(args: argparse.Namespace) -> dict[str, Any]:
             if args.provider == "openai"
             else None
         ),
+        processing_profile_binding=processing_profile_binding,
     )
 
 
@@ -8118,6 +8187,13 @@ def main() -> None:
     parser.add_argument("--input-package", type=Path)
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--subject")
+    parser.add_argument("--processing-profile-id", dest="processing_profile_id")
+    parser.add_argument("--processing-profile-sha256", dest="processing_profile_sha256")
+    parser.add_argument("--generation-manifest-sha256", dest="generation_manifest_sha256")
+    parser.add_argument(
+        "--processing-profile-route-family",
+        dest="processing_profile_route_family",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument(
         "--provider-reconciliation-cycle",
@@ -8460,6 +8536,10 @@ def main() -> None:
         if args.routing_policy == "cost_optimized"
         else "gpt-5.6-terra"
     )
+    try:
+        processing_profile_binding = resolve_processing_profile_args(args)
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.compare_cost_runs:
         report = compare_cost_runs(*args.compare_cost_runs)
         if args.cost_report_output:
@@ -8767,6 +8847,11 @@ def main() -> None:
             max_attempts=args.max_attempts,
             service_level=args.service_level,
         )
+        existing_binding = state.get("processing_profile_binding")
+        if existing_binding is not None and processing_profile_binding is None:
+            parser.error("profile-bound resume requires the original processing profile handoff")
+        if processing_profile_binding is not None and existing_binding != processing_profile_binding:
+            parser.error("resume processing profile binding does not match the durable run")
     else:
         state, run_json = create_run(
             input_package=args.input_package,
@@ -8780,7 +8865,10 @@ def main() -> None:
             split_assignment_policy=args.split_assignment_policy,
             full_chart_basis_format=args.full_chart_basis_format,
             exact_natal_policy=args.exact_natal_policy,
-            profile=profile_from_args(args),
+            profile=profile_from_args(
+                args, processing_profile_binding=processing_profile_binding,
+            ),
+            processing_profile_binding=processing_profile_binding,
         )
     event_emitter = (
         ExecutionEventEmitter(
