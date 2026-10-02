@@ -8,15 +8,11 @@ reported provider actions, while the final economics receipt was unavailable.
 No provider call, retained-workspace read, R2 access, API state change, or
 runtime export was made for this slice.
 
-The export itself is a sound read-only projection boundary, but it is not a
-self-publishing runtime mechanism. In source, the normal entry points are the
-public `read_provider_economics_export()` function and the explicit
-`provider_economics` CLI. The repository search found this reader used by its
-CLI and provider-free QA/tests, not a hook that automatically invokes it after
-every ordinary SBE lifecycle/action transition. That makes a missing successor
-export plausible, but not yet proven: API-side handoff timing, predecessor
-selection, or a snapshot/read failure could produce the same external
-`sbe_export_unavailable` observation.
+The export itself is a sound read-only projection boundary. Slice 0 corrects
+the initial “perhaps it is never invoked” hypothesis: SBE exposes the public
+`read_provider_economics_export()` function and explicit CLI, while API calls
+that public reader at its own sealed-transition boundaries. The reader is not
+a remote publisher, which remains the right custody division.
 
 ## What the reader guarantees
 
@@ -44,19 +40,38 @@ choose a latest remote record, or persist/publish an export itself. That is
 good custody discipline, but it means the integration must explicitly supply
 the predecessor set and deliver the returned canonical export each time.
 
+## Completed normal-cycle trace
+
+Source inspection establishes this non-mutating call chain:
+
+1. SBE seals a native transition and complete workspace snapshot.
+2. API reads/validates that exact publication and persists its native receipt.
+3. API calls `ProviderEconomicsExportIngestionService.observe()` with that
+   workspace, API run ID, and validated publication.
+4. `observe()` loads accepted tape predecessors, calls the public SBE reader
+   with the exact workspace and canonical UTC time, verifies native run and
+   snapshot equality, and sends returned revisions through immutable ingress.
+5. Initial-wave authority, later external-authority admission, ordinary
+   dispatch/reconciliation, and terminal ingress all invoke this observer.
+
+Orbit therefore reached the reader path after its transition was sealed. The
+event `sbe_export_unavailable` means that `observe()` caught an
+`SbeProviderContractError` while deliberately allowing lifecycle custody to
+continue. It does not reveal which internal phase or exception caused it.
+
 ## Leading hypotheses, kept distinct
 
 The evidence supports three non-exclusive explanations:
 
 | Hypothesis | What Slice 0 establishes | What remains unproven |
 | --- | --- | --- |
-| no normal-cycle invocation | Source exposes an explicit reader/CLI and no automatic lifecycle hook was found | Whether the deployed API already calls it on every relevant cycle. |
-| invocation before final durability | Reader refuses incomplete/malformed snapshots and only projects durable state | Orbit’s exact snapshot and action state at the failed read. |
-| predecessor/handoff mismatch | Successor projection requires caller-provided, validated predecessors | Whether API supplied the correct accepted predecessor revision(s) and consumed the returned result. |
+| reader/projection failure | The reader can reject snapshot/state/action facts with `OSError`, `TypeError`, or `ValueError`, which API wraps | Which local reader/projection predicate rejected Orbit. |
+| sealed-publication join failure | API requires returned native run ID and snapshot digest to equal the exact sealed transition | Whether a returned export disagreed with the publication identity. |
+| predecessor/tape failure | API supplies persisted revisions and validates/persists each returned successor | Whether stale/foreign/malformed predecessor or successor evidence failed. |
 
-Accordingly, do not label this a producer omission yet, and do not “fix” it by
-inventing latest-revision discovery in SBE. That would violate the exact
-handoff/custody lessons from the editorial work.
+Accordingly, do not label this a missing normal-cycle invocation or “fix” it
+by inventing latest-revision discovery in SBE. The present gap is phase/error
+classification inside API's intentionally non-fatal observation wrapper.
 
 ## Recommended integration contract
 
@@ -100,7 +115,8 @@ catalog record.
 
 ## Slice 0 decision
 
-The next slice should trace Orbit’s exact normal-cycle call chain and classify
-the missing final receipt into one row of the table above. It should not change
-the exporter, add an automatic publisher, or use retained-workspace access
-until that call-chain evidence says which boundary actually failed.
+Gate A should approve a provider-free diagnostic/reproduction plan that
+distinguishes reader snapshot/state failure, export validation failure,
+sealed-publication join failure, and immutable-ingress/predecessor failure.
+It should not change the exporter, add an automatic publisher, reconstruct
+receipts from API custody, or use retained-workspace access.

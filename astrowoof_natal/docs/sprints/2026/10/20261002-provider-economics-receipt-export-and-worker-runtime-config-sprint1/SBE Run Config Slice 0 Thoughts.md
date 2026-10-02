@@ -31,18 +31,20 @@ token cap, retry/polish model settings, polling/timeouts, cache policy,
 full-chart basis format, split-assignment policy, and an exact-Natal policy.
 The current defaults are therefore command behavior, not a versioned profile.
 
-The two relevant exact-Natal policy identifiers are:
+The closure parser currently exposes two selection-policy identifiers:
 
 - `legacy_atomic.v1` — the current/default policy.
-- `axis_aware.v1` — explicitly experimental and exact-Natal-only.
+- `axis_aware.v1` — explicitly experimental.
 
-`axis_aware.v1` is not merely a cosmetic flag. It selects the
-`AxisAwareExactNatalPolicy`, whose route is `exact_natal` and whose candidate
-generation and axis strategy differ from the legacy policy. A future profile
-must reject `axis_aware.v1` paired with a bounded route unless and until a
-bounded policy is separately defined and qualified. Silently ignoring that
-mismatch would recreate the sort of cross-layer ambiguity the profiles are
-intended to remove.
+`axis_aware.v1` is not merely a cosmetic flag. The present source implementation
+is named `AxisAwareExactNatalPolicy`, and its current parser wiring therefore
+only proves the exact-route implementation we inspected. That is an
+implementation inventory fact, not a product taxonomy. The intended profile
+model must treat selection policy as orthogonal to both birth-time route
+(`exact`/`bounded`) and service level (`live`/`batch`). Gate A must determine
+which combinations are actually supported by each qualified release and fail
+closed for a combination that is not. It must not make a category such as
+“exact-Natal/axis-aware” appear to be a third route.
 
 Bounded-Natal is also not simply the exact command with a boolean switched.
 SBE has a distinct `bounded_run` CLI and a distinct durable route contract,
@@ -54,6 +56,47 @@ and reconciliation concepts are familiar, but basis construction, portfolio
 selection, artifact compilation, resume behavior, and the durable contract
 are route-specific. The provider lifecycle can be reused conceptually; the
 route materialization cannot be treated as a copy-paste command line.
+
+## Four-role launch inventory
+
+The requested inventory is now complete enough to distinguish real launch
+boundaries from the logical AGF/SPC/SBE/closure stages. It also corrects the
+initial shorthand that all four are independently launched scripts.
+
+| Logical role | Current process boundary and configuration evidence | Profile-relevant inputs / present gap |
+| --- | --- | --- |
+| AGF canonical calculation | The API deterministic worker invokes `astrowoof-deterministic-runtime calculate-canonical --invocation … --result …`; AGF is not launched as a separate API subprocess. | The active generation manifest pins AGF version/wheel, Python 3.11, PySwissEph 2.10.3.2, and `moshier` ephemeris mode. The invocation supplies job/birth evidence. House system and bounded calculation choices need an explicit profile fragment rather than an inferred worker default. |
+| SPC projection | The same deterministic-runtime executable receives `project-all-contexts --canonical-result … --workspace … --result …`; SPC is likewise not a separately launched service command. | The active manifest pins SPC version/wheel, `woofmapped_astrology.v0@0.1.0`, and the four contexts `general`, `handler`, `direct-to-dog`, and `hybrid`. Bounded SPC has its own CLI contract requiring context ID/version and profile ID/version. These become route-specific fragment fields. |
+| SBE workspace initialization and lifecycle | API launches `astrowoof-semantic-closure` directly with input package, subject, run dir, generated spend-policy file, and frozen live arguments. | Current frozen live arguments are `provider=openai`, `service-level=interactive`, `routing-policy=cost_optimized`, `split-assignment-policy=stratified-v1`, `full-chart-basis-format=compact-v2`, `max-workers=6`, `max-attempts=3`, polish enabled/capped at 2, qualitative critic enabled, critic model Luna, critic reasoning medium. The absence of an explicit `--exact-natal-policy` means the parser’s legacy selection default is used today; a compatibility profile must state it explicitly. |
+| Closure/authoring behavior | This is the semantic-closure CLI invoked in the SBE worker, rather than a fourth independently deployed worker. Its parser additionally owns model routing, retry/polish/critic choices, prompt cache, timeouts, transport retry, output cap, qualitative caps, and the authority/event handoff files. | Separate profile-bound behavior from authority inputs (spend grants, reconciliation, external authority request/grant), job evidence (input package/subject/run dir), and secrets (`OPENAI_API_KEY` / endpoint wiring). The prompt-release reference belongs here but its registry is a separate immutable layer. |
+
+The API’s current production generation manifest already persists useful
+compatibility evidence: profile ID, deterministic/SBE compatibility identities,
+AGF and SPC wheel identities, SBE wheel identity, service execution mode,
+projection contexts, and a spend-policy fragment. It does **not** yet provide
+one validated profile digest whose role fragments cover the actual command
+arguments above. In particular, several SBE behavior choices are hard-coded in
+`live_frozen_arguments()` and are not represented as explicit manifest fields.
+
+### Classification of the current surface
+
+| Class | Current members | Profile rule |
+| --- | --- | --- |
+| job evidence | birth-data handoff, input package, subject, workspace/run paths, exact authority documents, checkpoint identity | Derived per job; never selectable profile values. |
+| secret / deployment wiring | OpenAI key environment name/value, base URL, database/R2 credentials, executable locations, worker roots | Remain platform configuration; profile may name a capability but never contain the secret or private endpoint. |
+| operational worker behavior | SBE service level, routing/model policy, concurrency, retries, token cap, cache mode, poll/HTTP limits, polish/critic behavior | Candidate SBE profile fragment, subject to capability and spend-policy validation. |
+| deterministic semantic behavior | AGF ephemeris/house/bounded basis choices, SPC context/profile/version, route contract, SBE split policy/basis format/selection policy | Candidate shared profile fragments; must be pinned before AGF/SPC/SBE consume work. |
+| authority/custody | spend policy, grants, reconciliation, lifecycle/terminal commands, event transports | Not general runtime flags. They retain existing exact handoff contracts and must not become mutable profile choices. |
+
+Thus a profile launcher must not copy every CLI argument into JSON. It selects
+only approved semantic/operational behavior; paths, sealed authority documents,
+and secrets retain their separate boundaries.
+
+Bounded authoring is a distinct `bounded_run` command with its own input
+package/subject/generation-profile inputs, model/reasoning/service-level/token
+settings, and bounded route contract. Its lifecycle concepts can be shared,
+but neither its input semantics nor SPC bounded profile/context requirements
+are evidence that it can consume an exact-run profile fragment unchanged.
 
 ## Recommended profile boundary
 
@@ -102,9 +145,11 @@ rules. Do not let workers fetch a mutable ``latest`` profile at launch.
 ## Initial profile set and proof obligations
 
 The first profile should explicitly encode today’s exact-Natal/live behavior;
-it must be a compatibility profile, not a behavioral redesign. The next two
-profiles can be bounded-Natal/live and exact-Natal/axis-aware. They should be
-separate named profiles even where several settings coincide.
+it must be a compatibility profile, not a behavioral redesign. Future profiles
+select independent values for route, service level, and selection policy. A
+selection-policy experiment must therefore name its compatible exact/bounded
+and live/batch matrix instead of being labeled as a route-like profile. Profiles
+remain separate named immutable objects even where several settings coincide.
 
 Before implementation approval, the next gate should inventory the actual AGF,
 SPC, SBE, and closure command inputs and classify every field as:
@@ -117,11 +162,12 @@ SPC, SBE, and closure command inputs and classify every field as:
 | job evidence | Derived from the user/job and never configurable as a profile. |
 
 Required provider-free tests for a later implementation include: exact legacy
-compatibility; bounded profile admission; axis-aware exact admission; each
-invalid route/policy pairing; unknown or altered digest; role-specific fragment
-mismatch; and resume/reconciliation refusal when the persisted profile is not
-available byte-for-byte. Filename differences should be asserted as derived
-artifact identity, not accepted as an alternative source of route truth.
+compatibility; bounded profile admission; every explicitly supported
+route/service-level/selection-policy combination; each unsupported combination;
+unknown or altered digest; role-specific fragment mismatch; and
+resume/reconciliation refusal when the persisted profile is not available
+byte-for-byte. Filename differences should be asserted as derived artifact
+identity, not accepted as an alternative source of route truth.
 
 ## Slice 0 decision
 

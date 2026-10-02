@@ -39,9 +39,16 @@ per-job overrides.
 - Classify each input as shared, role-specific, secret, environment-specific,
   compatibility-critical, or safely launch-selectable.
 - Specifically trace the parameter set required for a bounded-natal/live
-  profile and for SBE axis-aware processing. Establish whether the bounded
-  profile can reuse the exact-natal pipeline lifecycle/provider path while
-  preserving a distinct semantic identity and artifact naming.
+  profile and for SBE axis-aware processing. Treat route, service level, and
+  selection policy as independent dimensions; inventory the combinations that
+  the current installed implementations actually support rather than encoding
+  `axis_aware` as a route or service-level variant. Establish whether the
+  bounded profile can reuse the exact-natal pipeline lifecycle/provider path
+  while preserving a distinct semantic identity and artifact naming.
+- Record the real launch topology as well as the logical roles: determine
+  whether AGF/SPC are independently launched or are both inputs to the
+  qualified deterministic-runtime executable, and place profile verification
+  at each actual process boundary.
 - Compare a versioned non-secret configuration file plus digest with an
   attested manifest and API-owned record. Require exact-profile startup
   attestation or fail-closed behavior from every participating worker.

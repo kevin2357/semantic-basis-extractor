@@ -2,9 +2,9 @@
 
 ## Status
 
-**Not started — 2026-10-02.** This is a planning-only companion. It authorizes
-no package change, release, provider call, Render mutation, database mutation,
-or paid QA work.
+**Slice 0 discovery complete — 2026-10-02.** This remains a planning-only
+companion. Discovery made no package change, release, provider call, Render
+mutation, database mutation, retained-workspace access, or paid QA work.
 
 ## Why this sprint exists
 

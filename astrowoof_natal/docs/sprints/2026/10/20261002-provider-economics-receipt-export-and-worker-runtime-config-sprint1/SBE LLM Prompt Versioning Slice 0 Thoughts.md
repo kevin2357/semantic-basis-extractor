@@ -27,6 +27,20 @@ so prompt versioning cannot mean hashing one system string and declaring the
 whole request frozen. It must distinguish reusable prompt assets from
 job-specific workspace evidence and from retry feedback.
 
+The production-relevant provider-construction inventory is:
+
+| Route/path | Current selection source | Binding implication |
+| --- | --- | --- |
+| exact ordinary authoring | `closure.py` creates initial and, under cost-optimized routing, retry/polish/critic providers | One release maps every applicable stage; model routing is not prompt provenance. |
+| exact external-authority v2 | The CLI rebuilds a provider from an exact sealed action binding and persisted request material | Resumed/authorized work must use persisted binding, never a current default. |
+| bounded authoring | `bounded_run` creates `OpenAIBoundedLifecycleProvider`, delegating to `OpenAIResponsesProvider` | Bounded releases require explicit route compatibility; they cannot inherit exact assets by implication. |
+| qualification/recovery helpers | Provider-free utilities construct synthetic providers | They validate registry behavior but never define production defaults. |
+
+Current request metadata already records token-free layout information and a
+rendered workspace-prompt SHA-256. That is useful evidence but not reusable
+asset provenance. The release binding should extend, not replace, those request
+digests.
+
 There is useful existing custody behavior: request payloads and the full
 workspace prompt are written to private attempt files
 (`openai-request-payload.private.json` and `openai-workspace-prompt.txt`),
