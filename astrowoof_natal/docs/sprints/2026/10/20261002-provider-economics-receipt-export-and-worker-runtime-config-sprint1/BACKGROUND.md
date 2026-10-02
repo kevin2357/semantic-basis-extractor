@@ -93,6 +93,34 @@ only under explicit compatibility and environment policy. Slice 0 must decide
 precedence, idempotency/replay semantics, rollout/rollback behavior, and
 whether stored work checkpoints bind the selected prompt version immutably.
 
+### Prompt-release correction — static workspace guidance is prompt material
+
+The first installed prompt-release record binds only the short system-message
+asset. That is useful registry groundwork, but it is not a complete authoring
+prompt identity: the authoring agent is also instructed to read `START HERE.md`
+and follows static guidance copied into the generated exact/live workspace.
+Run-specific cards, chart material, and generated assignment text remain
+dynamic input covered by the workspace/generation manifest; the versioned
+prompt release must instead inventory every static instruction asset that the
+worker places or references in that workspace.
+
+Production editorial samples identified a narrow ambiguity rather than a
+contradiction. The exact/live workspace brief says direct-to-dog prose offers
+"perspective and dignity," while separately requiring full-astrology prose to
+explain relevant planets, angles, signs, Doghouses, aspects, geometry, and orb
+strength. Some direct-to-dog/full-astrology cards contain little or no explicit
+astrological terminology. The proposed new release will preserve all existing
+instruction bytes except for a single clarification attached to each copied
+direct-to-dog instruction: audience changes address and tone, never the chosen
+astrology density; a direct-to-dog `full_astro` rendering retains the relevant
+astrological explanation in warm, readable second-person prose.
+
+The existing compatibility profile and its prompt release remain immutable
+fallback evidence. The new axis-aware exact/live profile will bind a new
+editorial prompt release and its own copied, fully digested static instruction
+set. This permits a clean future comparison without silently changing the
+current route.
+
 ## Evidence and linked work
 
 - API Sprint 123, [provider-economics adoption and bounded user retry](https://github.com/kevin2357/astrowoof-api/tree/main/docs/sprints/2026/09/20260929-provider-economics-adoption-and-bounded-user-retry-sprint123), created the validated economics-tape ingress, operational event contract, and capped QA cohort procedure.
@@ -139,3 +167,7 @@ whether stored work checkpoints bind the selected prompt version immutably.
 6. What is the canonical prompt/query-version identifier, where are approved
    prompt assets stored, and how does the CLI selector bind it before provider
    creation without exposing prompt content in routine observability?
+7. Which static exact/live workspace instruction resources are copied or
+   referenced at authoring time, and how can their release-selected byte set be
+   separated from dynamic per-run workspace input without weakening workspace
+   manifest custody?

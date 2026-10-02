@@ -24,23 +24,34 @@ from astrowoof_natal_authoring.processing_profiles import (
 
 
 PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
+AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
 RELEASE_ID = "astrowoof.authoring.compat.v1"
 
 
 class ProcessingProfileSlice1Tests(unittest.TestCase):
-    def test_installed_catalogs_resolve_the_one_compatibility_binding(self) -> None:
+    def test_installed_catalogs_resolve_compatibility_and_axis_aware_bindings(self) -> None:
         profiles = read_processing_profile_catalog()
         releases = read_prompt_release_catalog()
-        self.assertEqual(1, len(profiles["profiles"]))
+        self.assertEqual(
+            [AXIS_AWARE_PROFILE_ID, PROFILE_ID],
+            [profile["profile_id"] for profile in profiles["profiles"]],
+        )
         self.assertEqual(1, len(releases["releases"]))
 
         profile = resolve_installed_processing_profile(PROFILE_ID)
+        axis_aware = resolve_installed_processing_profile(AXIS_AWARE_PROFILE_ID)
         release = read_prompt_release(RELEASE_ID)
         self.assertEqual(PROCESSING_PROFILE_SCHEMA, profile["schema_version"])
         self.assertEqual(PROMPT_RELEASE_SCHEMA, release["schema_version"])
         self.assertEqual(RELEASE_ID, profile["prompt_release"]["release_id"])
         self.assertEqual(release["release_sha256"], profile["prompt_release"]["release_sha256"])
         self.assertEqual("legacy_atomic.v1", profile["selection_policy"])
+        self.assertEqual("axis_aware.v1", axis_aware["selection_policy"])
+        self.assertNotEqual(profile["profile_sha256"], axis_aware["profile_sha256"])
+        self.assertEqual(profile["route"], axis_aware["route"])
+        self.assertEqual(profile["sbe"], axis_aware["sbe"])
+        self.assertEqual(profile["prompt_release"], axis_aware["prompt_release"])
+        self.assertEqual(profile["worker_compatibility"], axis_aware["worker_compatibility"])
         self.assertEqual("live", profile["route"]["execution_mode"])
         self.assertEqual("interactive", profile["sbe"]["provider_service_level"])
 
@@ -69,6 +80,19 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             route_family="exact_natal",
             execution_mode="live",
             selection_policy="axis_aware.v1",
+        ))
+        axis_aware = read_processing_profile(AXIS_AWARE_PROFILE_ID)
+        self.assertTrue(processing_profile_supports_tuple(
+            axis_aware,
+            route_family="exact_natal",
+            execution_mode="live",
+            selection_policy="axis_aware.v1",
+        ))
+        self.assertFalse(processing_profile_supports_tuple(
+            axis_aware,
+            route_family="exact_natal",
+            execution_mode="live",
+            selection_policy="legacy_atomic.v1",
         ))
 
     def test_profile_rejects_injected_secrets_and_changed_identity(self) -> None:
@@ -143,22 +167,33 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             read_prompt_release("astrowoof.authoring.future.v1")
 
     def test_sbe_binding_requires_exact_installed_profile_and_packages(self) -> None:
-        profile = read_processing_profile(PROFILE_ID)
+        profiles = {
+            profile_id: read_processing_profile(profile_id)
+            for profile_id in (PROFILE_ID, AXIS_AWARE_PROFILE_ID)
+        }
+        for profile_id, profile in profiles.items():
+            versions = {
+                item["distribution"]: item["version"]
+                for item in profile["worker_compatibility"]["sbe_authoring"]["required_distributions"]
+            }
+            binding = resolve_sbe_authoring_binding(
+                profile_id=profile_id,
+                profile_sha256=profile["profile_sha256"],
+                generation_manifest_sha256="a" * 64,
+                route_family="exact_natal",
+                environment="qa",
+                installed_version=versions.__getitem__,
+            )
+            self.assertEqual(profile_id, binding["processing_profile_id"])
+            self.assertEqual(profile["selection_policy"], binding["selection_policy"])
+            self.assertEqual("sbe_authoring", binding["worker_compatibility"]["worker_role"])
+            self.assertEqual("astrowoof.authoring.compat.v1", binding["prompt_release"]["release_id"])
+
+        profile = profiles[PROFILE_ID]
         versions = {
             item["distribution"]: item["version"]
             for item in profile["worker_compatibility"]["sbe_authoring"]["required_distributions"]
         }
-        binding = resolve_sbe_authoring_binding(
-            profile_id=PROFILE_ID,
-            profile_sha256=profile["profile_sha256"],
-            generation_manifest_sha256="a" * 64,
-            route_family="exact_natal",
-            environment="qa",
-            installed_version=versions.__getitem__,
-        )
-        self.assertEqual(PROFILE_ID, binding["processing_profile_id"])
-        self.assertEqual("sbe_authoring", binding["worker_compatibility"]["worker_role"])
-        self.assertEqual("astrowoof.authoring.compat.v1", binding["prompt_release"]["release_id"])
 
         with self.assertRaisesRegex(ValueError, "digest"):
             resolve_sbe_authoring_binding(

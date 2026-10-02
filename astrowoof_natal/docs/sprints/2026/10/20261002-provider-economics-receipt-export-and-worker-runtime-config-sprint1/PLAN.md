@@ -241,6 +241,69 @@ This slice is intentionally independent of the completed runtime-config Gate C
 and may be qualified as its own joint API/SBE evidence track after focused
 cross-repository review.
 
+### Follow-on prompt release and profile candidate — exact-Natal/live axis-aware selection
+
+#### Slice P1 — freeze the complete static exact/live authoring-instruction inventory
+
+- Trace the real exact/live authoring workspace builder and enumerate every
+  static packaged instruction asset copied or referenced for an authoring
+  agent, including the system-message asset, workspace briefs, guiding
+  guidance, and any static QA/editing instruction it is directed to read.
+- Explicitly distinguish those release-owned static bytes from dynamic
+  `START HERE.md` assignment material, card/chart evidence, and run-specific
+  workspace data already bound by the generation/workspace manifest.
+- Establish one release-selected resource-set resolver at the exact/live
+  workspace assembly boundary. It must fail closed for an unknown/mismatched
+  release and cannot change legacy workspace recovery or arbitrary resource
+  paths.
+
+#### Slice P2 — create the immutable editorial prompt release
+
+- Create a new editorial prompt-release ID and version with copied exact/live
+  static instruction assets. Preserve every existing asset byte except the
+  direct-to-dog guidance clauses.
+- In each applicable direct-to-dog instruction, add only the clarification
+  that audience affects address and tone, not astrology density: a
+  `direct_to_dog` `full_astro` rendering retains the relevant astrological
+  explanation in warm, readable second-person prose.
+- Digest every component as canonical LF/UTF-8 bytes. The release record must
+  bind its complete component inventory, stage selection, route/environment
+  limits, and allowed profile ID; it may not contain dynamic workspace content,
+  subject data, provider payloads, secrets, or paths.
+- Preserve `astrowoof.authoring.compat.v1` and its original resources exactly
+  as the compatibility fallback. A published release is never edited in place.
+
+#### Slice P3 — bind the new release to the axis-aware SBE profile
+
+- Finalize `astrowoof.exact_natal.live.axisawaresbe.v1` with the new editorial
+  release rather than the compatibility release. It otherwise preserves the
+  exact/live route, deterministic fragment, and worker compatibility
+  descriptors, with `selection_policy: axis_aware.v1` as its SBE behavior
+  delta.
+- Republish the new prompt-release, axis-aware-profile, and profile-catalog
+  digests together. The compat profile stays byte-identical to its released
+  fallback identity; no current profile is silently rewritten.
+- The semantic-closure command boundary derives the axis-aware selection
+  policy from the selected profile and replaces a contradictory caller flag.
+
+#### Slice P4 — provider-free isolation and release-pair qualification
+
+- Prove the compatibility profile still assembles only the original static
+  instruction bytes, while the new profile assembles only the new release's
+  copied bytes; dynamic workspace material must remain outside the release
+  digest but inside existing workspace/manifest custody.
+- Prove the sole semantic content delta is the direct-to-dog audience/density
+  clarification, and that the new profile resolves `axis_aware.v1` before any
+  provider construction. Unknown, mismatched, or cross-release components
+  fail closed.
+- Build and qualify the final installed SBE wheel and matching API/
+  deterministic-runtime deployment pair provider-free. API must separately
+  admit the final profile ID/SHA before a QA job can select it.
+
+**Gate D:** joint review of the exact static asset inventory, editorial text
+diff, immutable release/profile identities, and provider-free old-versus-new
+isolation evidence before any profile activation or paid QA invocation.
+
 ## Required eventual outcomes
 
 - A completed reported action produces an idempotent successor public economics

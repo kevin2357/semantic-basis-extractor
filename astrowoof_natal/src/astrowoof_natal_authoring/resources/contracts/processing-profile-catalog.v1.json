@@ -1,12 +1,107 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "94d98557afe262672fde96b8e2f466f01e6c6f614d4cc0d2564b53d7f836c05e",
+  "catalog_sha256": "ad47e31a6775abd2344d6b289a6102f920b516bbe26ec7921b78767a8cf25ed5",
   "profiles": [
+    {
+      "schema_version": "astrowoof.processing_profile.v1",
+      "profile_id": "astrowoof.exact_natal.live.axisawaresbe.v1",
+      "profile_version": "1.0.0",
+      "profile_sha256": "2f873276f36b59326283c9205cfdae0a6a895a23bcee0b758b2930b333e32988",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route": {
+        "family": "exact_natal",
+        "execution_mode": "live",
+        "sbe_contract": "astrowoof.semantic_closure_run.v0.9"
+      },
+      "selection_policy": "axis_aware.v1",
+      "prompt_release": {
+        "release_id": "astrowoof.authoring.compat.v1",
+        "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b"
+      },
+      "worker_compatibility": {
+        "deterministic_runtime": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "deterministic_runtime",
+          "required_distributions": [
+            {
+              "distribution": "astrology-graph-foundry",
+              "version": "0.8.1"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "df053cefa0e436d784c6b49cc3b74d1fe9b33d0f6c5a18576a408934cafa1fbb"
+        },
+        "sbe_authoring": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "sbe_authoring",
+          "required_distributions": [
+            {
+              "distribution": "astrowoof-natal-authoring",
+              "version": "0.4.66a0"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "f9bafdb2ecd1491efa2ad492f2d687ce2409b0cdaa9aa77cf1f27eb9d9338b80"
+        }
+      },
+      "deterministic_runtime": {
+        "birth_time_mode": "exact",
+        "ephemeris_mode": "moshier",
+        "projection_contexts": [
+          "direct_to_dog",
+          "general",
+          "handler",
+          "hybrid"
+        ],
+        "projection_contract": "woofmapped_astrology.v0@0.1.0"
+      },
+      "sbe": {
+        "provider": "openai",
+        "provider_service_level": "interactive",
+        "routing_policy": "cost_optimized",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "medium",
+        "retry_model": "gpt-5.6-terra",
+        "retry_reasoning_effort": "medium",
+        "split_assignment_policy": "stratified-v1",
+        "full_chart_basis_format": "compact-v2",
+        "max_workers": 6,
+        "max_attempts": 3,
+        "max_output_tokens": 100000,
+        "background": true,
+        "poll_interval_seconds": 2.0,
+        "response_timeout_seconds": 1800.0,
+        "http_timeout_seconds": 60.0,
+        "max_transport_retries": 4,
+        "transport_backoff_seconds": 1.0,
+        "prompt_cache_mode": "explicit",
+        "prompt_cache_ttl": "30m",
+        "polish": true,
+        "max_polish_attempts": 2,
+        "polish_model": "gpt-5.6-luna",
+        "polish_reasoning_effort": "low",
+        "qualitative_critic": true,
+        "critic_model": "gpt-5.6-luna",
+        "critic_reasoning_effort": "medium",
+        "qualitative_candidate": false,
+        "qualitative_editor_model": "gpt-5.6-luna",
+        "qualitative_editor_reasoning_effort": "low"
+      }
+    },
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "daf7cbacca620f578fcba9928e84e042904449176f65cf9808ccd9a1292d2212",
+      "profile_sha256": "975397d3c1bbf67cf92294bccb25aa2686256cfbc6503ed9850fde69b2c3476b",
       "allowed_environments": [
         "production",
         "qa"
@@ -19,7 +114,7 @@
       "selection_policy": "legacy_atomic.v1",
       "prompt_release": {
         "release_id": "astrowoof.authoring.compat.v1",
-        "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c"
+        "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b"
       },
       "worker_compatibility": {
         "deterministic_runtime": {

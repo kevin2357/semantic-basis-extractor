@@ -9,6 +9,7 @@ from astrowoof_natal_authoring.processing_profiles import read_processing_profil
 
 
 PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
+AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
 
 
 class ProcessingProfileRuntimeSlice2Tests(unittest.TestCase):
@@ -58,6 +59,25 @@ class ProcessingProfileRuntimeSlice2Tests(unittest.TestCase):
         self.assertTrue(args.qualitative_critic)
         self.assertFalse(args.qualitative_candidate)
         self.assertFalse(args.foreground)
+
+    def test_axis_aware_profile_replaces_the_cli_policy_at_the_command_boundary(self) -> None:
+        profile = read_processing_profile(AXIS_AWARE_PROFILE_ID)
+        binding = {
+            "schema_version": "astrowoof.processing_profile_binding.v1",
+            "processing_profile_id": AXIS_AWARE_PROFILE_ID,
+            "processing_profile_sha256": profile["profile_sha256"],
+            "generation_manifest_sha256": "b" * 64,
+            "route": profile["route"],
+            "selection_policy": profile["selection_policy"],
+            "prompt_release": {"release_id": "astrowoof.authoring.compat.v1"},
+            "worker_compatibility": {"worker_role": "sbe_authoring"},
+        }
+        args = self._args()
+        args.exact_natal_policy = "legacy_atomic.v1"
+        with patch.object(closure, "resolve_sbe_authoring_binding", return_value=binding):
+            resolved = closure.resolve_processing_profile_args(args, environment="qa")
+        self.assertEqual(binding, resolved)
+        self.assertEqual("axis_aware.v1", args.exact_natal_policy)
 
     def test_partial_handoff_is_refused_before_any_profile_lookup(self) -> None:
         args = self._args()

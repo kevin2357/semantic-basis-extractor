@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.prompt_release_catalog.v1",
-  "catalog_sha256": "623dfa6e4632bc990c3f056ace6a483e69a989aa2f57f0682a12163d7fffa3c8",
+  "catalog_sha256": "b4811bf9a323583d31e9f63f8a34b43549cbe3c8bbd45dc60b00d1ffb393d1dc",
   "releases": [
     {
       "schema_version": "astrowoof.prompt_release.v1",
       "release_id": "astrowoof.authoring.compat.v1",
       "release_version": "1.0.0",
-      "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c",
+      "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b",
       "status": "active",
       "allowed_environments": [
         "production",
@@ -16,6 +16,7 @@
         "exact_natal"
       ],
       "profile_ids": [
+        "astrowoof.exact_natal.live.axisawaresbe.v1",
         "astrowoof.exact_natal.live.compat.v1"
       ],
       "stage_components": {
