@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "ad47e31a6775abd2344d6b289a6102f920b516bbe26ec7921b78767a8cf25ed5",
+  "catalog_sha256": "7a4ac541478ca4cb2982f9bfb8816c41bfac95470ba470664f3157dd446c7394",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.axisawaresbe.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "2f873276f36b59326283c9205cfdae0a6a895a23bcee0b758b2930b333e32988",
+      "profile_sha256": "55914fd51e2c39169e81cc32f8d85b61ba3d97f3610358a7735e935cc5d5854a",
       "allowed_environments": [
         "production",
         "qa"
@@ -18,8 +18,8 @@
       },
       "selection_policy": "axis_aware.v1",
       "prompt_release": {
-        "release_id": "astrowoof.authoring.compat.v1",
-        "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b"
+        "release_id": "astrowoof.authoring.editorial.v2",
+        "release_sha256": "089942e352e92fa2ad2e80ad8a3a705ef7976aa2c64e9001f2b068c84bffa94f"
       },
       "worker_compatibility": {
         "deterministic_runtime": {
@@ -101,7 +101,7 @@
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "975397d3c1bbf67cf92294bccb25aa2686256cfbc6503ed9850fde69b2c3476b",
+      "profile_sha256": "daf7cbacca620f578fcba9928e84e042904449176f65cf9808ccd9a1292d2212",
       "allowed_environments": [
         "production",
         "qa"
@@ -114,7 +114,7 @@
       "selection_policy": "legacy_atomic.v1",
       "prompt_release": {
         "release_id": "astrowoof.authoring.compat.v1",
-        "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b"
+        "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c"
       },
       "worker_compatibility": {
         "deterministic_runtime": {

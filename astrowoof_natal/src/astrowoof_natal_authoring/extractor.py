@@ -39,6 +39,10 @@ from .resource_access import (
     module_source_path,
     read_resource_text,
 )
+from .processing_profiles import (
+    read_processing_profile,
+    resolve_prompt_release_workspace_assets,
+)
 
 
 CONTEXT_FILES = {
@@ -3307,6 +3311,7 @@ def build_story_workspace(
     pass_count: int | None = None,
     assigned_cards: list[dict[str, Any]] | None = None,
     full_chart_basis_format: str = "legacy",
+    processing_profile_id: str | None = None,
 ) -> None:
     if card_start < 1 or card_limit < 0:
         raise ValueError("card_start must be positive and card_limit nonnegative")
@@ -3326,14 +3331,27 @@ def build_story_workspace(
             card_start == 1 and card_limit == len(packet["cards"])
         )
     subject_bundle.mkdir(parents=True, exist_ok=True)
-    copy_resource(
-        "authoring/AstroWoof Story Workspace Authoring Brief.md",
-        subject_bundle / "AUTHORING BRIEF.md",
+    workspace_assets = (
+        resolve_prompt_release_workspace_assets(processing_profile_id)
+        if processing_profile_id is not None
+        else None
     )
-    copy_resource(
-        "authoring/AstroWoof Authoring Guiding Lights.md",
-        subject_bundle / "GUIDING LIGHTS.md",
-    )
+    if workspace_assets is None:
+        copy_resource(
+            "authoring/AstroWoof Story Workspace Authoring Brief.md",
+            subject_bundle / "AUTHORING BRIEF.md",
+        )
+        copy_resource(
+            "authoring/AstroWoof Authoring Guiding Lights.md",
+            subject_bundle / "GUIDING LIGHTS.md",
+        )
+    else:
+        expected_destinations = {"AUTHORING BRIEF.md", "GUIDING LIGHTS.md"}
+        destinations = {destination for destination, _raw in workspace_assets}
+        if destinations != expected_destinations:
+            raise ValueError("prompt release workspace assets are incomplete")
+        for destination, raw in workspace_assets:
+            (subject_bundle / destination).write_bytes(raw)
     write_opaque_authoring_checker(
         subject_bundle / "lint_authoring_pass.py",
         repo_root,
@@ -3671,6 +3689,8 @@ def main() -> None:
             "legacy_atomic.v1 preserves released behavior."
         ),
     )
+    parser.add_argument("--processing-profile-id")
+    parser.add_argument("--processing-profile-sha256")
     parser.add_argument(
         "--handoff-profile",
         choices=("rigorous", "compact", "authoring-workspace"),
@@ -3738,6 +3758,17 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
+    if (args.processing_profile_id is None) != (args.processing_profile_sha256 is None):
+        parser.error("processing profile ID and digest are required together")
+    processing_profile_id: str | None = None
+    if args.processing_profile_id is not None:
+        profile = read_processing_profile(args.processing_profile_id)
+        if profile["profile_sha256"] != args.processing_profile_sha256:
+            parser.error("processing profile digest does not match installed profile")
+        if profile["route"]["family"] != "exact_natal":
+            parser.error("processing profile route family is unsupported")
+        processing_profile_id = profile["profile_id"]
+        args.exact_natal_policy = profile["selection_policy"]
     try:
         policy = resolve_exact_natal_policy(args.exact_natal_policy)
     except ValueError as exc:
@@ -3949,6 +3980,7 @@ def main() -> None:
                             pass_count=6,
                             assigned_cards=assigned_cards,
                             full_chart_basis_format=args.full_chart_basis_format,
+                            processing_profile_id=processing_profile_id,
                         )
                         assignment = (
                             "Stories with canonical priority IDs "
@@ -3989,6 +4021,7 @@ def main() -> None:
                         repo_root,
                         args.workspace_card_limit,
                         full_chart_basis_format=args.full_chart_basis_format,
+                        processing_profile_id=processing_profile_id,
                     )
                     subject_bundles.append(subject_bundle)
             else:

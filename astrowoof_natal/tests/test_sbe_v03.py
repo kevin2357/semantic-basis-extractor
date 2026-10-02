@@ -773,6 +773,7 @@ class TestBrePacket(unittest.TestCase):
                 "Let the previous page leave your desk",
                 story_template,
             )
+
             self.assertIn("plan.memorable_takeaway", story_template)
             self.assertIn("plan.semantic_contributions", story_template)
             self.assertIn("plan.writing_form", story_template)
@@ -1279,6 +1280,28 @@ class TestBrePacket(unittest.TestCase):
             self.assertIn("kevin_1/GUIDING LIGHTS.md", names)
             self.assertIn("kevin_1/lint_authoring_pass.py", names)
             self.assertIn("kevin_1/WORKSPACE MANIFEST.md", names)
+
+
+    def test_axis_aware_profile_selects_only_the_editorial_workspace_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "bre"
+            build_story_workspace(
+                workspace,
+                self.packet,
+                ROOT,
+                2,
+                processing_profile_id="astrowoof.exact_natal.live.axisawaresbe.v1",
+            )
+            brief = (workspace / "AUTHORING BRIEF.md").read_text(encoding="utf-8")
+            lights = (workspace / "GUIDING LIGHTS.md").read_text(encoding="utf-8")
+            self.assertIn(
+                "This changes audience and tone, never astrology density",
+                brief,
+            )
+            self.assertIn(
+                "Audience changes address and tone, never\n  astrology density",
+                lights,
+            )
 
 
 class TestPackageDiscoveryAndRegistry(unittest.TestCase):

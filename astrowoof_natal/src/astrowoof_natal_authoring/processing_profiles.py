@@ -20,6 +20,7 @@ from typing import Any, Callable, Mapping
 PROCESSING_PROFILE_SCHEMA = "astrowoof.processing_profile.v1"
 PROCESSING_PROFILE_CATALOG_SCHEMA = "astrowoof.processing_profile_catalog.v1"
 PROMPT_RELEASE_SCHEMA = "astrowoof.prompt_release.v1"
+PROMPT_RELEASE_WORKSPACE_SCHEMA = "astrowoof.prompt_release.v2"
 PROMPT_RELEASE_CATALOG_SCHEMA = "astrowoof.prompt_release_catalog.v1"
 WORKER_COMPATIBILITY_SCHEMA = "astrowoof.worker_compatibility.v1"
 PROCESSING_PROFILE_BINDING_SCHEMA = "astrowoof.processing_profile_binding.v1"
@@ -41,11 +42,13 @@ _PROMPT_RELEASE_KEYS = {
     "status", "allowed_environments", "route_families", "profile_ids",
     "stage_components", "components",
 }
+_PROMPT_RELEASE_WORKSPACE_KEYS = _PROMPT_RELEASE_KEYS | {"workspace_components"}
 _CATALOG_KEYS = {"schema_version", "catalog_sha256", "profiles"}
 _PROMPT_CATALOG_KEYS = {"schema_version", "catalog_sha256", "releases"}
 _PROFILE_ROUTE_KEYS = {"family", "execution_mode", "sbe_contract"}
 _PROMPT_REFERENCE_KEYS = {"release_id", "release_sha256"}
 _COMPONENT_KEYS = {"component_id", "resource", "sha256"}
+_WORKSPACE_COMPONENT_KEYS = {"component_id", "resource", "destination", "sha256"}
 _WORKER_COMPATIBILITY_KEYS = {
     "schema_version", "worker_role", "required_distributions",
     "compatibility_sha256",
@@ -292,6 +295,33 @@ def _prompt_resource_bytes(resource: str) -> bytes:
     return files("astrowoof_natal_authoring.resources").joinpath(resource).read_bytes()
 
 
+def _validate_prompt_component(
+    component: Any, *, resource_reader: Callable[[str], bytes], workspace: bool,
+) -> tuple[str, str, str | None, bytes]:
+    expected = _WORKSPACE_COMPONENT_KEYS if workspace else _COMPONENT_KEYS
+    if not isinstance(component, dict) or set(component) != expected:
+        raise ValueError("prompt release component is invalid")
+    component_id = _require_identifier(component.get("component_id"), label="prompt component ID")
+    resource = component.get("resource")
+    if (
+        not isinstance(resource, str) or not resource.startswith("authoring/")
+        or ".." in resource.split("/") or not resource.endswith(".md")
+    ):
+        raise ValueError("prompt component resource is invalid")
+    destination: str | None = None
+    if workspace:
+        destination = component.get("destination")
+        if (
+            not isinstance(destination, str) or not destination.endswith(".md")
+            or destination in {".", ".."} or "/" in destination or "\\" in destination
+        ):
+            raise ValueError("prompt workspace destination is invalid")
+    raw = _canonical_prompt_asset(resource_reader(resource))
+    if component.get("sha256") != sha256(raw).hexdigest():
+        raise ValueError("prompt component digest mismatch")
+    return component_id, resource, destination, raw
+
+
 def read_processing_profile_catalog() -> dict[str, Any]:
     value = _parse_json(_resource_bytes(PROFILE_CATALOG_RESOURCE))
     if not isinstance(value, dict) or set(value) != _CATALOG_KEYS:
@@ -336,9 +366,12 @@ def validate_prompt_release(
 ) -> dict[str, Any]:
     """Validate one release and every installed text asset it names."""
     release = deepcopy(dict(value))
-    if set(release) != _PROMPT_RELEASE_KEYS:
+    schema = release.get("schema_version")
+    workspace_schema = schema == PROMPT_RELEASE_WORKSPACE_SCHEMA
+    expected_keys = _PROMPT_RELEASE_WORKSPACE_KEYS if workspace_schema else _PROMPT_RELEASE_KEYS
+    if set(release) != expected_keys:
         raise ValueError("prompt release fields are not exact")
-    if release.get("schema_version") != PROMPT_RELEASE_SCHEMA:
+    if schema not in {PROMPT_RELEASE_SCHEMA, PROMPT_RELEASE_WORKSPACE_SCHEMA}:
         raise ValueError("prompt release schema is unsupported")
     _require_identifier(release.get("release_id"), label="prompt release ID")
     _require_semver(release.get("release_version"), label="prompt release version")
@@ -354,21 +387,12 @@ def validate_prompt_release(
     component_ids: list[str] = []
     seen_resources: set[str] = set()
     for component in components:
-        if not isinstance(component, dict) or set(component) != _COMPONENT_KEYS:
-            raise ValueError("prompt release component is invalid")
-        component_id = _require_identifier(component.get("component_id"), label="prompt component ID")
-        resource = component.get("resource")
-        if (
-            not isinstance(resource, str) or not resource.startswith("authoring/")
-            or ".." in resource.split("/") or not resource.endswith(".md")
-        ):
-            raise ValueError("prompt component resource is invalid")
+        component_id, resource, _destination, _raw = _validate_prompt_component(
+            component, resource_reader=resource_reader, workspace=False,
+        )
         if resource in seen_resources:
             raise ValueError("prompt component resource is duplicated")
         seen_resources.add(resource)
-        raw = _canonical_prompt_asset(resource_reader(resource))
-        if component.get("sha256") != sha256(raw).hexdigest():
-            raise ValueError("prompt component digest mismatch")
         component_ids.append(component_id)
     if component_ids != sorted(component_ids) or len(component_ids) != len(set(component_ids)):
         raise ValueError("prompt release component IDs are not canonical")
@@ -382,6 +406,25 @@ def validate_prompt_release(
             raise ValueError("prompt release stage selection is not canonical")
         if any(item not in component_ids for item in selected):
             raise ValueError("prompt release stage names unknown component")
+    if workspace_schema:
+        workspace_components = release.get("workspace_components")
+        if not isinstance(workspace_components, list) or not workspace_components:
+            raise ValueError("prompt release workspace components are invalid")
+        workspace_ids: list[str] = []
+        workspace_resources: set[str] = set()
+        workspace_destinations: set[str] = set()
+        for component in workspace_components:
+            component_id, resource, destination, _raw = _validate_prompt_component(
+                component, resource_reader=resource_reader, workspace=True,
+            )
+            assert destination is not None
+            if resource in workspace_resources or destination in workspace_destinations:
+                raise ValueError("prompt release workspace components are duplicated")
+            workspace_resources.add(resource)
+            workspace_destinations.add(destination)
+            workspace_ids.append(component_id)
+        if workspace_ids != sorted(workspace_ids) or len(workspace_ids) != len(set(workspace_ids)):
+            raise ValueError("prompt release workspace component IDs are not canonical")
     _require_digest(release.get("release_sha256"), label="prompt release digest")
     if release["release_sha256"] != prompt_release_sha256(release):
         raise ValueError("prompt release digest mismatch")
@@ -531,6 +574,27 @@ def resolve_prompt_release_stage(
     }
 
 
+def resolve_prompt_release_workspace_assets(
+    profile_id: str,
+) -> list[tuple[str, bytes]] | None:
+    """Return release-owned static workspace assets for one installed profile.
+
+    A v1 release predates workspace-asset binding and deliberately returns
+    ``None`` so its legacy workspace route remains byte-compatible. A v2
+    release must carry the complete declared static asset set.
+    """
+    profile = resolve_installed_processing_profile(profile_id)
+    release = read_prompt_release(profile["prompt_release"]["release_id"])
+    if release["schema_version"] == PROMPT_RELEASE_SCHEMA:
+        return None
+    return [
+        (component["destination"], _canonical_prompt_asset(
+            _prompt_resource_bytes(component["resource"]),
+        ))
+        for component in release["workspace_components"]
+    ]
+
+
 def processing_profile_supports_tuple(
     profile: Mapping[str, Any], *, route_family: str, execution_mode: str,
     selection_policy: str,
@@ -547,7 +611,7 @@ def processing_profile_supports_tuple(
 
 __all__ = [
     "PROCESSING_PROFILE_SCHEMA", "PROCESSING_PROFILE_CATALOG_SCHEMA",
-    "PROMPT_RELEASE_SCHEMA", "PROMPT_RELEASE_CATALOG_SCHEMA",
+    "PROMPT_RELEASE_SCHEMA", "PROMPT_RELEASE_WORKSPACE_SCHEMA", "PROMPT_RELEASE_CATALOG_SCHEMA",
     "WORKER_COMPATIBILITY_SCHEMA", "PROCESSING_PROFILE_BINDING_SCHEMA",
     "canonical_processing_profile_json", "processing_profile_sha256",
     "prompt_release_sha256", "worker_compatibility_sha256",
@@ -555,6 +619,6 @@ __all__ = [
     "validate_prompt_release", "read_processing_profile_catalog",
     "read_processing_profile", "read_prompt_release_catalog", "read_prompt_release",
     "resolve_installed_processing_profile", "resolve_sbe_authoring_binding",
-    "resolve_prompt_release_stage",
+    "resolve_prompt_release_stage", "resolve_prompt_release_workspace_assets",
     "processing_profile_supports_tuple",
 ]

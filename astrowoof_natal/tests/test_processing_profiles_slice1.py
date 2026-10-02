@@ -15,6 +15,7 @@ from astrowoof_natal_authoring.processing_profiles import (
     read_prompt_release_catalog,
     resolve_installed_processing_profile,
     resolve_prompt_release_stage,
+    resolve_prompt_release_workspace_assets,
     resolve_sbe_authoring_binding,
     validate_processing_profile,
     validate_prompt_release,
@@ -26,6 +27,7 @@ from astrowoof_natal_authoring.processing_profiles import (
 PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
 AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
 RELEASE_ID = "astrowoof.authoring.compat.v1"
+EDITORIAL_RELEASE_ID = "astrowoof.authoring.editorial.v2"
 
 
 class ProcessingProfileSlice1Tests(unittest.TestCase):
@@ -36,7 +38,10 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             [AXIS_AWARE_PROFILE_ID, PROFILE_ID],
             [profile["profile_id"] for profile in profiles["profiles"]],
         )
-        self.assertEqual(1, len(releases["releases"]))
+        self.assertEqual(
+            [RELEASE_ID, EDITORIAL_RELEASE_ID],
+            [release["release_id"] for release in releases["releases"]],
+        )
 
         profile = resolve_installed_processing_profile(PROFILE_ID)
         axis_aware = resolve_installed_processing_profile(AXIS_AWARE_PROFILE_ID)
@@ -50,7 +55,8 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         self.assertNotEqual(profile["profile_sha256"], axis_aware["profile_sha256"])
         self.assertEqual(profile["route"], axis_aware["route"])
         self.assertEqual(profile["sbe"], axis_aware["sbe"])
-        self.assertEqual(profile["prompt_release"], axis_aware["prompt_release"])
+        self.assertNotEqual(profile["prompt_release"], axis_aware["prompt_release"])
+        self.assertEqual(EDITORIAL_RELEASE_ID, axis_aware["prompt_release"]["release_id"])
         self.assertEqual(profile["worker_compatibility"], axis_aware["worker_compatibility"])
         self.assertEqual("live", profile["route"]["execution_mode"])
         self.assertEqual("interactive", profile["sbe"]["provider_service_level"])
@@ -187,7 +193,12 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             self.assertEqual(profile_id, binding["processing_profile_id"])
             self.assertEqual(profile["selection_policy"], binding["selection_policy"])
             self.assertEqual("sbe_authoring", binding["worker_compatibility"]["worker_role"])
-            self.assertEqual("astrowoof.authoring.compat.v1", binding["prompt_release"]["release_id"])
+            expected_release = (
+                EDITORIAL_RELEASE_ID
+                if profile_id == AXIS_AWARE_PROFILE_ID
+                else RELEASE_ID
+            )
+            self.assertEqual(expected_release, binding["prompt_release"]["release_id"])
 
         profile = profiles[PROFILE_ID]
         versions = {
@@ -223,6 +234,27 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         )
         self.assertEqual("astrowoof.authoring.compat.v1", provenance["release_id"])
         self.assertEqual("initial", provenance["stage"])
+
+    def test_editorial_release_binds_complete_static_workspace_guidance(self) -> None:
+        prompt, provenance = resolve_prompt_release_stage(
+            AXIS_AWARE_PROFILE_ID, stage="initial",
+        )
+        self.assertEqual(
+            resolve_prompt_release_stage(PROFILE_ID, stage="initial")[0], prompt,
+        )
+        self.assertEqual(EDITORIAL_RELEASE_ID, provenance["release_id"])
+        self.assertIsNone(resolve_prompt_release_workspace_assets(PROFILE_ID))
+
+        assets = dict(resolve_prompt_release_workspace_assets(AXIS_AWARE_PROFILE_ID) or [])
+        self.assertEqual({"AUTHORING BRIEF.md", "GUIDING LIGHTS.md"}, set(assets))
+        self.assertIn(
+            b"This changes audience and tone, never astrology density",
+            assets["AUTHORING BRIEF.md"],
+        )
+        self.assertIn(
+            b"Audience changes address and tone, never\n  astrology density",
+            assets["GUIDING LIGHTS.md"],
+        )
 
 
 if __name__ == "__main__":

@@ -2200,6 +2200,7 @@ def run_sbe(
     split_assignment_policy: str = "stratified-v1",
     full_chart_basis_format: str = "legacy",
     exact_natal_policy: str = LEGACY_ATOMIC_POLICY_ID,
+    processing_profile_binding: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     command = [str(python_executable)]
     if sbe_script is None:
@@ -2227,6 +2228,13 @@ def run_sbe(
         exact_natal_policy,
         "--fail-fast",
     ])
+    if processing_profile_binding is not None:
+        command.extend([
+            "--processing-profile-id",
+            processing_profile_binding["processing_profile_id"],
+            "--processing-profile-sha256",
+            processing_profile_binding["processing_profile_sha256"],
+        ])
     if subject:
         command.extend(["--subject", subject])
     logger.info(
@@ -7643,6 +7651,7 @@ def create_run(
         split_assignment_policy=split_assignment_policy,
         full_chart_basis_format=full_chart_basis_format,
         exact_natal_policy=exact_natal_policy,
+        processing_profile_binding=processing_profile_binding,
     )
     specs = discover_passes(sbe_manifest, bundle_dir)
     state = initial_run_state(

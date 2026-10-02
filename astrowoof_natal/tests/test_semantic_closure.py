@@ -97,6 +97,7 @@ from astrowoof_natal_authoring.extractor import (  # noqa: E402
     build_story_workspace,
     render_compact_v2_full_chart_basis,
 )
+from astrowoof_natal_authoring.processing_profiles import read_processing_profile  # noqa: E402
 from astrowoof_natal_authoring.validation import BAD_SECOND_PERSON  # noqa: E402
 from astrowoof_natal_authoring.assembly import parse_fields  # noqa: E402
 from astrowoof_natal_authoring.pass_acceptance import (  # noqa: E402
@@ -1006,6 +1007,44 @@ class TestSemanticClosure(SemanticClosureFixture):
             command = invoked.call_args.args[0]
             index = command.index("--full-chart-basis-format")
             self.assertEqual("compact-v2", command[index + 1])
+
+    def test_run_sbe_threads_the_closed_profile_reference_to_workspace_assembly(self) -> None:
+        profile = read_processing_profile(
+            "astrowoof.exact_natal.live.axisawaresbe.v1",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            (output / "run-manifest.json").write_text(
+                json.dumps({"status": "pass", "subjects": []}),
+                encoding="utf-8",
+            )
+            with patch(
+                "subprocess.run",
+                return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+            ) as invoked:
+                run_sbe(
+                    input_package=root / "input",
+                    subject="bre",
+                    sbe_script=root / "sbe.py",
+                    python_executable=Path(sys.executable),
+                    output_dir=output,
+                    bundle_dir=root / "bundle",
+                    processing_profile_binding={
+                        "processing_profile_id": profile["profile_id"],
+                        "processing_profile_sha256": profile["profile_sha256"],
+                    },
+                )
+            command = invoked.call_args.args[0]
+            self.assertEqual(
+                profile["profile_id"],
+                command[command.index("--processing-profile-id") + 1],
+            )
+            self.assertEqual(
+                profile["profile_sha256"],
+                command[command.index("--processing-profile-sha256") + 1],
+            )
 
     def test_summary_gold_and_thesis_plan_are_pass_specific_assignment_inputs(
         self,

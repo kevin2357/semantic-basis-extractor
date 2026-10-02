@@ -245,6 +245,8 @@ cross-repository review.
 
 #### Slice P1 — freeze the complete static exact/live authoring-instruction inventory
 
+**Completed provider-free on 2026-10-02.**
+
 - Trace the real exact/live authoring workspace builder and enumerate every
   static packaged instruction asset copied or referenced for an authoring
   agent, including the system-message asset, workspace briefs, guiding
@@ -258,6 +260,8 @@ cross-repository review.
   paths.
 
 #### Slice P2 — create the immutable editorial prompt release
+
+**Completed provider-free on 2026-10-02.**
 
 - Create a new editorial prompt-release ID and version with copied exact/live
   static instruction assets. Preserve every existing asset byte except the
@@ -275,6 +279,8 @@ cross-repository review.
 
 #### Slice P3 — bind the new release to the axis-aware SBE profile
 
+**Completed provider-free on 2026-10-02.**
+
 - Finalize `astrowoof.exact_natal.live.axisawaresbe.v1` with the new editorial
   release rather than the compatibility release. It otherwise preserves the
   exact/live route, deterministic fragment, and worker compatibility
@@ -287,6 +293,9 @@ cross-repository review.
   policy from the selected profile and replaces a contradictory caller flag.
 
 #### Slice P4 — provider-free isolation and release-pair qualification
+
+**SBE source/wheel cells completed provider-free on 2026-10-02; joint API and
+deterministic-runtime release-pair cells remain Gate D work.**
 
 - Prove the compatibility profile still assembles only the original static
   instruction bytes, while the new profile assembles only the new release's

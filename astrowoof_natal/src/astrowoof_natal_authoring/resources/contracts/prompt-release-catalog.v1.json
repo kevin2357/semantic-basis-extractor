@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.prompt_release_catalog.v1",
-  "catalog_sha256": "b4811bf9a323583d31e9f63f8a34b43549cbe3c8bbd45dc60b00d1ffb393d1dc",
+  "catalog_sha256": "e48a2b1c474d31cb82295cefa40b2b32f338f29b3a1241eb2f6f941c828cf4cc",
   "releases": [
     {
       "schema_version": "astrowoof.prompt_release.v1",
       "release_id": "astrowoof.authoring.compat.v1",
       "release_version": "1.0.0",
-      "release_sha256": "2e16b4361d9794385ce63017618ba031cb3165eec14669bfdf611ed8ffc3583b",
+      "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c",
       "status": "active",
       "allowed_environments": [
         "production",
@@ -16,7 +16,6 @@
         "exact_natal"
       ],
       "profile_ids": [
-        "astrowoof.exact_natal.live.axisawaresbe.v1",
         "astrowoof.exact_natal.live.compat.v1"
       ],
       "stage_components": {
@@ -40,6 +39,58 @@
           "sha256": "2ec0738497756b09887e921273371b4f99108378b9197ce9b065beeacd453a71"
         }
       ]
+    },
+    {
+      "schema_version": "astrowoof.prompt_release.v2",
+      "release_id": "astrowoof.authoring.editorial.v2",
+      "release_version": "2.0.0",
+      "status": "active",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route_families": [
+        "exact_natal"
+      ],
+      "profile_ids": [
+        "astrowoof.exact_natal.live.axisawaresbe.v1"
+      ],
+      "stage_components": {
+        "initial": [
+          "system_authoring"
+        ],
+        "retry": [
+          "system_authoring"
+        ],
+        "polish": [
+          "system_authoring"
+        ],
+        "critic": [
+          "system_authoring"
+        ]
+      },
+      "components": [
+        {
+          "component_id": "system_authoring",
+          "resource": "authoring/prompt-system-authoring.editorial.v2.md",
+          "sha256": "2ec0738497756b09887e921273371b4f99108378b9197ce9b065beeacd453a71"
+        }
+      ],
+      "workspace_components": [
+        {
+          "component_id": "authoring_brief",
+          "resource": "authoring/AstroWoof Story Workspace Authoring Brief.editorial.v2.md",
+          "destination": "AUTHORING BRIEF.md",
+          "sha256": "8097cc2639212f82a0ff2b916baacd3d4f7bdaeca3cce22c0ada4d10db659bbc"
+        },
+        {
+          "component_id": "guiding_lights",
+          "resource": "authoring/AstroWoof Authoring Guiding Lights.editorial.v2.md",
+          "destination": "GUIDING LIGHTS.md",
+          "sha256": "ac1625fed0e6791b7c39c79610e104ba9a99ea720f4ecbe5cba55a8a070e7d08"
+        }
+      ],
+      "release_sha256": "089942e352e92fa2ad2e80ad8a3a705ef7976aa2c64e9001f2b068c84bffa94f"
     }
   ]
 }
