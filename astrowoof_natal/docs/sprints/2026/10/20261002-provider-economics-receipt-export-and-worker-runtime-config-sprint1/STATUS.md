@@ -22,9 +22,12 @@ fenced the returned attestation at canonical-result ingress. No image or wheel
 was pushed, tagged, published, deployed, or activated, and no provider-backed
 work was performed.
 
-The remaining work is independent Economics Slice E1. It is joint: SBE must
-expose a bounded public export-reader phase/reason classification, while API
-must keep `sbe_export_unavailable` nonfatal and emit only that safe
-classification. The evidence must prove exact and bounded classified failures
-have no lifecycle or economics-custody side effect. It does not reopen the
-runtime-config Gate C or create an SBE release obligation by itself.
+Economics Slice E1 is now at its joined consumer gate. SBE's added exact and
+bounded terminal-snapshot regression proves the public reader returns one
+valid final successor and then an explicit zero-revision replay when supplied
+that accepted predecessor. SBE does not emit a new diagnostic envelope: API
+correctly owns its safe phase labels because sealed-publication and immutable
+ingress failures occur on the API side. The remaining combined cell must feed
+the actual SBE-produced successor through immutable API ingress and verify the
+subsequent replay is idempotent. This does not reopen runtime-config Gate C or
+create an SBE release obligation by itself.

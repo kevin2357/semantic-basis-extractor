@@ -220,17 +220,21 @@ reciprocal API Gate C review.
 
 - Preserve `sbe_export_unavailable` as nonfatal and avoid promoting telemetry
   into a financial source of truth.
-- SBE owns a bounded public reader classification for its unavailable paths:
-  allowlisted phase/reason tokens only, with no exception prose, paths,
-  workspace contents, request data, or provider payloads. It must cover the
-  reader/snapshot, route/projection, predecessor/revision-validation, and
-  export-validation boundaries without manufacturing an export or successor.
-- API owns preservation of the existing nonfatal disposition, safe translation
-  of that public classification into the operational event, and proof that
-  unavailable has no lifecycle or economics-custody side effect.
+- SBE owns the strict local producer proof: a sealed final exact/bounded
+  snapshot yields one validated successor export; resubmitting that exact
+  accepted successor as the only predecessor yields an explicit zero-revision
+  replay. It must never discover remote state, publish remotely, or invent a
+  second receipt.
+- API owns the bounded safe phase labels and the nonfatal operational event.
+  This is the correct location because sealed-publication mismatch and
+  immutable predecessor/ingress failure are API-only boundaries, while SBE's
+  public reader intentionally exposes no exception prose, paths, workspace
+  contents, request data, or provider payloads.
 - Joint provider-free exact and bounded fixtures must exercise each classified
   failure phase and prove that the same safe classification reaches API's
-  emitted operational event. Neither side may infer a diagnosis from exception
+  emitted operational event. The final consumer cell must pass the actual
+  SBE-produced successor into immutable API ingress, then prove the exact
+  replay is idempotent. Neither side may infer a diagnosis from exception
   prose or fall back to generic latest-state discovery.
 
 This slice is intentionally independent of the completed runtime-config Gate C
