@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "3c90d1a570ada01caefec7f830bc5c17bf3995fa96365953b7ec8aaff4f7c74c",
+  "catalog_sha256": "94d98557afe262672fde96b8e2f466f01e6c6f614d4cc0d2564b53d7f836c05e",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a",
+      "profile_sha256": "daf7cbacca620f578fcba9928e84e042904449176f65cf9808ccd9a1292d2212",
       "allowed_environments": [
         "production",
         "qa"
@@ -43,14 +43,14 @@
           "required_distributions": [
             {
               "distribution": "astrowoof-natal-authoring",
-              "version": "0.4.66"
+              "version": "0.4.66a0"
             },
             {
               "distribution": "semantic-projection-core",
               "version": "0.11.1"
             }
           ],
-          "compatibility_sha256": "ed51592f2d32ec803054ec0353c7ac5dfac336475c43c6992404a9449559e581"
+          "compatibility_sha256": "f9bafdb2ecd1491efa2ad492f2d687ce2409b0cdaa9aa77cf1f27eb9d9338b80"
         }
       },
       "deterministic_runtime": {

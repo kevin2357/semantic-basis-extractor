@@ -17,5 +17,7 @@ descriptors. Slice 2 adds the first actual semantic-closure consumer: an
 all-or-none API reference handoff, installed profile/package validation,
 profile-owned CLI settings, and durable binding for creation and resume. The
 next SBE concern was executable prompt-release selection and safe action-level
-provenance; that compatibility-path work is now complete. The joint
-installed-wheel replay remains Gate C.
+provenance; that compatibility-path work is now complete. A non-release
+`0.4.66a0` candidate is now being built for the joint installed-wheel replay;
+its friendly label is `0.4.66-α`. The replay remains Gate C and does not
+authorize publication or deployment.

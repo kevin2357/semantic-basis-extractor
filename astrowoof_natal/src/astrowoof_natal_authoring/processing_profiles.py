@@ -28,7 +28,9 @@ PROMPT_RELEASE_CATALOG_RESOURCE = "prompt-release-catalog.v1.json"
 
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _IDENTIFIER = re.compile(r"^[a-z][a-z0-9._-]*$")
-_SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+# Package descriptors use the closed subset needed for release candidates:
+# a final PEP 440 three-part release or its explicit alpha sequence.
+_SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:a[0-9]+)?$")
 _PROFILE_KEYS = {
     "schema_version", "profile_id", "profile_version", "profile_sha256",
     "allowed_environments", "route", "selection_policy", "prompt_release",
