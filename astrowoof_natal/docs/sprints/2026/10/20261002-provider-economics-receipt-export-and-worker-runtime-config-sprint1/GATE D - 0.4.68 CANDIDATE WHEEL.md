@@ -61,6 +61,18 @@ wheel installed outside the checkout, resolved from that installation, exposed
 the expected safe binding, and contained all required assets with no generated
 or cache members.
 
+## Broad-suite qualification note
+
+The one manifest-driven broad suite was run once for this candidate. Its first
+pass exposed a local Windows checkout issue, not a package or test defect: the
+versioned `provider-economics/mutation-corpus.v1.json` fixture had materialized
+with CRLF bytes even though Git stores its required LF bytes. The existing
+mutation-corpus digest assertion correctly refused that drift. Restoring the
+single checked-out fixture to its committed LF bytes made the targeted test
+pass without changing the test or fixture. This is recorded as a local
+checkout-normalization snafu; final release builds remain archive-based and
+therefore consume the committed canonical LF bytes.
+
 ## Remaining Gate D work
 
 API must admit the exact axis profile and its worker-release/pool identity,
