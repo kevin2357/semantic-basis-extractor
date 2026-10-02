@@ -1,23 +1,30 @@
 # Status
 
-**SBE Slices 2–3 implemented provider-free; joint Gate C is next — 2026-10-02.**
+**Runtime-config Gate C is complete provider-free; joint Economics Slice E1 is
+the remaining sprint work — 2026-10-02.**
 
 The three investigative findings are recorded in the Slice 0 thoughts files:
 runtime processing profiles (including the completed real launch/flag
 inventory), LLM prompt-release binding, and Orbit economics successor-revision
-export. The plan now correctly treats selection policy as independent of route
-and service level. API's Gate A review approved the profile/prompt contract
-direction. Slice 1 now supplies closed package-installed catalogs for the
-first exact-Natal/live/legacy compatibility binding and its matching prompt
-release, with provider-free byte/digest and negative-path coverage. The
-catalog is not yet read by a worker command and no workspace, provider,
-release, environment, retained-workspace, or QA mutation occurred. Gate B is
-now approved with the republished profile digest and closed package
-descriptors. Slice 2 adds the first actual semantic-closure consumer: an
-all-or-none API reference handoff, installed profile/package validation,
-profile-owned CLI settings, and durable binding for creation and resume. The
-next SBE concern was executable prompt-release selection and safe action-level
-provenance; that compatibility-path work is now complete. A non-release
-`0.4.66a0` candidate is now being built for the joint installed-wheel replay;
-its friendly label is `0.4.66-α`. The replay remains Gate C and does not
-authorize publication or deployment.
+export. The plan correctly treats selection policy as independent of route and
+service level. Slices 1–3 provide the closed installed profile/prompt catalogs,
+two role-specific package descriptors, exact four-reference SBE CLI handoff,
+durable creation/resume binding, profile-owned settings, and compatibility
+prompt provenance.
+
+Gate C's runtime-config evidence is complete. The exact retained
+`0.4.66a0` (`0.4.66-α`) SBE wheel passed API's isolated installed resolver and
+real semantic-closure CLI creation/resume replay. A separately built,
+local-only deterministic alpha image installed and qualified that exact same
+profile package; its real CLI returned the expected attestation, and malformed
+profile/deployment identities refused before AGF work. API independently
+fenced the returned attestation at canonical-result ingress. No image or wheel
+was pushed, tagged, published, deployed, or activated, and no provider-backed
+work was performed.
+
+The remaining work is independent Economics Slice E1. It is joint: SBE must
+expose a bounded public export-reader phase/reason classification, while API
+must keep `sbe_export_unavailable` nonfatal and emit only that safe
+classification. The evidence must prove exact and bounded classified failures
+have no lifecycle or economics-custody side effect. It does not reopen the
+runtime-config Gate C or create an SBE release obligation by itself.

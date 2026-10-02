@@ -79,7 +79,7 @@ explicitly implemented, tested, and admitted independently.
 
 ### Slice 1 — Freeze the canonical processing-profile and prompt-release contracts
 
-**Implemented provider-free on 2026-10-02; Gate B remediation 1β remains.**
+**Implemented provider-free on 2026-10-02; Gate B closed through Slice 1β.**
 
 - Add the versioned, non-secret `processing_profile.v1` contract and its
   canonical serialization rules. A profile has one immutable profile ID and
@@ -187,6 +187,8 @@ two field names. Only then may Slice 2 wire the binding into a worker command.
 
 ### Slice 4 — Cross-process profile binding and installed-wheel qualification
 
+**Completed provider-free on 2026-10-02.**
+
 - Coordinate the API/deterministic-runtime half of the contract: admission
   selects an approved profile, writes the immutable binding to the existing
   generation manifest, and passes only the ID/digest and applicable role data
@@ -204,23 +206,36 @@ two field names. Only then may Slice 2 wire the binding into a worker command.
   artifact-naming review, and provider-free qualification; this slice does not
   infer support from the exact/live compatibility proof.
 
-**Gate C:** joint API/SBE review of the installed-wheel provider-free replay and
-the immutable compatibility-profile evidence. Only after that gate may a new
-profile be proposed for deployment or provider-backed QA.
+**Gate C runtime-config disposition:** satisfied on 2026-10-02. API and SBE
+jointly qualified the exact retained `0.4.66a0` SBE alpha wheel, its real
+semantic-closure CLI create/resume boundary, and a separate local-only
+deterministic image that carries the same installed SBE profile bundle. Exact
+handoffs and returned attestations passed; altered/missing profile references
+and deployment identities refused before provider or AGF work. The alpha is
+qualification evidence only, not an activated profile, publishable package, or
+deployment input. See `GATE C - 0.4.66-alpha CANDIDATE IDENTITY.md` and the
+reciprocal API Gate C review.
 
-### Parallel Slice E1 — Economics diagnostic classification (separate release concern)
+### Parallel Slice E1 — Economics diagnostic classification (joint, separate release concern)
 
 - Preserve `sbe_export_unavailable` as nonfatal and avoid promoting telemetry
   into a financial source of truth.
-- Add a bounded allowlisted phase/reason classification for the export reader's
-  unavailable path, without exception prose or private workspace data, so API
-  can distinguish validation/export phases during diagnosis.
-- Exercise exact and bounded fixtures for each classified failure phase and
-  assert that unavailable remains nonfatal while safe classification reaches the
-  emitted operational event.
+- SBE owns a bounded public reader classification for its unavailable paths:
+  allowlisted phase/reason tokens only, with no exception prose, paths,
+  workspace contents, request data, or provider payloads. It must cover the
+  reader/snapshot, route/projection, predecessor/revision-validation, and
+  export-validation boundaries without manufacturing an export or successor.
+- API owns preservation of the existing nonfatal disposition, safe translation
+  of that public classification into the operational event, and proof that
+  unavailable has no lifecycle or economics-custody side effect.
+- Joint provider-free exact and bounded fixtures must exercise each classified
+  failure phase and prove that the same safe classification reaches API's
+  emitted operational event. Neither side may infer a diagnosis from exception
+  prose or fall back to generic latest-state discovery.
 
-This slice is intentionally independent of the processing-profile release
-sequence and may be qualified on its own after its focused API review.
+This slice is intentionally independent of the completed runtime-config Gate C
+and may be qualified as its own joint API/SBE evidence track after focused
+cross-repository review.
 
 ## Required eventual outcomes
 
