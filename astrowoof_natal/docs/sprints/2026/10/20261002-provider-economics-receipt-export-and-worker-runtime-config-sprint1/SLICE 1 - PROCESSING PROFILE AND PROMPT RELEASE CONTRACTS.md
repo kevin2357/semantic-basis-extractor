@@ -91,3 +91,17 @@ manifest value.
 
 If approved, Slice 2 may wire only the persisted expected ID/digest into the
 semantic-closure command boundary and establish its safe durable attestation.
+
+## Gate B reciprocal-review disposition
+
+API approved the contract direction and the initial profile/prompt vocabulary,
+but correctly identified one missing field group: the canonical profile does
+not yet own the deterministic-runtime and SBE-authoring qualified
+compatibility identities that API must persist and later fence. The initial
+profile digest in this document is therefore pre-remediation evidence, not the
+final joint admission digest.
+
+Slice 1β will add those two closed fields using the real currently qualified
+identity values, recompute the catalog/profile digests, and return the precise
+replacement identity to API for Gate B closure. No worker command may consume
+the profile until that reciprocal confirmation is recorded.

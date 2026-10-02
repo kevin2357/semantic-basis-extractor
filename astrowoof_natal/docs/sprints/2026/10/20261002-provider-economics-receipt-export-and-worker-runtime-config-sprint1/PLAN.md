@@ -79,7 +79,7 @@ explicitly implemented, tested, and admitted independently.
 
 ### Slice 1 — Freeze the canonical processing-profile and prompt-release contracts
 
-**Completed provider-free on 2026-10-02; Gate B review is next.**
+**Implemented provider-free on 2026-10-02; Gate B remediation 1β remains.**
 
 - Add the versioned, non-secret `processing_profile.v1` contract and its
   canonical serialization rules. A profile has one immutable profile ID and
@@ -113,6 +113,27 @@ explicitly implemented, tested, and admitted independently.
 **Gate B:** API reviews the exact profile/prompt schema, the compatibility
 profile identity, and the proposed generation-manifest/handoff extension before
 any runtime consumer starts using it.
+
+### Slice 1β — freeze qualified worker compatibility identities
+
+- Extend the closed canonical profile with one exact compatibility-identity
+  field for each actual launch boundary: `deterministic_runtime` and
+  `sbe_authoring`. The values must be derived from the currently qualified
+  installed runtime/package identities, not invented labels or API deployment
+  settings.
+- Freeze the closed worker-role vocabulary as `deterministic_runtime` and
+  `sbe_authoring`. API handoff envelopes may carry one of those tokens only;
+  later consumers must verify the role against the corresponding profile-owned
+  compatibility identity.
+- Recompute the profile and catalog identities after the fields are added,
+  update prompt/profile cross-reference evidence if needed, and preserve the
+  existing exact/live/legacy tuple as the only installed capability.
+- Provider-free coverage: each profile contains both identities; an injected,
+  missing, or mismatched identity fails closed; and the profile digest changes
+  exactly when either compatibility identity changes.
+
+**Gate B closure:** API reviews the republished initial profile digest and its
+two field names. Only then may Slice 2 wire the binding into a worker command.
 
 ### Slice 2 — Resolve and attest the SBE profile before semantic closure
 
