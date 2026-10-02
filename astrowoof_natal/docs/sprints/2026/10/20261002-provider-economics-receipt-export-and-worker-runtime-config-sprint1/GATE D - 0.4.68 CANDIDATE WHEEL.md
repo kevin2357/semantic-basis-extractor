@@ -8,15 +8,21 @@ deployed, or admitted by API.
 | Field | Value |
 | --- | --- |
 | Artifact-source commit | `0f6979fba6674785bf188d5c1d7561e127205a73` |
+| Release-lock/tag commit | `ed4b8643` |
 | Distribution version | `0.4.68` |
-| `SOURCE_DATE_EPOCH` | `1790980395` |
+| `SOURCE_DATE_EPOCH` | `1790984940` |
 | Filename | `astrowoof_natal_authoring-0.4.68-py3-none-any.whl` |
-| Retained wheel | `C:\tmp\sbe-0.4.68-gate-d-0f6979fb\wheel-a\astrowoof_natal_authoring-0.4.68-py3-none-any.whl` |
-| SHA-256 | `9840101a108382666bbf58ebda089c6e8c26752420d5f8c5689111319aa1b9f1` |
+| Retained wheel | `C:\tmp\sbe-0.4.68-release-lock-ed4b8643\wheel-a\astrowoof_natal_authoring-0.4.68-py3-none-any.whl` |
+| SHA-256 | `d9636e5eadc302681040f2a732a3755f2db689e66bc18e3cfac8ea27b4c2b215` |
 | Byte size | `1,429,258` |
 
 Two clean archive builds were byte-identical. The second retained copy is in
 the sibling `wheel-b` directory.
+
+The exact retained wheel was installed into an isolated environment outside the
+checkout. It resolved from `site-packages` as version `0.4.68`; `pip check`
+passed after installing the declared transitive `jsonschema` requirement of
+SPC `0.11.1`; and `astrowoof-release-smoke --require-installed` passed.
 
 ## Final candidate contract identities
 
