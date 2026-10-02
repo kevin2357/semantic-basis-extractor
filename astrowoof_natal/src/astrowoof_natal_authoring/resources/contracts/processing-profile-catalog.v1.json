@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "560f91f3e7a1ae1b1c7b08c7d1f727c723309d0041f3b9d36ded192e5c41e6a3",
+  "catalog_sha256": "d5306dd374e123b6b8339581520a50ea64a0b317dcc18719e4329d5a09cb33e5",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.axisawaresbe.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "d75a2a6e122a17440ecbb2e3894a6ce45dd7dbe807dfb3c7d7a802603258dd72",
+      "profile_sha256": "da9f8dbd50421e0b556ee71cdd0b2ca54baebbc91ef2eb7f1137fa836488ff63",
       "allowed_environments": [
         "production",
         "qa"
@@ -43,14 +43,14 @@
           "required_distributions": [
             {
               "distribution": "astrowoof-natal-authoring",
-              "version": "0.4.67"
+              "version": "0.4.68"
             },
             {
               "distribution": "semantic-projection-core",
               "version": "0.11.1"
             }
           ],
-          "compatibility_sha256": "fdff9eca02c85ca6c9ae7787b10febe53b3ce4e0b088e5964d3c62e4508eaca7"
+          "compatibility_sha256": "e856d876e2d1ff6c234ca9624cd367602d1363519be7e0102c39b67b1ce64585"
         }
       },
       "deterministic_runtime": {
@@ -101,7 +101,7 @@
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "5fe18f925770c8b967a9b32b4ca749bc31363c806b0a186b042387ed37882d0e",
+      "profile_sha256": "28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a",
       "allowed_environments": [
         "production",
         "qa"
@@ -138,14 +138,14 @@
           "required_distributions": [
             {
               "distribution": "astrowoof-natal-authoring",
-              "version": "0.4.67"
+              "version": "0.4.66"
             },
             {
               "distribution": "semantic-projection-core",
               "version": "0.11.1"
             }
           ],
-          "compatibility_sha256": "fdff9eca02c85ca6c9ae7787b10febe53b3ce4e0b088e5964d3c62e4508eaca7"
+          "compatibility_sha256": "ed51592f2d32ec803054ec0353c7ac5dfac336475c43c6992404a9449559e581"
         }
       },
       "deterministic_runtime": {

@@ -533,6 +533,16 @@ def resolve_sbe_authoring_binding(
             "release_id": release["release_id"],
             "release_version": release["release_version"],
             "release_sha256": release["release_sha256"],
+            "workspace_components": [
+                {
+                    "logical_name": component["destination"],
+                    "sha256": component["sha256"],
+                }
+                for component in sorted(
+                    release.get("workspace_components", []),
+                    key=lambda component: component["destination"],
+                )
+            ],
         },
         "worker_compatibility": {
             "worker_role": descriptor["worker_role"],

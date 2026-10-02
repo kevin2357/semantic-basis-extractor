@@ -57,7 +57,14 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         self.assertEqual(profile["sbe"], axis_aware["sbe"])
         self.assertNotEqual(profile["prompt_release"], axis_aware["prompt_release"])
         self.assertEqual(EDITORIAL_RELEASE_ID, axis_aware["prompt_release"]["release_id"])
-        self.assertEqual(profile["worker_compatibility"], axis_aware["worker_compatibility"])
+        self.assertEqual(
+            profile["worker_compatibility"]["deterministic_runtime"],
+            axis_aware["worker_compatibility"]["deterministic_runtime"],
+        )
+        self.assertNotEqual(
+            profile["worker_compatibility"]["sbe_authoring"],
+            axis_aware["worker_compatibility"]["sbe_authoring"],
+        )
         self.assertEqual("live", profile["route"]["execution_mode"])
         self.assertEqual("interactive", profile["sbe"]["provider_service_level"])
 
@@ -199,6 +206,23 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
                 else RELEASE_ID
             )
             self.assertEqual(expected_release, binding["prompt_release"]["release_id"])
+            expected_inventory = (
+                [
+                    {
+                        "logical_name": "AUTHORING BRIEF.md",
+                        "sha256": "8097cc2639212f82a0ff2b916baacd3d4f7bdaeca3cce22c0ada4d10db659bbc",
+                    },
+                    {
+                        "logical_name": "GUIDING LIGHTS.md",
+                        "sha256": "ac1625fed0e6791b7c39c79610e104ba9a99ea720f4ecbe5cba55a8a070e7d08",
+                    },
+                ]
+                if profile_id == AXIS_AWARE_PROFILE_ID else []
+            )
+            self.assertEqual(
+                expected_inventory,
+                binding["prompt_release"]["workspace_components"],
+            )
 
         profile = profiles[PROFILE_ID]
         versions = {
@@ -217,6 +241,27 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
                 profile_id=PROFILE_ID, profile_sha256=profile["profile_sha256"],
                 generation_manifest_sha256="a" * 64, route_family="exact_natal",
                 environment="qa", installed_version=lambda _name: "0.0.0",
+            )
+
+    def test_historical_compatibility_profile_is_preserved_and_refuses_current_worker(self) -> None:
+        profile = read_processing_profile(PROFILE_ID)
+        self.assertEqual(
+            "28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a",
+            profile["profile_sha256"],
+        )
+        descriptor = profile["worker_compatibility"]["sbe_authoring"]
+        self.assertEqual("0.4.66", descriptor["required_distributions"][0]["version"])
+        with self.assertRaisesRegex(ValueError, "version mismatch"):
+            resolve_sbe_authoring_binding(
+                profile_id=PROFILE_ID,
+                profile_sha256=profile["profile_sha256"],
+                generation_manifest_sha256="a" * 64,
+                route_family="exact_natal",
+                environment="qa",
+                installed_version=lambda name: {
+                    "astrowoof-natal-authoring": "0.4.68",
+                    "semantic-projection-core": "0.11.1",
+                }[name],
             )
 
     def test_profile_stage_resolution_preserves_legacy_system_message_bytes(self) -> None:
