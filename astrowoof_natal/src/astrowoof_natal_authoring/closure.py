@@ -60,6 +60,7 @@ from .pass_acceptance import CONTEXT_FILTER_VOCABULARY
 from .pass_protocol import bind_logical_pass_request
 from .processing_profiles import (
     resolve_installed_processing_profile,
+    resolve_prompt_release_stage,
     resolve_sbe_authoring_binding,
 )
 from .initial_wave import (
@@ -1216,6 +1217,10 @@ class OpenAIResponsesProvider:
         safety_identifier: str | None = None,
         prompt_cache_mode: str = "explicit",
         prompt_cache_ttl: str = "30m",
+        system_prompt: str | None = None,
+        prompt_release_provenance: dict[str, Any] | None = None,
+        system_prompts_by_stage: dict[str, str] | None = None,
+        prompt_release_provenance_by_stage: dict[str, dict[str, Any]] | None = None,
         transport: JsonHttpTransport | None = None,
         sleep: Any = time.sleep,
         require_spend_authorization: bool = False,
@@ -1238,6 +1243,12 @@ class OpenAIResponsesProvider:
             raise ValueError(f"Unsupported prompt cache mode: {prompt_cache_mode}")
         self.prompt_cache_mode = prompt_cache_mode
         self.prompt_cache_ttl = prompt_cache_ttl
+        self.system_prompt = system_prompt
+        self.prompt_release_provenance = deepcopy(prompt_release_provenance)
+        self.system_prompts_by_stage = dict(system_prompts_by_stage or {})
+        self.prompt_release_provenance_by_stage = deepcopy(
+            prompt_release_provenance_by_stage or {}
+        )
         self.transport = transport or UrllibJsonTransport()
         self.sleep = sleep
         self.require_spend_authorization = require_spend_authorization
@@ -1353,7 +1364,8 @@ class OpenAIResponsesProvider:
         workspace: Path,
         feedback: dict[str, Any] | None,
     ) -> tuple[str, dict[str, str]]:
-        system = (
+        stage = "retry" if feedback else "initial"
+        system = self.system_prompts_by_stage.get(stage) or self.system_prompt or (
             "You are the author of one bounded AstroWoof authoring pass. "
             "Treat each supplied card or summary as an independent finished "
             "writing assignment while keeping the dog recognizable across "
@@ -1472,6 +1484,10 @@ class OpenAIResponsesProvider:
                 feedback=feedback, attempt_number=attempt_number,
             )
         )
+        prompt_stage = "retry" if feedback else "initial"
+        prompt_release = self.prompt_release_provenance_by_stage.get(
+            prompt_stage, self.prompt_release_provenance,
+        )
         attempt_root = response_workspace.parents[1]
         request_payload_path = attempt_root / "openai-request-payload.private.json"
         request_payload_artifact = persist_provider_request_payload(
@@ -1578,6 +1594,7 @@ class OpenAIResponsesProvider:
                         "retrieve": retrieve_transport_attempts,
                     },
                     "prompt_layout": prompt_layout,
+                    "prompt_release": prompt_release,
                     "elapsed_seconds": round(
                         time.monotonic() - started, 3
                     ),
@@ -1629,6 +1646,7 @@ class OpenAIResponsesProvider:
             "usage": usage,
             "estimated_cost": cost,
             "prompt_layout": prompt_layout,
+            "prompt_release": prompt_release,
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "request_path": normalized_path(
                 attempt_root / "openai-request.json"
@@ -8540,6 +8558,20 @@ def main() -> None:
         processing_profile_binding = resolve_processing_profile_args(args)
     except ValueError as exc:
         parser.error(str(exc))
+    profile_system_prompts: dict[str, str] | None = None
+    profile_prompt_provenance: dict[str, dict[str, Any]] | None = None
+    if processing_profile_binding is not None:
+        try:
+            selected = {
+                stage: resolve_prompt_release_stage(
+                    processing_profile_binding["processing_profile_id"], stage=stage,
+                )
+                for stage in ("initial", "retry")
+            }
+        except ValueError as exc:
+            parser.error(str(exc))
+        profile_system_prompts = {stage: value[0] for stage, value in selected.items()}
+        profile_prompt_provenance = {stage: value[1] for stage, value in selected.items()}
     if args.compare_cost_runs:
         report = compare_cost_runs(*args.compare_cost_runs)
         if args.cost_report_output:
@@ -8677,6 +8709,8 @@ def main() -> None:
             safety_identifier=args.safety_identifier,
             prompt_cache_mode=args.prompt_cache_mode,
             prompt_cache_ttl=args.prompt_cache_ttl,
+            system_prompts_by_stage=profile_system_prompts,
+            prompt_release_provenance_by_stage=profile_prompt_provenance,
             require_spend_authorization=True,
         )
 

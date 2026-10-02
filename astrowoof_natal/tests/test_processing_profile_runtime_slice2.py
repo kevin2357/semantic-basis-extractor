@@ -65,6 +65,21 @@ class ProcessingProfileRuntimeSlice2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exact set"):
             closure.resolve_processing_profile_args(args, environment="qa")
 
+    def test_provider_keeps_profile_prompt_provenance_per_initial_and_retry_stage(self) -> None:
+        provider = closure.OpenAIResponsesProvider(
+            api_key="provider-free", system_prompts_by_stage={
+                "initial": "initial-system", "retry": "retry-system",
+            }, prompt_release_provenance_by_stage={
+                "initial": {"release_id": "release", "stage": "initial"},
+                "retry": {"release_id": "release", "stage": "retry"},
+            },
+        )
+        self.assertEqual("initial-system", provider.system_prompts_by_stage["initial"])
+        self.assertEqual("retry-system", provider.system_prompts_by_stage["retry"])
+        self.assertEqual(
+            "retry", provider.prompt_release_provenance_by_stage["retry"]["stage"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

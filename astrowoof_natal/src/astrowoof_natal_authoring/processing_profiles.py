@@ -497,6 +497,38 @@ def resolve_sbe_authoring_binding(
     }
 
 
+def resolve_prompt_release_stage(
+    profile_id: str, *, stage: str,
+) -> tuple[str, dict[str, Any]]:
+    """Load the installed, profile-bound prompt text for one known stage."""
+    if stage not in {"initial", "retry", "polish", "critic"}:
+        raise ValueError("prompt release stage is unsupported")
+    profile = resolve_installed_processing_profile(profile_id)
+    release = read_prompt_release(profile["prompt_release"]["release_id"])
+    component_by_id = {item["component_id"]: item for item in release["components"]}
+    selected = release["stage_components"][stage]
+    raw_components = [_canonical_prompt_asset(
+        _prompt_resource_bytes(component_by_id[item]["resource"])
+    ) for item in selected]
+    # The release asset is LF-terminated for reproducible package identity;
+    # the historical system message was not.  Preserve existing request bytes.
+    rendered = "\n\n".join(raw.decode("utf-8").rstrip("\n") for raw in raw_components)
+    return rendered, {
+        "release_id": release["release_id"],
+        "release_version": release["release_version"],
+        "release_sha256": release["release_sha256"],
+        "stage": stage,
+        "components": [
+            {
+                "component_id": component_by_id[item]["component_id"],
+                "sha256": component_by_id[item]["sha256"],
+            }
+            for item in selected
+        ],
+        "rendered_sha256": sha256(rendered.encode("utf-8")).hexdigest(),
+    }
+
+
 def processing_profile_supports_tuple(
     profile: Mapping[str, Any], *, route_family: str, execution_mode: str,
     selection_policy: str,
@@ -521,5 +553,6 @@ __all__ = [
     "validate_prompt_release", "read_processing_profile_catalog",
     "read_processing_profile", "read_prompt_release_catalog", "read_prompt_release",
     "resolve_installed_processing_profile", "resolve_sbe_authoring_binding",
+    "resolve_prompt_release_stage",
     "processing_profile_supports_tuple",
 ]

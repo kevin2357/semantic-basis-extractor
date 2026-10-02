@@ -14,6 +14,7 @@ from astrowoof_natal_authoring.processing_profiles import (
     read_prompt_release,
     read_prompt_release_catalog,
     resolve_installed_processing_profile,
+    resolve_prompt_release_stage,
     resolve_sbe_authoring_binding,
     validate_processing_profile,
     validate_prompt_release,
@@ -171,6 +172,22 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
                 generation_manifest_sha256="a" * 64, route_family="exact_natal",
                 environment="qa", installed_version=lambda _name: "0.0.0",
             )
+
+    def test_profile_stage_resolution_preserves_legacy_system_message_bytes(self) -> None:
+        prompt, provenance = resolve_prompt_release_stage(PROFILE_ID, stage="initial")
+        self.assertEqual(
+            "You are the author of one bounded AstroWoof authoring pass. "
+            "Treat each supplied card or summary as an independent finished "
+            "writing assignment while keeping the dog recognizable across the "
+            "pass. Read START HERE.md first and follow the workspace's own "
+            "guidance as authoritative. Do not borrow wording, templates, or "
+            "content from any prior AstroWoof deck. Return only the field "
+            "values required by the response schema. Do not include marker "
+            "comments in field values.",
+            prompt,
+        )
+        self.assertEqual("astrowoof.authoring.compat.v1", provenance["release_id"])
+        self.assertEqual("initial", provenance["stage"])
 
 
 if __name__ == "__main__":
