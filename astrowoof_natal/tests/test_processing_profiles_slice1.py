@@ -125,7 +125,7 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
 
         changed = deepcopy(profile)
         descriptor = changed["worker_compatibility"]["sbe_authoring"]
-        descriptor["required_distributions"][0]["version"] = "0.4.67"
+        descriptor["required_distributions"][0]["version"] = "0.4.68"
         descriptor["compatibility_sha256"] = worker_compatibility_sha256(descriptor)
         changed["profile_sha256"] = processing_profile_sha256(changed)
         self.assertNotEqual(profile["profile_sha256"], changed["profile_sha256"])

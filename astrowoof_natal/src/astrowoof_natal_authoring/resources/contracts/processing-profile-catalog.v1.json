@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "7a4ac541478ca4cb2982f9bfb8816c41bfac95470ba470664f3157dd446c7394",
+  "catalog_sha256": "560f91f3e7a1ae1b1c7b08c7d1f727c723309d0041f3b9d36ded192e5c41e6a3",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.axisawaresbe.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "55914fd51e2c39169e81cc32f8d85b61ba3d97f3610358a7735e935cc5d5854a",
+      "profile_sha256": "d75a2a6e122a17440ecbb2e3894a6ce45dd7dbe807dfb3c7d7a802603258dd72",
       "allowed_environments": [
         "production",
         "qa"
@@ -43,14 +43,14 @@
           "required_distributions": [
             {
               "distribution": "astrowoof-natal-authoring",
-              "version": "0.4.66a0"
+              "version": "0.4.67"
             },
             {
               "distribution": "semantic-projection-core",
               "version": "0.11.1"
             }
           ],
-          "compatibility_sha256": "f9bafdb2ecd1491efa2ad492f2d687ce2409b0cdaa9aa77cf1f27eb9d9338b80"
+          "compatibility_sha256": "fdff9eca02c85ca6c9ae7787b10febe53b3ce4e0b088e5964d3c62e4508eaca7"
         }
       },
       "deterministic_runtime": {
@@ -101,7 +101,7 @@
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "daf7cbacca620f578fcba9928e84e042904449176f65cf9808ccd9a1292d2212",
+      "profile_sha256": "5fe18f925770c8b967a9b32b4ca749bc31363c806b0a186b042387ed37882d0e",
       "allowed_environments": [
         "production",
         "qa"
@@ -138,14 +138,14 @@
           "required_distributions": [
             {
               "distribution": "astrowoof-natal-authoring",
-              "version": "0.4.66a0"
+              "version": "0.4.67"
             },
             {
               "distribution": "semantic-projection-core",
               "version": "0.11.1"
             }
           ],
-          "compatibility_sha256": "f9bafdb2ecd1491efa2ad492f2d687ce2409b0cdaa9aa77cf1f27eb9d9338b80"
+          "compatibility_sha256": "fdff9eca02c85ca6c9ae7787b10febe53b3ce4e0b088e5964d3c62e4508eaca7"
         }
       },
       "deterministic_runtime": {
