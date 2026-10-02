@@ -9,9 +9,8 @@ environment mutation was performed by this review.
 ## Decision
 
 **API approves the SBE-owned `processing_profile.v1` and
-`prompt_release.v1` contract direction, subject to the shared mapping below.
-Gate B remains pending SBE's required worker-compatibility-identity addition
-and the resulting republished profile digest.**
+`prompt_release.v1` contracts for Gate B. Slice 1β resolves the remaining
+worker-compatibility concern with the correct two-layer model.**
 
 The SBE implementation is appropriately closed and provider-free at this
 stage. It validates strict canonical JSON and self-digests, refuses malformed
@@ -25,7 +24,7 @@ The approved initial compatibility tuple is:
 | --- | --- |
 | Profile schema | `astrowoof.processing_profile.v1` |
 | Processing profile ID | `astrowoof.exact_natal.live.compat.v1` |
-| Processing profile SHA-256 | `e1affc78ab278d20be990ba8652ee3991a4e672012358ae889cc39f5bc565a2d` |
+| Processing profile SHA-256 | `28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a` |
 | Profile version | `1.0.0` |
 | Route family / contract | `exact_natal` / `astrowoof.semantic_closure_run.v0.9` |
 | Execution mode | `live` |
@@ -39,16 +38,21 @@ catalog for this initial tuple. Bounded, batch, and `axis_aware` combinations
 remain unsupported and must refuse; neither repository may infer their support
 from the presence of a general catalog schema.
 
-### Reciprocal-review addendum
+### Slice 1β compatibility closure
 
-SBE's reciprocal API review correctly requires the deterministic-runtime and
-SBE-worker compatibility identities to be frozen **inside** the canonical
-profile rather than supplied independently by API deployment settings. The
-current catalog does not yet contain those fields, so the profile SHA-256 shown
-above is not the final joint admission digest. API accepts that correction:
-after SBE adds the exact fields and republishes the catalog, API will review
-the replacement profile ID/digest/field names and bind those resolved values
-into its outer immutable generation manifest. No Slice 1 work starts first.
+The republished profile adds closed, digest-validated package-requirement
+descriptors under `worker_compatibility`:
+
+| Worker role | Descriptor SHA-256 |
+| --- | --- |
+| `deterministic_runtime` | `df053cefa0e436d784c6b49cc3b74d1fe9b33d0f6c5a18576a408934cafa1fbb` |
+| `sbe_authoring` | `ed51592f2d32ec803054ec0353c7ac5dfac336475c43c6992404a9449559e581` |
+
+This is the correct interpretation of a profile-owned compatibility identity:
+it attests the semantic package requirements and is covered by the final
+profile digest. API's existing environment-specific deployed-worker identity
+remains an outer generation-manifest/image-rollout fence. A worker must verify
+both layers; neither is an alternative to the other.
 
 ## Shared API/SBE mapping
 
@@ -61,7 +65,7 @@ bundle. At admission the durable evidence must include:
   "processing_profile": {
     "schema_version": "astrowoof.processing_profile.v1",
     "processing_profile_id": "astrowoof.exact_natal.live.compat.v1",
-    "processing_profile_sha256": "e1affc78ab278d20be990ba8652ee3991a4e672012358ae889cc39f5bc565a2d",
+    "processing_profile_sha256": "28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a",
     "profile_version": "1.0.0",
     "route": {
       "family": "exact_natal",
@@ -92,10 +96,11 @@ action-level provenance. It need not be duplicated in the profile’s
    `sbe.provider_service_level = interactive`. API will preserve both where
    needed and will not rename either to make them appear synonymous.
 2. SBE’s profile bundle owns semantic/runtime choices, prompt-release binding,
-   and—after the pending catalog amendment—the two qualified worker
-   compatibility identities. API resolves and verifies those profile-owned
-   values, then persists their immutable binding in its outer generation
-   manifest; it does not independently configure them.
+   and role-specific package compatibility descriptors. API resolves and
+   verifies those profile-owned values, then persists their immutable binding
+   in its outer generation manifest. API separately persists the
+   environment-specific deployed-worker identity used to fence the selected
+   image; it does not independently configure profile semantics.
 3. API-to-worker launch input remains ID, expected profile SHA-256, full API
    manifest SHA-256, route family, and worker role—not arbitrary profile JSON,
    prompt text, environment values, secret references, grants, workspace
@@ -127,10 +132,9 @@ action-level provenance. It need not be duplicated in the profile’s
 
 ## Follow-up for the API repository
 
-API will revise its pre-Gate-B proposal to adopt SBE’s exact underscore schema
-identifier and field vocabulary, then obtain the reciprocal SBE review before
-starting its persistence migration or runtime-consumer slices.
+API has revised its pre-Gate-B proposal to adopt SBE’s exact underscore schema
+identifier, the final profile digest, and the two-layer compatibility model.
 
-With that reciprocal review complete, SBE may proceed to Slice 2. This API
+With reciprocal review complete, SBE may proceed to Slice 2. This API
 review does **not** authorize a deployment, provider-backed QA, or a newly
 admissible non-compatibility profile.
