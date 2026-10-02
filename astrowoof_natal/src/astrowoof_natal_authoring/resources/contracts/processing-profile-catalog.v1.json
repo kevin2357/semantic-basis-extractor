@@ -1,0 +1,69 @@
+{
+  "schema_version": "astrowoof.processing_profile_catalog.v1",
+  "catalog_sha256": "45a3531da372732809daff90958a50b432d2b3d20105c0726a6fc93ef66a4663",
+  "profiles": [
+    {
+      "schema_version": "astrowoof.processing_profile.v1",
+      "profile_id": "astrowoof.exact_natal.live.compat.v1",
+      "profile_version": "1.0.0",
+      "profile_sha256": "e1affc78ab278d20be990ba8652ee3991a4e672012358ae889cc39f5bc565a2d",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route": {
+        "family": "exact_natal",
+        "execution_mode": "live",
+        "sbe_contract": "astrowoof.semantic_closure_run.v0.9"
+      },
+      "selection_policy": "legacy_atomic.v1",
+      "prompt_release": {
+        "release_id": "astrowoof.authoring.compat.v1",
+        "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c"
+      },
+      "deterministic_runtime": {
+        "birth_time_mode": "exact",
+        "ephemeris_mode": "moshier",
+        "projection_contexts": [
+          "direct_to_dog",
+          "general",
+          "handler",
+          "hybrid"
+        ],
+        "projection_contract": "woofmapped_astrology.v0@0.1.0"
+      },
+      "sbe": {
+        "provider": "openai",
+        "provider_service_level": "interactive",
+        "routing_policy": "cost_optimized",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "medium",
+        "retry_model": "gpt-5.6-terra",
+        "retry_reasoning_effort": "medium",
+        "split_assignment_policy": "stratified-v1",
+        "full_chart_basis_format": "compact-v2",
+        "max_workers": 6,
+        "max_attempts": 3,
+        "max_output_tokens": 100000,
+        "background": true,
+        "poll_interval_seconds": 2.0,
+        "response_timeout_seconds": 1800.0,
+        "http_timeout_seconds": 60.0,
+        "max_transport_retries": 4,
+        "transport_backoff_seconds": 1.0,
+        "prompt_cache_mode": "explicit",
+        "prompt_cache_ttl": "30m",
+        "polish": true,
+        "max_polish_attempts": 2,
+        "polish_model": "gpt-5.6-luna",
+        "polish_reasoning_effort": "low",
+        "qualitative_critic": true,
+        "critic_model": "gpt-5.6-luna",
+        "critic_reasoning_effort": "medium",
+        "qualitative_candidate": false,
+        "qualitative_editor_model": "gpt-5.6-luna",
+        "qualitative_editor_reasoning_effort": "low"
+      }
+    }
+  ]
+}

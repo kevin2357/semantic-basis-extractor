@@ -3,3 +3,6 @@
 
 # Packaged JSON participates in byte-level fixture and catalog identities.
 *.json text eol=lf
+
+# Installed prompt assets participate in release-bound byte identities.
+astrowoof_natal/src/astrowoof_natal_authoring/resources/authoring/*.md text eol=lf

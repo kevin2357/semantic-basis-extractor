@@ -1,0 +1,408 @@
+"""Closed, package-installed processing-profile and prompt-release catalogs.
+
+This module intentionally has no workspace, CLI, environment, or provider
+dependencies.  It establishes immutable catalog identity before a later slice
+allows a semantic-closure command to consume a selected profile.
+"""
+
+from __future__ import annotations
+
+from copy import deepcopy
+from hashlib import sha256
+from importlib.resources import files
+import json
+import math
+import re
+from typing import Any, Callable, Mapping
+
+
+PROCESSING_PROFILE_SCHEMA = "astrowoof.processing_profile.v1"
+PROCESSING_PROFILE_CATALOG_SCHEMA = "astrowoof.processing_profile_catalog.v1"
+PROMPT_RELEASE_SCHEMA = "astrowoof.prompt_release.v1"
+PROMPT_RELEASE_CATALOG_SCHEMA = "astrowoof.prompt_release_catalog.v1"
+PROFILE_CATALOG_RESOURCE = "processing-profile-catalog.v1.json"
+PROMPT_RELEASE_CATALOG_RESOURCE = "prompt-release-catalog.v1.json"
+
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
+_IDENTIFIER = re.compile(r"^[a-z][a-z0-9._-]*$")
+_SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+_PROFILE_KEYS = {
+    "schema_version", "profile_id", "profile_version", "profile_sha256",
+    "allowed_environments", "route", "selection_policy", "prompt_release",
+    "deterministic_runtime", "sbe",
+}
+_PROMPT_RELEASE_KEYS = {
+    "schema_version", "release_id", "release_version", "release_sha256",
+    "status", "allowed_environments", "route_families", "profile_ids",
+    "stage_components", "components",
+}
+_CATALOG_KEYS = {"schema_version", "catalog_sha256", "profiles"}
+_PROMPT_CATALOG_KEYS = {"schema_version", "catalog_sha256", "releases"}
+_PROFILE_ROUTE_KEYS = {"family", "execution_mode", "sbe_contract"}
+_PROMPT_REFERENCE_KEYS = {"release_id", "release_sha256"}
+_COMPONENT_KEYS = {"component_id", "resource", "sha256"}
+_DETERMINISTIC_RUNTIME_KEYS = {
+    "birth_time_mode", "ephemeris_mode", "projection_contexts",
+    "projection_contract",
+}
+_SBE_COMPATIBILITY_KEYS = {
+    "provider", "provider_service_level", "routing_policy", "model",
+    "reasoning_effort", "retry_model", "retry_reasoning_effort",
+    "split_assignment_policy", "full_chart_basis_format", "max_workers",
+    "max_attempts", "max_output_tokens", "background",
+    "poll_interval_seconds", "response_timeout_seconds", "http_timeout_seconds",
+    "max_transport_retries", "transport_backoff_seconds", "prompt_cache_mode",
+    "prompt_cache_ttl", "polish", "max_polish_attempts", "polish_model",
+    "polish_reasoning_effort", "qualitative_critic", "critic_model",
+    "critic_reasoning_effort", "qualitative_candidate",
+    "qualitative_editor_model", "qualitative_editor_reasoning_effort",
+}
+
+
+def _reject_duplicate_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("processing-profile JSON contains duplicate keys")
+        value[key] = item
+    return value
+
+
+def _reject_nonfinite(value: str) -> None:
+    raise ValueError(f"processing-profile JSON contains non-finite number: {value}")
+
+
+def _assert_finite(value: Any) -> None:
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError("processing-profile JSON contains non-finite number")
+    if isinstance(value, list):
+        for item in value:
+            _assert_finite(item)
+    elif isinstance(value, dict):
+        for item in value.values():
+            _assert_finite(item)
+
+
+def _parse_json(raw: bytes) -> Any:
+    try:
+        text = raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ValueError("processing-profile resource must be UTF-8") from exc
+    decoder = json.JSONDecoder(
+        object_pairs_hook=_reject_duplicate_pairs,
+        parse_constant=_reject_nonfinite,
+    )
+    try:
+        value, end = decoder.raw_decode(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("processing-profile resource is invalid JSON") from exc
+    if text[end:].strip():
+        raise ValueError("processing-profile resource has trailing content")
+    _assert_finite(value)
+    return value
+
+
+def canonical_processing_profile_json(value: Any) -> bytes:
+    """Return the one digest representation for closed profile/release values."""
+    return json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+
+
+def _digest_without(value: Mapping[str, Any], field: str) -> str:
+    body = dict(value)
+    body.pop(field, None)
+    return sha256(canonical_processing_profile_json(body)).hexdigest()
+
+
+def processing_profile_sha256(value: Mapping[str, Any]) -> str:
+    return _digest_without(value, "profile_sha256")
+
+
+def prompt_release_sha256(value: Mapping[str, Any]) -> str:
+    return _digest_without(value, "release_sha256")
+
+
+def _catalog_sha256(value: Mapping[str, Any]) -> str:
+    return _digest_without(value, "catalog_sha256")
+
+
+def _require_identifier(value: Any, *, label: str) -> str:
+    if not isinstance(value, str) or not _IDENTIFIER.fullmatch(value):
+        raise ValueError(f"{label} is invalid")
+    return value
+
+
+def _require_digest(value: Any, *, label: str) -> str:
+    if not isinstance(value, str) or not _HEX64.fullmatch(value):
+        raise ValueError(f"{label} must be a lowercase SHA-256")
+    return value
+
+
+def _require_semver(value: Any, *, label: str) -> str:
+    if not isinstance(value, str) or not _SEMVER.fullmatch(value):
+        raise ValueError(f"{label} is invalid")
+    return value
+
+
+def _require_identifier_list(value: Any, *, label: str) -> list[str]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{label} must be a nonempty array")
+    items = [_require_identifier(item, label=label) for item in value]
+    if items != sorted(items) or len(items) != len(set(items)):
+        raise ValueError(f"{label} must be sorted and unique")
+    return items
+
+
+def validate_processing_profile(value: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate one closed processing profile and its canonical identity."""
+    profile = deepcopy(dict(value))
+    if set(profile) != _PROFILE_KEYS:
+        raise ValueError("processing profile fields are not exact")
+    if profile.get("schema_version") != PROCESSING_PROFILE_SCHEMA:
+        raise ValueError("processing profile schema is unsupported")
+    _require_identifier(profile.get("profile_id"), label="processing profile ID")
+    _require_semver(profile.get("profile_version"), label="processing profile version")
+    _require_identifier_list(
+        profile.get("allowed_environments"), label="processing profile environments",
+    )
+    route = profile.get("route")
+    if not isinstance(route, dict) or set(route) != _PROFILE_ROUTE_KEYS:
+        raise ValueError("processing profile route is invalid")
+    if route.get("family") not in {"exact_natal", "bounded_natal"}:
+        raise ValueError("processing profile route family is invalid")
+    if route.get("execution_mode") not in {"live", "batch"}:
+        raise ValueError("processing profile execution mode is invalid")
+    if not isinstance(route.get("sbe_contract"), str) or not route["sbe_contract"]:
+        raise ValueError("processing profile SBE route contract is invalid")
+    _require_identifier(profile.get("selection_policy"), label="selection policy")
+    prompt_release = profile.get("prompt_release")
+    if not isinstance(prompt_release, dict) or set(prompt_release) != _PROMPT_REFERENCE_KEYS:
+        raise ValueError("processing profile prompt-release reference is invalid")
+    _require_identifier(prompt_release.get("release_id"), label="prompt release ID")
+    _require_digest(prompt_release.get("release_sha256"), label="prompt release digest")
+    deterministic = profile.get("deterministic_runtime")
+    if not isinstance(deterministic, dict) or set(deterministic) != _DETERMINISTIC_RUNTIME_KEYS:
+        raise ValueError("processing profile deterministic fragment is invalid")
+    if deterministic.get("birth_time_mode") not in {"exact", "bounded"}:
+        raise ValueError("processing profile birth-time mode is invalid")
+    if deterministic.get("ephemeris_mode") != "moshier":
+        raise ValueError("processing profile ephemeris mode is invalid")
+    if deterministic.get("projection_contexts") != [
+        "direct_to_dog", "general", "handler", "hybrid",
+    ]:
+        raise ValueError("processing profile projection contexts are invalid")
+    if deterministic.get("projection_contract") != "woofmapped_astrology.v0@0.1.0":
+        raise ValueError("processing profile projection contract is invalid")
+    sbe = profile.get("sbe")
+    if not isinstance(sbe, dict) or set(sbe) != _SBE_COMPATIBILITY_KEYS:
+        raise ValueError("processing profile SBE fragment is invalid")
+    if sbe.get("provider") != "openai" or sbe.get("provider_service_level") not in {"interactive", "batch"}:
+        raise ValueError("processing profile SBE provider settings are invalid")
+    if sbe.get("routing_policy") not in {"fixed", "cost_optimized"}:
+        raise ValueError("processing profile SBE routing policy is invalid")
+    if sbe.get("split_assignment_policy") not in {"contiguous", "stratified-v1"}:
+        raise ValueError("processing profile SBE split policy is invalid")
+    if sbe.get("full_chart_basis_format") not in {"legacy", "compact-v1", "compact-v2"}:
+        raise ValueError("processing profile SBE basis format is invalid")
+    if sbe.get("prompt_cache_mode") not in {"disabled", "implicit", "explicit"} or sbe.get("prompt_cache_ttl") != "30m":
+        raise ValueError("processing profile SBE prompt-cache settings are invalid")
+    if any(not isinstance(sbe.get(key), bool) for key in (
+        "background", "polish", "qualitative_critic", "qualitative_candidate",
+    )):
+        raise ValueError("processing profile SBE boolean settings are invalid")
+    if any(isinstance(sbe.get(key), bool) or not isinstance(sbe.get(key), int) or sbe[key] < 0 for key in (
+        "max_workers", "max_attempts", "max_output_tokens", "max_transport_retries",
+        "max_polish_attempts",
+    )):
+        raise ValueError("processing profile SBE integer settings are invalid")
+    if any(isinstance(sbe.get(key), bool) or not isinstance(sbe.get(key), (int, float)) or sbe[key] <= 0 for key in (
+        "poll_interval_seconds", "response_timeout_seconds", "http_timeout_seconds",
+        "transport_backoff_seconds",
+    )):
+        raise ValueError("processing profile SBE timeout settings are invalid")
+    for key in (
+        "model", "reasoning_effort", "retry_model", "retry_reasoning_effort",
+        "polish_model", "polish_reasoning_effort", "critic_model",
+        "critic_reasoning_effort", "qualitative_editor_model",
+        "qualitative_editor_reasoning_effort",
+    ):
+        _require_identifier(sbe.get(key), label=f"processing profile SBE {key}")
+    _require_digest(profile.get("profile_sha256"), label="processing profile digest")
+    if profile["profile_sha256"] != processing_profile_sha256(profile):
+        raise ValueError("processing profile digest mismatch")
+    return profile
+
+
+def _resource_bytes(resource: str) -> bytes:
+    return files("astrowoof_natal_authoring.resources.contracts").joinpath(resource).read_bytes()
+
+
+def _prompt_resource_bytes(resource: str) -> bytes:
+    return files("astrowoof_natal_authoring.resources").joinpath(resource).read_bytes()
+
+
+def read_processing_profile_catalog() -> dict[str, Any]:
+    value = _parse_json(_resource_bytes(PROFILE_CATALOG_RESOURCE))
+    if not isinstance(value, dict) or set(value) != _CATALOG_KEYS:
+        raise ValueError("processing-profile catalog fields are not exact")
+    if value.get("schema_version") != PROCESSING_PROFILE_CATALOG_SCHEMA:
+        raise ValueError("processing-profile catalog schema is unsupported")
+    _require_digest(value.get("catalog_sha256"), label="processing-profile catalog digest")
+    if value["catalog_sha256"] != _catalog_sha256(value):
+        raise ValueError("processing-profile catalog digest mismatch")
+    profiles = value.get("profiles")
+    if not isinstance(profiles, list) or not profiles:
+        raise ValueError("processing-profile catalog profiles are invalid")
+    validated = [validate_processing_profile(item) for item in profiles]
+    profile_ids = [item["profile_id"] for item in validated]
+    if profile_ids != sorted(profile_ids) or len(profile_ids) != len(set(profile_ids)):
+        raise ValueError("processing-profile catalog profile IDs are not canonical")
+    return {**value, "profiles": validated}
+
+
+def read_processing_profile(profile_id: str) -> dict[str, Any]:
+    _require_identifier(profile_id, label="processing profile ID")
+    catalog = read_processing_profile_catalog()
+    for profile in catalog["profiles"]:
+        if profile["profile_id"] == profile_id:
+            return deepcopy(profile)
+    raise ValueError("processing profile is not installed")
+
+
+def _canonical_prompt_asset(raw: bytes) -> bytes:
+    try:
+        raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ValueError("prompt asset must be UTF-8") from exc
+    if b"\r" in raw or not raw.endswith(b"\n"):
+        raise ValueError("prompt asset must use canonical LF-terminated bytes")
+    return raw
+
+
+def validate_prompt_release(
+    value: Mapping[str, Any], *,
+    resource_reader: Callable[[str], bytes] = _prompt_resource_bytes,
+) -> dict[str, Any]:
+    """Validate one release and every installed text asset it names."""
+    release = deepcopy(dict(value))
+    if set(release) != _PROMPT_RELEASE_KEYS:
+        raise ValueError("prompt release fields are not exact")
+    if release.get("schema_version") != PROMPT_RELEASE_SCHEMA:
+        raise ValueError("prompt release schema is unsupported")
+    _require_identifier(release.get("release_id"), label="prompt release ID")
+    _require_semver(release.get("release_version"), label="prompt release version")
+    if release.get("status") not in {"active", "deprecated"}:
+        raise ValueError("prompt release status is invalid")
+    _require_identifier_list(release.get("allowed_environments"), label="prompt release environments")
+    if release.get("route_families") not in [["exact_natal"], ["bounded_natal"], ["bounded_natal", "exact_natal"]]:
+        raise ValueError("prompt release route families are invalid")
+    _require_identifier_list(release.get("profile_ids"), label="prompt release profile IDs")
+    components = release.get("components")
+    if not isinstance(components, list) or not components:
+        raise ValueError("prompt release components are invalid")
+    component_ids: list[str] = []
+    seen_resources: set[str] = set()
+    for component in components:
+        if not isinstance(component, dict) or set(component) != _COMPONENT_KEYS:
+            raise ValueError("prompt release component is invalid")
+        component_id = _require_identifier(component.get("component_id"), label="prompt component ID")
+        resource = component.get("resource")
+        if (
+            not isinstance(resource, str) or not resource.startswith("authoring/")
+            or ".." in resource.split("/") or not resource.endswith(".md")
+        ):
+            raise ValueError("prompt component resource is invalid")
+        if resource in seen_resources:
+            raise ValueError("prompt component resource is duplicated")
+        seen_resources.add(resource)
+        raw = _canonical_prompt_asset(resource_reader(resource))
+        if component.get("sha256") != sha256(raw).hexdigest():
+            raise ValueError("prompt component digest mismatch")
+        component_ids.append(component_id)
+    if component_ids != sorted(component_ids) or len(component_ids) != len(set(component_ids)):
+        raise ValueError("prompt release component IDs are not canonical")
+    stage_components = release.get("stage_components")
+    if not isinstance(stage_components, dict) or set(stage_components) != {"initial", "retry", "polish", "critic"}:
+        raise ValueError("prompt release stage map is invalid")
+    for stage, selected in stage_components.items():
+        if not isinstance(stage, str) or not isinstance(selected, list) or not selected:
+            raise ValueError("prompt release stage selection is invalid")
+        if selected != sorted(selected) or len(selected) != len(set(selected)):
+            raise ValueError("prompt release stage selection is not canonical")
+        if any(item not in component_ids for item in selected):
+            raise ValueError("prompt release stage names unknown component")
+    _require_digest(release.get("release_sha256"), label="prompt release digest")
+    if release["release_sha256"] != prompt_release_sha256(release):
+        raise ValueError("prompt release digest mismatch")
+    return release
+
+
+def read_prompt_release_catalog() -> dict[str, Any]:
+    value = _parse_json(_resource_bytes(PROMPT_RELEASE_CATALOG_RESOURCE))
+    if not isinstance(value, dict) or set(value) != _PROMPT_CATALOG_KEYS:
+        raise ValueError("prompt-release catalog fields are not exact")
+    if value.get("schema_version") != PROMPT_RELEASE_CATALOG_SCHEMA:
+        raise ValueError("prompt-release catalog schema is unsupported")
+    _require_digest(value.get("catalog_sha256"), label="prompt-release catalog digest")
+    if value["catalog_sha256"] != _catalog_sha256(value):
+        raise ValueError("prompt-release catalog digest mismatch")
+    releases = value.get("releases")
+    if not isinstance(releases, list) or not releases:
+        raise ValueError("prompt-release catalog releases are invalid")
+    validated = [validate_prompt_release(item) for item in releases]
+    release_ids = [item["release_id"] for item in validated]
+    if release_ids != sorted(release_ids) or len(release_ids) != len(set(release_ids)):
+        raise ValueError("prompt-release catalog release IDs are not canonical")
+    return {**value, "releases": validated}
+
+
+def read_prompt_release(release_id: str) -> dict[str, Any]:
+    _require_identifier(release_id, label="prompt release ID")
+    for release in read_prompt_release_catalog()["releases"]:
+        if release["release_id"] == release_id:
+            return deepcopy(release)
+    raise ValueError("prompt release is not installed")
+
+
+def resolve_installed_processing_profile(profile_id: str) -> dict[str, Any]:
+    """Resolve the closed profile and verify its referenced prompt release.
+
+    Command-line and workspace integration deliberately follow in Slice 2.
+    """
+    profile = read_processing_profile(profile_id)
+    reference = profile["prompt_release"]
+    release = read_prompt_release(reference["release_id"])
+    if release["release_sha256"] != reference["release_sha256"]:
+        raise ValueError("processing profile prompt-release digest mismatch")
+    if profile["profile_id"] not in release["profile_ids"]:
+        raise ValueError("prompt release does not allow processing profile")
+    if profile["route"]["family"] not in release["route_families"]:
+        raise ValueError("prompt release does not allow processing route")
+    return profile
+
+
+def processing_profile_supports_tuple(
+    profile: Mapping[str, Any], *, route_family: str, execution_mode: str,
+    selection_policy: str,
+) -> bool:
+    """Return whether one *installed profile* explicitly owns this tuple."""
+    validated = validate_processing_profile(profile)
+    route = validated["route"]
+    return (
+        route["family"] == route_family
+        and route["execution_mode"] == execution_mode
+        and validated["selection_policy"] == selection_policy
+    )
+
+
+__all__ = [
+    "PROCESSING_PROFILE_SCHEMA", "PROCESSING_PROFILE_CATALOG_SCHEMA",
+    "PROMPT_RELEASE_SCHEMA", "PROMPT_RELEASE_CATALOG_SCHEMA",
+    "canonical_processing_profile_json", "processing_profile_sha256",
+    "prompt_release_sha256", "validate_processing_profile",
+    "validate_prompt_release", "read_processing_profile_catalog",
+    "read_processing_profile", "read_prompt_release_catalog", "read_prompt_release",
+    "resolve_installed_processing_profile", "processing_profile_supports_tuple",
+]

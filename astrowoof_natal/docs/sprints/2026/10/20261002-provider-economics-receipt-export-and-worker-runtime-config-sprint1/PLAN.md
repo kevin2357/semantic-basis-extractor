@@ -79,6 +79,8 @@ explicitly implemented, tested, and admitted independently.
 
 ### Slice 1 — Freeze the canonical processing-profile and prompt-release contracts
 
+**Completed provider-free on 2026-10-02; Gate B review is next.**
+
 - Add the versioned, non-secret `processing_profile.v1` contract and its
   canonical serialization rules. A profile has one immutable profile ID and
   SHA-256, and separates the independent dimensions of natal route

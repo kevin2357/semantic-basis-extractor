@@ -286,6 +286,10 @@
       "weight_seconds": 1.731743
     },
     {
+      "module": "test_processing_profiles_slice1.py",
+      "weight_seconds": 0.25
+    },
+    {
       "module": "test_providerless_denial_qa.py",
       "weight_seconds": 16.426431
     },

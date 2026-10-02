@@ -1,0 +1,44 @@
+{
+  "schema_version": "astrowoof.prompt_release_catalog.v1",
+  "catalog_sha256": "623dfa6e4632bc990c3f056ace6a483e69a989aa2f57f0682a12163d7fffa3c8",
+  "releases": [
+    {
+      "schema_version": "astrowoof.prompt_release.v1",
+      "release_id": "astrowoof.authoring.compat.v1",
+      "release_version": "1.0.0",
+      "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c",
+      "status": "active",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route_families": [
+        "exact_natal"
+      ],
+      "profile_ids": [
+        "astrowoof.exact_natal.live.compat.v1"
+      ],
+      "stage_components": {
+        "initial": [
+          "system_authoring"
+        ],
+        "retry": [
+          "system_authoring"
+        ],
+        "polish": [
+          "system_authoring"
+        ],
+        "critic": [
+          "system_authoring"
+        ]
+      },
+      "components": [
+        {
+          "component_id": "system_authoring",
+          "resource": "authoring/prompt-system-authoring.compat.v1.md",
+          "sha256": "2ec0738497756b09887e921273371b4f99108378b9197ce9b065beeacd453a71"
+        }
+      ]
+    }
+  ]
+}
