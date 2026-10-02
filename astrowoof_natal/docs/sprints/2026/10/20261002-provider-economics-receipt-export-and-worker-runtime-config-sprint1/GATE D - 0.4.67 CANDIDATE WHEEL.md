@@ -1,4 +1,8 @@
-# Gate D — 0.4.67 candidate wheel
+# Gate D — 0.4.67 candidate wheel (superseded)
+
+> Superseded by the `0.4.68` candidate after the safe workspace-inventory
+> attestation and immutable legacy-compatibility correction. Do not use this
+> wheel for Gate D.
 
 ## Candidate coordinates
 
