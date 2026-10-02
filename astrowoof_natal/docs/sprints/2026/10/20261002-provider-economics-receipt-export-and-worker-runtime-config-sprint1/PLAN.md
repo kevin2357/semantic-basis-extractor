@@ -70,6 +70,130 @@ configuration inventory/profile-selection model, and prompt-selection
 precedence before implementation, package changes, provider work, or deployment
 mutation.
 
+## Post–Gate A implementation plan — runtime configuration
+
+Gate A is approved. The following slices implement the runtime-configuration
+workstream only. They deliberately do not make a bounded or axis-aware profile
+admissible merely by adding a configuration record: each support tuple must be
+explicitly implemented, tested, and admitted independently.
+
+### Slice 1 — Freeze the canonical processing-profile and prompt-release contracts
+
+- Add the versioned, non-secret `processing_profile.v1` contract and its
+  canonical serialization rules. A profile has one immutable profile ID and
+  SHA-256, and separates the independent dimensions of natal route
+  (`exact_natal` or `bounded_natal`), service level (`live` or `batch`), and
+  selection policy (`legacy_atomic` or `axis_aware`).
+- Define the SBE-owned installed profile bundle as a closed allowlist keyed by
+  profile ID. Each entry carries the complete shared profile identity plus its
+  SBE semantic-closure fragment and an approved prompt-release reference. It
+  contains no paths, workspace roots, credentials, endpoint URLs, executable
+  locations, grants, or terminal/reconciliation authority.
+- Freeze the complementary cross-package handoff: API admission persists the
+  profile ID, full-profile SHA-256, route/contract identity, and compatible
+  worker identities; the deterministic-runtime and SBE images each carry the
+  matching immutable bundle and validate their own fragment at their actual
+  process boundary. The generation manifest is extended as the durable common
+  record rather than creating a competing mutable source of truth.
+- Publish the initial `exact_natal` / `live` compatibility profile. It makes
+  every presently implicit production setting explicit, including the current
+  `legacy_atomic` selection policy and prompt release, without changing the
+  observable behavior of a newly admitted exact/live run.
+- Add a closed prompt-release contract and installed asset inventory: release
+  ID, semantic version, release digest, allowlisted component names, and
+  canonical LF/UTF-8 asset digests. Keep prompt text and user/provider content
+  out of the profile and public records.
+- Provider-free coverage: canonical-byte and digest stability; duplicate,
+  malformed, unknown, and incompatible profile/release refusal; secret/path
+  field rejection; and proof that `axis_aware` remains independent of the
+  exact/bounded and live/batch axes.
+
+**Gate B:** API reviews the exact profile/prompt schema, the compatibility
+profile identity, and the proposed generation-manifest/handoff extension before
+any runtime consumer starts using it.
+
+### Slice 2 — Resolve and attest the SBE profile before semantic closure
+
+- Add one narrow SBE resolver that accepts the API-persisted expected profile
+  ID and full-profile SHA-256, finds only an installed allowlisted entry, and
+  verifies canonical identity and SBE-fragment compatibility before semantic
+  closure/provider construction.
+- Wire the resolver into the actual SBE semantic-closure command boundary, not
+  a wrapper-only code path. Derive the existing closure flags from the resolved
+  SBE profile fragment; do not permit arbitrary CLI flag overrides to alter a
+  paid run.
+- Write safe startup and durable-workspace attestation only after validation:
+  profile ID, full-profile SHA-256, local bundle/fragment digest, prompt-release
+  ID/digest, route/service/selection tuple, and worker compatibility identity.
+  Do not record paths, prompts, raw inputs, responses, secrets, or grants.
+- Bind the resolved profile to the native invocation/result lineage so resume,
+  retry, reconciliation, and terminal handoffs require the persisted binding
+  rather than recomputing a current default. Legacy workspaces without this
+  binding remain on their documented legacy reader path and are never silently
+  reclassified.
+- Provider-free coverage: exact match succeeds; missing/wrong ID or digest,
+  unsupported tuple, incompatible SBE fragment, and tampered installed bundle
+  fail before any provider action; retry/resume preserves the original binding;
+  normal legacy recovery behavior remains unchanged.
+
+### Slice 3 — Make prompt-release selection and request provenance executable
+
+- Replace the implicit prompt-template default with a resolver for the prompt
+  release selected by the already validated processing profile. A CLI selector
+  is allowed only for new local/qualification invocations after the same
+  allowlist and compatibility checks; it cannot override an existing persisted
+  run binding.
+- Route every OpenAI-facing SBE creation path through that resolver, including
+  ordinary initial/retry, polish, critic, bounded-lifecycle, and supported
+  authority paths. Preserve each path's existing prompt assembly semantics
+  while selecting versioned installed assets.
+- Record safe per-action provenance: prompt-release ID/version/digest, selected
+  component inventory and digests, and rendered request digest. Preserve the
+  existing private/full-payload controls; ordinary logs and public artifacts do
+  not gain prompt text or provider responses.
+- Provider-free coverage: all supported provider constructors select the
+  profile-bound release; unknown or mismatched release refuses before request
+  creation; legacy bindings retain their prior selection; request payload bytes
+  for the compatibility release remain byte-identical to the pre-registry
+  behavior where the existing fixtures cover them.
+
+### Slice 4 — Cross-process profile binding and installed-wheel qualification
+
+- Coordinate the API/deterministic-runtime half of the contract: admission
+  selects an approved profile, writes the immutable binding to the existing
+  generation manifest, and passes only the ID/digest and applicable role data
+  to the deterministic-runtime and SBE command boundaries.
+- Run a provider-free joined replay using the exact installed SBE wheel and the
+  matching deterministic-runtime/API artifacts. Prove both actual processes
+  independently verify the same profile identity before work; prove the
+  manifest and native receipts retain it across retry and terminal routes.
+- Exercise the compatibility profile end-to-end, then negative cells for a
+  wrong digest, an unsupported tuple, an incompatible worker identity, and a
+  profile/prompt mismatch. Every negative cell must refuse before paid provider
+  work and without weakening ordinary legacy-workspace recovery.
+- Treat bounded/live and every axis-aware tuple as later, separately admitted
+  profile candidates. Their addition requires their own capability evidence,
+  artifact-naming review, and provider-free qualification; this slice does not
+  infer support from the exact/live compatibility proof.
+
+**Gate C:** joint API/SBE review of the installed-wheel provider-free replay and
+the immutable compatibility-profile evidence. Only after that gate may a new
+profile be proposed for deployment or provider-backed QA.
+
+### Parallel Slice E1 — Economics diagnostic classification (separate release concern)
+
+- Preserve `sbe_export_unavailable` as nonfatal and avoid promoting telemetry
+  into a financial source of truth.
+- Add a bounded allowlisted phase/reason classification for the export reader's
+  unavailable path, without exception prose or private workspace data, so API
+  can distinguish validation/export phases during diagnosis.
+- Exercise exact and bounded fixtures for each classified failure phase and
+  assert that unavailable remains nonfatal while safe classification reaches the
+  emitted operational event.
+
+This slice is intentionally independent of the processing-profile release
+sequence and may be qualified on its own after its focused API review.
+
 ## Required eventual outcomes
 
 - A completed reported action produces an idempotent successor public economics
