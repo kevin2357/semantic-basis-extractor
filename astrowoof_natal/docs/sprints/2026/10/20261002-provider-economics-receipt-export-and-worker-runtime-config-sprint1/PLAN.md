@@ -116,11 +116,16 @@ any runtime consumer starts using it.
 
 ### Slice 1β — freeze qualified worker compatibility identities
 
-- Extend the closed canonical profile with one exact compatibility-identity
-  field for each actual launch boundary: `deterministic_runtime` and
-  `sbe_authoring`. The values must be derived from the currently qualified
-  installed runtime/package identities, not invented labels or API deployment
-  settings.
+**Completed provider-free on 2026-10-02; replacement profile review pending.**
+
+- Extend the closed canonical profile with one exact compatibility descriptor
+  for each actual launch boundary: `deterministic_runtime` and
+  `sbe_authoring`. Each descriptor names its exact required package set and a
+  SHA-256 derived from that canonical requirement object. It is stable package
+  compatibility evidence, not an invented label or a deployment setting.
+- Preserve the separate control-plane distinction: API's environment-specific
+  deployed-worker `compatibility_identity` continues to fence the selected
+  deployment; it is not copied into the cross-environment package profile.
 - Freeze the closed worker-role vocabulary as `deterministic_runtime` and
   `sbe_authoring`. API handoff envelopes may carry one of those tokens only;
   later consumers must verify the role against the corresponding profile-owned

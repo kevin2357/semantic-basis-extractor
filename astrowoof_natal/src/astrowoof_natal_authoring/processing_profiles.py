@@ -20,6 +20,7 @@ PROCESSING_PROFILE_SCHEMA = "astrowoof.processing_profile.v1"
 PROCESSING_PROFILE_CATALOG_SCHEMA = "astrowoof.processing_profile_catalog.v1"
 PROMPT_RELEASE_SCHEMA = "astrowoof.prompt_release.v1"
 PROMPT_RELEASE_CATALOG_SCHEMA = "astrowoof.prompt_release_catalog.v1"
+WORKER_COMPATIBILITY_SCHEMA = "astrowoof.worker_compatibility.v1"
 PROFILE_CATALOG_RESOURCE = "processing-profile-catalog.v1.json"
 PROMPT_RELEASE_CATALOG_RESOURCE = "prompt-release-catalog.v1.json"
 
@@ -29,7 +30,7 @@ _SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 _PROFILE_KEYS = {
     "schema_version", "profile_id", "profile_version", "profile_sha256",
     "allowed_environments", "route", "selection_policy", "prompt_release",
-    "deterministic_runtime", "sbe",
+    "deterministic_runtime", "sbe", "worker_compatibility",
 }
 _PROMPT_RELEASE_KEYS = {
     "schema_version", "release_id", "release_version", "release_sha256",
@@ -41,6 +42,11 @@ _PROMPT_CATALOG_KEYS = {"schema_version", "catalog_sha256", "releases"}
 _PROFILE_ROUTE_KEYS = {"family", "execution_mode", "sbe_contract"}
 _PROMPT_REFERENCE_KEYS = {"release_id", "release_sha256"}
 _COMPONENT_KEYS = {"component_id", "resource", "sha256"}
+_WORKER_COMPATIBILITY_KEYS = {
+    "schema_version", "worker_role", "required_distributions",
+    "compatibility_sha256",
+}
+_DISTRIBUTION_KEYS = {"distribution", "version"}
 _DETERMINISTIC_RUNTIME_KEYS = {
     "birth_time_mode", "ephemeris_mode", "projection_contexts",
     "projection_contract",
@@ -124,6 +130,10 @@ def prompt_release_sha256(value: Mapping[str, Any]) -> str:
     return _digest_without(value, "release_sha256")
 
 
+def worker_compatibility_sha256(value: Mapping[str, Any]) -> str:
+    return _digest_without(value, "compatibility_sha256")
+
+
 def _catalog_sha256(value: Mapping[str, Any]) -> str:
     return _digest_without(value, "catalog_sha256")
 
@@ -153,6 +163,32 @@ def _require_identifier_list(value: Any, *, label: str) -> list[str]:
     if items != sorted(items) or len(items) != len(set(items)):
         raise ValueError(f"{label} must be sorted and unique")
     return items
+
+
+def validate_worker_compatibility(value: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a role's stable package requirements, not deployment state."""
+    descriptor = deepcopy(dict(value))
+    if set(descriptor) != _WORKER_COMPATIBILITY_KEYS:
+        raise ValueError("worker compatibility fields are not exact")
+    if descriptor.get("schema_version") != WORKER_COMPATIBILITY_SCHEMA:
+        raise ValueError("worker compatibility schema is unsupported")
+    if descriptor.get("worker_role") not in {"deterministic_runtime", "sbe_authoring"}:
+        raise ValueError("worker compatibility role is invalid")
+    distributions = descriptor.get("required_distributions")
+    if not isinstance(distributions, list) or not distributions:
+        raise ValueError("worker compatibility distributions are invalid")
+    names: list[str] = []
+    for item in distributions:
+        if not isinstance(item, dict) or set(item) != _DISTRIBUTION_KEYS:
+            raise ValueError("worker compatibility distribution is invalid")
+        names.append(_require_identifier(item.get("distribution"), label="worker distribution"))
+        _require_semver(item.get("version"), label="worker distribution version")
+    if names != sorted(names) or len(names) != len(set(names)):
+        raise ValueError("worker compatibility distributions are not canonical")
+    _require_digest(descriptor.get("compatibility_sha256"), label="worker compatibility digest")
+    if descriptor["compatibility_sha256"] != worker_compatibility_sha256(descriptor):
+        raise ValueError("worker compatibility digest mismatch")
+    return descriptor
 
 
 def validate_processing_profile(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -195,6 +231,15 @@ def validate_processing_profile(value: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("processing profile projection contexts are invalid")
     if deterministic.get("projection_contract") != "woofmapped_astrology.v0@0.1.0":
         raise ValueError("processing profile projection contract is invalid")
+    compatibility = profile.get("worker_compatibility")
+    if not isinstance(compatibility, dict) or set(compatibility) != {
+        "deterministic_runtime", "sbe_authoring",
+    }:
+        raise ValueError("processing profile worker compatibility is invalid")
+    for role, descriptor in compatibility.items():
+        validated_descriptor = validate_worker_compatibility(descriptor)
+        if validated_descriptor["worker_role"] != role:
+            raise ValueError("processing profile worker compatibility role mismatch")
     sbe = profile.get("sbe")
     if not isinstance(sbe, dict) or set(sbe) != _SBE_COMPATIBILITY_KEYS:
         raise ValueError("processing profile SBE fragment is invalid")
@@ -400,8 +445,10 @@ def processing_profile_supports_tuple(
 __all__ = [
     "PROCESSING_PROFILE_SCHEMA", "PROCESSING_PROFILE_CATALOG_SCHEMA",
     "PROMPT_RELEASE_SCHEMA", "PROMPT_RELEASE_CATALOG_SCHEMA",
+    "WORKER_COMPATIBILITY_SCHEMA",
     "canonical_processing_profile_json", "processing_profile_sha256",
-    "prompt_release_sha256", "validate_processing_profile",
+    "prompt_release_sha256", "worker_compatibility_sha256",
+    "validate_worker_compatibility", "validate_processing_profile",
     "validate_prompt_release", "read_processing_profile_catalog",
     "read_processing_profile", "read_prompt_release_catalog", "read_prompt_release",
     "resolve_installed_processing_profile", "processing_profile_supports_tuple",

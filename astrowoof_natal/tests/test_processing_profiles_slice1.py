@@ -16,6 +16,8 @@ from astrowoof_natal_authoring.processing_profiles import (
     resolve_installed_processing_profile,
     validate_processing_profile,
     validate_prompt_release,
+    validate_worker_compatibility,
+    worker_compatibility_sha256,
 )
 
 
@@ -79,6 +81,32 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         changed["sbe"]["max_workers"] = 7
         with self.assertRaisesRegex(ValueError, "digest mismatch"):
             validate_processing_profile(changed)
+
+    def test_qualified_worker_descriptors_are_closed_and_profile_bound(self) -> None:
+        profile = read_processing_profile(PROFILE_ID)
+        compatibility = profile["worker_compatibility"]
+        self.assertEqual(
+            {"deterministic_runtime", "sbe_authoring"}, set(compatibility),
+        )
+        for role, descriptor in compatibility.items():
+            self.assertEqual(role, validate_worker_compatibility(descriptor)["worker_role"])
+
+        changed = deepcopy(profile)
+        descriptor = changed["worker_compatibility"]["sbe_authoring"]
+        descriptor["required_distributions"][0]["version"] = "0.4.67"
+        descriptor["compatibility_sha256"] = worker_compatibility_sha256(descriptor)
+        changed["profile_sha256"] = processing_profile_sha256(changed)
+        self.assertNotEqual(profile["profile_sha256"], changed["profile_sha256"])
+        validate_processing_profile(changed)
+
+        role_mismatch = deepcopy(profile)
+        role_mismatch["worker_compatibility"]["sbe_authoring"]["worker_role"] = "deterministic_runtime"
+        role_mismatch["worker_compatibility"]["sbe_authoring"]["compatibility_sha256"] = worker_compatibility_sha256(
+            role_mismatch["worker_compatibility"]["sbe_authoring"],
+        )
+        role_mismatch["profile_sha256"] = processing_profile_sha256(role_mismatch)
+        with self.assertRaisesRegex(ValueError, "role mismatch"):
+            validate_processing_profile(role_mismatch)
 
     def test_prompt_assets_are_lf_utf8_and_digest_bound(self) -> None:
         release = read_prompt_release(RELEASE_ID)

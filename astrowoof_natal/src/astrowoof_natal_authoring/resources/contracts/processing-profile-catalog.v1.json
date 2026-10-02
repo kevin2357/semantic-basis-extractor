@@ -1,12 +1,12 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "45a3531da372732809daff90958a50b432d2b3d20105c0726a6fc93ef66a4663",
+  "catalog_sha256": "3c90d1a570ada01caefec7f830bc5c17bf3995fa96365953b7ec8aaff4f7c74c",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
       "profile_id": "astrowoof.exact_natal.live.compat.v1",
       "profile_version": "1.0.0",
-      "profile_sha256": "e1affc78ab278d20be990ba8652ee3991a4e672012358ae889cc39f5bc565a2d",
+      "profile_sha256": "28a92d24dbbc10597c11c5bca0309ee9ea7aad5168069138f5e76dd90e32bf7a",
       "allowed_environments": [
         "production",
         "qa"
@@ -20,6 +20,38 @@
       "prompt_release": {
         "release_id": "astrowoof.authoring.compat.v1",
         "release_sha256": "51e58cb41cf4a317b4fa37e77e18f57567bd4976b56d6e9fa788154b4c1e3d5c"
+      },
+      "worker_compatibility": {
+        "deterministic_runtime": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "deterministic_runtime",
+          "required_distributions": [
+            {
+              "distribution": "astrology-graph-foundry",
+              "version": "0.8.1"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "df053cefa0e436d784c6b49cc3b74d1fe9b33d0f6c5a18576a408934cafa1fbb"
+        },
+        "sbe_authoring": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "sbe_authoring",
+          "required_distributions": [
+            {
+              "distribution": "astrowoof-natal-authoring",
+              "version": "0.4.66"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "ed51592f2d32ec803054ec0353c7ac5dfac336475c43c6992404a9449559e581"
+        }
       },
       "deterministic_runtime": {
         "birth_time_mode": "exact",

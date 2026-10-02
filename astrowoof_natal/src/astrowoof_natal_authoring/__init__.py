@@ -496,6 +496,7 @@ from .processing_profiles import (  # noqa: E402
     PROCESSING_PROFILE_SCHEMA,
     PROMPT_RELEASE_CATALOG_SCHEMA,
     PROMPT_RELEASE_SCHEMA,
+    WORKER_COMPATIBILITY_SCHEMA,
     canonical_processing_profile_json,
     processing_profile_sha256,
     processing_profile_supports_tuple,
@@ -507,6 +508,8 @@ from .processing_profiles import (  # noqa: E402
     resolve_installed_processing_profile,
     validate_processing_profile,
     validate_prompt_release,
+    validate_worker_compatibility,
+    worker_compatibility_sha256,
 )
 
 __all__ = [
@@ -816,9 +819,12 @@ __all__ = [
     "PROCESSING_PROFILE_CATALOG_SCHEMA",
     "PROMPT_RELEASE_SCHEMA",
     "PROMPT_RELEASE_CATALOG_SCHEMA",
+    "WORKER_COMPATIBILITY_SCHEMA",
     "canonical_processing_profile_json",
     "processing_profile_sha256",
     "prompt_release_sha256",
+    "worker_compatibility_sha256",
+    "validate_worker_compatibility",
     "validate_processing_profile",
     "validate_prompt_release",
     "read_processing_profile_catalog",

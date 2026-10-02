@@ -105,3 +105,7 @@ Slice 1β will add those two closed fields using the real currently qualified
 identity values, recompute the catalog/profile digests, and return the precise
 replacement identity to API for Gate B closure. No worker command may consume
 the profile until that reciprocal confirmation is recorded.
+
+Slice 1β is now recorded in `SLICE 1B - QUALIFIED WORKER COMPATIBILITY
+DESCRIPTORS.md`; the baseline digest above is superseded by its replacement
+profile digest.
