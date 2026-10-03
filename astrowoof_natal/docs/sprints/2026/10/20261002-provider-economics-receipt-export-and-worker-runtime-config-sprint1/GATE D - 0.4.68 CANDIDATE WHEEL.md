@@ -79,6 +79,17 @@ pass without changing the test or fixture. This is recorded as a local
 checkout-normalization snafu; final release builds remain archive-based and
 therefore consume the committed canonical LF bytes.
 
+## Publication verification
+
+Published as [astrowoof-natal-authoring-v0.4.68](https://github.com/kevin2357/semantic-basis-extractor/releases/tag/astrowoof-natal-authoring-v0.4.68)
+at `2026-10-03T00:03:55Z` (release ID `RE_kwDOToQdE84X-ZYv`). The uploaded
+wheel asset `RA_kwDOToQdE84kKlOr` is 1,429,258 bytes and GitHub reports
+`sha256:d9636e5eadc302681040f2a732a3755f2db689e66bc18e3cfac8ea27b4c2b215`.
+Both published assets were freshly downloaded to a separate directory. The
+downloaded wheel SHA-256 and `SHA256SUMS.txt` entry match the qualified value
+exactly. The annotated tag's remote peeled target remains
+`ed4b8643384c544ec04fc239c1e4e4a2562dd07e`.
+
 ## Remaining Gate D work
 
 API must admit the exact axis profile and its worker-release/pool identity,
