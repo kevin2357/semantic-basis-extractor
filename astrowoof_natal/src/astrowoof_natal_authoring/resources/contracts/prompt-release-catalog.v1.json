@@ -1,6 +1,6 @@
 {
   "schema_version": "astrowoof.prompt_release_catalog.v1",
-  "catalog_sha256": "e48a2b1c474d31cb82295cefa40b2b32f338f29b3a1241eb2f6f941c828cf4cc",
+  "catalog_sha256": "ae047b98c61aa55930a33f81615936ba27cc67adf7b63a49600d097c97e56ab5",
   "releases": [
     {
       "schema_version": "astrowoof.prompt_release.v1",
@@ -17,6 +17,44 @@
       ],
       "profile_ids": [
         "astrowoof.exact_natal.live.compat.v1"
+      ],
+      "stage_components": {
+        "initial": [
+          "system_authoring"
+        ],
+        "retry": [
+          "system_authoring"
+        ],
+        "polish": [
+          "system_authoring"
+        ],
+        "critic": [
+          "system_authoring"
+        ]
+      },
+      "components": [
+        {
+          "component_id": "system_authoring",
+          "resource": "authoring/prompt-system-authoring.compat.v1.md",
+          "sha256": "2ec0738497756b09887e921273371b4f99108378b9197ce9b065beeacd453a71"
+        }
+      ]
+    },
+    {
+      "schema_version": "astrowoof.prompt_release.v1",
+      "release_id": "astrowoof.authoring.compat.v2",
+      "release_version": "2.0.0",
+      "release_sha256": "511a658b9036e5b62a88bb646e8cceacdb34824b93c9695d8ff2643c7b07e2f4",
+      "status": "active",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route_families": [
+        "exact_natal"
+      ],
+      "profile_ids": [
+        "astrowoof.exact_natal.live.compat.v2"
       ],
       "stage_components": {
         "initial": [
@@ -91,6 +129,58 @@
         }
       ],
       "release_sha256": "089942e352e92fa2ad2e80ad8a3a705ef7976aa2c64e9001f2b068c84bffa94f"
+    },
+    {
+      "schema_version": "astrowoof.prompt_release.v2",
+      "release_id": "astrowoof.authoring.editorial.v3",
+      "release_version": "3.0.0",
+      "status": "active",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route_families": [
+        "exact_natal"
+      ],
+      "profile_ids": [
+        "astrowoof.exact_natal.live.axisawaresbe.v2"
+      ],
+      "stage_components": {
+        "initial": [
+          "system_authoring"
+        ],
+        "retry": [
+          "system_authoring"
+        ],
+        "polish": [
+          "system_authoring"
+        ],
+        "critic": [
+          "system_authoring"
+        ]
+      },
+      "components": [
+        {
+          "component_id": "system_authoring",
+          "resource": "authoring/prompt-system-authoring.editorial.v2.md",
+          "sha256": "2ec0738497756b09887e921273371b4f99108378b9197ce9b065beeacd453a71"
+        }
+      ],
+      "workspace_components": [
+        {
+          "component_id": "authoring_brief",
+          "resource": "authoring/AstroWoof Story Workspace Authoring Brief.editorial.v2.md",
+          "destination": "AUTHORING BRIEF.md",
+          "sha256": "8097cc2639212f82a0ff2b916baacd3d4f7bdaeca3cce22c0ada4d10db659bbc"
+        },
+        {
+          "component_id": "guiding_lights",
+          "resource": "authoring/AstroWoof Authoring Guiding Lights.editorial.v2.md",
+          "destination": "GUIDING LIGHTS.md",
+          "sha256": "ac1625fed0e6791b7c39c79610e104ba9a99ea720f4ecbe5cba55a8a070e7d08"
+        }
+      ],
+      "release_sha256": "edff44c338f7a531affe967354174fd6ce45a45af41eb489e0446380e7cfcc70"
     }
   ]
 }

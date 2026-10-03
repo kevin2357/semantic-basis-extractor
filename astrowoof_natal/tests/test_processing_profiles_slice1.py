@@ -26,8 +26,12 @@ from astrowoof_natal_authoring.processing_profiles import (
 
 PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
 AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
+COMPAT_V2_PROFILE_ID = "astrowoof.exact_natal.live.compat.v2"
+AXIS_AWARE_V2_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v2"
 RELEASE_ID = "astrowoof.authoring.compat.v1"
 EDITORIAL_RELEASE_ID = "astrowoof.authoring.editorial.v2"
+COMPAT_V2_RELEASE_ID = "astrowoof.authoring.compat.v2"
+EDITORIAL_V3_RELEASE_ID = "astrowoof.authoring.editorial.v3"
 
 
 class ProcessingProfileSlice1Tests(unittest.TestCase):
@@ -35,11 +39,21 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         profiles = read_processing_profile_catalog()
         releases = read_prompt_release_catalog()
         self.assertEqual(
-            [AXIS_AWARE_PROFILE_ID, PROFILE_ID],
+            [
+                AXIS_AWARE_PROFILE_ID,
+                AXIS_AWARE_V2_PROFILE_ID,
+                PROFILE_ID,
+                COMPAT_V2_PROFILE_ID,
+            ],
             [profile["profile_id"] for profile in profiles["profiles"]],
         )
         self.assertEqual(
-            [RELEASE_ID, EDITORIAL_RELEASE_ID],
+            [
+                RELEASE_ID,
+                COMPAT_V2_RELEASE_ID,
+                EDITORIAL_RELEASE_ID,
+                EDITORIAL_V3_RELEASE_ID,
+            ],
             [release["release_id"] for release in releases["releases"]],
         )
 
@@ -67,6 +81,38 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         )
         self.assertEqual("live", profile["route"]["execution_mode"])
         self.assertEqual("interactive", profile["sbe"]["provider_service_level"])
+
+    def test_v2_profiles_preserve_semantics_but_require_0469(self) -> None:
+        compat_v1 = read_processing_profile(PROFILE_ID)
+        axis_v1 = read_processing_profile(AXIS_AWARE_PROFILE_ID)
+        compat_v2 = read_processing_profile(COMPAT_V2_PROFILE_ID)
+        axis_v2 = read_processing_profile(AXIS_AWARE_V2_PROFILE_ID)
+
+        for earlier, later, release_id in (
+            (compat_v1, compat_v2, COMPAT_V2_RELEASE_ID),
+            (axis_v1, axis_v2, EDITORIAL_V3_RELEASE_ID),
+        ):
+            self.assertEqual(earlier["route"], later["route"])
+            self.assertEqual(earlier["selection_policy"], later["selection_policy"])
+            self.assertEqual(earlier["sbe"], later["sbe"])
+            self.assertEqual(
+                "0.4.69",
+                later["worker_compatibility"]["sbe_authoring"]
+                ["required_distributions"][0]["version"],
+            )
+            self.assertEqual(release_id, later["prompt_release"]["release_id"])
+            self.assertNotEqual(earlier["profile_sha256"], later["profile_sha256"])
+
+        self.assertEqual("0.4.66", compat_v1["worker_compatibility"]["sbe_authoring"]["required_distributions"][0]["version"])
+        self.assertEqual("0.4.68", axis_v1["worker_compatibility"]["sbe_authoring"]["required_distributions"][0]["version"])
+        self.assertEqual(
+            resolve_prompt_release_stage(PROFILE_ID, stage="initial")[0],
+            resolve_prompt_release_stage(COMPAT_V2_PROFILE_ID, stage="initial")[0],
+        )
+        self.assertEqual(
+            resolve_prompt_release_workspace_assets(AXIS_AWARE_PROFILE_ID),
+            resolve_prompt_release_workspace_assets(AXIS_AWARE_V2_PROFILE_ID),
+        )
 
     def test_compatibility_profile_owns_only_its_explicit_tuple(self) -> None:
         profile = read_processing_profile(PROFILE_ID)
