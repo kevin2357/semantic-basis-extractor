@@ -37,6 +37,25 @@ PROFILE_BINDING = {
     "worker_compatibility_sha256": "1" * 64,
 }
 
+DURABLE_PROFILE_BINDING = {
+    "schema_version": "astrowoof.processing_profile_binding.v1",
+    "processing_profile_id": PROFILE_BINDING["processing_profile_id"],
+    "processing_profile_sha256": PROFILE_BINDING["processing_profile_sha256"],
+    "generation_manifest_sha256": PROFILE_BINDING["generation_manifest_sha256"],
+    "route": {
+        "family": "bounded_natal",
+        "execution_mode": "live",
+        "sbe_contract": "astrowoof.bounded_natal.authoring_run.v2",
+    },
+    "selection_policy": "stable_facts_only.v1",
+    "prompt_release": {"release_id": "bounded", "release_version": "1.0.0", "release_sha256": "2" * 64, "workspace_components": []},
+    "worker_compatibility": {
+        "worker_role": "sbe_authoring",
+        "compatibility_sha256": PROFILE_BINDING["worker_compatibility_sha256"],
+        "required_distributions": [],
+    },
+}
+
 
 class TestBoundedEligibility(unittest.TestCase):
     def test_result_is_strict_and_deterministic(self) -> None:
@@ -83,7 +102,7 @@ class TestBoundedEligibility(unittest.TestCase):
                 patch("sys.argv", argv),
                 patch(
                     "astrowoof_natal_authoring.cli.bounded_run._resolve_profile_binding",
-                    return_value=(PROFILE_BINDING, {"route": {"family": "bounded_natal"}}),
+                    return_value=(DURABLE_PROFILE_BINDING, {"route": {"family": "bounded_natal"}}),
                 ),
                 patch(
                     "astrowoof_natal_authoring.cli.bounded_run.admit_bounded_family",
@@ -114,6 +133,7 @@ class TestBoundedEligibility(unittest.TestCase):
             self.assertEqual("sbe.command_result.v1", envelope["schema_version"])
             self.assertEqual("command_result", envelope["envelope_type"])
             validate_bounded_eligibility_command_result(envelope["result"])
+            self.assertEqual(PROFILE_BINDING, envelope["result"]["processing_profile_binding"])
             self.assertFalse(run_dir.exists())
 
 

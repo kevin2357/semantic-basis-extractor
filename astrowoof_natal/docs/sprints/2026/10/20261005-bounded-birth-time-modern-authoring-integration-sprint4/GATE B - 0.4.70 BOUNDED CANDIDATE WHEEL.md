@@ -1,5 +1,10 @@
 # Gate B — 0.4.70 bounded candidate wheel
 
+> **Superseded.** This `86d209…` candidate qualified only the under-50
+> eligibility route. The installed eligible terminal fixture exposed a public
+> binding-projection correction, so Gate B must use the later `0e01f2…`
+> candidate documented in [Slice 2 installed fixture evidence](SLICE%202%20-%20INSTALLED%20REAL%20FOUR-CONTEXT%20TERMINAL%20FIXTURE.md).
+
 ## Scope and status
 
 This is a retained, local, provider-free candidate for the API/SBE joined

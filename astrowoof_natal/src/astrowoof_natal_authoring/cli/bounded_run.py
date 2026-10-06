@@ -159,6 +159,41 @@ def _bounded_eligibility_handoff(args: argparse.Namespace) -> dict[str, str] | N
     return {key: str(value) for key, value in values.items()}
 
 
+def _bounded_eligibility_profile_binding(
+    binding: dict[str, Any] | None,
+) -> dict[str, str]:
+    """Project the durable installed binding onto the closed public result.
+
+    Workspaces retain the richer nested binding (route, prompt release, and
+    package descriptors). The pre-workspace eligibility result instead has the
+    deliberately smaller API-frozen projection. Never pass the workspace shape
+    through as though it were that public contract.
+    """
+    if not isinstance(binding, dict):
+        raise ValueError("bounded eligibility requires a processing profile binding")
+    route = binding.get("route")
+    worker = binding.get("worker_compatibility")
+    if not isinstance(route, dict) or not isinstance(worker, dict):
+        raise ValueError("bounded eligibility processing profile binding is invalid")
+    value = {
+        "schema_version": binding.get("schema_version"),
+        "processing_profile_id": binding.get("processing_profile_id"),
+        "processing_profile_sha256": binding.get("processing_profile_sha256"),
+        "generation_manifest_sha256": binding.get("generation_manifest_sha256"),
+        "route_family": route.get("family"),
+        "worker_role": worker.get("worker_role"),
+        "worker_compatibility_sha256": worker.get("compatibility_sha256"),
+    }
+    if (
+        value["schema_version"] != "astrowoof.processing_profile_binding.v1"
+        or value["route_family"] != "bounded_natal"
+        or value["worker_role"] != "sbe_authoring"
+        or not all(isinstance(item, str) and item for item in value.values())
+    ):
+        raise ValueError("bounded eligibility processing profile binding is invalid")
+    return {key: str(item) for key, item in value.items()}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
@@ -285,7 +320,9 @@ def main() -> None:
                         "projection_set_evidence_sha256"
                     ],
                 },
-                processing_profile_binding=processing_profile_binding,
+                processing_profile_binding=_bounded_eligibility_profile_binding(
+                    processing_profile_binding
+                ),
             )
             StdoutJsonlSink()(command_result_envelope(result))
             log_cli_exit(

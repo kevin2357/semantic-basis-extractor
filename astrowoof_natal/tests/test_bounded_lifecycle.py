@@ -70,6 +70,10 @@ from astrowoof_natal_authoring.initial_wave import (  # noqa: E402
 from astrowoof_natal_authoring.native_transitions import (  # noqa: E402
     publish_native_execution_result,
 )
+from astrowoof_natal_authoring.terminal_review_contracts import (  # noqa: E402
+    build_terminal_delivery_command_result,
+    validate_terminal_delivery_command_result_against_publication,
+)
 from test_bounded_authoring import compiled  # noqa: E402
 import test_provider_pending_capacity as provider_pending_fixtures  # noqa: E402
 from test_external_authority_execution import authority  # noqa: E402
@@ -713,6 +717,35 @@ class TestBoundedLifecycle(unittest.TestCase):
                 "bounded.selection.completed", "bounded.disposition.completed",
                 "bounded.artifact.committed", "terminal.transitioned",
             } <= names)
+
+    def test_bounded_delivery_command_joins_its_exact_terminal_receipt(self) -> None:
+        """The bounded v2 route uses ordinary exact-delivery custody, not a shim."""
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            state = run_bounded_authoring(run_dir, self.artifacts)
+            sealed = publish_native_execution_result(
+                run_dir,
+                command_kind="ordinary_authoring",
+                sbe_release="test",
+                published_at=state["updated_at"],
+            )
+            command = build_terminal_delivery_command_result(
+                sealed["result"], sealed["receipt"],
+            )
+            self.assertEqual("delivery_complete", sealed["result"]["outcome"])
+            self.assertEqual(
+                "astrowoof.terminal_delivery_command_result.v0.1",
+                command["schema_version"],
+            )
+            validate_terminal_delivery_command_result_against_publication(
+                command, sealed["result"], sealed["receipt"],
+            )
+            changed = dict(command)
+            changed["receipt_sha256"] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "does not join exact publication"):
+                validate_terminal_delivery_command_result_against_publication(
+                    changed, sealed["result"], sealed["receipt"],
+                )
 
     def test_bounded_batch_authors_six_members_under_one_round(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

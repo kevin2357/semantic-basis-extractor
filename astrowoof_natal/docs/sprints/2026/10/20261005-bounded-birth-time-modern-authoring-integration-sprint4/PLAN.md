@@ -2,7 +2,7 @@
 
 ## Status
 
-**Gate A and API Gate B accepted; Slice 1 is complete and Slice 2 is active.**
+**Gate A and API Gate B accepted; Slices 1–2 are complete.**
 API Sprint 128's Gate A freezes the birth-data and generation-family boundary.
 API's representative AGF-originated four-context packet and eligibility-result
 receiver are qualified. No profile activation, provider work, wheel
@@ -62,15 +62,18 @@ Build and qualify a candidate wheel through the real installed executable.
 For a valid sealed source family below the floor, emit a distinct deterministic
 bounded eligibility result—not a provider/editorial retry—so API can surface a
 non-retryable correction path without conflating it with operational failure.
-That command contract and API receiver are implemented; the retained `0.4.70`
-candidate covers that narrow under-floor route only. Slice 2 must now add the
-separate eligible terminal-result/receipt fixture, real sealed-artifact
-refusals, and installed-wheel replay evidence. It will supersede the current
-candidate with a later candidate wheel.
+That command contract and API receiver are implemented. **Complete:** the
+installed-wheel real four-context family selects 50 invariant candidates,
+reaches a sealed `DELIVERY_COMPLETE` terminal result/receipt, and proves the
+exact terminal-command join. Missing-context, incompatible-contract, and
+altered-receipt variants refuse fail-closed. The initial under-floor wheel is
+superseded by the later retained candidate recorded in
+[Slice 2 installed fixture evidence](SLICE%202%20-%20INSTALLED%20REAL%20FOUR-CONTEXT%20TERMINAL%20FIXTURE.md).
 
-**Gate B — candidate handoff to API:** publish a versioned candidate identity,
-real bounded terminal-result/receipt fixture, and mismatch fixtures for API
-Sprint 128 Slices 2–3. API then owns receipt-ingress idempotency proof.
+**Gate B — candidate handoff to API:** SBE has produced the versioned
+candidate identity, real bounded terminal-result/receipt fixture, and mismatch
+fixtures. API Sprint 128 now owns receipt-ingress idempotency proof and the
+separately authorized public-delivery/admission path.
 
 **Current dependency: satisfied.** API Sprint 128 Gate B has supplied its
 representative AGF-originated four-context artifact family. SBE must consume

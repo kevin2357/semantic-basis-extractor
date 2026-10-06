@@ -1,6 +1,6 @@
 # Status
 
-**Gate A and API Gate B accepted; Slice 1 complete, Slice 2 active.** The historical bounded
+**Gate A and API Gate B accepted; Slices 1–2 complete.** The historical bounded
 semantic/privacy core is reusable, but integration requires more than a
 processing-profile and prompt-release record. The profile-bound invocation,
 release-owned provider prompts, workspace guidance inventory, and current
@@ -11,6 +11,9 @@ The three existing rendered audiences remain the bounded scope; the separate
 `general` source projection is a deferred product-contract question. API's
 real AGF-originated deterministic evidence and receiver/validator are now
 accepted. SBE has produced the retained `0.4.70` candidate wheel for the
-joined installed-wheel source-family proof; it is not tagged, published,
-deployed, or active. The next work is the joint provider-free replay against
-that exact wheel.
+eligible installed-wheel terminal fixture; it supersedes the earlier
+under-floor-only candidate and is not tagged, published, deployed, or active.
+Its real API four-context source replay reaches `DELIVERY_COMPLETE` with an
+exact native result/receipt/terminal-command join and refuses malformed
+source/receipt variants. The next work is API receipt-ingress/idempotency
+proof, then the separately approved joint Gate C path.
