@@ -15,8 +15,9 @@ eligible installed-wheel terminal fixture; it supersedes the earlier
 under-floor-only candidate and is not tagged, published, deployed, or active.
 Its real API four-context source replay reaches `DELIVERY_COMPLETE` with an
 exact native result/receipt/terminal-command join and refuses malformed
-source/receipt variants. A final candidate-only Slice 2B correction advances
+source/receipt variants. The final candidate-only Slice 2B correction advances
 the under-floor result to v2: API owns `command_attempt_id`, while SBE owns the
-later sealed native publication invocation ID. The next work is rebuilding the
-candidate, API receipt-ingress/idempotency proof, then the separately approved
-joint Gate C path.
+later sealed native publication invocation ID. The superseding `58c9ba…`
+candidate is retained and installed-wheel qualified. The next work is API
+receipt-ingress/idempotency proof, then the separately approved joint Gate C
+path.
