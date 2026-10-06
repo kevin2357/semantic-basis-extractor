@@ -8,9 +8,9 @@ import re
 from typing import Any, Mapping
 
 
-SCHEMA_VERSION = "astrowoof.bounded_eligibility_command_result.v1"
+SCHEMA_VERSION = "astrowoof.bounded_eligibility_command_result.v2"
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
-_INVOCATION_ID = re.compile(r"^ninv_[0-9a-f]{24}$")
+_COMMAND_ATTEMPT_ID = re.compile(r"^bca_[0-9a-f]{24}$")
 _RESULT_ID = re.compile(r"^belig_[0-9a-f]{24}$")
 _SOURCE_KEYS = {
     "canonical_semantic_identity_sha256",
@@ -27,7 +27,7 @@ _BINDING_KEYS = {
 }
 _RESULT_KEYS = {
     "schema_version", "outcome", "reason_code", "retryable_for_same_sealed_input",
-    "provider_activity", "native_run_id", "native_invocation_id", "source_binding",
+    "provider_activity", "native_run_id", "command_attempt_id", "source_binding",
     "processing_profile_binding", "result_id", "result_sha256",
 }
 
@@ -82,14 +82,14 @@ def _result_sha_material(value: Mapping[str, object]) -> dict[str, object]:
 def build_bounded_eligibility_command_result(
     *,
     native_run_id: str,
-    native_invocation_id: str,
+    command_attempt_id: str,
     source_binding: Mapping[str, object],
     processing_profile_binding: Mapping[str, object],
 ) -> dict[str, object]:
     """Build the sole pre-workspace terminal result for an under-50 source."""
     _require_digest(native_run_id, label="native run ID")
-    if not isinstance(native_invocation_id, str) or not _INVOCATION_ID.fullmatch(native_invocation_id):
-        raise ValueError("native invocation ID is invalid")
+    if not isinstance(command_attempt_id, str) or not _COMMAND_ATTEMPT_ID.fullmatch(command_attempt_id):
+        raise ValueError("command attempt ID is invalid")
     value: dict[str, object] = {
         "schema_version": SCHEMA_VERSION,
         "outcome": "ineligible",
@@ -97,7 +97,7 @@ def build_bounded_eligibility_command_result(
         "retryable_for_same_sealed_input": False,
         "provider_activity": "not_attempted",
         "native_run_id": native_run_id,
-        "native_invocation_id": native_invocation_id,
+        "command_attempt_id": command_attempt_id,
         "source_binding": _validate_source_binding(source_binding),
         "processing_profile_binding": _validate_processing_profile_binding(processing_profile_binding),
     }
@@ -120,8 +120,8 @@ def validate_bounded_eligibility_command_result(value: Mapping[str, object]) -> 
     ):
         raise ValueError("bounded eligibility result disposition is invalid")
     _require_digest(value.get("native_run_id"), label="native run ID")
-    if not isinstance(value.get("native_invocation_id"), str) or not _INVOCATION_ID.fullmatch(value["native_invocation_id"]):
-        raise ValueError("native invocation ID is invalid")
+    if not isinstance(value.get("command_attempt_id"), str) or not _COMMAND_ATTEMPT_ID.fullmatch(value["command_attempt_id"]):
+        raise ValueError("command attempt ID is invalid")
     source_binding = value.get("source_binding")
     profile_binding = value.get("processing_profile_binding")
     if not isinstance(source_binding, Mapping) or not isinstance(profile_binding, Mapping):

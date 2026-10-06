@@ -147,7 +147,7 @@ def _bounded_eligibility_handoff(args: argparse.Namespace) -> dict[str, str] | N
     """Read the atomic API-owned identities needed before a workspace exists."""
     values = {
         "native_run_id": args.native_run_id,
-        "native_invocation_id": args.native_invocation_id,
+        "command_attempt_id": args.command_attempt_id,
         "canonical_semantic_identity_sha256": args.canonical_semantic_identity_sha256,
         "projection_set_evidence_sha256": args.projection_set_evidence_sha256,
     }
@@ -208,7 +208,7 @@ def build_parser() -> argparse.ArgumentParser:
         dest="processing_profile_route_family",
     )
     parser.add_argument("--native-run-id")
-    parser.add_argument("--native-invocation-id")
+    parser.add_argument("--command-attempt-id")
     parser.add_argument("--canonical-semantic-identity-sha256")
     parser.add_argument("--projection-set-evidence-sha256")
     parser.add_argument("--provider", choices=("fake", "openai"), default="fake")
@@ -311,7 +311,7 @@ def main() -> None:
                 raise
             result = build_bounded_eligibility_command_result(
                 native_run_id=bounded_eligibility_handoff["native_run_id"],
-                native_invocation_id=bounded_eligibility_handoff["native_invocation_id"],
+                command_attempt_id=bounded_eligibility_handoff["command_attempt_id"],
                 source_binding={
                     "canonical_semantic_identity_sha256": bounded_eligibility_handoff[
                         "canonical_semantic_identity_sha256"

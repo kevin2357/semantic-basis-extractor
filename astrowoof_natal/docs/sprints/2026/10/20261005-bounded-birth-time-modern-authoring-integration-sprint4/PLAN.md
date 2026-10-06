@@ -80,6 +80,15 @@ representative AGF-originated four-context artifact family. SBE must consume
 that sealed evidence for the eligible fixture; no QA deployment or provider
 operation is part of this slice.
 
+### Slice 2B — under-floor attempt-identity alignment
+
+Correct the candidate-only under-floor result so its API-issued idempotency
+identity is `command_attempt_id`, not `native_invocation_id`. The latter is
+reserved for SBE's receipt-backed sealed-publication boundary and does not
+exist before a workspace/result/receipt. Advance the closed eligibility schema
+to v2, rebuild the candidate, and require API's receiver fixture to validate
+the matching attempt ID. **Complete provider-free; candidate rebuild follows.**
+
 ## Slice 3 — Joint provider-free and QA qualification
 
 Participate in API Gate C installed-wheel proof. Once API delivery fixtures are

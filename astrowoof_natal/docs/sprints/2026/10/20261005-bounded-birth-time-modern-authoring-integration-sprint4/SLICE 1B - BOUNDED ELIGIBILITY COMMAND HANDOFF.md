@@ -7,7 +7,7 @@
 For a valid admitted family with fewer than fifty invariant authored claims,
 `astrowoof-run-bounded-natal` emits exactly one `sbe.command_result.v1` JSONL
 stdout envelope. Its result uses
-`astrowoof.bounded_eligibility_command_result.v1` with the closed public
+`astrowoof.bounded_eligibility_command_result.v2` with the closed public
 disposition `ineligible`, `insufficient_invariant_basis`, non-retryable, and
 `provider_activity: not_attempted`.
 
@@ -26,18 +26,20 @@ handoff in addition to the existing processing-profile references:
 
 ```text
 --native-run-id <64 lowercase hex>
---native-invocation-id <ninv_ + 24 lowercase hex>
+--command-attempt-id <bca_ + 24 lowercase hex>
 --canonical-semantic-identity-sha256 <64 lowercase hex>
 --projection-set-evidence-sha256 <64 lowercase hex>
 ```
 
 The native run ID is also persisted in `run.json` when the source is eligible
 and a workspace is created. Thus both branches bind the same API-persisted
-native-run identity. Missing/partial values are refused before processing, and
-these values are invalid on resume.
+native-run identity. `command_attempt_id` is a distinct API-issued identity
+for the pre-workspace command attempt; it is not and must never be represented
+as a native publication invocation. Missing/partial values are refused before
+processing, and these values are invalid on resume.
 
 SBE validates digest syntax, the installed processing-profile binding, route
-family, worker role, and invocation-ID shape. API remains the source of truth
+family, worker role, and command-attempt-ID shape. API remains the source of truth
 for matching the two source-binding digests to its accepted projection set. The
 current materialized SBE input has four projected graph bytes, but not API's
 projection-result manifest and its member/receipt evidence. SBE therefore
@@ -52,5 +54,5 @@ single CLI envelope while provider construction and workspace creation are
 prohibited.
 
 The next joint gate needs API's positive and negative receiver fixtures:
-wrong run/invocation/source/binding/result identity and a forged nonzero
+wrong run/command-attempt/source/binding/result identity and a forged nonzero
 provider-activity result must all fail closed without terminal state mutation.

@@ -18,8 +18,10 @@ network or provider call and does not create an API/WWW public delivery.
 | Wheel members | `328` |
 | Installed SBE / SPC | `0.4.70` / `0.11.1` |
 
-This supersedes the earlier `86d209…` under-floor-only candidate. Neither
-candidate is a tag, publication, deployment, activation, or provider approval.
+This candidate is superseded for the joint API gate by the later v2 eligibility
+candidate recorded in the Slice 2B addendum. It remains valid evidence for the
+receipt-backed eligible terminal route. Neither candidate is a tag,
+publication, deployment, activation, or provider approval.
 
 ## Real source-family proof
 

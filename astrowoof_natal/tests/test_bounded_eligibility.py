@@ -22,7 +22,7 @@ from astrowoof_natal_authoring.cli.bounded_run import main  # noqa: E402
 
 
 RUN_ID = "a" * 64
-INVOCATION_ID = "ninv_" + "b" * 24
+COMMAND_ATTEMPT_ID = "bca_" + "b" * 24
 SOURCE_BINDING = {
     "canonical_semantic_identity_sha256": "c" * 64,
     "projection_set_evidence_sha256": "d" * 64,
@@ -61,13 +61,13 @@ class TestBoundedEligibility(unittest.TestCase):
     def test_result_is_strict_and_deterministic(self) -> None:
         first = build_bounded_eligibility_command_result(
             native_run_id=RUN_ID,
-            native_invocation_id=INVOCATION_ID,
+            command_attempt_id=COMMAND_ATTEMPT_ID,
             source_binding=SOURCE_BINDING,
             processing_profile_binding=PROFILE_BINDING,
         )
         second = build_bounded_eligibility_command_result(
             native_run_id=RUN_ID,
-            native_invocation_id=INVOCATION_ID,
+            command_attempt_id=COMMAND_ATTEMPT_ID,
             source_binding=SOURCE_BINDING,
             processing_profile_binding=PROFILE_BINDING,
         )
@@ -93,7 +93,7 @@ class TestBoundedEligibility(unittest.TestCase):
                 "--generation-manifest-sha256", PROFILE_BINDING["generation_manifest_sha256"],
                 "--processing-profile-route-family", "bounded_natal",
                 "--native-run-id", RUN_ID,
-                "--native-invocation-id", INVOCATION_ID,
+                "--command-attempt-id", COMMAND_ATTEMPT_ID,
                 "--canonical-semantic-identity-sha256", SOURCE_BINDING["canonical_semantic_identity_sha256"],
                 "--projection-set-evidence-sha256", SOURCE_BINDING["projection_set_evidence_sha256"],
             ]
