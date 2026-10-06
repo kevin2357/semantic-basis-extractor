@@ -8067,6 +8067,7 @@ def resolve_processing_profile_args(
     args: argparse.Namespace,
     *,
     environment: str | None = None,
+    expected_sbe_contract: str | None = None,
 ) -> dict[str, Any] | None:
     """Resolve an API reference handoff and replace profile-owned CLI knobs.
 
@@ -8087,7 +8088,7 @@ def resolve_processing_profile_args(
     )
     profile = resolve_installed_processing_profile(binding["processing_profile_id"])
     sbe = profile["sbe"]
-    if binding["route"]["sbe_contract"] != SCHEMA_VERSION:
+    if binding["route"]["sbe_contract"] != (expected_sbe_contract or SCHEMA_VERSION):
         raise ValueError("processing profile SBE contract mismatch")
     for name in (
         "provider", "provider_service_level", "routing_policy", "model",
@@ -8104,7 +8105,8 @@ def resolve_processing_profile_args(
     ):
         target = "service_level" if name == "provider_service_level" else name
         setattr(args, target, sbe[name])
-    args.exact_natal_policy = profile["selection_policy"]
+    if hasattr(args, "exact_natal_policy"):
+        args.exact_natal_policy = profile["selection_policy"]
     args.foreground = not sbe["background"]
     return binding
 

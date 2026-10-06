@@ -228,7 +228,8 @@ def validate_processing_profile(value: Mapping[str, Any]) -> dict[str, Any]:
     deterministic = profile.get("deterministic_runtime")
     if not isinstance(deterministic, dict) or set(deterministic) != _DETERMINISTIC_RUNTIME_KEYS:
         raise ValueError("processing profile deterministic fragment is invalid")
-    if deterministic.get("birth_time_mode") not in {"exact", "bounded"}:
+    birth_time_mode = deterministic.get("birth_time_mode")
+    if birth_time_mode not in {"exact", "bounded"}:
         raise ValueError("processing profile birth-time mode is invalid")
     if deterministic.get("ephemeris_mode") != "moshier":
         raise ValueError("processing profile ephemeris mode is invalid")
@@ -236,7 +237,12 @@ def validate_processing_profile(value: Mapping[str, Any]) -> dict[str, Any]:
         "direct_to_dog", "general", "handler", "hybrid",
     ]:
         raise ValueError("processing profile projection contexts are invalid")
-    if deterministic.get("projection_contract") != "woofmapped_astrology.v0@0.1.0":
+    expected_projection_contract = (
+        "woofmapped_bounded_astrology.v0@0.1.0"
+        if birth_time_mode == "bounded"
+        else "woofmapped_astrology.v0@0.1.0"
+    )
+    if deterministic.get("projection_contract") != expected_projection_contract:
         raise ValueError("processing profile projection contract is invalid")
     compatibility = profile.get("worker_compatibility")
     if not isinstance(compatibility, dict) or set(compatibility) != {

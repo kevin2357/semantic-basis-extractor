@@ -42,6 +42,10 @@
       "weight_seconds": 122.434
     },
     {
+      "module": "test_bounded_eligibility.py",
+      "weight_seconds": 0.25
+    },
+    {
       "module": "test_bounded_product_qa.py",
       "weight_seconds": 7.211
     },

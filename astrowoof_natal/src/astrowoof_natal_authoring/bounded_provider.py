@@ -30,7 +30,10 @@ class OpenAIBoundedLifecycleProvider:
     def __init__(
         self, *, run_dir: Path, api_key: str, model: str = "gpt-5.6-terra",
         reasoning_effort: str = "medium", service_level: str = "interactive",
-        maximum_output_tokens: int = 100_000, **responses_options: Any,
+        maximum_output_tokens: int = 100_000,
+        system_prompts_by_stage: dict[str, str] | None = None,
+        prompt_release_provenance_by_stage: dict[str, dict[str, Any]] | None = None,
+        **responses_options: Any,
     ) -> None:
         if service_level not in {"interactive", "batch"}:
             raise ValueError("Bounded OpenAI service_level must be interactive or batch")
@@ -39,6 +42,11 @@ class OpenAIBoundedLifecycleProvider:
         self.reasoning_effort = reasoning_effort
         self.service_level = service_level
         self.maximum_output_tokens = maximum_output_tokens
+        self.system_prompts_by_stage = dict(system_prompts_by_stage or {})
+        self.prompt_release_provenance_by_stage = {
+            stage: dict(provenance)
+            for stage, provenance in (prompt_release_provenance_by_stage or {}).items()
+        }
         self.responses = OpenAIResponsesProvider(
             api_key=api_key, model=model, reasoning_effort=reasoning_effort,
             max_output_tokens=maximum_output_tokens,
@@ -188,7 +196,7 @@ class OpenAIBoundedLifecycleProvider:
         }
 
     @staticmethod
-    def _instructions(stage: str) -> str:
+    def _legacy_instructions(stage: str) -> str:
         common = (
             "Use only the supplied bounded invariant packet and current cards. "
             "Do not infer a representative birth time, exact placement, orb, strength, "
@@ -204,6 +212,16 @@ class OpenAIBoundedLifecycleProvider:
         if stage not in stages:
             raise ValueError(f"Unsupported bounded OpenAI stage: {stage}")
         return f"{stages[stage]} {common}"
+
+    def _instructions(self, stage: str) -> str:
+        """Return the profile-owned stage prompt, or the legacy prompt by default."""
+        return self.system_prompts_by_stage.get(
+            stage, self._legacy_instructions(stage),
+        )
+
+    def _prompt_release(self, stage: str) -> dict[str, Any] | None:
+        provenance = self.prompt_release_provenance_by_stage.get(stage)
+        return dict(provenance) if provenance is not None else None
 
     def logical_pass_request(
         self, *, stage: str, packet: dict[str, Any], attempt_number: int,
@@ -310,6 +328,9 @@ class OpenAIBoundedLifecycleProvider:
         )
         if stage != "qualitative_critic":
             result = self._hydrate_cards(result, payload["authoring_packet"])
+        prompt_release = self._prompt_release(stage)
+        if prompt_release is not None:
+            metadata = {**metadata, "prompt_release": prompt_release}
         return result, metadata
 
     def execute(

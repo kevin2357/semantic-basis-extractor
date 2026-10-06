@@ -28,10 +28,12 @@ PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
 AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
 COMPAT_V2_PROFILE_ID = "astrowoof.exact_natal.live.compat.v2"
 AXIS_AWARE_V2_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v2"
+BOUNDED_PROFILE_ID = "astrowoof.bounded_natal.live.stable_facts.v1"
 RELEASE_ID = "astrowoof.authoring.compat.v1"
 EDITORIAL_RELEASE_ID = "astrowoof.authoring.editorial.v2"
 COMPAT_V2_RELEASE_ID = "astrowoof.authoring.compat.v2"
 EDITORIAL_V3_RELEASE_ID = "astrowoof.authoring.editorial.v3"
+BOUNDED_RELEASE_ID = "astrowoof.authoring.bounded_stable_facts.v1"
 
 
 class ProcessingProfileSlice1Tests(unittest.TestCase):
@@ -40,6 +42,7 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         releases = read_prompt_release_catalog()
         self.assertEqual(
             [
+                BOUNDED_PROFILE_ID,
                 AXIS_AWARE_PROFILE_ID,
                 AXIS_AWARE_V2_PROFILE_ID,
                 PROFILE_ID,
@@ -49,6 +52,7 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         )
         self.assertEqual(
             [
+                BOUNDED_RELEASE_ID,
                 RELEASE_ID,
                 COMPAT_V2_RELEASE_ID,
                 EDITORIAL_RELEASE_ID,
@@ -81,6 +85,15 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         )
         self.assertEqual("live", profile["route"]["execution_mode"])
         self.assertEqual("interactive", profile["sbe"]["provider_service_level"])
+
+        bounded = resolve_installed_processing_profile(BOUNDED_PROFILE_ID)
+        self.assertEqual("bounded_natal", bounded["route"]["family"])
+        self.assertEqual("bounded", bounded["deterministic_runtime"]["birth_time_mode"])
+        self.assertEqual(
+            "woofmapped_bounded_astrology.v0@0.1.0",
+            bounded["deterministic_runtime"]["projection_contract"],
+        )
+        self.assertEqual(BOUNDED_RELEASE_ID, bounded["prompt_release"]["release_id"])
 
     def test_v2_profiles_preserve_semantics_but_require_0469(self) -> None:
         compat_v1 = read_processing_profile(PROFILE_ID)
@@ -153,6 +166,36 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             execution_mode="live",
             selection_policy="legacy_atomic.v1",
         ))
+
+    def test_bounded_profile_tuple_requires_bounded_projection_contract(self) -> None:
+        profile = deepcopy(read_processing_profile(PROFILE_ID))
+        profile["profile_id"] = "astrowoof.bounded_natal.live.stable_facts.v1"
+        profile["route"] = {
+            "family": "bounded_natal",
+            "execution_mode": "live",
+            "sbe_contract": "astrowoof.bounded_natal.authoring_run.v2",
+        }
+        profile["selection_policy"] = "stable_facts_only.v1"
+        profile["deterministic_runtime"]["birth_time_mode"] = "bounded"
+        profile["deterministic_runtime"]["projection_contract"] = (
+            "woofmapped_bounded_astrology.v0@0.1.0"
+        )
+        profile["profile_sha256"] = processing_profile_sha256(profile)
+        validated = validate_processing_profile(profile)
+        self.assertTrue(processing_profile_supports_tuple(
+            validated,
+            route_family="bounded_natal",
+            execution_mode="live",
+            selection_policy="stable_facts_only.v1",
+        ))
+
+        invalid = deepcopy(profile)
+        invalid["deterministic_runtime"]["projection_contract"] = (
+            "woofmapped_astrology.v0@0.1.0"
+        )
+        invalid["profile_sha256"] = processing_profile_sha256(invalid)
+        with self.assertRaisesRegex(ValueError, "projection contract"):
+            validate_processing_profile(invalid)
 
     def test_profile_rejects_injected_secrets_and_changed_identity(self) -> None:
         profile = read_processing_profile(PROFILE_ID)
@@ -289,6 +332,41 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
                 environment="qa", installed_version=lambda _name: "0.0.0",
             )
 
+    def test_bounded_binding_is_installed_route_and_prompt_specific(self) -> None:
+        profile = read_processing_profile(BOUNDED_PROFILE_ID)
+        versions = {
+            item["distribution"]: item["version"]
+            for item in profile["worker_compatibility"]["sbe_authoring"]
+            ["required_distributions"]
+        }
+        binding = resolve_sbe_authoring_binding(
+            profile_id=BOUNDED_PROFILE_ID,
+            profile_sha256=profile["profile_sha256"],
+            generation_manifest_sha256="a" * 64,
+            route_family="bounded_natal",
+            environment="qa",
+            installed_version=versions.__getitem__,
+        )
+        self.assertEqual("bounded_natal", binding["route"]["family"])
+        self.assertEqual(
+            "astrowoof.bounded_natal.authoring_run.v2",
+            binding["route"]["sbe_contract"],
+        )
+        self.assertEqual(BOUNDED_RELEASE_ID, binding["prompt_release"]["release_id"])
+        self.assertEqual(
+            [
+                {
+                    "logical_name": "AUTHORING BRIEF.md",
+                    "sha256": "8cd6ebf406b288bdc0897cac9b55a811523e89f91d3c8508a038b5767273c09e",
+                },
+                {
+                    "logical_name": "GUIDING LIGHTS.md",
+                    "sha256": "39f3d75f6e3df58d36c20b74c073c7d4b8d0697f64bda313df6b1258d6e01fc8",
+                },
+            ],
+            binding["prompt_release"]["workspace_components"],
+        )
+
     def test_historical_compatibility_profile_is_preserved_and_refuses_current_worker(self) -> None:
         profile = read_processing_profile(PROFILE_ID)
         self.assertEqual(
@@ -346,6 +424,22 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             b"Audience changes address and tone, never\n  astrology density",
             assets["GUIDING LIGHTS.md"],
         )
+
+    def test_bounded_release_owns_the_actual_stage_specific_provider_prompts(self) -> None:
+        expected = {
+            "initial": "Write every editorial field from the bounded packet.",
+            "retry": "Rewrite the complete assigned editorial pass after local QA rejection.",
+            "polish": "Polish prose only.",
+            "critic": "Critique the current deck without rewriting it.",
+        }
+        for stage, opening in expected.items():
+            prompt, provenance = resolve_prompt_release_stage(
+                BOUNDED_PROFILE_ID, stage=stage,
+            )
+            self.assertTrue(prompt.startswith(opening))
+            self.assertIn("Do not infer a representative birth time", prompt)
+            self.assertEqual(BOUNDED_RELEASE_ID, provenance["release_id"])
+            self.assertEqual(stage, provenance["stage"])
 
 
 if __name__ == "__main__":

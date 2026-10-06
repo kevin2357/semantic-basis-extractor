@@ -168,6 +168,43 @@ class TestBoundedOpenAIProvider(unittest.TestCase):
             self.assertNotIn("1981-10-10T15:00:00-06:00", rendered)
             self.assertNotIn("SEED-PROTECTED-DENVER", rendered)
 
+    def test_profile_bound_prompt_is_sent_and_its_safe_provenance_is_retained(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            transport = Transport(completed_response(editorial_response(self.cards)))
+            provider = OpenAIBoundedLifecycleProvider(
+                run_dir=Path(temporary), api_key="test-key", transport=transport,
+                system_prompts_by_stage={
+                    "authoring_initial": "sealed bounded system prompt",
+                },
+                prompt_release_provenance_by_stage={
+                    "authoring_initial": {
+                        "release_id": "astrowoof.authoring.bounded_stable_facts.v1",
+                        "stage": "initial",
+                    },
+                },
+            )
+            payload = {
+                "route": "bounded_natal.v2",
+                "stage": "authoring_initial",
+                "authoring_packet": self.artifacts.authoring_packet,
+            }
+            result, metadata = provider.execute(
+                stage="authoring_initial",
+                route="bounded_natal.v2:profile-bound:attempt-001",
+                payload=payload,
+                before_submit=lambda _: None,
+                provider_created=lambda *_: None,
+            )
+            self.assertEqual(self.cards, result)
+            self.assertEqual(
+                "sealed bounded system prompt",
+                transport.calls[0]["payload"]["input"][0]["content"],
+            )
+            self.assertEqual(
+                "astrowoof.authoring.bounded_stable_facts.v1",
+                metadata["prompt_release"]["release_id"],
+            )
+
     def test_interactive_pass_request_is_isolated_and_hydrates_only_its_authority(self):
         pass_id = self.artifacts.split_assignment["card_passes"][0]["pass_id"]
         packet = self.artifacts.pass_packets[pass_id]

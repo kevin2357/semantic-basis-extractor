@@ -5,11 +5,13 @@ import unittest
 from unittest.mock import patch
 
 from astrowoof_natal_authoring import closure
+from astrowoof_natal_authoring.bounded_authoring import BOUNDED_RUN_V2_CONTRACT
 from astrowoof_natal_authoring.processing_profiles import read_processing_profile
 
 
 PROFILE_ID = "astrowoof.exact_natal.live.compat.v1"
 AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
+BOUNDED_PROFILE_ID = "astrowoof.bounded_natal.live.stable_facts.v1"
 
 
 class ProcessingProfileRuntimeSlice2Tests(unittest.TestCase):
@@ -84,6 +86,31 @@ class ProcessingProfileRuntimeSlice2Tests(unittest.TestCase):
         args.processing_profile_sha256 = None
         with self.assertRaisesRegex(ValueError, "exact set"):
             closure.resolve_processing_profile_args(args, environment="qa")
+
+    def test_bounded_profile_uses_its_own_native_contract_without_exact_policy(self) -> None:
+        profile = read_processing_profile(BOUNDED_PROFILE_ID)
+        binding = {
+            "schema_version": "astrowoof.processing_profile_binding.v1",
+            "processing_profile_id": BOUNDED_PROFILE_ID,
+            "processing_profile_sha256": profile["profile_sha256"],
+            "generation_manifest_sha256": "b" * 64,
+            "route": profile["route"],
+            "selection_policy": profile["selection_policy"],
+            "prompt_release": profile["prompt_release"],
+            "worker_compatibility": {"worker_role": "sbe_authoring"},
+        }
+        args = self._args()
+        del args.exact_natal_policy
+        with patch.object(closure, "resolve_sbe_authoring_binding", return_value=binding):
+            resolved = closure.resolve_processing_profile_args(
+                args,
+                environment="qa",
+                expected_sbe_contract=BOUNDED_RUN_V2_CONTRACT,
+            )
+        self.assertEqual(binding, resolved)
+        self.assertEqual("openai", args.provider)
+        self.assertEqual("interactive", args.service_level)
+        self.assertFalse(hasattr(args, "exact_natal_policy"))
 
     def test_provider_keeps_profile_prompt_provenance_per_initial_and_retry_stage(self) -> None:
         provider = closure.OpenAIResponsesProvider(

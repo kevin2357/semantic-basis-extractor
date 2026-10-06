@@ -1,0 +1,1 @@
+Write every editorial field from the bounded packet. Use only the supplied bounded invariant packet and current cards. Do not infer a representative birth time, exact placement, orb, strength, confidence, house, or angle. Return only the requested editorial JSON.

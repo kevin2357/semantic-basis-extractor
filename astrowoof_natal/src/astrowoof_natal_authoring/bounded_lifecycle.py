@@ -11,6 +11,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import threading
 from copy import deepcopy
 from dataclasses import dataclass
@@ -196,6 +197,9 @@ def create_bounded_run(
     *,
     provider: BoundedLifecycleProvider | None = None,
     generation_profile: Mapping[str, Any] | None = None,
+    processing_profile_binding: Mapping[str, Any] | None = None,
+    prompt_workspace_assets: Mapping[str, bytes] | None = None,
+    native_run_id: str | None = None,
     event_emitter: ExecutionEventEmitter | None = None,
 ) -> dict[str, Any]:
     """Create one complete, resumable bounded workspace before provider work."""
@@ -229,6 +233,18 @@ def create_bounded_run(
     }
     for name, value in values.items():
         write_json_atomic(inputs / name, value)
+    prompt_assets: dict[str, dict[str, Any]] = {}
+    if prompt_workspace_assets is not None:
+        prompt_root = run_dir / "bounded" / "prompt-release"
+        prompt_root.mkdir()
+        for name, raw in sorted(prompt_workspace_assets.items()):
+            if not isinstance(name, str) or not name.endswith(".md") or "/" in name or "\\" in name:
+                raise ValueError("bounded prompt workspace asset name is invalid")
+            if not isinstance(raw, bytes):
+                raise ValueError("bounded prompt workspace asset is not bytes")
+            path = prompt_root / name
+            path.write_bytes(raw)
+            prompt_assets[name] = _artifact(path, run_dir)
     packets_dir = inputs / "passes"
     packets_dir.mkdir()
     packet_artifacts: dict[str, dict[str, Any]] = {}
@@ -239,7 +255,9 @@ def create_bounded_run(
     now = utc_now()
     subject = artifacts.authoring_packet["subject"]
     subject_id = str(subject.get("subject_id") or "bounded-subject")
-    run_id = _digest({
+    if native_run_id is not None and not re.fullmatch(r"[0-9a-f]{64}", native_run_id):
+        raise ValueError("bounded native run ID must be a lowercase SHA-256 digest")
+    run_id = native_run_id or _digest({
         "route": BOUNDED_ROUTE,
         "logical_root": normalized_path(run_dir),
         "claim_deck_sha256": _digest(artifacts.claim_deck),
@@ -309,10 +327,15 @@ def create_bounded_run(
             "disposition_report": _artifact(inputs / "disposition-report.json", run_dir),
             "split_assignment": _artifact(inputs / "split-assignment.json", run_dir),
             "pass_packets": packet_artifacts,
+            "prompt_workspace_assets": prompt_assets,
             "completed_stages": [], "skipped_stages": [],
             "completed_pass_ids": [],
         },
     }
+    if processing_profile_binding is not None:
+        state["processing_profile_binding"] = deepcopy(
+            dict(processing_profile_binding)
+        )
     if provider.paid:
         state["spend_ledger"] = new_ledger(validate_policy(profile.get("spend_policy")))
     persist_state(run_dir / "run.json", state)

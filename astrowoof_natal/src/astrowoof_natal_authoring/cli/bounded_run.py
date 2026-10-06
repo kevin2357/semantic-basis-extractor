@@ -24,9 +24,21 @@ from ..bounded_lifecycle import (
     resume_bounded_run,
 )
 from ..bounded_provider import OpenAIBoundedLifecycleProvider
-from ..bounded_selection import select_bounded_portfolio
-from ..closure import load_json, public_run_state
-from ..execution_events import ExecutionEventEmitter, JsonlEventSink
+from ..bounded_authoring import BOUNDED_RUN_V2_CONTRACT
+from ..bounded_selection import BoundedSelectionError, select_bounded_portfolio
+from ..closure import load_json, public_run_state, resolve_processing_profile_args
+from ..execution_events import (
+    ExecutionEventEmitter,
+    JsonlEventSink,
+    StdoutJsonlSink,
+    command_result_envelope,
+)
+from ..bounded_eligibility import build_bounded_eligibility_command_result
+from ..processing_profiles import (
+    resolve_installed_processing_profile,
+    resolve_prompt_release_stage,
+    resolve_prompt_release_workspace_assets,
+)
 from ..spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
@@ -46,12 +58,29 @@ def _json(path: Path | None) -> dict[str, Any] | None:
     return load_json(path) if path else None
 
 
-def _provider(args: argparse.Namespace):
+def _provider(
+    args: argparse.Namespace, *, processing_profile_id: str | None = None,
+):
     if args.provider == "fake":
         return FakeBoundedLifecycleProvider()
     key = os.environ.get("OPENAI_API_KEY")
     if not key:
         raise ValueError("OPENAI_API_KEY is required for provider=openai")
+    system_prompts_by_stage: dict[str, str] = {}
+    prompt_release_provenance_by_stage: dict[str, dict[str, Any]] = {}
+    if processing_profile_id is not None:
+        stage_map = {
+            "authoring_initial": "initial",
+            "creative_retry": "retry",
+            "polish": "polish",
+            "qualitative_critic": "critic",
+        }
+        for native_stage, release_stage in stage_map.items():
+            prompt, provenance = resolve_prompt_release_stage(
+                processing_profile_id, stage=release_stage,
+            )
+            system_prompts_by_stage[native_stage] = prompt
+            prompt_release_provenance_by_stage[native_stage] = provenance
     return OpenAIBoundedLifecycleProvider(
         run_dir=args.run_dir,
         api_key=key,
@@ -59,7 +88,75 @@ def _provider(args: argparse.Namespace):
         reasoning_effort=args.reasoning_effort,
         service_level=args.service_level,
         maximum_output_tokens=args.maximum_output_tokens,
+        system_prompts_by_stage=system_prompts_by_stage,
+        prompt_release_provenance_by_stage=prompt_release_provenance_by_stage,
     )
+
+
+def _resolve_profile_binding(args: argparse.Namespace) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Resolve the sealed bounded profile and replace caller-owned knobs."""
+    binding = resolve_processing_profile_args(
+        args, expected_sbe_contract=BOUNDED_RUN_V2_CONTRACT,
+    )
+    if binding is None:
+        return None, None
+    profile = resolve_installed_processing_profile(
+        binding["processing_profile_id"]
+    )
+    if profile["route"]["family"] != "bounded_natal":
+        raise ValueError("processing profile is not a bounded-Natal profile")
+    sbe = profile["sbe"]
+    args.provider = sbe["provider"]
+    args.service_level = sbe["provider_service_level"]
+    args.model = sbe["model"]
+    args.reasoning_effort = sbe["reasoning_effort"]
+    args.maximum_output_tokens = sbe["max_output_tokens"]
+    return binding, profile
+
+
+def _profile_generation_settings(
+    profile: dict[str, Any] | None, binding: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if profile is None or binding is None:
+        return None
+    sbe = profile["sbe"]
+    return {
+        "max_attempts": sbe["max_attempts"],
+        "optional_stages": {
+            "polish": sbe["polish"],
+            "qualitative_critic": sbe["qualitative_critic"],
+            "qualitative_candidate": sbe["qualitative_candidate"],
+        },
+        "processing_profile_binding": binding,
+        "selection_policy": profile["selection_policy"],
+        "prompt_release": binding["prompt_release"],
+    }
+
+
+def _command_output(state: dict[str, Any], sealed: dict[str, Any]) -> dict[str, Any]:
+    """Return the exact same-invocation delivery handoff when available."""
+    if sealed["result"].get("outcome") == "delivery_complete":
+        from ..terminal_review_contracts import build_terminal_delivery_command_result
+        return build_terminal_delivery_command_result(
+            sealed["result"], sealed["receipt"],
+        )
+    return public_run_state(state)
+
+
+def _bounded_eligibility_handoff(args: argparse.Namespace) -> dict[str, str] | None:
+    """Read the atomic API-owned identities needed before a workspace exists."""
+    values = {
+        "native_run_id": args.native_run_id,
+        "native_invocation_id": args.native_invocation_id,
+        "canonical_semantic_identity_sha256": args.canonical_semantic_identity_sha256,
+        "projection_set_evidence_sha256": args.projection_set_evidence_sha256,
+    }
+    present = [value is not None for value in values.values()]
+    if any(present) and not all(present):
+        raise ValueError("bounded eligibility handoff fields are required together")
+    if not any(present):
+        return None
+    return {key: str(value) for key, value in values.items()}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -68,6 +165,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--input-package", type=Path)
     parser.add_argument("--subject", type=Path)
     parser.add_argument("--generation-profile", type=Path)
+    parser.add_argument("--processing-profile-id", dest="processing_profile_id")
+    parser.add_argument("--processing-profile-sha256", dest="processing_profile_sha256")
+    parser.add_argument("--generation-manifest-sha256", dest="generation_manifest_sha256")
+    parser.add_argument(
+        "--processing-profile-route-family",
+        dest="processing_profile_route_family",
+    )
+    parser.add_argument("--native-run-id")
+    parser.add_argument("--native-invocation-id")
+    parser.add_argument("--canonical-semantic-identity-sha256")
+    parser.add_argument("--projection-set-evidence-sha256")
     parser.add_argument("--provider", choices=("fake", "openai"), default="fake")
     parser.add_argument("--model", default="gpt-5.6-terra")
     parser.add_argument("--reasoning-effort", default="medium")
@@ -100,6 +208,11 @@ def main() -> None:
         "service_level=%s",
         args.resume, args.provider_reconciliation_cycle, args.service_level,
     )
+    try:
+        processing_profile_binding, processing_profile = _resolve_profile_binding(args)
+        bounded_eligibility_handoff = _bounded_eligibility_handoff(args)
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.resume and (args.input_package or args.subject or args.generation_profile):
         parser.error("resume uses the frozen workspace; omit input, subject, and profile")
     if not args.resume and not args.input_package:
@@ -137,7 +250,61 @@ def main() -> None:
             "bounded external initial-wave authority requires interactive OpenAI "
             "resume and exactly six member authorizations"
         )
-    provider = _provider(args)
+    if args.resume and processing_profile_binding is not None:
+        durable = load_json(args.run_dir / "run.json")
+        if durable.get("processing_profile_binding") != processing_profile_binding:
+            parser.error("resume processing profile binding does not match durable run")
+    if args.resume and processing_profile_binding is None and (
+        args.run_dir / "run.json"
+    ).is_file() and load_json(args.run_dir / "run.json").get("processing_profile_binding") is not None:
+        parser.error("profile-bound resume requires the original processing profile handoff")
+    if args.resume and bounded_eligibility_handoff is not None:
+        parser.error("bounded eligibility handoff is only valid for a new run")
+    if not args.resume and processing_profile_binding is not None and bounded_eligibility_handoff is None:
+        parser.error(
+            "profile-bound bounded run requires the complete bounded eligibility handoff"
+        )
+    admission = None
+    selection = None
+    if not args.resume:
+        admission = admit_bounded_family(load_bounded_family(args.input_package))
+        basis = build_bounded_basis(admission)
+        try:
+            selection = select_bounded_portfolio(basis)
+        except BoundedSelectionError as exc:
+            if exc.code != "insufficient_invariant_basis" or bounded_eligibility_handoff is None:
+                raise
+            result = build_bounded_eligibility_command_result(
+                native_run_id=bounded_eligibility_handoff["native_run_id"],
+                native_invocation_id=bounded_eligibility_handoff["native_invocation_id"],
+                source_binding={
+                    "canonical_semantic_identity_sha256": bounded_eligibility_handoff[
+                        "canonical_semantic_identity_sha256"
+                    ],
+                    "projection_set_evidence_sha256": bounded_eligibility_handoff[
+                        "projection_set_evidence_sha256"
+                    ],
+                },
+                processing_profile_binding=processing_profile_binding,
+            )
+            StdoutJsonlSink()(command_result_envelope(result))
+            log_cli_exit(
+                logger, command="bounded_run", operation="bounded_eligibility",
+                exit_code=0, outcome="ineligible", result_id=result["result_id"],
+                authoritative_transport="stdout_jsonl",
+            )
+            return
+    provider = (
+        _provider(
+            args,
+            processing_profile_id=(
+                processing_profile_binding["processing_profile_id"]
+                if processing_profile_binding is not None else None
+            ),
+        )
+        if (args.resume or args.provider_reconciliation_cycle or not args.prepare_only)
+        else FakeBoundedLifecycleProvider()
+    )
     emitter = ExecutionEventEmitter(
         release=__version__,
         sink=JsonlEventSink(args.events_jsonl) if args.events_jsonl else None,
@@ -179,25 +346,42 @@ def main() -> None:
                 raise SystemExit(3)
             return
         if not args.resume:
-            admission = admit_bounded_family(load_bounded_family(args.input_package))
-            basis = build_bounded_basis(admission)
-            selection = select_bounded_portfolio(basis)
+            if admission is None or selection is None:
+                raise RuntimeError("bounded selection was not prepared")
             artifacts = compile_bounded_authoring_artifacts(
                 admission, selection, subject=_json(args.subject)
             )
+            prompt_assets = (
+                dict(resolve_prompt_release_workspace_assets(
+                    processing_profile_binding["processing_profile_id"],
+                ) or [])
+                if processing_profile_binding is not None else None
+            )
             state = create_bounded_run(
                 args.run_dir, artifacts, provider=provider,
-                generation_profile=_json(args.generation_profile),
+                generation_profile=(
+                    _profile_generation_settings(
+                        processing_profile, processing_profile_binding,
+                    )
+                    if processing_profile_binding is not None
+                    else _json(args.generation_profile)
+                ),
+                processing_profile_binding=processing_profile_binding,
+                prompt_workspace_assets=prompt_assets,
+                native_run_id=(
+                    bounded_eligibility_handoff["native_run_id"]
+                    if bounded_eligibility_handoff is not None else None
+                ),
                 event_emitter=emitter,
             )
             if args.prepare_only:
                 from ..native_transitions import publish_native_execution_result
-                publish_native_execution_result(
+                sealed = publish_native_execution_result(
                     args.run_dir, command_kind="ordinary_authoring",
                     sbe_release=__version__, published_at=state["updated_at"],
                     event_emitter=emitter,
                 )
-                print(json.dumps(public_run_state(state), sort_keys=True))
+                print(json.dumps(_command_output(state, sealed), sort_keys=True))
                 log_native_state_summary(logger, state, phase="prepare_only_complete")
                 log_cli_exit(
                     logger, command="bounded_run", operation="prepare_only",
@@ -215,13 +399,13 @@ def main() -> None:
             event_emitter=emitter,
         )
         from ..native_transitions import publish_native_execution_result
-        publish_native_execution_result(
+        sealed = publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=state["updated_at"],
             event_emitter=emitter,
         )
         log_native_state_summary(logger, state, phase="ordinary_run_complete")
-        print(json.dumps(public_run_state(state), sort_keys=True))
+        print(json.dumps(_command_output(state, sealed), sort_keys=True))
         log_cli_exit(
             logger, command="bounded_run",
             operation="resume" if args.resume else "create",
@@ -237,13 +421,13 @@ def main() -> None:
         )
         state = load_json(args.run_dir / "run.json")
         from ..native_transitions import publish_native_execution_result
-        publish_native_execution_result(
+        sealed = publish_native_execution_result(
             args.run_dir, command_kind="ordinary_authoring",
             sbe_release=__version__, published_at=state["updated_at"],
             event_emitter=emitter,
         )
         log_native_state_summary(logger, state, phase="external_boundary")
-        print(json.dumps(public_run_state(state), sort_keys=True))
+        print(json.dumps(_command_output(state, sealed), sort_keys=True))
         log_cli_exit(
             logger, command="bounded_run", operation="external_boundary",
             exit_code=3, outcome=type(exc).__name__,

@@ -398,6 +398,34 @@ class TestBoundedLifecycle(unittest.TestCase):
                     ),
                 }]
 
+    def test_profile_bound_create_persists_binding_and_prompt_asset_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir = Path(temporary) / "run"
+            binding = {
+                "schema_version": "astrowoof.processing_profile_binding.v1",
+                "processing_profile_id": "astrowoof.bounded_natal.live.stable_facts.v1",
+            }
+            state = create_bounded_run(
+                run_dir,
+                self.artifacts,
+                processing_profile_binding=binding,
+                prompt_workspace_assets={
+                    "AUTHORING BRIEF.md": b"bounded stable facts only\n",
+                    "GUIDING LIGHTS.md": b"no invented precision\n",
+                },
+            )
+            self.assertEqual(binding, state["processing_profile_binding"])
+            assets = state["bounded"]["prompt_workspace_assets"]
+            self.assertEqual(["AUTHORING BRIEF.md", "GUIDING LIGHTS.md"], list(assets))
+            self.assertEqual(
+                b"bounded stable facts only\n",
+                (run_dir / "bounded" / "prompt-release" / "AUTHORING BRIEF.md").read_bytes(),
+            )
+            self.assertEqual(
+                state["processing_profile_binding"],
+                load_json(run_dir / "run.json")["processing_profile_binding"],
+            )
+
     def test_openai_interactive_prepares_and_creates_one_six_member_wave(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             run_dir = Path(temporary) / "run"
