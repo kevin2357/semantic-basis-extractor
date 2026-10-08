@@ -1,15 +1,20 @@
 # Status
 
-**Slice 3 candidate handoff is complete and awaits API Gate D.** The
+**Canonical replacement candidate is built; the broad regression rerun is in
+progress before renewed API intake.** The
 bounded branch of `astrowoof-external-authority-v2` commits and dispatches in
 one process, so its raw capability never crosses the API/SBE boundary. It
 emits a typed bounded result distinct from ordinary v2.
 
-The earlier local `0.4.71` wheel was Gate C-only and is superseded. The retained
-`0.4.72` candidate is built twice from committed source `0b814260`, SHA-256
-`dadd3969f83f834e4c0dee7d61a2ef6b4be6592ad2505e31e1384c36999cb29b`,
-1,446,113 bytes. Its raw installed-command fixture is retained at
-`C:\tmp\sbe-0.4.72-bounded-initial-wave-v2-candidate\installed-command-fixture.json`.
+The earlier local `0.4.71` wheel was Gate C-only and is superseded. The first
+unpublished `0.4.72` candidate (`dadd3969…99cb29b`) is also superseded after
+the broad suite exposed an exact-route lifecycle regression. The replacement
+uses the same unreleased distribution version from source `986e05ea`, with
+`SOURCE_DATE_EPOCH=1791479232`, two clean canonical-LF archives, SHA-256
+`298273523a05c7a72cdd5404ca1727ef3f03c5c922785a7c5ba4da6f2990c364`, and
+1,442,607 bytes. Its two archive builds are byte-identical and contain no CRLF
+packaged text members. The retained wheel is
+`C:\tmp\sbe-0.4.72-regression-candidate\canonical-wheel-a\astrowoof_natal_authoring-0.4.72-py3-none-any.whl`.
 No release, provider call, deployment, or activation occurred.
 
 The final two Gate C corrections are included: `checkpoint_published` is now
@@ -25,5 +30,5 @@ injected failure, and duplicate authorization refusal. Slice 3 minted the
 immutable bounded `stable_facts.v3` / prompt-release `v3` pair bound to the
 new `0.4.72` package descriptor; neither supersedes the historical `v1` or
 `v2` records. The remaining gate is API's exact installed-wheel
-admission/resume/replay; no release, provider action, deployment, or activation
-is authorized.
+admission/resume/replay after the broad rerun is green; no release, provider
+action, deployment, or activation is authorized.
