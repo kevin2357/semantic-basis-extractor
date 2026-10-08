@@ -24,6 +24,12 @@ from ..closure import (
 )
 from ..execution_events import ExecutionEventEmitter, JsonlEventSink, StdoutJsonlSink
 from ..external_authority_v2 import build_no_grant_dispatch_result_v2
+from ..bounded_lifecycle import (
+    commit_bounded_initial_wave_v2_dispatch_intent,
+    dispatch_bounded_initial_wave_v2_intent,
+)
+from ..bounded_provider import OpenAIBoundedLifecycleProvider
+from ..initial_wave import InitialWaveError
 from ..external_authority_v2_execution import (
     ExternalAuthorityV2ExecutionError,
     build_external_authority_prepared_create,
@@ -51,6 +57,102 @@ from ..native_suspension_runtime import (
 logger = logging.getLogger(__name__)
 
 
+_BOUNDED_COMMAND_SCHEMA = "astrowoof.bounded_initial_wave_v2_command_result.v1"
+
+
+def _canonical_digest(value: dict[str, Any]) -> str:
+    return hashlib.sha256(json.dumps(
+        value, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")).hexdigest()
+
+
+def _bounded_command_result(
+    *, request: dict[str, Any], grant: dict[str, Any] | None,
+    intent_result: dict[str, Any] | None, wave_result: dict[str, Any] | None,
+    outcome: str, reason_code: str | None, native_mutation_performed: bool,
+    provider_io_performed: bool, checkpoint_published: bool,
+) -> dict[str, Any]:
+    """Closed API-facing envelope for one bounded v2 command invocation."""
+    body = {
+        "schema_version": _BOUNDED_COMMAND_SCHEMA,
+        "outcome": outcome,
+        "reason_code": reason_code,
+        "native_run_id": request["run_id"],
+        "checkpoint_basis_sha256": request["checkpoint_basis_sha256"],
+        "request_sha256": request["external_authority_request_sha256"],
+        "grant_sha256": None if grant is None else grant["grant_sha256"],
+        "api_decision_id": None if grant is None else grant["api_decision_id"],
+        "request_kind": "initial_wave_admission",
+        "ordering_semantics": "prepared_wave_semantic_member_order",
+        "ordered_action_ids": list(request["ordered_action_ids"]),
+        "initial_wave": request["initial_wave"],
+        "intent_result": intent_result,
+        "wave_result": wave_result,
+        "native_mutation_performed": native_mutation_performed,
+        "provider_io_performed": provider_io_performed,
+        "checkpoint_published": checkpoint_published,
+    }
+    return _validate_bounded_command_result({
+        **body, "result_sha256": _canonical_digest(body),
+    })
+
+
+def _validate_bounded_command_result(value: Any) -> dict[str, Any]:
+    keys = {
+        "schema_version", "result_sha256", "outcome", "reason_code",
+        "native_run_id", "checkpoint_basis_sha256", "request_sha256",
+        "grant_sha256", "api_decision_id", "request_kind",
+        "ordering_semantics", "ordered_action_ids", "initial_wave",
+        "intent_result", "wave_result", "native_mutation_performed",
+        "provider_io_performed", "checkpoint_published",
+    }
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ValueError("bounded initial-wave command result fields are not exact")
+    if (
+        value.get("schema_version") != _BOUNDED_COMMAND_SCHEMA
+        or value.get("outcome") not in {
+            "pre_provider_refusal", "detached_provider_pending", "exact_replay",
+            "ambiguous_custody_refusal",
+        }
+        or value.get("request_kind") != "initial_wave_admission"
+        or value.get("ordering_semantics") != "prepared_wave_semantic_member_order"
+        or not isinstance(value.get("native_run_id"), str) or not value["native_run_id"]
+        or any(
+            not isinstance(value.get(key), str) or len(value[key]) != 64
+            for key in ("checkpoint_basis_sha256", "request_sha256", "result_sha256")
+        )
+        or not isinstance(value.get("ordered_action_ids"), list)
+        or len(value["ordered_action_ids"]) != 6
+        or len(set(value["ordered_action_ids"])) != 6
+        or not isinstance(value.get("initial_wave"), dict)
+        or any(not isinstance(value.get(key), bool) for key in (
+            "native_mutation_performed", "provider_io_performed", "checkpoint_published",
+        ))
+    ):
+        raise ValueError("bounded initial-wave command result semantics are invalid")
+    refusal = value["outcome"] == "pre_provider_refusal"
+    if refusal and any(value[key] for key in (
+        "native_mutation_performed", "provider_io_performed", "checkpoint_published",
+    )):
+        raise ValueError("pre-provider refusal must be nonmutating")
+    if value["outcome"] == "exact_replay" and value["provider_io_performed"]:
+        raise ValueError("bounded exact replay cannot perform provider I/O")
+    body = {key: item for key, item in value.items() if key != "result_sha256"}
+    if value["result_sha256"] != _canonical_digest(body):
+        raise ValueError("bounded initial-wave command result digest mismatch")
+    return value
+
+
+class _FakeBoundedInitialProvider:
+    """Provider-free command double; never selected by production API inputs."""
+
+    name = "openai"
+
+    def create_interactive_only(self, *, body, idempotency_material, timeout_seconds):
+        del body, timeout_seconds
+        return {"id": f"fake-response-{idempotency_material}", "status": "queued"}, 1
+
+
 def _load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -74,6 +176,110 @@ def _render(value: dict[str, Any], output: Path | None) -> None:
         output.write_text(rendered, encoding="utf-8")
 
 
+def _run_bounded_initial_wave_v2(
+    *, args: argparse.Namespace, run_dir: Path, request: dict[str, Any],
+    inspection: dict[str, Any], event_emitter: ExecutionEventEmitter | None,
+) -> int:
+    """Consume the bounded v2 pair and dispatch in this exact process only."""
+    entry_state = _load(run_dir / "run.json")
+    was_detached = (
+        (entry_state.get("initial_authoring_wave") or {}).get("state") == "DETACHED"
+    )
+    if args.grant is None:
+        result = _bounded_command_result(
+            request=request, grant=None, intent_result=None, wave_result=None,
+            outcome="pre_provider_refusal", reason_code="compatible_grant_required",
+            native_mutation_performed=False, provider_io_performed=False,
+            checkpoint_published=False,
+        )
+        _render(result, args.output)
+        return 3
+    grant = _load(args.grant)
+    documents = [_load(path) for path in args.authorization]
+    if args.provider not in {"openai", "fake"}:
+        result = _bounded_command_result(
+            request=request, grant=grant, intent_result=None, wave_result=None,
+            outcome="pre_provider_refusal", reason_code="provider_required",
+            native_mutation_performed=False, provider_io_performed=False,
+            checkpoint_published=False,
+        )
+        _render(result, args.output)
+        return 3
+    try:
+        intent_result = commit_bounded_initial_wave_v2_dispatch_intent(
+            run_dir, request=request, inspection=inspection, grant=grant,
+            authorization_documents=documents, event_emitter=event_emitter,
+        )
+    except (InitialWaveError, ValueError) as exc:
+        result = _bounded_command_result(
+            request=request, grant=grant, intent_result=None, wave_result=None,
+            outcome="pre_provider_refusal",
+            reason_code=getattr(exc, "reason_code", "authority_validation_failed"),
+            native_mutation_performed=False, provider_io_performed=False,
+            checkpoint_published=False,
+        )
+        _render(result, args.output)
+        return 3
+
+    if args.provider == "fake":
+        provider = _FakeBoundedInitialProvider()
+    else:
+        api_key = os.environ.get(args.api_key_env)
+        if not api_key:
+            result = _bounded_command_result(
+                request=request, grant=grant, intent_result=intent_result,
+                wave_result=None, outcome="ambiguous_custody_refusal",
+                reason_code="provider_capability_unavailable",
+                native_mutation_performed=True, provider_io_performed=False,
+                checkpoint_published=True,
+            )
+            _render(result, args.output)
+            return 3
+        binding = documents[0].get("binding") if documents else None
+        if not isinstance(binding, dict):
+            result = _bounded_command_result(
+                request=request, grant=grant, intent_result=intent_result,
+                wave_result=None, outcome="ambiguous_custody_refusal",
+                reason_code="provider_configuration_invalid",
+                native_mutation_performed=True, provider_io_performed=False,
+                checkpoint_published=True,
+            )
+            _render(result, args.output)
+            return 3
+        provider = OpenAIBoundedLifecycleProvider(
+            run_dir=run_dir, api_key=api_key, model=binding["model"],
+            maximum_output_tokens=binding["maximum_output_tokens"],
+            base_url=args.base_url, http_timeout_seconds=args.http_timeout_seconds,
+            max_transport_retries=0,
+        )
+    try:
+        wave_result = dispatch_bounded_initial_wave_v2_intent(
+            run_dir,
+            request_sha256=request["external_authority_request_sha256"],
+            grant_sha256=grant["grant_sha256"], provider=provider,
+            event_emitter=event_emitter,
+        )
+    except InitialWaveError as exc:
+        result = _bounded_command_result(
+            request=request, grant=grant, intent_result=intent_result,
+            wave_result=None, outcome="ambiguous_custody_refusal",
+            reason_code=exc.reason_code, native_mutation_performed=True,
+            provider_io_performed=False, checkpoint_published=True,
+        )
+        _render(result, args.output)
+        return 3
+    replay = was_detached and wave_result.get("outcome") == "detached_provider_pending"
+    result = _bounded_command_result(
+        request=request, grant=grant, intent_result=intent_result,
+        wave_result=wave_result,
+        outcome="exact_replay" if replay else wave_result["outcome"],
+        reason_code=None, native_mutation_performed=not replay,
+        provider_io_performed=not replay, checkpoint_published=True,
+    )
+    _render(result, args.output)
+    return 0 if result["outcome"] in {"detached_provider_pending", "exact_replay"} else 3
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Consume or inspect one exact external-authority v2 request.",
@@ -83,7 +289,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--request", required=True, type=Path)
     parser.add_argument("--grant", type=Path)
     parser.add_argument("--authorization", action="append", type=Path, default=[])
-    parser.add_argument("--provider", choices=("none", "openai"), default="none")
+    parser.add_argument("--provider", choices=("none", "openai", "fake"), default="none")
     parser.add_argument("--api-key-env", default="OPENAI_API_KEY")
     parser.add_argument("--base-url", default="https://api.openai.com/v1")
     parser.add_argument("--http-timeout-seconds", type=float, default=15.0)
@@ -139,6 +345,12 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("command_start command=external_authority_v2 provider=%s", args.provider)
     inspection = _load(args.inspection)
     request = _load(args.request)
+
+    if request.get("request_kind") == "initial_wave_admission":
+        return _run_bounded_initial_wave_v2(
+            args=args, run_dir=run_dir, request=request, inspection=inspection,
+            event_emitter=event_emitter,
+        )
 
     if args.grant is None:
         if args.authorization or args.provider != "none":

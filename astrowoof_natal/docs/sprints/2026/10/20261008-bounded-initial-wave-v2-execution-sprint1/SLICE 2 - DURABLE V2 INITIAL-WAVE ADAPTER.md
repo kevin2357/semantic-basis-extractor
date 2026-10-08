@@ -41,7 +41,37 @@ resolver.
 4. descriptor tamper, injected pre-intent failure, and duplicate documents
    fail closed before provider I/O.
 
-The public CLI/result-envelope adaptation is intentionally not frozen by this
-slice. Gate C review must choose its exact API-visible result shape before the
-adapter is wired into the production command, rather than silently presenting
-the bounded semantic order as an ordinary v2 lexical result.
+## Public command envelope
+
+`astrowoof-external-authority-v2` now recognizes
+`initial_wave_admission` and performs commit and bounded dispatch within one
+process. Its closed result schema is
+`astrowoof.bounded_initial_wave_v2_command_result.v1`, deliberately distinct
+from ordinary v2 results. It carries the run/checkpoint/request/grant/API
+decision identities, semantic ordering, full initial-wave projection, durable
+intent receipt, optional wave result, three explicit mutation/I/O/checkpoint
+booleans, and a canonical `result_sha256`.
+
+The outcome vocabulary is `pre_provider_refusal`,
+`detached_provider_pending`, `exact_replay`, and
+`ambiguous_custody_refusal`. A refusal is mechanically constrained to no
+mutation, no provider I/O, and no checkpoint publication. A process restart
+after intent cannot recreate a provider call; it returns the typed ambiguity
+disposition instead.
+
+## Installed-command evidence
+
+The untagged local source wheel (`0.4.71`, SHA-256
+`01ad5b08059a3199b459d8ee90742974c8951f2f4ac93067f8cdbcd657bc9e48`,
+1,445,920 bytes) was installed into an isolated temporary venv. Its actual
+`astrowoof-external-authority-v2` console command ran the bounded fixture with
+`--provider fake` and produced:
+
+- `detached_provider_pending`, exit 0, native mutation and provider-I/O true;
+- `exact_replay`, exit 0, provider-I/O false; and
+- a wrong-grant `pre_provider_refusal`, exit 3, mutation/I/O false.
+
+The raw outputs are retained at
+`C:\tmp\sbe-bounded-v2-installed-command-fixture.json` for the matching API
+ingress fixture. This is provider-free fake transport only; it is not an
+OpenAI request, a publish, or a deployment.

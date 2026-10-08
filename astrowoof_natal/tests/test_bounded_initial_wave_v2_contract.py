@@ -32,6 +32,7 @@ from astrowoof_natal_authoring.external_authority_v2 import (
     validate_external_authority_grant_v2,
     validate_no_grant_dispatch_result_v2,
 )
+from astrowoof_natal_authoring.cli.external_authority_v2 import main as authority_v2_main
 from test_bounded_authoring import compiled
 
 
@@ -282,6 +283,58 @@ class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
                     api_decision_id="api-decision-bounded-v2",
                     issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
                 )
+
+    def test_public_command_emits_typed_success_refusal_and_replay(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            run_dir, inspection, request, documents = _bounded_initial_authority(root)
+            grant = build_external_authority_grant_v2(
+                request, inspection, documents,
+                api_decision_id="api-decision-bounded-v2",
+                issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
+            )
+            def write(name, value):
+                path = root / name
+                path.write_text(__import__("json").dumps(value), encoding="utf-8")
+                return path
+            inspection_path = write("inspection.json", inspection)
+            request_path = write("request.json", request)
+            grant_path = write("grant.json", grant)
+            document_paths = [write(f"authorization-{index}.json", value)
+                              for index, value in enumerate(documents)]
+            output = root / "result.json"
+            arguments = [
+                "--run-dir", str(run_dir), "--inspection", str(inspection_path),
+                "--request", str(request_path), "--grant", str(grant_path),
+                "--provider", "fake", "--output", str(output), "--log-level", "ERROR",
+            ]
+            for path in document_paths:
+                arguments.extend(["--authorization", str(path)])
+            self.assertEqual(0, authority_v2_main(arguments))
+            success = __import__("json").loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(
+                "astrowoof.bounded_initial_wave_v2_command_result.v1",
+                success["schema_version"],
+            )
+            self.assertEqual("detached_provider_pending", success["outcome"])
+            self.assertTrue(success["native_mutation_performed"])
+            self.assertTrue(success["provider_io_performed"])
+            self.assertEqual(0, authority_v2_main(arguments))
+            replay = __import__("json").loads(output.read_text(encoding="utf-8"))
+            self.assertEqual("exact_replay", replay["outcome"])
+            self.assertFalse(replay["provider_io_performed"])
+
+            # A wrong grant is rendered as a closed pre-provider refusal.
+            wrong_grant = copy.deepcopy(grant)
+            wrong_grant["grant_sha256"] = "0" * 64
+            wrong_grant_path = write("wrong-grant.json", wrong_grant)
+            wrong_arguments = list(arguments)
+            wrong_arguments[wrong_arguments.index(str(grant_path))] = str(wrong_grant_path)
+            self.assertEqual(3, authority_v2_main(wrong_arguments))
+            refusal = __import__("json").loads(output.read_text(encoding="utf-8"))
+            self.assertEqual("pre_provider_refusal", refusal["outcome"])
+            self.assertFalse(refusal["native_mutation_performed"])
+            self.assertFalse(refusal["provider_io_performed"])
 
 
 if __name__ == "__main__":
