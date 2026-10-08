@@ -96,6 +96,64 @@ available, confirm bounded payloads remain presentation-compatible. Only after
 all joint proof passes may a bounded profile be released/registered for a
 separately approved QA cohort.
 
+## Post-publication corrective track — 0.4.71 bounded paid initialization
+
+The released `0.4.70` bounded command accepts a sealed, eligible four-context
+source and reaches the paid native lifecycle, but it has no profile-bound way
+to receive API's already-approved native spend policy. It therefore fails
+closed before it writes a workspace, ledger, or public state. This is a narrow
+missing CLI-to-generation-profile handoff, not a change to bounded selection,
+editorial guidance, authority, or provider dispatch semantics.
+
+The correction is a new release line. Do not rewrite the `0.4.70` bounded
+profile/prompt identities or treat a newer package descriptor as equivalent.
+`0.4.71` will introduce immutable bounded `v2` processing-profile and prompt
+release records; the original `v1` records remain available for their
+historical package context.
+
+### Slice 3A — Freeze the policy and immutable successor identities
+
+Define the bounded CLI contract using the established exact-route spelling,
+`--spend-policy <json-path>`, only for a new OpenAI-bound profile initialization.
+The CLI loads and validates the policy before durable state creation and carries
+the validated policy unchanged into the native generation profile. A missing,
+malformed, or invalid policy refuses before workspace/ledger/provider activity.
+Resume/reconciliation must continue to read the sealed existing ledger, not
+accept replacement policy input.
+
+Create successor records for the bounded processing profile and bounded prompt
+release, both allowlisting only the new `v2` profile. Their package descriptor
+must require `astrowoof-natal-authoring==0.4.71`; record canonical component
+inventories and catalog/profile/release digests. The `v1` records are immutable.
+
+### Slice 3B — Implement bounded spend-policy handoff
+
+Add the bounded CLI option and its strict applicability/validation boundary.
+When a profile-bound new run resolves to OpenAI, merge the validated policy
+into `_profile_generation_settings()` so `create_bounded_run()` establishes the
+ordinary paid ledger. Do not add defaults, bypass API spend authority, relax
+authorization requirements, or alter the provider-free under-floor outcome.
+
+### Slice 3C — Provider-free CLI proof and candidate handoff
+
+Exercise a real eligible four-context bounded CLI invocation with an OpenAI
+profile, a valid API-supplied policy, disabled network, and no authorizations.
+It must create a durable OpenAI-bound workspace, retain the policy in its
+ledger/state, prepare exactly the initial six-member authority wave, and stop
+at the authority boundary with zero submissions. Cover missing/malformed
+policy refusal, resume-policy rejection, and unchanged under-floor behavior.
+
+Build a retained `0.4.71` candidate wheel and hand API its complete immutable
+identity table, the new bounded profile/prompt/catalog digests, and the
+provider-free fixture evidence. API must install and qualify that exact wheel
+before any tag, publication, context deployment, profile activation, or
+provider-backed bounded work.
+
+**Gate C — joint 0.4.71 installed-wheel admission:** API confirms the exact
+candidate can create and subsequently resume the normal authority-gated bounded
+workspace using its real handoff. A release/tag and any QA deployment remain
+separate owner-approved actions.
+
 ## Completion criteria
 
 The current SBE architecture—not the historical parallel command alone—can
