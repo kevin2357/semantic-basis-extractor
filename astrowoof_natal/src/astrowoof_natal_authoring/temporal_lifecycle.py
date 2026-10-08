@@ -120,6 +120,10 @@ _ROUTE_CONTRACTS = {
 }
 _ACTION_ID_PATTERN = re.compile(r"^paid_[0-9a-f]{24}$")
 _REQUEST_KINDS = {"ordinary_action_set", "initial_wave_admission"}
+_INITIAL_WAVE_ROUTE_CONTRACTS = {
+    "exact_natal": "astrowoof.semantic_closure_run.v0.9",
+    "bounded_natal": "astrowoof.bounded_natal.authoring_run.v2",
+}
 
 
 def canonical_utc_instant(value: str) -> str:
@@ -146,6 +150,33 @@ def _without_observed_at(observation: dict[str, Any]) -> dict[str, Any]:
     projected = deepcopy(observation)
     projected.pop("observed_at", None)
     return projected
+
+
+def _valid_initial_wave_context(
+    value: Any, *, route_family: str | None = None
+) -> bool:
+    """Validate one six-member initial-wave projection without crossing routes."""
+    if not isinstance(value, dict) or set(value) != _INITIAL_WAVE_CONTEXT_KEYS:
+        return False
+    route_contract = value.get("route_contract")
+    if route_family is None:
+        if route_contract not in set(_INITIAL_WAVE_ROUTE_CONTRACTS.values()):
+            return False
+    elif _INITIAL_WAVE_ROUTE_CONTRACTS.get(route_family) != route_contract:
+        return False
+    return not (
+        value.get("member_count") != 6
+        or any(not _valid_sha256(value.get(field)) for field in (
+            "wave_sha256", "assignment_sha256", "profile_sha256",
+        ))
+        or not isinstance(value.get("wave_id"), str) or not value["wave_id"]
+        or not isinstance(value.get("ordered_member_binding_sha256s"), list)
+        or len(value["ordered_member_binding_sha256s"]) != 6
+        or any(
+            not _valid_sha256(item)
+            for item in value["ordered_member_binding_sha256s"]
+        )
+    )
 
 
 def _authority_state(value: dict[str, Any]) -> dict[str, Any]:
@@ -576,17 +607,9 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
         if authority["request_kind"] == "initial_wave_admission":
             wave = authority.get("initial_wave")
             if (
-                basis["native_route"]["route_family"] != "bounded_natal"
-                or not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
-                or wave.get("member_count") != 6
-                or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
-                or any(not _valid_sha256(wave.get(field)) for field in (
-                    "wave_sha256", "assignment_sha256", "profile_sha256",
-                ))
-                or not isinstance(wave.get("wave_id"), str) or not wave["wave_id"]
-                or not isinstance(wave.get("ordered_member_binding_sha256s"), list)
-                or len(wave["ordered_member_binding_sha256s"]) != 6
-                or any(not _valid_sha256(item) for item in wave["ordered_member_binding_sha256s"])
+                not _valid_initial_wave_context(
+                    wave, route_family=basis["native_route"]["route_family"]
+                )
             ):
                 raise ValueError("Checkpoint initial-wave projection is invalid")
             by_id = {item["action_id"]: item for item in inventory["actions"]}
@@ -749,16 +772,7 @@ def validate_external_authority_request_v2(value: dict[str, Any]) -> None:
     if value.get("request_kind") == "initial_wave_admission":
         wave = value.get("initial_wave")
         if (
-            not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
-            or len(ids) != 6 or wave.get("member_count") != 6
-            or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
-            or any(not _valid_sha256(wave.get(field)) for field in (
-                "wave_sha256", "assignment_sha256", "profile_sha256",
-            ))
-            or not isinstance(wave.get("wave_id"), str) or not wave["wave_id"]
-            or not isinstance(wave.get("ordered_member_binding_sha256s"), list)
-            or len(wave["ordered_member_binding_sha256s"]) != 6
-            or any(not _valid_sha256(item) for item in wave["ordered_member_binding_sha256s"])
+            len(ids) != 6 or not _valid_initial_wave_context(wave)
         ):
             raise ValueError("External-authority initial-wave projection is invalid")
     body = {

@@ -30,6 +30,10 @@ class TestLogicalPassProtocol(unittest.TestCase):
         self.packet = deepcopy(artifacts.pass_packets[first_pass_id])
         provider = object.__new__(OpenAIBoundedLifecycleProvider)
         provider.maximum_output_tokens = 30_000
+        # This protocol-only fixture deliberately bypasses provider initialization.
+        # Retain the production default: no profile-owned prompt override.
+        provider.system_prompts_by_stage = {}
+        provider.prompt_release_provenance_by_stage = {}
         self.provider = provider
 
     def test_bounded_request_binding_is_deterministic_and_transport_neutral(self) -> None:
