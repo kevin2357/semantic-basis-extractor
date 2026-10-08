@@ -21,3 +21,22 @@ later sealed native publication invocation ID. The superseding `58c9ba…`
 candidate is retained and installed-wheel qualified. The next work is API
 receipt-ingress/idempotency proof, then the separately approved joint Gate C
 path.
+
+## 0.4.71 paid-initialization corrective track
+
+API's provider-free replay found a narrow post-`0.4.70` integration omission:
+the bounded profile resolves to OpenAI but the bounded CLI had no way to pass
+the API-approved native spend policy into the durable generation profile. The
+native lifecycle correctly refused before workspace/provider activity.
+
+SBE is implementing the existing `--spend-policy <json-path>` convention for a
+new profile-bound OpenAI bounded run only. The policy is validated before any
+workspace/provider work, sealed in the native ledger at creation, and refused
+on resume, reconciliation, or `--prepare-only`; no default or substituted
+policy exists. `v1` bounded profile/prompt records remain immutable. The
+successor `stable_facts.v2` / `bounded_stable_facts.v2` records require SBE
+`0.4.71`. Provider-free CLI coverage proves the eligible four-context path
+prepares six actions and stops at authority with zero provider submission and
+network access. The next boundary is a retained `0.4.71` candidate and API's
+exact installed-wheel admission/replay; no deployment, activation, or provider
+work is authorized by this status update.

@@ -154,6 +154,11 @@ candidate can create and subsequently resume the normal authority-gated bounded
 workspace using its real handoff. A release/tag and any QA deployment remain
 separate owner-approved actions.
 
+**Implementation status:** Slices 3A–3B are complete in source and Slice 3C's
+provider-free CLI proof is recorded in
+[Slice 3 bounded spend-policy handoff](SLICE%203%20-%20BOUNDED%20SPEND%20POLICY%20HANDOFF.md).
+The next work is the retained-wheel/API portion of Slice 3C.
+
 ## Completion criteria
 
 The current SBE architecture—not the historical parallel command alone—can

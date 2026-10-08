@@ -29,11 +29,13 @@ AXIS_AWARE_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v1"
 COMPAT_V2_PROFILE_ID = "astrowoof.exact_natal.live.compat.v2"
 AXIS_AWARE_V2_PROFILE_ID = "astrowoof.exact_natal.live.axisawaresbe.v2"
 BOUNDED_PROFILE_ID = "astrowoof.bounded_natal.live.stable_facts.v1"
+BOUNDED_V2_PROFILE_ID = "astrowoof.bounded_natal.live.stable_facts.v2"
 RELEASE_ID = "astrowoof.authoring.compat.v1"
 EDITORIAL_RELEASE_ID = "astrowoof.authoring.editorial.v2"
 COMPAT_V2_RELEASE_ID = "astrowoof.authoring.compat.v2"
 EDITORIAL_V3_RELEASE_ID = "astrowoof.authoring.editorial.v3"
 BOUNDED_RELEASE_ID = "astrowoof.authoring.bounded_stable_facts.v1"
+BOUNDED_V2_RELEASE_ID = "astrowoof.authoring.bounded_stable_facts.v2"
 
 
 class ProcessingProfileSlice1Tests(unittest.TestCase):
@@ -43,6 +45,7 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         self.assertEqual(
             [
                 BOUNDED_PROFILE_ID,
+                BOUNDED_V2_PROFILE_ID,
                 AXIS_AWARE_PROFILE_ID,
                 AXIS_AWARE_V2_PROFILE_ID,
                 PROFILE_ID,
@@ -53,6 +56,7 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
         self.assertEqual(
             [
                 BOUNDED_RELEASE_ID,
+                BOUNDED_V2_RELEASE_ID,
                 RELEASE_ID,
                 COMPAT_V2_RELEASE_ID,
                 EDITORIAL_RELEASE_ID,
@@ -94,6 +98,21 @@ class ProcessingProfileSlice1Tests(unittest.TestCase):
             bounded["deterministic_runtime"]["projection_contract"],
         )
         self.assertEqual(BOUNDED_RELEASE_ID, bounded["prompt_release"]["release_id"])
+
+        bounded_v2 = resolve_installed_processing_profile(BOUNDED_V2_PROFILE_ID)
+        bounded_v2_release = read_prompt_release(BOUNDED_V2_RELEASE_ID)
+        self.assertEqual(bounded["route"], bounded_v2["route"])
+        self.assertEqual(bounded["selection_policy"], bounded_v2["selection_policy"])
+        self.assertEqual(
+            "0.4.71",
+            bounded_v2["worker_compatibility"]["sbe_authoring"]
+            ["required_distributions"][0]["version"],
+        )
+        self.assertEqual(
+            BOUNDED_V2_RELEASE_ID, bounded_v2["prompt_release"]["release_id"],
+        )
+        self.assertEqual([BOUNDED_V2_PROFILE_ID], bounded_v2_release["profile_ids"])
+        self.assertNotEqual(bounded["profile_sha256"], bounded_v2["profile_sha256"])
 
     def test_v2_profiles_preserve_semantics_but_require_0469(self) -> None:
         compat_v1 = read_processing_profile(PROFILE_ID)

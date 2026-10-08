@@ -43,6 +43,7 @@ from ..spend import (
     AmbiguousProviderSubmission,
     AwaitingSpendAuthorization,
     BudgetExhausted,
+    validate_policy,
 )
 from ..trace_observability import (
     log_cli_exit,
@@ -116,11 +117,12 @@ def _resolve_profile_binding(args: argparse.Namespace) -> tuple[dict[str, Any] |
 
 def _profile_generation_settings(
     profile: dict[str, Any] | None, binding: dict[str, Any] | None,
+    *, spend_policy: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     if profile is None or binding is None:
         return None
     sbe = profile["sbe"]
-    return {
+    settings = {
         "max_attempts": sbe["max_attempts"],
         "optional_stages": {
             "polish": sbe["polish"],
@@ -131,6 +133,12 @@ def _profile_generation_settings(
         "selection_policy": profile["selection_policy"],
         "prompt_release": binding["prompt_release"],
     }
+    if spend_policy is not None:
+        # The policy is API-owned admission input, not a profile default.  It
+        # becomes immutable only when the paid native workspace seals its
+        # ledger during create_bounded_run().
+        settings["spend_policy"] = validate_policy(spend_policy)
+    return settings
 
 
 def _command_output(state: dict[str, Any], sealed: dict[str, Any]) -> dict[str, Any]:
@@ -216,6 +224,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--reasoning-effort", default="medium")
     parser.add_argument("--service-level", choices=("interactive", "batch"), default="interactive")
     parser.add_argument("--maximum-output-tokens", type=int, default=100_000)
+    parser.add_argument(
+        "--spend-policy", type=Path,
+        help=(
+            "API-approved native spend policy JSON; required for a new "
+            "profile-bound OpenAI bounded run and frozen after creation"
+        ),
+    )
     parser.add_argument("--spend-authorization", type=Path, action="append", default=[])
     parser.add_argument("--initial-wave-authorization", type=Path)
     parser.add_argument("--external-authority-request", type=Path)
@@ -250,6 +265,8 @@ def main() -> None:
         parser.error(str(exc))
     if args.resume and (args.input_package or args.subject or args.generation_profile):
         parser.error("resume uses the frozen workspace; omit input, subject, and profile")
+    if args.resume and args.spend_policy:
+        parser.error("--spend-policy is frozen at creation and cannot change on resume")
     if not args.resume and not args.input_package:
         parser.error("new bounded runs require --input-package")
     if args.prepare_only and args.resume:
@@ -265,6 +282,30 @@ def main() -> None:
         parser.error("provider reconciliation cannot apply spend authorization")
     if args.provider_reconciliation_cycle and not args.observed_at:
         parser.error("--provider-reconciliation-cycle requires --observed-at")
+    spend_policy: dict[str, Any] | None = None
+    if args.spend_policy:
+        if processing_profile_binding is None or args.provider != "openai":
+            parser.error(
+                "--spend-policy is only valid for a new profile-bound OpenAI bounded run"
+            )
+        try:
+            spend_policy = validate_policy(load_json(args.spend_policy))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            parser.error(f"invalid --spend-policy: {exc}")
+    elif (
+        not args.resume
+        and processing_profile_binding is not None
+        and args.provider == "openai"
+    ):
+        parser.error("new profile-bound OpenAI bounded runs require --spend-policy")
+    if (
+        args.prepare_only
+        and processing_profile_binding is not None
+        and args.provider == "openai"
+    ):
+        parser.error(
+            "--prepare-only cannot create a profile-bound OpenAI bounded workspace"
+        )
     if args.initial_wave_authorization and len(args.spend_authorization) != 6:
         parser.error(
             "--initial-wave-authorization requires exactly six ordered "
@@ -399,6 +440,7 @@ def main() -> None:
                 generation_profile=(
                     _profile_generation_settings(
                         processing_profile, processing_profile_binding,
+                        spend_policy=spend_policy,
                     )
                     if processing_profile_binding is not None
                     else _json(args.generation_profile)

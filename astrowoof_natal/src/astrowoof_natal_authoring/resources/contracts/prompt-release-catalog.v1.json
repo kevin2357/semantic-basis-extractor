@@ -1,6 +1,6 @@
 {
   "schema_version": "astrowoof.prompt_release_catalog.v1",
-  "catalog_sha256": "f9ebcb02503217003d6dbf87867b8a32eed81860c17a46bf9128149a952e3214",
+  "catalog_sha256": "880671e257d6480e6957baa1dbd72873330981302c05014e18939dfe1f18473a",
   "releases": [
     {
       "schema_version": "astrowoof.prompt_release.v2",
@@ -60,6 +60,65 @@
         }
       ],
       "release_sha256": "ddf589eee616ef04b411a345d81c1fc635682766593ffed18020a72a329118fe"
+    },
+    {
+      "schema_version": "astrowoof.prompt_release.v2",
+      "release_id": "astrowoof.authoring.bounded_stable_facts.v2",
+      "release_version": "2.0.0",
+      "status": "active",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route_families": [
+        "bounded_natal"
+      ],
+      "profile_ids": [
+        "astrowoof.bounded_natal.live.stable_facts.v2"
+      ],
+      "stage_components": {
+        "initial": ["system_bounded_initial"],
+        "retry": ["system_bounded_retry"],
+        "polish": ["system_bounded_polish"],
+        "critic": ["system_bounded_critic"]
+      },
+      "components": [
+        {
+          "component_id": "system_bounded_critic",
+          "resource": "authoring/prompt-system-bounded-authoring-critic.v1.md",
+          "sha256": "c1961d8370d15ef34854047866e025502da46e6667dcece2822c5d35cac04832"
+        },
+        {
+          "component_id": "system_bounded_initial",
+          "resource": "authoring/prompt-system-bounded-authoring-initial.v1.md",
+          "sha256": "d619cc06b6c20935545efc9028890cba2328396f6b713c259430becabbacd55f"
+        },
+        {
+          "component_id": "system_bounded_polish",
+          "resource": "authoring/prompt-system-bounded-authoring-polish.v1.md",
+          "sha256": "441cb33894b1b013c3e6103059acd739526c20e25268632b29a5930fe8f3ecc7"
+        },
+        {
+          "component_id": "system_bounded_retry",
+          "resource": "authoring/prompt-system-bounded-authoring-retry.v1.md",
+          "sha256": "304915fbe8f1bdb88d3fb898470087a631432cbd48593cec5339394f206ade5b"
+        }
+      ],
+      "workspace_components": [
+        {
+          "component_id": "authoring_brief",
+          "resource": "authoring/Bounded Natal Story Workspace Authoring Brief.md",
+          "destination": "AUTHORING BRIEF.md",
+          "sha256": "8cd6ebf406b288bdc0897cac9b55a811523e89f91d3c8508a038b5767273c09e"
+        },
+        {
+          "component_id": "guiding_lights",
+          "resource": "authoring/Bounded Natal Authoring Guiding Lights.md",
+          "destination": "GUIDING LIGHTS.md",
+          "sha256": "39f3d75f6e3df58d36c20b74c073c7d4b8d0697f64bda313df6b1258d6e01fc8"
+        }
+      ],
+      "release_sha256": "f91501af0425ecf71e77ca6d1daacc582780de98f70c9fe01a4c4b1e9b49476b"
     },
     {
       "schema_version": "astrowoof.prompt_release.v1",
