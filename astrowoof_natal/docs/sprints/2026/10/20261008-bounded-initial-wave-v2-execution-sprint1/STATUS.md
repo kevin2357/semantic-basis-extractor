@@ -8,10 +8,15 @@ emits a typed bounded result distinct from ordinary v2.
 An unpublished local `0.4.71` wheel was installed into an isolated temporary
 venv and its real console command passed provider-free success, exact replay,
 and wrong-grant refusal cells. Candidate: SHA-256
-`01ad5b08059a3199b459d8ee90742974c8951f2f4ac93067f8cdbcd657bc9e48`,
-1,445,920 bytes. The raw three-output fixture is retained locally at
+`122a702c05bec119c5afed74710d9e5dcfff081f32ee9336827a4b0f594e4841`,
+1,447,968 bytes. The raw three-output fixture is retained locally at
 `C:\tmp\sbe-bounded-v2-installed-command-fixture.json`; no release, provider
 call, deployment, or activation occurred.
+
+The final two Gate C corrections are included: `checkpoint_published` is now
+per invocation (false on exact replay), and the command envelope has a public
+validator plus packaged closed JSON schema. Focused tests include altered
+envelope refusal.
 
 The new process-local capability is deliberately not written into the
 workspace: a later process may reconcile durable identities but cannot turn a

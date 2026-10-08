@@ -33,6 +33,10 @@ from astrowoof_natal_authoring.external_authority_v2 import (
     validate_no_grant_dispatch_result_v2,
 )
 from astrowoof_natal_authoring.cli.external_authority_v2 import main as authority_v2_main
+from astrowoof_natal_authoring import (
+    read_bounded_initial_wave_v2_command_result_schema,
+    validate_bounded_initial_wave_v2_command_result,
+)
 from test_bounded_authoring import compiled
 
 
@@ -319,10 +323,21 @@ class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
             self.assertEqual("detached_provider_pending", success["outcome"])
             self.assertTrue(success["native_mutation_performed"])
             self.assertTrue(success["provider_io_performed"])
+            self.assertTrue(success["checkpoint_published"])
+            self.assertEqual(success, validate_bounded_initial_wave_v2_command_result(success))
+            self.assertEqual(
+                "astrowoof.bounded_initial_wave_v2_command_result.v1",
+                read_bounded_initial_wave_v2_command_result_schema()["$id"],
+            )
             self.assertEqual(0, authority_v2_main(arguments))
             replay = __import__("json").loads(output.read_text(encoding="utf-8"))
             self.assertEqual("exact_replay", replay["outcome"])
             self.assertFalse(replay["provider_io_performed"])
+            self.assertFalse(replay["checkpoint_published"])
+            altered = copy.deepcopy(replay)
+            altered["provider_io_performed"] = True
+            with self.assertRaisesRegex(ValueError, "exact replay"):
+                validate_bounded_initial_wave_v2_command_result(altered)
 
             # A wrong grant is rendered as a closed pre-provider refusal.
             wrong_grant = copy.deepcopy(grant)

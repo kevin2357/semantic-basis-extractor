@@ -379,6 +379,12 @@ from .external_authority_v2 import (  # noqa: E402
     validate_external_authority_grant_v2,
     validate_no_grant_dispatch_result_v2,
 )
+from .bounded_initial_wave_v2_command import (  # noqa: E402
+    BOUNDED_INITIAL_WAVE_V2_COMMAND_RESULT_SCHEMA,
+    build_bounded_initial_wave_v2_command_result,
+    read_bounded_initial_wave_v2_command_result_schema,
+    validate_bounded_initial_wave_v2_command_result,
+)
 from .external_authority_v2_execution import (  # noqa: E402
     ExternalAuthorityV2ExecutionError,
     build_external_authority_v2_command_result,
@@ -718,12 +724,16 @@ __all__ = [
     "validate_external_authority_refusal",
     "validate_external_authority_request",
     "build_external_authority_grant_v2",
+    "BOUNDED_INITIAL_WAVE_V2_COMMAND_RESULT_SCHEMA",
+    "build_bounded_initial_wave_v2_command_result",
     "build_no_grant_dispatch_result_v2",
     "read_external_authority_dispatch_result_v2_schema",
+    "read_bounded_initial_wave_v2_command_result_schema",
     "read_external_authority_grant_v2_schema",
     "read_external_authority_v2_fixture",
     "validate_authorization_document_v2",
     "validate_external_authority_grant_v2",
+    "validate_bounded_initial_wave_v2_command_result",
     "validate_no_grant_dispatch_result_v2",
     "ExternalAuthorityV2ExecutionError",
     "build_external_authority_v2_command_result",

@@ -52,6 +52,13 @@ decision identities, semantic ordering, full initial-wave projection, durable
 intent receipt, optional wave result, three explicit mutation/I/O/checkpoint
 booleans, and a canonical `result_sha256`.
 
+`checkpoint_published` is strictly per invocation: it is true only when that
+command invocation made a durable checkpoint publication. Consequently an
+exact replay has all three effect flags false. The public validator
+`validate_bounded_initial_wave_v2_command_result()` and packaged schema reader
+`read_bounded_initial_wave_v2_command_result_schema()` are the supported API
+ingress surface; altered result bytes, effect claims, or digest refuse.
+
 The outcome vocabulary is `pre_provider_refusal`,
 `detached_provider_pending`, `exact_replay`, and
 `ambiguous_custody_refusal`. A refusal is mechanically constrained to no
@@ -62,8 +69,8 @@ disposition instead.
 ## Installed-command evidence
 
 The untagged local source wheel (`0.4.71`, SHA-256
-`01ad5b08059a3199b459d8ee90742974c8951f2f4ac93067f8cdbcd657bc9e48`,
-1,445,920 bytes) was installed into an isolated temporary venv. Its actual
+`122a702c05bec119c5afed74710d9e5dcfff081f32ee9336827a4b0f594e4841`,
+1,447,968 bytes) was installed into an isolated temporary venv. Its actual
 `astrowoof-external-authority-v2` console command ran the bounded fixture with
 `--provider fake` and produced:
 

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "astrowoof.bounded_initial_wave_v2_command_result.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "result_sha256", "outcome", "reason_code",
+    "native_run_id", "checkpoint_basis_sha256", "request_sha256",
+    "grant_sha256", "api_decision_id", "request_kind", "ordering_semantics",
+    "ordered_action_ids", "initial_wave", "intent_result", "wave_result",
+    "native_mutation_performed", "provider_io_performed", "checkpoint_published"
+  ],
+  "properties": {
+    "schema_version": {"const": "astrowoof.bounded_initial_wave_v2_command_result.v1"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "outcome": {"enum": ["pre_provider_refusal", "detached_provider_pending", "exact_replay", "ambiguous_custody_refusal"]},
+    "reason_code": {"type": ["string", "null"]},
+    "native_run_id": {"type": "string", "minLength": 1},
+    "checkpoint_basis_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "grant_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "api_decision_id": {"type": ["string", "null"]},
+    "request_kind": {"const": "initial_wave_admission"},
+    "ordering_semantics": {"const": "prepared_wave_semantic_member_order"},
+    "ordered_action_ids": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string", "minLength": 1}},
+    "initial_wave": {"type": "object"},
+    "intent_result": {"type": ["object", "null"]},
+    "wave_result": {"type": ["object", "null"]},
+    "native_mutation_performed": {"type": "boolean"},
+    "provider_io_performed": {"type": "boolean"},
+    "checkpoint_published": {"type": "boolean"}
+  }
+}
