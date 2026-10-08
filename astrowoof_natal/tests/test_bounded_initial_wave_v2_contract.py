@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -19,6 +20,7 @@ from astrowoof_natal_authoring.temporal_lifecycle import (
     inspect_temporal_lifecycle,
     validate_external_authority_request_v2_against_inspection,
 )
+from astrowoof_natal_authoring.lifecycle_contracts import canonical_contract_json
 from astrowoof_natal_authoring.external_authority_v2 import (
     build_external_authority_grant_v2,
     build_no_grant_dispatch_result_v2,
@@ -99,6 +101,18 @@ def _bounded_initial_authority(root: Path):
 
 
 class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
+    @staticmethod
+    def _rehash_inspection(inspection: dict) -> None:
+        inspection["checkpoint_basis_sha256"] = hashlib.sha256(
+            canonical_contract_json(inspection["checkpoint_basis"]).encode("utf-8")
+        ).hexdigest()
+        inspection["temporal_decision"]["checkpoint_basis_sha256"] = (
+            inspection["checkpoint_basis_sha256"]
+        )
+        inspection["temporal_decision_sha256"] = hashlib.sha256(
+            canonical_contract_json(inspection["temporal_decision"]).encode("utf-8")
+        ).hexdigest()
+
     def test_initial_wave_request_and_grant_bind_the_semantic_six_member_projection(self):
         with tempfile.TemporaryDirectory() as temporary:
             _, inspection, request, documents = _bounded_initial_authority(Path(temporary))
@@ -125,8 +139,6 @@ class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
             _, inspection, request, documents = _bounded_initial_authority(Path(temporary))
             changed = copy.deepcopy(request)
             changed["initial_wave"]["assignment_sha256"] = "0" * 64
-            from astrowoof_natal_authoring.lifecycle_contracts import canonical_contract_json
-            import hashlib
             body = {key: value for key, value in changed.items()
                     if key != "external_authority_request_sha256"}
             changed["external_authority_request_sha256"] = hashlib.sha256(
@@ -143,6 +155,15 @@ class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
                     issuer="astrowoof-api",
                     issued_at="2026-10-08T18:00:01Z",
                 )
+
+    def test_cross_route_initial_wave_projection_refuses_before_grant_or_no_grant(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            _, inspection, _, documents = _bounded_initial_authority(Path(temporary))
+            mismatched = copy.deepcopy(inspection)
+            mismatched["checkpoint_basis"]["native_route"]["route_family"] = "exact_natal"
+            self._rehash_inspection(mismatched)
+            with self.assertRaisesRegex(ValueError, "native route|initial-wave"):
+                build_external_authority_request_v2(mismatched)
 
     def test_initial_wave_binding_descriptor_tamper_refuses_before_authority_export(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -135,14 +135,16 @@ def _ordering_semantics(request: Mapping[str, Any]) -> str:
 
 
 def _validate_initial_wave_request(
-    request: Mapping[str, Any], actions: Sequence[Mapping[str, Any]],
+    request: Mapping[str, Any], actions: Sequence[Mapping[str, Any]], *,
+    route_family: str,
 ) -> None:
     """Validate the bounded six-member projection carried by a v2 request."""
     if request["request_kind"] != "initial_wave_admission":
         return
     wave = request.get("initial_wave")
     if (
-        not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_KEYS
+        route_family != "bounded_natal"
+        or not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_KEYS
         or len(request["ordered_action_ids"]) != 6
         or wave.get("member_count") != 6
         or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
@@ -184,7 +186,10 @@ def build_external_authority_grant_v2(
     if len(authorization_documents) != len(ids):
         raise ValueError("v2 grant must authorize the complete ordered inventory")
     actions = _inspection_actions(inspection, ids)
-    _validate_initial_wave_request(request, actions)
+    _validate_initial_wave_request(
+        request, actions,
+        route_family=inspection["checkpoint_basis"]["native_route"]["route_family"],
+    )
     members = []
     for action_id, action, raw in zip(ids, actions, authorization_documents, strict=True):
         document = validate_authorization_document_v2(dict(raw), run_id=request["run_id"])
@@ -233,7 +238,10 @@ def validate_external_authority_grant_v2(
         raise ValueError("unsupported v2 grant")
     ids = request["ordered_action_ids"]
     actions = _inspection_actions(inspection, ids)
-    _validate_initial_wave_request(request, actions)
+    _validate_initial_wave_request(
+        request, actions,
+        route_family=inspection["checkpoint_basis"]["native_route"]["route_family"],
+    )
     expected = {
         "external_authority_request_sha256": request["external_authority_request_sha256"],
         "run_id": request["run_id"], "checkpoint_basis_sha256": request["checkpoint_basis_sha256"],
@@ -292,7 +300,10 @@ def build_no_grant_dispatch_result_v2(inspection: dict[str, Any]) -> dict[str, A
     }
     if request["request_kind"] == "initial_wave_admission":
         actions = _inspection_actions(inspection, request["ordered_action_ids"])
-        _validate_initial_wave_request(request, actions)
+        _validate_initial_wave_request(
+            request, actions,
+            route_family=inspection["checkpoint_basis"]["native_route"]["route_family"],
+        )
         result["initial_wave"] = deepcopy(request["initial_wave"])
     result["result_sha256"] = _digest({key: item for key, item in result.items() if key != "result_sha256"})
     return validate_no_grant_dispatch_result_v2(result)

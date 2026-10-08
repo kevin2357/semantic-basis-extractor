@@ -11,7 +11,8 @@ The v2 authority family now has two explicit, closed branches:
   and ordered member-binding digests.
 
 The latter branch is accepted only when its six action IDs and every binding
-digest join the inspected bounded checkpoint. Its v2 grant repeats the exact
+digest join the inspected bounded checkpoint **and that checkpoint's actual
+`native_route.route_family` is `bounded_natal`**. Its v2 grant repeats the exact
 projection and requires six matching authorization documents. The no-grant
 result carries the same projection while remaining read-only and non-dispatching.
 
@@ -38,6 +39,8 @@ Passed provider-free:
 
 - bounded v2 initial request/grant/no-grant projection join;
 - changed projection and member-binding refusal;
+- cross-route inspection/projection refusal before request, grant, or no-grant
+  dispatch construction;
 - initial-wave binding-descriptor tamper refusal before authority export;
 - ordinary v2 request/grant/no-grant compatibility; and
 - existing v2 intent/dispatch fence coverage.

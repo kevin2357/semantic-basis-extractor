@@ -576,7 +576,8 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
         if authority["request_kind"] == "initial_wave_admission":
             wave = authority.get("initial_wave")
             if (
-                not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
+                basis["native_route"]["route_family"] != "bounded_natal"
+                or not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
                 or wave.get("member_count") != 6
                 or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
                 or any(not _valid_sha256(wave.get(field)) for field in (
