@@ -42,3 +42,18 @@ network access. The retained `0.4.71` candidate is recorded in
 `b6683ba1…e954d00`, 1,439,684 bytes, from `0ade2e1f…`. API's exact
 installed-wheel admission/replay is now the Gate C boundary; no deployment,
 activation, or provider work is authorized by this status update.
+
+## Post-release disposition — v2 initial-wave execution gap
+
+`0.4.71` completed its intended spend-policy handoff and was released. Its
+first paid bounded QA witness then exposed a separate, fail-closed execution
+gap: the new v2 external-authority dispatcher accepts only
+`ordinary_action_set`, while bounded initialization correctly requests the
+six-member `initial_wave_admission` authority. No provider action or custody
+was created for that witness.
+
+The complete API handoff is retained in
+[API to SBE — 0.4.71 bounded initial-wave v2 execution gap](API%20TO%20SBE%20-%200.4.71%20BOUNDED%20INITIAL-WAVE%20V2%20EXECUTION%20GAP.md).
+This sprint is otherwise complete. A successor SBE companion sprint will
+define and qualify an initial-wave-specific v2 authority/dispatch contract;
+it must not reinterpret the existing v1 grant or reopen this terminal QA run.
