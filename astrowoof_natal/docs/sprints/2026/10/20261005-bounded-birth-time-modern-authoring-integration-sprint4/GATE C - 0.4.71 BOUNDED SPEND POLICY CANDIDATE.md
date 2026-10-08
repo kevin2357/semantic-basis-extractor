@@ -10,12 +10,14 @@ deployment, profile activation, or authorization to make a provider request.
 
 | Field | Value |
 | --- | --- |
-| Source commit | `0ade2e1fd1c9940d16a514edbffd8d1786f29069` |
+| Artifact-source commit | `234aa64cffa36ab7ad1f1695f1226304ceb55982` |
 | Distribution version | `0.4.71` |
-| Wheel path | `C:\tmp\sbe-0.4.71-bounded-spend-policy-candidate\astrowoof_natal_authoring-0.4.71-py3-none-any.whl` |
-| Wheel SHA-256 | `b6683ba16a51246bfda0247a667fad48d65ac544f9c5437c590c86fb8e954d00` |
-| Wheel bytes | `1,439,684` |
-| Build | `pip wheel --no-deps --no-build-isolation` from the source commit |
+| Wheel path | `C:\tmp\sbe-0.4.71-release-lock-20261008\wheel-a\astrowoof_natal_authoring-0.4.71-py3-none-any.whl` |
+| Wheel SHA-256 | `f230893ce5e3b735d9e130c6fbbe92f472dfb20f665daec5eb5fe39cf2af5527` |
+| Wheel bytes | `1,434,161` |
+| Wheel members | `328` |
+| Recorded `SOURCE_DATE_EPOCH` | `1791452810` |
+| Build | Two clean canonical-LF Git archives with `pip wheel --no-deps --no-build-isolation` |
 
 ## Immutable bounded bundle
 
@@ -43,13 +45,20 @@ valid policy creates the durable OpenAI-bound workspace, seals the policy in
 the ledger, prepares six `authoring_initial` actions, returns the ordinary
 authority-boundary result, and reaches zero provider submission/identity.
 
-The wheel was installed with `pip --no-index --no-deps --target` in a fresh
-local target. That installed package reported `0.4.71` and resolved the exact
-profile ID, prompt release ID, and SBE descriptor above.
+Two independent clean archive builds produced the exact filename, member
+inventory, byte size, and SHA-256 above. The wheel contains no cache, build,
+bytecode, or generated temporary members. A fresh out-of-checkout Windows
+environment installed the exact wheel and local SPC `0.11.1` wheel; `pip
+check` passed and `astrowoof-release-smoke --require-installed` completed
+with a full deterministic delivery, forced retry, manifest-integrity, and
+cleanup pass. The installed runtime loaded from `site-packages`, reported
+`0.4.71`, and exposed `--spend-policy` on the bounded CLI.
 
 ## API Gate C request
 
-Install **only this SHA-bound wheel** into an isolated API context. Use the
+Install **only this SHA-bound wheel** into an isolated API context. The earlier
+working-tree candidate (`b6683ba1…e954d00`) is superseded and must not be used
+for release admission. Use the
 `v2` processing-profile handoff and provide the API-owned policy through the
 new `--spend-policy <json-path>` argument on a new bounded initialization.
 Prove all of the following without network/provider access:
