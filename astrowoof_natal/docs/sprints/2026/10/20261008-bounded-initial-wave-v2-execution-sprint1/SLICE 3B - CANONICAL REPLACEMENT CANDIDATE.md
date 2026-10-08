@@ -42,9 +42,13 @@ environment. Its package resolves from `site-packages` as `0.4.72`; the public
 declared `jsonschema` and `tzdata` dependencies into that same disposable
 environment, `pip check` reports no broken requirements.
 
-## Remaining gate
+## Qualification and next gate
 
-The full manifest-driven broad rerun from `986e05ea` is in progress. Once it
-is green, API should replace—not supplement—its prior `dadd3969…99cb29b` pin
-with the SHA above and run the existing joint installed-wheel fixture once.
-No real provider, release, deployment, or activation is part of this slice.
+The manifest-driven broad rerun from `986e05ea` passed with 1,267 tests, 62
+expected skips, zero failures/errors, one worker, and 1,345.694 wall seconds.
+The retained receipt is
+`C:\tmp\sbe-0472-canonical-broad-suite-receipt.json`.
+
+API may now replace—not supplement—its prior `dadd3969…99cb29b` pin with the
+SHA above and run the existing joint installed-wheel fixture once. No real
+provider, release, deployment, or activation is part of this slice.

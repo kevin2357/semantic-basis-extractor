@@ -1,7 +1,7 @@
 # Status
 
-**Canonical replacement candidate is built; the broad regression rerun is in
-progress before renewed API intake.** The
+**Canonical replacement candidate is built and qualified for renewed API
+intake.** The
 bounded branch of `astrowoof-external-authority-v2` commits and dispatches in
 one process, so its raw capability never crosses the API/SBE boundary. It
 emits a typed bounded result distinct from ordinary v2.
@@ -15,6 +15,9 @@ uses the same unreleased distribution version from source `986e05ea`, with
 1,442,607 bytes. Its two archive builds are byte-identical and contain no CRLF
 packaged text members. The retained wheel is
 `C:\tmp\sbe-0.4.72-regression-candidate\canonical-wheel-a\astrowoof_natal_authoring-0.4.72-py3-none-any.whl`.
+The manifest-driven broad rerun from `986e05ea` passed: 1,267 tests, 62
+expected skips, zero failures/errors, one worker, and 1,345.694 wall seconds.
+Its receipt is `C:\tmp\sbe-0472-canonical-broad-suite-receipt.json`.
 No release, provider call, deployment, or activation occurred.
 
 The final two Gate C corrections are included: `checkpoint_published` is now
@@ -30,5 +33,5 @@ injected failure, and duplicate authorization refusal. Slice 3 minted the
 immutable bounded `stable_facts.v3` / prompt-release `v3` pair bound to the
 new `0.4.72` package descriptor; neither supersedes the historical `v1` or
 `v2` records. The remaining gate is API's exact installed-wheel
-admission/resume/replay after the broad rerun is green; no release, provider
+admission/resume/replay against this replacement wheel; no release, provider
 action, deployment, or activation is authorized.
