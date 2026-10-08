@@ -37,6 +37,8 @@ policy exists. `v1` bounded profile/prompt records remain immutable. The
 successor `stable_facts.v2` / `bounded_stable_facts.v2` records require SBE
 `0.4.71`. Provider-free CLI coverage proves the eligible four-context path
 prepares six actions and stops at authority with zero provider submission and
-network access. The next boundary is a retained `0.4.71` candidate and API's
-exact installed-wheel admission/replay; no deployment, activation, or provider
-work is authorized by this status update.
+network access. The retained `0.4.71` candidate is recorded in
+[its Gate C handoff](GATE%20C%20-%200.4.71%20BOUNDED%20SPEND%20POLICY%20CANDIDATE.md):
+`b6683ba1…e954d00`, 1,439,684 bytes, from `0ade2e1f…`. API's exact
+installed-wheel admission/replay is now the Gate C boundary; no deployment,
+activation, or provider work is authorized by this status update.
