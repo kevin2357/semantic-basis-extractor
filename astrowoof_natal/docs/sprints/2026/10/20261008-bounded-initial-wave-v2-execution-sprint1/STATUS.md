@@ -1,6 +1,6 @@
 # Status
 
-**Slice 2 command-envelope correction is ready for Gate C re-review.** The
+**Gate C is approved; Slice 3 candidate handoff is in progress.** The
 bounded branch of `astrowoof-external-authority-v2` commits and dispatches in
 one process, so its raw capability never crosses the API/SBE boundary. It
 emits a typed bounded result distinct from ordinary v2.
@@ -22,5 +22,8 @@ The new process-local capability is deliberately not written into the
 workspace: a later process may reconcile durable identities but cannot turn a
 persisted intent into a new provider create. Provider-free tests cover exact
 intent replay, six-member fake dispatch, descriptor tamper, pre-intent
-injected failure, and duplicate authorization refusal. No candidate wheel,
-provider action, deployment, or activation has occurred.
+injected failure, and duplicate authorization refusal. Slice 3 will mint the
+immutable bounded `stable_facts.v3` / prompt-release `v3` pair bound to the
+new `0.4.72` package descriptor; neither supersedes the historical `v1` or
+`v2` records. No release, provider action, deployment, or activation has
+occurred.

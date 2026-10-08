@@ -1,6 +1,6 @@
 {
   "schema_version": "astrowoof.processing_profile_catalog.v1",
-  "catalog_sha256": "1e1cacec47969d4d19baaf1aecb677c7c6aa818cf3f7bfab998894e66f32ebc7",
+  "catalog_sha256": "039fd08ea77f105cb52ae9376e7e3907b3ff130d258f6afccafc375f609d1982",
   "profiles": [
     {
       "schema_version": "astrowoof.processing_profile.v1",
@@ -146,6 +146,101 @@
             }
           ],
           "compatibility_sha256": "89953f31ba9ea5f302bed0e8d14c2ef27a029d8a08d723958985d3f43bbc7b05"
+        }
+      },
+      "deterministic_runtime": {
+        "birth_time_mode": "bounded",
+        "ephemeris_mode": "moshier",
+        "projection_contexts": [
+          "direct_to_dog",
+          "general",
+          "handler",
+          "hybrid"
+        ],
+        "projection_contract": "woofmapped_bounded_astrology.v0@0.1.0"
+      },
+      "sbe": {
+        "provider": "openai",
+        "provider_service_level": "interactive",
+        "routing_policy": "cost_optimized",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "medium",
+        "retry_model": "gpt-5.6-terra",
+        "retry_reasoning_effort": "medium",
+        "split_assignment_policy": "stratified-v1",
+        "full_chart_basis_format": "compact-v2",
+        "max_workers": 6,
+        "max_attempts": 3,
+        "max_output_tokens": 100000,
+        "background": true,
+        "poll_interval_seconds": 2.0,
+        "response_timeout_seconds": 1800.0,
+        "http_timeout_seconds": 60.0,
+        "max_transport_retries": 4,
+        "transport_backoff_seconds": 1.0,
+        "prompt_cache_mode": "explicit",
+        "prompt_cache_ttl": "30m",
+        "polish": true,
+        "max_polish_attempts": 2,
+        "polish_model": "gpt-5.6-luna",
+        "polish_reasoning_effort": "low",
+        "qualitative_critic": true,
+        "critic_model": "gpt-5.6-luna",
+        "critic_reasoning_effort": "medium",
+        "qualitative_candidate": false,
+        "qualitative_editor_model": "gpt-5.6-luna",
+        "qualitative_editor_reasoning_effort": "low"
+      }
+    },
+    {
+      "schema_version": "astrowoof.processing_profile.v1",
+      "profile_id": "astrowoof.bounded_natal.live.stable_facts.v3",
+      "profile_version": "3.0.0",
+      "profile_sha256": "5ccdbac1d8b81b9099fa7689f08460c30a2563192b4c766587ea190bfb05caed",
+      "allowed_environments": [
+        "production",
+        "qa"
+      ],
+      "route": {
+        "family": "bounded_natal",
+        "execution_mode": "live",
+        "sbe_contract": "astrowoof.bounded_natal.authoring_run.v2"
+      },
+      "selection_policy": "stable_facts_only.v1",
+      "prompt_release": {
+        "release_id": "astrowoof.authoring.bounded_stable_facts.v3",
+        "release_sha256": "737bb2cb64e426b281a12a88578b7831473b228d2b40a7fdb2c8c7ad5fa1b0e6"
+      },
+      "worker_compatibility": {
+        "deterministic_runtime": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "deterministic_runtime",
+          "required_distributions": [
+            {
+              "distribution": "astrology-graph-foundry",
+              "version": "0.8.1"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "df053cefa0e436d784c6b49cc3b74d1fe9b33d0f6c5a18576a408934cafa1fbb"
+        },
+        "sbe_authoring": {
+          "schema_version": "astrowoof.worker_compatibility.v1",
+          "worker_role": "sbe_authoring",
+          "required_distributions": [
+            {
+              "distribution": "astrowoof-natal-authoring",
+              "version": "0.4.72"
+            },
+            {
+              "distribution": "semantic-projection-core",
+              "version": "0.11.1"
+            }
+          ],
+          "compatibility_sha256": "440d4475d4b746833f45bc9a4efc53d220fca636476ca6f8d626f4259b201cf8"
         }
       },
       "deterministic_runtime": {
