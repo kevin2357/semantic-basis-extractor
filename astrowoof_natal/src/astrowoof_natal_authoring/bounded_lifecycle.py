@@ -92,6 +92,16 @@ BOUNDED_RUN_CONTRACT = BOUNDED_RUN_V2_CONTRACT
 LEGACY_BOUNDED_RUN_CONTRACT = "astrowoof.bounded_natal.authoring_run.v1"
 BOUNDED_DELIVERY_CONTRACT = "astrowoof.bounded_natal.delivery.v1"
 FINAL_STAGES = ("polish", "qualitative_critic", "qualitative_candidate")
+BOUNDED_INITIAL_WAVE_V2_INTENT_SCHEMA = (
+    "astrowoof.bounded_initial_wave_v2_dispatch_intent.v1"
+)
+BOUNDED_INITIAL_WAVE_V2_INTENT_RESULT_SCHEMA = (
+    "astrowoof.bounded_initial_wave_v2_intent_result.v1"
+)
+# A raw capability is deliberately never written to the workspace.  The
+# process that fenced the intent may submit it; a later process must reconcile
+# durable provider identity rather than recreate an unprovable provider call.
+_BOUNDED_INITIAL_WAVE_V2_CAPABILITIES: dict[tuple[str, str, str], str] = {}
 
 
 class BoundedLifecycleProvider(Protocol):
@@ -1276,6 +1286,265 @@ def _execute_bounded_interactive_initial_wave(
     save_state(run_dir / "run.json", state)
     inject("after_final_wave_snapshot")
     return result
+
+
+def _bounded_initial_wave_v2_intent_result(
+    *, state: Mapping[str, Any], request: Mapping[str, Any],
+    grant: Mapping[str, Any], pre_state_revision: int,
+) -> dict[str, Any]:
+    """Build the replayable, provider-free receipt for a v2 wave intent."""
+    body = {
+        "schema_version": BOUNDED_INITIAL_WAVE_V2_INTENT_RESULT_SCHEMA,
+        "outcome": "intent_committed",
+        "run_id": state["run_id"],
+        "request_sha256": request["external_authority_request_sha256"],
+        "grant_sha256": grant["grant_sha256"],
+        "ordering_semantics": "prepared_wave_semantic_member_order",
+        "ordered_action_ids": list(request["ordered_action_ids"]),
+        "pre_state_revision": pre_state_revision,
+        "post_state_revision": int(state["state_revision"]),
+        "provider_io_performed": False,
+    }
+    return {
+        **body,
+        "result_sha256": hashlib.sha256(
+            json.dumps(
+                body, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest(),
+    }
+
+
+def validate_bounded_initial_wave_v2_intent_result(value: Any) -> dict[str, Any]:
+    """Validate the exact, semantic-order v2 bounded intent receipt."""
+    keys = {
+        "schema_version", "result_sha256", "outcome", "run_id",
+        "request_sha256", "grant_sha256", "ordering_semantics",
+        "ordered_action_ids", "pre_state_revision", "post_state_revision",
+        "provider_io_performed",
+    }
+    if not isinstance(value, dict) or set(value) != keys:
+        raise ValueError("bounded v2 intent result fields are not exact")
+    if (
+        value.get("schema_version") != BOUNDED_INITIAL_WAVE_V2_INTENT_RESULT_SCHEMA
+        or value.get("outcome") != "intent_committed"
+        or value.get("ordering_semantics") != "prepared_wave_semantic_member_order"
+        or value.get("provider_io_performed") is not False
+        or not isinstance(value.get("run_id"), str) or not value["run_id"]
+    ):
+        raise ValueError("bounded v2 intent result semantics are invalid")
+    for field in ("request_sha256", "grant_sha256", "result_sha256"):
+        item = value.get(field)
+        if not isinstance(item, str) or re.fullmatch(r"[0-9a-f]{64}", item) is None:
+            raise ValueError(f"bounded v2 intent result {field} is invalid")
+    ids = value.get("ordered_action_ids")
+    if (
+        not isinstance(ids, list) or len(ids) != 6 or len(set(ids)) != 6
+        or any(not isinstance(item, str) or not item for item in ids)
+    ):
+        raise ValueError("bounded v2 intent result member order is invalid")
+    before, after = value.get("pre_state_revision"), value.get("post_state_revision")
+    if (
+        any(isinstance(item, bool) or not isinstance(item, int) or item < 0
+            for item in (before, after))
+        or after <= before
+    ):
+        raise ValueError("bounded v2 intent result revision transition is invalid")
+    body = {key: item for key, item in value.items() if key != "result_sha256"}
+    expected = hashlib.sha256(json.dumps(
+        body, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")).hexdigest()
+    if value["result_sha256"] != expected:
+        raise ValueError("bounded v2 intent result digest mismatch")
+    return deepcopy(value)
+
+
+def commit_bounded_initial_wave_v2_dispatch_intent(
+    run_dir: Path | str, *, request: dict[str, Any], inspection: dict[str, Any],
+    grant: dict[str, Any], authorization_documents: list[dict[str, Any]],
+    failure_injector: Callable[[str], None] | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
+) -> dict[str, Any]:
+    """Durably admit one exact bounded initial wave under a v2 grant.
+
+    This is deliberately separate from the ordinary v2 dispatcher: the bounded
+    wave's six members have semantic, not lexical, order and are submitted by
+    the established all-or-nothing bounded initial-wave executor.
+    """
+    from .external_authority_v2 import validate_external_authority_grant_v2
+    from .lifecycle import _exclusive_lifecycle_lock
+    from .temporal_lifecycle import (
+        inspect_temporal_lifecycle,
+        validate_external_authority_request_v2_against_inspection,
+    )
+
+    root = Path(run_dir).resolve()
+    run_json = root / "run.json"
+    with _exclusive_lifecycle_lock(root):
+        state = load_json(run_json)
+        validate_workspace_snapshot(root, state)
+        if request.get("request_kind") != "initial_wave_admission":
+            raise InitialWaveError(
+                "unsupported_contract", "v2 bounded dispatch requires initial-wave admission",
+            )
+        # A committed intent deliberately changes the checkpoint.  Recognize
+        # its exact pair before asking the live inspector to rediscover the
+        # now-stale pre-intent request.
+        stored = state.get("initial_authoring_wave")
+        existing = (
+            stored.get("constrained_submission_intent")
+            if isinstance(stored, dict) else None
+        )
+        if isinstance(existing, dict) and existing.get("intent_schema_version") == (
+            BOUNDED_INITIAL_WAVE_V2_INTENT_SCHEMA
+        ):
+            if (
+                existing.get("request_sha256") == request.get("external_authority_request_sha256")
+                and existing.get("grant_sha256") == grant.get("grant_sha256")
+            ):
+                return validate_bounded_initial_wave_v2_intent_result(
+                    existing.get("intent_result")
+                )
+            raise InitialWaveError(
+                "action_state_or_custody_mismatch",
+                "bounded initial wave already has incompatible submit intent",
+            )
+        observation = inspection["temporal_decision"]["observed_at"]
+        access = inspection["checkpoint_basis"]["observation"]["native_exclusive_access"]
+        current = inspect_temporal_lifecycle(
+            root, native_exclusive_access=access, observed_at=observation,
+        )
+        validate_external_authority_request_v2_against_inspection(request, current)
+        if current != inspection:
+            raise InitialWaveError(
+                "stale_checkpoint_basis", "supplied inspection is not the current exact inspection",
+            )
+        validate_external_authority_grant_v2(
+            request, current, grant, authorization_documents,
+        )
+        stored = _validate_stored_bounded_initial_wave(state, root)
+        if stored.get("state") != "AWAITING_SPEND_AUTHORIZATION":
+            raise InitialWaveError(
+                "request_unavailable", "bounded initial wave is no longer admissible",
+            )
+        wave = {
+            key: value for key, value in stored.items()
+            if key not in {
+                "state", "requests", "authorization", "result",
+                "constrained_submission_intent",
+            }
+        }
+        envelope = build_wave_authorization(
+            wave, authorization_documents,
+            reservation_set_reference=grant["api_decision_id"],
+            issuer=grant["issuer"], authorized_at=grant["issued_at"],
+        )
+        preflight_wave_authorization(wave, envelope, authorization_documents)
+        candidate = deepcopy(state)
+        for document in authorization_documents:
+            authorize_action(candidate["spend_ledger"], document)
+        for action_id in request["ordered_action_ids"]:
+            action = next(
+                item for item in candidate["spend_ledger"]["actions"]
+                if item["action_id"] == action_id
+            )
+            begin_submission(
+                action,
+                consumer_id=f"external-grant-v2:{grant['api_decision_id']}",
+                state_revision=int(candidate.get("state_revision") or 0),
+            )
+        token = os.urandom(32).hex()
+        candidate_stored = candidate["initial_authoring_wave"]
+        candidate_stored["authorization"] = envelope
+        candidate_stored["state"] = "SUBMITTING"
+        candidate_stored["constrained_submission_intent"] = {
+            "intent_schema_version": BOUNDED_INITIAL_WAVE_V2_INTENT_SCHEMA,
+            "request_schema_version": request["schema_version"],
+            "request_sha256": request["external_authority_request_sha256"],
+            "grant_schema_version": grant["schema_version"],
+            "grant_sha256": grant["grant_sha256"],
+            "api_decision_id": grant["api_decision_id"],
+            "ordering_semantics": grant["ordering_semantics"],
+            "ordered_action_ids": list(request["ordered_action_ids"]),
+            "initial_wave": deepcopy(request["initial_wave"]),
+            "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
+        }
+        if failure_injector is not None:
+            failure_injector("before_durable_pre_submit_intent")
+        pre_revision = int(state.get("state_revision") or 0)
+        persist_state(run_json, candidate)
+        intent_result = _bounded_initial_wave_v2_intent_result(
+            state=candidate, request=request, grant=grant,
+            pre_state_revision=pre_revision,
+        )
+        candidate_stored["constrained_submission_intent"]["intent_result"] = intent_result
+        # The receipt is part of the same fenced state.  It contains no
+        # workspace digest, avoiding a recursive snapshot self-reference.
+        write_json_atomic(run_json, candidate)
+        write_workspace_snapshot(root)
+        validate_workspace_snapshot(root, candidate)
+        _BOUNDED_INITIAL_WAVE_V2_CAPABILITIES[
+            (
+                str(root), request["external_authority_request_sha256"],
+                grant["grant_sha256"],
+            )
+        ] = token
+        if event_emitter is not None:
+            event_emitter.emit("external_authority.intent_committed", data={
+                "request_sha256": request["external_authority_request_sha256"],
+                "grant_sha256": grant["grant_sha256"], "action_count": 6,
+                "state_revision": int(candidate["state_revision"]),
+            }, correlation={"native_run_id": str(candidate.get("run_id") or "")})
+        return validate_bounded_initial_wave_v2_intent_result(intent_result)
+
+
+def dispatch_bounded_initial_wave_v2_intent(
+    run_dir: Path | str, *, request_sha256: str, grant_sha256: str,
+    provider: BoundedLifecycleProvider,
+    failure_injector: Callable[[str], None] | None = None,
+    event_emitter: ExecutionEventEmitter | None = None,
+) -> dict[str, Any]:
+    """Execute or safely replay one already-fenced bounded v2 initial wave."""
+    root = Path(run_dir).resolve()
+    state = load_json(root / "run.json")
+    validate_workspace_snapshot(root, state)
+    stored = _validate_stored_bounded_initial_wave(state, root)
+    intent = stored.get("constrained_submission_intent")
+    if not isinstance(intent, dict) or intent.get("intent_schema_version") != (
+        BOUNDED_INITIAL_WAVE_V2_INTENT_SCHEMA
+    ):
+        raise InitialWaveError(
+            "dispatch_intent_unavailable", "bounded v2 submit intent is unavailable",
+        )
+    if (
+        intent.get("request_sha256") != request_sha256
+        or intent.get("grant_sha256") != grant_sha256
+    ):
+        raise InitialWaveError(
+            "authorization_mismatch", "dispatch identity does not match bounded v2 intent",
+        )
+    if stored.get("state") == "DETACHED":
+        result = stored.get("result")
+        if not isinstance(result, dict):
+            raise InitialWaveError("native_evidence_invalid", "detached wave has no result")
+        return deepcopy(result)
+    if stored.get("state") != "SUBMITTING":
+        raise InitialWaveError(
+            "dispatch_intent_unavailable", "bounded v2 intent is not submit-ready",
+        )
+    token = _BOUNDED_INITIAL_WAVE_V2_CAPABILITIES.get(
+        (str(root), request_sha256, grant_sha256)
+    )
+    # The raw capability is intentionally process-local.  A later process may
+    # reconcile durable provider identities but may not manufacture a new create.
+    if not isinstance(token, str) or not token:
+        raise InitialWaveError(
+            "provider_submission_ambiguous",
+            "bounded v2 intent cannot be replayed without its process-local capability",
+        )
+    return _execute_bounded_interactive_initial_wave(
+        state, root, provider, event_emitter, token, failure_injector,
+    )
 
 
 def resume_bounded_run(

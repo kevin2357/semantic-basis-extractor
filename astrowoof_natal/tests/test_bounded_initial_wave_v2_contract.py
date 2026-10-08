@@ -12,7 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tests"))
 
-from astrowoof_natal_authoring.bounded_lifecycle import create_bounded_run, resume_bounded_run
+from astrowoof_natal_authoring.bounded_lifecycle import (
+    commit_bounded_initial_wave_v2_dispatch_intent,
+    create_bounded_run,
+    dispatch_bounded_initial_wave_v2_intent,
+    resume_bounded_run,
+)
 from astrowoof_natal_authoring.bounded_provider import OpenAIBoundedLifecycleProvider
 from astrowoof_natal_authoring.spend import PRICE_BOOK_VERSION
 from astrowoof_natal_authoring.temporal_lifecycle import (
@@ -33,6 +38,20 @@ from test_bounded_authoring import compiled
 class _NoNetworkTransport:
     def request_json(self, **_kwargs):  # pragma: no cover - authority must stop first
         raise AssertionError("provider transport must not run before authority")
+
+
+class _RecordingInitialWaveProvider:
+    """Provider-free create double for the bounded six-member executor."""
+
+    name = "openai"
+    calls: list[str]
+
+    def __init__(self) -> None:
+        self.calls = []
+
+    def create_interactive_only(self, *, body, idempotency_material, timeout_seconds):
+        self.calls.append(idempotency_material)
+        return {"id": f"resp_{idempotency_material}", "status": "queued"}, 1
 
 
 def _policy() -> dict:
@@ -181,6 +200,88 @@ class BoundedInitialWaveV2ContractSlice1(unittest.TestCase):
             )
             with self.assertRaisesRegex(ValueError, "no external-authority request"):
                 build_external_authority_request_v2(inspection)
+
+    def test_v2_grant_commits_one_semantic_wave_and_replays_without_second_create(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, inspection, request, documents = _bounded_initial_authority(Path(temporary))
+            grant = build_external_authority_grant_v2(
+                request, inspection, documents,
+                api_decision_id="api-decision-bounded-v2",
+                issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
+            )
+            intent = commit_bounded_initial_wave_v2_dispatch_intent(
+                run_dir, request=request, inspection=inspection, grant=grant,
+                authorization_documents=documents,
+            )
+            self.assertEqual("intent_committed", intent["outcome"])
+            self.assertEqual("prepared_wave_semantic_member_order", intent["ordering_semantics"])
+            self.assertEqual(request["ordered_action_ids"], intent["ordered_action_ids"])
+            replayed_intent = commit_bounded_initial_wave_v2_dispatch_intent(
+                run_dir, request=request, inspection=inspection, grant=grant,
+                authorization_documents=documents,
+            )
+            self.assertEqual(intent, replayed_intent)
+            provider = _RecordingInitialWaveProvider()
+            dispatched = dispatch_bounded_initial_wave_v2_intent(
+                run_dir,
+                request_sha256=request["external_authority_request_sha256"],
+                grant_sha256=grant["grant_sha256"], provider=provider,
+            )
+            self.assertEqual("detached_provider_pending", dispatched["outcome"])
+            self.assertCountEqual(request["ordered_action_ids"], provider.calls)
+            replayed_dispatch = dispatch_bounded_initial_wave_v2_intent(
+                run_dir,
+                request_sha256=request["external_authority_request_sha256"],
+                grant_sha256=grant["grant_sha256"], provider=provider,
+            )
+            self.assertEqual(dispatched, replayed_dispatch)
+            self.assertEqual(6, len(provider.calls))
+
+    def test_v2_descriptor_tamper_refuses_before_intent_or_provider_io(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, inspection, request, documents = _bounded_initial_authority(Path(temporary))
+            grant = build_external_authority_grant_v2(
+                request, inspection, documents,
+                api_decision_id="api-decision-bounded-v2",
+                issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
+            )
+            descriptor = run_dir / "initial-authoring-wave-binding-bundle.json"
+            descriptor.write_bytes(descriptor.read_bytes() + b"\n")
+            with self.assertRaisesRegex(Exception, "snapshot|lineage|digest"):
+                commit_bounded_initial_wave_v2_dispatch_intent(
+                    run_dir, request=request, inspection=inspection, grant=grant,
+                    authorization_documents=documents,
+                )
+            state = __import__("json").loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            self.assertNotIn("constrained_submission_intent", state["initial_authoring_wave"])
+
+    def test_v2_pre_intent_failure_and_duplicate_authorization_do_not_mutate(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run_dir, inspection, request, documents = _bounded_initial_authority(Path(temporary))
+            grant = build_external_authority_grant_v2(
+                request, inspection, documents,
+                api_decision_id="api-decision-bounded-v2",
+                issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
+            )
+            with self.assertRaisesRegex(RuntimeError, "injected"):
+                commit_bounded_initial_wave_v2_dispatch_intent(
+                    run_dir, request=request, inspection=inspection, grant=grant,
+                    authorization_documents=documents,
+                    failure_injector=lambda point: (
+                        (_ for _ in ()).throw(RuntimeError("injected"))
+                        if point == "before_durable_pre_submit_intent" else None
+                    ),
+                )
+            state = __import__("json").loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                "AWAITING_SPEND_AUTHORIZATION", state["initial_authoring_wave"]["state"],
+            )
+            with self.assertRaisesRegex(ValueError, "partial|complete"):
+                build_external_authority_grant_v2(
+                    request, inspection, documents + [copy.deepcopy(documents[0])],
+                    api_decision_id="api-decision-bounded-v2",
+                    issuer="astrowoof-api", issued_at="2026-10-08T18:00:01Z",
+                )
 
 
 if __name__ == "__main__":
