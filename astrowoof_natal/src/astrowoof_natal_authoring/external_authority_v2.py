@@ -22,6 +22,7 @@ GRANT_SCHEMA_V2 = "astrowoof.external_authority_grant.v2"
 DISPATCH_RESULT_SCHEMA_V2 = "astrowoof.external_authority_dispatch_result.v2"
 AUTHORIZATION_SCHEMA = "astrowoof.provider_spend_authorization.v0.1"
 ORDERING_SEMANTICS = "lexical_action_id_ascending"
+INITIAL_WAVE_ORDERING_SEMANTICS = "prepared_wave_semantic_member_order"
 _ACTION_ID = re.compile(r"^paid_[0-9a-f]{24}$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _BINDING_KEYS = {
@@ -42,6 +43,10 @@ _GRANT_KEYS = {
     "checkpoint_basis_sha256", "request_schema_version", "request_kind", "ordering_semantics",
     "route_family", "provider_mechanism", "action_count",
     "ordered_action_ids", "ordered_member_authorizations",
+}
+_INITIAL_WAVE_KEYS = {
+    "wave_id", "wave_sha256", "route_contract", "assignment_sha256",
+    "profile_sha256", "member_count", "ordered_member_binding_sha256s",
 }
 _RESULT_KEYS = {
     "schema_version", "result_sha256", "outcome", "run_id",
@@ -121,20 +126,65 @@ def _mechanism(actions: Sequence[Mapping[str, Any]]) -> str:
     return next(iter(mechanisms))
 
 
+def _ordering_semantics(request: Mapping[str, Any]) -> str:
+    return (
+        INITIAL_WAVE_ORDERING_SEMANTICS
+        if request["request_kind"] == "initial_wave_admission"
+        else ORDERING_SEMANTICS
+    )
+
+
+def _validate_initial_wave_request(
+    request: Mapping[str, Any], actions: Sequence[Mapping[str, Any]],
+) -> None:
+    """Validate the bounded six-member projection carried by a v2 request."""
+    if request["request_kind"] != "initial_wave_admission":
+        return
+    wave = request.get("initial_wave")
+    if (
+        not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_KEYS
+        or len(request["ordered_action_ids"]) != 6
+        or wave.get("member_count") != 6
+        or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
+        or not isinstance(wave.get("wave_id"), str) or not wave["wave_id"]
+        or any(not isinstance(wave.get(field), str) or not _SHA256.fullmatch(wave[field])
+               for field in ("wave_sha256", "assignment_sha256", "profile_sha256"))
+        or not isinstance(wave.get("ordered_member_binding_sha256s"), list)
+        or wave["ordered_member_binding_sha256s"] != [
+            _digest(action["binding"]) for action in actions
+        ]
+        or wave["profile_sha256"] != actions[0]["binding"]["profile_sha256"]
+    ):
+        raise ValueError("v2 initial-wave projection does not join inspection")
+
+
+def _grant_keys(request: Mapping[str, Any]) -> set[str]:
+    return _GRANT_KEYS | (
+        {"initial_wave"}
+        if request["request_kind"] == "initial_wave_admission" else set()
+    )
+
+
+def _result_keys(request: Mapping[str, Any]) -> set[str]:
+    return _RESULT_KEYS | (
+        {"initial_wave"}
+        if request["request_kind"] == "initial_wave_admission" else set()
+    )
+
+
 def build_external_authority_grant_v2(
     request: dict[str, Any], inspection: dict[str, Any],
     authorization_documents: Sequence[Mapping[str, Any]], *,
     api_decision_id: str, issuer: str, issued_at: str,
 ) -> dict[str, Any]:
     validate_external_authority_request_v2_against_inspection(request, inspection)
-    if request["request_kind"] != "ordinary_action_set":
-        raise ValueError("v2 execution supports ordinary_action_set only")
     ids = request["ordered_action_ids"]
-    if ids != sorted(ids):
+    if request["request_kind"] == "ordinary_action_set" and ids != sorted(ids):
         raise ValueError("ordinary v2 action IDs must use canonical lexical order")
     if len(authorization_documents) != len(ids):
         raise ValueError("v2 grant must authorize the complete ordered inventory")
     actions = _inspection_actions(inspection, ids)
+    _validate_initial_wave_request(request, actions)
     members = []
     for action_id, action, raw in zip(ids, actions, authorization_documents, strict=True):
         document = validate_authorization_document_v2(dict(raw), run_id=request["run_id"])
@@ -155,11 +205,14 @@ def build_external_authority_grant_v2(
         "run_id": request["run_id"],
         "checkpoint_basis_sha256": request["checkpoint_basis_sha256"],
         "request_schema_version": request["schema_version"],
-        "request_kind": request["request_kind"], "ordering_semantics": ORDERING_SEMANTICS,
+        "request_kind": request["request_kind"],
+        "ordering_semantics": _ordering_semantics(request),
         "route_family": inspection["checkpoint_basis"]["native_route"]["route_family"],
         "provider_mechanism": _mechanism(actions), "action_count": len(ids),
         "ordered_action_ids": deepcopy(ids), "ordered_member_authorizations": members,
     }
+    if request["request_kind"] == "initial_wave_admission":
+        grant["initial_wave"] = deepcopy(request["initial_wave"])
     grant["grant_sha256"] = _digest({key: item for key, item in grant.items() if key != "grant_sha256"})
     return validate_external_authority_grant_v2(request, inspection, grant, authorization_documents)
 
@@ -169,27 +222,34 @@ def validate_external_authority_grant_v2(
     authorization_documents: Sequence[Mapping[str, Any]],
 ) -> dict[str, Any]:
     validate_external_authority_request_v2_against_inspection(request, inspection)
-    if request["request_kind"] != "ordinary_action_set":
-        raise ValueError("v2 execution supports ordinary_action_set only")
-    if request["ordered_action_ids"] != sorted(request["ordered_action_ids"]):
+    if (
+        request["request_kind"] == "ordinary_action_set"
+        and request["ordered_action_ids"] != sorted(request["ordered_action_ids"])
+    ):
         raise ValueError("ordinary v2 action IDs must use canonical lexical order")
-    if not isinstance(grant, dict) or set(grant) != _GRANT_KEYS:
+    if not isinstance(grant, dict) or set(grant) != _grant_keys(request):
         raise ValueError("v2 grant fields are not exact")
     if grant.get("schema_version") != GRANT_SCHEMA_V2 or grant.get("decision") != "granted":
         raise ValueError("unsupported v2 grant")
     ids = request["ordered_action_ids"]
     actions = _inspection_actions(inspection, ids)
+    _validate_initial_wave_request(request, actions)
     expected = {
         "external_authority_request_sha256": request["external_authority_request_sha256"],
         "run_id": request["run_id"], "checkpoint_basis_sha256": request["checkpoint_basis_sha256"],
         "request_schema_version": "astrowoof.external_authority_request.v2",
-        "request_kind": "ordinary_action_set", "ordering_semantics": ORDERING_SEMANTICS,
+        "request_kind": request["request_kind"],
+        "ordering_semantics": _ordering_semantics(request),
         "route_family": inspection["checkpoint_basis"]["native_route"]["route_family"],
         "provider_mechanism": _mechanism(actions), "action_count": len(ids),
         "ordered_action_ids": ids,
     }
     if any(grant.get(key) != value for key, value in expected.items()):
         raise ValueError("v2 grant does not join request and inspection")
+    if request["request_kind"] == "initial_wave_admission" and (
+        grant.get("initial_wave") != request["initial_wave"]
+    ):
+        raise ValueError("v2 grant initial-wave projection mismatch")
     _require_string(grant.get("api_decision_id"), "api_decision_id")
     _require_string(grant.get("issuer"), "issuer")
     if grant.get("issued_at") != canonical_utc_instant(grant.get("issued_at")):
@@ -223,23 +283,35 @@ def build_no_grant_dispatch_result_v2(inspection: dict[str, Any]) -> dict[str, A
         "outcome": "awaiting_compatible_grant", "run_id": request["run_id"],
         "checkpoint_basis_sha256": request["checkpoint_basis_sha256"],
         "external_authority_request_sha256": request["external_authority_request_sha256"],
-        "request_kind": request["request_kind"], "ordering_semantics": ORDERING_SEMANTICS,
+        "request_kind": request["request_kind"],
+        "ordering_semantics": _ordering_semantics(request),
         "ordered_action_ids": deepcopy(request["ordered_action_ids"]),
         "reason_code": "compatible_grant_required", "selected_command": "none",
         "dispatch_permitted": False, "native_mutation_performed": False,
         "provider_io_performed": False, "checkpoint_published": False,
     }
+    if request["request_kind"] == "initial_wave_admission":
+        actions = _inspection_actions(inspection, request["ordered_action_ids"])
+        _validate_initial_wave_request(request, actions)
+        result["initial_wave"] = deepcopy(request["initial_wave"])
     result["result_sha256"] = _digest({key: item for key, item in result.items() if key != "result_sha256"})
     return validate_no_grant_dispatch_result_v2(result)
 
 
 def validate_no_grant_dispatch_result_v2(value: Any) -> dict[str, Any]:
-    if not isinstance(value, dict) or set(value) != _RESULT_KEYS:
+    if not isinstance(value, dict) or value.get("request_kind") not in {
+        "ordinary_action_set", "initial_wave_admission",
+    } or set(value) != _result_keys(value):
         raise ValueError("v2 dispatch result fields are not exact")
+    initial = value["request_kind"] == "initial_wave_admission"
     expected = {
         "schema_version": DISPATCH_RESULT_SCHEMA_V2,
-        "outcome": "awaiting_compatible_grant", "request_kind": "ordinary_action_set",
-        "ordering_semantics": ORDERING_SEMANTICS, "reason_code": "compatible_grant_required",
+        "outcome": "awaiting_compatible_grant",
+        "request_kind": value["request_kind"],
+        "ordering_semantics": (
+            INITIAL_WAVE_ORDERING_SEMANTICS if initial else ORDERING_SEMANTICS
+        ),
+        "reason_code": "compatible_grant_required",
         "selected_command": "none", "dispatch_permitted": False,
         "native_mutation_performed": False, "provider_io_performed": False,
         "checkpoint_published": False,
@@ -250,8 +322,21 @@ def validate_no_grant_dispatch_result_v2(value: Any) -> dict[str, Any]:
     for key in ("checkpoint_basis_sha256", "external_authority_request_sha256"):
         _require_digest(value.get(key), key)
     ids = value.get("ordered_action_ids")
-    if not isinstance(ids, list) or not ids or ids != sorted(ids) or len(ids) != len(set(ids)) or any(not isinstance(item, str) or not _ACTION_ID.fullmatch(item) for item in ids):
-        raise ValueError("no-grant action IDs are not canonical lexical order")
+    if (
+        not isinstance(ids, list) or not ids or len(ids) != len(set(ids))
+        or any(not isinstance(item, str) or not _ACTION_ID.fullmatch(item) for item in ids)
+        or (not initial and ids != sorted(ids))
+        or (initial and len(ids) != 6)
+    ):
+        raise ValueError("no-grant action IDs are not valid for request kind")
+    if initial:
+        wave = value.get("initial_wave")
+        if (
+            not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_KEYS
+            or wave.get("member_count") != 6
+            or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
+        ):
+            raise ValueError("no-grant initial-wave projection is invalid")
     body = {key: item for key, item in value.items() if key != "result_sha256"}
     if value.get("result_sha256") != _digest(body):
         raise ValueError("v2 dispatch result digest mismatch")

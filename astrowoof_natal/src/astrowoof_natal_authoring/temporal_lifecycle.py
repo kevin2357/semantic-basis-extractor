@@ -60,6 +60,10 @@ _AUTHORITY_KEYS = {
     "kind", "request_kind", "ordered_action_ids", "refusal_reason",
     "evidence_categories",
 }
+_INITIAL_WAVE_CONTEXT_KEYS = {
+    "wave_id", "wave_sha256", "route_contract", "assignment_sha256",
+    "profile_sha256", "member_count", "ordered_member_binding_sha256s",
+}
 _TERMINAL_KEYS = {
     "outcome", "terminal", "terminal_reason", "deck_bytes_exist",
     "native_qa_passed", "assembly_lint_validation_accepted",
@@ -148,13 +152,16 @@ def _authority_state(value: dict[str, Any]) -> dict[str, Any]:
     request = value.get("external_authority_request")
     refusal = value.get("external_authority_refusal")
     if request is not None:
-        return {
+        result = {
             "kind": "request",
             "request_kind": request["request_kind"],
             "ordered_action_ids": deepcopy(request["ordered_action_ids"]),
             "refusal_reason": None,
             "evidence_categories": [],
         }
+        if request["request_kind"] == "initial_wave_admission":
+            result["initial_wave"] = deepcopy(request["initial_wave"])
+        return result
     if refusal is not None:
         return {
             "kind": "refusal",
@@ -541,7 +548,11 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
     if not isinstance(custody, dict) or set(custody) != _CUSTODY_KEYS:
         raise ValueError("Checkpoint custody contains temporal due subset")
     authority = basis.get("external_authority_state")
-    if not isinstance(authority, dict) or set(authority) != _AUTHORITY_KEYS:
+    allowed_authority_keys = _AUTHORITY_KEYS | (
+        {"initial_wave"} if isinstance(authority, dict)
+        and authority.get("request_kind") == "initial_wave_admission" else set()
+    )
+    if not isinstance(authority, dict) or set(authority) != allowed_authority_keys:
         raise ValueError("Checkpoint external-authority fields are not exact")
     if authority.get("kind") == "request":
         if (
@@ -562,6 +573,27 @@ def validate_lifecycle_inspection_v06(value: dict[str, Any]) -> None:
             for action_id in authority["ordered_action_ids"]
         ):
             raise ValueError("Checkpoint external-authority inventory does not join")
+        if authority["request_kind"] == "initial_wave_admission":
+            wave = authority.get("initial_wave")
+            if (
+                not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
+                or wave.get("member_count") != 6
+                or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
+                or any(not _valid_sha256(wave.get(field)) for field in (
+                    "wave_sha256", "assignment_sha256", "profile_sha256",
+                ))
+                or not isinstance(wave.get("wave_id"), str) or not wave["wave_id"]
+                or not isinstance(wave.get("ordered_member_binding_sha256s"), list)
+                or len(wave["ordered_member_binding_sha256s"]) != 6
+                or any(not _valid_sha256(item) for item in wave["ordered_member_binding_sha256s"])
+            ):
+                raise ValueError("Checkpoint initial-wave projection is invalid")
+            by_id = {item["action_id"]: item for item in inventory["actions"]}
+            if wave["ordered_member_binding_sha256s"] != [
+                _sha256(by_id[action_id]["binding"])
+                for action_id in authority["ordered_action_ids"]
+            ]:
+                raise ValueError("Checkpoint initial-wave projection does not join bindings")
         if custody.get("action_ids"):
             raise ValueError(
                 "Checkpoint external authority is masked by retained provider custody"
@@ -676,6 +708,8 @@ def build_external_authority_request_v2(value: dict[str, Any]) -> dict[str, Any]
         "request_kind": authority["request_kind"],
         "ordered_action_ids": deepcopy(authority["ordered_action_ids"]),
     }
+    if authority["request_kind"] == "initial_wave_admission":
+        request["initial_wave"] = deepcopy(authority["initial_wave"])
     request["external_authority_request_sha256"] = _sha256(request)
     validate_external_authority_request_v2(request)
     return request
@@ -686,6 +720,8 @@ def validate_external_authority_request_v2(value: dict[str, Any]) -> None:
         "schema_version", "external_authority_request_sha256", "run_id",
         "checkpoint_basis_sha256", "request_kind", "ordered_action_ids",
     }
+    if isinstance(value, dict) and value.get("request_kind") == "initial_wave_admission":
+        keys.add("initial_wave")
     if not isinstance(value, dict) or set(value) != keys:
         raise ValueError("External-authority request v2 fields are not exact")
     if value.get("schema_version") != EXTERNAL_AUTHORITY_REQUEST_SCHEMA_V2:
@@ -709,6 +745,21 @@ def validate_external_authority_request_v2(value: dict[str, Any]) -> None:
         raise ValueError(
             "External-authority ordinary action IDs must use canonical lexical order"
         )
+    if value.get("request_kind") == "initial_wave_admission":
+        wave = value.get("initial_wave")
+        if (
+            not isinstance(wave, dict) or set(wave) != _INITIAL_WAVE_CONTEXT_KEYS
+            or len(ids) != 6 or wave.get("member_count") != 6
+            or wave.get("route_contract") != "astrowoof.bounded_natal.authoring_run.v2"
+            or any(not _valid_sha256(wave.get(field)) for field in (
+                "wave_sha256", "assignment_sha256", "profile_sha256",
+            ))
+            or not isinstance(wave.get("wave_id"), str) or not wave["wave_id"]
+            or not isinstance(wave.get("ordered_member_binding_sha256s"), list)
+            or len(wave["ordered_member_binding_sha256s"]) != 6
+            or any(not _valid_sha256(item) for item in wave["ordered_member_binding_sha256s"])
+        ):
+            raise ValueError("External-authority initial-wave projection is invalid")
     body = {
         key: item for key, item in value.items()
         if key != "external_authority_request_sha256"
@@ -735,6 +786,10 @@ def validate_external_authority_request_v2_against_inspection(
         errors.append("request_kind")
     if request["ordered_action_ids"] != authority.get("ordered_action_ids"):
         errors.append("ordered_action_ids")
+    if request["request_kind"] == "initial_wave_admission" and (
+        request.get("initial_wave") != authority.get("initial_wave")
+    ):
+        errors.append("initial_wave")
     inventory = inspection["checkpoint_basis"]["action_inventory"]["actions"]
     by_id = {item["action_id"]: item for item in inventory}
     for action_id in request["ordered_action_ids"]:
@@ -749,6 +804,14 @@ def validate_external_authority_request_v2_against_inspection(
             )
         except ValueError:
             errors.append(f"binding_invalid:{action_id}")
+    if request["request_kind"] == "initial_wave_admission":
+        expected = [
+            _sha256(by_id[action_id]["binding"])
+            for action_id in request["ordered_action_ids"]
+            if action_id in by_id
+        ]
+        if request["initial_wave"]["ordered_member_binding_sha256s"] != expected:
+            errors.append("initial_wave_bindings")
     if errors:
         raise ValueError(
             "External-authority request does not join inspection: "

@@ -31,8 +31,8 @@ Extend the v2 request/grant/inspection contracts only as needed to represent
   initial-wave context/digest.
 - Preserve ordinary-v2 lexical ordering as a separate branch.
 - Reject mixed schemas, wrong route/profile/checkpoint, wrong ordering, stale
-  grants, duplicates, and malformed authorization documents before native
-  mutation or provider I/O.
+  grants, duplicates, malformed authorization documents, and source/binding
+  descriptor path-or-digest tamper before native mutation or provider I/O.
 
 **Gate B:** provider-free unit/fixture review proves the new contract is exact
 and no v1 document is accepted as a v2 document.
@@ -51,7 +51,8 @@ initial-wave execution machinery.
 
 **Gate C:** failure-injection and fake-provider tests cover pre-intent refusal,
 post-intent replay, partial execution recovery, duplicate authorization, and
-zero-I/O malformed paths.
+zero-I/O malformed paths, including source/binding descriptor path-or-digest
+tamper.
 
 ## Slice 3 — Immutable successor catalog and candidate handoff
 

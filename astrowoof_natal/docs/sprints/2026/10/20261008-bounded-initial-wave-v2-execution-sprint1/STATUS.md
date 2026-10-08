@@ -1,11 +1,10 @@
 # Status
 
-**Slice 0 complete; Gate A awaits joint review.** The investigation confirms
-that the existing generic v2 adapter is intentionally ordinary-only, while the
-bounded v1 lifecycle already contains the required six-member aggregate-wave
-transition. The frozen direction is a distinct v2 initial-wave contract for
-new successor runs, not a v1-to-v2 migration or a relaxation of ordinary-v2.
-See [Slice 0 contract map](SLICE%200%20-%20V2%20INITIAL-WAVE%20CONTRACT%20MAP.md).
+**Slice 1 complete; Gate B awaits joint review.** Gate A approved the distinct
+new-run v2 initial-wave direction. SBE now emits and validates a bounded
+six-member semantic projection through v2 request, grant, and no-grant result
+contracts, with explicit binding-descriptor tamper refusal. See
+[Slice 1 authority contract](SLICE%201%20-%20V2%20INITIAL-WAVE%20AUTHORITY%20CONTRACT.md).
 
-No successor contract, code, profile, candidate wheel, or provider action has
-been created.
+No durable v2 initial-wave dispatch intent, provider execution, successor
+profile, candidate wheel, or provider action has been created.

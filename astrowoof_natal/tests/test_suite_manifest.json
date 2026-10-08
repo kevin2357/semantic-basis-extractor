@@ -348,6 +348,7 @@
     "test_adversarial_runtime_adapter.py",
     "test_basis_policies.py",
     "test_bounded_admission.py",
+    "test_bounded_initial_wave_v2_contract.py",
     "test_bounded_provider.py",
     "test_editorial_review_contract_foundation.py",
     "test_editorial_review_contract_fixtures.py",
