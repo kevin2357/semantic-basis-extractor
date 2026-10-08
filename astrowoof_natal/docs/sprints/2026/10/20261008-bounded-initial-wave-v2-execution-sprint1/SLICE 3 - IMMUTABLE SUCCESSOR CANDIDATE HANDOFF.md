@@ -43,15 +43,51 @@ inventory.  Its only semantic successor change is binding that immutable
 configuration to the package that contains the approved v2 initial-wave
 command.
 
-## Candidate procedure
+## Candidate qualification
 
-1. Commit this exact source state.
-2. Build the `0.4.72` wheel twice from that committed archive with the release
-   epoch; require byte equality.
-3. Install only that wheel into an isolated target and rerun the bounded
-   public-command success, exact-replay, and pre-provider-refusal fixture.
-4. Record the exact wheel path, source commit, whole-wheel SHA/size, package
-   descriptors, and raw fixture locations for API's installed-wheel Gate D.
+| Field | Value |
+| --- | --- |
+| Artifact-source commit | `0b814260d8dcec5e3daa246374b047a8c7c4fe9c` |
+| `SOURCE_DATE_EPOCH` | `1791471128` |
+| Filename | `astrowoof_natal_authoring-0.4.72-py3-none-any.whl` |
+| Retained wheel | `C:\tmp\sbe-0.4.72-bounded-initial-wave-v2-candidate\wheel-a\astrowoof_natal_authoring-0.4.72-py3-none-any.whl` |
+| Duplicate build | sibling `wheel-b` directory |
+| SHA-256 | `dadd3969f83f834e4c0dee7d61a2ef6b4be6592ad2505e31e1384c36999cb29b` |
+| Byte size | `1,446,113` |
+| Wheel members | `330` |
+| Raw command fixture | `C:\tmp\sbe-0.4.72-bounded-initial-wave-v2-candidate\installed-command-fixture.json` |
+| Fixture SHA-256 | `d55e1f484307d6d527d423fe2244e31bea95b9f023a2a6a7e320a3d3e800e3e2` |
+
+Two clean canonical-LF Git archives from `0b814260` built with that epoch into
+independent directories. Filename, member inventory, byte size, and
+whole-wheel SHA-256 are byte-identical. The inventory contains the public
+bounded command schema and no cache, build, bytecode, or other generated
+members.
+
+The exact wheel was installed only in the isolated candidate venv. It resolved
+from `site-packages` as `0.4.72`, and `pip check` passed after installing SPC's
+declared `jsonschema` dependency in that disposable environment. Its public
+`astrowoof-external-authority-v2` command, using `--provider fake`, produced:
+
+| Cell | Exit | Typed outcome | Safety result |
+| --- | --- | --- | --- |
+| First six-member dispatch | `0` | `detached_provider_pending` | exactly one durable intent and six fake provider bindings |
+| Exact replay | `0` | `exact_replay` | no new mutation, publication, or provider I/O |
+| Altered grant | `3` | `pre_provider_refusal` | no mutation or provider I/O |
+
+The raw success, replay, and refusal envelopes are retained in the fixture
+named above. The fixture is produced by an API-shaped request/grant whose
+native run ID is generated before the command call; the installed candidate
+echoes that same ID in all three outputs. It uses no network or real provider
+credentials.
+
+## API Gate D request
+
+Install only the SHA-bound wheel above into an isolated API context. Admit the
+v3 profile/release/catalog identities as a new immutable bundle; do not alter
+v1 or v2. Exercise the raw success envelope, exact replay, and altered-grant
+refusal fixture through API's bounded initial-wave ingress and idempotency
+boundary, while retaining ordinary-v2 coverage unchanged.
 
 No package publication, tag, deployment, profile activation, workspace
 mutation, or provider operation is part of this candidate handoff.
