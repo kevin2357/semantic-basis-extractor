@@ -65,6 +65,11 @@ raw success/refusal fixtures.
 initial-wave admission/resume/replay cell, alongside unchanged ordinary-v2
 coverage. Only then can owner-approved release qualification begin.
 
+**Completed:** API approved the canonical replacement candidate for package
+release; `0.4.72` was subsequently published. See
+[publication evidence](PUBLICATION%20-%200.4.72.md). This is not QA rollout,
+profile activation, or provider-backed test approval.
+
 ## Non-goals
 
 No operation against the terminal 0.4.71 QA workspace, no provider-backed test,
