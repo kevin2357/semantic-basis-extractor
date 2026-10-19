@@ -1,9 +1,32 @@
 # Plan — bounded reconciliation supervision and command contract
 
-**Status:** Slices 0A and 0B are complete; the native proposal is **awaiting
-joint Gate A review**, not approved. See the [inventory](SLICE%200A%20-%20NATIVE%20AND%20API%20BOUNDARY%20INVENTORY.md)
+**Status:** API and SBE approve the narrowed contract and frozen fixture
+definitions; **Gate A is closed**. The next deliverable is provider-free
+construction of complete shared fixture bytes, not an installed-wheel pass.
+See the [inventory](SLICE%200A%20-%20NATIVE%20AND%20API%20BOUNDARY%20INVENTORY.md)
 and [contract proposal and matrix](SLICE%200B%20-%20NATIVE%20COMMAND%20AND%20SUPERVISION%20PROPOSAL.md).
 This is the SBE companion to API sprint 129. Gate A precedes implementation.
+
+**Alpha scope refinement:** the [narrowed Gate A proposal and matrix](SLICE%200C%20-%20ALPHA%20SAME-CALL%20HANDOFF%20AND%20CONTAINMENT.md)
+supersede 0B's invocation-scoped durable-binding/reconstruction mechanism and
+related Candidate A/B research. Exact same-call handoff remains required;
+ambiguous lost output/crashes remain held for investigation rather than being
+automatically reconstructed. The older documents remain historical design
+context, not additional release requirements.
+The follow-on [Slice 0D](SLICE%200D%20-%20ALPHA%20COMMAND%20OUTCOMES%20AND%20CONTAINMENT%20REVIEW.md)
+proposes the concrete command/companion, outcome table, clock topology and
+durable containment tests; the subsequent joint review closes the contract gate.
+API's Slice 0D review identifies a specific untyped early integrity refusal and
+the need for a genuinely usable cross-host clock policy. SBE's response in API
+sprint 129 proposes a narrowly bound typed companion, tightens the table, and
+originally proposed a stricter clock proof. The owner and API/SBE subsequently
+agreed the alpha policy: retain operator-origin deadlines under an explicit
+reasonable-clock assumption, unknown skew and no guaranteed hard cutoff;
+use the branch-specific typed refusal companion. See API sprint 129's
+`SBE AGENT - GATE A ALPHA SHARED HANDOFF AND FIXTURES.md`. Shared executable
+fixture definitions are frozen by API review and SBE sign-off in API sprint
+129's `SBE AGENT - GATE A SHARED FIXTURE DEFINITIONS AND SIGNOFF.md`.
+Genuine fixture generation and later implementation/qualification remain.
 
 ## Objective and boundaries
 
@@ -96,21 +119,42 @@ questions and explicit non-guarantees, for API's review and API-side handoff.
 API owns its lease, worker, durable custody, economics, checkpoint and rollout
 semantics; SBE does not claim to attest them from native state alone.
 
-## Gate A — joint review before implementation
+## Gate A — joint review before implementation (approved)
 
 API reviews the proposal against its actual worker, lease/fence, child-process,
 ingestion, economics and checkpoint contracts; documents its matching handoff;
 and identifies changes or missing evidence. SBE incorporates and re-reviews
 material corrections. Both sides agree on the executable contract and test
 matrix; the owner resolves consequential product or operational choices.
-Until then, no implementation, release candidate or provider work is implied.
+API's Gate A alpha handoff review and SBE's matching sign-off approve the
+contract and frozen fixture definitions. This does not imply complete
+executable fixtures, a release candidate or provider work.
 
 Review must specifically settle observation-time freshness versus the existing
 launch-time timestamp, checkpoint ancestry after local continuation, exact
 same-call terminal publication selection versus the existing latest reader,
 and the API-side cross-version routing and direct-child/checkpoint proofs.
+Review the narrowed 0C contract and matching API handoff, including exact
+same-call receipt selection, no-output containment, the real clock topology,
+outcome-by-outcome checkpoint/exit mapping, and the supported operator path.
+Agree the executable schemas and test matrix before implementation. Existing
+review and research files retain their historical findings, but durable
+attempt-keyed recovery, Candidate A/B and automatic recovery from lost stdout
+are not Gate A or alpha release requirements. No latest-result substitution,
+custody loss or duplicated paid work is permitted under the narrower scope.
 
-## Later work — sequencing only, not yet authorized by Gate A
+## Slice 0E — provider-free shared executable fixture construction
+
+Build complete, reproducible synthetic shared workspace, authority, stream and
+negative fixture bytes according to the frozen API-sprint definitions. Use
+existing native validators and real source artifact shapes; no real provider
+I/O. Derive result/receipt IDs and digests from genuine synthetic evidence,
+not illustrative placeholders. Verify source fixture construction and share
+exact paths/hashes with API. Fixture generation cannot assume the new command
+is already implemented. If actual native shapes conflict with the frozen
+contract, pause for joint revision; do not silently loosen it.
+
+## Later work — sequencing after the fixture slice
 
 After approval, detail separate SBE implementation/provider-free unit and
 exact-route regression slices; create and qualify the immutable bounded
