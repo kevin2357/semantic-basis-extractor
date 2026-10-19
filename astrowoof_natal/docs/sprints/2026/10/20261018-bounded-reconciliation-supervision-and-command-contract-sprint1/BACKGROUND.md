@@ -1,6 +1,6 @@
 # Bounded reconciliation supervision and command contract: background
 
-**Status: not started.** This is the SBE side of the coordinated follow-up to API's bounded QA investigation; API's proposed plan and gates are linked below. SBE should develop its own plan and review the cross-repo contract before implementation.
+**Status: Slices 0A/0B complete; awaiting joint Gate A review.** This is the SBE side of the coordinated follow-up to API's bounded QA investigation. The [current-state inventory](SLICE%200A%20-%20NATIVE%20AND%20API%20BOUNDARY%20INVENTORY.md) and [proposed contract and test matrix](SLICE%200B%20-%20NATIVE%20COMMAND%20AND%20SUPERVISION%20PROPOSAL.md) are proposals, not authorization to implement or operate.
 
 ## What happened
 

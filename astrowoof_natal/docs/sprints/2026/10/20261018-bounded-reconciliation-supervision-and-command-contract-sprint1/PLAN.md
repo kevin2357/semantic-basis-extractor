@@ -1,8 +1,9 @@
 # Plan — bounded reconciliation supervision and command contract
 
-**Status:** preliminary investigation/design plan; no slice has started and
-no native contract is approved. This is the SBE companion to API sprint 129.
-The first review boundary is joint Gate A, before implementation.
+**Status:** Slices 0A and 0B are complete; the native proposal is **awaiting
+joint Gate A review**, not approved. See the [inventory](SLICE%200A%20-%20NATIVE%20AND%20API%20BOUNDARY%20INVENTORY.md)
+and [contract proposal and matrix](SLICE%200B%20-%20NATIVE%20COMMAND%20AND%20SUPERVISION%20PROPOSAL.md).
+This is the SBE companion to API sprint 129. Gate A precedes implementation.
 
 ## Objective and boundaries
 
@@ -103,6 +104,11 @@ and identifies changes or missing evidence. SBE incorporates and re-reviews
 material corrections. Both sides agree on the executable contract and test
 matrix; the owner resolves consequential product or operational choices.
 Until then, no implementation, release candidate or provider work is implied.
+
+Review must specifically settle observation-time freshness versus the existing
+launch-time timestamp, checkpoint ancestry after local continuation, exact
+same-call terminal publication selection versus the existing latest reader,
+and the API-side cross-version routing and direct-child/checkpoint proofs.
 
 ## Later work — sequencing only, not yet authorized by Gate A
 
